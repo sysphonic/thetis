@@ -1,0 +1,321 @@
+<% unless (params[:controller] == 'desktop' and params[:action] == 'show') or (params[:controller] == 'items' and params[:action] == 'edit') %>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<% end %>
+
+<html>
+<head>
+<title>Thetis</title>
+
+<meta http-equiv="Content-Script-Type" content="text/JavaScript">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<%= stylesheet_link_tag 'thetis100', :media => 'all' %>
+<%= javascript_include_tag 'prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar' %>
+<%= javascript_include_tag 'thetis/common100', 'thetis/thetis098', 'thetis/thetisbox110' %>
+<%= javascript_include_tag 'dojo/dojo', 'dojo/src/io/IframeIO' %>
+
+<style type="text/css">
+.list_th {
+  background-image: url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png);
+}
+.img_button_td {
+  background-image: url(<%= THETIS_RELATIVE_URL_ROOT %>/images/button.png);
+}
+</style>
+
+<script type="text/javascript">
+<!--
+
+ThetisBox.setTitle("<%=h $thetis_config[:general]['app_title'] %>");
+ThetisBox.setOK("<%=h t('btn.ok') %>");
+ThetisBox.setCancel("<%=h t('btn.cancel') %>");
+ThetisBox.setClose("<%=h t('btn.close') %>");
+ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/close.png");
+<%
+login_user = session[:login_user]
+login_name = (login_user.nil?)?'':login_user.name
+login_admin = (!login_user.nil? and login_user.admin?)?'true':'false'
+%>
+setHeaderLogin("<%=h login_name %>");
+setLeftLogin("<%=h login_name %>", <%= login_admin %>);
+
+function setHeaderLogin()
+{
+  try {
+    top.header.setLoginName("<%=h login_name %>");
+  } catch(e) {
+    setTimeout("setHeaderLogin();", 100);
+  }
+}
+
+function setLeftLogin()
+{
+  try {
+    top.left.setLogin("<%=h login_name %>", <%= login_admin %>);
+  } catch(e) {
+    setTimeout("setLeftLogin();", 100);
+  }
+}
+
+function doOnLoad()
+{
+<% if request.path.index('/items/show').nil?   # Not to be scrolled by default.. %>
+  if (document.forms
+      && document.forms[0]
+      && document.forms[0].elements)
+  {
+    try {
+      for (var i=0; i < document.forms[0].elements.length; i++) {
+        var first_elem = document.forms[0].elements[i];
+        if (first_elem.type != "select-one"
+            && first_elem.type != "hidden"
+            && !first_elem.readOnly
+            && first_elem.name != "authenticity_token") {
+          first_elem.focus();
+          break;
+        }
+      }
+    } catch(e) {
+    }
+  }
+<% end %>
+
+  eval("try{ if(onLoadSub){ onLoadSub() } }catch(e){}");
+
+  setTimeout("doResize()", 10);
+
+<% if params[:topicBox] == 'true' %>
+  setTimeout("showTopicBox()", 10);
+<% end %>
+}
+
+function showTopicBox()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%= t('topicbox.title') %>";
+  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%=h $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+  $('divThetisBox-' + thetisBox.id).style.zIndex += 1;
+}
+
+function _forBugfullIE(div, list)
+{
+  if (list != null) {
+    list.style.width = div.clientWidth+"px";
+  }
+}
+
+var mainRegion = getClientRegion();
+var mainWidth = mainRegion.width;
+var mainHeight = mainRegion.height;
+
+function doResize()
+{
+<% if params[:controller] == 'items' and params[:action] == 'show_for_print' %>
+  return;
+<% end %>
+
+  mainRegion = getClientRegion();
+  mainWidth = mainRegion.width;
+  mainHeight = mainRegion.height;
+
+  var main_div = $("main_div");
+  main_div.style.height = mainHeight + "px";
+  main_div.style.width = mainWidth + "px";
+
+  var div = null;
+
+  if (div = $("div_desktop")) {
+
+    var h = mainHeight - 20;
+    div.style.height = h + "px";
+
+    if (!is_MS) {
+      var elems = document.getElementsByClassName("desktop_tr");
+      for (var i=0; elems != null && i < elems.length; i++) {
+        elems[i].style.height = (h-1) / 2 + "px";
+      }
+      elems = document.getElementsByClassName("desktop_td");
+      for (var i=0; elems != null && i < elems.length; i++) {
+        elems[i].style.width = mainWidth / 2 + "px";
+      }
+    }
+
+    var toolbox = $("toolbox");
+    if (toolbox != null) {
+      toolbox.style.top = (mainHeight - toolbox.clientHeight - 30) + "px";
+      toolbox.style.left = 50 + "px";
+    }
+
+  } else if (div = $("div_list")) {
+
+    div.style.height = (mainHeight - 125) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_items"));
+    }
+
+  } else if ((div = $("folderTree")) || (div = $("groupTree"))) {
+
+  <% if params[:controller] == 'folders' and !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
+    var h = mainHeight - 140;
+  <% else %>
+    var h = mainHeight - 100;
+  <% end %>
+
+    div.style.height = h + "px";
+   // Firefox: offsetHeight = style.height + style.paddingTop + style.paddingBottom
+    if (div.offsetHeight != h) {
+      h -= div.offsetHeight - h;
+      div.style.height = h + "px";
+    }
+    div.style.width = (mainWidth-100)/2 + "px";
+
+    var view = $("div_view");
+    view.style.height = div.offsetHeight + "px";
+    view.style.width = div.offsetWidth + "px";
+
+    $("td_tree").style.width = div.offsetWidth + "px";
+    $("td_view").style.width = div.offsetWidth + "px";
+
+  } else if (div = $("mailTree")) {
+
+    var h = mainHeight - 120;
+
+    var td_tree = $("td_tree");
+    var td_view = $("td_view");
+
+    var div_mails = $("div_mails");
+    var div_mail_content = $("div_mail_content");
+
+    div.style.width = (mainWidth-118) / 4 + "px";
+    div.style.height = (h - 40 - 20) + "px";
+
+    td_tree.style.width = div.offsetWidth + "px";
+    td_view.style.width   = (mainWidth-118) / 4 * 3 + "px";
+    td_tree.style.height = h + "px" ;
+    td_view.style.height  = td_tree.style.height;
+
+    var treeMainWidth = $("tree_main").clientWidth;
+    var mailTreePos = Position.cumulativeOffset(div);
+    var borderPos = Position.cumulativeOffset($("drag_v_border"));
+    var leftWidth = borderPos[0] - mailTreePos[0] - 24;
+    div_mails.style.width  = (treeMainWidth - leftWidth - 38) + "px";
+//  div_mails.style.width  = td_view.style.width;
+    div_mails.style.height = ((h-5) / 2) + "px";
+
+    div_mail_content.style.width  = div_mails.style.width;
+    div_mail_content.style.height = ((h-5) / 2) + "px";
+
+  } else if (div = $("div_users")) {
+
+    div.style.height = (mainHeight - 130) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_users"));
+    }
+
+  } else if (div = $("div_addresses")) {
+
+    div.style.height = (mainHeight - 130) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_addresses"));
+    }
+
+  } else if (div = $("div_logs")) {
+
+    div.style.height = (mainHeight - 130) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_logs"));
+    }
+
+  } else if (div = $("div_teams")) {
+
+    div.style.height = (mainHeight - 120) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_teams"));
+    }
+
+  } else if (div = $("div_equipment")) {
+
+    div.style.height = (mainHeight - 120) + "px";
+
+    if (is_MS) {
+      _forBugfullIE(div, $("list_equipment"));
+    }
+
+/* GREP WITH BUGFULL-IE!
+  } else if (div = $("div_schedule")) {
+
+    div.style.height = (mainHeight - 70) + "px";
+*/
+  } else if (div = $("div_calendar")) {
+
+    div.style.height = (mainHeight - 100) + "px";
+
+  } else if (div = $("div_workflow_list")) {
+
+    div.style.height = (mainHeight - 40) + "px";
+
+    $("workflow_list_received").style.height = (mainHeight - 200) + "px";
+    $("div_ajax_workflow").style.height = (mainHeight - 350) + "px";
+
+  } else if (div = $("div_login")) {
+
+    div.style.height = (mainHeight - 20) + "px";
+
+  } else {
+
+    if (div = $("div_item_workflow")) {
+      div.style.height = (mainHeight - 140) + "px";
+    }
+    if (div = $("div_item_basic")) {
+      div.style.height = (mainHeight - 140) + "px";
+    }
+    if (div = $("div_item_description")) {
+      div.style.height = (mainHeight - 140) + "px";
+    }
+    if (div = $("div_item_image")) {
+      div.style.height = (mainHeight - 140) + "px";
+    }
+    if (div = $("div_item_attachment")) {
+      div.style.height = (mainHeight - 140) + "px";
+    }
+
+    if (div = $("div_research_records")) {
+      div.style.height = (mainHeight - 137) + "px";
+    }
+    if (div = $("div_research_lists")) {
+      div.style.height = (mainHeight - 137) + "px";
+    }
+  }
+}
+
+window.onresize = doResize;
+//-->
+</script>
+
+</head>
+
+<body onLoad="doOnLoad(); showErrorMsg(''); eval('try{ showTips() }catch(e){}')" bgcolor="white">
+
+<a name="top"></a>
+
+<div id="main_div" align="center">
+  <table width="95%" height="100%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" style="padding-top:10px; vertical-align:top;">
+        <%= yield %>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<%= render :partial => 'layouts/popup' %>
+
+<%= render :partial => 'common/flash_notice' %>
+
+</body>
+</html>

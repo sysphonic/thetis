@@ -1,0 +1,179 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= render :partial => 'common/error', :locals => {:obj => @user} %>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="10"><td></td></tr>
+  <tr>
+    <td width="49%" valign="top">
+
+      <!-- System -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('template.system_templates') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" style="width:40%;" nowrap><%=h t('item.profile_sheet') %></td>
+            <td class="item_value_td">
+              <%= render :partial => 'system' %>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="height:10px;"></div>
+
+      <!-- Local -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap style="width:100%;"><%=h t('template.item_templates') %></td>
+          </tr>
+          <tr>
+            <td class="item_value_td">
+              <div id="div_ajax_local">
+                <%= render :partial => 'ajax_local' %>
+              </div>
+
+              <table align="right" width="120" cellspacing="0" cellpadding="0">
+                <tr height="6"><td></td></tr>
+                <tr>
+                  <td class="td_button_gray" align="left" nowrap bgcolor="gray" onClick="doCreateLocal();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                    <%=h t('btn.create') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </td>
+    <td width="10">&nbsp;</td>
+    <td width="49%" valign="top">
+
+      <!-- Workflows -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap style="width:100%;"><%=h t('workflow.plural') %></td>
+          </tr>
+          <tr>
+            <td class="item_value_td">
+              <div id="div_ajax_workflows">
+                <%= render :partial => 'ajax_workflows' %>
+              </div>
+
+              <table align="right" width="120" cellspacing="0" cellpadding="0">
+                <tr height="6"><td></td></tr>
+                <tr>
+                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreateWorkflow();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                    <%=h t('btn.create') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </td>
+  </tr>
+</table>
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+      <%=h t('btn.back') %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+<br/>
+
+
+<script type="text/javascript">
+
+function doCreateLocal()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_ajax_local",
+              "<%= url_for :controller => 'templates', :action => 'create_local' %>",
+              {
+                parameters:"authenticity_token=<%= form_authenticity_token %>",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                }
+              }
+            );
+  return true;
+}
+
+function doCreateWorkflow()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_ajax_workflows",
+              "<%= url_for :controller => 'templates', :action => 'create_workflow' %>",
+              {
+                parameters:"authenticity_token=<%= form_authenticity_token %>",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                }
+              }
+            );
+  return true;
+}
+
+function doDeleteLocal(item_id, title)
+{
+  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('msg.confirm_to_delete') %>", "_doDeleteLocal("+item_id+")");
+}
+
+function _doDeleteLocal(item_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_local",
+      "<%= url_for :controller => 'templates', :action => 'destroy_local' %>?id=" + item_id,
+      {
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); }
+      }
+    );
+}
+
+function doDeleteWorkflow(item_id, title)
+{
+  confm("<%= h t('paren.square.left') %>" + title + "<%= h t('msg.confirm_to_delete') %>", "_doDeleteWorkflow("+item_id+")");
+}
+
+function _doDeleteWorkflow(item_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_workflows",
+      "<%= url_for :controller => 'templates', :action => 'destroy_workflow' %>?id=" + item_id,
+      {
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); }
+      }
+    );
+}
+
+</script>

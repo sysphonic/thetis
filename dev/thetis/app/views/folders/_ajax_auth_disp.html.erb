@@ -1,0 +1,140 @@
+
+<% if @folder.nil? %>
+
+<table cellpadding="0" cellspacing="0" width="100%" height="100%" style="background-color:lightcyan;">
+  <tr>
+    <td valign="top">
+      <br/>
+      <table align="center" width="80%" cellpadding="0" cellspacing="0" border="0">
+        <tr>
+          <td align="left" valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%=h t('folder.cannot_be_edited') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<% else %>
+
+<table cellspacing="0" cellpadding="0" width="100%" height="100%" style="background-color:lightcyan;">
+
+  <tr height="100%">
+    <td valign="top">
+
+      <table cellspacing="0" cellpadding="0" width="100%">
+        <tr height="10"><td style="padding:10px;"></td></tr>
+        <tr>
+          <td style="padding:10px;">
+          <%
+          read_users = @folder.get_read_users_a
+          write_users = @folder.get_write_users_a
+          read_users = [] if read_users.nil?
+          write_users = [] if write_users.nil?
+
+          read_groups = @folder.get_read_groups_a
+          write_groups = @folder.get_write_groups_a
+          read_groups = [] if read_groups.nil?
+          write_groups = [] if write_groups.nil?
+
+          read_teams = @folder.get_read_teams_a
+          write_teams = @folder.get_write_teams_a
+          read_teams = [] if read_teams.nil?
+          write_teams = [] if write_teams.nil?
+
+          if read_users.empty? and write_users.empty? and read_groups.empty? and write_groups.empty? and read_teams.empty? and write_teams.empty?
+          %>
+
+            <br/><br/>
+            <table align="center" width="80%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center" style="padding:10px; color:dimgray; background-color:white; border:1px dimgray dotted;">
+                  <%=h t('paren.no_autorities') %>
+                </td>
+              </tr>
+            </table>
+
+          <% else %>
+
+            <table cellspacing="2" cellpadding="0" width="100%">
+              <tr>
+                <td class="prim_cap_td">
+                  <%=h t('cap.users') %>
+                </td>
+                <td class="item_value_td" style="background-color:white;">
+                  <%
+                   read_write = read_users & write_users
+                   read_only = read_users - write_users
+                   write_only = write_users - read_users
+                   read_write.each do |user_id|
+                  %>
+                    <%=h User.get_name(user_id) %> (Read/Write)<br/>
+                  <% end %>
+                  <% read_only.each do |user_id|  %>
+                    <%=h User.get_name(user_id) %> (Read)<br/>
+                  <% end %>
+                  <% write_only.each do |user_id|  %>
+                    <%=h User.get_name(user_id) %> (Write)<br/>
+                  <% end %>
+                </td>
+              </tr>
+              <tr>
+                <td class="prim_cap_td">
+                  <%=h t('cap.groups') %>
+                </td>
+                <td class="item_value_td" style="background-color:white;">
+                  <%
+                  read_write = read_groups & write_groups
+                  read_only = read_groups - write_groups
+                  write_only = write_groups - read_groups
+                  groups_cache = {}
+
+                  read_write.each do |group_id| 
+                  %>
+                    <%=h Group.get_path(group_id, groups_cache) %> (Read/Write)<br/>
+                  <% end %>
+                  <% read_only.each do |group_id|  %>
+                    <%=h Group.get_path(group_id, groups_cache) %> (Read)<br/>
+                  <% end %>
+                  <% write_only.each do |group_id|  %>
+                    <%=h Group.get_path(group_id, groups_cache) %> (Write)<br/>
+                  <% end %>
+                </td>
+              </tr>
+              <tr>
+                <td class="prim_cap_td">
+                  <%=h t('cap.teams') %>
+                </td>
+                <td class="item_value_td" style="background-color:white;">
+                  <%
+                   read_write = read_teams & write_teams
+                   read_only = read_teams - write_teams
+                   write_only = write_teams - read_teams
+                   read_write.each do |team_id| 
+                  %>
+                    <%=h Team.get_name(team_id) %> (Read/Write)<br/>
+                  <% end %>
+                  <% read_only.each do |team_id|  %>
+                    <%=h Team.get_name(team_id) %> (Read)<br/>
+                  <% end %>
+                  <% write_only.each do |team_id|  %>
+                    <%=h Team.get_name(team_id) %> (Write)<br/>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
+
+          <% end %>
+
+          </td>
+        </tr>
+        <tr height="15"><td></td></tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<% end %>
+

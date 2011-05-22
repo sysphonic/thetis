@@ -1,0 +1,77 @@
+
+<%
+login_user = session[:login_user]
+date_string = @day.strftime(Schedule::SYS_DATE_FORM)
+
+auth_read = @schedule.check_user_auth(login_user, 'r', true)
+auth_write = @schedule.check_user_auth(login_user, 'w', true)
+
+if @schedule.holiday?
+  bg_color = 'white'
+else
+  case @schedule.scope
+    when Schedule::SCOPE_ALL
+      scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"
+      bg_color = '#FFD5C5'
+    when Schedule::SCOPE_PRIVATE
+      scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
+      bg_color = 'lightcyan'
+    else
+      scope = ''
+      bg_color = '#DEF9A3'
+  end
+
+  bg_color = '#FF9797' if @overlap_ary.include?(@schedule.id)
+end
+%>
+
+<td align="left" style="padding-left:5px; padding-top:5px; padding-bottom:5px; background-color:<%= bg_color %>; line-height:1.3; border-bottom:1px solid white;">
+
+  <% if @schedule.holiday? %>
+    <span class="span_holiday"><%=h @schedule.title %></span>
+  <% elsif @schedule.allday %>
+    <ul style="padding-left:15px">
+      <li>
+    <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
+    <% if auth_read %><a class="a_underline" href="#" onclick="showDetail(<%= @schedule.id %>, '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
+      <%=h @schedule.title %>
+    <% if auth_read %></a><% end %>
+    <%= raw(scope) %>
+    <% if auth_write %>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editDetail('<%= date_string %>', '<%= @schedule.id %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete('<%= date_string %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" />
+    <% end %>
+      </li>
+    </ul>
+  <%
+  else
+    if @schedule.within_a_day?
+  %>
+      <%= @schedule.start.strftime('%H:%M') + '-' + @schedule.end.strftime('%H:%M') %><% unless auth_write %><br/><% end %>
+    <% else %>
+      <%= @schedule.start.strftime(THETIS_DATE_FORMAT_MD+' %H:%M') + ' - ' + @schedule.end.strftime(THETIS_DATE_FORMAT_MD+' %H:%M') %><% unless auth_write %><br/><% end %>
+  <%
+    end
+    if auth_write
+  %>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editDetail('<%= date_string %>', '<%= @schedule.id %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete('<%= date_string %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" /><br/>
+    <% end %>
+    <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
+    <% if auth_read %><a class="a_underline" href="#" onclick="showDetail(<%= @schedule.id %>, '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
+      <%=h @schedule.title %>
+    <% if auth_read %></a><% end %>
+    <%= raw(scope) %>
+    <%
+    unless auth_read
+      rep_user_id = @schedule.get_representative
+      unless rep_user_id.nil?
+    %>
+      <span style="color:darkgreen;">(<%= User.get_name(rep_user_id) %>)</span>
+  <%
+      end
+    end
+  end
+  %>
+
+</td>

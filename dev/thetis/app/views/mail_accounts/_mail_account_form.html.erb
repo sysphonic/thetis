@@ -1,0 +1,287 @@
+
+<%= render :partial => 'common/error', :locals => {:obj => @mail_account} %>
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td align="center">
+
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr>
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if($('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+            <%= h t('cap.basic_info') %>
+          </td>
+          <td id="tab_receive" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onMouseOver="if($('div_receive').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+            <%= h t('mail.receive') %>
+          </td>
+          <td id="tab_send" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if($('div_send').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+            <%= h t('mail.send') %>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+
+      <div id="div_basic" style="width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_title"><%=h MailAccount.human_attribute_name('title') %></label>
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('mail_account.title_info')%>');">
+                  </td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'title' %><sup style="color:red">*</sup>
+                  </td>
+                </tr>
+<!--
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap> <label for="mail_account_is_default"><%=h t('mail_account.default') %></label></td>
+                  <td class="item_value_td">
+                    <%= check_box 'mail_account', 'is_default' %> <label for="mail_account_is_default"><%= h MailAccount.human_attribute_name('is_default') %></label>
+                  </td>
+                </tr>
+--><%= check_box 'mail_account', 'is_default', :style => 'display:none;' %>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_from_name"><%=h MailAccount.human_attribute_name('from_name') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'from_name' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_from_address"><%=h MailAccount.human_attribute_name('from_address') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'from_address', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_reply_to"><%=h MailAccount.human_attribute_name('reply_to') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'reply_to', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_organization"><%=h MailAccount.human_attribute_name('organization') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'organization' %>
+                  </td>
+                </tr>
+              <% if THETIS_MAIL_LIMIT_NUM_PER_USER > 0 %>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.limit_num_per_user') %></td>
+                  <td class="item_value_td">
+                    <%= THETIS_MAIL_LIMIT_NUM_PER_USER %>
+                  </td>
+                </tr>
+              <% end %>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="div_receive" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_server"><%=h MailAccount.human_attribute_name('pop_server') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'pop_server', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_port"><%=h MailAccount.human_attribute_name('pop_port') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'pop_port', :style => 'ime-mode:disabled; width:80px;' %>
+                  </td>
+                </tr>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_username"><%=h MailAccount.human_attribute_name('pop_username') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'pop_username', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_password"><%=h MailAccount.human_attribute_name('pop_password') %></label></td>
+                  <td class="item_value_td">
+                    <%= password_field 'mail_account', 'pop_password' %>
+                  </td>
+                </tr>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_secure_conn"><%=h t('mail_account.secure_connection') %></label></td>
+                  <td class="item_value_td">
+                    <%= radio_button 'mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_NONE %><label for="mail_account_pop_secure_conn_none"> <%=h t('msg.none') %></label><br/>
+<!--
+                    <%= radio_button 'mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_STARTTLS %><label for="mail_account_pop_secure_conn_starttls"> STARTTLS</label><br/>
+-->
+                    <%= radio_button 'mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_SSL_TLS %><label for="mail_account_pop_secure_conn_ssl_tls"> SSL/TLS</label><br/>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_secure_auth"><%= t('mail_account.secure_auth') %></label></td>
+                  <td class="item_value_td">
+                    <%= radio_button 'mail_account', 'pop_secure_auth', false %><label for="mail_account_pop_secure_auth_false"> <%= t('msg.none') %></label><br/>
+                    <%= radio_button 'mail_account', 'pop_secure_auth', true %><label for="mail_account_pop_secure_auth_true"> APOP</label><br/>
+                  </td>
+                </tr>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_remove_from_server"><%=h t('mail.messages') %></label></td>
+                  <td class="item_value_td">
+                    <%= check_box 'mail_account', 'remove_from_server', :disabled => true %> <label for="mail_account_remove_from_server"><%= h MailAccount.human_attribute_name('remove_from_server') %></label>
+                    <span style="color:dimgray;">(Disabled)</span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="div_send" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_server"><%=h MailAccount.human_attribute_name('smtp_server') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'smtp_server', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_port"><%=h MailAccount.human_attribute_name('smtp_port') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'mail_account', 'smtp_port', :style => 'ime-mode:disabled; width:80px;' %>
+                  </td>
+                </tr>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_secure_conn"><%=h t('mail_account.secure_connection') %></label></td>
+                  <td class="item_value_td">
+                    <%= radio_button 'mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_NONE %><label for="mail_account_smtp_secure_conn_none"> <%=h t('msg.none') %></label><br/>
+                    <%= radio_button 'mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_STARTTLS %><label for="mail_account_smtp_secure_conn_starttls"> STARTTLS</label><br/>
+                    <%= radio_button 'mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_SSL_TLS %><label for="mail_account_smtp_secure_conn_ssl_tls"> SSL/TLS</label><br/>
+                  </td>
+                </tr>
+                <tr height="10"><td colspan="2"></td></tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_auth"><%=h MailAccount.human_attribute_name('smtp_auth') %></label></td>
+                  <td class="item_value_td">
+                    <%= check_box 'mail_account', 'smtp_auth', :onClick => '$("div_smtp_auth").style.display=this.checked?"block":"none";' %> <label for="mail_account_smtp_auth"><%= h t('mail_account.enable_auth') %></label>
+                  </td>
+                </tr>
+                <tr>
+                  <td colspan="2" style="padding-left:20px;">
+                    <div id="div_smtp_auth" style="display:<%= (!@mail_account.nil? and @mail_account.smtp_auth)?'block':'none' %>">
+                      <div style="padding-bottom:5px;">
+                        <%= radio_button 'mail_account', 'smtp_auth_method', 'plain' %><label for="mail_account_smtp_auth_method_plain">Plain</label>
+                        <%= radio_button 'mail_account', 'smtp_auth_method', 'login' %><label for="mail_account_smtp_auth_method_login">Login</label>
+                        <%= radio_button 'mail_account', 'smtp_auth_method', 'cram_md5' %><label for="mail_account_smtp_auth_method_cram_md5">CRAM MD5</label>
+                      </div>
+
+                      <table width="100%" cellpadding="0" cellspacing="2">
+                        <tr>
+                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_username"><%=h t('user.u_name') %></label></td>
+                          <td class="item_value_td">
+                            <%= text_field 'mail_account', 'smtp_username', :style => 'ime-mode:disabled;' %>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_password"><%=h User.human_attribute_name('password') %></label></td>
+                          <td class="item_value_td">
+                            <%= password_field 'mail_account', 'smtp_password' %>
+                          </td>
+                        </tr>
+                      </table>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+showAddressTab = function(name)
+{
+  var nameArray = new Array("basic", "receive", "send");
+
+  var tab = null;
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.style.cursor = "pointer";
+      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+    }
+  }
+  var target_tab = $("tab_"+name);
+  target_tab.style.cursor = "default";
+  var bg = target_tab.bgColor;
+
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.bgColor = "silver";
+    }
+  }
+
+  target_tab.bgColor = bg;
+
+  for (i=0; i<nameArray.length; i++) {
+    div = $("div_"+nameArray[i]);
+    if (div != null) {
+      div.style.display = "none";
+    }
+  }
+
+  div = $("div_"+name);
+  div.style.visibility = "visible";
+  div.style.display = "inline";
+}
+
+showAddressTab("basic");
+
+
+doRegister = function()
+{
+  var form = document.form_mail_account<%= form_idx %>;
+
+  if (trim($("mail_account_title").value) == "") {
+    msg("<%= t('mail_account.specify_title')%>");
+    return;
+  }
+
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Request(
+              form.action,
+              {
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                  request.responseText.evalScripts();
+                },
+                parameters:Form.serialize(form)+"&authenticity_token=<%= form_authenticity_token %>"
+              }
+            );
+}
+
+</script>

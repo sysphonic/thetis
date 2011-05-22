@@ -1,0 +1,330 @@
+
+<%
+login_user = session[:login_user]
+%>
+
+<%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" nowrap width="1%">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="showAddressNew();">
+          </td>
+          <td align="right" nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <input type="button" value="<%= h t('btn.search') %>" onClick="form_list.action='<%= url_for :controller => 'addressbook', :action => 'search' %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= h t('btn.reset') %>" onClick="location.href='<%= url_for :controller => 'addressbook', :action => 'list' %>'; prog('TOP-RIGHT');"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="1"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+          <td align="left" width="120" style="padding-bottom:5px;">
+          <td align="right">
+            <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%=h t('btn.delete')%>" onclick="doDelete();">
+          </td>
+         </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('address', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_address')
+      pagination = will_paginate(@address_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_addresses" style="overflow:scroll; background-color:white;">
+<table id="list_addresses" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="35%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Address.human_attribute_name('name') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="35%" nowrap onClick="sortList('email1')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('email.name') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="30%" nowrap onClick="sortList('organization')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Address.human_attribute_name('organization') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
+  </tr>
+<% @addresses.each_with_index do |address, idx|  %>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="showAddress(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>'); return false;">
+        <%= truncate(address.name, :length => 30) %>
+      </a>
+    </td>
+    <%
+      addrs = [address.email1, address.email2, address.email3]
+      addrs.compact!
+      addrs.delete('')
+      addrs.map! do |addr|
+        truncate(addr, :length => 40)
+      end
+    %>
+    <td class="<%=td_class %>" nowrap>
+    <% addrs.each do |addr| %>
+      <%= addr %><br/>
+    <% end %>
+    </td>
+    <td class="<%=td_class %>">
+      <%= truncate(address.organization, :length => 40) %>
+    </td>
+    <td class="<%=td_class %>" width="20" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>');" />
+    </td>
+    <td class="<%=td_class %>" width="20" style="text-align:center;">
+      <%= check_box :check_address, address.id, :class => 'check_address' %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+var thetisBox = null;
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_address", document.form_list);
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function doDelete()
+{
+  var elems = document.getElementsByClassName("check_address", document.form_list);
+  var count=0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  confm(count+"<%= h t('address.confirm_delete') %>", "_doDelete()");
+}
+
+function _doDelete()
+{
+  document.form_list.action = "<%= url_for :controller => 'addressbook', :action => 'destroy' %>";
+  document.form_list.submit();
+
+  prog("TOP-RIGHT");
+}
+
+
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function showAddress(address_id, address_name)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'show') %>?id="+address_id,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + address_name;
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function showAddressNew()
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'addressbook', :action => 'new' %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%=h t('address.new') %>";
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function showAddressEdit(address_id, address_name)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'edit') %>?id="+address_id,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+//-->
+</script>
+
+<%
+unless @imp_errs.nil? or @imp_errs.empty?
+%>
+
+<div id="imp_errs" style="display:none;">
+<table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0">
+  <tr style="height:20px;">
+    <td align="right" style="color:blueviolet; padding-right:10px; padding-top:10px;">
+      <%=h t('address.imported', :count => @imp_cnt) %><br/>
+    </td>
+  </tr>
+  <tr>
+    <td valign="top" style="padding:10px;">
+      <table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0" border="1">
+<%
+err_cnt = 0
+@imp_errs.each do |address_cnt, errs|
+  if err_cnt < 20
+%>
+        <tr>
+        <% if address_cnt > 0 %>
+          <td align="right" valign="top" style="padding-left:3px; padding-right:3px;">
+            <%=h t('address.cap_with_num', :num => address_cnt) %>
+          </td>
+          <td align="left" valign="top" style="padding-left:3px; padding-right:3px;">
+        <% else %>
+          <td align="left" valign="top" style="padding-left:3px; padding-right:3px;" colspan="2">
+        <% end %>
+        <% errs.each do |err| %>
+            <li><%=h err %><br/>
+        <% end %>
+          </td>
+        </tr>
+<% else %>
+        <tr>
+          <td colspan="2" align="center" valign="top" nowrap style="padding-left:3px; padding-right:3px;">
+            <b>...</b>
+          </td>
+        </tr>
+<%
+    break
+  end
+  err_cnt += 1
+end
+%>
+      </table>
+    </td>
+  </tr>
+</table>
+</div>
+
+<script type="text/javascript">
+<!--
+function showImportError()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('cap.import_error') %>";
+  thetisBox.bgcolor_title = "crimson";
+  thetisBox.bgcolor_body = "salmon";
+  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%=h t('msg.error_detected') %>", $("imp_errs").innerHTML);
+}
+
+function onLoadSub()
+{
+  setTimeout("showImportError()", 100);
+}
+//-->
+</script>
+
+<% end %>

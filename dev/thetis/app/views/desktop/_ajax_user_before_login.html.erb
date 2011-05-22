@@ -1,0 +1,52 @@
+<% login_user = session[:login_user] %>
+
+<table align="center" width="85%" cellpadding="0" cellspacing="2">
+  <tr>
+    <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
+      <%=h t('desktop.before_login') %>&nbsp;
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('desktop.before_login_info1') %><br/><%=h t('desktop.before_login_info2') %><br/><%=h t('desktop.before_login_info3') %>');">
+    </td>
+  </tr>
+  <tr>
+    <td class="prim_cap_td" nowrap><%=h t('desktop.currently_selected') %></td>
+    <td class="item_value_td" width="70%">
+      <%
+      unless @yaml[:desktop].nil?
+        user_before_login = @yaml[:desktop]['user_before_login']
+      end
+
+      if user_before_login.nil? or user_before_login.empty?
+      %>
+        <%=h t('paren.not_selected') %><br/>
+      <% else %>
+        <%=h User.get_name(user_before_login) %><br/>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" nowrap><%=h t('desktop.select_mine') %></td>
+    <td class="item_value_td">
+      <%
+      disabled = ''
+      if user_before_login == login_user.id.to_s
+        disabled = 'disabled'
+      end
+      %>
+      <input type="button" style="width:100px;" value="<%=h t('btn.apply') %>" onclick="doUpdateConfig('<%= login_user.id %>');" <%= disabled %>>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" nowrap><%=h t('btn.deselect') %></td>
+    <td class="item_value_td">
+      <%
+      disabled = ''
+      if user_before_login.nil? or user_before_login.empty?
+        disabled = 'disabled'
+      end
+      %>
+      <input type="button" style="width:100px;" value="<%=h t('btn.deselect') %>" onclick="doUpdateConfig('');" <%= disabled %>>
+    </td>
+  </tr>
+</table>
+
+<%= render :partial => 'common/flash_notice' %>

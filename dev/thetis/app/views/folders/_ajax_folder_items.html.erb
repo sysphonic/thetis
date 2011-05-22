@@ -1,0 +1,76 @@
+
+<% login_user = session[:login_user] %>
+
+<% unless @items.nil? %>
+
+<table align="center" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap style="cursor:default"><%= t('activerecord.attributes.id') %></th>
+    <th class="list_th" width="35%" nowrap style="cursor:default"><%= Item.human_attribute_name('title') %></th>
+    <th class="list_th" width="22%" nowrap style="cursor:default"><%= t('activerecord.attributes.updated_at') %></th>
+    <th class="list_th" width="7%"  nowrap style="cursor:default"><%= Item.human_attribute_name('public') %></th>
+    <th class="list_th" width="13%" nowrap style="cursor:default"><%= t('item.registered_by') %></th>
+  </tr>
+<%
+users_cache = {}
+@items.each_with_index do |item, idx|
+  td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
+%>
+  <tr height="33">
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h item.id %></td>
+    <td class="<%= td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => item %>'; return false;" >
+        <%=h truncate(item.title, :length => 20) %>
+      </a>
+      <% if !item.workflow.nil? and item.workflow.decided? %>
+        <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%=h item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
+      <% end %>
+
+      <% if item.xtype == Item::XTYPE_PROJECT %>
+        &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+      <% elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
+        &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
+      <% end %>
+    </td>
+    <%
+    updated_at = ''
+    unless item.updated_at.nil?
+      updated_at = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+    end
+    %>
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
+      <%=h updated_at %>
+    </td>
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%=h item.public ? 'check_ok.gif' : 'check_ng.gif' %>">
+    </td>
+    <% user_name = item.disp_registered_by(users_cache) %>
+    <td class="<%= td_class %>" nowrap><%=h truncate(user_name, :length => 10) %></td>
+  <%
+  if params[:read_only] != 'true'
+    if !login_user.nil? and item.editable?(login_user.id)
+  %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
+    </td>
+  <%
+    end
+    if !login_user.nil? and item.deletable?(login_user.id)
+  %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%
+      del_type = 'null'
+      del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
+      %>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteItem(<%= item.id %>, <%= item.folder_id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>);" />
+    </td>
+  <%
+    end
+  end
+  %>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<%= render :partial => 'common/flash_notice' %>

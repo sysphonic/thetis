@@ -1,0 +1,213 @@
+
+<% login_user = session[:login_user] %>
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td style="vertical-align:top;">
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr height="20">
+          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users'); this.bgColor='blue';" bgcolor="blue" onMouseOver="if($('div_mem_users').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+              <%= t('user.plural') %>
+          </td>
+          <td id="tab_groups" class="td_item_tab" nowrap onclick="showTab('groups'); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('div_mem_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+              <%= t('group.plural') %>
+          </td>
+          <td id="tab_teams" class="td_item_tab" nowrap onclick="showTab('teams'); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('div_mem_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+              <%= t('team.plural') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="border:solid 1px gray; background-color:#FFFAFD;">
+
+      <div id="div_mem_users">
+        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+          <tr>
+            <td id="div_selectUsers">
+              <%
+              @users_selected = @schedule.get_users_a
+              if params[:action] == 'new'
+                @users_selected << login_user.id.to_s
+              end
+
+              @users_cache ||= {}
+              %>
+              <%= render :partial => 'ajax_select_users' %>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td align="left" valign="bottom" width="33%">
+                    <%= t('user.plural') %><%= t('cap.suffix') %>
+                  </td>
+                  <td align="center" width="34%" nowrap>
+                    <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('user');" style="width:80px;" />
+                    <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('user');" style="width:80px;" />
+                  </td>
+                  <td width="33%">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <select id="users_selected" name="users[]" class="select_multi" size="5" multiple="multiple">
+              <% @users_selected.each do |user_id| %>
+                <option value="<%= user_id %>"><%= User.get_name(user_id, @users_cache) %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="div_mem_groups" style="display:none;">
+        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+          <tr>
+            <td>
+              <%
+              groups = Group.find(:all) || []
+              groups_selected = @schedule.get_groups_a
+              @groups_cache ||= {}
+              %>
+              <select id="group_candidates" name="group_candidates" class="select_candidates" size="5" multiple="multiple">
+              <%
+               groups.each do |group|
+                 next if groups_selected.include?(group.id.to_s)
+              %>
+                <option value="<%= group.id %>"><%= Group.get_path(group.id, @groups_cache) %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td align="left" valign="bottom" width="33%">
+                    <%= t('group.plural') %><%= t('cap.suffix') %>
+                  </td>
+                  <td align="center" width="34%" nowrap>
+                    <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('group');" style="width:80px;" />
+                    <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('group');" style="width:80px;" />
+                  </td>
+                  <td width="33%">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <select id="groups_selected" name="groups[]" class="select_multi" size="5" multiple="multiple">
+              <% groups_selected.each do |group_id| %>
+                <option value="<%= group_id %>"><%= Group.get_path(group_id, @groups_cache) %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div id="div_mem_teams" style="display:none;">
+        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+          <tr>
+            <td>
+              <%
+              target_user_id = (login_user.admin?(User::AUTH_TEAM))?(nil):(login_user.id)
+              teams = Team.get_for(target_user_id, true)
+              teams_selected = @schedule.get_teams_a
+              @teams_cache ||= {}
+              %>
+              <select id="team_candidates" name="team_candidates" class="select_candidates" size="5" multiple="multiple">
+              <%
+               teams.each do |team|
+                 next if teams_selected.include?(team.id.to_s)
+              %>
+                <option value="<%= team.id %>"><%= Team.get_name(team.id, @teams_cache) %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td align="left" valign="bottom" width="33%">
+                    <%= t('team.plural') %><%= t('cap.suffix') %>
+                  </td>
+                  <td align="center" width="34%" nowrap>
+                    <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('team');" style="width:80px;" />
+                    <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('team');" style="width:80px;" />
+                  </td>
+                  <td width="33%">&nbsp;</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td>
+              <select id="teams_selected" name="teams[]" class="select_multi" size="5" multiple="multiple">
+              <% teams_selected.each do |team_id| %>
+                <option value="<%= team_id %>"><%= Team.get_name(team_id, @teams_cache) %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+showTab = function(name)
+{
+  var nameArray = new Array("users", "groups", "teams");
+
+  var tab = null;
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.style.cursor = "pointer";
+      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+    }
+  }
+  var target_tab = $("tab_"+name);
+  target_tab.style.cursor = "default";
+  var bg = target_tab.bgColor;
+
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.bgColor = "silver";
+    }
+  }
+
+  target_tab.bgColor = bg;
+
+  for (i=0; i<nameArray.length; i++) {
+    div = $("div_mem_"+nameArray[i]);
+    if (div != null) {
+      div.style.display = "none";
+    }
+  }
+
+  div = $("div_mem_"+name);
+  div.style.visibility = "visible";
+  div.style.display = "inline";
+}
+
+showTab("users");
+
+</script>
+

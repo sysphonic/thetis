@@ -1,0 +1,105 @@
+<table width="100%" cellspacing="0" cellpadding="0">
+   <tr>
+    <td align="left" style="padding:5px; padding-top:10px; padding-left:10px;">
+    <% if @group_id.nil? or @group_id.empty? %>
+      <table width="120" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+            <%=h t('btn.select_group') %>
+          </td>
+        </tr>
+      </table>
+    <% else %>
+      <table cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" nowrap>
+            <%=h t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%=h Group.get_path(@group_id) %></a>
+          </td>
+        </tr>
+      </table>
+    <% end %>
+    </td>
+  </tr>
+</table>
+
+<% if @researches.nil? or @researches.empty? %>
+
+<table cellspacing="0" cellpadding="0" width="100%" height="80%">
+  <tr height="20%"><td>&nbsp;</td></tr>
+  <tr height="60%">
+    <td valign="middle" align="center">
+
+  <% if @group_id.nil? or @group_id.empty? %>
+      <%=h t('group.select_to_show')%>
+  <% else %>
+      <%=h t('msg.no_data_to_display') %>
+  <% end %>
+
+    </td>
+  </tr>
+  <tr height="20%"><td>&nbsp;</td></tr>
+</table>
+
+<%
+else
+  @researches.each_with_index do |research, idx|
+    if idx >= 100
+%>
+
+    <div align="center" style="padding-top:10px; width:100%; color:red; font-weight:bold;">
+      <%=h t('research.max_to_display1') %><%= @researches.length %><%=h t('research.max_to_display2') %>
+    </div>
+    <br/>
+
+  <%
+    break
+  else
+  %>
+
+<table width="95%" cellpadding="2" cellspacing="2" align="center">
+  <tr height="3"><td></td></tr>
+  <tr>
+    <td valign="top" width="20">
+      <%= idx + 1 %>.
+    </td>
+    <td>
+
+      <table width="100%" cellpadding="2" cellspacing="2">
+    <%
+    unless @q_codes.nil?
+      @q_codes.each do |q_code|
+    %>
+        <tr>
+          <td nowrap bgcolor="#99ccff" width="100" align="center" style="padding:3px; line-height:11pt;">
+            <%= q_code %>.
+          </td>
+          <td bgcolor="#ccffff" align="left" style="padding-left:10px;">
+          <%
+          vals = research.get_by_q_code(q_code)
+          unless vals.nil?
+            ary = vals.split("\n")
+          %>
+          <%
+            ary.each do |val|
+          %>
+            <%=h val %><br/>
+          <%
+            end
+          end
+          %>
+          </td>
+        </tr>
+    <%
+      end
+    end
+    %>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%
+    end
+  end
+end
+%>

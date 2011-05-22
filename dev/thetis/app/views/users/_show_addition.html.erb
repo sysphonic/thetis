@@ -1,0 +1,126 @@
+
+<% login_user = session[:login_user] %>
+
+<!-- Authorities -->
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table width="90%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="item_cap_td" align="center"  nowrap style="width:100%;">
+        <%=h t('cap.admin_authorities') %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_value_td">
+        <table cellspacing="0" cellpadding="0" width="100%">
+          <tr>
+            <td nowrap width='20%'>
+              <%
+              unless @user.nil?
+                @user.get_auth_a.each do |auth|
+              %>
+                <%= User.get_auth_name(auth) %><br/>
+              <%
+                end
+              end
+              %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div style="height:10px"></div>
+
+<!-- Groups -->
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table width="90%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="item_cap_td" align="center"  nowrap style="width:100%;">
+        <%=h t('group.plural') %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_value_td">
+        <table cellspacing="0" cellpadding="0" width="100%">
+          <tr>
+            <td nowrap>
+              <%
+              unless @user.nil?
+                groups_cache = {}
+                @user.get_groups_a.each do |group_id|
+              %>
+                <%= Group.get_path(group_id, groups_cache) %><br/>
+              <%
+                end
+              end
+              %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div style="height:10px"></div>
+
+<!-- Teams -->
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table width="90%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="item_cap_td" align="center"  nowrap style="width:100%;">
+        <%=h t('team.plural') %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_value_td">
+        <div id="div_user_teams">
+          <ul style="padding-left:15px;">
+          <%
+          @user.get_teams_a.each do |team_id|
+            begin
+              team = Team.find(team_id)
+              access_auth = team.item.check_user_auth(login_user, 'r', true)
+          %>
+            <li type="square">
+            <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => team.item.id %>'; return false;"><% end %>
+              <%=h team.name %>
+            <% if access_auth %></a><% end %><br/>
+          <%
+            rescue
+            end
+          end
+          %>
+          </ul>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div style="height:10px"></div>
+
+<!-- Zeptair VPN -->
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table width="90%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="item_cap_td" align="center"  nowrap style="width:100%;">
+        <%= t('zeptair.vpn_connection') %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_value_td">
+        <% if @user.allowed_zept_connect? %>
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+          <%= t('msg.allowed') %><br/>
+          <%= t('zeptair.recent_zeptid') %> <b style="color:blueviolet;"><%= @user.zeptair_id %></b>
+        <% else %>
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+          <%= t('msg.not_allowed') %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+</div>

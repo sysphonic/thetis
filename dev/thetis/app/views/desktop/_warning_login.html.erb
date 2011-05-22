@@ -1,0 +1,37 @@
+
+<span>
+  <% toy_id = "toy_warnLogin" %>
+
+  <div class="toy_desktop" id="<%= toy_id %>" style='position:absolute; z-index:10000; display:none;'>
+  <table width='200' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;' cellspacing='7'>
+    <tr>
+      <td width="20" style="width:20px; cursor:move; background-color:deeppink; padding-left:10px;">
+        &nbsp;
+      </td>
+      <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editLabel('<%= toy_id %>')">
+        <pre id="<%= toy_id %>_msg"><%=h t('msg.login_to_show_own_desktop') %></pre>
+      </td>
+    </tr>
+  </table>
+  <span id="<%= toy_id %>_type" style="display:none;"><%= Toy::XTYPE_LABEL %></span>
+  </div>
+
+  <%= draggable_element(toy_id, :revert => false) %>
+
+<SCRIPT language="javascript" type="text/javascript">
+
+var desktop = $("div_desktop");
+
+var deskWidth = desktop.clientWidth;
+var deskHeight = desktop.clientHeight;
+var deskPos = Position.cumulativeOffset(desktop);
+
+var toy = $("<%= toy_id %>");
+toy.style.left = (deskPos[0] + deskWidth * 700 / 10000) + "px"; // 7%
+toy.style.top = (deskPos[1] + deskHeight * 1500 / 10000) + "px"; // 15%
+toy.style.display = "inline";
+
+</SCRIPT>
+
+</span>
+

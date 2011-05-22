@@ -1,0 +1,239 @@
+
+<%= form_tag( {:controller => 'zeptair_xlogs', :action => 'search'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td align="left" nowrap width="1%">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= h t('btn.export_csv') %>" title="<%= h t('btn.export_csv') %>" onclick="exportCsv();">
+    </td>
+    <td align="right">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">
+      &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+<% unless session[:login_user].nil? %>
+  <%= h t('cap.targets') %> <%= select_tag 'filter',
+                           options_for_select([
+                                                [t('log.all'),'all'],
+                                                ['HTTP','HTTP'],
+                                                ['HTTP(PROXY)', 'HTTP(PROXY)'],
+                                                ['HTTPS','HTTPS'],
+                                                ['POP3','POP3'],
+                                                ['SMTP','SMTP'],
+                                                ['FTP','FTP'],
+                                                [t('paren.unknown'),'UNKNOWN']
+                                              ],
+                                              params[:filter])
+            %>
+<% end %>
+      <input type="button" value="<%= h t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= h t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'zeptair_xlogs', :action => 'list' %>';"/>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td colspan="2" align="right">
+        <input type="button" value="<%=h t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
+        <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
+        <input type="button" value="<%=h t('btn.delete')%>" onclick="doDelete(); return false;">
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= t('cap.total') %><%= t('log', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_xlog')
+      pagination = will_paginate(@xlog_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_logs" style="overflow:scroll; background-color:white;">
+<table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="15%" nowrap onClick="sortList('fin_at')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="15%" nowrap onClick="sortList('req_at')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="15%" nowrap onClick="sortList('user_id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%" nowrap onClick="sortList('s_addr')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= ZeptairXlog.human_attribute_name('s_addr') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('s_addr', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="10%"  nowrap onClick="sortList('cs_protocol')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= ZeptairXlog.human_attribute_name('cs_protocol') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_protocol', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="25%" nowrap onClick="sortList('cs_uri')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= ZeptairXlog.human_attribute_name('cs_uri') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_uri', @sort_col, @sort_type)) %></span></th>
+  </tr>
+<%
+users_cache = {}
+exist_cache = {}
+@xlogs.each_with_index do |xlog, idx|
+%>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:center;"><%= xlog.fin_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;"><%= xlog.req_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+    <%
+    user_exist = false
+    user_name = ''
+    unless xlog.user_id.nil?
+      if exist_cache[xlog.user_id].nil?
+        begin
+          user = User.find(xlog.user_id)
+          user_name = user.get_name
+          user_exist = true
+        rescue
+          user_name = xlog.user_id.to_s + ' ' + t('paren.deleted')
+        end
+        users_cache[xlog.user_id] = user_name
+        exist_cache[xlog.user_id] = user_exist
+      else
+        user_name = users_cache[xlog.user_id]
+        user_exist = exist_cache[xlog.user_id]
+      end
+    end
+    if user_exist == false
+    %>
+      <td class="<%=td_class %>" style="color:crimson"><%= user_name %></td>
+    <% else %>
+      <% if session[:login_user].admin?(User::AUTH_USER) %>
+        <td class="<%=td_class %>">
+          <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => xlog.user_id %>'; return false;">
+            <%= truncate(user_name, :length => 20) %>
+          </a>
+        </td>
+      <% else %>
+        <td class="<%=td_class %>"><%= truncate(user_name, :length => 20) %></td>
+    <%
+      end
+    end
+    %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;"><%= xlog.s_addr %></td>
+    <%
+    type_color = 'black'
+    type_color = 'red' unless xlog.cs_protocol.index('HTTP').nil?
+    type_color = 'blue' if xlog.cs_protocol == 'SMTP' or xlog.cs_protocol == 'POP3'
+    %>
+    <td class="<%=td_class %>" nowrap style="text-align:center; color:<%= type_color %>"><%= xlog.cs_protocol %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(xlog.cs_uri, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="msg('<%= xlog.get_detail %>');">
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box :check_xlog, xlog.id, :class => 'check_xlog' %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.action = "<%= url_for :controller => 'zeptair_xlogs', :action => 'list' %>";
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_xlog", document.form_list);
+  var all_selected=true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function doDelete()
+{
+  var elems = document.getElementsByClassName("check_xlog", document.form_list);
+  var count=0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) return;
+
+  confm(count+"<%= h t('log.confirm_to_delete') %>", "_doDelete()");
+}
+
+function _doDelete()
+{
+  document.form_list.action = "<%= url_for :controller => 'zeptair_xlogs', :action => 'destroy' %>";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function doDeleteAll()
+{
+  confm("<%= h t('log.confirm_to_delete_all') %>", "_doDeleteAll()");
+}
+
+function _doDeleteAll()
+{
+  document.form_list.action = "<%= url_for :controller => 'zeptair_xlogs', :action => 'destroy_all' %>";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+var thetisBoxExport = null;
+
+function exportCsv()
+{
+  if (thetisBoxExport != null){
+    thetisBoxExport.remove();
+    thetisBoxExport = null;
+  }
+
+  var content = getEncodingSelector("doExportCsv()", "export");
+
+  thetisBoxExport = new ThetisBox;
+  thetisBoxExport.title = "<%= t('zeptair.xlog.title_export') %>";
+  thetisBoxExport.show("CENTER", "380,280", "TRAY", "", "<%= t('msg.select_encoding') %> ", content);
+}
+
+function doExportCsv()
+{
+  var enc = null;
+  for (var i=0; i<document.form_enc.enc.length; i++) {
+    if (document.form_enc.enc[i].checked) {
+      enc = document.form_enc.enc[i].value;
+      break;
+    }
+  }
+  if (enc == null) {
+    return;
+  }
+  thetisBoxExport.remove();
+  thetisBoxExport = null;
+
+  location="<%= url_for :controller => 'zeptair_xlogs', :action => 'export_csv' %>?enc="+enc;
+}
+//-->
+</script>
+
+<%= render :partial => 'common/encoding_selector' %>
+

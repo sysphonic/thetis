@@ -1,0 +1,33 @@
+<%
+form_idx = Time.now.to_f.to_s.gsub('.', '_')
+%>
+
+<%= form_tag({:controller => 'mail_accounts', :action => 'create'}, :method => 'post', :name => 'form_mail_account'+form_idx) %>
+
+<table width="90%" align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td valign="top">
+      <%= render :partial => 'mail_account_form', :locals => {:form_idx => form_idx} %>
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table width="80%" align="center" cellspacing="0" cellpadding="0">
+  <tr height="10"><td></td></tr>
+  <tr>
+    <td align="center">
+      <table cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="img_button_td" onclick="doRegister();">
+            <%=h t('btn.register')%>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="40"><td></td></tr>
+</table>
+

@@ -1,0 +1,91 @@
+<script type="text/javascript">
+  <%
+  folder_shortcut = THETIS_RELATIVE_URL_ROOT + '/images/folder/folder_shortcut.gif'
+  %>
+  var folderImgs = new Array(
+                      <% icons = Folder.get_icons(nil, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, true, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, false, true) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, true, true) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%=h folder_shortcut %>", "<%=h folder_shortcut %>")
+                      );
+
+  var array = new Array();
+  <%
+  session_folder = session[:folder_id]
+  if !session_folder.nil? and Folder.exists?(session_folder)
+    if session_folder != '0'
+  %>
+  array.push(new Array("+<%= session_folder %>", "<%=h Folder.get_path(session_folder) %>", "", "", 8));
+  <%
+    end
+  else
+    session[:folder_id] = nil
+  end
+  %>
+
+  array.push(new Array("0", " (root)", "", "", 0));
+
+  var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
+  <% @folder_tree.each do |parent_id, child_folders| %>
+  array = new Array(
+  <%
+  count = 0
+  child_folders.each do |folder|
+
+    case folder.xtype
+      when Folder::XTYPE_USER
+        img_idx = 1
+      when Folder::XTYPE_GROUP
+        img_idx = 2
+      when Folder::XTYPE_TEAM
+        img_idx = 3
+      when Folder::XTYPE_SYSTEM
+        img_idx = 4
+      else
+        if folder.bbs_top?
+          if folder.locked?
+            img_idx = 7
+          else
+            img_idx = 6
+          end
+        else
+          if folder.locked?
+            img_idx = 5
+          else
+            img_idx = 0
+          end
+        end
+    end
+  %>
+    new Array("<%= folder.id %>", " <%=h folder.name %>", "", "", <%= img_idx %>)
+  <%
+    count += 1
+    if count < child_folders.length
+  %>
+    ,
+  <%
+    end
+  end
+  %>
+        );
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs, false);
+  <% end %>
+  <% if params[:selId].nil? or params[:selId].empty? %>
+    ThetisBox.selectTree("<%= params[:selKeeper] %>", firstMenuId, null);
+  <% else %>
+    ThetisBox.selectTree("<%= params[:selKeeper] %>", "<%= params[:selId] %>", null, true);
+  <% end %>
+</script>

@@ -1,0 +1,79 @@
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+      <table width="100%" cellpadding="5" cellspacing="2" style="border:1px solid lightskyblue;">
+        <tr>
+          <td nowrap width="5%" align="center" style="padding:3px;">
+          </td>
+          <td nowrap width="85%" align="left" style="padding:3px; padding-left:10px;">
+          </td>
+          <td nowrap width="10%" align="right" style="padding:3px;">
+            <%=h t('msg.total') %>
+          </td>
+          <td></td>
+          <%
+          @sum_groups.each do |group_id|
+            group_name = Group.get_name group_id
+          %>
+          <td nowrap width="10%" align="right" bgcolor="" style="padding:3px;">
+            <%=h group_name %>
+          </td>
+          <% end %>
+        </tr>
+      <%
+      idx = 0
+      params = PseudoHash.new
+      params['title'] = @caption
+      %>
+      <% @votes_hash.each do |vote, hash| %>
+        <%
+        total = hash[0]
+        params['vote['+vote+']'] = total
+        bg_color = (idx%2 == 1) ? "white" : "#ccffdf"
+        %>
+        <tr>
+          <td nowrap width="5%" bgcolor="<%= bg_color %>" align="center" style="padding:3px;">
+            <%=h (idx+1).to_s %>.
+          </td>
+          <td nowrap width="85%" bgcolor="<%= bg_color %>" align="left" style="padding:3px; padding-left:10px;">
+            <%=h vote %>
+          </td>
+          <td nowrap width="10%" align="right" bgcolor="<%= bg_color %>" style="padding:3px;">
+            <%=h total.to_s %>
+          </td>
+          <td></td>
+          <%
+          @sum_groups.each do |group_id|
+            group_sum = hash[group_id]
+          %>
+            <td nowrap width="10%" align="right" bgcolor="" style="padding:3px;">
+            <% if group_sum.nil? %>
+              0
+            <% else %>
+              <%=h group_sum.to_s %>
+            <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <%
+        idx += 1
+      end
+      %>
+      </table>
+    </td>
+  </tr>
+<!--
+<% if false %>
+  <tr>
+    <td align="center">
+      <%
+      bg_color = (idx%2 == 1) ? 'white' : '#ccffdf'
+      url_h = ApplicationHelper.get_fwd_params(params)
+      url_h = url_h.update({:controller => 'researches', :action => 'graph'})
+      %>
+      <img src="<%= url_for(url_h) %>">
+    </td>
+  </tr>
+<% end %>
+-->
+</table>

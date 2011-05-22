@@ -1,0 +1,215 @@
+
+<% login_user = session[:login_user] %>
+
+<%= render :partial => 'common/error', :locals => {:obj => @item} %>
+
+<table align="center" width="90%" cellpadding="0" cellspacing="2">
+  <tr height="15"><td></td></tr>
+<% unless @item.nil? %>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_xtype"><%= h Item.human_attribute_name('xtype') %></label></td>
+    <td class="item_value_td">
+  <%
+  case @item.xtype
+    when Item::XTYPE_PROFILE
+  %>
+      <%= t('item.profile_sheet') %>
+  <% when Item::XTYPE_WORKFLOW %>
+      <%= Workflow.human_name %>
+  <% when Item::XTYPE_RESEARCH %>
+      <%= Research.human_name %>
+  <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_INFO, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
+    <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.zeptair_dist_info') %>');">
+    <% end %>
+  <% end %>
+    </td>
+  </tr>
+<% end %>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_title"><%= h Item.human_attribute_name('title') %></label></td>
+    <td class="item_value_td">
+      <%= text_field 'item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++' %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_folder_id"><%= h Folder.human_name %></label></td>
+    <td class="item_value_td">
+<% if !@item.nil? and Folder.get_path(@item.folder_id).include?('/$') %>
+  ---
+  <%= hidden_field_tag 'item[folder_id]', @item.folder_id %>
+<% elsif !@item.nil? and @item.xtype == Item::XTYPE_PROFILE %>
+  <%= @item.get_folder_path %>
+  <%= hidden_field_tag 'item[folder_id]', @item.folder_id %>
+<% else %>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+           <td align="left" nowrap width="20%">
+             <span id="div_folderPath" style="color:red">
+               <%=h (@item.nil?)?'/(root)':@item.get_folder_path %>
+               <%= hidden_field_tag 'item[folder_id]', (@item.nil?)?'0':@item.folder_id %>
+             </span>
+           </td>
+           <td width="10"></td>
+           <td nowrap>
+             <table align="left" width="120" cellspacing="0" cellpadding="0">
+               <tr>
+                 <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect($('item_folder_id').value); modifiedBasic++;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                   <%=h t('btn.select_folder') %>
+                 </td>
+               </tr>
+             </table>
+           </td>
+        </tr>
+      </table>
+      <div style="padding-top:4px;">
+        <input type="checkbox" id="check_create_folder" name="check_create_folder" value="1" onclick="$('create_folder').style.display=(this.checked?'inline':'none'); modifiedBasic++;"><label for="check_create_folder"><%=h t('item.create_folder_path') %></label><br/>
+        <div style="padding-top:4px; padding-left:30px;">
+          <span id="create_folder" style="display:none;"> <%=h t('item.subfolder_name') %><input name="create_folder_name" type="text" value="" onchange="modifiedBasic++;"></span>
+        </div>
+      </div>
+<% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_summary"><%= h Item.human_attribute_name('summary') %></label></td>
+    <td class="item_value_td">
+      <%= text_area 'item', 'summary', :rows => "3", :wrap => "off", :style => 'width:100%', :onChange => 'modifiedBasic++' %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF;">
+      <label for="item_public">
+        <%=h Item.human_attribute_name('public') %>&nbsp;
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.public_info1') %><br/><%=h t('item.public_info2') %>');">
+      </label>
+    </td>
+    <td class="item_value_td">
+<% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH) %>
+      ---
+      <%= hidden_field_tag 'item[public]', '0' %>
+<% else %>
+      <%= check_box 'item', 'public', :onChange => 'modifiedBasic++' %><label for="item_public"><%= h t('item.set_public') %></label>
+<% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_update_message"><%= h t('item.update_message') %></label></td>
+    <td class="item_value_td">
+<% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH or @item.xtype == Item::XTYPE_PROFILE)  %>
+      ---
+      <%= hidden_field_tag 'item[update_message]', '' %>
+<% else %>
+      <%= text_area 'item', 'update_message', :rows => "3", :wrap => "off", :style => 'width:100%', :onChange => 'modifiedBasic++' %>
+      &nbsp;<span style="color:blueviolet; font-size:9pt;"><%=h t('item.update_message_info') %></span>
+<% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_layout"><%= h Item.human_attribute_name('layout') %></label></td>
+    <td class="item_value_td">
+      <table cellspacing="0" cellpadding="0">
+        <tr>
+          <td width="10"></td>
+          <td valign="top">
+            <%= radio_button 'item', 'layout', 'A', :onClick => 'modifiedBasic++' %><label for="item_layout_a"> A</label>
+            <table border="1" cellspacing="0" cellpadding="0" width="50">
+              <tr>
+                <td>
+                  <table border="1" cellpadding="0" cellspacing="2">
+                    <tr>
+                      <td nowrap valign="top">
+                        <%= h truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
+                        <%= h truncate(Item.human_attribute_name('description'), :length => 8) %><br/>
+                      </td>
+                      <td nowrap valign="top" width="30%">
+                        <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center">
+                  <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td width="20"></td>
+          <td valign="top">
+            <%= radio_button 'item', 'layout', 'B', :onClick => 'modifiedBasic++' %><label for="item_layout_b"> B</label>
+            <table border="1" cellspacing="0" cellpadding="0" width="50">
+              <tr>
+                <td>
+                  <table border="1" cellpadding="0" cellspacing="2">
+                    <tr>
+                      <td nowrap valign="top">
+                         <%= h truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
+                      </td>
+                      <td nowrap valign="top" width="30%">
+                         <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td nowrap valign="top">
+                         <%= h truncate(Item.human_attribute_name('description'), :length => 8) %><br/>&nbsp;
+                      </td>
+                      <td nowrap valign="top" width="30%">
+                         <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td width="20"></td>
+          <td valign="top">
+            <%= radio_button 'item', 'layout', 'C', :onClick => 'modifiedBasic++' %><label for="item_layout_c"> C</label>
+            <table border="1" cellspacing="0" cellpadding="0" width="50">
+              <tr>
+                <td align="center" colspan="2">
+                  <table border="1" cellpadding="0" cellspacing="2">
+                    <tr>
+                      <td nowrap valign="top">
+                         &nbsp;&nbsp;<%= h truncate(Item.human_attribute_name('summary'), :length => 8) %>&nbsp;&nbsp;<br/>
+                         &nbsp;&nbsp;<%= h truncate(Item.human_attribute_name('description'), :length => 8) %>&nbsp;&nbsp;<br/>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr>
+                <td align="center" nowrap>
+                   <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                </td>
+                <td align="center" nowrap>
+                   <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<script type="text/javascript">
+<% unless @item.nil? %>
+document.getElementById("item_id").value = "<%= @item.id %>";
+<% end %>
+
+function showFolderTreeToSelect(folder_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'get_path' %>\" onsubmit=\"new Ajax.Updater('div_folderPath', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('msg.select_folder_to_save_in')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>", folder_id);
+}
+</script>
+

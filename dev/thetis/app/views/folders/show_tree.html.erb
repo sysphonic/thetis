@@ -1,0 +1,666 @@
+<script type="text/javascript">
+var modified_users = 0;
+var modified_groups = 0;
+var modified_teams = 0;
+</script>
+
+<%
+login_user = session[:login_user]
+
+groups_cache = {}
+%>
+
+<div style="padding-top:7px;">
+
+<table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<% if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
+  <tr>
+    <td align="right" style="padding:5px 5px;">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+            <td align="left" style="background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
+    <% if @group_id.nil? or @group_id.empty? %>
+              <div class="td_button_gray" align="left" nowrap style="width:110px; background-color:gray;" onClick="showGroupTreeToSelect('0');" onMouseOver="this.style.backgroundColor='lawngreen'" onMouseOut="this.style.backgroundColor='gray'">
+                <%=h t('btn.select_group') %>
+              </div>
+    <% else %>
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="left" nowrap style="text-indent:10px;">
+                    <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span></a>
+                    &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                  </td>
+                </tr>
+              </table>
+    <% end %>
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+<% end %>
+  <tr>
+    <td>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+   <% if !login_user.nil? %>
+          <td align="left" nowrap style="padding:5px 20px;">
+            <input type="button" value="<%= h t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= h t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= h t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= h t('btn.move') %>" onClick="doMove();" style="width:80px;" />
+          </td>
+   <% else %>
+          <td align="left" style="padding:5px 20px;">
+            <%=h t('folder.login_to_edit_tree') %>
+          </td>
+   <% end %>
+          <td align="right" style="padding:5px 20px;">
+   <% unless login_user.nil? %>
+            <%
+            options = []
+            options << [h(t('folder.opt.items_list')), 'items']
+            options << [h(t('folder.opt.items_order')), 'items_order']
+            options << [h(t('folder.opt.folders_order')), 'folders_order']
+            options << [h(t('folder.opt.authorities')), 'auth']
+            options << [h(t('folder.opt.display_control')), 'disp']
+            %>
+            <%= select_tag 'select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px;' %>
+   <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="100%">
+    <td align="center" style="padding-bottom:7px;">
+
+      <table width="100%" cellspacing="0" cellpadding="0" style="background-color:white;">
+        <tr>
+          <td id="td_tree" align="left" valign="top" style="border:inset 2px silver; padding:0px;">
+            <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
+              <div id="folderTree" align="left" style="padding:10px; overflow:auto;"></div>
+              <input type='hidden' name='selKeeper' id='selKeeper' value='' />
+            </form>
+          </td>
+          <td id="drag_border" width="5" valign="middle" style="background-color:#F9BF8B; cursor:w-resize;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
+          </td>
+          <td id="td_view" align="center" valign="top" style="width:50%; border:inset 2px silver;">
+            <div id="div_view" width="100%" style="overflow:auto;">&nbsp;</div>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+</div>
+
+<%
+@folder_tree.each do |parent_id, child_folders|
+  child_folders.each do |folder|
+    folder_xtype = folder.xtype
+
+    # >>>  Only for ver.0.9.1
+    if folder_xtype == Folder::XTYPE_USER
+      begin
+        user = User.find(folder.owner_id)
+      rescue
+      end
+      folder_xtype = '' if user.nil?
+    end
+    # <<<
+    # >>>  To make sure
+    if folder_xtype == Folder::XTYPE_GROUP
+      begin
+        group = Group.find(folder.owner_id)
+      rescue
+      end
+      folder_xtype = '' if group.nil?
+    end
+    if folder_xtype == Folder::XTYPE_TEAM
+      begin
+        team = Team.find(folder.owner_id)
+      rescue
+      end
+      folder_xtype = '' if team.nil?
+    end
+    # <<<
+%>
+  <span id="xtype_<%= folder.id %>" style="display:none;"><%= folder_xtype %></span>
+<%
+  end
+end
+%>
+  <span id="xtype_0" style="display:none;"></span>
+
+
+<%= draggable_element('drag_border', :revert => false, :constraint => '"horizontal"') %>
+
+<script type="text/javascript">
+<!--
+
+var BorderDragObserver = Class.create();
+BorderDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    if (draggable.element.id != "drag_border") {
+      return;
+    }
+    if (!is_MS && !is_Opera) {
+      var folderTree = $("folderTree");
+      var td_tree = $("td_tree");
+      var view = $("div_view");
+      var td_view = $("td_view");
+      var orgWidthFolderTree = folderTree.offsetWidth;
+      var orgWidthView = view.offsetWidth;
+
+      draggable.options.snap = function(x, y){
+          folderTree.style.width = (orgWidthFolderTree + x - 10) + "px";
+          td_tree.style.width = (orgWidthFolderTree + x) + "px";
+          view.style.width = (orgWidthView - x - 10) + "px";
+          td_view.style.width = (orgWidthView - x) + "px";
+          return [x, y];
+        };
+    }
+  },
+  onDrag: function(eventName, draggable, event) {
+    if (draggable.element.id != "drag_border") {
+      return;
+    }
+    if (is_MS || is_Opera) {
+      var treeMainWidth = $("tree_main").clientWidth;
+      var folderTree = $("folderTree");
+      var td_tree = $("td_tree");
+      var view = $("div_view");
+      var td_view = $("td_view");
+
+      var folderTreePos = Position.cumulativeOffset(folderTree);
+      var borderPos = Position.cumulativeOffset(draggable.element);
+
+//    alert("borderPos[0]="+borderPos[0]+", folderTreePos[0]="+folderTreePos[0]);
+
+      var leftWidth = borderPos[0] - folderTreePos[0] - 24;
+      folderTree.style.width = leftWidth + "px";
+      td_tree.style.width = leftWidth + "px";
+
+      view.style.width = (treeMainWidth - leftWidth - 38) + "px";
+      td_view.style.width = (treeMainWidth - leftWidth - 38) + "px";
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    if (draggable.element.id != "drag_border") {
+      return;
+    }
+    if (!is_MS && !is_Opera) {
+      draggable.options.snap = false;
+    }
+  }
+}
+Draggables.addObserver( new BorderDragObserver() );
+
+
+function onLoadSub()
+{
+  var array = new Array(new Array("0", " (root)", "", "selectFolder('0');", 0));
+  var folderImgs = new Array(
+                      <% icons = Folder.get_icons(nil, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, true, false) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, false, true) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = Folder.get_icons(nil, true, true) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>")
+                      );
+  var firstMenuId = ThetisBox.buildTree("", array, null, "folderTree", "selKeeper", folderImgs);
+  <% @folder_tree.each do |parent_id, child_folders| %>
+  array = new Array(
+    <%
+    count = 0
+    child_folders.each do |folder|
+
+      case folder.xtype
+        when Folder::XTYPE_USER
+          img_idx = 1
+        when Folder::XTYPE_GROUP
+          img_idx = 2
+        when Folder::XTYPE_TEAM
+          img_idx = 3
+        when Folder::XTYPE_SYSTEM
+          img_idx = 4
+        else
+          if folder.bbs_top?
+            if folder.locked?
+              img_idx = 7
+            else
+              img_idx = 6
+            end
+          else
+            if folder.locked?
+              img_idx = 5
+            else
+              img_idx = 0
+            end
+          end
+      end
+
+      folder_name = folder.name
+      if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER)
+        if folder.xtype == Folder::XTYPE_USER
+          folder_name = folder.name + ' : ' + User.get_name(folder.owner_id)
+        elsif folder.xtype == Folder::XTYPE_GROUP
+          folder_name = Group.get_path(folder.owner_id, groups_cache)
+        end
+      end
+    %>
+    new Array("<%= folder.id %>", " <%=h folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
+    <%
+      count += 1
+      if count < child_folders.length
+    %>
+    ,
+    <%
+      end
+    end
+    %>
+        );
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "folderTree", "selKeeper", folderImgs, false);
+  <% end %>
+
+<% unless session[:folder_id].nil? or session[:folder_id].empty? %>
+  var menuId = "a_folderTree:<%= session[:folder_id] %>";
+  ThetisBox.selectTree("selKeeper", menuId, null, true);
+  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
+    doGetItems(<%= session[:folder_id] %>);
+  }
+<% end %>
+}
+
+function checkName(val)
+{
+  var val = trim(val, false);
+
+  if (val.charAt(0) == '$') {
+    msg("<%=h t('folder.reserved_name') %>");
+    return false;
+  }
+  if (val.indexOf('/') >= 0) {
+    msg("<%=h t('folder.reserved_char') %>");
+    return false;
+  }
+  return true;
+}
+
+function checkSystemFolder(folder_id)
+{
+  var xtype = $("xtype_"+folder_id).innerHTML;
+
+  if (xtype == "<%= Folder::XTYPE_SYSTEM %>") {
+    msg("<%=h t('folder.blocked_by_system') %>");
+    return false;
+  }
+  return true;
+}
+
+function checkMyFolder(folder_id)
+{
+  var xtype = $("xtype_"+folder_id).innerHTML;
+
+  if (xtype == "<%= Folder::XTYPE_USER %>") {
+    msg("<%=h t('folder.my_folder_restricted') %>");
+    return false;
+  }
+  return true;
+}
+
+function checkGroupFolder(folder_id)
+{
+  var xtype = $("xtype_"+folder_id).innerHTML;
+
+  if (xtype == "<%= Folder::XTYPE_GROUP %>") {
+    msg("<%=h t('folder.group_folder_restricted') %>");
+    return false;
+  }
+  return true;
+}
+
+function checkTeamFolder(folder_id)
+{
+  var xtype = $("xtype_"+folder_id).innerHTML;
+
+  if (xtype == "<%= Folder::XTYPE_TEAM %>") {
+    msg("<%=h t('folder.team_folder_restricted') %>");
+    return false;
+  }
+  return true;
+}
+
+function doCreate(pos)
+{
+  if (document.form_folder_tree.selKeeper.value == "") {
+    msg("<%=h t('folder.select_parent') %>");
+    return;
+  }
+  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+
+  if (!checkSystemFolder(folder_id)) {
+    return;
+  }
+
+  ThetisBox.openTree("folderTree:"+folder_id, true);
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'create' %>\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
+}
+
+function doRename(pos)
+{
+  if (document.form_folder_tree.selKeeper.value == '') {
+    msg("<%=h t('folder.select') %>");
+    return;
+  }
+  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+
+  if (folder_id == "0") {
+    msg("<%= h t('folder.root_folder_restricted') %>");
+    return;
+  }
+
+  if (!checkSystemFolder(folder_id)
+      || !checkGroupFolder(folder_id)) {
+    return;
+  }
+
+  ThetisBox.openTree("folderTree:"+folder_id, true);
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'rename' %>?id="+folder_id+"\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('a_folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  var name = trim($("folderTree:"+folder_id+"_name").innerHTML);
+  thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
+}
+
+function doDelete()
+{
+  if (document.form_folder_tree.selKeeper.value == '') {
+    msg("<%=h t('folder.select') %>");
+    return;
+  }
+  var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1]; 
+
+  if (folder_id == "0") {
+    msg("<%= h t('folder.root_folder_restricted') %>");
+    return;
+  }
+
+  if (!checkSystemFolder(folder_id)
+      || !checkMyFolder(folder_id)
+      || !checkGroupFolder(folder_id)
+      || !checkTeamFolder(folder_id)) {
+    return;
+  }
+
+  ThetisBox.openTree("folderTree:"+folder_id, true);
+
+  var name = trim($("folderTree:"+folder_id+"_name").innerHTML);
+  confm("<%=h t('paren.square.left') %>"+name+"<%=h t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
+}
+
+function _doDelete(folder_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for :controller => 'folders', :action => 'destroy' %>?id="+folder_id,
+              {
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                  if (request.responseText == "") {
+                    removeElem("base_folderTree:"+folder_id);
+                    document.form_folder_tree.selKeeper.value = "";
+                  }
+                  request.responseText.evalScripts();
+                },
+                parameters:Form.serialize(document.form_folder_tree)+"&authenticity_token=<%= form_authenticity_token %>"
+              }
+            );
+}
+
+function doMove()
+{
+  if (document.form_folder_tree.selKeeper.value == "") {
+    msg("<%=h t('folder.select') %>");
+    return;
+  }
+  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+
+  if (folder_id == "0") {
+    msg("<%= h t('folder.root_folder_restricted') %>");
+    return;
+  }
+
+  if (!checkSystemFolder(folder_id)
+      || !checkMyFolder(folder_id)
+      || !checkGroupFolder(folder_id)
+      || !checkTeamFolder(folder_id)) {
+    return;
+  }
+
+  ThetisBox.openTree("folderTree:"+folder_id, true);
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'folders', :action => 'move' %>?id="+folder_id, "<%=h t('folder.select_dest')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>?id="+folder_id, "0");
+}
+
+function selectFolder(folder_id)
+{
+  var select_opt = $('select_opt');
+
+  if (select_opt == null) {
+    doGetItems(folder_id);
+  } else {
+    switch ($('select_opt').value)
+    {
+      case 'items': doGetItems(folder_id); break;
+      case 'items_order': doGetItemsOrder(folder_id); break;
+      case 'folders_order': doGetFoldersOrder(folder_id); break;
+      case 'auth': doGetAuth(folder_id); break;
+      case 'disp': doGetDispCtrl(folder_id); break;
+    }
+  }
+}
+
+function changeOption(val)
+{
+  var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1];
+  if (!folder_id) {
+    return false;
+  }
+
+  switch (val) {
+    case 'items': doGetItems(folder_id); break;
+    case 'items_order': doGetItemsOrder(folder_id); break;
+    case 'folders_order': doGetFoldersOrder(folder_id); break;
+    case 'auth': doGetAuth(folder_id); break;
+    case 'disp': doGetDispCtrl(folder_id); break;
+  }
+}
+
+function doDeleteItem(item_id, folder_id, title, del_type)
+{
+  if (del_type == "<%= Item::XTYPE_PROJECT %>") {
+    confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+title+"<%=h t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
+  } else {
+    confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
+  }
+}
+
+function _doDeleteItem(item_id, folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'ajax_delete_item' %>?id="+item_id+"&folder_id="+folder_id);
+}
+
+function doGetItems(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_items' %>?id="+folder_id);
+}
+
+function doGetItemsOrder(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_items_order' %>?id="+folder_id);
+}
+
+function doGetFoldersOrder(folder_id)
+{
+  var param = "";
+  <% unless @group_id.nil? %>
+  param = "&group_id=<%= @group_id %>";
+  <% end %>
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_folders_order' %>?id="+folder_id+param);
+}
+
+function doGetAuth(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_users' %>?id="+folder_id);
+}
+
+function doGetDispCtrl(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_disp_ctrl' %>?id="+folder_id);
+}
+
+function doUpdateView(action)
+{
+  var params = "authenticity_token=<%= form_authenticity_token %>";
+  if (arguments.length >= 2) {
+    params += "&" + arguments[1];
+  }
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                "div_view",
+                action,
+                {
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){ thetisBox.remove(); },
+                  parameters: params
+                }
+              );
+}
+
+function getApplyFunc(folder_id)
+{
+  var applyFunc = null;
+  if (modified_users > 0) {
+    modified_users = 0;
+    applyFunc = "doApplyAuthUsers("+folder_id+")";
+  } else if (modified_groups > 0) {
+    modified_groups = 0;
+    applyFunc = "doApplyAuthGroups("+folder_id+")";
+  } else if (modified_teams > 0) {
+    modified_teams = 0;
+    applyFunc = "doApplyAuthTeams("+folder_id+")";
+  }
+  return applyFunc;
+}
+
+function selectTabUsers(folder_id)
+{
+  var applyFunc = getApplyFunc(folder_id);
+  if (applyFunc != null) {
+    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabUsers("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+  } else{
+    _selectTabUsers(folder_id);
+  }
+}
+
+function _selectTabUsers(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_users' %>?id=" + folder_id);
+}
+
+function doApplyAuthUsers(folder_id)
+{
+  selectListAll($("users_auth"));
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_users' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+}
+
+function selectTabGroups(folder_id)
+{
+  var applyFunc = getApplyFunc(folder_id);
+  if (applyFunc != null) {
+    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabGroups("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+  } else{
+    _selectTabGroups(folder_id);
+  }
+}
+
+function _selectTabGroups(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_groups' %>?id=" + folder_id);
+}
+
+function doApplyAuthGroups(folder_id)
+{
+  selectListAll($("groups_auth"));
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_groups' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+}
+
+function selectTabTeams(folder_id)
+{
+  var applyFunc = getApplyFunc(folder_id);
+  if (applyFunc != null) {
+    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabTeams("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+  } else{
+    _selectTabTeams(folder_id);
+  }
+}
+
+function _selectTabTeams(folder_id)
+{
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_teams' %>?id=" + folder_id);
+}
+
+function doApplyAuthTeams(folder_id)
+{
+  selectListAll($("teams_auth"));
+  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_teams' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'folders', :action => 'show_tree' %>", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+function clearGroup()
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for :controller => 'folders', :action => 'show_tree' %>";
+}
+
+//-->
+</script>

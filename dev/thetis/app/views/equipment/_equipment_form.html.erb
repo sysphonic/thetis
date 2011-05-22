@@ -1,0 +1,20 @@
+
+<%= render :partial => 'common/error', :locals => {:obj => @equipment} %>
+
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table align="center" width="85%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="prim_cap_td" nowrap><label for="equipment_name"><%=h Equipment.human_attribute_name('name') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'equipment', 'name', :style => 'width:80%' %><sup style="color:red">*</sup>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="equipment_note"><%=h Equipment.human_attribute_name('note') %></label></td>
+      <td class="item_value_td">
+        <%= text_area 'equipment', 'note', :rows => '4', :style => 'width:80%' %>
+      </td>
+    </tr>
+  </table>
+</div>
+

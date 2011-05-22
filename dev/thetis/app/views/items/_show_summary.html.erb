@@ -1,0 +1,16 @@
+<% if @item.summary.nil? or @item.summary.empty? %>
+
+<% else %>
+  <table width="100%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="td_show_cap_bar">
+        <%= Item.human_attribute_name('summary') %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_value_td">
+        <div><%= ApplicationHelper.format_text_block(h(@item.summary)) %></div>
+      </td>
+    </tr>
+  </table>
+<% end %>

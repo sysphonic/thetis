@@ -1,0 +1,102 @@
+<% login_user = session[:login_user] %>
+
+<% unless @comment.nil? %>
+  <table cellspacing="0" cellpadding="0" width="100%">
+    <tr>
+      <td style="padding:20px 20px 0px;">
+        <table cellspacing="0" cellpadding="0" width="100%">
+          <tr>
+            <td class="comment_tab_td" align="left" nowrap width="25%" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/comment_tab.png') top left repeat-x;">
+              <div class="comment_name" nowrap>
+                <% user_name = User.get_name(@comment.user_id, @users_cache) %>
+                <b><%=h user_name %></b>&nbsp;&nbsp;(<%= @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
+              </div>
+            </td>
+            <td align="left" style="padding-left:15px;">
+          <%
+          unless login_user.nil? or params[:action] == 'bbs'
+            login_id = login_user.id
+            if login_id == @comment.user_id or login_id == @item.user_id or login_user.admin?(User::AUTH_ITEM)
+          %>
+              <table cellspacing="0" cellpadding="0" align="left" width="75">
+                <tr>
+            <% if login_id == @comment.user_id %>
+                  <td>
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
+                  </td>
+                  <td>
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%=h t('item.attach_file') %>" title="<%=h t('item.attach_file') %>" onclick="attachFile(<%= @comment.id %>);" />
+                  </td>
+            <% end %>
+                  <td>
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteComment(<%= @comment.id %>); return false;" />
+                  </td>
+                </tr>
+              </table>
+          <%
+            end
+          end
+          %>
+            </td>
+          </tr>
+          <tr>
+            <td class="comment_body_td" id="comment_<%= @comment.id %>" colspan="2" align="left">
+              <div id ="comment_body<%= @comment.id %>"><%= ApplicationHelper.format_text_block(h(@comment.message)) %></div>
+            </td>
+          </tr>
+        <%
+        comment_attachments = @comment.attachments_without_content
+        unless comment_attachments.nil? or comment_attachments.empty?
+        %>
+          <tr>
+            <td align="left" colspan="2" style="color:black; font-size:10pt; padding-left:10px; border:1px solid #965100; border-top:0px; background-color:white">
+            <% comment_attachments.each do |attach| %>
+              <div id="div_comment_attach_<%= attach.id %>">
+                <a href="<%= url_for :controller => 'items', :action => :get_attachment, :id => attach.id %>">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
+                </a>
+              <% if params[:action] != 'bbs' and !login_user.nil? and @comment.user_id == login_user.id %>
+                &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteCommentAttachment('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+              <% end %>
+              </div>
+            <% end %>
+            </td>
+          </tr>
+        <%
+        end
+
+        if @for_print.nil? or @for_print == false
+
+          profiles_cache ||= {}
+          profile_sheet = profiles_cache[@comment.user_id]
+
+          if profile_sheet.nil?
+            begin
+              user = User.find(@comment.user_id)
+              profile_sheet = Item.find(user.item_id)
+              profiles_cache[@comment.user_id] = profile_sheet unless profiles_cache.nil?
+            rescue
+            end
+          end
+
+          @item = @comment.item if @item.nil?
+          if login_id == @item.user_id and !profile_sheet.nil? and profile_sheet.public
+        %>
+          <tr>
+            <td colspan="2" align="right">
+              <a class="a_underline" href="#" onclick="var thetisBox=new ThetisBox; thetisBox.title='<%=h t('item.profile_sheet') %> - <%=ApplicationHelper.h_s_quote user_name %>'; thetisBox.show('CENTER', (mainWidth*8/10)+','+(mainHeight*8/10), 'IFRAME', '', '', '<%= url_for :controller => 'items', :action => 'show_for_print', :id => profile_sheet.id %>'); return false;">
+                <%=h t('item.profile_sheet') %>
+                <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('item.show_profile_sheet') %>" title="<%=h t('item.show_profile_sheet') %>" />
+              </a>
+            </td>
+          </tr>
+        <%
+          end
+        end
+        %>
+        </table>
+      </td>
+    </tr>
+  </table>
+<% end %>
+

@@ -1,0 +1,53 @@
+<% login_user = session[:login_user] %>
+
+<div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px; background-color:#FFEBCB;" align="center">
+  <%= form_tag( {:controller => 'items', :action => 'destroy_comment', :id => '', :comment_id => @comment.id }, :name => 'form_team_cancel', :method => 'post') %>
+    <table align="center" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <%=h t('team.now_applying') %>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding-top:10px;" align="center">
+          <table align="center" cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="img_button_td" onclick="doTeamCancel();">
+                <%=h t('btn.cancel') %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
+
+<%= render :partial => 'common/flash_notice' %>
+
+
+<script type="text/javascript">
+
+doTeamCancel = function()
+{
+  confm("<%=h t('team.confirm_cancel') %>", "_doTeamCancel()");
+}
+
+_doTeamCancel = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+                "div_team_apply",
+                document.form_team_cancel.action,
+                {
+                  asynchronous:true,
+                  evalScripts:true,
+                  onComplete:function(request) {
+                      thetisBox.remove();
+                  },
+                  parameters: Form.serialize(document.form_team_cancel)
+                }
+              );
+}
+</script>

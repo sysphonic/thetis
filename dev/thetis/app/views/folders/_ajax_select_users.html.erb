@@ -1,0 +1,40 @@
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="130">
+      <table align="left" width="120" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="td_button_gray" style="width:100px;" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+            <span style="font-size:10pt;"><%=h t('btn.select_group') %></span>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td align="left" style="color:blue; font-size:10pt;">
+      <% unless @group_id.nil? or @group_id == '' %>
+        <%=h Group.get_path(@group_id) %>
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<input type="hidden" name="group_id" value="<%= @group_id %>" />
+
+<select class="select_multi" id="user_candidates" name="user_candidates" size="5" multiple="multiple">
+<%
+@read_users = @folder.get_read_users_a
+@write_users = @folder.get_write_users_a
+@read_users = [] if @read_users.nil?
+@write_users = [] if @write_users.nil?
+unless @users.nil?
+  @users.each do |user|
+   next if @read_users.include?(user.id.to_s)
+   next if @write_users.include?(user.id.to_s)
+%>
+  <option value="<%=h user.id %>"><%=h user.get_name %></option>
+<%
+  end
+end
+%>
+</select>
+

@@ -1,0 +1,162 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" -->
+<html>
+<head>
+<title>Thetis</title>
+  
+<META http-equiv="Content-Script-Type" content="text/JavaScript">
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<%= stylesheet_link_tag 'thetis100' %>
+<%= javascript_include_tag 'prototype', 'thetis/common100', 'thetis/thetis098' %>
+
+<style type=text/css>
+A:link {
+  COLOR: white; TEXT-DECORATION: none
+}
+A:visited {
+  COLOR: white; TEXT-DECORATION: none
+}
+A:hover {
+  LEFT: 1px; COLOR: white; POSITION: relative; TOP: 1px; TEXT-DECORATION: none
+}
+</style>
+
+<script type="text/javascript">
+<!--
+function setLoginName(name)
+{
+  if (name == null || name.length <= 0) {
+    $("login_name").innerHTML = "";
+    $("table_login_user").style.display = "none";
+  } else {
+    $("login_name").innerHTML = name;
+    $("table_login_user").style.display = "block";
+  }
+}
+
+function progMain()
+{
+  eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
+}
+
+var vertical_rows_org = null;
+
+function changeHeight(elem)
+{
+  var tr_img = $("tr_img");
+  var frameset_vertical = top.frameset_vertical;
+  if (frameset_vertical == null) {
+    // for FireFox
+    frameset_vertical = top.document.getElementById("frameset_vertical");
+  }
+
+  if (tr_img.style.display == "none") {
+    $("offset_from_top").value = 0;
+
+    frameset_vertical.rows = vertical_rows_org;
+    tr_img.style.height = "45px";
+    tr_img.style.display = "table-row";
+    elem.innerHTML = "&and;";
+  } else {
+    vertical_rows_org = frameset_vertical.rows;
+    var ary = vertical_rows_org.split(",");
+    var orgHeight = parseInt(ary[0], 10);
+    ary[0] = 19;
+    $("offset_from_top").value = orgHeight - ary[0];
+    frameset_vertical.rows = ary.join(",");
+    tr_img.style.height = "0px";
+    tr_img.style.display = "none";
+    elem.innerHTML = "&or;";
+  }
+}
+
+//-->
+</script>
+
+</head>
+
+<body>
+
+<input type="hidden" id="offset_from_top" value="0" />
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr id="tr_img">
+    <td>
+      <table cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+          <td align="center" style="padding-left:10px;">
+            <a href="#" onclick="progMain(); top.main.location.href='<%= url_for :controller => 'users', :action => 'edit' %>'" style="color:navy;">
+              <table id="table_login_user" cellspacing="0" cellpadding="0" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
+                <tr>
+                  <td align="center" nowrap style="padding:5px; padding-left:10px; padding-right:10px; line-height:1.0;">
+                    <%= h t('cap.login') %> 
+                    <span id="login_name"></span>&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>">
+                  </td>
+                </tr>
+              </table>
+            </a>
+          </td>
+        <% if $thetis_config[:feed]['enabled'] == '1' %>
+          <td width="10"></td>
+          <td align="center" style="vertical-align:middle;">
+            <a href="#" onclick="window.open('<%= ApplicationHelper.url_for(:controller => 'feeds', :action => 'index', :feed => 'all') %>', 'thetis_feeds');">
+              <table cellspacing="0" cellpadding="0" width="36" style="padding:0px; cursor:pointer;">
+                <tr>
+                  <td align="center" valign="bottom"><img border="0" src="/thetis/images/feed_icon.png" title="<%= t('feed.cap') %>" alt="<%= t('feed.name') %>" /></td>
+                </tr>
+              </table>
+            </a>
+          </td>
+        <% end %>
+          <td>
+            <table align="right" cellspacing="0" cellpadding="0" width="520">
+              <tr height="45">
+                <td nowrap style="font-family:Times New Roman; line-height:28pt; font-size:28pt; text-indent:200px; background:url(<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_HEADER_IMAGE+'?'+rand(10000000000).to_s) %>) right top no-repeat;">
+                  <%= raw($thetis_config[:general]['header_title']) %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td style="border-right:1px solid darkslateblue; border-bottom:1px solid darkslateblue; border-top:1px solid white; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_menu.png'); background-repeat:repeat-x;" bgcolor="#8282fc">
+      <table cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+          <td style="font-size:11pt; text-indent:30px; line-height:17px;" align="left">
+            <a href="#" onclick="eval('var ret=false; try{ top.main.showTopicBox(); ret=true; }catch(e){}'); if (!ret) { alert('<%=h t('topicbox.info') %>'); } return false;"><span style="color:white;"><%=h t('topicbox.title') %></span></a>
+              <span style="color:lightblue;">/ </span>
+            <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%=h t('menu.note') %></span></a>
+              <span style="color:lightblue;">/ </span>
+            <%
+            headlines = PseudoHash.new
+            header_menus = $thetis_config[:general]['header_menus']
+            unless header_menus.nil?
+              header_menus.each do |link|
+                headlines[link[0], true] = [link[1], link[2]]
+              end
+            end
+            if $thetis_config[:menu]['open_user_reg'] == '1'
+              headlines[t('menu.user_reg'), true] = ['main', url_for(:controller => 'users', :action => 'new')]
+            end
+
+            headlines.each do |caption, params|
+            %>
+              <a href="<%= params[1] %>" target="<%= params[0] %>"><span style="color:white;"><%=h caption %></span></a>
+                <span style="color:lightblue;">/ </span>
+            <% end %>
+          </td>
+          <td style="font-size:11pt; padding-right:10px; line-height:17px;" align="right">
+            <a href="#" onclick="changeHeight(this);">&and;</a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</body>
+</html>

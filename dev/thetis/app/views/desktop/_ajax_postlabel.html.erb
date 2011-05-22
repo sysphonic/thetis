@@ -1,0 +1,45 @@
+
+<% unless @toy.nil? %>
+
+  <% toy_id = "toy_#{@toy.id}" %>
+
+  <div class="toy_desktop" id="<%= toy_id %>" style='position:absolute; z-index:10000; display:none;'>
+  <table width='200' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;' cellspacing='7'>
+    <tr>
+      <td rowspan="2" width="20" style="width:20px; cursor:move; background-color:deeppink; padding-left:10px;">
+        &nbsp;
+      </td>
+      <td align="left" nowrap style="font-size:10pt;">
+        <%=h t('postlabel.from') %>
+        <% user_name = User.get_name(@toy.posted_by, @users_cache) %>
+        <b><%=h user_name %></b>&nbsp;&nbsp;(<%= @toy.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
+      </td>
+    </tr>
+    <tr>
+      <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editPostLabel('<%= toy_id %>', '<%= @toy.posted_by %>', '<%=ApplicationHelper.h_s_quote user_name %>')">
+        <pre id="<%= toy_id %>_msg"><%=h @toy.message %></pre>
+      </td>
+    </tr>
+  </table>
+  <span id="<%= toy_id %>_type" style="display:none;"><%= @toy.xtype %></span>
+  </div>
+
+  <%= draggable_element(toy_id, :revert => false) %>
+
+<SCRIPT language="javascript" type="text/javascript">
+
+var desktop = $("div_desktop");
+
+var deskWidth = desktop.clientWidth;
+var deskHeight = desktop.clientHeight;
+var deskPos = Position.cumulativeOffset(desktop);
+
+var toy = $("<%= toy_id %>");
+toy.style.left = (deskPos[0] + deskWidth * <%= @toy.x %> / 10000) + "px";
+toy.style.top = (deskPos[1] + deskHeight * <%= @toy.y %> / 10000) + "px";
+toy.style.display = "inline";
+
+</SCRIPT>
+
+<% end %>
+

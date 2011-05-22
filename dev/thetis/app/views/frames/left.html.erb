@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" -->
+<html>
+<head>
+<title>Thetis</title>
+
+<META http-equiv="Content-Script-Type" content="text/JavaScript">
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<%= stylesheet_link_tag 'thetis100' %>
+<%= javascript_include_tag 'prototype', 'thetis/common100', 'thetis/thetis098' %>
+
+  <STYLE type=text/css>
+  A:link {
+    COLOR: white; TEXT-DECORATION: none
+  }
+  A:visited {
+    COLOR: white; TEXT-DECORATION: none
+  }
+  A:hover {
+    LEFT: 2px; COLOR: white; TEXT-DECORATION: none
+  }
+  </STYLE>
+
+<script type="text/javascript">
+<!--
+function doOnLoad()
+{
+  doResize();
+}
+
+var mainRegion = getClientRegion();
+var mainWidth = mainRegion.width;
+var mainHeight = mainRegion.height;
+
+function doResize()
+{
+  mainRegion = getClientRegion();
+  mainWidth = mainRegion.width;
+  mainHeight = mainRegion.height;
+
+  var height = window.innerHeight;  // Firefox
+  if (isNaN(height))  {
+    height = mainHeight;
+  }
+  $("left_table").style.height = height + "px";
+}
+
+var min = -1;
+function doUpdateTime()
+{
+  setTimeout("doUpdateTime()", 1000);
+
+  var div_time = $("div_time");
+  if (div_time == null) {
+    return;
+  }
+
+  var date = new Date();
+  var curMin = date.getMinutes();
+  if (min == curMin) {
+    return;
+  }
+  min = curMin;
+
+  var locale = date.toLocaleString();
+  // ex. (jp) 2007nen12gatsu31nichi 12:00:00  (with Kanji characters)
+  // ex. (en) Friday, December 31, 2007 12:00:00  (Safari)
+  var sepIdx = locale.lastIndexOf(" ");
+  var day = locale.substring(0, sepIdx);
+  if (day.split(", ").length > 2) {
+    day = day.substring(day.indexOf(", ")+2, day.length);
+  }
+  if (day.match(/[A-Z]+ [0-9][0-9]?, [0-9]{4}/i)) {
+    var dayArray = day.split(" ");
+    if (dayArray[0].length > 4) {
+      dayArray[0] = dayArray[0].substring(0, 3) + ".";
+      day = dayArray.join(" ");
+    }
+  }
+  var time = locale.substring(sepIdx+1, locale.lastIndexOf(":"));
+  var date_disp = day + "<br/>("+getDay(date)+")<br/>"+time;
+  eval('try{ div_time.innerHTML = date_disp }catch(e){}');
+}
+
+function getDay(date)
+{
+  switch (date.getDay()) {
+    case 0: return "<%=h t('wday.sun') %>";
+    case 1: return "<%=h t('wday.mon') %>";
+    case 2: return "<%=h t('wday.tue') %>";
+    case 3: return "<%=h t('wday.wed') %>";
+    case 4: return "<%=h t('wday.thu') %>";
+    case 5: return "<%=h t('wday.fri') %>";
+    case 6: return "<%=h t('wday.sat') %>";
+  }
+}
+
+function setLogin(login_name, is_admin)
+{
+  if (is_admin) {
+    $("adminMenu").style.display = "block";
+  } else {
+    $("adminMenu").style.display = "none";
+  }
+
+  if (login_name != null && login_name.length > 0) {
+    $("menu_login").innerHTML= "<%=h t('btn.logout') %>";
+  } else {
+    $("menu_login").innerHTML= "<%=h t('btn.login') %>";
+  }
+}
+
+function doLogin()
+{
+  if ($("menu_login").innerHTML == "<%=h t('btn.logout') %>") {
+    top.main.location.href = "<%= url_for :controller => 'login', :action => 'logout' %>";
+  } else {
+    top.main.location.href = "<%= url_for :controller => 'login', :action => 'index' %>";
+  }
+}
+
+<%
+style_bg_on = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_on.png') center no-repeat"
+style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') center no-repeat"
+%>
+
+function activateMenu(menu, obj)
+{
+  obj.style.background = "<%= style_bg_on %>";
+
+  for (var i=0; i< obj.childNodes.length; i++) {
+    if (obj.childNodes[i].tagName == "A") {
+      obj.childNodes[i].style.color = "deeppink";
+      break;
+    }
+  }
+  try {
+    top.main.showPopupIcon(menu, obj, "<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/", parseInt(top.header.document.getElementById("offset_from_top").value, 10));
+  } catch (e) {
+  }
+  hideAdminMenu();
+}
+
+function deactivateMenu(obj)
+{
+  obj.style.background = "<%= style_bg_off %>";
+
+  for (var i=0; i< obj.childNodes.length; i++) {
+    if (obj.childNodes[i].tagName == "A") {
+      obj.childNodes[i].style.color = "#404040";
+      break;
+    }
+  }
+  try {
+    top.main.hidePopupIcon();
+  } catch (e) {
+  }
+}
+
+function activateAdminMenu(obj)
+{
+  for (var i=0; i< obj.childNodes.length; i++) {
+    if (obj.childNodes[i].tagName == "A") {
+      obj.childNodes[i].style.color = "deeppink";
+      break;
+    }
+  }
+  showAdminMenu(obj);
+}
+
+function deactivateAdminMenu(obj)
+{
+  for (var i=0; i< obj.childNodes.length; i++) {
+    if (obj.childNodes[i].tagName == "A") {
+      obj.childNodes[i].style.color = "darkgreen";
+      break;
+    }
+  }
+}
+
+function showAdminMenu(obj)
+{
+  var adminMenu = top.main.document.getElementById("adminMenu");
+
+  if (adminMenu) {
+    adminMenu.style.display = "block";
+
+    var offsetFromTop = 0;
+    try {
+      offsetFromTop = parseInt(top.header.document.getElementById("offset_from_top").value, 10);
+    } catch (e) {
+    }
+    var pos = Position.cumulativeOffset(obj);
+
+    var bodyScroll = top.main.getBodyScroll();
+    adminMenu.style.left = bodyScroll.left + "px";
+    adminMenu.style.top = (bodyScroll.top + pos[1] - 110 + offsetFromTop) + "px";
+    adminMenu.style.display = "block";
+  }
+}
+
+function hideAdminMenu()
+{
+  try {
+    var adminMenu = top.main.document.getElementById("adminMenu");
+
+    if (adminMenu) {
+      adminMenu.style.display = "none";
+    }
+  } catch (e) {
+  }
+}
+
+function progMain()
+{
+  eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
+}
+
+function toggleSymbol(sw)
+{
+  var tr_top_space = $("tr_top_space");
+  var tr_symbol = $("tr_symbol");
+  var tr_drop_down = $("tr_drop_down");
+
+  if (sw) {
+    tr_top_space.style.display = "table-row";
+    tr_symbol.style.display = "table-row";
+    tr_drop_down.style.display = "none";
+  } else {
+    tr_top_space.style.display = "none";
+    tr_symbol.style.display = "none";
+    tr_drop_down.style.display = "table-row";
+  }
+}
+
+window.onresize = doResize;
+setTimeout("doUpdateTime()", 1000);
+//-->
+</script>
+
+</head>
+
+<body onLoad="doOnLoad();">
+
+<table id="left_table" cellspacing="0" cellpadding="0" width="100%">
+  <tr id="tr_top_space" height="15"><td></td></tr>
+
+  <tr>
+    <td valign="top" align="center">
+      <!-------INDEX-Column START------->
+      <TABLE cellspacing="1" cellpadding="0" width="100%">
+        <TR id="tr_symbol" height="90">
+          <TD align="center" valign="bottom" onclick="toggleSymbol(false);" style="cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onMouseOver="this.style.backgroundColor='gainsboro'" onMouseOut="this.style.backgroundColor='white'">
+            <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
+              <%=h $thetis_config[:general]['symbol_title'] %>
+            </span>
+          </TD>
+        </TR>
+        <TR id="tr_drop_down" height="15" style="display:none">
+          <TD align="center" valign="middle">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
+          </TD>
+        </TR>
+        <TR height="6"><TD></TD></TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); doLogin(); return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
+            <A id="menu_login" href="#" onclick="return false;" style="color:black"><%= t('btn.login') %></A>
+          </TD>
+        </TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'desktop', :action => 'show') %>'; return false;" onMouseOver="activateMenu('desktop', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.desktop') %></A>
+          </TD>
+        </TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'items', :action => 'bbs', :tips => 'true') %>'; return false;" onMouseOver="activateMenu('item_bbs', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.items_bbs') %></A>
+          </TD>
+        </TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'items', :action => 'list', :tips => 'true') %>'; return false;" onMouseOver="activateMenu('item_list', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.items_list') %></A>
+          </TD>
+        </TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'folders', :action => 'show_tree') %>'; return false;" onMouseOver="activateMenu('folder_tree', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.folder_tree') %></A>
+          </TD>
+        </TR>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'schedules', :action => 'day' %>?id='+getDateString(); return false;" onMouseOver="activateMenu('schedule', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.schedule') %></A>
+          </TD>
+        </TR>
+      <% if $thetis_config[:menu]['disp_equipment'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all' %>?id='+getDateString(); return false;" onMouseOver="activateMenu('equipment', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.equipment') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_workflow'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'workflows', :action => 'list' %>'; return false;" onMouseOver="activateMenu('workflow', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.workflow') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_research'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'researches', :action => 'index' %>'; return false;" onMouseOver="activateMenu('research', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.research') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'users', :action => 'list' %>'; return false;" onMouseOver="activateMenu('user_list', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.user_list') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_mail'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'mail_folders', :action => 'show_tree', :tips => 'true' %>'; return false;" onMouseOver="activateMenu('mail', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.mail') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_addressbook'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'addressbook', :action => 'list' %>'; return false;" onMouseOver="activateMenu('addressbook', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.addressbook') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_paintmail'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'paintmail', :action => 'index' %>'; return false;" onMouseOver="activateMenu('paintmail', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= _('PaintMail') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      <% if $thetis_config[:menu]['disp_timecard'] == '1' %>
+        <TR height="31">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'timecards', :action => 'month' %>'; return false;" onMouseOver="activateMenu('timecard', this);" onMouseOut="deactivateMenu(this);">
+            <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.timecard') %></A>
+          </TD>
+        </TR>
+      <% end %>
+      </TABLE>
+      <!-------INDEX-Column END------->
+      <div id="adminMenu" style="display:none;">
+        <table cellspacing="1" cellpadding="0" width="100%" align="center">
+          <tr height="5"><td></td></tr>
+          <tr height="31">
+            <td class="menu_td" align="center" onMouseOver="activateAdminMenu(this);" onMouseOut="deactivateAdminMenu(this);">
+              <a href="#" class="a_underline" onclick="progMain(); top.main.location.href='<%= url_for :controller => 'frames', :action => 'admin' %>'; return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+  <tr height="100%"><td></td></tr>
+
+  <tr height="50">
+    <td align="left" style="padding-left:15px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/left_down.png') center top no-repeat;">
+      <table cellspacing="0" cellpadding="0" width="50%" style="cursor:pointer;" onclick="progMain(); top.main.location.href='<%= url_for(:controller => 'schedules', :action => 'month') %>?id='+getDateString()" onmouseover="this.style.border='1px dotted white'; hideAdminMenu();" onmouseout="this.style.border=''">
+        <tr>
+          <td style="padding-left:5px; padding-right:5px; color:white; font-size:9pt; line-height:13px;" nowrap>
+            <div id="div_time" align="center"></div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<span style="display:none;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/menu_on.png" />
+</span>
+</body>
+</html>

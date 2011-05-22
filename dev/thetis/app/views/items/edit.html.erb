@@ -1,0 +1,698 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= render :partial => 'common/dojo_init' %>
+
+<script type="text/javascript">
+var oEditor;
+</script>
+
+<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+<script type="text/javascript">
+var users_cache = new Array();
+</script>
+<% end %>
+
+<%= hidden_field_tag 'item_id', @item.id %>
+<%= hidden_field_tag 'folder_id', @item.folder_id %>
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr height="5">
+    <td></td>
+    <td rowspan="2">
+  <% if @item.id.nil? %>
+      <table id="tmpl_button" align="left" width="120" cellspacing="0" cellpadding="0">
+        <tr>
+          <td class="td_button_gray" align="center" nowrap bgColor="gray" onClick="showTemplateTreeToSelect();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+            <%=h t('btn.template') %>
+          </td>
+        </tr>
+      </table>
+  <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+
+    <table cellspacing="2" cellpadding="0" width="100%">
+      <tr>
+        <!-- style.backgroundColor is for initial display. -->
+      <% if @item.xtype == Item::XTYPE_WORKFLOW %>
+        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow'); this.bgColor='orange'" bgColor="orange" onMouseOver="if($('div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
+            <%= h Workflow.human_name %>
+        </td>
+      <% end %>
+        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic'); this.bgColor='blue'" bgColor="blue" onMouseOver="if($('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+            <%= h t('cap.basic_info') %>
+        </td>
+        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description'); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+            <%= h Item.human_attribute_name('description') %>
+        </td>
+        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image'); this.bgColor='red'" bgColor="red" onMouseOver="if($('div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
+            <%= h t('image.plural') %>
+        </td>
+        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment'); this.bgColor='brown'" bgColor="brown" onMouseOver="if($('div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+            <%= h t('attachment.plural_full') %>
+        </td>
+        <td>&nbsp;</td>
+      </tr>
+    </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td align="center" colspan="2">
+
+    <% if @item.xtype == Item::XTYPE_WORKFLOW %>
+      <div id="div_workflow">
+        <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFF8D7" style="border:solid 5px gold;">
+          <tr>
+            <td>
+              <div id="div_item_workflow" style="overflow:auto;">
+                <%= render :partial => 'ajax_item_workflow' %>
+              </div>
+            </td>
+          </tr>
+          <tr height="20"><td></td></tr>
+          <tr>
+            <td>
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                    <%= h t('btn.back') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doSave();">
+                    <%= h t('btn.save') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doShow();">
+                    <%= h t('btn.show') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+        </form>
+      </div>
+    <% end %>
+
+      <div id="div_basic">
+        <%= form_tag( {:controller => 'items', :action => 'set_basic', :id => @item }, :id => 'form_basic', :method => 'post') %>
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="aliceblue" style="border:solid 5px cornflowerblue;">
+          <tr>
+            <td>
+              <div id="div_item_basic" style="overflow:auto;">
+                <%= render :partial => "ajax_item_basic" %>
+              </div>
+            </td>
+          </tr>
+          <tr height="20"><td></td></tr>
+          <tr>
+            <td>
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                    <%= h t('btn.back') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doSave();">
+                    <%= h t('btn.save') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doShow();">
+                    <%= h t('btn.show') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+        </form>
+      </div>
+
+      <div id="div_description" style="display:none;">
+      <%= form_tag( {:controller => 'items', :action => 'set_description', :id => @item }, :id => 'form_description', :method => 'post') %>
+      <table cellspacing="0" cellpadding="0" width="100%" bgcolor="honeydew" style="border:solid 5px yellowgreen;">
+        <tr>
+          <td>
+            <div id="div_item_description" style="overflow:auto;">
+              <%= render :partial => "ajax_item_description" %>
+            </div>
+          </td>
+        </tr>
+        <tr height="20"><td></td></tr>
+        <tr>
+          <td>
+            <table align="center" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                  <%= h t('btn.back') %>
+                </td>
+                <td width="15"></td>
+                <td class="img_button_td" onclick="doSave();">
+                    <%= h t('btn.save') %>
+                </td>
+                  <td width="15"></td>
+                <td class="img_button_td" onclick="doShow();">
+                    <%= h t('btn.show') %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr height="15"><td></td></tr>
+      </table>
+      </form>
+      </div>
+
+      <div id="div_image" style="display:none;">
+
+       <%= form_tag( {:controller => 'items', :action => 'set_image', :id => @item }, :id => 'form_image', :name => 'form_image', :method => 'post', :enctype => 'multipart/form-data') %>
+
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFEEED" style="border:solid 5px salmon;">
+          <tr>
+            <td>
+              <div id="div_item_image" style="overflow:auto;">
+                <%= render :partial => "ajax_item_image" %>
+              </div>
+            </td>
+          </tr>
+          <tr height="20"><td></td></tr>
+          <tr>
+            <td>
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                    <%= h t('btn.back') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doSave();">
+                    <%= h t('btn.register') %>
+                  </td>
+                    <td width="15"></td>
+                  <td class="img_button_td" onclick="doShow();">
+                    <%= h t('btn.show') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+        </form>
+
+      </div>
+
+      <div id="div_attachment" style="display:none;">
+
+       <%= form_tag( {:controller => 'items', :action => 'set_attachment', :id => @item }, :id => 'form_attachment', :name => 'form_attachment', :method => 'post', :enctype => 'multipart/form-data') %>
+
+        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFF6DD" style="border:solid 5px tan;">
+          <tr>
+            <td>
+              <div id="div_item_attachment" style="overflow:auto;">
+                <%= render :partial => "ajax_item_attachment" %>
+              </div>
+            </td>
+          </tr>
+          <tr height="20"><td></td></tr>
+          <tr>
+            <td>
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                    <%= h t('btn.back') %>
+                  </td>
+                  <td width="15"></td>
+                  <td class="img_button_td" onclick="doSave();">
+                    <%= h t('btn.register') %>
+                  </td>
+                    <td width="15"></td>
+                  <td class="img_button_td" onclick="doShow();">
+                    <%= h t('btn.show') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+
+        </form>
+  
+      </div>
+
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+<!--
+<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+  showTab("workflow");
+<% else %>
+  showTab("basic");
+<% end %>
+
+function showTab(name)
+{
+  var nameArray = new Array("workflow", "basic", "description", "image", "attachment");
+
+  var tab = null;
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.style.cursor = "pointer";
+      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+    }
+  }
+  var target_tab = $("tab_"+name);
+  target_tab.style.cursor = "default";
+  var bg = target_tab.bgColor;
+
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.bgColor = "silver";
+    }
+  }
+
+  target_tab.bgColor = bg;
+
+  for (i=0; i<nameArray.length; i++) {
+    div = $("div_"+nameArray[i]);
+    if (div != null) {
+      div.style.display = "none";
+    }
+  }
+
+  div = $("div_"+name);
+  div.style.visibility = "visible";
+  div.style.display = "inline";
+}
+
+function _ajaxPost(form_id, p_url, target_id, func_complete, func_error)
+{
+  var frm = $(form_id);
+
+  new Ajax.Updater(
+            target_id,
+            p_url,
+            {
+              asynchronous:true,
+              evalScripts:true,
+              onComplete:function(request){
+                            if (showErrorMsg($(target_id)) == true) {
+                              setTimeout(func_error, 10);
+                            } else {
+                              setTimeout(func_complete, 10);
+                            }
+                          },
+              parameters:Form.serialize(frm)
+            }
+          );
+   return false;
+}
+
+var modifiedWorkflow = 0;
+var modifiedBasic = 0;
+
+function isModifiedWorkflow()
+{
+  return (modifiedWorkflow > 0);
+}
+
+function isModifiedBasic()
+{
+  return (modifiedBasic > 0);
+}
+
+function isModifiedDescription()
+{
+  try {
+    return oEditor.checkDirty();
+  } catch (e) {
+    return false;
+  }
+}
+
+function isModifiedImage()
+{
+  if ($("image0_file").value.length > 0) return true;
+  if ($("image1_file").value.length > 0) return true;
+  return false
+}
+
+function isModifiedAttachment()
+{
+  if ($("attachment0_file").value.length > 0) return true;
+  if ($("attachment1_file").value.length > 0) return true;
+  return false
+}
+
+<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+
+function onSelectWfOrder()
+{
+  var list = $("users_selected");
+  for (var i=0; i<list.length; i++) {
+    users_cache[list.options[i].value] = list.options[i].text;
+  }
+  list.length=0;
+  var order_id = getListSelected($("orders"))[0];
+  var divOrder=$("order-"+order_id);
+  if (divOrder.value == null) {
+    return;
+  }
+  var array = divOrder.value.split(",");
+  for (var i=0; i<array.length; i++) {
+    if (array[i] == null || array[i].length <= 0) {
+      continue;
+    }
+    list.options[i] = new Option(users_cache[array[i]], array[i]);
+  }
+}
+
+function addWfOrder()
+{
+  var order_list = $("orders");
+  var order_id = 1;
+  if (order_list.length > 0) {
+    order_id = parseInt(order_list.options[order_list.length-1].value, 10) + 1;
+  }
+  var d = document.createElement("input");
+  d.id = "order-"+order_id;
+  d.name = d.id;
+  d.type = "hidden";
+  $("form_workflow").appendChild(d);
+  addList(order_list, "<%=h t('workflow.order_prefix') %>"+order_id, order_id, true);
+  if (getListSelected(order_list).length <= 0) {
+    order_list.options[order_list.length-1].selected = true;
+  }
+  modifiedWorkflow++;
+  return false;
+}
+
+function removeWfOrder()
+{
+  var order_list = $("orders");
+  var del_ary = deleteList(order_list);
+  for (var i=0; i < del_ary.length; i++) {
+    $("order-"+del_ary[i]).remove();
+  }
+  $("users_selected").length=0;
+  modifiedWorkflow++;
+  return false;
+}
+
+function addWfUser()
+{
+  var order_ary=getListSelected($("orders"));
+  if (order_ary <= 0) {
+    msg("<%=h t('workflow.select_order')%>");
+    return;
+  }
+  var add_ary = moveList($("user_candidates"), $("users_selected"));
+  var order_id = order_ary[0];
+  var divOrder = $("order-"+order_id);
+  var array=add_ary;
+  if (divOrder.value != null && divOrder.value.length > 0) {
+    array = divOrder.value.split(",");
+    array = array.concat(add_ary);
+  }
+  divOrder.value = array.join(",");
+  modifiedWorkflow++;
+  return false;
+}
+
+function removeWfUser()
+{
+  var del_ary = moveList($("users_selected"), $("user_candidates"));
+  var order_id = getListSelected($("orders"))[0];
+  var divOrder = $("order-"+order_id);
+  if (divOrder.value == null) {
+    return;
+  }
+  var array = divOrder.value.split(",");
+  array = removeArrayElements(array, del_ary);
+  divOrder.value = array.join(",");
+  modifiedWorkflow++;
+  return false;
+}
+
+function checkWorkflow()
+{
+  var list = $("orders");
+  if (list.length <= 0) {
+    msg("<%= h t('workflow.specify_orders') %>");
+    return false;
+  }
+  for (var i=0; i<list.length; i++) {
+    var order_id = list.options[i].value;
+    var divOrder=$("order-"+order_id);
+    if (divOrder.value == null || divOrder.value.length <= 0) {
+      msg("<%= h t('workflow.specify_users_for1') %>"+order_id+"<%= h t('workflow.specify_users_for2') %>");
+      return false;
+    }
+  }
+  return true;
+}
+
+<% end %>
+
+function checkGeneral()
+{
+  var title = trim($("item_title").value, false);
+  if (title.length <= 0) {
+    msg("<%=h t('item.specify_title') %>");
+    return false;
+  }
+  return true;
+}
+
+function checkBasic()
+{
+  var frm = $("form_basic");
+  if (frm.check_create_folder != null && frm.check_create_folder.checked) {
+
+    var folder_name = trim(frm.create_folder_name.value, false);
+
+    if (folder_name.length <= 0) {
+      msg("<%=h t('item.specify_folder_name') %>");
+      return false;
+    }
+
+    if (folder_name.charAt(0) == "$") {
+      msg("<%=h t('folder.reserved_name') %>");
+      return false;
+    }
+    if (folder_name.indexOf("/") >= 0) {
+      msg("<%=h t('folder.reserved_char') %>");
+      return false;
+    }
+  }
+  return true;
+}
+
+var thetisBoxProgress = new ThetisBox;
+var saveFuncs = null;
+var saveFuncsIdx = 0;
+
+function doSave()
+{
+  if (saveFuncsIdx > 0) {
+    msg("<%=h t('item.being_registered') %>");
+    return;
+  }
+
+  if (!checkGeneral()) {
+    return false;
+  }
+
+  saveFuncs = new Array();
+
+<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+  // Workflow
+  if (isModifiedWorkflow()) {
+    if (!checkWorkflow()) {
+      showTab("workflow");
+      $("tab_workflow").bgColor="orange";
+      return false;
+    }
+    addInputHidden($("form_workflow"), null, "item[folder_id]", $("item_folder_id").value); 
+    saveFuncs.push(
+          function() {
+            _ajaxPost(
+                    "form_workflow",
+                    "<%= url_for :controller => 'items', :action => 'set_workflow' %>?id="+$("item_id").value,
+                    "div_item_workflow",
+                    function(){ onSaveComplete("workflow") },
+                    function(){ onSaveError("workflow") }
+                  );
+          }
+        );
+  }
+<% end %>
+
+  // Basic
+  if (isModifiedBasic()) {
+    if (!checkBasic()) {
+      showTab("basic");
+      $("tab_basic").bgColor="blue";
+      return false;
+    }
+    saveFuncs.push(
+          function() {
+            _ajaxPost(
+                    "form_basic",
+                    "<%= url_for :controller => 'items', :action => 'set_basic' %>?id="+$("item_id").value,
+                    "div_item_basic",
+                    function(){ onSaveComplete("basic") },
+                    function(){ onSaveError("basic") }
+                  );
+          }
+        );
+  }
+
+  // Description
+  if (isModifiedDescription()) {
+    addInputHidden($("form_description"), null, "item[folder_id]", $("item_folder_id").value);
+    $("item_description").value = oEditor.getData();
+    saveFuncs.push(
+          function() {
+              _ajaxPost(
+                    "form_description",
+                    "<%= url_for :controller => 'items', :action => 'set_description' %>?id="+$("item_id").value,
+                    "div_item_description",
+                    function(){ onSaveComplete("description") },
+                    function(){ onSaveError("description") }
+                  );
+          }
+        );
+  }
+
+  // Image
+  if (isModifiedImage()) {
+    addInputHidden($("form_image"), null, "item[folder_id]", $("item_folder_id").value);
+    saveFuncs.push(
+          function() {
+            ajaxUploadFile(
+                    "form_image",
+                    "<%= url_for :controller => 'items', :action => 'set_image' %>?id="+$("item_id").value,
+                    "div_item_image",
+                    function(){
+                      setTimeout(setSortableImg, 100);
+                      onSaveComplete("image");
+                    },
+                    function(){ onSaveError("image") }
+                  );
+          }
+        );
+  }
+
+  // Attachment
+  if (isModifiedAttachment()) {
+    addInputHidden($("form_attachment"), null, "item[folder_id]", $("item_folder_id").value);
+    saveFuncs.push(
+          function() {
+            ajaxUploadFile(
+                    "form_attachment",
+                    "<%= url_for :controller => 'items', :action => 'set_attachment' %>?id="+$("item_id").value,
+                    "div_item_attachment",
+                    function(){
+                      setTimeout(setSortableAttach, 100);
+                      onSaveComplete("attachment");
+                    },
+                    function(){ onSaveError("attachment") }
+                  );
+          }
+        );
+  }
+
+  if (saveFuncs.length > 0) {
+    thetisBoxProgress.show("TOP-RIGHT", "", "PROGRESS", "", "", "");
+    removeElem("tmpl_button");
+    setTimeout("onSaveComplete()", 10);
+  }
+}
+
+function onSaveComplete(tab_name)
+{
+  switch (tab_name) {
+    case "workflow":
+      modifiedWorkflow = 0; break;
+    case "basic":
+      modifiedBasic = 0; break;
+  }
+  if (saveFuncsIdx < saveFuncs.length) {
+    saveFuncs[saveFuncsIdx++]();
+  } else {
+    saveFuncsIdx = 0;
+    thetisBoxProgress.remove();
+    if (move_to_show) {
+      _doShow();
+    } else {
+      tips("<%=h t('msg.save_success') %>");
+    }
+  }
+}
+
+function onSaveError(tab_name)
+{
+  showTab(tab_name);
+
+  saveFuncsIdx = 0;
+  thetisBoxProgress.remove();
+  move_to_show = false;
+}
+
+var move_to_show = false;
+
+function doShow()
+{
+  if ($("item_id").value=="") {
+    msg("<%=h t('item.register_first') %>");
+    return;
+  }
+  if (isModifiedWorkflow() || isModifiedBasic() || isModifiedDescription() || isModifiedImage() || isModifiedAttachment()) {
+    var actions = new Array("move_to_show = true; doSave();", "_doShow();");
+    confm("<%=h t('msg.confirm_to_save_change') %>", actions, null, "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+  } else {
+    _doShow();
+  }
+}
+
+function _doShow()
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for :controller => 'items', :action => 'show' %>?id="+$("item_id").value;
+}
+
+function showTemplateTreeToSelect()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'templates', :action => 'copy' %>", "<%=h t('item.select_template')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'templates', :action => 'ajax_get_tree' %>", 0);
+
+  if (isModifiedBasic() || isModifiedDescription()) {
+    msg("<%=h t('item.apply_template_info') %>");
+  }
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'items', :action => 'get_group_users' %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+//-->
+</script>

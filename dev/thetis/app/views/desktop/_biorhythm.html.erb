@@ -1,0 +1,27 @@
+
+<% login_user = session[:login_user] %>
+
+<table width="100%" cellspacing="0" cellpadding="0" border="0">
+  <tr>
+    <td width="100%" align="center">
+      <applet code="com/sysphonic/biorhythm/main/Biorhythm.class" width="100%" height="320" archive="<%= THETIS_RELATIVE_URL_ROOT %>/options/biorhythm/biorhythm.jar" codebase="./">
+        <param name='Birthday' value="<%=h t('biorhythm.cap.birthday') %>">
+        <param name='TargetMonth' value="<%=h t('biorhythm.cap.term') %>">
+        <param name='Draw' value="<%=h t('btn.update') %>">
+        <param name='Body' value="<%=h t('biorhythm.physical') %>">
+        <param name='Mind' value="<%=h t('biorhythm.emotional') %>">
+        <param name='Intelligence' value="<%=h t('biorhythm.intellectual') %>">
+        <param name='X_Body' value="30">
+        <param name='X_Mind' value="110">
+        <param name='X_Intelligence' value="200">
+        <%
+        birthday = ''
+        unless login_user.nil? or login_user.birthday.nil?
+          birthday = login_user.birthday.strftime(Schedule::SYS_DATE_FORM)
+        end
+        %>
+        <param name='Def_Birthday' value="<%= birthday %>">
+      <%=h t('msg.error_java_applet') %></applet>
+    </td>
+  </tr>
+</table>

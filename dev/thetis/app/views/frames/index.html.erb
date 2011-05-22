@@ -1,0 +1,38 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN">
+<HTML>
+<HEAD>
+  <TITLE><%= $thetis_config[:general]['app_title'] %></TITLE>
+
+<META http-equiv="Content-Script-Type" content="text/JavaScript">
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<link rel="shortcut icon" href="images/thetis.ico">
+
+</HEAD>
+
+<FRAMESET border="0" frameSpacing="0" cols="150,*" frameBorder="0">
+  <FRAME name="left" src="<%= url_for :controller => 'frames', :action => 'left' %>" noResize scrolling="no">
+  <FRAMESET id="frameset_vertical" name="frameset_vertical" border="0" rows="64,*,20" frameSpacing="0" frameBorder="no">
+    <FRAME name="header" src="<%= url_for :controller => 'frames', :action => 'header' %>" noResize scrolling="no">
+    <%
+    if params[:default].nil? or params[:default].empty?
+      main = ''
+      main << $thetis_config[:general]['default_page']
+      if $thetis_config[:general]['default_topicbox'] == '1'
+        if main.include?('?')
+          main << '&'
+        else
+          main << '?'
+        end
+        main << 'topicBox=true'
+      end
+    else
+      main = params[:default]
+    end
+    %>
+    <FRAME name="main" src="<%= main %>" noResize scrolling="auto">
+    <FRAME name="footer" src="<%= url_for :controller => 'frames', :action => 'footer' %>" noResize scrolling="no">
+  </FRAMESET>
+  <NOFRAME>
+</FRAMESET>
+</HTML>

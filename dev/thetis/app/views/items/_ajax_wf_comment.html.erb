@@ -1,0 +1,27 @@
+<% unless @comment.nil? %>
+  <a name="comment_<%= @comment.id %>"></a>
+  <table cellspacing="5" cellpadding="0" align="center" width="95%" style="border:1px skyblue solid; background-color:white;">
+    <tr>
+      <%
+      case @comment.xtype
+        when Comment::XTYPE_ACK
+          bgcolor = '#BDF759'
+        when Comment::XTYPE_NAK
+          bgcolor = 'lightcoral'
+        else
+          bgcolor = ''
+      end
+      %>
+      <td style="background-color:<%= bgcolor %>; padding-left:5px;">
+        <%=h @comment.get_xtype_name %>&nbsp;&nbsp;<span style="font-size:10pt;">(<%=h @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+      </td>
+    </tr>
+    <tr>
+      <td style="padding-left:5px; padding-right:5px;">
+        <pre><%=h @comment.message %></pre>
+      </td>
+    </tr>
+  </table>
+  <div style="height:5px"></div>
+<% end %>
+

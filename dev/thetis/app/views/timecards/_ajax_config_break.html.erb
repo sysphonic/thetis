@@ -1,0 +1,34 @@
+<%
+unless @yaml_timecard['default_breaks'].nil?
+  @yaml_timecard['default_breaks'].each do |spans|
+    org_start = spans.first
+    org_end = spans.last
+    brk = (UtilDateTime.create(org_end).to_time - UtilDateTime.create(org_start).to_time) / 60 / 60
+%>
+<div nowrap>
+<%=h (brk <= 0.0)?'':brk %>
+<span style="color:orangered;">
+  (
+  <%=h org_start.strftime('%H:%M') %>
+  ~
+  <%=h org_end.strftime('%H:%M') %>
+  )
+</span>
+&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="inputBreak('<%=h org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteBreak('<%=h org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+</div>
+<%
+  end
+end
+%>
+
+<table align="left" width="120" cellspacing="0" cellpadding="0">
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="inputBreak();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+      <%=h t('btn.add') %>
+    </td>
+  </tr>
+</table>
+
+<%= render :partial => 'common/flash_notice' %>

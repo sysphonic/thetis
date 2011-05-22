@@ -1,0 +1,489 @@
+
+<%
+login_user = session[:login_user]
+
+groups_cache = {}
+%>
+
+<%= form_tag( {:controller => 'timecards', :action => 'users'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+        <% if login_user.admin?(User::AUTH_TIMECARD) %>
+          <td align="left" nowrap width="1%">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'configure' %>';">
+          </td>
+        <% end %>
+          <td align="right" nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <input type="button" value="<%= h t('btn.search') %>" onClick="form_list.action='<%= url_for :controller => 'timecards', :action => 'search' %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= h t('btn.reset') %>" onClick="location.href='<%= url_for :controller => 'timecards', :action => 'users' %>'; prog('TOP-RIGHT');"/>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="1"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+          <td align="left" width="120" style="padding-bottom:5px;">
+  <% if @group_id.nil? or @group_id.empty? %>
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                  <%=h t('btn.select_group') %>
+                </td>
+              </tr>
+            </table>
+  <% else %>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="left" nowrap>
+                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                </td>
+              </tr>
+            </table>
+  <% end %>
+          </td>
+          <td align="right">
+  <% if login_user.admin?(User::AUTH_TIMECARD) %>
+            <input type="button" value="<%=h t('btn.multi_update')%>" onclick="showUpdateMulti();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('timecard.multi_update_paid_holidays_info') %>');">
+            &nbsp;&nbsp;
+            <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
+  <% else %>
+            &nbsp;
+  <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('user', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_user')
+      pagination = will_paginate(@user_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_users" style="overflow:scroll; background-color:white;">
+<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('User.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_name %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="25%" nowrap onClick="sortList('xorder')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('user.title') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="30%" nowrap onClick="sortList('groups')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_attribute_name('organization') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <td width="10%" align="center" nowrap style="background-color:#FFDFAD;"><%= h t('timecard.applied') %></td>
+    <td width="10%" align="center" nowrap style="background-color:#D4FFA9;"><%= h t('timecard.remainder') %></td>
+  </tr>
+<%
+yaml = ApplicationHelper.get_config_yaml
+year_begins_from, month_begins_at = TimecardsHelper.get_fiscal_params(yaml)
+fiscal_year = TimecardsHelper.get_fiscal_year(Date.today, year_begins_from, month_begins_at)
+year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_from, month_begins_at) 
+
+@users.each_with_index do |user, idx|
+  td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
+%>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
+    <td  class="<%=td_class %>"nowrap>
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
+        <%=h truncate(user.get_name_for_timecard(yaml), :length => 20) %>
+      </a>
+    </td>
+    <td class="<%=td_class %>" nowrap><%=h truncate(user.title, :length => 10) %></td>
+    <td class="<%=td_class %>" nowrap>
+      <% user.get_groups_a.each do |group_id| %>
+        <%=h Group.get_path(group_id, groups_cache) %><br/>
+      <% end %>
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center">
+      <%
+      applied_paid_hlds = Timecard.applied_paid_hlds(user.id, year_start, year_end)
+      %>
+      <%= applied_paid_hlds %>
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center">
+      <%
+      paid_hld = PaidHoliday.get_for(user.id, fiscal_year)
+      given_num = (paid_hld.nil?)?0:paid_hld.num
+      carried_over = PaidHoliday.get_carried_over(user.id, fiscal_year)
+      %>
+      <%= given_num + carried_over - applied_paid_hlds %>
+    </td>
+  <% if login_user.admin?(User::AUTH_TIMECARD) %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.detail') %>" title="<%=h t('btn.detail') %>" onclick="showPaidHldByUser(<%= user.id %>, '<%=ApplicationHelper.h_s_quote user.get_name_for_timecard(yaml) %>');" />
+    </td>
+    <td class="<%=td_class %>" width="20" style="text-align:center;">
+      <%= check_box :check_user, user.id, :class => 'check_user' %>
+    </td>
+  <% end %>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag 'group_id', @group_id %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_user", document.form_list);
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function clearGroup()
+{
+  document.form_list.group_id.value = "";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'timecards', :action => 'users' %>", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+var thetisBox = null;
+
+function showUpdateMulti()
+{
+  if (thetisBox != null) {
+    thetisBox.remove();
+    thetisBox = null;
+  }
+
+  <%
+  if yaml[:timecard].nil? or yaml[:timecard]['paidhld_per_year'].nil?
+    paidhld_per_year = 0
+  else
+    paidhld_per_year = yaml[:timecard]['paidhld_per_year']
+  end
+  %>
+  var content = getUpdateMultiDialog(<%= fiscal_year %>, <%= paidhld_per_year %>, "onUpdateMultiOK()", "onUpdateMultiCancel()");
+
+  thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('timecard.paid_holiday') %>";
+  thetisBox.overflow = "hide";
+  thetisBox.show("CENTER", "350,280", "TRAY", "", "", content);
+}
+
+function checkUpdateMulti()
+{
+  var year = document.form_update_multi.year.value;
+  var num = document.form_update_multi.num.value;
+
+  var check_ary = new Array(year, num);
+
+  for (var i=0; i < check_ary.length; i++) {
+    if (check_ary[i].length <= 0) {
+      msg("<%=h t('msg.specify_all_indispensable') %>");
+      return false;
+    }
+  }
+  if (isNaN(year) || parseInt(year, 10) < 1970 || parseInt(year, 10) > 2100) {
+    msg("<%=h t('timecard.invalid_fiscal_year') %>");
+    return false;
+  }
+  if (isNaN(num) || parseFloat(num) < 0.0 || parseFloat(num) > 365.0) {
+    msg("<%=h t('timecard.invalid_paid_holidays') %>");
+    return false;
+  }
+  return true;
+}
+
+function onUpdateMultiOK()
+{
+  if (!checkUpdateMulti()) {
+    return;
+  }
+
+  confm("<%=h t('timecard.confirm_multi_update_paid_holidays') %>", "_onUpdateMultiOK()");
+}
+
+function _onUpdateMultiOK()
+{
+  thetisBox.hide();
+
+  var elem = document.createElement("input");
+  elem.name = "year";
+  elem.type = "hidden";
+  elem.value = document.form_update_multi.year.value;
+  document.form_list.appendChild(elem);
+
+  elem = document.createElement("input");
+  elem.name = "num";
+  elem.type = "hidden";
+  elem.value = document.form_update_multi.num.value;
+  document.form_list.appendChild(elem);
+
+  document.form_list.action = "<%= url_for :controller => 'timecards', :action => 'paidhld_update_multi' %>";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function onUpdateMultiCancel()
+{
+  thetisBox.remove();
+  thetisBox = null;
+}
+
+function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
+{
+  content = "<form name='form_update_multi'>";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' style='padding:15px 0px;'>";
+
+  content += "<table align='center' width='95%' cellspacing='0' cellpadding='0'>";
+  content += "  <tr>";
+  content += "    <td colspan='2' align='left'>";
+  content += "      <%=h t('timecard.updating_paid_holidays') %>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='left' width='40%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "      <%=h t('cap.fiscal_year') %>";
+  content += "    </td>";
+  content += "    <td align='left'>";
+  content += "      <input type='text' name='year' value='"+defYear+"' style='ime-mode:disabled; width:60px;' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td colspan='2' align='left'>";
+  content += "      <%=h t('timecard.uniformly_to') %>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='left' width='40%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "      <%=h t('cap.days') %>";
+  content += "    </td>";
+  content += "    <td align='left'>";
+  content += "      <input type='text' name='num' value='"+defNum+"' style='ime-mode:disabled; width:60px;' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "</table>";
+
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "</form>";
+  return content;
+}
+
+var thetisBoxPaidHldByUser = null;
+
+function showPaidHldByUser(user_id, name)
+{
+  if (thetisBoxPaidHldByUser != null) {
+    thetisBoxPaidHldByUser.remove();
+    thetisBoxPaidHldByUser = null;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'timecards', :action => 'paidhld_list' %>?user_id=" + user_id + "&edit=true",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+
+              thetisBoxPaidHldByUser = new ThetisBox;
+              thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
+              thetisBoxPaidHldByUser.title = "<%=h t('timecard.paid_holiday') %>";
+              thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
+              thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
+              thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
+              request.responseText.evalScripts();
+            }
+          }
+        );
+  return true;
+}
+
+function showUpdateGivenDays(user_id, defYear, defNum)
+{
+  if (thetisBox != null) {
+    thetisBox.remove();
+    thetisBox = null;
+  }
+
+  var content = getUpdateGivenDaysDialog(defYear, defNum, "onUpdateGivenDaysOK("+user_id+")", "onUpdateGivenDaysCancel()");
+
+  thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('timecard.paid_holiday') %>";
+  thetisBox.overflow = "hide";
+  thetisBox.show("CENTER", "300,240", "TRAY", "", "", content);
+}
+
+function checkUpdateGivenDays()
+{
+  var num = document.form_given_days.num.value;
+
+  var check_ary = new Array(num);
+
+  for (var i=0; i < check_ary.length; i++) {
+    if (check_ary[i].length <= 0) {
+      msg("<%=h t('msg.specify_all_indispensable') %>");
+      return false;
+    }
+  }
+  if (isNaN(num) || parseFloat(num) < 0.0 || parseFloat(num) > 365.0) {
+    msg("<%=h t('timecard.invalid_paid_holidays') %>");
+    return false;
+  }
+  return true;
+}
+
+function onUpdateGivenDaysOK(user_id)
+{
+  if (!checkUpdateGivenDays()) {
+    return;
+  }
+
+  thetisBox.hide();
+
+  var elem = document.createElement("input");
+  elem.name = "user_id";
+  elem.type = "hidden";
+  elem.value = user_id;
+  document.form_given_days.appendChild(elem);
+
+  elem = document.createElement("input");
+  elem.name = "edit";
+  elem.type = "hidden";
+  elem.value = "true";
+  document.form_given_days.appendChild(elem);
+
+  thetisBoxPaidHldByUser.setOnClose(function(){ prog("CENTER", "<%=h t('msg.updating_list') %>"); document.form_list.submit(); });
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Updater(
+              "thetisBoxContent-"+thetisBoxPaidHldByUser.id,
+              "<%= url_for :controller => 'timecards', :action => 'paidhld_update' %>",
+              {
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){ thetisBoxProgress.remove(); },
+                parameters:Form.serialize(document.form_given_days)+"&authenticity_token=<%= form_authenticity_token %>"
+              }
+            );
+}
+
+function onUpdateGivenDaysCancel()
+{
+  thetisBox.remove();
+  thetisBox = null;
+}
+
+function getUpdateGivenDaysDialog(defYear, defNum, onOk, onCancel)
+{
+  content = "<form name='form_given_days'>";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' style='padding:15px 0px;'>";
+
+  content += "<table align='center' width='95%' cellspacing='0' cellpadding='0'>";
+  content += "  <tr>";
+  content += "    <td align='left' width='50%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "      <%=h t('cap.fiscal_year') %>";
+  content += "    </td>";
+  content += "    <td align='left'>";
+  content += "      "+defYear;
+  content += "      <input type='hidden' name='year' value='"+defYear+"' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='left' width='50%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "      <%=h t('cap.days') %>";
+  content += "    </td>";
+  content += "    <td align='left'>";
+  content += "      <input type='text' name='num' value='"+defNum+"' style='ime-mode:disabled; width:60px;' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "</table>";
+
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "</form>";
+  return content;
+}
+
+//-->
+</script>

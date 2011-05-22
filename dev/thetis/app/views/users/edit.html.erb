@@ -1,0 +1,265 @@
+<% HistoryHelper.set_back(request) %>
+
+<% login_user = session[:login_user] %>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="15"><td colspan="3"></td></tr>
+  <tr>
+    <td width="54%" valign="top">
+      <%= form_tag({:controller => 'users', :action => 'update', :id => @user.id}, :name => 'form_user_basic', :method => 'post') %>
+        <%= render :partial => 'user_form' %>
+      </form>
+      <div class="info_area" style="width:100%; padding-top:0px; padding-bottom:15px;" align="center">
+        <%= hidden_field 'user', 'id' %>
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('item.profile_sheet') %></td>
+            <td class="item_value_td">
+              <%= form_tag({:controller => 'items', :action => 'create_profile_sheet', :id => @user.id}, :name => 'form_ajax_userItem', :method => 'post') %>
+                <div id="div_ajax_userItem" style="padding-left:10px;">
+                  <%= render :partial => 'ajax_profile_sheet' %>
+                </div>
+              </form>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+    <td width="10">&nbsp;</td>
+    <td width="45%" valign="top">
+
+    <% if login_user.admin?(User::AUTH_USER) %>
+      <!-- Authority -->
+      <%= render :partial => 'user_auth' %>
+
+      <div style="height:10px"></div>
+
+      <!-- Groups -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('group.plural') %></td>
+            <td class="item_value_td">
+              <div id="div_user_groups">
+                <%= render :partial => 'ajax_groups' %>
+              </div>
+
+            <% if login_user.admin?(User::AUTH_USER) %>
+              <table align="left" width="120" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0', false);" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                    <%=h t('btn.add_group') %>
+                  </td>
+                </tr>
+              </table>
+            <% end %>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <!-- Teams -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap>
+              <%=h t('team.plural') %>
+            </td>
+            <td class="item_value_td">
+              <div id="div_user_teams">
+                <ul style="padding-left:15px;">
+                <%
+                @user.get_teams_a.each do |team_id|
+                  begin
+                    team = Team.find(team_id)
+                    access_auth = team.item.check_user_auth(login_user, 'r', true)
+                %>
+                <li type="square">
+                <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => team.item.id %>'; return false;"><% end %>
+                  <%=h team.name %>
+                <% if access_auth %></a><% end %><br/>
+                <%
+                  rescue
+                  end
+                end
+                %>
+                </ul>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <!-- Zeptair VPN -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap>
+              <%= t('zeptair.vpn_connection') %>
+            </td>
+            <td class="item_value_td">
+              <form name="form_zept_allowed">
+                <%
+                checked_zept_allowed_true = ''
+                checked_zept_allowed_false = ''
+                if @user.allowed_zept_connect?
+                  checked_zept_allowed_true = 'checked'
+                else
+                  checked_zept_allowed_false = 'checked'
+                end
+                %>
+                <input type="radio" id="zept_allowed_true" name="zept_allowed" value="true" <%= checked_zept_allowed_true %>><label for="zept_allowed_true"><%= t('msg.allowed') %></label><br/>
+                <input type="radio" id="zept_allowed_false" name="zept_allowed" value="false" <%= checked_zept_allowed_false %>><label for="zept_allowed_false"><%= t('msg.not_allowed') %></label>
+              </form>
+            </td>
+
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr height="5"><td></td></tr>
+              <tr>
+                <td align="center">
+                  <input type="button" value="<%= t('btn.apply') %>" style="width:80px;" onclick="doUpdateZeptAllowed(); return false;" />
+                </td>
+              </tr>
+            </table>
+          </tr>
+        </table>
+      </div>
+
+    <% else %>
+
+      <%= render :partial => 'show_addition' %>
+
+    <% end %>
+
+    </td>
+  </tr>
+</table>
+
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+      <%= h t('btn.back') %>
+    </td>
+    <td width="15"></td>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); document.form_user_basic.submit();">
+        <%= h t('btn.register') %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<br/>
+
+<script type="text/javascript">
+<!--
+
+function doDelete(user_id, title)
+{
+  confm("<%= h t('paren.square.left') %>" + title + "<%= h t('msg.confirm_to_delete') %>", "_doDelete("+user_id+")");
+}
+
+function _doDelete(user_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+          "div_ajax_userItem",
+          "<%= url_for :controller => 'users', :action => 'destroy_profile_sheet' %>?id=" + user_id,
+          {
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){ thetisBox.remove(); },
+            parameters:Form.serialize(document.form_ajax_userItem)
+          }
+      );
+}
+
+function showGroupTreeToSelect(group_id, do_change)
+{
+  var additionalParams = new Array(
+                            "authenticity_token=<%= form_authenticity_token %>",
+                            "user_id=<%= @user.id %>"
+                          );
+  if (do_change == true) {
+    additionalParams.push("current_id="+group_id);
+  }
+
+  var caption = "";
+  if (do_change == true) {
+    caption = "<%=h t('group.select_to_change_to')%>";
+  } else {
+    caption = "<%=h t('user.select_group_to_add_to')%>";
+  }
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'users', :action => 'add_to_group' %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_user_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setAdditionalParams(additionalParams);
+  thetisBox.show("CENTER", "", "TREE", "", caption, "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+function doRemoveGroup(group_id, path, user_id)
+{
+  confm("<%=h t('user.confirm_to_excluded_from1') %>" + path + "<%=h t('user.confirm_to_excluded_from2') %>", "_doRemoveGroup("+group_id+", "+user_id+")");
+}
+
+function _doRemoveGroup(group_id, user_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+        "div_user_groups",
+        "<%= url_for :controller => 'users', :action => 'exclude_from_group' %>?id=" + user_id + "&group_id=" + group_id,
+        {
+          parameters:"authenticity_token=<%= form_authenticity_token %>",
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request){ thetisBox.remove() }
+        }
+     );
+}
+
+doUpdateZeptAllowed = function()
+{
+  var zept_allowed = null;
+  var radios = document.form_zept_allowed.zept_allowed;
+  if (radios == null)
+    return;
+
+  for (var i=0; i<radios.length; i++) {
+    if (radios[i].checked) {
+      zept_allowed = radios[i].value;
+      break;
+    }
+  }
+  if (!zept_allowed)
+    return;
+
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for :controller => 'users', :action => 'update_zept_allowed', :id => @user.id %>",
+              {
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                  if (request.responseText == "") {
+                    tips("<%=h t('msg.update_success') %>");
+                  } else {
+                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  }
+                },
+                parameters:"zept_allowed="+zept_allowed
+              }
+            );
+}
+
+//-->
+</script>

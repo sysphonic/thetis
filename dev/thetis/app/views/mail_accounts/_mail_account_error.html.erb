@@ -1,0 +1,19 @@
+<script type="text/javascript">
+
+var d = document.createElement("div");
+//<![CDATA[
+d.innerHTML = "<%= render(:partial => 'common/error', :locals => {:obj => @mail_account}).gsub('"', '\"') %>";
+//]]>
+d.style.display = "none";
+document.body.appendChild(d);
+
+showErrorMsg('');
+
+d.parentNode.removeChild(d);
+//    var thetis = new ThetisBox;
+//    thetis.show("TOP-RIGHT", "", "MESSAGE", "", d.innerHTML, "");
+</script>
+
+<%
+@mail_account.errors.clear
+%>

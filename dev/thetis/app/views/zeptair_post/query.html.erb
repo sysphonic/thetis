@@ -1,0 +1,53 @@
+<%
+csv_lines = ''
+
+opt = {
+  :force_quotes => true,
+  :encoding => 'UTF-8'
+}
+
+if @post_item.nil?
+  csv_lines << CSV.generate(opt) do |csv|
+
+    @post_items.each do |post_item|
+      attachs = post_item.attachments_without_content
+      next if attachs.empty?
+
+      ary = []
+      ary << post_item.user_id
+      ary << User.find(post_item.user_id).zeptair_id
+      ary << post_item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+
+      attach_ids = []
+      attachs.each do |attach|
+        attach_ids << attach.id.to_s
+      end
+      ary << attach_ids.join('|')
+
+      csv << ary
+    end
+  end
+else
+  csv_lines << CSV.generate(opt) do |csv|
+
+    @post_item.attachments_without_content.each do |attach|
+      ary = []
+      ary << attach.id
+      ary << attach.title
+      ary << attach.memo
+      ary << attach.name
+
+      attach_ids = []
+      item.attachments_without_content.each do |attach|
+        attach_ids << attach.id.to_s
+      end
+      ary << attach_ids.join('|')
+
+      csv << ary
+    end
+  end
+end
+%>
+
+<%= csv_lines %>
+

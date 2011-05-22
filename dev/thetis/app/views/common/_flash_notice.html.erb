@@ -1,0 +1,16 @@
+<% unless flash[:notice].nil? or flash[:notice].empty? %>
+
+<script type="text/javascript">
+<%
+if flash[:notice].index('ERROR:')
+  msg = flash[:notice]['ERROR:'.length .. -1]
+%>
+  setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);
+<% else  %>
+  setTimeout("try{ tips(\"<%= raw(flash[:notice]) %>\"); }catch(e){}", 100);
+<% end  %>
+</script>
+
+<% end %>
+
+<% flash[:notice] = nil %>

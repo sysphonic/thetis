@@ -1,0 +1,190 @@
+
+<% groups_cache = {} %>
+
+
+<%= form_tag( {:controller => 'equipment', :action => 'search'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr height="0"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+            <td align="left" width="120" style="padding-top:5px; padding-bottom:5px;">
+              <a href="<%= url_for :controller => 'equipment', :action => 'new' %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>"></a>
+    <% if @group_id.nil? or @group_id.empty? %>
+      <!--
+              <table width="100%" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                    <%=h t('btn.select_group') %>
+                  </td>
+                </tr>
+              </table>
+      -->
+    <% else %>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="left" nowrap>
+                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span>
+                  &nbsp;<a class="a_underline" href="javascript:clearGroup()"><%=h t('btn.bracket.clear') %></a>
+                </td>
+              </tr>
+            </table>
+    <% end %>
+            </td>
+            <td align="right">
+              <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
+              <input type="button" value="<%=h t('btn.delete')%>" onclick="doDelete(); return false;">
+            </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="0"><td></td></tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('equipment', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_equipment')
+      pagination = will_paginate(@equipment_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_equipment" style="overflow:auto; background-color:white;">
+<table id="list_equipment" align="center" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('equipment.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="28%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="57%" nowrap onClick="sortList('note')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
+  <!--
+    <th class="list_th" width="30%"  nowrap onClick="sortList('belongs_to')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
+  -->
+  </tr>
+<%
+users_cache = {}
+@equipment.each_with_index do |equipment, idx|
+%>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h equipment.id %></td>
+    <td class="<%=td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'show', :id => equipment.id %>'; return false;">
+        <%=h truncate(equipment.name, :length => 20) %>
+      </a>
+    </td>
+    <td class="<%=td_class %>" nowrap><pre><%=h truncate(equipment.note, :length => 30) %></pre></td>
+  <!--
+    <td class="<%=td_class %>" nowrap>
+      <% equipment.get_users_a.each do |user_id| %>
+        <%=h User.get_name(user_id, users_cache) %><br/>
+      <% end %>
+      <% equipment.get_groups_a.each do |group_id| %>
+        <%=h Group.get_path(group_id, groups_cache) %><br/>
+      <% end %>
+      <% equipment.get_teams_a.each do |team_id| %>
+        <%=h Team.get_name(team_id) %><br/>
+      <% end %>
+    </td>
+  -->
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="location.href='<%= url_for(:controller => 'equipment', :action => 'edit', :id => equipment) %>';">
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box :check_equipment, equipment.id, :class => 'check_equipment' %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag 'group_id', @group_id %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+function clearGroup()
+{
+  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'list' %>";
+  document.form_list.group_id.value = "";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'list' %>";
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'equipment', :action => 'list' %>", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_equipment", document.form_list);
+  var all_selected = true;
+
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function doDelete()
+{
+  var elems = document.getElementsByClassName("check_equipment", document.form_list);
+  var count=0;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) return;
+
+  confm(count+"<%= h t('equipment.confirm_to_delete') %>", "_doDelete()");
+}
+
+function _doDelete()
+{
+  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'destroy' %>";
+  document.form_list.submit();
+
+  prog("TOP-RIGHT");
+}
+
+//-->
+</script>
+

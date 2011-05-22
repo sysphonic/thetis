@@ -1,0 +1,23 @@
+<table class="info_area" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td align="left">
+      <div style="padding-left:10px;">
+      <%
+      unless @tmpl_system_folder.nil?
+        items = Folder.get_items_admin(@tmpl_system_folder.id, 'xorder ASC')
+        unless items.nil?
+          items.each do |item|
+      %>
+        <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => item.id %>'; return false;">
+          <%=h truncate(item.title, :length => 20) %>
+        </a>
+        &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';">
+      <%
+          end
+        end
+      end
+      %>
+      </div>
+    </td>
+  </tr>
+</table>

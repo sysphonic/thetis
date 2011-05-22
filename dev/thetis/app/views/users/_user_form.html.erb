@@ -1,0 +1,255 @@
+
+<%= render :partial => 'common/error', :locals => {:obj => @user} %>
+
+<% login_user = session[:login_user] %>
+
+<div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
+  <%= hidden_field 'user', 'id' %>
+  <table align="center" width="85%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="prim_cap_td" nowrap><label for="user_name"><%=h t('user.u_name') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'name', :style => 'ime-mode:disabled' %><sup style="color:red">*</sup>
+      </td>
+    </tr>
+  <%
+  req_pass = false
+  if $thetis_config[:menu]['open_user_reg'] == '1'
+    unless  params[:action]=='new' or params[:action]=='create'
+      req_pass = true
+    end
+  else
+    req_pass = true
+  end
+  if req_pass
+  %>
+     <tr>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%=h User.human_attribute_name('password') %></label></td>
+      <td class="item_value_td">
+        <%= password_field 'user', 'password' %><sup style="color:red">*</sup>
+      </td>
+    </tr>
+    <tr>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%=h t('password.confirm') %></label></td>
+      <td class="item_value_td">
+        <%= password_field 'user', 'password_confirmation' %><sup style="color:red">*</sup>
+      </td>
+    </tr>
+  <% end %>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_email"><%=h User.human_attribute_name('email') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'email', :style => 'ime-mode:disabled' %><sup style="color:red">*</sup>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_fullname"><%=h User.human_attribute_name('fullname') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'fullname' %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_address"><%=h User.human_attribute_name('address') %></label></td>
+      <td class="item_value_td">
+        <%=h t('cap.postalcode') %> <%= text_field 'user', 'postalcode', :style => 'width:100px; ime-mode:disabled' %><br/>
+        <%= text_area 'user', 'address', :style => 'width:100%', :rows => '3' %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label></td>
+      <td class="item_value_td">
+<%
+if THETIS_USER_TIMEZONE_SELECTABLE \
+    or (!login_user.nil? and login_user.admin?(User::AUTH_USER))
+%>
+        <%= time_zone_select 'user', 'time_zone', nil, :default => THETIS_USER_TIMEZONE_DEFAULT %>
+<%
+else
+  if @user.nil? or @user.time_zone.nil? or @user.time_zone.empty?
+%>
+        <%= t('paren.not_specified') %>
+  <% else %>
+        <%= ActiveSupport::TimeZone[@user.time_zone] %>
+<%
+  end
+end
+%>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_tel"><%=h t('cap.tel') %></label></td>
+      <td class="item_value_td">
+        <%
+        options = []
+        THETIS_TEL_TYPES.each do |type|
+          val = User.get_tel_type_name(type)
+          options << [val, val]
+        end
+        
+        tel1_note = ''
+        tel2_note = ''
+        tel3_note = ''
+        unless @user.nil?
+          tel1_note = @user.tel1_note
+          tel2_note = @user.tel2_note
+          tel3_note = @user.tel3_note
+        end
+        %>
+        <%= select_tag 'user[tel1_note]', options_for_select(options, tel1_note) %>
+        <%= text_field 'user', 'tel1', :style => 'ime-mode:disabled' %><br/>
+        <%= select_tag 'user[tel2_note]', options_for_select(options, tel2_note) %>
+        <%= text_field 'user', 'tel2', :style => 'ime-mode:disabled' %><br/>
+        <%= select_tag 'user[tel3_note]', options_for_select(options, tel3_note) %>
+        <%= text_field 'user', 'tel3', :style => 'ime-mode:disabled' %><br/>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_fax"><%=h User.human_attribute_name('fax') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'fax', :style => 'ime-mode:disabled' %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_organization"><%=h User.human_attribute_name('organization') %></label></td>
+      <td class="item_value_td">
+        <%= text_area 'user', 'organization', :style => "width:100%", :rows => '3' %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_url"><%=h User.human_attribute_name('url') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'url', :style => 'width:100%; ime-mode:disabled' %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_title"><%=h t('user.title') %></label></td>
+      <td class="item_value_td">
+        <%= text_field 'user', 'title', :style => 'width:80%; vertical-align:middle;' %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showTitleSelector();" style="cursor:pointer;" />
+      </td>
+    </tr>
+  <% if params[:action] == 'edit' and login_user.id == @user.id %>
+    <tr>
+      <%
+      def_birth_y = ''
+      def_birth_m = ''
+      def_birth_n = ''
+      unless @user.nil? or @user.birthday.nil?
+        def_birth_y = @user.birthday.strftime('%Y')
+        def_birth_m = @user.birthday.strftime('%m')
+        def_birth_d = @user.birthday.strftime('%d')
+      end
+      %>
+      <td class="item_cap_td" nowrap><label for="user_birthday"><%=h User.human_attribute_name('birthday') %></label></td>
+      <td class="item_value_td">
+        <input type="text" id="user_birthday_y" name="user[birthday_y]" value="<%= def_birth_y %>" size="30" style="width:50px; ime-mode:disabled">
+        <%
+        options = []
+        (1..12).each do |month|
+          options << [month, month]
+        end
+        %>
+        <%= select_tag 'user[birthday_m]', options_for_select(options, def_birth_m.to_i) %>
+        <%
+        options = []
+        (1..31).each do |day|
+          options << [day, day]
+        end
+        %>
+        <%= select_tag 'user[birthday_d]', options_for_select(options, def_birth_d.to_i) %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+</div>
+
+<input type="hidden" name="from" value="<%= params[:from] %>" />
+
+
+<script type="text/javascript">
+
+var selector = null;
+
+function showTitleSelector()
+{
+  if (selector != null){
+    selector.remove();
+    selector = null;
+  }
+
+  var content = getTitleSelector("onTitleSelectOK()", "onTitleSelectCancel()");
+
+  selector = new ThetisBox;
+  selector.title = "<%=h t('user.select_title') %>";
+  selector.overflow = "hide";
+  selector.show("CENTER", "350,200", "TRAY", "", "", content);
+}
+
+function getTitleSelector(onOk, onCancel)
+{
+  var titles = new Array(
+  <%
+  first = true
+  titles = User.get_config_titles
+  unless titles.nil?
+    titles.each do |title|
+      unless first
+  %>
+                    ,
+  <%
+      end
+      first = false
+  %>
+                    "<%=h title %>"
+  <%
+    end
+  end
+  %>
+                    );
+
+  var def = $("user_title").value;
+
+  content = "<form name='form_title'>";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' valign='middle'>";
+  content += "      <select name='title'>";
+  var found_flag = false;
+  for (var i=0; i < titles.length; i++) {
+    var selected = "";
+    if (def == titles[i] || (!found_flag && i == titles.length - 1)) {
+      selected = "selected";
+      found_flag = true;
+    }
+    content += "      <option value=\""+esc_w_quotes(titles[i])+"\" "+selected+">"+titles[i]+"</option>";
+  }
+  content += "      </select>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='<%= h t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= h t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "</form>";
+  return content;
+}
+
+function onTitleSelectOK()
+{
+  $("user_title").value = document.form_title.title.value;
+  selector.remove();
+  selector = null;
+}
+
+function onTitleSelectCancel()
+{
+  selector.remove();
+  selector = null;
+}
+
+</script>

@@ -1,0 +1,168 @@
+<%
+attachments = @item.attachments_without_content
+%>
+
+<%= form_tag( {:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td align="right" nowrap>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <%= h t('cap.status') %><%= select_tag 'filter_status',
+                               options_for_select([[h(t('msg.all')), ''],
+                                                  [h(t('zeptair.no_reply')), ZeptairDistHelper::STATUS_NO_REPLY],
+                                                  [h(t('zeptair.replied')), ZeptairDistHelper::STATUS_REPLIED],
+                                                  [h(t('msg.completed')), ZeptairDistHelper::STATUS_COMPLETE]], 
+                                                  params[:filter_status])  %>
+      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>';"/>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+          <td align="left" width="120" style="padding-bottom:5px;">
+        <% if @group_id.nil? or @group_id.empty? %>
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                  <%= t('btn.select_group') %>
+                </td>
+              </tr>
+            </table>
+        <% else %>
+            <table align="center" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="left" nowrap>
+                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id) %></a>
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                </td>
+              </tr>
+            </table>
+        <% end %>
+          </td>
+          <td align="right">
+            &nbsp;
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= t('cap.total') %><%= t('user', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      pagination = will_paginate(@user_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_users" style="overflow:scroll; background-color:white;">
+<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('User.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="22%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="25%" nowrap onClick="sortList('Comment.updated_at')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Comment.updated_at', @sort_col, @sort_type)) %></span></th>
+<% attachments.each_with_index do |attach, attach_idx| %>
+    <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
+<% end %>
+  </tr>
+<%
+@users.each_with_index do |user, idx|
+  comment = ZeptairDistHelper.get_comment_of(@item.id, user.id)
+  entries = ZeptairDistHelper.get_ack_array_of(comment)
+%>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
+   <% if session[:login_user].admin?(User::AUTH_USER) %>
+    <td class="<%=td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => user.id %>'; return false;">
+        <%= truncate(user.get_name, :length => 20) %>
+      </a>
+    </td>
+   <% else %>
+    <td class="<%=td_class %>" nowrap>
+      <%= truncate(user.get_name, :length => 20) %>
+    </td>
+   <% end %>
+    <td class="<%=td_class %>" nowrap>
+    <% unless comment.nil? or comment.updated_at.nil? %>
+      <%= comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
+    <% end %>
+    </td>
+<% attachments.each do |attach| %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <% if entries.nil? %>
+      <%= ZeptairDistHelper::MARK_NA %>
+    <% else %>
+      <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(attach)) %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+      <% elsif !entries.find{|entry| entry.index("#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+      <% else %>
+        <%= ZeptairDistHelper::MARK_NA %>
+      <% end %>
+    <% end %>
+    </td>
+<% end %>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag 'group_id', @group_id %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+
+function clearGroup()
+{
+  document.form_list.action = "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>";
+  document.form_list.group_id.value = "";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  prog("TOP-RIGHT");
+  document.form_list.action = "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>";
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+//-->
+</script>
+

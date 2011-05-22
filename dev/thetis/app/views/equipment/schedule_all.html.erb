@@ -1,0 +1,181 @@
+
+<%= render :partial => 'common/jkl_calendar_init' %>
+
+<script type="text/javascript">
+<!--
+var calDisp = new JKL.Calendar("div_cal_disp", "form_equipment", "date");
+calDisp.setFunc(function() {$('date_wday').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'; document.form_equipment.submit(); prog('TOP-RIGHT');});
+calDisp.setStyle( "frame_color", "#3333CC" );
+//-->
+</script>
+
+<% login_user = session[:login_user] %>
+<%
+  if login_user.nil?
+    login_id = ''
+  else
+    login_id = login_user.id.to_s
+  end
+%>
+
+<% date_string = @date.strftime(Schedule::SYS_DATE_FORM) %>
+
+<%= form_tag( {:controller => 'equipment', :action => 'schedule_all', :id => params[:id]}, :method => 'get', :name => 'form_equipment', :id => 'form_equipment') %>
+
+<table align="center" width="98%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left" width="30%">
+    <% unless login_user.nil? %>
+      <table align="left" cellspacing="0" cellpadding="0" width="65">
+        <tr>
+          <td align="left" nowrap width="30">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'day', :id => date_string, :showNew => 'true' %>';">
+          </td>
+          <% if login_user.admin? User::AUTH_EQUIPMENT %>
+          <td width="5"></td>
+          <td align="left" nowrap width="30">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'list' %>';">
+          </td>
+          <% end %>
+        </tr>
+      </table>
+    <% end %>
+    </td>
+    <td align="right" nowrap width="30%">
+  <%
+  display = [[h(t('equipment.all')), 'all']]
+# unless login_user.nil?
+#   groups_a = login_user.get_groups_a
+#   groups_a.each do |group_id|
+#     display << [h(Group.get_name(group_id)), 'group_'+group_id]
+#   end
+#   teams_a = login_user.get_teams_a
+#   teams_a.each do |team_id|
+#     display << [h(Team.get_name(team_id)), 'team_'+team_id]
+#   end
+# end
+  %>
+  <%= h t('cap.display') %> <%= select_tag 'display',
+                           options_for_select(display, params[:display]),
+                           :onchange => "prog('TOP-RIGHT'); submit();"
+            %>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center" width="20%">
+    </td>
+    <td align="center" width="60%">
+<%
+yesterday = @date - 1
+tomorrow = @date + 1
+last_week = @date - 7
+next_week = @date + 7
+%>
+      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_string %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+    </td>
+    <td align="right" width="20%" style="padding-right:10px; padding-top:10px;">
+    </td>
+  </tr>
+</form>
+</table>
+
+
+<% if @equip_schedule_hash.nil? or @equip_schedule_hash.empty? %>
+  <div style="padding-top:20px;">
+    <table width="95%" cellspacing="0" cellpadding="0" style="border:green 1px solid; border-collapse:collapse;">
+      <tr height="50">
+        <td align="center" style="color:darkgreen;">
+          <%= t('paren.no_equipment') %>
+        </td>
+      </tr>
+    </table>
+  </div>
+<% else %>
+
+  <%
+  @equip_schedule_hash.each do |equip_id, sched_hash|
+    @equipment_id = equip_id
+    @schedules_hash = sched_hash
+  %>
+
+  <div id="div_timetable_<%= @equipment_id %>">
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left">
+          <%= Equipment.get_name @equipment_id %>
+        </td>
+      </tr>
+      <tr height="5"><td></td></tr>
+      <tr>
+        <td>
+          <%= render :partial => 'weektable' %>
+        </td>
+      </tr>
+      <tr height="10"><td></td></tr>
+    </table>
+  </div>
+
+  <% end %>
+
+<% end %>
+
+
+<script type="text/javascript">
+<!--
+
+function showDetail(schedule_id, title)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+  new Ajax.Request(
+          "<%= url_for :controller => 'schedules', :action => 'show' %>?id=" + schedule_id,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          mainWidth*80/100+"," + mainHeight*80/100,
+                          "TRAY",
+                          "",
+                          title,
+                          "<br/>"+request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function editDetail(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&edit_id="+id;
+}
+
+function doDelete(date, id, title)
+{
+  confm("<%=h t('paren.square.left') %>"+title+"<%=h t('equipment.confirm_to_delete_related') %>", "_doDelete('"+date+"', '"+id+"')");
+}
+
+function _doDelete(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&doDelete="+id;
+}
+
+//-->
+</script>

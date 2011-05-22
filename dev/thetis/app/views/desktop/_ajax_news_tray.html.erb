@@ -1,0 +1,136 @@
+
+<% login_user = session[:login_user] %>
+
+<!-- Don't use <table> instead of <div> because of IE's bug for alignment -->
+<div id="tray" align="left" width="100%">
+<% @toys.each do |toy| %>
+  <% toy_id = "#{toy.xtype}:#{toy.target_id}" %>
+  <div class="toy_tray" id="<%= toy_id %>" style="z-index:10000; padding:5px; font-size:9pt; word-break:break-all;">
+    <%
+    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
+    icon_img = ""
+    case toy.xtype
+      when Toy::XTYPE_ITEM
+        icon_img = img_root + 'item.gif'
+      when Toy::XTYPE_COMMENT
+        icon_img = img_root + 'comment.gif'
+      when Toy::XTYPE_WORKFLOW
+        icon_img = img_root + 'workflow.gif'
+      when Toy::XTYPE_SCHEDULE
+        icon_img = img_root + 'schedule.gif'
+      when Toy::XTYPE_FOLDER
+        begin
+          folder = Folder.find(toy.target_id)
+          icon_img = folder.get_icons[0]
+        rescue
+          icon_img = img_root + 'folder/folder.gif'
+        end
+    end
+    %>
+    <img src="<%= icon_img %>" style="cursor:move;" />
+
+  <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
+    <a href="#" onclick="showScheduleDetail('<%=ApplicationHelper.h_s_quote truncate(toy.name, :length => 20) %>', '<%= toy.address %>'); return false;">
+  <% else %>
+    <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
+  <% end %>
+      <span id="<%= toy_id %>_name"><%=h truncate(toy.name, :length => 50) %></span>
+    </a>
+  </div>
+
+  <script type="text/javascript">
+  //<![CDATA[
+  new Draggable("<%= toy_id %>", {revert:false})
+  //]]>
+  </script>
+
+<% end %>
+</div>
+
+<script type="text/javascript">
+
+getScrollParent = function(elem)
+{
+  var scrollParent = elem;
+  for (var i=0; i<50; i++) {
+    scrollParent = scrollParent.parentNode;
+    if (scrollParent == null) {
+      break;
+    }
+    if (scrollParent.style != null
+         && (scrollParent.style.overflow == 'scroll' || scrollParent.style.overflow == 'auto')) {
+      return scrollParent;
+    }
+  }
+
+  // for Safari(3.0.3) which returns always empty as style.overflow
+  scrollParent = elem;
+  for (var i=0; i<50; i++) {
+    scrollParent = scrollParent.parentNode;
+    if (scrollParent == null) {
+      break;
+    }
+    if (scrollParent.scrollTop > 0) {
+      return scrollParent;
+    }
+  }
+  return null;
+}
+
+var TrayDragObserver = Class.create();
+TrayDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != 'toy_tray') {
+      return;
+    }
+
+    // IE doesn't allow to move it out of div with 'overflow:scroll;'
+    var scrollParent = getScrollParent(toy);
+    if (scrollParent != null) {
+      draggable.options.snap = function(x, y){
+          y = y - scrollParent.scrollTop + parseInt(toy.style.paddingTop, 10);
+          if (is_Netscape) {
+            if (scrollParent.scrollTop > 0) {
+              y -= toy.clientHeight;
+            }
+          } else {
+            if (scrollParent.scrollHeight == scrollParent.scrollTop + scrollParent.clientHeight) {
+              y -= toy.clientHeight;
+            }
+          }
+          return [x, y];
+        };
+    }
+    removeElem(toy);
+    document.body.appendChild(toy);   // not on $("div_desktop"), to show over the tray.
+    Position.absolutize(toy);
+    var nameLen = getByteSize($(toy.id+"_name").innerHTML);
+    if (nameLen > 30) {
+      toy.style.width = "200px";
+    } else {
+      toy.style.width = Math.floor(nameLen * 6.7 + 30) + "px";
+    }
+
+    toy.style.zIndex = 100000;
+  },
+  onDrag: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != 'toy_tray') {
+      return;
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != 'toy_tray') {
+      return;
+    }
+    $("div_desktop").style.backgroundColor = "#A9CDF9";
+    draggable.options.snap = false;
+  }
+}
+Draggables.addObserver( new TrayDragObserver() );
+
+</script>

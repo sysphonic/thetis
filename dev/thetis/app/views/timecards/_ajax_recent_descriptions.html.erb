@@ -1,0 +1,26 @@
+
+<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0" width="100%">
+<%
+idx = 0
+@timecards.each do |timecard|
+%>
+  <tr>
+    <td align="left" style="padding:10px; border:solid dimgray 1px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelect('desc_<%= idx %>')">
+      <pre id="desc_<%= idx %>" style="font-size:10pt;"><%=h timecard.comment %></pre>
+    </td>
+  </tr>
+<%
+  idx += 1
+end
+%>
+</table>
+
+<script type="text/javascript">
+
+doSelect = function(div_id)
+{
+  $("timecard_comment").innerHTML = $(div_id).innerHTML;
+  ThetisBox.getContainer($(div_id)).remove();
+}
+</script>
+

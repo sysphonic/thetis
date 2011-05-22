@@ -1,0 +1,206 @@
+
+<% login_user = session[:login_user] %>
+
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+<!--
+document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/grad.png) right repeat-y";
+
+function onLoadSub()
+{
+<%
+open_url_h = ApplicationHelper.get_fwd_params(params)
+open_url_h = open_url_h.update({:controller => 'desktop', :action => 'open_desktop'})
+%>
+  new Ajax.Updater(
+            $("div_desktop").parentNode,
+            "<%= url_for(open_url_h) %>",
+            {
+              method:"get",
+              asynchronous:true,
+              evalScripts:true,
+              onComplete:function(request){
+                  setTimeout("showTray()", 100);
+                }
+            }
+          );
+}
+
+function showToolTray(sw)
+{
+  if (sw) {
+    $("tool_tray").style.display = "block";
+  } else {
+    $("tool_tray").style.display = "none";
+  }
+}
+
+function showTray()
+{
+  var desktop = $("div_desktop");
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  showToolTray(false);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.setOnClose("showToolTray(true);");
+  var trayWidth = Math.floor(deskWidth / 3);
+  var trayHeight = deskHeight;
+  var trayX = deskPos[0] + deskWidth - trayWidth + 2;
+  var trayY = deskPos[1] + 4;
+  if (is_MS) {
+    trayX -= 2;
+    trayY -= 2;
+  }
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'desktop', :action => 'get_news_tray' %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "<%=h t('desktop.news.title') %>";
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          trayX+","+trayY,
+                          trayWidth+","+trayHeight,
+                          "TRAY",
+                          "",
+                          "<%=h t('desktop.news.caption') %>",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function showToolBiorhythm(sw)
+{
+  var tool_biorhythm = $("tool_biorhythm");
+
+  if (tool_biorhythm == null) {
+    return;
+  }
+
+  if (sw) {
+    tool_biorhythm.style.display = "block";
+  } else {
+    tool_biorhythm.style.display = "none";
+  }
+}
+
+function requestBirthday()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"saveBirthday(thetisBoxEdit.value); return false;\">");
+  thetisBox.show(
+            "CENTER",
+            "",
+            "INPUT",
+            "",
+            "<%=h t('msg.specify_birthday') %><br/>&nbsp;&nbsp;&nbsp;<%=h t('msg.ex_birthday') %><br/><%=h t('msg.howto_change_birthday') %>",
+            ""
+          );
+}
+
+<% unless login_user.nil? %>
+function saveBirthday(birthday)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'users', :action => 'update', :id => login_user.id %>&user[birthday]="+birthday,
+          {
+            parameters:"authenticity_token=<%= form_authenticity_token %>",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                setTimeout("showBiorhythm()", 10);
+                thetisBoxProgress.remove();
+                $("biorhythm_req_birth").value = "false";
+              }
+          }
+        );
+}
+<% end %>
+
+function showBiorhythm()
+{
+  showToolBiorhythm(false);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.setOnClose("showToolBiorhythm(true);");
+  thetisBox.bgcolor_title = "darkviolet";
+  thetisBox.bgcolor_body = "thistle";
+  thetisBox.title = "<%=h t('biorhythm.name') %>";
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'desktop', :action => 'show_biorhythm' %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          "530,407",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText
+                        );
+                thetisBoxProgress.remove();
+              }
+          }
+        );
+}
+
+function showScheduleDetail(title, url)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+  new Ajax.Request(
+          url,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                var desktop = $("div_desktop");
+                thetisBox.show(
+                          "CENTER",
+                          desktop.clientWidth*2/3+","+desktop.clientHeight*80/100,
+                          "TRAY",
+                          "",
+                          title,
+                          "<br/>"+request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+//-->
+</script>
+

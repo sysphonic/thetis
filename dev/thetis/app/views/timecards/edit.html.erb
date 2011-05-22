@@ -1,0 +1,655 @@
+<% HistoryHelper.set_back(request) %>
+
+<%
+login_user = session[:login_user]
+date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
+%>
+
+<%= render :partial => 'common/jkl_calendar_init' %>
+
+<script type="text/javascript">
+<!--
+var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
+calDisp.setFunc(
+    function() {
+      $("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+
+      var elem = document.createElement("input");
+      elem.name = "user_id";
+      elem.type = "hidden";
+      elem.value = "<%= @selected_user.id %>";
+      document.form_schedule.appendChild(elem);
+
+    <% unless params[:display].nil? %>
+      elem = document.createElement("input");
+      elem.name = "display";
+      elem.type = "hidden";
+      elem.value = "<%= params[:display] %>";
+      document.form_schedule.appendChild(elem);
+    <% end %>
+
+      document.form_schedule.submit();
+      prog("TOP-RIGHT");
+    }
+  );
+calDisp.setStyle( "frame_color", "#3333CC" );
+//-->
+</script>
+
+<% unless @schedules.nil? %>
+<div style="padding-bottom:10px;">
+  <table align="center" cellspacing="0" cellpadding="0" width="98%" style="border:1px outset lightgrey; background-color:#eee;">
+    <tr>
+      <td valign="top" style="padding:10px;">
+        <div id="div_timetable" style="background-color:white;">
+          <%= render :partial => 'schedules/timetable' %>
+        </div>
+      </td>
+    </tr>
+  </table>
+</div>
+<% end %>
+
+<div style="padding-bottom:5px;">
+  <%= render :partial => 'toolbar'%>
+</div>
+
+<div class="info_area" style="width:98%; padding:20px 0px; background-color:lightcyan" align="center">
+
+<%= form_tag( {:controller => 'timecards', :action => 'edit', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+<%
+yesterday = @date - 1
+tomorrow = @date + 1
+last_week = @date - 7
+next_week = @date + 7
+%>
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+      </td>
+    </tr>
+    <tr height="10"><td></td></tr>
+  </table>
+</form>
+
+<table align="center" width="95%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center">
+      <%= render :partial => 'user_profile'%>
+    </td>
+  </tr>
+</table>
+
+<%
+editable = false
+if login_user.admin?(User::AUTH_TIMECARD) or login_user.id == @selected_user.id
+  editable = true
+end
+%>
+
+<%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
+  <table class="timecard" align="center" width="95%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('cap.classification') %></td>
+      <td class="item_value_td">
+      <% if editable or !@timecard.nil? %>
+        <span style="padding:0px 5px;">
+        <%
+        if @timecard.nil? or @timecard.workcode.nil?
+          cur_workcode = Timecard::WKCODE_WK_NORMAL
+        else
+          cur_workcode = @timecard.workcode
+        end
+        Timecard.workcodes.each do |workcode, value|
+          display = (cur_workcode==workcode)?'inline':'none'
+        %><img class="workcode_icon" id="workcode_icon_<%= workcode %>" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= Timecard::WKCODE_ICONS[workcode] %>" style="display:<%= display %>;"><% end %>
+        </span>
+      <% end %>
+
+      <% if editable %>
+        <%
+        opt_ary = []
+        Timecard.workcodes.each do |workcode, value|
+          opt_ary << [h(Timecard.workcode_names[workcode]), workcode]
+        end
+        %>
+        <%= select_tag 'timecard[workcode]',
+                     options_for_select(opt_ary, (@timecard.nil?)?nil:(@timecard.workcode)),
+                     :onChange => 'changeWorkcode(this.value);'
+                  %>
+      <% elsif !@timecard.nil? %>
+        <%=h @timecard.workcode_name %>
+      <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('timecard.labor_time') %></td>
+      <td class="item_value_td">
+      <% if editable %>
+        <select id="start_hour" onchange="changeHour(this.value, $('start_min'));">
+          <option value=""></option>
+        <%
+        THETIS_HOURS.each do |hour|
+          selected = ''
+          if !@timecard.nil? and !@timecard.start.nil? and hour == @timecard.start.hour
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+        <% end %>
+        </select>
+        <select id="start_min" onchange="changeMin(this.value, $('start_hour'));">
+          <option value=""></option>
+        <%
+        THETIS_MINUTES.each do |min|
+          selected = ''
+          if !@timecard.nil? and !@timecard.start.nil? and min == @timecard.start.min
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+        <% end %>
+        </select>
+        <% if @timecard.nil? or @timecard.start.nil? %>
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/laquo.gif" alt="<%= User.human_attribute_name('login_at') %>" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= login_user.login_at.hour %>', '<%= login_user.login_at.min %>');">
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" alt="<%= t('msg.current_time') %>" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
+        <% end %>
+        ~
+        <select id="end_hour" onchange="changeHour(this.value, $('end_min'));">
+          <option value=""></option>
+        <%
+        THETIS_HOURS.each do |hour|
+          selected = ''
+          if !@timecard.nil? and !@timecard.end.nil? and hour == @timecard.end.hour
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+        <% end %>
+        </select>
+        <select id="end_min" onchange="changeMin(this.value, $('end_hour'));">
+          <option value=""></option>
+        <%
+        THETIS_MINUTES.each do |min|
+          selected = ''
+          if !@timecard.nil? and !@timecard.end.nil? and min == @timecard.end.min
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+        <% end %>
+        </select>
+        <% if !@timecard.nil? and @timecard.end.nil? %>
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" alt="<%= t('msg.current_time') %>" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('end', null, null);">
+        <% end %>
+      <% elsif !@timecard.nil? %>
+        <%= (@timecard.start.nil?)?'':(@timecard.start.strftime('%H:%M')) %>
+        ~
+        <%= (@timecard.end.nil?)?'':(@timecard.end.strftime('%H:%M')) %>
+      <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('cap.option') %></td>
+      <td class="item_value_td">
+      <% if editable %>
+        <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
+        <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%=h t('timecard.business_trip') %></label>
+      <% elsif !@timecard.nil? and @timecard.business_trip? %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%=h t('timecard.business_trip') %>
+      <% end %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h Timecard.human_attribute_name('comment') %></td>
+      <td class="item_value_td">
+      <% if editable %>
+        <table cellpadding="0" cellspacing="0" width="100%">
+          <tr>
+            <td style="border:0px">
+              <%= text_area 'timecard', 'comment', :rows => 3, :style => 'width:100%;' %>
+            </td>
+            <td width="25" align="center" style="border:0px">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showDescSelector();" style="cursor:pointer; vertical-align:middle;" />
+            </td>
+          </tr>
+        </table>
+      <% elsif !@timecard.nil? %>
+        <%=h @timecard.comment %>
+      <% end %>
+      </td>
+    </tr>
+  </table>
+  <%
+  display_with_clear = 'block'
+  display_without_clear = 'none'
+  if @timecard.nil?
+    display_with_clear = 'none'
+    display_without_clear = 'block'
+  end
+  %>
+  <table id="buttons_with_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_with_clear %>">
+    <tr height="10"><td></td></tr>
+    <tr>
+      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+        <%=h t('btn.back') %>
+      </td>
+    <% if editable %>
+      <td width="10"></td>
+      <td class="img_button_td" onclick="doRegister();">
+        <%=h t('btn.register') %>
+      </td>
+      <td width="10"></td>
+      <td class="img_button_td" onclick="doClear();">
+        <%=h t('btn.clear') %>
+      </td>
+    <% end %>
+    </tr>
+    <tr height="10"><td></td></tr>
+  </table>
+  <table id="buttons_without_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_without_clear %>">
+    <tr height="10"><td></td></tr>
+      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+        <%=h t('btn.back') %>
+      </td>
+    <% if editable %>
+      <td width="10"></td>
+      <td class="img_button_td" onclick="doRegister();">
+        <%=h t('btn.register') %>
+      </td>
+    <% end %>
+    </tr>
+    <tr height="10"><td></td></tr>
+  </table>
+
+  <div id="div_break">
+    <%= render :partial => 'ajax_update_break' %>
+  </div>
+
+  <input type="hidden" id="timecard_user_id" name="timecard[user_id]" value="<%= @selected_user.id %>" />
+  <input type="hidden" id="timecard_date" name="timecard[date]" value="<%= date_s %>" />
+  <input type="hidden" id="timecard_start" name="timecard[start]" />
+  <input type="hidden" id="timecard_end" name="timecard[end]" />
+
+</form>
+
+</div>
+
+<br/>
+
+<script type="text/javascript">
+<!--
+
+<% if editable %>
+changeWorkcode($("timecard_workcode").value);
+<% end %>
+
+function changeHour(value, min)
+{
+  if (value == "") {
+    min.value = "";
+  } else if (min.value == "") {
+    min.value = 0;
+  }
+}
+
+function changeMin(value, hour)
+{
+  if (value == "") {
+    hour.value = "";
+  } else if (hour.value == "") {
+    hour.value = new Date().getHours();
+  }
+}
+
+function doRegister()
+{
+  var start_hour = $("start_hour").value;
+  var start_min = $("start_min").value;
+  var end_hour = $("end_hour").value;
+  var end_min = $("end_min").value;
+  
+  var start_date = "<%= date_s %>";
+  var next_date = "<%= (@date+1).strftime(Schedule::SYS_DATE_FORM) %>";
+  if (_timeToVal(start_hour, start_min) >= _timeToVal(end_hour, end_min)) {
+    end_date = next_date;
+  } else {
+    end_date = start_date;
+  }
+
+  if (checkOff($("timecard_workcode").value)) {
+    $("timecard_start").value = "";
+  } else if (start_hour == "" || start_min == "") {
+    msg("<%=h t('timecard.specify_start_time') %>");
+    return false;
+  } else {
+    $("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
+  }
+  if (end_hour == "" || end_min == "") {
+    $("timecard_end").value = "";
+  } else {
+    $("timecard_end").value = end_date + " " + end_hour + ":" + end_min;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+          "div_break",
+          "<%= url_for :controller => 'timecards', :action => 'update' %>?id=" + $("timecard_id").value,
+          {
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(document.form_timecard),
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+function doClear()
+{
+  confm("<%=h t('timecard.confirm_to_clear_record') %>", "_doClear()");
+}
+
+function _doClear()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  location.href = "<%= url_for :controller => 'timecards', :action => 'destroy' %>?id=" + $("timecard_id").value + "&user_id=<%= @selected_user.id %>";
+}
+
+function showDetail(date, schedule_id, title)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+  new Ajax.Request(
+          "<%= url_for :controller => 'schedules', :action => 'show' %>?id=" + schedule_id,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          mainWidth*80/100+"," + mainHeight*80/100,
+                          "TRAY",
+                          "",
+                          title,
+                          "<br/>"+request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function editDetail(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&edit_id="+id;
+}
+
+function doDelete(date, id, title)
+{
+  confm("<%=h t('paren.square.left') %>"+title+"<%=h t('schedule.confirm_to_delete') %>", "_doDelete('"+date+"', '"+id+"')");
+}
+
+function _doDelete(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&doDelete="+id;
+}
+
+var thetisBox = null;
+
+function inputBreak(org_start, org_end)
+{
+  if (thetisBox != null){
+    thetisBox.remove();
+    thetisBox = null;
+  }
+
+  var hours = new Array(
+  <% THETIS_HOURS.each do |hour| %>
+        <%=h hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
+  <% end %>
+      );
+  var mins = new Array(
+  <% THETIS_MINUTES.each do |min| %>
+        <%=h min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
+  <% end %>
+      );
+  var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);
+
+  thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('timecard.input_break') %>";
+  thetisBox.overflow = "hide";
+  thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
+}
+
+function onBreakOK()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+          "div_break",
+          "<%= url_for :controller => 'timecards', :action => 'update_break' %>?id=" + $("timecard_id").value,
+          {
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(document.form_span) + "&date=<%= date_s %>&user_id=<%= @selected_user.id %>&authenticity_token=<%= form_authenticity_token %>",
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBox.remove();
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+function onBreakCancel()
+{
+  thetisBox.remove();
+  thetisBox = null;
+}
+
+function doDeleteBreak(org_start, org_end)
+{
+  confm("<%=h t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%=h t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
+}
+
+function _doDeleteBreak(org_start, org_end)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+          "div_break",
+          "<%= url_for :controller => 'timecards', :action => 'delete_break' %>?id=" + $("timecard_id").value,
+          {
+            asynchronous:true,
+            evalScripts:false,
+            parameters:"org_start=" + encodeURIComponent(org_start) + "&org_end=" + encodeURIComponent(org_end) + "&user_id=<%= @selected_user.id %>&authenticity_token=<%= form_authenticity_token %>",
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBox.remove();
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+function changeWorkcode(workcode)
+{
+  var isOff = checkOff(workcode);
+
+  $("start_hour").disabled = isOff;
+  $("start_min").disabled = isOff;
+  $("end_hour").disabled = isOff;
+  $("end_min").disabled = isOff;
+  $("timecard_options_business_trip").disabled = isOff;
+  
+  var times_table = $("times_table");
+  if (times_table != null) {
+    times_table.style.display = isOff?"none":"block";
+  }
+
+  var elems = document.getElementsByClassName("workcode_icon", document.form_timecard);
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].style.display = "none";
+  }
+  var workcode_icon = $("workcode_icon_"+workcode);
+  if (workcode_icon) {
+    workcode_icon.style.display = "inline";
+  }
+}
+
+function checkOff(workcode)
+{
+  var holidays = new Array(
+  <%
+  is_first = true
+  Timecard.workcodes.each do |workcode, value|
+    if value[Timecard::WKCODE_PARAM_LABORDAY] <= 0.0
+  %>
+                    <%= (is_first)?'':',' %> "<%= workcode %>"
+  <%
+      is_first = false
+    end
+  end
+  %>
+                );
+  var isOff = false;
+  for (var i=0; i < holidays.length; i++) {
+    if (holidays[i] == workcode) {
+      isOff = true;
+      break;
+    }
+  }
+  return isOff;
+}
+
+function showDescSelector()
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('timecard.select_from_recent_desc') %>";
+  new Ajax.Request(
+          "<%= url_for :controller => 'timecards', :action => 'recent_descriptions' %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          mainWidth*70/100+"," + mainHeight*70/100,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function setAppropriateTime(sw, hour_str, min_str)
+{
+  if (!hour_str || !min_str) {
+    var date = new Date();
+    hour_str = date.getHours().toString();
+    min_str = date.getMinutes().toString();
+  }
+
+  var timeVal = _timeToVal(hour_str, min_str);
+
+  var hourElem = null;
+  var minElem = null;
+
+  if (sw == "start") {
+    hourElem = $("start_hour");
+    minElem = $("start_min");
+  } else {
+    hourElem = $("end_hour");
+    minElem = $("end_min");
+  }
+
+  var hourIdx = -1;
+  var minIdx = -1;
+
+  for (var i=0; i < hourElem.options.length; i++) {
+    if (hourElem.options[i].value == "") {
+      continue;
+    }
+    for (var k=0; k < minElem.options.length; k++) {
+      if (minElem.options[k].value == "") {
+        continue;
+      }
+      var refVal = _timeToVal(hourElem.options[i].value, minElem.options[k].value)
+      if (refVal == timeVal) {
+        hourElem.options[i].selected = true;
+        minElem.options[k].selected = true;
+        return;
+      } else if (timeVal < refVal) {
+        hourIdx = i;
+        minIdx = k;
+        break;
+      }
+    }
+    if (hourIdx >= 0) {
+      break;
+    }
+  }
+
+  if (hourIdx >= 0) {
+    if (sw != "start") {
+      if (minIdx > 0) {
+        minIdx--;
+      } else {
+        if (hourIdx > 0) {
+          hourIdx--;
+        } else {
+          hourIdx = hourElem.options.length - 1;
+        }
+        minIdx = minElem.options.length - 1;
+      }
+    }
+    hourElem.options[hourIdx].selected = true;
+    minElem.options[minIdx].selected = true;
+  } else {
+    if (sw == "start") {
+      hourElem.options[0].selected = true;
+      minElem.options[0].selected = true;
+    } else {
+      hourElem.options[hourElem.options.length-1].selected = true;
+      minElem.options[minElem.options.length-1].selected = true;
+    }
+  }
+}
+
+function _timeToVal(hour_str, min_str)
+{
+  return (Number(hour_str)*100 + Number(min_str));
+}
+//-->
+</script>
+
+

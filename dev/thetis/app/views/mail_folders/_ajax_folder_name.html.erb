@@ -1,0 +1,14 @@
+<%
+unless @mail_folder.nil?
+  div_id = 'mailTree:' + @mail_folder.id.to_s
+%>
+  <%
+  icons = @mail_folder.get_icons
+  folder_open = icons[1]
+  folder_close = icons[2]
+  %>
+  <img id="<%= div_id %>_open" src="<%= folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= folder_close %>" border="0" style="display:none;">
+  <span id="<%= div_id %>_name"><%=h @mail_folder.name %></span>
+<% end %>
+
+<%= render :partial => 'common/flash_notice' %>

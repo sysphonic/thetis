@@ -1,0 +1,89 @@
+
+<% login_user = session[:login_user] %>
+
+<% if Folder.check_user_auth(@folder_id, login_user, 'w', true) %>
+
+  <% if @items.nil? or @items.empty? %>
+
+    <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+      <tr>
+        <td valign="top">
+          <br/><br/><br/>
+          <table align="center" width="80%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+                <%=h t('paren.no_items') %>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+  <% else %>
+
+    <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+      <tr>
+        <td id="sortable_items" valign="top">
+        <%
+        users_cache = {}
+        @items.each_with_index do |item, idx|
+          td_class = (idx % 2 == 1) ? 'list_td_off' : 'list_td_on'
+
+          if item.user_id.nil? or item.user_id == 0
+            user_name = ''
+          else
+            user_name = User.get_name(item.user_id, users_cache)
+          end
+          %>
+          <div id="item_<%= item.id %>" class="<%= td_class %>" style="padding:0px;">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td nowrap style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+                  <%
+                  updated_at = ''
+                  unless item.updated_at.nil?
+                    updated_at = '( ' + item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') + ' )'
+                  end
+                  %>
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+                  <%
+                  if item.public
+                    scope = '<span style="color:orangered;">' + t('schedule.public') + "</span>"
+                  else
+                    scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
+                  end
+                  %>
+                  [<%= item.id %>]&nbsp;&nbsp;<span style="color:navy;"><%= truncate(item.title, :length => 20) %></span> <%= truncate(user_name, :length => 10) %> <span style="font-size:10pt"><%= updated_at %></span> <%= raw(scope) %>
+                </td>
+              </tr>
+            </table>
+          </div>
+        <% end %>
+        </td>
+      </tr>
+    </table>
+
+    <%= sortable_element('sortable_items', :url => {:controller => 'folders', :action => 'update_items_order', :id => @items.first.folder_id }, :with => "Sortable.serialize('sortable_items', {name:'items_order'})", :tag => 'div') %>
+
+  <% end %>
+
+<% else %>
+
+  <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+    <tr>
+      <td valign="top">
+        <br/><br/><br/>
+        <table align="center" width="80%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+              <%=h t('folder.need_auth_to_modify') %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+
+<% end %>
+

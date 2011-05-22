@@ -1,0 +1,34 @@
+<table align="center" cellspacing="0" cellpadding="0" width="85%">
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td align="center">
+      <% @item.images_without_content.each do |img| %>
+        <div style="padding:15px 0px; text-align:center;">
+          <table cellspacing="0" cellpadding="0">
+            <tr>
+              <td class="img_td" align="center">
+                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :rand => rand(10000000000)) %>
+                <img id="<%= "img#{img.id}" %>" src="<%= img_url %>" />
+              </td>
+            </tr>
+          <% unless img.title.nil? or img.title.empty? %>
+            <tr>
+              <td class="img_title_td" align="center">
+                &lt;<%=h img.title %>&gt;
+              </td>
+            </tr>
+          <% end %>
+          </table>
+
+        <% unless img.memo.nil? or img.memo.empty? %>
+          <div style="height:8px;"></div>
+          <div class="img_memo_td" width="100%">
+            <pre style="font-size:10pt;"><%=h img.memo %></pre>
+          </div>
+        <% end %>
+
+        </div>
+      <% end %>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,222 @@
+
+<%= render :partial => 'common/jkl_calendar_init' %>
+
+<script type="text/javascript">
+<!--
+var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
+calDisp.setFunc(
+          function() {
+            $('date_wday').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            document.form_schedule.submit();
+            prog('TOP-RIGHT');
+          }
+        );
+calDisp.setStyle( "frame_color", "#3333CC" );
+//-->
+</script>
+
+
+<%
+login_user = session[:login_user]
+
+if login_user.nil?
+  login_id = ''
+else
+  login_id = login_user.id.to_s
+end
+
+date_string = @date.strftime(Schedule::SYS_DATE_FORM)
+
+@groups_cache ||= {}
+@teams_cache ||= {}
+%>
+
+<%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
+
+<table align="center" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left" width="30%">
+    <% unless login_user.nil? %>
+      <table align="left" cellspacing="0" cellpadding="0" width="65">
+        <tr>
+          <td align="left" nowrap width="30">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'day', :id => date_string, :showNew => 'true' %>';">
+          </td>
+          <% if login_user.admin? User::AUTH_SCHEDULE %>
+          <td width="5"></td>
+          <td align="left" nowrap width="30">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'configure' %>';">
+          </td>
+          <% end %>
+        </tr>
+      </table>
+    <% end %>
+    </td>
+    <td align="center" nowrap width="40%">
+      <% if login_user.nil? %>
+        &nbsp;&nbsp;<span style="color:navy"><%=h t('schedule.login_required') %></span>&nbsp;&nbsp;
+      <% end %>
+    </td>
+    <td align="right" nowrap width="30%">
+      <%
+      display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
+      unless login_user.nil?
+        groups_a = login_user.get_groups_a
+        groups_a.each do |group_id|
+          display << [h(Group.get_name(group_id)), 'group_'+group_id]
+        end
+        teams_a = login_user.get_teams_a
+        teams_a.each do |team_id|
+          display << [h(Team.get_name(team_id, @teams_cache)), 'team_'+team_id]
+        end
+        unless groups_a.include?(@group_id)
+          display << [h(Group.get_name(@group_id)), 'group_'+@group_id]
+        end
+        display << [h(t('group.other_group')), 'group_other']
+      end
+      %>
+      <%= h t('cap.display') %>
+      <%= select_tag 'display',
+           options_for_select(display, params[:display]),
+           :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
+      %>
+    </td>
+  </tr>
+</table>
+
+<table align="center" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="center">
+<%
+yesterday = @date - 1
+tomorrow = @date + 1
+last_week = @date - 7
+next_week = @date + 7
+%>
+      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'group', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'group', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_string %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'group', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'group', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<% if @user_schedule_hash.nil? or @user_schedule_hash.empty? %>
+  <div style="padding-top:20px;">
+    <table width="95%" cellspacing="0" cellpadding="0" style="border:green 1px solid; border-collapse:collapse;">
+      <tr height="50">
+        <td align="center" style="color:mediumblue;">
+          <%= t('paren.no_users') %>
+        </td>
+      </tr>
+    </table>
+  </div>
+<%
+else
+  @user_schedule_hash.each do |user_id, schedules_h|
+    @schedules_hash = schedules_h
+    user_name = User.get_name(user_id)
+%>
+  <div id="div_timetable_<%= user_id %>">
+    <table align="center" width="100%" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="left"  style="color:navy;">
+          <%=h user_name %>&nbsp;
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/calendar.gif" alt="<%= h t('schedule.calendar') %>" title="<%= h t('schedule.calendar') %>" onclick="showCalendar('<%= user_id %>', '<%=ApplicationHelper.h_s_quote(user_name) %>');">
+        </td>
+      </tr>
+      <tr height="5"><td></td></tr>
+      <tr>
+        <td>
+          <%= render :partial => 'weektable' %>
+        </td>
+      </tr>
+      <tr height="10"><td></td></tr>
+    </table>
+  </div>
+<%
+  end
+end
+%>
+
+
+<script type="text/javascript">
+<!--
+
+function showScheduleDetail(schedule_id, title)
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+  new Ajax.Request(
+          "<%= url_for :controller => 'schedules', :action => 'show' %>?id=" + schedule_id,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          mainWidth*80/100+"," + mainHeight*80/100,
+                          "TRAY",
+                          "",
+                          title,
+                          "<br/>"+request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function editDetail(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&edit_id="+id;
+}
+
+function doDelete(date, id, title)
+{
+  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('schedule.confirm_to_delete') %>", "_doDelete('"+date+"', "+id+")");
+}
+
+function _doDelete(date, id)
+{
+  prog("TOP-RIGHT");
+  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&doDelete="+id;
+}
+
+function showGroupTree()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'schedules', :action => 'get_group_users' %>\" onsubmit=\"var display=$('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", "");
+}
+
+function showCalendar(user_id, user_name)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('schedule.calendar') %> - " + user_name ;
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*9/10)+","+(mainHeight*9/10),
+            "IFRAME",
+            "",
+            "",
+            "<%= url_for :controller => 'schedules', :action => 'month' %>?id=" + getDateString() + "&user_id=" + user_id
+          );
+}
+
+//-->
+</script>

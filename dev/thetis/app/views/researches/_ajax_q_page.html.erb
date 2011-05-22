@@ -1,0 +1,30 @@
+<% unless @tmpl_q_folder.nil? %>
+
+<table class="info_area" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td id="sortable_items" align="left" style="padding-left:10px;">
+      <%
+      unless @items.nil?
+        @items.each do |item|
+      %>
+        <div id="item_<%= item.id %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%=h t('msg.drag_to_change_orger') %>" style="cursor:move" />
+          <a class="a_underline" href="#" onclick="var thetisBox=new ThetisBox; thetisBox.title='<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>'; thetisBox.show('CENTER', (mainWidth*8/10)+','+(mainHeight*8/10), 'IFRAME', '', '', '<%= url_for :controller => 'items', :action => 'show_for_print', :id => item.id %>'); return false;">
+            <%=h truncate(item.title, :length => 20) %>
+          </a>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeletePage(<%= item.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20)%>'); return false;" />
+        </div>
+      <%
+        end
+      end
+      %>
+    </td>
+  </tr>
+</table>
+
+<%= sortable_element 'sortable_items', :url => {:controller => 'folders', :action => 'update_items_order', :id => @tmpl_q_folder.id }, :with => "Sortable.serialize('sortable_items', {name:'items_order'})", :tag => "div" %>
+
+<%= render :partial => 'common/flash_notice' %>
+
+<% end %>

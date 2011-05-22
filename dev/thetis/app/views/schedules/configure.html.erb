@@ -1,0 +1,183 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= form_tag( {:controller => 'schedules', :action => 'update_config'}, :name => 'form_config', :method => 'post') %>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="10"><td></td></tr>
+  <tr>
+    <td width="49%" valign="top">
+
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
+              <%=h t('msg.holidays') %>
+            </td>
+          </tr>
+          <tr>
+            <td align="center" style="padding-top:10px;">
+              <table cellspacing="0" cellpadding="0">
+                <tr>
+                  <td>
+                    <select id="holidays" name="holidays[]" class="select_multi" size="15" multiple style="width:220px;">
+                    <%
+                    unless @holidays.nil?
+                      @holidays.each do |schedule|
+                        val = schedule.start.strftime(Schedule::SYS_DATE_FORM) + ', ' + schedule.title
+                        disp = val
+                    %>
+                      <option value="<%= val %>"><%=h disp %></option>
+                    <%
+                      end
+                    end
+                    %>
+                    </select>
+                  </td>
+                  <td width="10">&nbsp;</td>
+                  <td valign="top">
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                      <tr>
+                        <td align="center">
+                          <input type="button" value="<%=h t('btn.add') %>" onclick="addHolidays();" style="width:80px;">
+                        </td>
+                      </tr>
+                      <tr height="5"><td></td></tr>
+                      <tr>
+                        <td align="center">
+                          <input type="button" value="<%=h t('btn.remove') %>" onclick="removeHolidays();" style="width:80px;">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="10"><td></td></tr>
+          <tr>
+            <td style="width:100%;" colspan="2" align="right">
+              <input type="button" style="width:100px;" value="<%=h t('btn.register') %>" onclick="doUpdateConfig();">
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </td>
+    <td width="10">&nbsp;</td>
+    <td width="49%" valign="top">
+
+
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+      <%=h t('btn.back') %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+<br/>
+
+<script type="text/javascript">
+
+function addHolidays()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+
+  var form_tag = "<form action=\"\" onsubmit=\"var ret=_addHolidays($('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} ThetisBox.remove("+thetisBox.id+"); return false;\">";
+  thetisBox.setFormTag(form_tag);
+  thetisBox.progress = false;
+  var cap = "<%=h t('schedule.specify_holidays_info1') %><br/>"
+            + "<div style='text-indent:20px'><%=h t('schedule.specify_holidays_info2') %></div>"
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", cap, "");
+}
+
+function _addHolidays(val)
+{
+  if (val == null) {
+    return false;
+  }
+  var lines = val.split("\n");
+  if (lines == null) {
+    return false;
+  }
+
+  var list = $("holidays");
+  var holidays = new Array();
+
+  for (var i=0; i < lines.length; i++) {
+    lines[i] = trim(removeCtrlChar(lines[i]));
+    if (lines[i].length <= 0) {
+      continue;
+    }
+    var date = null;
+    var name = null;
+    var tokens = lines[i].split(",");
+    if (tokens != null) {
+      try {
+        date = trim(tokens[0]);
+        if (date.match(/^[0-9][0-9][0-9][0-9]-[01]?[0-9]-[0-3]?[0-9]$/)) {
+          date_params = date.split("-");
+          date = new Date(date_params[0], parseInt(date_params[1], 10)-1, date_params[2]);
+          tokens.shift();
+          name = trim(tokens.join(","));
+        }
+      } catch (e) {}
+    }
+    if (date == null || name == null || name.length <= 0) {
+      msg("<%=h t('msg.format_invalid') %>: "+lines[i]);
+      return false;
+    }
+    date = getDateString(date);
+    holidays.push(new Array(date, name));
+  }
+  
+  for (var i=0; i < holidays.length; i++) {
+    var date = holidays[i][0];
+    var name = holidays[i][1];
+    addList(list, date+', '+name, date+', '+name, false);
+  }
+  sortList(list, "DESC");
+  return true;
+}
+
+function removeHolidays()
+{
+  var del_ary = deleteList($("holidays"));
+}
+
+function doUpdateConfig(user_id)
+{
+  selectListAll($("holidays"));
+
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+              document.form_config.action,
+              {
+                asynchronous:true,
+                evalScripts:true,
+                parameters:Form.serialize(document.form_config),
+                onComplete:function(request) {
+                  thetisBox.remove();
+
+                  if (request.responseText == "") {
+                    tips("<%=h t('msg.register_success')%>");
+                  } else {
+                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  }
+                }
+              }
+            );
+  return true;
+}
+
+</script>
+

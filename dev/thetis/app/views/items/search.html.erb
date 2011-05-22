@@ -1,0 +1,177 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= form_tag( {:action => 'search'}, :method => 'post', :name => 'form_search') %>
+
+<%
+login_user = session[:login_user]
+
+folders_cache = {}
+%>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td align="right">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] -%>
+      <%= h t('msg.search_in') %> <%= select_tag 'find_in',
+                                 options_for_select([[h(t('folder.all')),Item::FOLDER_ALL],
+                                                    [h(t('folder.current')),Item::FOLDER_CURRENT],
+                                                    [h(t('folder.lower')), Item::FOLDER_LOWER]], 
+                                                    params[:find_in])
+              %>
+      <input type="button" value="<%= h t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= h t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => params[:from_action] %>';"/>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" nowrap style="color:sienna">
+      <%
+      folder_id = params[:folder_id]
+      if folder_id.nil? or folder_id.empty?
+      %>
+
+      <% else %>
+            <%=h t('cap.folder') %> <%=h Folder.get_path(folder_id, folders_cache) %>
+      <% end %>
+          </td>
+          <td align="right">
+            <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_search.submit();">
+            <%
+            excepts = nil
+            excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
+            Item.sort_opts(excepts).each do |text_val|
+              selected = ''
+              selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
+            %>
+              <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
+            <% end %>
+            </select>
+            &nbsp;&nbsp;
+
+            <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%=h t('btn.arrow_back') %></a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+</table>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag 'thumbnails', params[:thumbnails] %>
+<%= hidden_field_tag 'from_action', params[:from_action] %>
+
+</form>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('item', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      pagination = will_paginate(@item_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<% users_cache = {} %>
+
+<div id="div_list" style="overflow:scroll;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background-color:white;">
+<% @items.each do |item| %>
+  <tr>
+    <td>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
+            <%=h item.id %>.&nbsp;&nbsp;
+            <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => item.id %>'; return false;">
+              <%=h truncate(item.title, :length => 20) %>
+            </a>
+            <% if !item.workflow.nil? and item.workflow.decided? %>
+              <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%=h item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
+            <% end %>
+            &nbsp;&nbsp;
+          <% unless item.folder_id.nil? %>
+            <span style="color:red;"><%=h item.get_folder_path(folders_cache) %></span>
+          <% end %>
+          &nbsp;&nbsp;
+          <% if !login_user.nil? and item.editable?(login_user.id) %>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
+          <% end %>
+          <%
+          if !login_user.nil? and item.deletable?(login_user.id)
+            del_type = 'null'
+            del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
+          %>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>); return false;" />
+          <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align:left; font-size:11pt; padding:5px; line-height:14pt; text-indent:60px;">
+            <span style="color:green;">by <%=h User.get_name(item.user_id, users_cache) %></span>
+            <% unless item.updated_at.nil? %>
+            &nbsp;<span style="text-align:left; font-size:9pt; vertical-align:middle;">(<%=h item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <table align="center" width="90%">
+              <tr>
+                <td align="left" bgcolor="#ccffff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
+<div>
+  <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= h Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
+  <%= ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100))) %>
+</div>
+<span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= h Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
+<br/>
+<% unless item.description.nil? or item.description.empty? %>
+<%=h truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>
+<% end %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+      <br/>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<script type="text/javascript">
+<!--
+function doDelete(item_id, title, del_type)
+{
+  if (del_type == "<%= Item::XTYPE_PROJECT %>") {
+    confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+title+"<%=h t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDelete("+item_id+")");
+  } else {
+    confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDelete("+item_id+")");
+  }
+}
+
+function _doDelete(item_id)
+{
+  document.form_search.action = "<%= url_for :controller => 'items', :action => 'destroy' %>?id="+item_id;
+  document.form_search.submit();
+
+  prog("TOP-RIGHT");
+}
+
+//-->
+</script>
+

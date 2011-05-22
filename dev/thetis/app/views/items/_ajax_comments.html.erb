@@ -1,0 +1,14 @@
+<%
+if @for_print.nil? or @for_print == false
+  profiles_cache = {}
+end
+
+@item.comments.each do |comment|
+  @comment = comment
+  next unless @comment.xtype == Comment::XTYPE_MSG
+%>
+  <a name="comment_<%= @comment.id %>"></a>
+  <div id="div_comment_<%= @comment.id %>">
+    <%= render :partial => "ajax_comment", :locals => {:profiles_cache => profiles_cache} %>
+  </div>
+<% end %>

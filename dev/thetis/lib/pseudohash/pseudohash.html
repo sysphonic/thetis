@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+<TITLE>pseudohash.rb</TITLE>
+</HEAD>
+<BODY>
+<H1><A NAME="label:0">PseudoHash class
+</A></H1><!-- RDLabel: "PseudoHash class" -->
+<H2><A NAME="label:1">SYNOPSIS
+</A></H2><!-- RDLabel: "SYNOPSIS" -->
+<PRE>
+-----
+  require "pseudohash"
+
+  record = PseudoHash.new.with_order ['Alice', 'Bob', 'Charlee']
+  record['Charlee'] = 90
+  record['Alice'] = 91
+  record['Bob'] = 89
+  record.each{|k,v|
+    print "#{k}: #{v}; "
+  }
+  print "\n"
+-----
+produces:
+  Alice: 91; Bob: 89; Charlee 90; 
+</PRE>
+<H2><A NAME="label:2">DESCRIPTION
+</A></H2><!-- RDLabel: "DESCRIPTION" -->
+<P>
+PseudoHash is a subclass of Hash but can be specified the order of keys. 
+The order of keys determines the order of the iterations of <CODE>each</CODE>. 
+</P>
+<H2><A NAME="label:3">METHODS
+</A></H2><!-- RDLabel: "METHODS" -->
+<DL>
+<DT><A NAME="label:6">phash[<VAR>key</VAR>, <VAR>set</VAR> = false] = <VAR>val</VAR>
+</A><!-- RDLabel: "phash[key,set= false] =val" -->
+<DD>
+<P>
+Stores <VAR>val</VAR> associating to <VAR>key</VAR>. 
+If <VAR>set</VAR> is true and <CODE>order</CODE> does not include <VAR>key</VAR>, 
+the <VAR>key</VAR> will be appended to order. 
+</P>
+</DD>
+<DT><A NAME="label:7">order
+</A><!-- RDLabel: "order" -->
+<DD>
+<P>
+Returns the order of keys.
+</P>
+</DD>
+<DT><A NAME="label:8">order= <VAR>array</VAR>
+</A><!-- RDLabel: "order=array" -->
+<DD>
+<P>
+Sets the order of the keys to <VAR>array</VAR>. 
+</P>
+</DD>
+<DT><A NAME="label:9">order_of <VAR>key</VAR>
+</A><!-- RDLabel: "order_ofkey" -->
+<DD>
+<P>
+Returns the position of <VAR>key</VAR> in `<CODE>order</CODE>. 
+</P>
+</DD>
+<DT><A NAME="label:10">with_oder <VAR>array</VAR>
+</A><!-- RDLabel: "with_oderarray" -->
+<DD>
+<P>
+Similar to order= but returns self. 
+</P>
+</DD>
+<DT><A NAME="label:11">each{|k,v| ....}
+</A><!-- RDLabel: "each{|k,v| ....}" -->
+<DT><A NAME="label:12">each_pair{|k,v| ....}
+</A><!-- RDLabel: "each_pair{|k,v| ....}" -->
+<DD>
+<P>
+Iterates over all pairs of key and value in the order of `<CODE>order</CODE>'. 
+The keys not included in `<CODE>order</CODE>' will be postponed. 
+</P>
+</DD>
+</DL>
+<H2><A NAME="label:4">AUTHORS
+</A></H2><!-- RDLabel: "AUTHORS" -->
+<P>
+Gotoken
+</P>
+<H2><A NAME="label:5">HISTORY
+</A></H2><!-- RDLabel: "HISTORY" -->
+<PRE>
+2000-12-25 Created.
+</PRE>
+
+</BODY>
+</HTML>

@@ -1,0 +1,312 @@
+<%
+login_user = session[:login_user]
+
+@groups_cache ||= {}
+@teams_cache ||= {}
+%>
+
+<%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule') %>
+
+<% if params[:user_id].nil? %>
+  <table align="center" width="95%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left" width="30%">
+      <% unless login_user.nil? %>
+        <table align="left" cellspacing="0" cellpadding="0" width="65">
+          <tr>
+            <td align="left" nowrap width="30">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'day', :id => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true' %>';">
+            </td>
+            <% if login_user.admin? User::AUTH_SCHEDULE %>
+            <td width="5"></td>
+            <td align="left" nowrap width="30">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'configure' %>';">
+            </td>
+            <% end %>
+          </tr>
+        </table>
+      <% end %>
+      </td>
+      <td align="center" nowrap width="40%">
+        <% if login_user.nil? %>
+          &nbsp;&nbsp;<span style="color:navy"><%=h t('schedule.login_required') %></span>&nbsp;&nbsp;
+        <% end %>
+      </td>
+      <td align="right" nowrap width="30%">
+        <%
+        display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
+        unless login_user.nil?
+          groups_a = login_user.get_groups_a
+          groups_a.each do |group_id|
+            display << [h(Group.get_name(group_id)), 'group_'+group_id] unless group_id == 0
+          end
+          teams_a = login_user.get_teams_a
+          teams_a.each do |team_id|
+            display << [h(Team.get_name(team_id, @teams_cache)), 'team_'+team_id] unless team_id == 0
+          end
+          display << [h(t('group.other_group')), 'group_other']
+        end
+        %>
+        <%= h t('cap.display') %>
+        <%= select_tag 'display',
+             options_for_select(display, params[:display]),
+             :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
+        %>
+      </td>
+    </tr>
+  </table>
+<% end %>
+
+<table align="center" width="95%" cellspacing="0" cellpadding="0">
+  <tr height="25">
+    <td width="25%"></td>
+    <td align="center" width="50%">
+      <%
+      last_month = Date.new(@date.year, @date.month, 1) << 1
+      next_month = Date.new(@date.year, @date.month, 1) >> 1
+      %>
+      <a class="calendar_paging" href="#" onclick="doPageCalendar('<%= last_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <span style="color:crimson; cursor:pointer;" onclick="selectMonth();"><u><%= sprintf('%4d - %02d', @date.year, @date.month) %></u></span>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
+    </td>
+    <td align="right" width="25%">
+    <% if params[:user_id].nil? and !login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
+      <input type="hidden" name="timecard_icons" value="false" />
+      <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for :controller => 'schedules', :action => 'month' %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%=h t('timecard.show_icons') %></label>
+    <% end %>
+    </td>
+  </tr>
+</table>
+
+<table id="div_calendar" style="overflow:auto;" cellspacing="5" cellpadding="3" align="center" width="95%" style="background-color:white">
+  <tr height="20">
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[0] %>;" align="center" width="14%">
+      SUN
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[1] %>;" align="center" width="14%">
+      MON
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[2] %>;" align="center" width="14%">
+      TUE
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[3] %>;" align="center" width="14%">
+      WED
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[4] %>;" align="center" width="14%">
+      THU
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[5] %>;" align="center" width="14%">
+      FRI
+    </td>
+    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[6] %>;" style="background-color:turquoise;" align="center" width="14%">
+      SAT
+    </td>
+  </tr>
+<%
+today = Date.today
+first_day = Date.new @date.year, @date.month, 1
+days = Date.new(@date.year, @date.month, -1).day
+day = 0
+for week in 0..5 do
+%>
+  <tr>
+<%
+for wd in 0..6 do
+  day += 1 if day > 0
+  day = 1 if day == 0 and wd == first_day.wday
+
+  if day >= 1 and day <= days
+    if params[:user_id].nil? or params[:user_id].empty?
+      schedules = Schedule.get_user_day(login_user, first_day+(day-1))
+    else
+      schedules = Schedule.get_somebody_day(login_user, params[:user_id], first_day+(day-1))
+    end
+%>
+    <%
+      day_caption = day.to_s
+      if @date.year == today.year and @date.month == today.month and day == today.day
+        day_caption = '<div style="background-color:darkorange; color:white; width:95%;">&nbsp;<b>' + day_caption + '</b></div>'
+      end
+    %>
+    <td class="td_calendar" valign="top" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
+      <%= raw(day_caption) %><br/>
+      <%
+      standard_num = 3
+      if schedules.nil? or schedules.empty?
+      %>
+        <%= raw('<br/>' * standard_num) %>
+      <%
+      else
+        schedules.each do |schedule|
+          title = ApplicationHelper.take_ncols(schedule.title, 16, '...')
+
+          if schedule.holiday?
+      %>
+            <div class="span_holiday" style="padding:1px;" width="100%" align="center"><%=h title %></div>
+          <% elsif schedule.repeat? %>
+            <b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<%=h title %><br/>
+          <% else %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="" />&nbsp;<%=h title %><br/>
+        <%
+          end
+        end
+        br = ''
+        if schedules.length < standard_num
+          br = '<br/>' * (standard_num - schedules.length)
+        end
+        %>
+        <%= raw(br) %>
+    <%
+    end
+
+    unless @timecards.nil?
+      date_s = Date.new(@date.year, @date.month, day).strftime(Schedule::SYS_DATE_FORM)
+      timecard = @timecards[date_s]
+      unless timecard.nil?
+    %>
+        <% alt = h(timecard.workcode_name) %>
+        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => date_s, :user_id => login_user.id %>'; return false;">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
+          <%
+          options = ''
+          if timecard.business_trip?
+            options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" alt="'+t('timecard.business_trip')+'" title="'+t('timecard.business_trip')+'">'
+          end
+          %>
+          <%= raw(options) %>
+          <% if !timecard.start.nil? and timecard.end.nil? %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>"/>
+          <% end %>
+        </a>
+    <%
+      end
+    end
+    %>
+    </td>
+  <% else %>
+    <td class="td_calendar_empty">
+      &nbsp;
+    </td>
+  <% end %>
+<% end %>
+  </tr>
+<%
+  break if day >= days
+end
+%>
+</table>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+</form>
+
+
+<script type="text/javascript">
+<!--
+
+function doPageCalendar(date)
+{
+  var url = "<%= url_for :controller => 'schedules', :action => 'month' %>?date=" + date;
+
+<% unless params[:user_id].nil? %>
+  url += "&user_id=<%= params[:user_id] %>";
+<% end %>
+
+  prog("TOP-RIGHT");
+  document.location.href = url;
+}
+
+function doMoveToDay(date)
+{
+  var url = "<%= url_for :controller => 'schedules', :action => 'day' %>?date=" + date;
+
+<% unless params[:user_id].nil? %>
+  url += "&user_id=<%= params[:user_id] %>";
+<% end %>
+
+  prog("TOP-RIGHT");
+  document.location.href = url;
+}
+
+var thetisBox = null;
+
+function selectMonth()
+{
+  if (thetisBox != null){
+    thetisBox.remove();
+    thetisBox = null;
+  }
+
+  var content = getYmSelector("onYmSelectOK()", "onYmSelectCancel()");
+
+  thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('msg.select_month') %>";
+  thetisBox.overflow = "hide";
+  thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
+}
+
+function getYmSelector(onOk, onCancel)
+{
+  var date = new Date();
+  var y = date.getFullYear();
+  var m = date.getMonth()+1;
+
+  content = "<form name='form_ym'>";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' valign='middle'>";
+  content += "      <select name='year'>";
+  for (var i=y-10; i <= y+10; i++) {
+    var selected = "";
+    if (i == y) selected = "selected";
+    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
+  }
+  content += "      </select>";
+  content += " - ";
+  content += "      <select name='month'>";
+  for (var i=1; i <= 12; i++) {
+    var selected = "";
+    if (i == m) selected = "selected";
+    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
+  }
+  content += "      </select>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='<%= h t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= h t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "</form>";
+  return content;
+}
+
+function onYmSelectOK()
+{
+  var date = document.form_ym.year.value + "-" + fillLeft(document.form_ym.month.value, "0", 2) + "-01";
+  thetisBox.remove();
+  doPageCalendar(date);
+}
+
+function onYmSelectCancel()
+{
+  thetisBox.remove();
+  thetisBox = null;
+}
+
+function showGroupTree()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'schedules', :action => 'get_group_users' %>\" onsubmit=\"var display=$('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", "");
+}
+
+//-->
+</script>
+

@@ -1,0 +1,48 @@
+<table id="list_items" width="100%" height="100%" cellpadding="0" cellspacing="0" style="background-color:aliceblue;">
+  <tr>
+    <td valign="top">
+      <br/>
+      <br/>
+      <table align="center" width="80%" cellpadding="0" cellspacing="0" style="background-color:white; border:5px dodgerblue dashed;">
+        <tr height="10">
+          <td></td>
+        </tr>
+        <tr>
+          <td align="left" style="padding-left:20px; color:navy;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" style="vertical-align:middle;">&nbsp;
+            <%=h t('item.specify_folder_info1') %> <a href="#" onclick="showFolderTreeToSelect('');"><%=h t('btn.select_folder') %></a> <%=h t('item.specify_folder_info2') %><br/>
+          </td>
+        </tr>
+        <tr height="10">
+          <td></td>
+        </tr>
+        <tr>
+          <td align="left" style="padding-left:20px; color:navy;">
+            <%= t('item.bbs_info1') %>
+            <a href="#" onclick="var bbs_help=$('bbs_help'); if (bbs_help.style.display=='block') { bbs_help.style.display='none'; } else { bbs_help.style.display='block'; } return false;"><span style="font-size:10pt; color:royalblue;"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/down.gif" style="vertical-align:middle;"> <u><%=h t('btn.help') %></u></span></a><br/>
+          </td>
+        </tr>
+        <tr height="15">
+          <td></td>
+        </tr>
+        <tr>
+          <td align="center" valign="top">
+            <table id="bbs_help" align="center" width="80%" cellpadding="0" cellspacing="0" style="display:none;">
+              <tr>
+                <td align="left" valign="top" style="padding:10px; color:mediumblue; background-color:aliceblue;">
+                  &nbsp;&nbsp;<%= t('item.if_admin') %><br/>
+                  <div style="padding-left:30px;">
+                  <%= t('menu.folder_tree') + t('arrow.right_full') + t('folder.opt.display_control') %><br/>
+                  <%= raw(t('paren.square_i.left')) + t('folder.disp_ctrl.added_to_bbs') + raw(t('paren.square_i.right')) %><br/>
+                  </div>
+                  <%= t('item.bbs_info2') %><br/>
+                </td>
+              </tr>
+              <tr height="20"><td></td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

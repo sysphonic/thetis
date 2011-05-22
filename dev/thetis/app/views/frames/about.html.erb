@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" -->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Content-Script-Type" content="text/javascript">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<title>Sysphonic Thetis</title>
+<%= stylesheet_link_tag 'thetis100' %>
+</head>
+
+<body>
+
+<table width="100%" cellspacing="0" cellpadding="0" height="100%">
+  <tr style="height:95%;">
+    <td width="200" style="padding:30px">
+      <table width="100%" onclick="window.open('http://sysphonic.com/').focus();" style="cursor:pointer; border:3px inset silver;" cellspacing="0" cellpadding="0">
+        <tr height="180">
+          <td align="center" valign="middle">
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr height="92">
+                <td width="100%" align="center" valign="bottom" style="cursor:pointer; background:url(<%= THETIS_RELATIVE_URL_ROOT %>/images/sysphonic_small.png) center top no-repeat;">
+                  <span style="font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
+                      Sysphonic
+                  </span>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td valign="top" style="padding:10px;">
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr height="10"><td></td></tr>
+        <tr>
+          <td>
+            <table width="60%" align="left" cellspacing="0" cellpadding="0">
+              <tr>
+                <td align="left" nowrap>
+                  Sysphonic <B>Thetis</B><sup>&reg;</sup>  <small align="right">ver.1.0.0</small>&nbsp;
+                </td>
+              </tr>
+              <tr>
+                <td></td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <hr width="100%">
+            <li style="font-size:10pt;"><%=h t('about.license') %><br/>
+            <li style="font-size:10pt;"><%=h t('about.license_detail') %><br/>
+          </td>
+        </tr>
+        <tr height="5"><td></td></tr>
+        <tr>
+          <td style="font-size:9pt;" align="center">
+            Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size:9pt;" align="center">
+            Thetis includes following other copyrights :
+          </td>
+        </tr>
+        <tr height="10"><td></td></tr>
+        <tr>
+          <td>
+            <div nowrap style="padding:5px; overflow:scroll; font-size:10pt; width:320px; height:100px; border:solid 1px gray;">
+<span style="background-color:turquoise">CKEditor</span> ver.3.6<br/>
+Copyright (C) 2003-2011, CKSource - Frederico Knabben<br/>
+http://ckeditor.com/<br/>
+<span style="background-color:turquoise">JKL.Calendar</span> based on ver.0.13<br/>
+Copyright 2005-2006 Kawasaki Yusuke<br/>
+http://www.kawa.net/works/js/jkl/calender.html<br/>
+<span style="background-color:turquoise">Dojo</span> ver.0.4.2(Ajax)<br/>
+Copyright (c) 2005-2006, The Dojo Foundation<br/>
+http://dojotoolkit.org<br/>
+<span style="background-color:turquoise">Prototype JavaScript framework</span> ver.1.6.1<br/>
+(c) 2005-2009 Sam Stephenson<br/>
+http://www.prototypejs.org/<br/>
+<span style="background-color:turquoise">script.aculo.us</span> v1.9.0<br/>
+Copyright (c) 2005-2010 Thomas Fuchs<br/>
+http://script.aculo.us<br/>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr style="height:5%;">
+    <td align="center" colspan="2">
+      <table align="center" width="95%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td bgcolor="silver" align="center" style="padding:5px">
+            <input type="button" onclick="window.close();" value="<%= t('btn.close') %>" />
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+</body>
+</html>

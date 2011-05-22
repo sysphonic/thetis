@@ -1,0 +1,459 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= form_tag( {:controller => 'config', :action => 'update'}, :name => 'form_config', :method => 'post', :enctype => 'multipart/form-data') %>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="15"><td></td></tr>
+  <tr>
+    <td width="49%" valign="top">
+
+      <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('config.general_settings') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.app_title') %></td>
+            <td class="item_value_td" style="width:70%;">
+              <input type="text" name="general[app_title]" value="<%=h @yaml[:general]['app_title'] %>" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.emblem_title') %></td>
+            <td class="item_value_td">
+              <input type="text" name="general[symbol_title]" value="<%=h @yaml[:general]['symbol_title'] %>" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.emblem_image') %></td>
+            <td class="item_value_td">
+              <input type="file" name="general[symbol_image]" size="30" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.header_title') %></td>
+            <td class="item_value_td">
+              <input type="text" id="general_header_title" name="general[header_title]" value="" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.header_image') %></td>
+            <td class="item_value_td">
+              <input type="file" name="general[header_image]" size="30" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.default_page') %></td>
+            <td class="item_value_td" nowrap>
+              <input type="text" id="general_default_page" name="general[default_page]" value="" style="width:95%" /><br/>
+              <% checked = (@yaml[:general]['default_topicbox']=='1')?'checked':'' %>
+              <input name="general[default_topicbox]" type="hidden" value="0" />
+              <input type="checkbox" id="general_default_topicbox" name="general[default_topicbox]" value="1" <%= checked %>><label for="general_default_topicbox"> <%=h t('config.show_topicbox') %></label>
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('config.show_topicbox_info')%>');">
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('config.cap_menus') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.mode') %></td>
+            <td class="item_value_td" style="width:70%">
+              <% checked = (@yaml[:menu]['open_user_reg']=='1')?'checked':'' %>
+              <input name="menu[open_user_reg]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_open_user_reg" name="menu[open_user_reg]" value="1" <%= checked %>><label for='menu_open_user_reg'><%=h t('config.open_user_reg') %></label>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.display') %></td>
+            <td class="item_value_td">
+              <% checked = (@yaml[:menu]['disp_equipment']=='1')?'checked':'' %>
+              <input name="menu[disp_equipment]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_equipment" name="menu[disp_equipment]" value="1" <%= checked %>><label for="menu_disp_equipment"> <%=h t('menu.equipment') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_workflow']=='1')?'checked':'' %>
+              <input name="menu[disp_workflow]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_workflow" name="menu[disp_workflow]" value="1" <%= checked %>><label for="menu_disp_workflow"> <%=h t('menu.workflow') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_research']=='1')?'checked':'' %>
+              <input name="menu[disp_research]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_research" name="menu[disp_research]" value="1" <%= checked %>><label for="menu_disp_research"> <%=h t('menu.research') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_user_list']=='1')?'checked':'' %>
+              <input name="menu[disp_user_list]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_user_list" name="menu[disp_user_list]" value="1" <%= checked %>><label for="menu_disp_user_list"> <%=h t('menu.user_list') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_mail']=='1')?'checked':'' %>
+              <input name="menu[disp_mail]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_mail" name="menu[disp_mail]" value="1" <%= checked %>><label for="menu_disp_mail"> <%=h t('menu.mail') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_addressbook']=='1')?'checked':'' %>
+              <input name="menu[disp_addressbook]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_addressbook" name="menu[disp_addressbook]" value="1" <%= checked %>><label for="menu_disp_addressbook"> <%=h t('menu.addressbook') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_paintmail']=='1')?'checked':'' %>
+              <input name="menu[disp_paintmail]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_paintmail" name="menu[disp_paintmail]" value="1" <%= checked %>><label for="menu_disp_paintmail"> <%=h t('menu.paintmail') %></label><br/>
+
+              <% checked = (@yaml[:menu]['disp_timecard']=='1')?'checked':'' %>
+              <input name="menu[disp_timecard]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_disp_timecard" name="menu[disp_timecard]" value="1" <%= checked %>><label for="menu_disp_timecard"> <%=h t('menu.timecard') %></label><br/>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.login_required') %></td>
+            <td class="item_value_td">
+              <% checked = (@yaml[:menu]['req_login_desktop']=='1')?'checked':'' %>
+              <input name="menu[req_login_desktop]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_req_login_desktop" name="menu[req_login_desktop]" value="1" <%= checked %>><label for="menu_req_login_desktop"> <%=h t('menu.desktop') %></label><br/>
+
+              <% checked = (@yaml[:menu]['req_login_items']=='1')?'checked':'' %>
+              <input name="menu[req_login_items]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_req_login_items" name="menu[req_login_items]" value="1" <%= checked %>><label for="menu_req_login_items"> <%=h t('menu.items') %></label><br/>
+
+              <% checked = (@yaml[:menu]['req_login_schedules']=='1')?'checked':'' %>
+              <input name="menu[req_login_schedules]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_req_login_schedules" name="menu[req_login_schedules]" value="1" <%= checked %>><label for="menu_req_login_schedules"> <%=h t('menu.schedules') %></label><br/>
+
+              <% checked = (@yaml[:menu]['req_login_equipment']=='1')?'checked':'' %>
+              <input name="menu[req_login_equipment]" type="hidden" value="0" />
+              <input type="checkbox" id="menu_req_login_equipment" name="menu[req_login_equipment]" value="1" <%= checked %>><label for="menu_req_login_equipment"> <%=h t('menu.equipment') %></label><br/>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+      </div>
+
+    </td>
+    <td width="10">&nbsp;</td>
+    <td width="49%" valign="top">
+
+      <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
+        <!-- Topic Box -->
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('topicbox.title') %> <%=h t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.caption') %></td>
+            <td class="item_value_td" style="width:70%;">
+              <input type="text" id="topic_caption" name="topic[caption]" value="" style="width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.html') %></td>
+            <td class="item_value_td">
+              <input type="file" name="topic[src]" size="30" style="width:95%;" />
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+
+        <!-- Note -->
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('config.note') %> <%=h t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.html') %></td>
+            <td class="item_value_td" style="width:70%;">
+              <input type="file" name="note[src]" size="30" style="width:95%;" />
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+
+        <!-- E-mail Settings -->
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('config.smtp_settings') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.from_address') %></td>
+            <td class="item_value_td" style="width:70%;" nowrap>
+              <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%=h @yaml[:smtp]['from_address'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.server') %></td>
+            <td class="item_value_td" nowrap>
+              <input type="text" id="smtp_server" name="smtp[server]" value="<%=h @yaml[:smtp]['server'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.port') %></td>
+            <td class="item_value_td" nowrap>
+              <input type="text" id="smtp_port" name="smtp[port]" value="<%=h @yaml[:smtp]['port'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.domain') %></td>
+            <td class="item_value_td">
+              <input type="text" name="smtp[domain]" value="<%=h @yaml[:smtp]['domain'] %>" style="ime-mode:disabled; width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('config.authentication') %></td>
+            <td class="item_value_td">
+              <% checked = (@yaml[:smtp]['auth_enabled']=='1')?'checked':'' %>
+              <input name="smtp[auth_enabled]" type="hidden" value="0" />
+              <input type="checkbox" id="smtp_auth_enabled" name="smtp[auth_enabled]" value="1" <%= checked %> onclick="$('smtp_auth_param').style.display=this.checked?'block':'none';" /><label for="smtp_auth_enabled"><%=h t('config.smtp_auth') %></label>
+            </td>
+          </tr>
+        </table>
+        <div id="smtp_auth_param" align="center" style="padding-left:10px; display:<%= (checked.empty?)?'none':'block' %>">
+          <%
+          checked_plain = ''
+          checked_login = ''
+          checked_cram_md5 = ''
+          case @yaml[:smtp]['auth']
+            when 'plain'; checked_plain = 'checked'
+            when 'login'; checked_login = 'checked'
+            when 'cram_md5'; checked_cram_md5 = 'checked'
+          end
+          %>
+          <div style="padding-bottom:5px;">
+            <input type="radio" id="smtp_auth_plain" name="smtp[auth]" value="plain" <%= checked_plain %> /><label for="smtp_auth_plain">Plain</label>
+            <input type="radio" id="smtp_auth_login" name="smtp[auth]" value="login" <%= checked_login %> /><label for="smtp_auth_login">Login</label>
+            <input type="radio" id="smtp_auth_cram_md5" name="smtp[auth]" value="cram_md5" <%= checked_cram_md5 %> /><label for="smtp_auth_cram_md5">CRAM MD5</label>
+            <sup style="color:red">*</sup>
+          </div>
+          <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <tr>
+              <td class="item_cap_td" nowrap><%=h t('user.u_name') %></td>
+              <td class="item_value_td" nowrap>
+                <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%=h @yaml[:smtp]['user_name'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              </td>
+            </tr>
+            <tr>
+              <td class="item_cap_td" nowrap><%=h User.human_attribute_name('password') %></td>
+              <td class="item_value_td">
+                <input type="password" id="smtp_password" name="smtp[password]" value="<%=h @yaml[:smtp]['password'] %>" style="width:95%" />
+              </td>
+            </tr>
+          </table>
+        </div>
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr height="15"><td></td></tr>
+        </table>
+
+        <!-- Feeds -->
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('feed.cap') %></td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('feed.name') %></td>
+            <td class="item_value_td" style="width:70%;">
+              <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
+              <input name="feed[enabled]" type="hidden" value="0" />
+              <input type="checkbox" id="feed_enabled" name="feed[enabled]" value="1" <%= checked %>><label for="feed_enabled"> <%=h t('cap.enabled') %></label><br/>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%=h t('feed.data') %></td>
+            <td class="item_value_td">
+              <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
+              <input name="feed[feed_content]" type="hidden" value="0" />
+              <input type="checkbox" id="feed_feed_content" name="feed[feed_content]" value="1" <%= checked %>><label for="feed_feed_content"> <%=h t('feed.feed_content') %></label><br/>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+
+        <!-- Header Menus -->
+        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap style="width:100%;">
+              <%=h t('config.header_menus') %>&nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td class="item_value_td">
+              <div id="div_ajax_header_menu">
+                <%= render :partial => 'ajax_header_menu' %>
+              </div>
+
+              <table align="right" width="120" cellspacing="0" cellpadding="0"">
+                <tr height="6"><td></td></tr>
+                <tr>
+                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doEditHeaderMenu();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                    <%=h t('btn.create') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+      </div>
+
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+      <%=h t('btn.back') %>
+    </td>
+    <td width="15"></td>
+    <td class="img_button_td" onclick="doRegister();">
+      <%=h t('btn.register') %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+<br/>
+
+
+<script type="text/javascript">
+
+function onLoadSub()
+{
+  setTimeout(forBugfulIE, 500);
+}
+
+function forBugfulIE()
+{
+  // Bugful IE decides width of an input-text control depending on the length of its content.
+  $("general_header_title").value = restoreHTML("<%=h @yaml[:general]['header_title'] %>");
+  $("general_default_page").value = restoreHTML("<%=h @yaml[:general]['default_page'] %>");
+  $("topic_caption").value = restoreHTML("<%=h @yaml[:topic]['caption'] %>");
+}
+
+
+var thetisBoxHeaderMenuInfo = null;
+
+function onHeaderMenuInfoOK(org_name)
+{
+  var btnOk = $("header_menu_info_ok");
+  btnOk.disabled = true;
+  var btnCancel = $("header_menu_info_cancel");
+  btnCancel.disabled = true;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Updater(
+          "div_ajax_header_menu",
+          document.form_header_menu_info.action+"?org_name="+encodeURIComponent(org_name),
+          {
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(document.form_header_menu_info),
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBoxHeaderMenuInfo.remove();
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+function onHeaderMenuInfoCancel()
+{
+  thetisBoxHeaderMenuInfo.remove();
+}
+
+function doEditHeaderMenu(org_name)
+{
+  if (thetisBoxHeaderMenuInfo != null) {
+    return;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var add_param = "";
+  if (org_name != null) {
+    add_param = "?org_name=" + encodeURIComponent(org_name);
+  }
+  new Ajax.Request(
+          "<%= url_for :controller => 'config', :action => 'edit_header_menu' %>" + add_param,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+
+              thetisBoxHeaderMenuInfo = new ThetisBox;
+              thetisBoxHeaderMenuInfo.setOnClose(function(){ thetisBoxHeaderMenuInfo = null; });
+              thetisBoxHeaderMenuInfo.title = "<%=h t('menu.header_menu') %>";
+              thetisBoxHeaderMenuInfo.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+              request.responseText.evalScripts();
+            }
+          }
+        );
+  return true;
+}
+
+function doDeleteHeaderMenu(name)
+{
+  confm("<%=h t('paren.square.left') %>" + esc_w_quotes(name) + "<%=h t('msg.confirm_to_delete') %>", "_doDeleteHeaderMenu('"+esc_quotes(name)+"')");
+}
+
+function _doDeleteHeaderMenu(name)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_header_menu",
+      "<%= url_for :controller => 'config', :action => 'destroy_header_menu' %>",
+      {
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); },
+        parameters:"org_name=" + encodeURIComponent(name)+"&authenticity_token=<%= form_authenticity_token %>"
+      }
+    );
+}
+
+function doRegister()
+{
+  var check_ary = new Array("general_default_page", "smtp_from_address", "smtp_server", "smtp_port");
+
+  if ($("smtp_auth_enabled").checked) {
+    check_ary.push("smtp_user_name");
+  }
+
+  for (var i=0; i < check_ary.length; i++) {
+    if ($(check_ary[i]).value.length <= 0) {
+      msg("<%=h t('msg.specify_indispensable') %>");
+      return;
+    }
+  }
+
+  if ($("smtp_auth_enabled").checked) {
+    check_ary = new Array("smtp_auth_plain", "smtp_auth_login", "smtp_auth_cram_md5");
+
+    var checked = false
+    for (var i=0; i < check_ary.length; i++) {
+      if ($(check_ary[i]).checked) {
+        checked = true;
+        break;
+      }
+    }
+    if (!checked) {
+      msg("<%=h t('config.select_smtp_auth') %>");
+      return;
+    }
+  }
+
+  var smtp_port = $("smtp_port").value;
+  if (isNaN(smtp_port) || parseInt(smtp_port, 10) < 1 || parseInt(smtp_port, 10) > 65535) {
+    msg("<%=h t('config.invalid_smtp_port') %>");
+    return;
+  }
+
+  prog("TOP-RIGHT");
+  document.form_config.submit();
+}
+</script>
+

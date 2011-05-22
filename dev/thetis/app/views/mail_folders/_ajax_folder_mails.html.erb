@@ -1,0 +1,91 @@
+
+<% login_user = session[:login_user] %>
+
+<% unless @emails.nil? %>
+
+<input type='hidden' id="selected_row" value="" />
+<input type='hidden' id="req_detail" value="false" />
+
+<table width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th align="center" width="60%" class="list_th" nowrap style="cursor:default"><%= t('mail.subject') %></th>
+    <th align="center" width="5%" class="list_th" nowrap style="cursor:default"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif"></th>
+    <th align="center" width="15%" class="list_th" nowrap style="cursor:default"><%= t('mail.sender') %></th>
+    <th align="center" width="20%" class="list_th" nowrap style="cursor:default"><%= t('mail.sent_at') %></th>
+  </tr>
+
+<%
+@emails.each_with_index do |email, idx|
+  td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
+  sbj_style = (email.status == Email::STATUS_UNREAD)?'font-weight:bold; color:sienna;':'font-weight:normal; color:black;'
+  show_header = (email.status != Email::STATUS_DRAFT)
+%>
+  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="33" onclick="onSelChanged(this, <%= email.id %>);" style="cursor:pointer;" onmouseover="if ($('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, ($('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
+    <td class="<%= td_class %>" id="mail_subect_<%= email.id %>" title="<%=h email.subject %>" nowrap style="<%= sbj_style %> text-align:left;">
+    <% if show_header %>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="$('req_detail').value='true';">
+    <% end %>
+      <%=h truncate(email.subject, :length => 30) %>
+      <div id="mail_header_<%= email.id %>" style="display:none;">
+        <%= render :partial => 'header_info',:locals => {:email => email} %>
+      </div>
+      <%= hidden_field_tag 'email_status_' + email.id.to_s, email.status %>
+    </td>
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
+      <% if email.mail_attachments.nil? or email.mail_attachments.empty? %>
+        &nbsp;
+      <% else %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif">
+      <% end %>
+    </td>
+    <td class="<%= td_class %>" title="<%=h email.from_address %>" nowrap style="text-align:center;">
+      <%=h truncate(email.from_address, :length => 15) %>
+    </td>
+    <%
+    sent_at = email.get_sent_at_exp
+    %>
+    <td class="<%= td_class %>" title="<%=h sent_at %>" nowrap style="text-align:center;">
+      <%= sent_at %>
+    </td>
+  </tr>
+<% end %>
+</table>
+<% end %>
+
+<%= render :partial => 'common/flash_notice' %>
+
+
+<script type="text/javascript">
+
+onSelChanged = function(cur_tr, email_id)
+{
+  var sel_tr = $("selected_row").value;
+  if (sel_tr != "") {
+    set_tr_bgcolor($(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
+  }
+  $("selected_row").value = cur_tr.id;
+  set_tr_bgcolor(cur_tr, "lawngreen");
+
+  if ($("req_detail").value == "true") {
+    showHeaderInfo(email_id, $("mail_subect_"+email_id).title);
+    $("req_detail").value = "false";
+  } else {
+    removeHeaderInfo();
+  }
+
+  showMail(email_id);
+
+  var div_mail_subect = $("mail_subect_"+email_id);
+  div_mail_subect.style.fontWeight = "normal";
+  div_mail_subect.style.color = "black";
+
+  if ($("email_status_"+email_id).value == "<%= Email::STATUS_DRAFT %>") {
+    $("btnbox_handled").style.display = "none";
+    $("btnbox_draft").style.display = "block";
+  } else {
+    $("btnbox_handled").style.display = "block";
+    $("btnbox_draft").style.display = "none";
+  }
+}
+
+</script>

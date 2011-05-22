@@ -1,0 +1,212 @@
+
+<%= form_tag( {:controller => 'logs', :action => 'search'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td align="left" nowrap width="1%">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'logs', :action => 'configure' %>';">
+    </td>
+    <td align="right">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">
+      &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+<% unless session[:login_user].nil? %>
+  <%= h t('cap.targets') %> <%= select_tag 'filter',
+                           options_for_select([
+                                                [h(t('log.all')),'all'],
+                                                [h(t('btn.login')),'login'],
+                                                [h(t('menu.desktop')),'desktop'],
+                                                [h(t('menu.items')),'items'],
+                                                [h(t('folder.plural')),'folders'],
+                                                [h(t('menu.schedules')),'schedules'],
+                                                [h(t('menu.equipment')),'equipment'],
+                                                [h(t('user.plural')),'users'],
+                                                [h(t('group.plural')),'groups'],
+                                                [h(t('team.plural')),'teams'],
+                                                [h(t('template.plural')),'templates'],
+                                                [h(t('workflow.plural')),'workflows'],
+                                                [h(t('research.plural')), 'researches'],
+                                                [h(t('menu.mail')), 'emails'],
+                                                [h(t('address.book')), 'addressbook'],
+                                                [h(t('feed.cap')), 'feeds']
+                                              ],
+                                              params[:filter])
+            %>
+<% end %>
+      <input type="button" value="<%= h t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= h t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'logs', :action => 'list' %>';"/>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td colspan="2" align="right">
+        <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
+        <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
+        <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('log', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_log')
+      pagination = will_paginate(@log_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_logs" style="overflow:scroll; background-color:white;">
+<table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('logs.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="22%" nowrap onClick="sortList('updated_at')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%" nowrap onClick="sortList('user_id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="15%" nowrap onClick="sortList('remote_ip')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="7%"  nowrap onClick="sortList('log_type')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="28%" nowrap onClick="sortList('access_path')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
+  </tr>
+<%
+users_cache = {}
+exist_cache = {}
+@logs.each_with_index do |log, idx|
+%>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%= log.id %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;"><%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+    <%
+    user_exist = false
+    user_name = ''
+    unless log.user_id.nil?
+      if exist_cache[log.user_id].nil?
+        begin
+          user = User.find(log.user_id)
+          user_name = user.get_name
+          user_exist = true
+        rescue
+          user_name = log.user_id.to_s + ' ' + t('paren.deleted')
+        end
+        users_cache[log.user_id] = user_name
+        exist_cache[log.user_id] = user_exist
+      else
+        user_name = users_cache[log.user_id]
+        user_exist = exist_cache[log.user_id]
+      end
+    end
+    if user_exist == false
+    %>
+      <td class="<%=td_class %>" style="color:crimson"><%=h user_name %></td>
+    <% else %>
+      <% if session[:login_user].admin?(User::AUTH_USER) %>
+        <td class="<%=td_class %>">
+          <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => log.user_id %>'; return false;">
+            <%=h truncate(user_name, :length => 20) %>
+          </a>
+        </td>
+      <% else %>
+        <td class="<%=td_class %>"><%=h truncate(user_name, :length => 20) %></td>
+    <%
+      end
+    end
+    %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;"><%=h log.remote_ip %></td>
+    <%
+    type_color = 'black'
+    type_color = 'blue' if log.info?
+    type_color = 'red' if log.error?
+    %>
+    <td class="<%=td_class %>" nowrap style="text-align:center; color:<%= type_color %>"><%=h log.log_type %></td>
+    <td class="<%=td_class %>" nowrap><%=h truncate(log.access_path, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.detail') %>" title="<%=h t('btn.detail') %>" onclick="msg('<%=h log.detail %>');">
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box :check_log, log.id, :class => 'check_log' %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.action = "<%= url_for :controller => 'logs', :action => 'list' %>";
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_log", document.form_list);
+  var all_selected=true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function doDelete()
+{
+  var elems = document.getElementsByClassName("check_log", document.form_list);
+  var count=0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) return;
+
+  confm(count+"<%= h t('log.confirm_to_delete') %>", "_doDelete()");
+}
+
+function _doDelete()
+{
+  document.form_list.action = "<%= url_for :controller => 'logs', :action => 'destroy' %>";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function doDeleteAll()
+{
+  confm("<%= h t('log.confirm_to_delete_all') %>", "_doDeleteAll()");
+}
+
+function _doDeleteAll()
+{
+  document.form_list.action = "<%= url_for :controller => 'logs', :action => 'destroy_all' %>";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+//-->
+</script>
+

@@ -1,0 +1,674 @@
+
+<%
+login_user = session[:login_user]
+
+is_def_desktop = false
+
+if !login_user.nil? and login_user.admin?(User::AUTH_DESKTOP)
+  yaml = ApplicationHelper.get_config_yaml
+  unless yaml[:desktop].nil?
+    is_def_desktop = (yaml[:desktop]['user_before_login'] == login_user.id.to_s)
+  end
+end
+
+@users_cache = {}
+%>
+
+<span>
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:#A9CDF9; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
+  <tr class="desktop_tr">
+    <td class="desktop_td" id="cell_0x0" align="left" valign="top" style="width:10%;">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+    <td class="desktop_td" id="cell_1x0" align="center" valign="top" style="width:80%;" nowrap>
+      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%=h t('msg.desktop_public') %></span><% end %>
+    </td>
+    <td class="desktop_td" id="cell_2x0" align="right" valign="top" style="width:10%;">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+  </tr>
+  <tr class="desktop_tr">
+    <td class="desktop_td" id="cell_0x2" align="left" valign="bottom">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+    <td class="desktop_td" id="cell_1x0" align="center" valign="bottom" nowrap>
+      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%=h t('msg.desktop_public') %></span><% end %>
+    </td>
+    <td class="desktop_td" id="cell_2x2" align="right" valign="bottom">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+  </tr>
+</table>
+</span>
+
+<!-- Toolbox -->
+<span style="display:none;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png" width="0">
+</span>
+
+<table id="toolbox" width="80%" cellpadding="0" cellspacing="0" style="height:115px; position:absolute; display:none;">
+  <tr>
+    <td width="100" align="center" valign="middle">
+      <div id="recyclebox" width="10" style="height:100%;" onclick="tipsRecyclebox()" title="<%=h t('desktop.drop_to_remove') %>">
+        <img id="recyclebox_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png" alt="<%=h t('desktop.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
+    </td>
+    <td width="10">
+      &nbsp;
+    </td>
+    <td align="center" valign="middle">
+      <table id="tools" width="100%">
+        <tr>
+        <% if $thetis_config[:menu]['req_login_schedules'] == '1' and login_user.nil? %>
+        <% else %>
+          <td width="25%" style="cursor:pointer;;" align="center" valign="middle">
+            <div id="tool_calendar" style="vertical-align:middle;" title="<%=h t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_calendar.png" alt="<%=h t('calendar.name') %>" />
+            </div>
+          </td>
+        <% end %>
+          <td width="20%" style="cursor:pointer;" align="center" valign="middle">
+            <div id="tool_label" style="vertical-align:middle;" title="<%=h t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_label.png" alt="<%=h t('desktop.label.create') %>" />
+            </div>
+          </td>
+          <td width="20%" style="cursor:pointer;" align="center" style="vertical-align:middle">
+            <%
+            unless params[:biorhythm] == 'false'
+              req_birth = "false"
+              if !login_user.nil? and login_user.birthday.nil?
+                req_birth = "true"
+              end
+            %>
+            <input id="biorhythm_req_birth" type="hidden" value="<%= req_birth %>" />
+            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%=h t('biorhythm.show') %>" onclick="if ($('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" alt="<%=h t('biorhythm.show') %>">
+            </div>
+            <% end %>
+          </td>
+        <% unless login_user.nil? %>
+          <td width="20%" style="cursor:pointer;" align="center" valign="middle">
+            <div id="tool_postlabel" style="vertical-align:middle;" title="<%=h t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" alt="<%=h t('desktop.label.post') %>" />
+            </div>
+          </td>
+          <td width="20%" style="cursor:pointer;" align="center" valign="middle">
+            <div id="tool_addressbook" style="vertical-align:middle;" title="<%=h t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_addressbook.png" alt="<%=h t('address.book') %>" />
+            </div>
+          </td>
+        <% end %>
+          <td width="20%" style="cursor:pointer;" align="center" valign="middle">
+            <div id="tool_tray" style="vertical-align:middle;" onclick="showTray()" title="<%=h t('desktop.news.show') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_tray.png" alt="<%=h t('desktop.news.show') %>">
+            </div>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td width="70%">
+    </td>
+  </tr>
+</table>
+
+<!-- Toys -->
+<%
+unless @toys.nil?
+  @toys.each do |toy|
+    toy_id = "toy_#{toy.id}"
+
+    if toy.xtype == Toy::XTYPE_LABEL
+      @toy = toy
+%>
+  <%= render :partial => "ajax_label" %>
+<%
+    elsif toy.xtype == Toy::XTYPE_POSTLABEL
+      @toy = toy
+%>
+  <%= render :partial => "ajax_postlabel" %>
+<%
+    else
+      width_limit = '';
+      width_limit = 'width:200px;' if toy.name.length >= 30;
+%>
+  <div class="toy_desktop" id="<%= toy_id %>" align="left" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
+    <%
+    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
+    icon_img = ""
+    case toy.xtype
+      when Toy::XTYPE_ITEM
+        icon_img = img_root + 'item.gif'
+      when Toy::XTYPE_COMMENT
+        icon_img = img_root + 'comment.gif'
+      when Toy::XTYPE_WORKFLOW
+        icon_img = img_root + 'workflow.gif'
+      when Toy::XTYPE_SCHEDULE
+        icon_img = img_root + 'schedule.gif'
+      when Toy::XTYPE_FOLDER
+        begin
+          folder = Folder.find(toy.target_id)
+          icon_img = folder.get_icons[0]
+        rescue
+          icon_img = img_root + 'folder/folder.gif'
+        end
+    end
+    %>
+    <img src="<%= icon_img %>" style="cursor:move;" />
+
+  <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
+    <a href="#" onclick="showScheduleDetail('<%=ApplicationHelper.h_s_quote truncate(toy.name, :length => 20) %>', '<%= toy.address %>'); return false;">
+  <% else %>
+    <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
+  <% end %>
+      <%=h truncate(toy.name, :length => 30) %>
+    </a>
+    <span id="<%= toy_id %>_type" style="display:none;"><%= toy.xtype %></span>
+  </div>
+
+  <%= draggable_element(toy_id, :revert => false) %>
+<%
+    end
+  end
+end
+%>
+
+
+<script type="text/javascript">
+//<![CDATA[
+Droppables.add(
+        "div_desktop",
+        {
+          accept: "toy_tray",
+          onHover:function(element)
+          {
+            $("div_desktop").style.backgroundColor = "#A4DFF8";
+          },
+          onDrop:function(element)
+          {
+            var axis = getAxis(element.id);
+
+            new Ajax.Request(
+                    "<%= url_for(:controller => 'desktop', :action => 'drop_on_desktop') %>?id="+encodeURIComponent(element.id),
+                    {
+                      asynchronous:true,
+                      evalScripts:true,
+                      parameters:"x="+axis[0]+"&y="+axis[1]+"&authenticity_token=<%= form_authenticity_token %>",
+                      onComplete:function(request){
+                                    var xtype = element.id.split(":")[0];
+                                    element.id = "toy_" + request.responseText;
+                                    element.className = "toy_desktop";
+
+                                    var s = document.createElement("span");
+                                    s.id = element.id + "_type";
+                                    s.style.display = "none";
+                                    s.innerHTML = xtype;
+                                    element.appendChild(s);
+                                  }
+                    }
+                  );
+          }
+        }
+      )
+//]]>
+
+//<![CDATA[
+Droppables.add(
+        "recyclebox",
+        {
+          accept: "toy_desktop",
+          onHover:function(element)
+          {
+            $("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png";
+          },
+          onDrop:function(element)
+          {
+            doRemoveToy(element.id);
+          }
+        }
+      )
+//]]>
+</script>
+
+
+<SCRIPT language="javascript" type="text/javascript">
+
+var desktop = $("div_desktop");
+desktop.style.display = "block";
+$("toolbox").style.display = "inline";
+
+doResize();
+
+var deskWidth = desktop.clientWidth;
+var deskHeight = desktop.clientHeight;
+var deskPos = Position.cumulativeOffset(desktop);
+
+<%
+unless @toys.nil?
+  @toys.each do |toy|
+%>
+  toy = $("toy_<%= toy.id %>");
+  toy.style.left = (deskPos[0] + deskWidth * <%= toy.x %> / 10000) + "px";
+  toy.style.top = (deskPos[1] + deskHeight * <%= toy.y %> / 10000) + "px";
+  toy.style.display = "inline";
+<%
+  end
+end
+%>
+
+doRemoveToy = function(element_id)
+{
+  var xtype = $(element_id+"_type").innerHTML;
+  var disp_type = (xtype == "<%= Toy::XTYPE_LABEL %>" || xtype == "<%= Toy::XTYPE_POSTLABEL %>")?"<%= t('desktop.label.confirm_to_delete') %>":"<%= t('desktop.shortcut.confirm_to_delete') %>";
+
+  confm(disp_type, "_doRemoveToy('"+element_id+"')");
+}
+
+_doRemoveToy = function(element_id)
+{
+  var id = element_id.split("_")[1];
+
+  var thetisBoxProgress = prog("CENTER");
+  
+  new Ajax.Request(
+          "<%= url_for :controller => 'desktop', :action => 'drop_on_recyclebox' %>?id="+id,
+          {
+            parameters:"authenticity_token=<%= form_authenticity_token %>",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+              setTimeout(
+                  function(){
+                    var toy = $(element_id);
+                    removeElem(toy);
+                  },
+                  100
+                );
+            }
+          }
+        );
+}
+
+showCalendar = function()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('calendar.name') %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+
+<%
+user_param = '&user_id='
+user_param += login_user.id.to_s unless login_user.nil?
+%>
+
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*90/100)+','+(mainHeight*92/100),
+            "IFRAME",
+            "",
+            "",
+            "<%= url_for(:controller => 'schedules', :action => 'month') %>?id=" + getDateString() + "<%= user_param %>"
+          );
+}
+
+editLabel = function(toy_id)
+{
+  var label = $(toy_id);
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.bgcolor_title = "darkorange";
+  thetisBox.bgcolor_body = "peachpuff";
+
+  var form_tag = "<form action=\"<%= url_for :controller => 'desktop', :action => 'update_label' %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  thetisBox.setFormTag(form_tag);
+
+  // for users without LOGIN
+  var axis = getAxis(toy_id);
+
+  thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%=h t('cap.edit_message') %>", restoreHTML($(toy_id+"_msg").innerHTML));
+}
+
+createLabel = function()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.bgcolor_title = "darkorange";
+  thetisBox.bgcolor_body = "peachpuff";
+
+  var form_tag = "<form action=\"<%= url_for :controller => 'desktop', :action => 'create_label' %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  thetisBox.setFormTag(form_tag);
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%=h t('cap.edit_new_label') %>", "");
+}
+
+//////////////////////////
+var thetisBoxPostLabel = null;
+
+editPostLabel = function(toy_id, posted_by, user_name)
+{
+  createPostLabel();
+
+  post_to = $("post_to");
+  post_to.options[post_to.length++] = new Option(user_name, posted_by);
+
+  toy_msg = $(toy_id+"_msg");
+  if (toy_msg.innerHTML != null) {
+    $("txaPostLabel").innerHTML = "&gt; " + toy_msg.innerHTML.split('\n')[0];
+  }
+}
+
+createPostLabel = function()
+{
+  if (thetisBoxPostLabel != null){
+    thetisBoxPostLabel.remove();
+    thetisBoxPostLabel = null;
+  }
+
+  var content = getPostLabelEditor("if (!onPostLabelOK()) { return false; }", "onPostLabelCancel()");
+
+  thetisBoxPostLabel = new ThetisBox;
+  thetisBoxPostLabel.bgcolor_title = "deeppink";
+  thetisBoxPostLabel.bgcolor_body = "lightpink";
+  thetisBoxPostLabel.title = "<%=h t('desktop.label.post') %>";
+  thetisBoxPostLabel.overflow = "hide";
+  thetisBoxPostLabel.show("CENTER", "540,400", "TRAY", "", "", content);
+}
+
+getPostLabelEditor = function(onOk, onCancel)
+{
+  content = "<form name='form_postlabel' action=\"<%= url_for :controller => 'desktop', :action => 'post_label' %>\" method=\"post\" onsubmit='"+onOk+"'>";
+  content += "<table width='100%' style='height:100%; background-color:#FFDDE3;' cellspacing='10'>";
+  content += "  <tr>";
+  content += "    <td>";
+  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%=h t('cap.to') %></div>";
+  content += "      <table cellspacing='0' cellpadding='0'>";
+  content += "        <tr>";
+  content += "          <td>";
+  content += "            <select id='post_to' name='post_to[]' class='select_multi' size='4' multiple style='width:280px;'>";
+  content += "          </td>";
+  content += "          <td width='10'>&nbsp;</td>";
+  content += "          <td valign='top'>";
+  content += "            <table cellspacing='0' cellpadding='0' width='100%'>";
+  content += "              <tr>";
+  content += "                <td align='center'>";
+  content += "                  <input type='button' value='<%=h t('btn.add') %>' onclick='addPostTo();' style='width:80px;'>";
+  content += "                </td>";
+  content += "              </tr>";
+  content += "              <tr height='5'><td></td></tr>";
+  content += "              <tr>";
+  content += "                <td align='center'>";
+  content += "                  <input type='button' value='<%=h t('btn.remove') %>' onclick='removePostTo();' style='width:80px;'>";
+  content += "                </td>";
+  content += "              </tr>";
+  content += "            </table>";
+  content += "          </td>";
+  content += "        </tr>";
+  content += "      </table>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td>";
+  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%=h t('cap.message') %></div>";
+  content += "      <textarea id='txaPostLabel' name='txaPostLabel' wrap='off' tabindex='1' style='width:99%; height:120px;'></textarea>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='40'>";
+  content += "    <td>";
+  content += "      <table width='10%' border='0' align='center'>";
+  content += "        <tr>";
+  content += "          <td>";
+  content += "            <input type='submit' value='OK' tabindex='2' style='width:90px; height:25px'>";
+  content += "          </td>";
+  content += "          <td width='30'>&nbsp;</td>";
+  content += "          <td>";
+  content += "            <input type='button' value='<%=h t('btn.cancel')%>' tabindex='3' style='width:90px; height:25px' onClick='"+onCancel+"'>";
+  content += "          </td>";
+  content += "        </tr>";
+  content += "      </table>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "<input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>'>";
+  content += "</form>";
+  return content;
+}
+
+onPostLabelOK = function()
+{
+  if (ThetisBox.trim(document.form_postlabel.txaPostLabel.value, true).length <= 0
+      || $("post_to").length <= 0 ) {
+    return false;
+  }
+
+  confm("<%= t('desktop.label.confirm_to_post1') %>"+$("post_to").length+"<%= t('desktop.label.confirm_to_post2') %>", "_onPostLabelOK()");
+}
+
+_onPostLabelOK = function()
+{
+  thetisBoxPostLabel.hide();
+
+  var thetisBoxProgress = new ThetisBox;
+  thetisBoxProgress.show("TOP-RIGHT", "", "PROGRESS", "", "", "");
+  selectListAll($("post_to"));
+
+  new Ajax.Request(
+          document.form_postlabel.action,
+          {
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request)
+            {
+              thetisBoxProgress.remove();
+
+              thetisBoxPostLabel.remove();
+              thetisBoxPostLabel = null;
+
+              request.responseText.evalScripts();
+            },
+            parameters:Form.serialize(document.form_postlabel)}
+          );
+  return true;
+}
+
+onPostLabelCancel = function()
+{
+  thetisBoxPostLabel.remove();
+  thetisBoxPostLabel = null;
+}
+
+removePostTo = function()
+{
+  var del_ary = deleteList($("post_to"));
+}
+
+addPostTo = function()
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'desktop', :action => 'get_group_users' %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "<%=h t('desktop.label.sel_users_to_post') %>";
+                thetisBox.overflow = "hide";
+                thetisBox.show(
+                          "CENTER",
+                          "460,280",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+//////////////////////////
+
+showAddressBook = function()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%= t('address.book') %>";
+  thetisBox.bgcolor_title = "limegreen";
+  thetisBox.bgcolor_body = "lightcyan";
+
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*80/100)+','+(mainHeight*92/100),
+            "IFRAME",
+            "",
+            "",
+            "<%= url_for :controller => 'addressbook', :action => 'list' %>"
+          );
+}
+
+//////////////////////////
+
+bound = function(toy_id)
+{
+  var toy = $(toy_id);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var toyPos = Position.cumulativeOffset(toy);
+  toy.style.position = "absolute";
+  var toyWidth = toy.clientWidth;
+  var toyHeight = toy.clientHeight;
+
+  var updated = false;
+
+  if (toyPos[0] < deskPos[0]) {
+    toyPos[0] = deskPos[0] + 5;
+    updated = true;
+  }
+  if (toyPos[1] < deskPos[1]) {
+    toyPos[1] = deskPos[1] + 5;
+    updated = true;
+  }
+  if (toyPos[0] + toyWidth > deskPos[0] + deskWidth) {
+    toyPos[0] = deskPos[0] + deskWidth - toyWidth - 25;
+    updated = true;
+  }
+  if (toyPos[1] + toyHeight > deskPos[1] +deskHeight) {
+    toyPos[1] = deskPos[1] + deskHeight - toyHeight - 25;
+    updated = true;
+  }
+
+  if (updated) {
+    toy.style.left = toyPos[0] + "px";
+    toy.style.top = toyPos[1] + "px";
+  }
+}
+
+getAxis = function(toy_id)
+{
+  var toy = $(toy_id);
+  var toyPos = Position.cumulativeOffset(toy);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var xAxis = Math.floor(Math.max(0, toyPos[0]-deskPos[0]) / deskWidth * 10000);
+  if (xAxis >= 10000) {
+    xAxis = 9500;
+  }
+  var yAxis = Math.floor(Math.max(0, toyPos[1]-deskPos[1]) / deskHeight * 10000);
+  if (yAxis >= 10000) {
+    yAxis = 9500;
+  }
+
+  return new Array(xAxis, yAxis);
+}
+
+save = function(toy_id)
+{
+  bound(toy_id);
+
+  var axis = getAxis(toy_id);
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'desktop', :action => 'on_toys_moved') %>?id=" + encodeURIComponent(toy_id.split("_")[1]),
+          {
+            asynchronous:true,
+            evalScripts:true,
+            parameters:"x="+axis[0]+"&y="+axis[1]+"&authenticity_token=<%= form_authenticity_token %>"
+          }
+        );
+}
+
+var DesktopDragObserver = Class.create();
+DesktopDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != "toy_desktop") {
+      return;
+    }
+
+    bound(toy.id);
+  },
+  onDrag: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != "toy_desktop") {
+      return;
+    }
+    var toyWidth = toy.clientWidth;
+    var toyHeight = toy.clientHeight;
+    var toyPos = Position.cumulativeOffset(toy);
+
+    var deskWidth = desktop.clientWidth;
+    var deskHeight = desktop.clientHeight;
+    var deskPos = Position.cumulativeOffset(desktop);
+
+    if (toyPos[0] < deskPos[0]
+        || toyPos[1] < deskPos[1]
+        || toyPos[0] + toyWidth > deskPos[0] +deskWidth
+        || toyPos[1] + toyHeight > deskPos[1] +deskHeight
+       ) {
+      try {
+        document.selection.empty();
+      } catch (e) {}
+      draggable.endDrag(event);
+
+      setTimeout("bound('"+toy.id+"');", 100);
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    var toy = draggable.element;
+    if (toy.className != "toy_desktop") {
+      return;
+    }
+    setTimeout("save('"+toy.id+"');", 100);
+    $("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png";
+  }
+}
+Draggables.addObserver( new DesktopDragObserver() );
+
+tipsRecyclebox = function()
+{
+  var recycleboxPos = Position.cumulativeOffset($("recyclebox"));
+  var x = recycleboxPos[0] + 50;
+  var y = recycleboxPos[1] - 50;
+  
+  var thetisBox = new ThetisBox;
+  thetisBox.bgcolor_body = "#FFFF80";
+  thetisBox.show(x+","+y, "", "TIPS", "", "<%=h t('desktop.drop_to_remove')%>", "");
+}
+</SCRIPT>
+
+<% if login_user.nil? %>
+  <%= render :partial => 'warning_login' %>
+<% end %>
+<% if !@ie_ver.nil? and @ie_ver < 7.0 %>
+  <%= render :partial => 'warning_browser' %>
+<% end %>
+

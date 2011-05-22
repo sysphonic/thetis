@@ -1,0 +1,10 @@
+<% if obj and obj.errors.any? %>
+<div class="errorExplanation" style="display:none;">
+  <h2><%= t('msg.validation_error') %></h2>
+  <ul style="padding-left:20px;">
+  <% obj.errors.full_messages.each do |msg| %>
+    <li><%= msg %></li>
+  <% end %>
+  </ul>
+</div>
+<% end %>

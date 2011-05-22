@@ -1,0 +1,209 @@
+<% HistoryHelper.set_back(request) %>
+
+<% date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil? %>
+
+<%= render :partial => 'common/jkl_calendar_init' %>
+
+<script type="text/javascript">
+<!--
+var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
+calDisp.setFunc(
+    function() {
+      $("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      document.form_schedule.submit();
+      prog("TOP-RIGHT");
+    }
+  );
+calDisp.setStyle( "frame_color", "#3333CC" );
+//-->
+</script>
+
+<%= render :partial => 'toolbar'%>
+
+<%= form_tag( {:controller => 'timecards', :action => 'group', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
+  <input type="hidden" name="display" value="<%=h params[:display] %>" />
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr height="5"><td></td></tr>
+    <tr>
+      <td align="center">
+<%
+yesterday = @date - 1
+tomorrow = @date + 1
+last_week = @date - 7
+next_week = @date + 7
+%>
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+      </td>
+    </tr>
+    <tr height="5"><td></td></tr>
+  </table>
+</form>
+
+<div style="padding-bottom:10px; color:navy;">
+
+</div>
+<table class='timecard' width="100%">
+  <tr>
+    <td align="center" width="10%" rowspan="2" nowrap><%= User.human_name %></th>
+    <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%=h t('cap.class') %></td>
+    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%=h Timecard.human_attribute_name('status') %></td>
+    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%=h t('cap.option') %></td>
+    <td align="center" width="24%" bgcolor="#D6ECFA" colspan="3" nowrap><%=h t('timecard.labor_time') %></td>
+    <td align="center" width="25%" bgcolor="#D6ECFA" rowspan="2" nowrap><%=h Timecard.human_attribute_name('comment') %></td>
+    <td align="center" width="16%" bgcolor="#C6D3EF" colspan="2" nowrap><%=h t('timecard.overtime') %></td>
+<% unless @selected_users.nil? or @selected_users.empty? %>
+    <td align="center" width="1%" bgcolor="white" rowspan="2" style="border-top:0px; border-right:0px;"></td>
+<% end %>
+  </tr>
+  <tr>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.from') %></td>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.to') %></td>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('msg.hours_full') %></td>
+    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.usual') %></td>
+    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.midnight') %></td>
+  </tr>
+<% if @selected_users.nil? or @selected_users.empty? %>
+  <tr height="50">
+    <td align="center" style="color:mediumblue;" colspan="10">
+      <%= t('paren.no_users') %>
+    </td>
+  </tr>
+<%
+else
+  yaml = ApplicationHelper.get_config_yaml
+  @selected_users.each_with_index do |user, idx|
+    bgcolor = (idx % 2 == 1) ? 'gainsboro' : 'white'
+
+    timecard = Timecard.get_for(user.id, @date)
+    timecard = Timecard.new if timecard.nil?
+%>
+  <tr bgcolor="<%= bgcolor %>">
+    <td align="center">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :id => date_s, :user_id => user.id, :display => params[:display] %>'; return false;">
+        <%= user.get_name_for_timecard(yaml) %>
+      </a>
+    </td>
+
+    <%
+    case timecard.workcode
+      when Timecard::WKCODE_WK_NORMAL
+        color = '#FF9900'
+      when Timecard::WKCODE_WK_ON_HOLIDAY
+        color = '#0099FF'
+      when Timecard::WKCODE_HLD_AM
+        color = '#99FF00'
+      when Timecard::WKCODE_HLD_PM
+        color = '#00FF99'
+      when Timecard::WKCODE_HLD_SPECIAL
+        color = '#FF0099'
+      when Timecard::WKCODE_HLD_MAKEUP
+        color = '#9900FF'
+      when Timecard::WKCODE_ABSENCE
+        color = 'red'
+      else
+        color = 'black'
+    end
+    %>
+    <td align="center" nowrap style="color:<%= color %>;">
+    <% unless timecard.workcode.nil? %>
+      <% alt = h(timecard.workcode_name) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
+    <% end %>
+    </td>
+    <td align="center" nowrap>
+      <% if !timecard.start.nil? and timecard.end.nil? %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%=h t('msg.not_fulfilled') %>" title="<%=h t('msg.not_fulfilled') %>">
+      <%
+      elsif !timecard.start.nil?
+        check_ok = true
+        if timecard.lateness?
+          check_ok = false
+      %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" alt="<%=h t('timecard.lateness') %>" title="<%=h t('timecard.lateness') %>">
+        <%
+        end
+        if timecard.leaving_early?
+          check_ok = false
+        %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" alt="<%=h t('timecard.leaving_early') %>" title="<%=h t('timecard.leaving_early') %>">
+      <%
+        end
+        if check_ok
+      %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%=h t('btn.ok') %>" title="<%=h t('btn.ok') %>">
+      <%
+        end
+      end
+      %>
+    </td>
+    <td align="center" nowrap>
+      <%
+      options = ''
+      if timecard.business_trip?
+        options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" alt="'+t('timecard.business_trip')+'" title="'+t('timecard.business_trip')+'">'
+      end
+      %>
+      <%= options %>
+    </td>
+    <td align="center" nowrap><%=h (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %></td>
+    <td align="center" nowrap><%=h (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %></td>
+    <%
+    actual_wktime = timecard.get_actual_wktime
+    %>
+    <td align="center" nowrap style="color:blue;">
+      <%=h (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
+    </td>
+    <td align="left" style="padding:0px 5px;">
+      <%=h timecard.comment %>
+    </td>
+
+    <td align="center" nowrap>
+      <%
+      unless timecard.start.nil? or timecard.end.nil?
+        usual_overtime = timecard.get_usual_overtime
+
+        exp_usual_overtime = ApplicationHelper.float_exp(usual_overtime / 60.0, 2)
+        if timecard.work_on_holiday?
+          exp_usual_overtime = '(' + exp_usual_overtime + ')'
+        end
+
+        if usual_overtime < 0.0
+      %>
+        <span style="color:darkgreen;"><%= exp_usual_overtime %></span>
+      <% elsif usual_overtime == 0.0 %>
+        -
+      <% else %>
+        <span style="color:orangered;"><%= exp_usual_overtime %></span>
+      <%
+        end
+      end
+      %>
+    </td>
+    <td align="center" nowrap>
+      <%
+      unless timecard.start.nil? or timecard.end.nil?
+        midnight_overtime = timecard.get_midnight_overtime
+        exp_midnight_overtime = ApplicationHelper.float_exp(midnight_overtime / 60.0, 2)
+        if timecard.work_on_holiday?
+          exp_midnight_overtime = '(' + exp_midnight_overtime + ')'
+        end
+      %>
+        <%= (midnight_overtime <= 0)?'-':'<span style="color:red;">' + exp_midnight_overtime + '</span>' %>
+      <% end %>
+    </td>
+    <td align="center" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.detail') %>" title="<%=h t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => date_s, :user_id => user.id, :display => params[:display] %>';">
+    </td>
+  </tr>
+<%
+  end
+end
+%>
+</table>
+<br/>
+<br/>
+

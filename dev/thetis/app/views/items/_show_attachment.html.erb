@@ -1,0 +1,40 @@
+<table cellspacing="2" cellpadding="0" width="100%">
+  <tr>
+    <td class="td_show_cap_bar">
+      <%=h t('attachment.plural_full') %>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+    <%
+    @attachments = @item.attachments_without_content
+    @attachments.each do |attach|
+    %>
+      <table cellspacing="1" cellpadding="0" width="100%" style="cursor:pointer; border:2px solid white;" onClick="location='<%= url_for :controller => 'items', :action => :get_attachment, :id => attach.id %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+        <tr>
+          <td class="td_attachment_name" nowrap align="center">
+            <%=h attach.name %>
+          </td>
+        </tr>
+      <% unless attach.title.nil? or attach.title.empty? %>
+        <tr>
+          <td class="td_attachment_title" align="center">
+            <%=h attach.title %>
+          </td>
+        </tr>
+      <% end %>
+      <% unless attach.memo.nil? or attach.memo.empty? %>
+        <tr>
+          <td class="td_attachment_memo">
+            <%=h attach.memo %>
+          </td>
+        </tr>
+      <% end %>
+      </table>
+      <table cellspacing="0" cellpadding="0" width="100%">
+        <tr height="2"><td></td></tr>
+      </table>
+    <% end %>
+    </td>
+  </tr>
+</table>

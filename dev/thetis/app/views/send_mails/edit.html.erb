@@ -1,0 +1,11 @@
+
+<% form_idx = Time.now.to_f.to_s.gsub('.', '_') %>
+
+<table width="600" align="center" cellspacing="0" cellpadding="0">
+  <tr>
+    <td valign="top">
+      <%= render :partial => 'send_mail_form', :object => @email, :locals => {:form_idx => form_idx} %>
+    </td>
+  </tr>
+</table>
+

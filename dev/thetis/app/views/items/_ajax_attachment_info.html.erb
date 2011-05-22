@@ -1,0 +1,65 @@
+
+<%= form_tag( {:controller => 'items', :action => 'update_attachment_info', :id => @attachment.item_id }, :id => 'form_attachment_info', :name => 'form_attachment_info', :method => 'post', :enctype => 'multipart/form-data') %>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td style="text-align:right;">
+      <table width="100%" cellpadding="0" cellspacing="1">
+        <tr height="5"><td></td></tr>
+        <tr>
+          <td colspan="2" align="center">
+            <%=h @attachment.name %>
+          </td>
+        </tr>
+        <tr height="5"><td></td></tr>
+        <tr>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= h t('item.new_file') %></td>
+          <td class="item_value_td">
+            <%= file_field :attachment, :file, :size => '43', :style => 'width:100%' %><br/>
+          </td>
+        </tr>
+        <tr>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= h Item.human_attribute_name('title') %></td>
+          <td class="item_value_td">
+            <%= text_field :attachment, :title, :style => 'width:70%'  %><br/>
+          </td>
+        </tr>
+        <tr>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= h Attachment.human_attribute_name('memo') %></td>
+          <td class="item_value_td">
+            <%= text_area :attachment, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+          </td>
+        </tr>
+      <% if THETIS_ATTACHMENT_LOCATION_SELECTABLE %>
+        <tr>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= h t('item.storage_location') %></td>
+          <td class="item_value_td">
+          <% if @attachment.location == Attachment::LOCATION_DIR %>
+            <%=h t('item.location_file') %>
+          <% else %>
+            <%=h t('item.location_db') %>
+          <% end %>
+          </td>
+        </tr>
+      <% end %>
+        <tr height="10"><td></td></tr>
+        <tr>
+          <td colspan="2">
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="center">
+                  <input id="attachment_info_ok" type="button" value="<%=h t('btn.register') %>" onclick="onAttachInfoOK()" style="width:80px;">
+                  &nbsp;&nbsp;<input id="attachment_info_cancel" type="button" value="<%=h t('btn.cancel') %>" onclick="onAttachInfoCancel()" style="width:80px;">
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<input type="hidden" name="attachment_id" value="<%= @attachment.id %>" />
+
+</form>
+

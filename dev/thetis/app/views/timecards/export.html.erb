@@ -1,0 +1,196 @@
+
+$FISCAL_YEAR=<%= @year %>
+$FISCAL_MONTH=<%= @month %>
+$NAME=<%=h @selected_user.get_name_for_timecard %>
+$TITLE=<%=h @selected_user.title %>
+
+<%
+groups = []
+groups_cache = {}
+
+@selected_user.get_groups_a.each do |group_id|
+  groups << Group.get_path(group_id, groups_cache)
+end
+%>
+$GROUPS
+<%=h groups.join("\n") %>
+
+<%
+records = []
+day = @start_date.dup
+days = (@end_date - @start_date).to_i + 1
+
+holidays = Schedule.get_holidays
+
+workcodes = Timecard.workcodes
+
+labor_days = 0.0
+lateness_days = 0
+leaving_early_days = 0
+work_on_holidays = 0
+paid_holidays = 0
+business_trip_days = 0
+makeup_holidays = 0
+special_holidays = 0
+absence_days = 0
+wktime_sum = 0
+wktime_on_holidays = 0
+wktime_on_holidays_midnight = 0
+overtime_sum = 0
+usual_overtime_sum = 0
+midnight_overtime_sum = 0
+
+days.times do
+  if Schedule.check_holiday(day, holidays)
+    bgcolor = Timecard::BGCOLOR_XLS_HOLIDAY
+  else
+    case day.wday
+      when 0
+        bgcolor = Timecard::BGCOLOR_XLS_SUN
+      when 6
+        bgcolor = Timecard::BGCOLOR_XLS_SAT
+      else
+        bgcolor = ''
+    end
+  end
+
+  date_s = day.strftime(Schedule::SYS_DATE_FORM)
+  timecard = @timecards[date_s]
+  timecard = Timecard.new if timecard.nil?
+
+  wkcode_params = workcodes[timecard.workcode]
+  unless wkcode_params.nil?
+    labor_days += wkcode_params[Timecard::WKCODE_PARAM_LABORDAY]
+    paid_holidays += wkcode_params[Timecard::WKCODE_PARAM_PAIDHLD]
+  end
+
+  vals = []
+  vals << day.month.to_s
+  vals << day.day.to_s
+  vals << Schedule.wday_name(day.wday)
+  vals << bgcolor
+  vals << ((timecard.workcode.nil?)?'':timecard.workcode_name)
+
+  status = []
+  if !timecard.start.nil? and timecard.end.nil?
+    status << t('msg.not_fulfilled')
+  elsif !timecard.start.nil?
+    check_ok = true
+    if timecard.lateness?
+      lateness_days += 1
+      check_ok = false
+      status << t('timecard.lateness')
+    end
+    if timecard.leaving_early?
+      leaving_early_days += 1
+      check_ok = false
+      status << t('timecard.leaving_early')
+    end
+    if check_ok
+      status << t('btn.ok')
+    end
+  end
+  vals << status.join(',')
+
+  options = ''
+  if timecard.business_trip?
+    business_trip_days += 1
+    options = t('timecard.business_trip')
+  end
+  vals << options
+
+  vals << ((timecard.start.nil?)?'':timecard.start.strftime('%H:%M'))
+  vals << ((timecard.end.nil?)?'':timecard.end.strftime('%H:%M'))
+
+  actual_wktime = timecard.get_actual_wktime
+  wktime_sum += actual_wktime
+
+  if timecard.work_on_holiday?
+    wktime_on_holidays += actual_wktime
+  end
+  vals << ((actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'')
+
+  if timecard.comment.nil?
+    vals << ''
+  else
+    vals << timecard.comment.gsub("\n", ' ').gsub(',', ' ')
+  end
+
+  # Note that "overtime != usual_overtime + midnight_overtime".
+  overtime_sum += timecard.get_overtime unless timecard.work_on_holiday?
+
+  if timecard.start.nil? or timecard.end.nil?
+      vals << ''
+  else
+    usual_overtime = timecard.get_usual_overtime
+    exp_usual_overtime = ApplicationHelper.float_exp(usual_overtime / 60.0, 2)
+
+    if timecard.work_on_holiday?
+      exp_usual_overtime = '(' + exp_usual_overtime + ')'
+    else
+      usual_overtime_sum += usual_overtime
+    end
+
+    vals << exp_usual_overtime
+  end
+
+  if timecard.start.nil? or timecard.end.nil?
+      vals << ''
+  else
+    midnight_overtime = timecard.get_midnight_overtime
+    exp_midnight_overtime = ApplicationHelper.float_exp(midnight_overtime / 60.0, 2)
+
+    if timecard.work_on_holiday?
+      exp_midnight_overtime = '(' + exp_midnight_overtime + ')'
+      wktime_on_holidays_midnight += midnight_overtime
+    else
+      midnight_overtime_sum += midnight_overtime
+    end
+
+    vals << exp_midnight_overtime
+  end
+
+  if timecard.start.nil? or timecard.end.nil?
+    vals << ''
+  else
+    vals << ApplicationHelper.float_exp(timecard.get_break / 60.0, 2)
+  end
+
+  breaks = []
+  timecard.get_breaks_a.each do |spans|
+    break_start = spans.first.strftime('%H:%M')
+    break_end = spans.last.strftime('%H:%M')
+    breaks << break_start + '-' + break_end
+  end
+  vals << breaks.join(' ')
+
+  records << vals.join(',')
+
+  day += 1
+end
+%>
+$RECORDS
+$MONTH,$DAY,$WEEKDAY,$BGCOLOR,$CLASS,$STATUS,$OPTION,$START,$END,$HOURS,$DESC,$OVERTIME_USUAL,$OVERTIME_MIDNIGHT,$BREAK_SUM,$BREAK_DETAIL
+<%=h records.join("\n") %>
+
+$LABOR_DAYS=<%= labor_days %>
+$BUSINESS_TRIP_DAYS=<%= business_trip_days %>
+$LATENESS_DAYS=<%= lateness_days %>
+$LEAVING_EARLY_DAYS=<%= leaving_early_days %>
+$WORK_ON_HOLIDAYS=<%= work_on_holidays %>
+$MAKEUP_HOLIDAYS=<%= makeup_holidays %>
+$SPECIAL_HOLIDAYS=<%= special_holidays %>
+$ABSENCE_DAYS=<%= absence_days %>
+$PAID_HOLIDAYS=<%= paid_holidays %>
+<%
+given_num = (@paid_holiday.nil?)?0:@paid_holiday.num
+carried_over = PaidHoliday.get_carried_over(@selected_user.id, @fiscal_year)
+%>
+$LEFT_PAID_HOLIDAYS=<%=h given_num + carried_over - @applied_paid_hlds - paid_holidays %>
+
+$HOURS_SUM=<%= ApplicationHelper.float_exp(wktime_sum / 60.0, 2) %>
+$OVERTIME_SUM=<%= ApplicationHelper.float_exp(overtime_sum / 60.0, 2) %>
+$OVERTIME_USUAL_SUM=<%= ApplicationHelper.float_exp(usual_overtime_sum / 60.0, 2) %>
+$OVERTIME_MIDNIGHT_SUM=<%= ApplicationHelper.float_exp(midnight_overtime_sum / 60.0, 2) %>
+$WORK_ON_HOLIDAY_HOURS=<%= ApplicationHelper.float_exp(wktime_on_holidays / 60.0, 2) %>
+$WORK_ON_HOLIDAY_MIDNIGHT=<%= ApplicationHelper.float_exp(wktime_on_holidays_midnight / 60.0, 2) %>

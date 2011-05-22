@@ -1,0 +1,282 @@
+<%
+committed = []
+research_cache = {}
+@users.each do |user|
+  research = Research.get_for(user.id)
+  if !research.nil? and research.status == Research::U_STATUS_COMMITTED
+    committed << user.id.to_s
+  end
+  research_cache[user.id.to_s] = research
+end
+
+groups_cache = {}
+%>
+<div id="committed_users" style="display:none;"><%= '|'+committed.join('|')+'|' %></div>
+
+<%= form_tag( {:controller => 'researches', :action => 'users'}, :method => 'post', :name => 'form_list') %>
+
+<table width="100%" cellspacing="3" cellpadding="0">
+  <tr>
+    <td align="right" nowrap>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <%= h t('cap.status') %><%= select_tag 'filter_status',
+                               options_for_select([[h(t('msg.all')), ''],
+                                                  [h(t('research.no_action')), '-1'],
+                                                  [h(t('research.in_action')), Research::U_STATUS_IN_ACTON.to_s],
+                                                  [h(t('research.committed')), Research::U_STATUS_COMMITTED.to_s]], 
+                                                  params[:filter_status])  %>
+      <input type="button" value="<%= h t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= h t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'researches', :action => 'users' %>';"/>
+    </td>
+  </tr>
+  <tr height="5"><td></td></tr>
+  <tr>
+    <td align="right">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+          <td align="left" width="120" style="padding-bottom:5px;">
+        <% if @group_id.nil? or @group_id.empty? %>
+            <table width="100%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                  <%=h t('btn.select_group') %>
+                </td>
+              </tr>
+            </table>
+        <% else %>
+          <table align="center" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="left" nowrap>
+                <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+                &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+              </td>
+            </tr>
+          </table>
+        <% end %>
+          </td>
+          <td align="right">
+            <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%=h t('research.select_not_committed')%>" onclick="selectNotCommitted();">
+            <input type="button" value="<%=h t('btn.send_notification')%>" onclick="doNotify();">
+            <input type="button" value="<%=h t('btn.reset_status')%>" onclick="doResetSatus();">
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= h t('cap.total') %><%= h t('user', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_user')
+      pagination = will_paginate(@user_pages, :params => prms)
+      pagination = ApplicationHelper.custom_pagination(pagination)
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+
+<div id="div_users" style="overflow:scroll; background-color:white;">
+<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+  <tr>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('User.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="22%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="25%" nowrap onClick="sortList('fullname')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="28%" nowrap onClick="sortList('groups')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('msg.organizations') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%" nowrap onClick="sortList('Research.status')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Research.human_attribute_name('status') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Research.status', @sort_col, @sort_type)) %></span></th>
+  </tr>
+<% @users.each_with_index do |user, idx| %>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr height="33">
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
+   <% if session[:login_user].admin?(User::AUTH_USER) %>
+    <td class="<%=td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => user.id %>'; return false;">
+        <%=h truncate(user.name, :length => 20) %>
+      </a>
+    </td>
+   <% else %>
+    <td class="<%=td_class %>" nowrap><%=h truncate(user.name, :length => 20) %></td>
+   <% end %>
+    <td class="<%=td_class %>" nowrap><%=h truncate(user.fullname, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap>
+      <%
+      user.get_groups_a.each do |group_id|
+        group_path = Group.get_path(group_id, groups_cache)
+      %>
+        <%=h group_path %><br/>
+      <% end %>
+    </td>
+    <%
+    research = research_cache[user.id.to_s]
+    status = ''
+    color = ''
+    if research.nil?
+      status = t('research.no_action')
+      color = 'red'
+    else
+      case research.status
+        when Research::U_STATUS_COMMITTED
+          status = t('research.committed')
+          color = 'blue'
+        else
+          status = t('research.in_action')
+          color = 'green'
+      end
+    end
+    %>
+    <td class="<%=td_class %>" nowrap style="text-align:center; color:<%= color %>;"><%=h status %></td>
+   <!--
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user) %>';">
+    </td>
+   -->
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box :check_user, user.id, :class => 'check_user' %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag 'group_id', @group_id %>
+
+</form>
+
+<script type="text/javascript">
+<!--
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_user", document.form_list);
+  var all_selected = true;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+function selectNotCommitted()
+{
+  var elems = document.getElementsByClassName("check_user", document.form_list);
+  for (var i=0; elems != null && i < elems.length; i++) {
+    var user_id = elems[i].id.split("_")[2];
+    elems[i].checked = ($("committed_users").innerHTML.indexOf("|"+user_id+"|") < 0);
+  }
+}
+
+function getCheckedUsersParam()
+{
+  var params = new Array;
+
+  var elems = document.getElementsByClassName("check_user", document.form_list);
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      var user_id = elems[i].id.split("_")[2];
+      params[params.length] = "check_user["+user_id+"]=1";
+    }
+  }
+  return params;
+}
+
+function doNotify()
+{
+  var additionalParams = getCheckedUsersParam();
+
+  var count = additionalParams.length;
+
+  if (count <= 0) {
+    msg("<%= h t('msg.select_users_to_notify') %>");
+    return false;
+  }
+
+  additionalParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.setAdditionalParams(additionalParams);
+  thetisBox.progress = true;
+  thetisBox.show(
+                "CENTER", "540,200", "TEXTAREA",
+                "<%= url_for :controller => 'researches', :action => 'notify' %>",
+                "<%=h t('msg.notify_info1') %>"+count+"<%=h t('msg.notify_info2') %>\n<%=h t('msg.notify_info3') %>"
+                + "",
+                ""
+              );
+}
+
+function clearGroup()
+{
+  document.form_list.action = "<%= url_for :controller => 'researches', :action => 'users' %>";
+  document.form_list.group_id.value = "";
+  document.form_list.submit();
+  prog("TOP-RIGHT");
+}
+
+function sortList(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  prog("TOP-RIGHT");
+  document.form_list.action = "<%= url_for :controller => 'researches', :action => 'users' %>";
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+  document.form_list.submit();
+}
+
+function showGroupTreeToSelect(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'researches', :action => 'users' %>", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+}
+
+function doResetSatus()
+{
+  var count = getCheckedUsersParam().length;
+
+  if (count <= 0) {
+    msg("<%= h t('msg.select_users_to_reset') %>");
+    return false;
+  }
+
+  confm("<%=h t('research.confirm_to_reset_status1') %>" + count + "<%=h t('research.confirm_to_reset_status2') %>", "_doResetSatus()");
+}
+
+function _doResetSatus()
+{
+  var additionalParams = getCheckedUsersParam();
+
+  var count = additionalParams.length;
+
+  if (count <= 0) {
+    msg("<%= h t('msg.select_users_to_notify') %>");
+    return false;
+  }
+
+  prog("TOP-RIGHT");
+  document.form_list.action = "<%= url_for :controller => 'researches', :action => 'reset_users' %>";
+  document.form_list.submit();
+}
+//-->
+</script>
+

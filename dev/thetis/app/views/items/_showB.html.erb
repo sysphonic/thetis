@@ -1,0 +1,55 @@
+<script type="text/javascript">
+function getDescriptionWidth()
+{
+  var leftWidthPercent = 0;
+  var horizontalFrame = parent.document.getElementById('horizontalFrame');
+  if (horizontalFrame != null) {
+    leftWidthPercent = horizontalFrame.cols.split('%')[0];
+  }
+  var mainWidthMax = screen.availWidth*(100-leftWidthPercent)/100;
+  return (mainWidthMax*55/100);
+}
+</script>
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td>
+      <table align="center" style="width:600px;" cellpadding="0" cellspacing="2">
+        <tr>
+          <td valign="top">
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr>
+                <td>
+                   <%= render :partial => 'show_summary' %>
+                </td>
+              </tr>
+              <tr>
+                <td valign="top">
+                   <%= render :partial => 'show_description' %>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td valign="top">
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr>
+                <td valign="top" width="30%">
+                  <% if @item.attachments_without_content.length > 0 %>
+                   <%= render :partial => 'show_attachment' %>
+                  <% end %>
+                </td>
+              </tr>
+              <tr style="height:10px;"><td></td></tr>
+              <tr>
+                <td>
+                  <% if @item.images_without_content.length > 0 %>
+                    <%= render :partial => 'show_image' %>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

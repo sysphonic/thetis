@@ -1,0 +1,120 @@
+<% login_user = session[:login_user] %>
+
+<table align="center" width="85%" cellpadding="0" cellspacing="2">
+  <tr>
+    <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+      <%=h @item.title %>
+    </td>
+  </tr>
+  <tr>
+    <td class="prim_cap_td" style="width:20%;" nowrap><%=h Team.human_attribute_name('status') %></td>
+    <td class="item_value_td" id="status">
+      <div id="div_team_status">
+
+        <%= render :partial => 'ajax_team_status' %>
+
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="width:20%;" nowrap><%=h t('msg.members') %></td>
+    <td class="item_value_td" nowrap>
+    <%
+    unless @team.nil?
+      groups_cache = Hash.new
+
+      @team.get_users_a.each do |user_id|
+        user_name = User.get_name(user_id, @users_cache)
+        group_names = []
+        begin
+          user = User.find(user_id)
+          user.get_groups_a.each do |group_id|
+            g_name = groups_cache[group_id]
+            if g_name.nil?
+              g_name = Group.get_path(group_id)
+              groups_cache[group_id] = g_name
+            end
+            group_names << g_name
+          end
+        rescue
+        end
+        belongs_to = user_name + ' @ <br/>&nbsp;&nbsp;' + group_names.join('<br/>&nbsp;&nbsp;')
+    %>
+        <% unless login_user.nil? %><a class="a_underline" href="#" onclick="msg('<%=ApplicationHelper.h_s_quote belongs_to %>'); return false;"><% end %>
+          <%=h user_name %>
+        <% unless login_user.nil? %></a><% end %>
+        <br/>
+    <%
+      end
+    end
+    %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" style="width:20%;" nowrap><%=h t('team.team_folder') %></td>
+    <td class="item_value_td" nowrap>
+    <%
+    unless @team.nil? or login_user.nil?
+      team_folder = @team.get_team_folder
+      unless team_folder.nil?
+        if  Folder.check_user_auth(team_folder.id, login_user, 'r', true)
+          path = team_folder.get_path
+    %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" alt="">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
+        <%=h path %>
+      </a>
+      <% else %>
+        <%= t('paren.round.left') %><%= t('msg.need_auth_to_access') %><%= t('paren.round.right') %>
+    <%
+        end
+      end
+    end
+    %>
+    </td>
+  </tr>
+  <tr height="15"><td></td></tr>
+</table>
+
+<%= render :partial => 'common/flash_notice' %>
+
+
+<script type="text/javascript">
+
+<% unless @team.nil? %>
+if ($("team_id") != null) {
+  $("team_id").value = "<%= @team.id %>";
+}
+<% end %>
+
+<% if params[:action] == 'team_organize' %>
+
+doMoveInTeamFolder = function()
+{
+  confm("<%=h t('item.confirm_move_in_team_folder') %><br/><%=h t('item.move_in_team_folder_info') %>", "_doMoveInTeamFolder()");
+}
+
+_doMoveInTeamFolder = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+                "folder_path",
+                "<%= url_for :controller => 'items', :action => 'move_in_team_folder', :id => @item.id %>",
+                {
+                  parameters:"authenticity_token=<%= form_authenticity_token %>",
+                  asynchronous:true,
+                  evalScripts:true,
+                  onComplete:function(request) {
+                    thetisBox.remove();
+                  }
+                }
+              );
+}
+
+// Once the item is moved in the Team Folder, nobody except the members of the Team can see it.
+// setTimeout(doMoveInTeamFolder, 100);
+
+<% end %>
+
+</script>

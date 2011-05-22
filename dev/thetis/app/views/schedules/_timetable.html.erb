@@ -1,0 +1,128 @@
+<%
+login_user = session[:login_user]
+date_string = @date.strftime(Schedule::SYS_DATE_FORM)
+read_only = false if read_only.nil?
+%>
+
+<table width="100%" cellspacing="0" cellpadding="0" style="border:blue 1px solid; border-collapse:collapse;">
+  <tr>
+<% for time in (THETIS_HOURS.first)..(THETIS_HOURS.last) do %>
+  <%
+  bgcolor = 'white'
+  if THETIS_DAWN[:range].include?(time)
+    bgcolor = THETIS_DAWN[:color]
+  elsif THETIS_MORNING[:range].include?(time)
+    bgcolor = THETIS_MORNING[:color] 
+  elsif THETIS_DAYTIME[:range].include?(time)
+    bgcolor = THETIS_DAYTIME[:color]
+  elsif THETIS_AFTERNOON[:range].include?(time)
+    bgcolor = THETIS_AFTERNOON[:color]
+  elsif THETIS_EVENING[:range].include?(time)
+    bgcolor = THETIS_EVENING[:color]
+  elsif THETIS_NIGHT[:range].include?(time)
+    bgcolor = THETIS_NIGHT[:color]
+  end
+  %>
+    <td colspan="<%= THETIS_DIV_IN_HOUR %>" align="center" style="background-color:<%= bgcolor %>; border:blue 1px solid; font-weight:400; font-size:11pt;"><%= time%></td>
+<% end %>
+  </tr>
+  <tr height="10">
+<%
+ cell_num = THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR
+ cell_num.times do |q|
+%>
+    <td style="line-height:10px; border:blue 1px solid; border-collapse:collapse;">&nbsp</td>
+<% end %>
+  </tr>
+<%
+if @schedules.length > 0
+  @schedules.each do |schedule|
+    auth_write = schedule.check_user_auth(login_user, 'w', true)
+    case schedule.scope
+      when Schedule::SCOPE_ALL
+        scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"
+        bg_color = '#FFD5C5'
+        border_color = 'orangered'
+      when Schedule::SCOPE_PRIVATE
+        scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
+        bg_color = 'lightcyan'
+        border_color = 'mediumblue'
+      else
+        scope = ''
+        bg_color = '#DEF9A3'
+        border_color = 'darkgreen'
+    end
+%>
+  <tr height="30">
+    <% if schedule.holiday? %>
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center">
+      <span class="span_holiday"><%=h schedule.title %></span>
+    </td>
+    <% elsif schedule.allday %>
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center" style="color:navy">
+      <li><% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
+      <a class="a_underline" href="#" onclick="showDetail('<%= date_string %>', '<%= schedule.id %>', '<%=ApplicationHelper.h_s_quote schedule.title %>'); return false;">
+        <%=h schedule.title %>
+      </a>
+      <%= raw(scope) %>
+      <% if auth_write and !read_only %>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editDetail('<%= date_string %>', '<%= schedule.id %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete('<%= date_string %>', '<%= schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(schedule.title, :length => 20) %>'); return false;" />
+      <% end %>
+    </td>
+    <%
+    else
+      if schedule.repeat? or schedule.start.strftime(Schedule::SYS_DATE_FORM) == date_string
+       span_before = (schedule.start.hour-THETIS_HOURS.first)*THETIS_DIV_IN_HOUR + schedule.start.min/(60/THETIS_DIV_IN_HOUR)
+      else
+       span_before = 0
+      end
+
+      if schedule.repeat? or schedule.end.strftime(Schedule::SYS_DATE_FORM) == date_string
+       span_after = (THETIS_HOURS.last-schedule.end.hour)*THETIS_DIV_IN_HOUR + THETIS_DIV_IN_HOUR-schedule.end.min/(60/THETIS_DIV_IN_HOUR)
+      else
+       span_after = 0
+      end
+
+      span = cell_num - span_before - span_after
+      if span == 0
+        span = 1
+        span_after -= 1
+      end
+    %>
+
+    <% if span_before > 0 %>
+    <td colspan="<%= span_before %>"></td>
+    <% end %>
+
+    <td colspan="<%= span %>" align="left" style="padding-left:5px; padding-top:5px; padding-bottom:5px; background-color:<%= bg_color %>; border:1px solid <%= border_color %>; line-height:1.3;">
+      <% if schedule.within_a_day? %>
+        <%= schedule.start.strftime('%H:%M') + '-' + schedule.end.strftime('%H:%M') %><% if !auth_write or read_only %><br/><% end %>
+      <% else %>
+        <%= schedule.start.strftime(THETIS_DATE_FORMAT_MD+' %H:%M') + ' - ' + schedule.end.strftime(THETIS_DATE_FORMAT_MD+' %H:%M') %><% unless auth_write %><br/><% end %>
+      <% end %>
+      <% if auth_write and !read_only %>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editDetail('<%= date_string %>', '<%= schedule.id %>'); return false;">
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete('<%= date_string %>', '<%= schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(schedule.title, :length => 20) %>'); return false;" /><br/>
+      <% end %>
+      <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<% end %><a class="a_underline" href="#" onclick="showDetail('<%= date_string %>', '<%= schedule.id %>', '<%=ApplicationHelper.h_s_quote schedule.title %>'); return false;"><%=h schedule.title %></a>
+      <%= raw(scope) %>
+    </td>
+
+    <% if span_after > 0 %>
+    <td colspan="<%= span_after %>"></td>
+    <% end %>
+  </tr>
+<%
+    end
+  end
+end
+if @schedules.find { |schedule| !schedule.holiday? }.nil?
+%>
+  <tr height="50">
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center" style="color:navy">
+      <%=h t('paren.no_schedules') %>
+    </td>
+  </tr>
+<% end %>
+</table>

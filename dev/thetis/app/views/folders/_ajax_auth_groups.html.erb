@@ -1,0 +1,138 @@
+<% if @folder.nil? %>
+
+<table align="center" width="100%" height="100%" bgcolor="lightcyan" cellpadding="0" cellspacing="0">
+  <tr>
+    <td valign="top">
+      <br/><br/><br/>
+      <table align="center" width="80%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%=h t('folder.cannot_be_edited') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%
+else
+  groups_cache = {}
+%>
+
+<table cellspacing="0" cellpadding="0" width="100%" height="100%" bgcolor="lightcyan">
+  <tr>
+    <td style="vertical-align:top;">
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr>
+          <td id="tab_users" class="td_item_tab" nowrap onClick="selectTabUsers(<%= @folder.id %>);" bgColor="silver" onMouseOver="this.bgColor='palegreen'" onMouseOut="this.bgColor='silver';">
+              <%= h t('user.plural') %>
+          </td>
+          <td id="tab_groups" class="td_item_tab" nowrap bgColor="forestgreen" style="cursor:default">
+              <%= h t('group.plural') %>
+          </td>
+          <td id="tab_teams" class="td_item_tab" nowrap onClick="selectTabTeams(<%= @folder.id %>);" bgColor="silver" onMouseOver="this.bgColor='palegreen'" onMouseOut="this.bgColor='silver';">
+              <%= h t('team.plural') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td style="vertical-align:top;">
+
+      <%= form_tag( {:controller => 'folders', :action => 'set_auth_groups', :id => ''}, :name => 'form_folder_auth', :method => 'post') %>
+        <table cellspacing="0" cellpadding="0" width="100%">
+          <tr height="10"><td></td></tr>
+          <tr>
+            <td style="padding:10px;">
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td style="text-align:left;">
+                    <%= h t('cap.groups') %><br/>
+                    <select id="group_candidates" name="group_candidates" class="select_multi" size="5" multiple="multiple">
+                    <%
+                     read_groups = @folder.get_read_groups_a
+                     write_groups = @folder.get_write_groups_a
+                     read_groups = [] if read_groups.nil?
+                     write_groups = [] if write_groups.nil?
+                     @groups.each do |group|
+                       next if read_groups.include?(group.id.to_s)
+                       next if write_groups.include?(group.id.to_s)
+                    %>
+                      <option value="<%=h group.id %>"><%=h Group.get_path(group.id, groups_cache) %></option>
+                    <% end %>
+                    </select>
+                  </td>
+                </tr>
+                <tr height="5"><td></td></tr>
+                <tr>
+                  <td>
+                    <table cellspacing="0" cellpadding="0" width="100%">
+                      <tr>
+                        <td align="center" nowrap>
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.read_write') %>" onclick="var ary=moveListWithSuffix($('group_candidates'), $('groups_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.read') %>" onclick="var ary=moveListWithSuffix($('group_candidates'), $('groups_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.write') %>" onclick="var ary=moveListWithSuffix($('group_candidates'), $('groups_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.up')) %><%=h t('btn.remove') %>" onclick="var ary=moveListTrimSuffix($('groups_auth'), $('group_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr height="6"><td></td></tr>
+                <tr>
+                  <td>
+                    <select id="groups_auth" name="groups_auth[]" class="select_multi" size="5" multiple="multiple">
+                    <%
+                     readWrite = read_groups & write_groups
+                     readOnly = read_groups - write_groups
+                     writeOnly = write_groups - read_groups
+                     readWrite.each do |group_id|
+                    %>
+                      <option value="<%= group_id %>:r+w"><%=h Group.get_path(group_id, groups_cache) %> (Read/Write)</option>
+                    <% end %>
+                    <% readOnly.each do |group_id| %>
+                      <option value="<%= group_id %>:r"><%=h Group.get_path(group_id, groups_cache) %> (Read)</option>
+                    <% end %>
+                    <% writeOnly.each do |group_id| %>
+                      <option value="<%= group_id %>:w"><%=h Group.get_path(group_id, groups_cache) %> (Write)</option>
+                    <% end %>
+                    </select>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="20">
+            <td>
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr height="20"><td></td></tr>
+                <tr>
+                  <td class="img_button_td" onclick="doApplyAuthGroups(<%= @folder.id %>);">
+                    <%=h t('btn.apply') %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr height="15"><td></td></tr>
+        </table>
+      </form>
+
+    </td>
+  </tr>
+</table>
+
+<% end %>
+
+<%= render :partial => 'common/flash_notice' %>
+
+<script type="text/javascript">
+
+modified_users = 0;
+modified_groups = 0;
+modified_teams = 0;
+
+</script>

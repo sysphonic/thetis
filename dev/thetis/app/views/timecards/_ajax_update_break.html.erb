@@ -1,0 +1,160 @@
+<% unless @timecard.nil? %>
+
+<%
+login_user = session[:login_user]
+editable = false
+if login_user.admin?(User::AUTH_TIMECARD) or login_user.id == @selected_user.id
+  editable = true
+end
+%>
+
+<div style="padding-bottom:10px;">
+  <table class="timecard" align="center" width="95%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="item_cap_td" style="width:20%; background-color:#FFC9A9;" nowrap><%= Timecard.human_attribute_name('status') %></td>
+      <td class="item_value_td" style="padding-left:20px;">
+        <% if !@timecard.start.nil? and @timecard.end.nil? %>
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif"/>
+          &nbsp;<span style="color:crimson;"><%= t('msg.not_fulfilled') %></span>
+        <%
+        else
+          status_ary = []
+          status_ary << '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/lateness.gif"> ' + h(t('timecard.lateness')) if @timecard.lateness?
+          status_ary << '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/leaving_early.gif"> ' + h(t('timecard.leaving_early')) if @timecard.leaving_early?
+
+          if status_ary.empty?
+        %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%= t('btn.ok') %>" title="<%= t('btn.ok') %>">
+          <% else %>
+            <span style="color:crimson;"><%= raw(status_ary.join(' / ')) %></span>
+        <%
+          end
+        end
+        %>
+      </td>
+    </tr>
+  </table>
+</div>
+
+  <table style="border-collapse:collapse; background-color:white" id="times_table" align="center" width="95%" cellpadding="0" cellspacing="0">
+    <tr>
+      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+        <%=h t('timecard.within_standard') %>
+      </td>
+      <td class="item_value_td" colspan="2" width="60%" style="padding-left:15px; border:solid black 1px;">
+        <%
+        standard_wktime = Timecard.get_standard_wktime
+        actual_wktime = @timecard.get_actual_wktime
+        if standard_wktime > 0 and actual_wktime > standard_wktime
+          within_standard = standard_wktime / 60.0
+        else
+          within_standard = actual_wktime / 60.0
+        end
+        %>
+        <%= ApplicationHelper.float_exp(within_standard, 2) %>
+      </td>
+      <td align="center" rowspan="3" width="20%" style="border:solid black 1px;">
+        <%= ApplicationHelper.float_exp(actual_wktime / 60.0, 2) %>
+      </td>
+    </tr>
+    <tr>
+      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+        <%=h t('timecard.usual_overtime') %>
+      </td>
+      <td class="item_value_td" width="40%" style="padding-left:15px; border:solid black 1px;">
+        <%
+        overtime = @timecard.get_overtime
+        usual_overtime = @timecard.get_usual_overtime
+        midnight_overtime = @timecard.get_midnight_overtime
+        overtime_start = @timecard.get_overtime_start
+        %>
+        <%= ApplicationHelper.float_exp(usual_overtime / 60.0, 2) %>
+      </td>
+      <td align="center" rowspan="2" width="20%" style="border:solid black 1px;">
+        <%= ApplicationHelper.float_exp(overtime / 60.0, 2) %>
+      </td>
+    </tr>
+    <tr>
+      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+        <%=h t('timecard.midnight_overtime') %>
+      </td>
+      <td class="item_value_td" style="padding-left:15px; border:solid black 1px;">
+        <%= ApplicationHelper.float_exp(midnight_overtime / 60.0, 2) %>
+        <span style="color:orangered;">
+        <%
+        if midnight_overtime > 0
+          midnight_spans = @timecard.get_midnight_spans
+          unless midnight_spans.nil?
+            midnight_spans.each do |span|
+        %>
+          (
+          <%=h span.first.strftime('%H:%M') %>
+          ~
+          <%=h span.last.strftime('%H:%M') %>
+          )
+        <%
+            end
+          end
+        end
+        %>
+        </span>
+      </td>
+    </tr>
+    <tr>
+      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+        <%=h t('timecard.break') %>
+      </td>
+      <td class="item_value_td" colspan="3" width="80%" style="padding-left:15px; border:solid black 1px;">
+        <%
+        @timecard.get_breaks_a.each do |spans|
+          break_start = spans.first
+          break_end = spans.last
+          brk = (break_end - break_start) / 60
+        %>
+        <%= ApplicationHelper.float_exp(brk / 60.0, 2) %>
+        <span style="color:orangered;">
+          (
+          <%=h break_start.strftime('%H:%M') %>
+          ~
+          <%=h break_end.strftime('%H:%M') %>
+          )
+        </span>
+    <% if editable %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="inputBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+    <% end %>
+        <br/>
+        <% end %>
+
+    <% if editable %>
+        <table align="left" width="120" cellspacing="0" cellpadding="0">
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="inputBreak();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+              <%=h t('timecard.add_break') %>
+            </td>
+          </tr>
+        </table>
+    <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= render :partial => 'common/flash_notice' %>
+
+  <input type="hidden" id="timecard_id" name="timecard_id" value="<%= @timecard.id %>" />
+  
+  <script type="text/javascript">
+    $("buttons_with_clear").style.display = "block";
+    $("buttons_without_clear").style.display = "none";
+
+    <% unless params[:action] == 'edit' %>
+    changeWorkcode($("timecard_workcode").value);
+    <% end %>
+
+  </script>
+<% else %>
+
+  <input type="hidden" id="timecard_id" name="timecard_id" value="" />
+
+<% end %>

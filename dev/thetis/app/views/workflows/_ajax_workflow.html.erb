@@ -1,0 +1,35 @@
+<% login_user = session[:login_user] %>
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td align="left">
+      <div style="padding-left:10px;">
+      <%
+      unless @workflows.nil?
+        @workflows.each do |workflow|
+          item = workflow.item
+      %>
+        <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => item.id %>'; return false;" style="line-height:2.0;">
+          <%=h truncate(item.title, :length => 30) %>
+        </a>
+        <span style="color:red;">&lt;<%=h workflow.get_status_name %>&gt;</span>
+      <% if !login_user.nil? and item.editable?(login_user.id)  %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
+      <% end %>
+      <% if !login_user.nil? and item.movable_wf?(login_user.id) %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%=h t('btn.move') %>" title="<%=h t('btn.move') %>" onclick="showFolderTreeToSelect(<%= item.folder_id %>, <%= workflow.id %>, '<%=ApplicationHelper.h_s_quote item.title %>');" />
+      <% end %>
+      <% if !login_user.nil? and item.deletable?(login_user.id, false)  %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete(<%= workflow.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20)%>'); return false;" />
+      <% end %>
+      <br/>
+      <%
+        end
+      end
+      %>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<%= render :partial => 'common/flash_notice' %>

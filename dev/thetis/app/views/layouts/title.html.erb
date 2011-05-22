@@ -1,0 +1,70 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Thetis: <%= controller.action_name %></title>
+
+<META http-equiv="Content-Script-Type" content="text/JavaScript">
+<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+<%= stylesheet_link_tag 'thetis100' %>
+
+<%= javascript_include_tag 'prototype', 'thetis/common100', 'thetis/thetis098', 'thetis/thetisbox110' %>
+
+<script type="text/javascript">
+<!--
+<%
+login_name = (session[:login_user].nil?)?'':session[:login_user].name
+login_admin = (!session[:login_user].nil? and session[:login_user].admin?)?'true':'false'
+%>
+setHeaderLogin("<%=h login_name %>");
+setLeftLogin("<%=h login_name %>", <%= login_admin %>);
+
+function doOnLoad()
+{
+  setTimeout("doResize()", 10);
+
+<% if params[:topicBox] == 'true' %>
+  setTimeout("showTopicBox()", 10);
+<% end %>
+}
+
+function doResize()
+{
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var main_div = $("main_div");
+  main_div.style.height = mainHeight + "px";
+  main_div.style.width = mainWidth + "px";
+}
+
+function showTopicBox()
+{
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%= t('topicbox.title') %>";
+  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%=h $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+  $('divThetisBox-' + thetisBox.id).style.zIndex += 1;
+}
+
+window.onresize = doResize;
+//-->
+</script>
+</head>
+
+<body bgcolor="white" onLoad="doOnLoad();">
+
+
+<div id="main_div" width="100%" style="vertical-align:top; background:url(<%= THETIS_RELATIVE_URL_ROOT %>/images/stripeback.gif) repeat-y white; overflow:auto;">
+  <%= yield %>
+</div>
+
+
+<%= render :partial => 'layouts/popup' %>
+
+</body>
+</html>

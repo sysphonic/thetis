@@ -1,0 +1,367 @@
+<% if @schedule.nil? %>
+
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <%=h t('paren.deleted') %>
+      </td>
+    </tr>
+  </table>
+
+<% else %>
+
+  <div class="info_area" style="width:90%; padding-top:20px; padding-bottom:20px;" align="center">
+    <%= hidden_field 'schedule', 'id' %>
+    <table align="center" width="95%" cellpadding="0" cellspacing="2">
+      <tr>
+        <td class="prim_cap_td" nowrap><label for="schedule_title"><%=h Schedule.human_attribute_name('title') %></label></td>
+        <td class="item_value_td">
+
+<%
+if params[:from] == 'desktop'
+  href = url_for :controller => 'schedules', :action => 'show_in_day', :id => @schedule.id, :date => Date.today.strftime(Schedule::SYS_DATE_FORM)
+%>
+          <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;">
+            <%=h @schedule.title %>
+          </a>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.move_to_schedule') %>" title="<%=h t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
+<% else %>
+          <%=h @schedule.title %>
+<%
+  login_user = session[:login_user]
+  toy_xtype = Toy::XTYPE_SCHEDULE
+  toy_target_id = @schedule.id
+  if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(login_user.id.to_s))
+%>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= h t('btn.add_to_desktop') %>" title="<%= h t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+
+<script type="text/javascript">
+addToDesktop = function()
+{
+  confm("<%=h t('paren.square.left') + truncate(@schedule.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
+}
+
+_addToDesktop = function()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'desktop', :action => 'add_toy' %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
+          {
+            parameters:"authenticity_token=<%= form_authenticity_token %>",
+            asynchronous:true,
+            evalScripts:false,
+            onComplete:function(request) {
+                var button = $("add_to_desktop");
+                removeElem(button);
+
+                thetisBoxProgress.remove();
+
+                if (Number(request.responseText) > 0) {
+                  tips("<%=h t('msg.add_to_desktop_success')%>");
+                }
+              }
+          }
+        );
+}
+</script>
+<%
+  end
+end
+%>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('schedule.time') %></td>
+        <td class="item_value_td">
+
+          <% if @schedule.repeat? %>
+
+            <% unless @schedule.allday %>
+            <%=h @schedule.start.strftime('%H:%M') %>&nbsp;&nbsp;<span style="color:firebrick">-</span>&nbsp;&nbsp;<%=h @schedule.end.strftime('%H:%M') %>
+            <br/>
+            <% end %>
+
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding-left:20px;">
+              <tr>
+                <td width="20%" nowrap><%= h t('schedule.cap_rule') %></td>
+                <td>
+                  <%
+                  rules_locale = []
+                  @schedule.get_rules_a.each do |rule|
+                    rules_locale << Schedule::rule_names[rule]
+                  end
+                  %>
+                  <%=h rules_locale.join(', ') %>
+                </td>
+              </tr>
+              <tr>
+                <td nowrap><%= h t('schedule.cap_term') %></td>
+                <td>
+                  <% if @schedule.repeat_start.nil? and @schedule.repeat_end.nil? %>
+
+                    <%=h t('paren.not_specified') %>
+
+                  <% else %>
+
+                    <%
+                    unless @schedule.repeat_start.nil?
+                      repeat_start = @schedule.repeat_start.strftime(THETIS_DATE_FORMAT_YMD)
+                    else
+                      repeat_start = ''
+                    end
+                    unless @schedule.repeat_end.nil?
+                      repeat_end = @schedule.repeat_end.strftime(THETIS_DATE_FORMAT_YMD)
+                    else
+                      repeat_end = ''
+                    end
+                    %>
+                    <%=h repeat_start %>&nbsp;&nbsp;<span style="color:firebrick">~</span>&nbsp;&nbsp;<%=h repeat_end %>
+
+                  <% end %>
+                </td>
+              </tr>
+            <% unless @schedule.get_excepts_a.empty? %>
+              <tr>
+                <td nowrap><%= h t('schedule.cap_except') %></td>
+                <td>
+                  <%=h @schedule.get_excepts_a.join(', ') %>
+                </td>
+              </tr>
+            <% end %>
+            </table>
+
+          <% else %>
+
+            <%
+            if @schedule.within_a_day?
+
+              if @schedule.allday
+                disp = @schedule.start.utc.strftime(THETIS_DATE_FORMAT_YMD)
+              else
+                disp = @schedule.start.strftime(THETIS_DATE_FORMAT_YMD)
+                disp << '&nbsp;&nbsp;'
+
+                format = '%H:%M'
+                disp << @schedule.start.strftime(format) + ' <span style="color:firebrick">-</span> ' + @schedule.end.strftime(format)
+              end
+            else
+              format = "#{THETIS_DATE_FORMAT_YMD}"
+              format << ' %H:%M' unless @schedule.allday
+              disp = @schedule.start.strftime(format) + ' <span style="color:firebrick">-</span> ' + @schedule.end.strftime(format)
+            end
+            %>
+            <%= raw(disp) %>
+
+          <% end %>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_detail"><%=h t('btn.detail') %></label></td>
+        <td class="item_value_td">
+         <pre><%=h @schedule.detail %></pre>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap>
+          <%= t('schedule.scope') %>
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<b style=\'color:orangered; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.disp_to_all')) %></b><br/><%= t('schedule.disp_to_all_info')%><br/>'
+                  + '<b style=\'color:darkgreen; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.public')) %></b><br/><%= t('schedule.public_info') %><br/>'
+                  + '<b style=\'color:mediumblue; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.private')) %></b><br/><%= t('schedule.private_info') %><br/>');">
+        </td>
+        <td class="item_value_td">
+          <%
+          case @schedule.scope
+            when Schedule::SCOPE_ALL
+              scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"
+            when Schedule::SCOPE_PUBLIC
+              scope = '<span style="color:darkgreen;">' + t('schedule.public') + "</span>"
+            when Schedule::SCOPE_PRIVATE
+              scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
+            else
+              scope = ''
+          end
+          %>
+          <%= raw(scope) %>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('msg.members') %></td>
+        <td class="item_value_td">
+        <%
+        @groups_cache ||= {}
+        @teams_cache ||= {}
+
+        users = @schedule.get_users_a
+        groups = @schedule.get_groups_a
+        teams = @schedule.get_teams_a
+        %>
+
+        <% unless users.empty? %>
+          <%= t('user.plural') %><%= t('cap.suffix') %>
+          <div style="padding-left:20px;">
+          <%
+          users.each do |user_id|
+
+            org_names = []
+
+            begin
+              user = User.find(user_id)
+
+              user.get_groups_a.each do |group_id|
+                group_name = Group.get_path(group_id, @groups_cache)
+                org_names << group_name
+              end
+
+              #Hide team_name for security.
+              # user.get_teams_a.each do |team_id|
+              #   team_name = Team.get_name(team_id, @teams_cache)
+              #   org_names << team_name
+              # end
+            rescue StandardError => err
+              Log.add_error(request, err)
+            end
+
+            disp = User.get_name(user_id)
+            belongs_to = ''
+            unless org_names.empty?
+              belongs_to = disp + ' @ <br/>&nbsp;&nbsp;' + org_names.join('<br/>&nbsp;&nbsp;')
+            end
+
+            sep = (users.last == user_id)?'':', '
+          %>
+          <a class="a_underline" href="#" nowrap onclick="msg('<%=ApplicationHelper.h_s_quote belongs_to %>'); return false;"><%=h disp %></a><%= sep %>
+          <% end %>
+          </div>
+        <% end %>
+
+        <% unless groups.empty? %>
+          <%= t('group.plural') %><%= t('cap.suffix') %>
+          <div style="padding-left:20px;">
+          <% groups.each do |group_id| %>
+            <%= Group.get_path(group_id, @groups_cache) %><br/>
+          <% end %>
+          </div>
+        <% end %>
+
+        <% unless teams.empty? %>
+          <%= t('team.plural') %><%= t('cap.suffix') %>
+          <div style="padding-left:20px;">
+          <% teams.each do |team_id| %>
+            <%= Team.get_name(team_id, @teams_cache) %><br/>
+          <% end %>
+          </div>
+        <% end %>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_equipment"><%=h t('menu.equipment') %></label></td>
+        <td class="item_value_td">
+          <%
+          equipments = @schedule.get_equipment_a
+          equipments.each do |equipment_id|
+            begin
+              equip = Equipment.find(equipment_id)
+            rescue
+            end
+            disp = Equipment.get_name(equipment_id)
+            sep = (equipments.last == equipment_id)?'':', '
+          %>
+            <% unless equip.nil? %><a class="a_underline" href="#" onclick="showEquipment(<%= equipment_id %>, '<%=ApplicationHelper.h_s_quote disp %>'); return false;"><% end %>
+              <%=h disp %>
+            <% unless equip.nil? %></a><% end %><%= sep %>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_items"><%=h t('menu.items') %></label></td>
+        <td class="item_value_td">
+          <ul style="padding-left:20px;">
+          <%
+          @schedule.get_items_a.each do |item_id|
+            begin
+              item = Item.find(item_id)
+            rescue StandardError => err
+              Log.add_error(request, err)
+            end
+
+            disp = Item.get_title(item_id)
+
+            auth_read = false
+            auth_read = item.check_user_auth(login_user, 'r', true) unless item.nil?
+          %>
+          <li style="list-style:square;">
+            <% if auth_read %><a class="a_underline" href="#" onclick="showItem(<%= item.id %>, '<%=ApplicationHelper.h_s_quote disp %>'); return false;"><% end %>
+              <%=h disp %>
+            <% if auth_read %></a><% end %>
+            <% if !login_user.nil? and !item.nil? and item.editable?(login_user.id) %>
+            &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
+            <% end %>
+          </li>
+          <% end %>
+          </ul>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('msg.created_by') %></td>
+        <td class="item_value_td">
+        <%
+        users_cache = {}
+        unless @schedule.created_by.nil?
+        %>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.created_by, users_cache) %></b></span>
+          &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+        <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('msg.updated_by') %></td>
+        <td class="item_value_td">
+        <% unless @schedule.updated_by.nil? %>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.updated_by, users_cache) %></b></span>
+          &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+        <% end %>
+        </td>
+      </tr>
+    </table>
+
+  </div>
+  <br/>
+
+
+<script type="text/javascript">
+
+showItem = function(item_id, title)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = title;
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*8/10)+','+(mainHeight*8/10),
+            "IFRAME",
+            "",
+            "",
+            "<%= url_for :controller => 'items', :action => 'show_for_print' %>?id=" + item_id
+          );
+}
+
+showEquipment = function(equipment_id, name)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%=h t('menu.equipment') %>";
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*7/10)+","+(mainHeight*7/10),
+            "IFRAME",
+            "",
+            name,
+            "<%= url_for :controller => 'equipment', :action => 'show' %>?id=" + equipment_id + "&popup=true"
+          );
+}
+
+</script>
+
+<% end %>

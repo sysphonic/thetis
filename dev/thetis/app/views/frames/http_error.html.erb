@@ -1,0 +1,44 @@
+<%
+error_name = 'Error'
+error_desc = ''
+case params[:id]
+  when '401'
+    error_name = t('msg.unauthorized')
+    error_desc = t('msg.need_auth_to_access')
+end
+%>
+
+<br/>
+<table cellspacing="5" cellpadding="3" align="center" width="75%" style="height:100%; border:2px solid hotpink; border-right:2px solid crimson; border-bottom:2px solid crimson;">
+  <tr height="250">
+    <td align="center">
+
+      <table cellspacing="5" cellpadding="3" align="center" width="100%">
+        <tr height="10"><td></td></tr>
+        <tr height="35%">
+          <td align="center" valign="bottom" style="color:crimson; line-height:1.0; font-size:22pt; font-weight:bold;">
+            <%=h error_name %>
+          </td>
+        </tr>
+        <tr height="100">
+          <td align="center" valign="bottom">
+
+            <table cellspacing="5" cellpadding="3" align="center" width="70%" style="border:solid 1pt crimson;" bgcolor="pink">
+              <tr height="10"><td></td></tr>
+              <tr>
+                <td align="center">
+                  <%=h error_desc %>
+                </td>
+              </tr>
+              <tr height="10"><td></td></tr>
+            </table>
+
+          </td>
+        </tr>
+        <tr height="10"><td></td></tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+<br/>

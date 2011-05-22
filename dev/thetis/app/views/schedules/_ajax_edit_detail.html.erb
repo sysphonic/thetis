@@ -1,0 +1,764 @@
+<% login_user = session[:login_user] %>
+
+<% if @schedule.nil? %>
+
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="center">
+        <%=h t('paren.deleted') %>
+      </td>
+    </tr>
+  </table>
+
+<%
+else
+  is_repeat = @schedule.repeat?
+%>
+
+  <div class="info_area" style="width:90%; padding:20px 0px;" align="center">
+    <%= hidden_field 'schedule', 'id' %>
+    <table align="center" width="95%" cellpadding="0" cellspacing="2">
+      <tr>
+        <td class="prim_cap_td" nowrap><label for="schedule_title"><%=h Schedule.human_attribute_name('title') %></label></td>
+        <td class="item_value_td">
+          <%= text_field 'schedule', 'title', :style => 'width:70%', :onChange => 'reqTargetDay++' %><sup style="color:red">*</sup>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_start"><%=h t('schedule.time') %></label></td>
+        <td class="item_value_td">
+
+          <input name="schedule[allday]" type="hidden" value="0" />
+          <input type="checkbox" id="schedule_allday" name="schedule[allday]" value="1" onclick="setAllDay(this.checked);" <%= (@schedule.allday)?'checked':'' %> /><label for="schedule_allday"><%= h t('schedule.without_time_spec') %></label>
+          <br/>
+          <%
+          time_disp = 'inline'
+          time_disp = 'none' if @schedule.allday
+          %>
+
+          <input type="checkbox" id="is_repeat" name="is_repeat" value="1" onclick="setRepeat(this.checked)" <%= (is_repeat)?'checked':'' %> /><label for="is_repeat"><%= h t('schedule.repeat') %></label>
+          <div style="height:5px"></div>
+          <div id="div_once" style="display:<%= (is_repeat)?'none':'block' %>">
+            <%
+            if is_repeat
+              start_val = @date.strftime(Schedule::SYS_DATE_FORM)
+              end_val = @date.strftime(Schedule::SYS_DATE_FORM)
+            elsif @schedule.allday
+              start_val = @schedule.start.utc.strftime(Schedule::SYS_DATE_FORM)
+              end_val = @schedule.end.utc.strftime(Schedule::SYS_DATE_FORM)
+            else
+              start_val = @schedule.start.strftime(Schedule::SYS_DATE_FORM)
+              end_val = @schedule.end.strftime(Schedule::SYS_DATE_FORM)
+            end
+            %>
+            <input id="start_date" name="start_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= start_val %>" onClick="showCalStart();" />
+            <input id="schedule_start" name="schedule[start]" type="hidden" />
+            <span id="div_cal_start"></span>
+
+            <span class="time_select" style="display:<%= time_disp %>;">
+              <select id="once_start_hour">
+              <%
+              THETIS_HOURS.each do |hour|
+                selected = ''
+                if !@schedule.start.nil? and hour == @schedule.start.hour
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+              <% end %>
+              </select>
+              <select id="once_start_min">
+              <%
+              THETIS_MINUTES.each do |min|
+                selected = ''
+                if !@schedule.start.nil? and min == @schedule.start.min
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+              <% end %>
+              </select>
+            </span>
+
+            &nbsp;<span style="color:firebrick">-</span>&nbsp;
+
+            <input id="end_date" name="end_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= end_val %>" onClick="showCalEnd();" />
+            <input id="schedule_end" name="schedule[end]" type="hidden" />
+            <span id="div_cal_end"></span>
+
+            <span class="time_select" style="display:<%= time_disp %>;">
+              <select id="once_end_hour">
+              <%
+              THETIS_HOURS.each do |hour|
+                selected = ''
+                if !@schedule.end.nil? and hour == @schedule.end.hour
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+              <% end %>
+              </select>
+              <select id="once_end_min">
+              <%
+              THETIS_MINUTES.each do |min|
+                selected = ''
+                if !@schedule.end.nil? and min == @schedule.end.min
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+              <% end %>
+              </select>
+              <sup style="color:red">*</sup>
+            </span>
+          </div>
+
+          <div id="div_repeat" style="padding-left:30px; display:<%= (is_repeat)?'block':'none' %>">
+
+            <div class="time_select" style="display:<%= time_disp %>;">
+              <select id="repeat_start_hour" onchange="reqTargetDay++;">
+              <%
+              THETIS_HOURS.each do |hour|
+                selected = ''
+                if !@schedule.start.nil? and hour == @schedule.start.hour
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+              <% end %>
+              </select>
+              <select id="repeat_start_min" onchange="reqTargetDay++;">
+              <%
+              THETIS_MINUTES.each do |min|
+                selected = ''
+                if !@schedule.start.nil? and min == @schedule.start.min
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+              <% end %>
+              </select>
+
+              &nbsp;<span style="color:firebrick">-</span>&nbsp;
+
+              <select id="repeat_end_hour" onchange="reqTargetDay++;">
+              <%
+              THETIS_HOURS.each do |hour|
+                selected = ''
+                if !@schedule.end.nil? and hour == @schedule.end.hour
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+              <% end %>
+              </select>
+              <select id="repeat_end_min" onchange="reqTargetDay++;">
+              <%
+              THETIS_MINUTES.each do |min|
+                selected = ''
+                if !@schedule.end.nil? and min == @schedule.end.min
+                  selected = 'selected'
+                end
+              %>
+                <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+              <% end %>
+              </select>
+              <sup style="color:red">*</sup>
+              <div style="height:5px"></div>
+            </div>
+
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding-bottom:5px;">
+              <tr>
+                <td width="30%" align="left">
+                  <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                      <td>
+                        <%= h t('schedule.cap_rule') %>
+                      </td>
+                      <td colspan="3"></td>
+                      <td>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <select id="rule_candidates" class="select_candidates" size="5" style="width:200px;" multiple>
+                        <%
+                        rules_available = PseudoHash.new
+
+                        Schedule::rule_names.each do |key, value|
+                          rules_available[key, true] = value
+                        end
+
+                        rules_selected = @schedule.get_rules_a
+
+                        rule_cache = {}
+                        rules_available.each do |rule, disp|
+                          if rules_selected.include?(rule)
+                            rule_cache[rule] = disp
+                            next
+                          end
+                        %>
+                          <option value="<%=h rule %>"><%=h disp %></option>
+                        <% end %>
+                        </select>
+                      </td>
+                      <td width="10">&nbsp;</td>
+                      <td width="70">
+                        <table cellspacing="0" cellpadding="0" width="100%">
+                          <tr>
+                            <td align="center">
+                              <input type="button" value="<%=h t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList($('rule_candidates'), $('repeat_rules')); setForceTargetAll(); return false;" style="width:80px;">
+                            </td>
+                          </tr>
+                          <tr height="10"><td></td></tr>
+                          <tr>
+                            <td align="center">
+                              <input type="button" value="<%= raw(t('arrow.left')) %><%=h t('btn.remove') %>" onclick="moveList($('repeat_rules'), $('rule_candidates')); setForceTargetAll(); return false;" style="width:80px;">
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                      <td width="10">&nbsp;</td>
+                      <td>
+                        <select id="repeat_rules" name="repeat_rules[]" class="select_multi" size="5" multiple style="width:200px;">
+                        <% rule_cache.each do |rule, disp| %>
+                          <option value="<%= rule %>"><%=h disp %></option>
+                        <% end %>
+                        </select>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td width="70%">&nbsp;</td>
+              </tr>
+            </table>
+
+            <%=h t('schedule.cap_term') %><br/>
+            <input type="text" id="schedule_repeat_start" name="schedule[repeat_start]" readonly value="<%= @schedule.repeat_start.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_start.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermStart();" />
+            <span id="div_cal_repStart"></span>
+            <img class="img_btn" onclick="$('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= h t('btn.clear') %>" title="<%= h t('btn.clear') %>">
+
+            &nbsp;<span style="color:firebrick">-</span>&nbsp;
+
+            <input type="text" id="schedule_repeat_end" name="schedule[repeat_end]" readonly value="<%= @schedule.repeat_end.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_end.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermEnd();" />
+            <span id="div_cal_repEnd"></span>
+            <img class="img_btn" onclick="$('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= h t('btn.clear') %>" title="<%= h t('btn.clear') %>">
+
+            <table cellspacing="0" cellpadding="0" width="100%" style="padding-top:5px;">
+              <tr>
+                <td width="30%" align="left">
+                  <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                      <td colspan="3">
+                        <%= h t('schedule.cap_except') %>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <select id="excepts" name="excepts[]" class="select_multi" size="5" multiple style="width:150px;">
+                        <%
+                        excepts = @schedule.get_excepts_a
+                        excepts.each do |except|
+                        %>
+                          <option value="<%= except %>"><%=h except %></option>
+                        <% end %>
+                        </select>
+                      </td>
+                      <td width="10">&nbsp;</td>
+                      <td valign="top">
+                        <table cellspacing="0" cellpadding="0" width="100%">
+                          <tr>
+                            <td align="center">
+                              <input type="button" value="<%=h t('btn.add') %>" onclick="addRepeatExcept();" style="width:80px;">
+                              <input type="hidden" id="except_day" name="except_day" />
+                              <span id="div_cal_except"></span>
+                            </td>
+                          </tr>
+                          <tr height="5"><td></td></tr>
+                          <tr>
+                            <td align="center">
+                              <input type="button" value="<%=h t('btn.remove') %>" onclick="removeRepeatExcept();" style="width:80px;">
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td width="70%">&nbsp;</td>
+              </tr>
+            </table>
+
+          </div>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_detail"><%=h t('btn.detail') %></label></td>
+        <td class="item_value_td">
+          <%= text_area 'schedule', 'detail', :rows => "4", :style => 'width:100%', :onChange => "reqTargetDay++" %>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap>
+          <%=h t('schedule.scope') %>
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<b style=\'color:orangered; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.disp_to_all')) %></b><br/><%= t('schedule.disp_to_all_info')%><br/>'
+                  + '<b style=\'color:darkgreen; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.public')) %></b><br/><%= t('schedule.public_info') %><br/>'
+                  + '<b style=\'color:mediumblue; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.private')) %></b><br/><%= t('schedule.private_info') %><br/>');">
+        </td>
+        <td class="item_value_td">
+          <%
+          checked_all = (@schedule.for_all?)?'checked':''
+          checked_public = (@schedule.public?)?'checked':''
+          checked_private = (@schedule.private?)?'checked':''
+          %>
+          <input type="radio" id="schedule_scope_all" name="schedule[scope]" value="<%= Schedule::SCOPE_ALL %>" onclick="reqTargetDay++" <%= checked_all %>><label for="schedule_scope_all"> <span style="color:#CE3636;"><%= t('schedule.disp_to_all') %></span></label>
+          &nbsp;
+          <input type="radio" id="schedule_scope_public" name="schedule[scope]" value="<%= Schedule::SCOPE_PUBLIC %>" onclick="reqTargetDay++" <%= checked_public %>><label for="schedule_scope_public"> <span style="color:darkgreen;"><%= t('schedule.public') %></span></label>
+          &nbsp;
+          <input type="radio" id="schedule_scope_private" name="schedule[scope]" value="<%= Schedule::SCOPE_PRIVATE %>" onclick="reqTargetDay++" <%= checked_private %>><label for="schedule_scope_private"> <span style="color:mediumblue;"><%= t('schedule.private') %></span></label>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><label for="schedule_members"><%=h t('msg.members') %></label></td>
+        <td class="item_value_td">
+
+          <%= render :partial => 'edit_members' %>
+
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%= t('menu.equipment') %></td>
+        <td class="item_value_td">
+
+        <%
+        equipment_selected = @schedule.get_equipment_a
+
+        div_equipment_display = 'block'
+
+        if equipment_selected.empty?
+          div_equipment_display = 'none'
+        %>
+        <div id="div_equipment_empty">
+          <%= t('paren.not_specified') %>
+          &nbsp;
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editEquipment();" />
+        </div>
+
+<script type="text/javascript">
+editEquipment = function()
+{
+  $("div_equipment_empty").style.display = "none";
+  $("div_equipment").style.display = "block";
+}
+</script>
+
+        <% end %>
+          <div id="div_equipment" style="display:<%= div_equipment_display %>">
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr>
+                <td>
+                  <!-- <%= h t('cap.candidates') %><br/> -->
+                  <select id="equipment_candidates" class="select_candidates" size="5" multiple>
+                  <%
+                  equipment_available = {}
+
+                  Equipment.find(:all).each do |equipment|
+                    equipment_id = equipment.id.to_s
+                    equipment_available[equipment_id] = equipment.name
+                  end
+
+                  equipment_cache = {}
+                  equipment_available.each do |equipment_id, name|
+                    disp = name
+                    if equipment_selected.include?(equipment_id)
+                      equipment_cache[equipment_id] = disp
+                      next
+                    end
+                  %>
+                    <option value="<%=h equipment_id %>"><%=h disp %></option>
+                  <% end %>
+                  </select>
+                </td>
+              </tr>
+              <tr height="5"><td></td></tr>
+              <tr>
+                <td>
+                  <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                      <td align="left" width="33%" valign="bottom">
+                        <%= h t('cap.selected') %>
+                      </td>
+                      <td align="center" width="34%" nowrap>
+                        <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('btn.add') %>" onclick="addEquipment();" style="width:80px;">
+                        <input type="button" value="<%= raw(t('arrow.up')) %><%=h t('btn.remove') %>" onclick="removeEquipment();" style="width:80px;">
+                      </td>
+                      <td align="center" width="33%">&nbsp;</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr height="5"><td></td></tr>
+              <tr>
+                <td>
+                  <select id="equipment_selected" name="equipment[]" class="select_multi" size="5" multiple="multiple">
+                  <%
+                  equipment_selected.each do |equipment_id|
+                    if equipment_cache[equipment_id].nil?
+                      disp = Equipment.get_name(equipment_id)
+                    else
+                      disp = equipment_cache[equipment_id]
+                    end
+                  %>
+                    <option value="<%= equipment_id %>"><%=h disp %></option>
+                  <% end %>
+                  </select>
+                </td>
+              </tr>
+            </table>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('menu.items') %></td>
+        <td class="item_value_td">
+
+        <%
+        items_selected = @schedule.get_items_a
+
+        div_items_display = 'block'
+
+        if items_selected.empty?
+          div_items_display = 'none'
+        %>
+        <div id="div_items_empty">
+          <%= t('paren.not_specified') %>
+          &nbsp;
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editItems();" />
+        </div>
+
+<script type="text/javascript">
+editItems = function()
+{
+  $("div_items_empty").style.display = "none";
+  $("div_items").style.display = "block";
+}
+</script>
+
+        <% end %>
+          <div id="div_items" style="display:<%= div_items_display %>">
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr>
+                <td>
+                  <span id="div_selectItems">
+                    <%= render :partial => 'ajax_select_items' %>
+                  </span>
+                </td>
+              </tr>
+              <tr height="5"><td></td></tr>
+              <tr>
+                <td>
+                  <table cellspacing="0" cellpadding="0" width="100%">
+                    <tr>
+                      <td align="left" width="33%" valign="bottom">
+                        <%= h t('cap.selected') %>
+                      </td>
+                      <td align="center" width="34%" nowrap>
+                        <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('btn.add') %>" onclick="addItem();" style="width:80px;" />
+                        <input type="button" value="<%= raw(t('arrow.up')) %><%=h t('btn.remove') %>" onclick="removeItem();" style="width:80px;" />
+                      </td>
+                      <td align="center" width="33%">&nbsp;</td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              <tr height="5"><td></td></tr>
+              <tr>
+                <td>
+                  <select id="items_selected" name="items[]" class="select_multi" size="5" multiple="multiple">
+                  <%
+                  items_selected.each do |item_id|
+                    title = Item.get_title item_id
+                    disp = sprintf('[%2s] %s', item_id, title)
+                  %>
+                    <option value="<%= item_id %>"><%=h disp %></option>
+                  <% end %>
+                  </select>
+                </td>
+              </tr>
+            </table>
+
+        </td>
+      </tr>
+    <%
+    unless @schedule.created_by.nil?
+      users_cache = {}
+    %>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('msg.created_by') %></td>
+        <td class="item_value_td">
+          <b style="color:darkgreen;"><%=h User.get_name(@schedule.created_by, users_cache) %></b>
+          &nbsp;<span style="font-size:10pt; vertical-align:middle;">(<%=h @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+" %H:%M") %>)</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="item_cap_td" nowrap><%=h t('msg.updated_by') %></td>
+        <td class="item_value_td">
+        <% unless @schedule.updated_by.nil? %>
+          <b style="color:darkgreen;"><%=h User.get_name(@schedule.updated_by, users_cache) %></b>
+          &nbsp;<span style="font-size:10pt; vertical-align:middle;">(<%=h @schedule.updated_at.strftime(THETIS_DATE_FORMAT_YMD+" %H:%M") %>)</span>
+        <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if ((params[:action] == 'edit') or (params[:action] == 'day' and !params[:edit_id].nil?)) and is_repeat %>
+      <tr>
+        <td class="prim_cap_td" nowrap><%=h t('msg.update_target') %></td>
+        <td class="item_value_td">
+          <div id="update_target">
+            <input type="radio" id="repeat_update_target_all" name="repeat_update_target" value="all" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=true; is_repeat.disabled=false; forceRepeat(true);" /><label for="repeat_update_target_all"><%=h t('schedule.all_repeated') %></label>
+            <input type="radio" id="repeat_update_target_each" name="repeat_update_target" value="each" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=false; is_repeat.disabled=true; forceRepeat(false); " /><label for="repeat_update_target_each"><%=h @date.strftime(Schedule::SYS_DATE_FORM)+t('msg.only') %></label>
+          </div>
+          <div id="update_target_hide" style="text-indent:20px; display:none;">---</div>
+        </td>
+      </tr>
+    <% end %>
+
+    </table>
+  </div>
+
+  <table align="center" cellspacing="0" cellpadding="0">
+    <tr height="20"><td></td></tr>
+      <td class="img_button_td" onclick="doRegisterDetail('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
+        <%=h t('btn.register')%>
+      </td>
+    </tr>
+    <tr height="40"><td></td></tr>
+  </table>
+
+
+<script type="text/javascript">
+
+reqTargetDay = 0;
+forceTargetAll = 0;
+
+setAllDay = function(sw)
+{
+  var elems = document.getElementsByClassName("time_select", document.form_detail);
+
+  var disp="inline";
+  if (sw) {
+    disp="none";
+  }
+  for (var i=0; i < elems.length; i++) {
+    elems[i].style.display = disp;
+  }
+  reqTargetDay++;
+}
+
+setRepeat = function(sw)
+{
+  var update_target = $("update_target");
+  var update_target_hide = $("update_target_hide");
+
+  if (sw) {
+    $("div_once").style.display = "none";
+    $("div_repeat").style.display = "block";
+    if (update_target != null) {
+      if (forceTargetAll > 0) {
+        update_target_hide.innerHTML = "<%=h t('schedule.all_repeated') %>";
+      } else {
+        update_target.style.display = "block";
+        update_target_hide.style.display = "none";
+      }
+    }
+  } else {
+    $("div_once").style.display = "block";
+    $("div_repeat").style.display = "none";
+    if (update_target != null) {
+      update_target.style.display = "none";
+      update_target_hide.style.display = "block";
+      update_target_hide.innerHTML = "---";
+    }
+  }
+}
+
+setForceTargetAll = function(sw)
+{
+  forceTargetAll++
+
+  var update_target = $("update_target");
+
+  if (update_target != null) {
+    var repeat_update_target = document.form_detail.repeat_update_target;
+    if (repeat_update_target != null) {
+      for (var i=0; i<repeat_update_target.length; i++) {
+        if (repeat_update_target[i].value == "all") {
+          repeat_update_target[i].checked = true;
+          break;
+        }
+      }
+    }
+
+    var update_target_hide = $("update_target_hide");
+
+    update_target.style.display = "none";
+    update_target_hide.style.display = "block";
+    update_target_hide.innerHTML = "<%=h t('schedule.all_repeated') %>";
+  }
+}
+
+forceRepeat = function(sw)
+{
+  if (sw) {
+    $("div_once").style.display = "none";
+    $("div_repeat").style.display = "block";
+  } else {
+    $("div_once").style.display = "block";
+    $("div_repeat").style.display = "none";
+  }
+}
+
+showCalStart = function()
+{
+  var calStart = new JKL.Calendar("div_cal_start", "form_detail", "start_date");
+  calStart.setFunc(
+                function() {
+                    var start = $("start_date");
+                    var end = $("end_date");
+                    if (end.value != null && end.value != "" && start.value > end.value) {
+                      end.value = start.value;
+                    }
+                  }
+            );
+  calStart.write();
+}
+
+showCalEnd = function()
+{
+  var calEnd = new JKL.Calendar("div_cal_end", "form_detail", "end_date");
+  calEnd.setFunc(
+                function() {
+                    var start = $("start_date");
+                    var end = $("end_date");
+                    if (start.value != null && start.value != "" && end.value < start.value) {
+                      start.value = end.value;
+                    }
+                  }
+            );
+  calEnd.write();
+}
+
+showCalTermStart = function()
+{
+  var calRepStart = new JKL.Calendar("div_cal_repStart", "form_detail", "schedule[repeat_start]");
+  calRepStart.setFunc(
+                function() {
+                    setForceTargetAll();
+                    var start = $("schedule_repeat_start");
+                    var end = $("schedule_repeat_end");
+                    if (end.value != null && end.value != "" && start.value > end.value) {
+                      end.value = start.value;
+                    }
+                  }
+            );
+  calRepStart.write();
+}
+
+showCalTermEnd = function()
+{
+  var calRepEnd = new JKL.Calendar("div_cal_repEnd", "form_detail", "schedule[repeat_end]");
+  calRepEnd.setFunc(
+                function() {
+                    setForceTargetAll();
+                    var start = $("schedule_repeat_start");
+                    var end = $("schedule_repeat_end");
+                    if (start.value != null && start.value != "" && end.value < start.value) {
+                      start.value = end.value;
+                    }
+                  }
+            );
+  calRepEnd.write();
+}
+
+addRepeatExcept = function()
+{
+  var calExcept = new JKL.Calendar("div_cal_except", "form_detail", "except_day");
+  calExcept.setFunc(
+                function() {
+                    var input_day = $("except_day").value;
+                    var list = $("excepts");
+                    addList(list, input_day, input_day, false);
+                    sortList(list, "DESC");
+                    setForceTargetAll();
+                  }
+            );
+  calExcept.write();
+}
+
+removeRepeatExcept = function()
+{
+  var del_ary = deleteList($("excepts"));
+
+  if (del_ary != null && del_ary.length > 0) {
+    setForceTargetAll();
+  }
+}
+
+addMember = function(attr_name)
+{
+  var ret_ary = moveList($(attr_name+"_candidates"), $(attr_name+"s_selected"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+
+removeMember = function(attr_name)
+{
+  var ret_ary = moveList($(attr_name+"s_selected"), $(attr_name+"_candidates"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+
+addEquipment = function()
+{
+  var ret_ary = moveList($("equipment_candidates"), $("equipment_selected"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+
+removeEquipment = function()
+{
+  var ret_ary = moveList($("equipment_selected"), $("equipment_candidates"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+
+addItem = function()
+{
+  var ret_ary = moveList($("item_candidates"), $("items_selected"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+
+removeItem = function()
+{
+  var ret_ary = moveList($("items_selected"), $("item_candidates"));
+
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+}
+</script>
+
+<% end %>

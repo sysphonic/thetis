@@ -1,0 +1,67 @@
+<% login_user = session[:login_user] %>
+
+<%= form_tag( {:controller => 'timecards', :action => 'group'}, :name => 'form_display', :method => 'get') %>
+  <table align="center" width="98%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left" width="30%">
+      <% if !login_user.nil? and login_user.admin?(User::AUTH_TIMECARD) %>
+        <table align="left" cellspacing="0" cellpadding="0" width="65">
+          <tr>
+            <td align="left" nowrap width="30">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'configure' %>';">
+            </td>
+          </tr>
+        </table>
+      <% end %>
+      </td>
+      <td align="center" nowrap width="40%"></td>
+      <td align="right" nowrap width="30%">
+        <%
+        display = []
+        unless @user.nil?
+          user_name = @user.get_name_for_timecard
+          if login_user != @user
+            display << [h(user_name), 'user_'+@user.id.to_s]
+          end
+        end
+        display << [h(t('timecard.my_timecard')), 'mine']
+        unless login_user.nil?
+          groups_a = login_user.get_groups_a
+          groups_a.each do |group_id|
+            display << [h(Group.get_name(group_id)), 'group_'+group_id]
+          end
+          # teams_a = login_user.get_teams_a
+          # teams_a.each do |team_id|
+          #   display << [h(Team.get_name(team_id)), 'team_'+team_id]
+          # end
+          if !@group_id.nil? and !groups_a.include?(@group_id)
+            display << [h(Group.get_name(@group_id)), 'group_'+@group_id]
+          end
+          if !login_user.nil? and login_user.admin?(User::AUTH_TIMECARD)
+            display << [h(t('group.other_group')), 'group_other']
+          end
+        end
+        %>
+        <%= h t('cap.display') %>
+        <%= select_tag 'display',
+             options_for_select(display, params[:display]),
+             :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
+        %>
+      </td>
+    </tr>
+  </table>
+</form>
+
+<script type="text/javascript">
+<!--
+function showGroupTree()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'timecards', :action => 'group' %>\" onsubmit=\"var display=$('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_display.submit(); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", "");
+}
+//-->
+</script>
+

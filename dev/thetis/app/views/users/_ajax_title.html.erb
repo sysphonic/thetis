@@ -1,0 +1,27 @@
+
+<table class="info_area" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td id="sortable_titles" align="left" style="padding-left:10px;">
+      <%
+      titles = User.get_config_titles
+      unless titles.nil?
+        titles.each do |title_name|
+      %>
+        <div id="item_<%=h title_name %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%=h t('msg.drag_to_change_orger') %>" style="cursor:move" />
+          <%=h truncate(title_name, :length => 20) %>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.rename') %>" title="<%=h t('btn.rename') %>" onclick="doRenameTitle('<%=ApplicationHelper.h_s_quote title_name %>'); return false;" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteTitle('<%=ApplicationHelper.h_s_quote title_name %>'); return false;" />
+        </div>
+      <%
+        end
+      end
+      %>
+    </td>
+  </tr>
+</table>
+
+<%= sortable_element "sortable_titles", :url => {:controller => 'users', :action => 'update_titles_order' }, :with => "Sortable.serialize('sortable_titles', {name:'titles_order'})", :tag => "div" %>
+
+<%= render :partial => 'common/flash_notice' %>
+

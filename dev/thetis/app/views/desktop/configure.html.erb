@@ -1,0 +1,61 @@
+<% HistoryHelper.set_back(request) %>
+
+<%= form_tag( {:controller => 'desktop', :action => 'update_config'}, :name => 'form_desktop_config', :method => 'post') %>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr height="10"><td></td></tr>
+  <tr>
+    <td width="49%" valign="top">
+
+      <div class="info_area" id="div_user_before_login" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <%= render :partial => 'ajax_user_before_login' %>
+      </div>
+
+    </td>
+    <td width="10">&nbsp;</td>
+    <td width="49%" valign="top">
+
+
+    </td>
+  </tr>
+</table>
+
+  <input type="hidden" id="user_before_login" name="desktop[user_before_login]" value="" />
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0">
+  <tr height="20"><td></td></tr>
+  <tr>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+      <%=h t('btn.back') %>
+    </td>
+  </tr>
+  <tr height="10"><td></td></tr>
+</table>
+<br/>
+
+<script type="text/javascript">
+
+function doUpdateConfig(user_id)
+{
+  $("user_before_login").value = user_id;
+
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_user_before_login",
+              document.form_desktop_config.action,
+              {
+                asynchronous:true,
+                evalScripts:true,
+                parameters:Form.serialize(document.form_desktop_config),
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+  return true;
+}
+
+</script>
+

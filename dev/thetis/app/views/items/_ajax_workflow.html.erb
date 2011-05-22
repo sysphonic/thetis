@@ -1,0 +1,116 @@
+<% login_user = session[:login_user] %>
+
+<table align="center" width="95%" cellpadding="0" cellspacing="2">
+  <tr>
+    <td class="item_cap_td" nowrap style="background-color:darkseagreen;"><%=h Workflow.human_attribute_name('status') %></td>
+    <td style="padding-left:5px;">
+      <%
+      back_style = ''
+      if @workflow.decided?
+        back_style = "background:url('#{THETIS_RELATIVE_URL_ROOT}/images/colback.png') left no-repeat;"
+      end
+      %>
+      <table cellspacing="0" cellpadding="0" width="100%" style="<%= back_style %>">
+        <tr height="35">
+        <% unless back_style.empty? %>
+          <td width="15"></td>
+          <td width="20" align="center">
+            <%
+            img = ''
+            if @workflow.accepted?
+              img = "#{THETIS_RELATIVE_URL_ROOT}/images/check_ok.gif"
+            elsif @workflow.denied?
+              img = "#{THETIS_RELATIVE_URL_ROOT}/images/check_ng.gif"
+            end
+            %>
+            <img src="<%= img %>">
+          </td>
+        <% end %>
+          <td align="left" style="padding-left:10px">
+            <span style="color:red; font-size:11pt; font-weight:bold;"><%=h @workflow.get_status_name %></span>
+          <% unless @workflow.decided_at.nil? %>
+            &nbsp;<span style="font-size:10pt;">(<%=h @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+          <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <%
+  marked_users = []
+  order_idx = 0
+  expected_users = @workflow.get_current_expected
+  @orders.each do |order|
+  %>
+  <tr>
+    <td class="item_cap_td" nowrap style="background-color:lightgreen;"><%=h t('workflow.order_prefix')+(order_idx+1).to_s %></td>
+    <td class="item_value_td">
+      <table cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+          <td>
+          <%
+          order.each do |user_id, user_name|
+            expected_mark = ''
+            if !expected_users.nil? and expected_users.include?(user_id) and !marked_users.include?(user_id)
+              expected_mark = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/red_flag.gif" alt="'+h(t('workflow.expected_icon_alt'))+'" />'
+              marked_users << user_id
+            end
+          %>
+            <div style="padding-bottom:5px;"><%= raw(expected_mark) %> <%=h user_name %></div>
+            <% if !@item.comments.nil? %>
+
+              <%
+              user_comments = Workflow.get_comments_for(@orders, @item.comments, user_id, order_idx)
+              unless user_comments.nil?
+                user_comments.each do |cmnt|
+                @comment = cmnt
+              %>
+
+              <%= render :partial => "ajax_wf_comment", :object => @comment %>
+
+            <%
+                end
+              end
+            end
+            %>
+            <% if !login_user.nil? and user_id == login_user.id and !expected_mark.empty? %>
+            <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'doWfRespond(); return false;') %>
+              <%= hidden_field 'comment', 'item_id', :value => @item.id %>
+              <%= hidden_field 'comment', 'user_id', :value => login_user.id %>
+              <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#A9CDF9">
+                <tr>
+                  <td>
+                    <span id="comment_ack">
+                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="$('comment_ack').style.backgroundColor='greenyellow'; $('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
+                    </span>
+                    &nbsp;
+                    <span id="comment_nak">
+                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="$('comment_ack').style.backgroundColor=''; $('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="font-size:8pt; color:midnightblue; padding-left:10px; padding-right:10px;">
+                      <%=h t('cap.comment') %>
+                      <%= text_area 'comment', 'message', :rows => "4", :value => "", :style => 'width:100%;' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="center">
+                    <input name="commit" type="submit" value="<%=h t('btn.register') %>" style="width:80px;" />
+                  </td>
+                </tr>
+              </table>
+            </form>
+            <% end %>
+          <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <%
+    order_idx += 1
+  end
+  %>
+</table>

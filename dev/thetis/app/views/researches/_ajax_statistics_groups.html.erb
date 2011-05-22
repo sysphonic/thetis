@@ -1,0 +1,24 @@
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td id="sortable_groups" nowrap width="20%">
+<%
+unless @group_ids.nil?
+  groups_cache = {}
+  @group_ids.each do |group_id|
+%>
+      <div id="item_<%= group_id %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%=h t('msg.drag_to_change_orger') %>" style="cursor:move" />
+        <%= Group.get_path(group_id, groups_cache) %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showGroupTreeToSelect('<%= group_id %>', true);" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%=ApplicationHelper.h_s_quote Group.get_path(group_id, groups_cache) %>'); return false;" />
+      </div>
+<%
+  end
+end
+%>
+    </td>
+  </tr>
+</table>
+
+<%= sortable_element "sortable_groups", :url => {:controller => 'researches', :action => 'update_groups_order' }, :with => "Sortable.serialize('sortable_groups', {name:'groups_order'})", :tag => "div" %>

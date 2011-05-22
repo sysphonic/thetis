@@ -1,0 +1,61 @@
+<script type="text/javascript">
+<!--
+function getEncodingSelector(onOk, type)
+{
+  var encArray = new Array();
+<% 
+acceptLangs = request.env['HTTP_ACCEPT_LANGUAGE']
+if !acceptLangs.nil? and acceptLangs.split(',').first.downcase.index('ja') == 0
+%>
+  encArray.push(new Array("UTF8", "<%= t('msg.enc_utf8') %>"));
+  encArray.push(new Array("SJIS", "<%= t('msg.enc_sjis') %>"));
+  encArray.push(new Array("EUC-JP", "<%= t('msg.enc_eucjp') %>"));
+<% else %>
+  encArray.push(new Array("UTF8", "<%= t('msg.enc_utf8') %>"));
+  encArray.push(new Array("ISO-8859-1", "<%= t('msg.enc_iso8859_1') %>"));
+<% end %>
+  content = "<form name='form_enc' enctype='multipart/form-data'>";
+  content += "<table align='center' width='80%' height='80%' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:20px;'><td></td></tr>";
+  if (type == 'import') {
+    content += "  <tr style='height:40px;'>";
+    content += "    <td>";
+    content += "      <input type='file' name='imp_file' size='40' style='width:100%;' />";
+    content += "    </td>";
+    content += "  </tr>";
+    content += "  <tr style='height:5px;'><td></td></tr>";
+  }
+  for (var i=0; i < encArray.length; i++) {
+    content += "  <tr style='height:30px;'>";
+    content += "    <td align='left'>";
+    content += "      <input type='radio' id='enc_"+encArray[i][0]+"' name='enc' value='"+encArray[i][0]+"' /> <label for='enc_"+encArray[i][0]+"'>"+encArray[i][1]+"</label><br/>";
+    content += "    </td>";
+    content += "  </tr>";
+  }
+  if (type == 'import') {
+    content += "  <tr style='height:15px;'><td></td></tr>";
+    content += "  <tr>";
+    content += "    <td align='left' style='background-color:blue; color:white; padding-left:10px;'>";
+    content += "      <%= t('msg.import_mode') %>";
+    content += "    </td>";
+    content += "  </tr>";
+    content += "  <tr>";
+    content += "    <td align='left' style='border:1px solid blue; padding:10px;'>";
+    content += "      <input type='radio' id='mode_add' name='mode' value='add' /><label for='mode_add'> <%=h t('msg.add_only')%></label><br/>";
+    content += "      <input type='radio' id='mode_update' name='mode' value='update' /><label for='mode_update'> <%=h t('msg.update_all')%></label>";
+    content += "    </td>";
+    content += "  </tr>";
+  }
+  content += "  <tr style='height:15px;'><td></td></tr>";
+  content += "  <tr>";
+  content += "    <td align='center'>";
+  content += "      <input type='button' value='<%= h t('btn.execute') %>' onclick='"+onOk+"' style='width:80px;' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "<input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>' />";
+  content += "</form>";
+  return content;
+}
+//-->
+</script>

@@ -1,0 +1,196 @@
+
+<%= render :partial => 'common/error', :locals => {:obj => @address} %>
+
+<table cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td align="center">
+
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr>
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+            <%= h t('cap.basic_info') %>
+          </td>
+          <td id="tab_address" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('address'); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if($('div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+            <%= h Address.human_attribute_name('address') %>
+          </td>
+          <td id="tab_memo" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('memo'); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+            <%= h Address.human_attribute_name('memo') %>
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+
+      <%= hidden_field 'address', 'id' %>
+
+      <div id="div_basic" style="width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name"><%=h Address.human_attribute_name('name') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'name' %><sup style="color:red">*</sup>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email1"><%=h Address.human_attribute_name('email1') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'email1', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email2"><%=h Address.human_attribute_name('email2') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'email2', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email3"><%=h Address.human_attribute_name('email3') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'email3', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel1"><%=h Address.human_attribute_name('tel1') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'tel1', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel2"><%=h Address.human_attribute_name('tel2') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'tel2', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel3"><%=h Address.human_attribute_name('tel3') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'tel3', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_fax"><%=h Address.human_attribute_name('fax') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'fax', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <br/>
+      </div>
+
+      <div id="div_address" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_postalcode"><%=h Address.human_attribute_name('postalcode') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'postalcode', :style => 'width:80%' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_address"><%=h Address.human_attribute_name('address') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_area 'address', 'address', :style => 'width:100%', :rows => '4' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_url"><%=h Address.human_attribute_name('url') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'url', :style => 'ime-mode:disabled' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_organization"><%=h Address.human_attribute_name('organization') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_area 'address', 'organization', :style => 'width:100%', :rows => '3' %>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_title"><%=h Address.human_attribute_name('title') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_field 'address', 'title' %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <br/>
+      </div>
+
+      <div id="div_memo" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_memo"><%=h Address.human_attribute_name('memo') %></label></td>
+                  <td class="item_value_td">
+                    <%= text_area 'address', 'memo', :style => 'width:100%', :rows => '5' %>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+        <br/>
+      </div>
+
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+showAddressTab = function(name)
+{
+  var nameArray = new Array("basic", "address", "memo");
+
+  var tab = null;
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.style.cursor = "pointer";
+      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+    }
+  }
+  var target_tab = $("tab_"+name);
+  target_tab.style.cursor = "default";
+  var bg = target_tab.bgColor;
+
+  for (i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.bgColor = "silver";
+    }
+  }
+
+  target_tab.bgColor = bg;
+
+  for (i=0; i<nameArray.length; i++) {
+    div = $("div_"+nameArray[i]);
+    if (div != null) {
+      div.style.display = "none";
+    }
+  }
+
+  div = $("div_"+name);
+  div.style.visibility = "visible";
+  div.style.display = "inline";
+}
+
+showAddressTab("basic");
+
+</script>

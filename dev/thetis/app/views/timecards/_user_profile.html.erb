@@ -1,0 +1,26 @@
+<div style="padding-bottom:15px;">
+  <table class="timecard" width="100%">
+    <tr>
+      <th width="25%"><%=h User.human_attribute_name('name') %></th>
+      <th width="20%"><%=h t('user.title') %></th>
+      <th width="55%"><%=h Group.human_name %></th>
+    </tr>
+    <tr>
+      <td align="center">
+        <b><%=h @selected_user.get_name_for_timecard %></b>
+      </td>
+      <td align="center">
+        <%=h @selected_user.title %>
+      </td>
+      <td align="left" style="padding:0px 5px">
+        <%
+        groups_cache = {}
+
+        @selected_user.get_groups_a.each do |group_id|
+        %>
+          <%=h Group.get_path(group_id, groups_cache) %><br/>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+</div>

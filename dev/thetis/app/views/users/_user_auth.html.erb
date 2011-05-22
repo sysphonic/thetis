@@ -1,0 +1,111 @@
+
+<%= form_tag( {:controller => 'users', :action => 'update_auth', :id => @user.id }, :name => 'form_ajax_userAuth', :method => 'post') %>
+
+<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+  <table align="center" width="90%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="item_cap_td" nowrap style="width:100%">
+        <span nowrap><%=h t('cap.admin_authorities') %></span>
+      </td>
+    </tr>
+    <tr>
+      <td align="right">
+        <%
+        check_all = (@user.auth == User::AUTH_ALL)
+        %>
+        <input type="checkbox" id="check_auth_all" name="check_auth_all" value="1" <%= (check_all)?'checked':'' %> onclick="$('btn_add').disabled = $('btn_remove').disabled = $('auth_candidates').disabled = $('auth_selected').disabled = this.checked;" /><label for="check_auth_all"><%=h User.get_auth_name(User::AUTH_ALL) %></label>
+      </td>
+    </tr>
+    <tr>
+      <td>
+
+        <table class="info_area" cellspacing="0" cellpadding="0" width="100%">
+          <tr>
+            <td width="45%">
+              <select id="auth_candidates" <%= (check_all)?'disabled':'' %> class="select_multi" size="5" style="width:100%;" multiple>
+              <%
+              auth_available = PseudoHash.new
+              [ User::AUTH_DESKTOP, User::AUTH_ITEM, User::AUTH_FOLDER, User::AUTH_USER,
+                User::AUTH_GROUP, User::AUTH_TEAM, User::AUTH_SCHEDULE,
+                User::AUTH_EQUIPMENT, User::AUTH_LOG, User::AUTH_RESEARCH, User::AUTH_TIMECARD,
+                User::AUTH_MAIL, User::AUTH_ZEPTAIR ].each do |auth|
+                auth_available[auth, true] = User.get_auth_name(auth)
+              end
+
+              auth_selected = @user.get_auth_a
+
+              auth_cache = {}
+              auth_available.each do |auth, disp|
+                if auth_selected.include?(auth)
+                  auth_cache[auth] = disp
+                  next
+                end
+              %>
+                <option value="<%=h auth %>"><%=h disp %></option>
+              <% end %>
+              </select>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="70">
+              <table cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                  <td align="center">
+                    <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%=h t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList($('auth_candidates'), $('auth_selected')); return false;" style="width:80px;">
+                  </td>
+                </tr>
+                <tr height="10"><td></td></tr>
+                <tr>
+                  <td align="center">
+                    <input type="button" id="btn_remove" <%= (check_all)?'disabled':'' %> value="<%= raw(t('arrow.left')) %><%=h t('btn.remove') %>" onclick="moveList($('auth_selected'), $('auth_candidates')); return false;" style="width:80px;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+            <td width="10">&nbsp;</td>
+            <td width="45%">
+              <select id="auth_selected" name="auth_selected[]" <%= (check_all)?'disabled':'' %> class="select_multi" size="5" multiple style="width:100%;">
+              <% auth_cache.each do |auth, disp| %>
+                <option value="<%= auth %>"><%=h disp %></option>
+              <% end %>
+              </select>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+    <tr>
+      <td align="right">
+        <input type="button" value="<%= t('btn.apply') %>" style="width:80px;" onclick="doUpdateAuth(); return false;" />
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id="div_ajax_userAuth"></div>
+
+</form>
+
+<script type="text/javascript">
+doUpdateAuth = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+  selectListAll($("auth_selected"));
+  new Ajax.Request(
+              "<%= url_for :controller => 'users', :action => 'update_auth', :id => @user.id %>",
+              {
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                  if (request.responseText == "") {
+                    tips("<%=h t('user.auth_updated') %>");
+                  } else {
+                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  }
+                },
+                parameters:Form.serialize(document.form_ajax_userAuth)
+              }
+            );
+}
+</script>

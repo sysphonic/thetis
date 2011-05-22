@@ -1,0 +1,110 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+  <head>
+  <title>Thetis</title>
+
+  <!------------START-META TAGS--------->
+  <META http-equiv=Content-Script-Type content=text/JavaScript>
+  <META http-equiv=Content-Type content="text/html; charset=utf-8">
+  <!-------------END-META TAGS--------->
+
+<script language="JavaScript">
+<!--
+
+url_base = "";
+
+var lang;
+lang = window.navigator.systemLanguage;
+if (lang == null) {
+  lang = window.navigator.language;
+}
+
+if (lang.indexOf("ja") >= 0) {
+  url_base = "http://sysphonic.com/ja/";
+} else if (lang.indexOf("de") >= 0) {
+  url_base = "http://sysphonic.com/de/";
+} else {
+  url_base = "http://sysphonic.com/en/";
+}
+
+function doOnLoad()
+{
+  if (lang.indexOf("ja") >= 0) {
+    document.getElementById("div_ja").style.display = "block";
+  } else if (lang.indexOf("de") >= 0) {
+    document.getElementById("div_de").style.display = "block";
+  } else {
+    document.getElementById("div_en").style.display = "block";
+  }
+}
+//-->
+</script>
+</head>
+
+<body onLoad="doOnLoad();">
+
+<div style="padding-top:40px;">
+<table cellspacing="0" cellpadding="0" width="95%" align="center">
+  <tr>
+    <td align="center">
+
+      <table align="center" cellspacing="0" cellpadding="0" width="90%">
+        <tr>
+          <td align="left" style="vertical-align:middle; font-family:Times New Roman; line-height:0.8;">
+            <font style="font-size:30pt; font-weight:bold;">Thetis</font>&nbsp;&nbsp;<span style="font-size:14pt; font-weight:400; color:midnightblue;">[tetis]</span>
+            <hr size="1" color="black" width="100%" />
+          </td>
+        </tr>
+        <tr height="20"><td></td></tr>
+        <tr>
+          <td align="center">
+            <table align="center" cellspacing="0" cellpadding="0" width="90%">
+              <tr>
+                <td align="left" style="font-size:11pt; color:maroon; border:5px dashed peru; padding:20px;">
+                  <div id="div_en" style="display:none;">
+                    The content of this page and the "Topic Box" (Header Menu) can be replaced at <br/>
+                    <span style="padding-left:20px;">Admin Menu - General Configuration</span><br/>
+                    by registering arbitrary HTML file.<br/>
+                  </div>
+                  <div id="div_ja" style="display:none;">
+                    このページ、および「トピックボックス」（ヘッダー・メニュー）の内容は、<br/>
+                    <span style="padding-left:20px;">管理メニュー － 動作設定</span><br/>
+                    で任意のHTMLファイルを登録することにより置き換え可能です。<br/>
+                  </div>
+                  <div id="div_de" style="display:none;">
+                    Die Inhalte dieser Seite und des "Topic Box" (Kopfzeile-Menü) können auf <br/>
+                    <span style="padding-left:20px;">Admin Menu - General Configuration</span><br/>
+                    mit Registrierung einer beliebige HTML Datei umgesetzt werden.<br/>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr height="20"><td></td></tr>
+        <tr>
+          <td align="left" style="color:navy;">
+
+          </td>
+        </tr>
+        <tr>
+          <td align="center">
+            <table cellspacing="0" cellpadding="0" width="100%">
+              <tr height="20"><td></td></tr>
+              <tr>
+                <td align="center">
+                  <b>Thetis</b><br/>
+                  URL: <a href="#" onclick="window.open(url_base+'thetis.html').focus(); return false;"><u><script language="JavaScript">document.write(url_base);</script>thetis.html</u></a>
+                </td>
+              </tr>
+              <tr height="20"><td></td></tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</div>
+</body>
+</html>

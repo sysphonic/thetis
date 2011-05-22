@@ -1,0 +1,61 @@
+<script type="text/javascript">
+  <%
+  mail_user_open = THETIS_RELATIVE_URL_ROOT + '/images/mail/mail_user_open.gif'
+  mail_user_close = THETIS_RELATIVE_URL_ROOT + '/images/mail/mail_user_close.gif'
+  %>
+  var folderImgs = new Array(
+                      <% icons = MailFolder.get_icons(nil) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = MailFolder.get_icons(MailFolder::XTYPE_INBOX) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = MailFolder.get_icons(MailFolder::XTYPE_SENT) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = MailFolder.get_icons(MailFolder::XTYPE_DRAFTS) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                      <% icons = MailFolder.get_icons(MailFolder::XTYPE_TRASH) %>
+                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%=h mail_user_open %>", "<%=h mail_user_close %>")
+                      );
+
+  var array = new Array();
+  array.push(new Array("0", " <%=h session[:login_user].get_name %>", "", "", 5 /* img_idx */));
+
+  var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
+  <% @folder_tree.each do |parent_id, child_folders| %>
+  array = new Array(
+  <%
+  count = 0
+  child_folders.each do |folder|
+
+    case folder.xtype
+      when MailFolder::XTYPE_INBOX
+        img_idx = 1
+      when MailFolder::XTYPE_SENT
+        img_idx = 2
+      when MailFolder::XTYPE_DRAFTS
+        img_idx = 3
+      when MailFolder::XTYPE_TRASH
+        img_idx = 4
+      else
+        img_idx = 0
+    end
+  %>
+    new Array("<%= folder.id %>", " <%=h folder.name %>", "", "", <%= img_idx %>)
+  <%
+    count += 1
+    if count < child_folders.length
+  %>
+    ,
+  <%
+    end
+  end
+  %>
+        );
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs, false);
+  <% end %>
+  <% if params[:selId].nil? or params[:selId].empty? %>
+    ThetisBox.selectTree("<%= params[:selKeeper] %>", firstMenuId, null);
+  <% else %>
+    ThetisBox.selectTree("<%= params[:selKeeper] %>", "<%= params[:selId] %>", null, true);
+  <% end %>
+</script>
