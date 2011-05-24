@@ -1,0 +1,62 @@
+
+<div id="div_reset" align="right" style="display:none; padding:5px;">
+  <a href="#" onclick="resetRestore(); return false;">
+    <u><%= t('item.reset_restore') %></u>
+  </a>
+</div>
+
+<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0" width="100%">
+<% if @logs.nil? or @logs.empty? %>
+  <tr>
+    <td align="center" style="padding:10px;">
+      <%= t('paren.no_entries') %>
+    </td>
+  </tr>
+<% else %>
+  <% @logs.each_with_index do |log, idx| %>
+  <tr>
+    <td align="left" style="padding:10px; border:solid dimgray 1px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelectDesc('desc_<%= idx %>')">
+      <%
+      desc_ary = log.detail.scan(/["]description["]=>["]((\\"|[^"])*)["]/)
+      next if desc_ary.nil? or desc_ary.empty? or desc_ary.first.nil?
+      desc = desc_ary.first.to_a.first
+      %>
+      <%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') %> <span style="color:gray;">(<%= desc.length %> byte)</span>
+      <div id="desc_<%= idx %>" style="display:none;"><%= raw(desc.gsub(/\\"/, '"').gsub(/\\r/, '').gsub(/\\n/, '').gsub(/\\t/, "\t")) %></div>
+    </td>
+  </tr>
+<%
+  end
+end
+%>
+</table>
+
+<script type="text/javascript">
+
+if ($("div_before_restore").innerHTML != "") {
+  $("div_reset").style.display = "block";
+}
+
+doSelectDesc = function(div_id)
+{
+  if (oEditor) {
+    var div_before_restore = $("div_before_restore");
+    if (div_before_restore.innerHTML == "") {
+      div_before_restore.innerHTML = oEditor.getData();
+    }
+    oEditor.setData(restoreHTML($(div_id).innerHTML));
+  }
+  ThetisBox.getContainer($(div_id)).remove();
+}
+
+resetRestore = function()
+{
+  var div_before_restore = $("div_before_restore");
+  if (div_before_restore.innerHTML != "") {
+    oEditor.setData(restoreHTML(div_before_restore.innerHTML));
+  }
+  ThetisBox.getContainer($("div_reset")).remove();
+}
+
+</script>
+

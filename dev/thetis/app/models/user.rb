@@ -608,7 +608,7 @@ class User < ActiveRecord::Base
   #
   def get_my_folder
 
-    User.get_my_folder self.id
+    User.get_my_folder(self.id)
   end
 
   #=== self.get_my_folder

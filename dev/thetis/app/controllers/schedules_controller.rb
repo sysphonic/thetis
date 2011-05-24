@@ -24,7 +24,7 @@ class SchedulesController < ApplicationController
     before_filter :check_login, :only => [:new, :destroy, :save, :edit, :get_group_users]
   end
 
-  before_filter :only => [:configure, :update_config] do |controller|
+  before_filter :only => [:configure, :add_holidays, :delete_holidays] do |controller|
     controller.check_auth(User::AUTH_SCHEDULE)
   end
 
@@ -39,18 +39,17 @@ class SchedulesController < ApplicationController
     @holidays = Schedule.get_holidays
   end
 
-  #=== update_config
+  #=== add_holidays
   #
-  #Updates configuration about Schedule.
+  #<Ajax>
+  #Adds holidays.
   #
-  def update_config
+  def add_holidays
     Log.add_info(request, params.inspect)
 
-    Schedule.destroy_all("xtype='#{Schedule::XTYPE_HOLIDAY}'")
-
-    holidays = params[:holidays]
+    holidays = params[:thetisBoxEdit]
     unless holidays.nil?
-      holidays.each do |holiday|
+      holidays.split("\n").each do |holiday|
         tokens = holiday.split(',')
         date = DateTime.parse(tokens.shift.strip)
         date += date.offset   # 2011-01-01 09:00:00 +0900 (==> 2011-01-01 00:00:00 UTC)
@@ -67,11 +66,34 @@ class SchedulesController < ApplicationController
       end
     end
 
-    render(:text => '')
+    @holidays = Schedule.get_holidays
+    render(:partial => 'config_holidays', :layout => false)
 
   rescue StandardError => err
     Log.add_error(request, err)
-    render(:text => err.to_s)
+    flash[:notice] = 'ERROR:' + t('msg.format_invalid')
+
+    @holidays = Schedule.get_holidays
+    render(:partial => 'config_holidays', :layout => false)
+  end
+
+  #=== delete_holidays
+  #
+  #<Ajax>
+  #Deletes holidays.
+  #
+  def delete_holidays
+    Log.add_info(request, params.inspect)
+
+    holidays = params[:holidays]
+    unless holidays.nil?
+      holidays.each do |schedule_id|
+        Schedule.destroy(schedule_id)
+      end
+    end
+
+    @holidays = Schedule.get_holidays
+    render(:partial => 'config_holidays', :layout => false)
   end
 
   #=== new

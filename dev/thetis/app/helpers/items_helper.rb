@@ -15,6 +15,88 @@
 #
 module ItemsHelper
 
+  #=== self.get_next_revision
+  #
+  #Gets the next revision number for the specified Item-ID.
+  #
+  #_user_id_:: Target User-ID.
+  #_source_id_:: Source Item-ID.
+  #return:: Next revision number.
+  #
+  def self.get_next_revision(user_id, source_id)
+    copied_items = Item.find(:all, :conditions => ['user_id=? and source_id=?', user_id, source_id], :order => 'created_at DESC')
+
+    rev = 0
+    copied_items.each do |item|
+      rev_ary = item.title.scan(/[#](\d\d\d)$/)
+      next if rev_ary.nil?
+
+      rev = rev_ary.first.to_a.first.to_i
+      break
+    end
+
+    return '#' + sprintf('%03d', rev+1)
+  end
+
+  #=== self.get_copies_folder
+  #
+  #Gets the Copies Folder in My Folder of the specified User.
+  #If not found, sets up and initializes it.
+  #
+  #_user_id_:: Target User-ID.
+  #return:: Copies Folder.
+  #
+  def self.get_copies_folder(user_id)
+
+    my_folder = User.get_my_folder(user_id)
+
+    unless my_folder.nil?
+      con = ['parent_id=? and name=?', my_folder.id, Item.copies_folder]
+
+      begin
+        copies_folder = Folder.find(:first, :conditions => con)
+      rescue
+      end
+      if copies_folder.nil?
+        folder = Folder.new
+        folder.name = Item.copies_folder
+        folder.parent_id = my_folder.id
+        folder.owner_id = user_id.to_i
+        folder.xtype = nil
+        folder.read_users = '|' + user_id.to_s + '|'
+        folder.write_users = '|' + user_id.to_s + '|'
+        folder.save!
+
+        copies_folder = folder
+      end
+    end
+
+    return copies_folder
+  end
+
+  #=== self.exists_copies_folder?
+  #
+  #Checks if the Copies Folder exists in My Folder.
+  #
+  #_user_id_:: Target User-ID.
+  #return:: true if Copies Folder exists, false otherwise.
+  #
+  def self.exists_copies_folder?(user_id)
+
+    my_folder = User.get_my_folder(user_id)
+
+    unless my_folder.nil?
+      con = ['parent_id=? and name=?', my_folder.id, Item.copies_folder]
+
+      begin
+        copies_folder = Folder.find(:first, :conditions => con)
+      rescue
+      end
+    end
+
+    return !copies_folder.nil?
+  end
+
   #=== self.get_list_sql
   #
   #Gets SQL for list of Items. Here is the sample of return.

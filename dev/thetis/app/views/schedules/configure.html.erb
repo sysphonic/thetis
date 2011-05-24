@@ -1,7 +1,5 @@
 <% HistoryHelper.set_back(request) %>
 
-<%= form_tag( {:controller => 'schedules', :action => 'update_config'}, :name => 'form_config', :method => 'post') %>
-
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr height="10"><td></td></tr>
   <tr>
@@ -11,52 +9,34 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
-              <%=h t('msg.holidays') %>
+              <%= t('msg.holidays') %>
             </td>
           </tr>
           <tr>
             <td align="center" style="padding-top:10px;">
               <table cellspacing="0" cellpadding="0">
                 <tr>
-                  <td>
-                    <select id="holidays" name="holidays[]" class="select_multi" size="15" multiple style="width:220px;">
-                    <%
-                    unless @holidays.nil?
-                      @holidays.each do |schedule|
-                        val = schedule.start.strftime(Schedule::SYS_DATE_FORM) + ', ' + schedule.title
-                        disp = val
-                    %>
-                      <option value="<%= val %>"><%=h disp %></option>
-                    <%
-                      end
-                    end
-                    %>
-                    </select>
+                  <td id="div_holidays">
+                    <%= render :partial => 'config_holidays' %>
                   </td>
                   <td width="10">&nbsp;</td>
                   <td valign="top">
                     <table cellspacing="0" cellpadding="0" width="100%">
                       <tr>
                         <td align="center">
-                          <input type="button" value="<%=h t('btn.add') %>" onclick="addHolidays();" style="width:80px;">
+                          <input type="button" value="<%= t('btn.add') %>" onclick="addHolidays();" style="width:80px;">
                         </td>
                       </tr>
                       <tr height="5"><td></td></tr>
                       <tr>
                         <td align="center">
-                          <input type="button" value="<%=h t('btn.remove') %>" onclick="removeHolidays();" style="width:80px;">
+                          <input type="button" value="<%= t('btn.remove') %>" onclick="removeHolidays();" style="width:80px;">
                         </td>
                       </tr>
                     </table>
                   </td>
                 </tr>
               </table>
-            </td>
-          </tr>
-          <tr height="10"><td></td></tr>
-          <tr>
-            <td style="width:100%;" colspan="2" align="right">
-              <input type="button" style="width:100px;" value="<%=h t('btn.register') %>" onclick="doUpdateConfig();">
             </td>
           </tr>
         </table>
@@ -70,8 +50,6 @@
     </td>
   </tr>
 </table>
-
-</form>
 
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
@@ -91,11 +69,21 @@ function addHolidays()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
 
-  var form_tag = "<form action=\"\" onsubmit=\"var ret=_addHolidays($('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} ThetisBox.remove("+thetisBox.id+"); return false;\">";
+  var updater = "new Ajax.Updater("
+                + "'div_holidays',"
+                + "this.action,"
+                + "{"
+                  + "asynchronous:true,"
+                  + "evalScripts:true,"
+                  + "onComplete:function(request){ __thetisBoxProgress.remove(); ThetisBox.remove("+thetisBox.id+"); },"
+                  + "parameters:Form.serialize(this)"
+                + "}"
+                + ");"
+  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays($('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
   thetisBox.setFormTag(form_tag);
-  thetisBox.progress = false;
-  var cap = "<%=h t('schedule.specify_holidays_info1') %><br/>"
-            + "<div style='text-indent:20px'><%=h t('schedule.specify_holidays_info2') %></div>"
+  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
+  var cap = "<%= t('schedule.specify_holidays_info1') %><br/>"
+            + "<div style='text-indent:20px'><%= t('schedule.specify_holidays_info2') %></div>"
   thetisBox.show("CENTER", "540,200", "TEXTAREA", "", cap, "");
 }
 
@@ -132,51 +120,41 @@ function _addHolidays(val)
       } catch (e) {}
     }
     if (date == null || name == null || name.length <= 0) {
-      msg("<%=h t('msg.format_invalid') %>: "+lines[i]);
+      msg("<%= t('msg.format_invalid') %>: "+lines[i]);
       return false;
     }
     date = getDateString(date);
     holidays.push(new Array(date, name));
   }
-  
-  for (var i=0; i < holidays.length; i++) {
-    var date = holidays[i][0];
-    var name = holidays[i][1];
-    addList(list, date+', '+name, date+', '+name, false);
-  }
-  sortList(list, "DESC");
   return true;
 }
 
 function removeHolidays()
 {
-  var del_ary = deleteList($("holidays"));
+  var sel_num = getListSelected($("holidays")).length;
+  if (sel_num <= 0) {
+    return;
+  }
+  confm(sel_num + "<%= t('msg.confirm_to_delete_num', :name => t('msg.holidays')) %>", "_removeHolidays()");
 }
 
-function doUpdateConfig(user_id)
+function _removeHolidays()
 {
-  selectListAll($("holidays"));
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Request(
-              document.form_config.action,
-              {
-                asynchronous:true,
-                evalScripts:true,
-                parameters:Form.serialize(document.form_config),
-                onComplete:function(request) {
-                  thetisBox.remove();
-
-                  if (request.responseText == "") {
-                    tips("<%=h t('msg.register_success')%>");
-                  } else {
-                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
-                  }
-                }
-              }
-            );
-  return true;
+  new Ajax.Updater(
+          "div_holidays",
+          document.form_holidays.action,
+          {
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(document.form_holidays)+"&authenticity_token=<%= form_authenticity_token %>",
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              request.responseText.evalScripts();
+            }
+          }
+        );
 }
 
 </script>

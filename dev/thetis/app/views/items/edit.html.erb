@@ -150,15 +150,21 @@ var users_cache = new Array();
             <table align="center" cellspacing="0" cellpadding="0">
               <tr>
                 <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-                  <%= h t('btn.back') %>
+                  <%= t('btn.back') %>
                 </td>
+              <% unless @item.id.nil? %>
+                <td width="15"></td>
+                <td class="img_button_td" onclick="showRestoreSelector();">
+                  <%= t('btn.restore') %>
+                </td>
+              <% end %>
                 <td width="15"></td>
                 <td class="img_button_td" onclick="doSave();">
-                    <%= h t('btn.save') %>
+                  <%= t('btn.save') %>
                 </td>
-                  <td width="15"></td>
+                <td width="15"></td>
                 <td class="img_button_td" onclick="doShow();">
-                    <%= h t('btn.show') %>
+                  <%= t('btn.show') %>
                 </td>
               </tr>
             </table>
@@ -482,20 +488,48 @@ function checkBasic()
     var folder_name = trim(frm.create_folder_name.value, false);
 
     if (folder_name.length <= 0) {
-      msg("<%=h t('item.specify_folder_name') %>");
+      msg("<%= t('item.specify_folder_name') %>");
       return false;
     }
 
     if (folder_name.charAt(0) == "$") {
-      msg("<%=h t('folder.reserved_name') %>");
+      msg("<%= t('folder.reserved_name') %>");
       return false;
     }
     if (folder_name.indexOf("/") >= 0) {
-      msg("<%=h t('folder.reserved_char') %>");
+      msg("<%= t('folder.reserved_char') %>");
       return false;
     }
   }
   return true;
+}
+
+function showRestoreSelector()
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%= t('cap.restore_from_log') %>";
+  new Ajax.Request(
+          "<%= url_for(:controller => 'items', :action => 'recent_descriptions', :id => @item.id) %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.show(
+                          "CENTER",
+                          mainWidth*70/100+"," + mainHeight*70/100,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
 }
 
 var thetisBoxProgress = new ThetisBox;

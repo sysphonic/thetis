@@ -287,7 +287,7 @@ class ItemsController < ApplicationController
 
     if params[:from_action].nil?
       render(:text => params[:id])
-    else 
+    else
       params.delete :controller
       params.delete :action
       params.delete :id
@@ -295,6 +295,32 @@ class ItemsController < ApplicationController
       params[:action] = params[:from_action]
       redirect_to(params)
     end
+  end
+
+  #=== duplicate
+  #
+  #<Ajax>
+  #Duplicates Item.
+  #
+  def duplicate
+    Log.add_info(request, params.inspect)
+
+    login_user = session[:login_user]
+
+    copies_folder = ItemsHelper.get_copies_folder(login_user.id)
+
+    item = Item.find(params[:id])
+    if item.is_a_copy?
+      flash[:notice] = 'ERROR:' + t('msg.system_error')
+    else
+      item.xtype = Item::XTYPE_INFO
+      item.title += ItemsHelper.get_next_revision(login_user.id, item.id)
+      copied_item = item.copy(login_user.id, copies_folder.id, [:image, :attachment])
+
+      flash[:notice] = "#{t('msg.save_success')}#{t('cap.suffix')}<br/>#{copied_item.title}"
+    end
+
+    render(:partial => 'common/flash_notice', :layout => false)
   end
 
   ######################
@@ -454,6 +480,22 @@ class ItemsController < ApplicationController
   rescue StandardError => err
     Log.add_error(request, err)
     render(:partial => 'ajax_item_description', :layout => false)
+  end
+
+  #=== recent_descriptions
+  #
+  #<Ajax>
+  #Gets recent descriptions to select.
+  #
+  def recent_descriptions
+    Log.add_info(request, params.inspect)
+
+    login_user = session[:login_user]
+
+    sql = "select distinct * from logs where user_id=#{login_user.id} and (access_path like '%/items/set_description%') and (detail like '%\"id\"=>\"#{params[:id]}\"%') order by updated_at DESC limit 0,10"
+    @logs = Log.find_by_sql(sql)
+
+    render(:partial => 'ajax_recent_descriptions', :layout => false)
   end
 
   ################

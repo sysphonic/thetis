@@ -58,7 +58,7 @@
              <table align="left" width="120" cellspacing="0" cellpadding="0">
                <tr>
                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect($('item_folder_id').value); modifiedBasic++;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                   <%=h t('btn.select_folder') %>
+                   <%= t('btn.select_folder') %>
                  </td>
                </tr>
              </table>
@@ -68,7 +68,7 @@
       <div style="padding-top:4px;">
         <input type="checkbox" id="check_create_folder" name="check_create_folder" value="1" onclick="$('create_folder').style.display=(this.checked?'inline':'none'); modifiedBasic++;"><label for="check_create_folder"><%=h t('item.create_folder_path') %></label><br/>
         <div style="padding-top:4px; padding-left:30px;">
-          <span id="create_folder" style="display:none;"> <%=h t('item.subfolder_name') %><input name="create_folder_name" type="text" value="" onchange="modifiedBasic++;"></span>
+          <span id="create_folder" style="display:none;"> <%= t('item.subfolder_name') %><input name="create_folder_name" type="text" value="" onchange="modifiedBasic++;"></span>
         </div>
       </div>
 <% end %>
@@ -83,7 +83,7 @@
   <tr>
     <td class="item_cap_td" style="background-color:#97DCFF;">
       <label for="item_public">
-        <%=h Item.human_attribute_name('public') %>&nbsp;
+        <%= Item.human_attribute_name('public') %>&nbsp;
         <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.public_info1') %><br/><%=h t('item.public_info2') %>');">
       </label>
     </td>
@@ -185,10 +185,10 @@
               </tr>
               <tr>
                 <td align="center" nowrap>
-                   <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                   <%= truncate(t('image.plural'), :length => 8) %><br/>
                 </td>
                 <td align="center" nowrap>
-                   <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                   <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                 </td>
               </tr>
             </table>
@@ -197,6 +197,24 @@
       </table>
     </td>
   </tr>
+<% if !@item.nil? and @item.is_a_copy? %>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><%= t('cap.original') %></td>
+    <td class="item_value_td">
+    <%
+    source_item = Item.find(@item.source_id)
+    if source_item.nil?
+    %>
+      <%= t('paren.deleted') %><br/>
+    <% elsif source_item.check_user_auth(login_user, 'r', true) %>
+      <%= source_item.title %><br/>
+    <% else %>
+      <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %><br/>
+    <% end %>
+      <input type="checkbox" id="check_clear_original" name="check_clear_original" value="1" onclick="modifiedBasic++;"><label for="check_clear_original"><%= t('item.clear_ref_original') %></label><br/>
+    </td>
+  </tr>
+<% end %>
 </table>
 <script type="text/javascript">
 <% unless @item.nil? %>

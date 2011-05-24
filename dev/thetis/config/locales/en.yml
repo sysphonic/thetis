@@ -389,6 +389,10 @@ en:
       zeptair_dist: "Distribution Package"
     message_arrived: "A message has arrived on your item:"
     not_created_or_not_public: "(Not created or not public.)"
+    reset_restore: "Reset to before restoration"
+    copies_folder: "Copies"
+    confirm_to_duplicate: "This item will be duplicated in the following folder. Are you sure?"
+    clear_ref_original: "Clear reference to the original"
     one: "1 item"
     other: "%{count} items"
   log:
@@ -847,6 +851,7 @@ en:
     error_detected: "Following errors are detected."
     drag_to_change_orger: "Drag to change orders."
     confirm_to_delete: "] will be deleted. Are you sure?"
+    confirm_to_delete_num: " %{name} will be deleted. Are you sure?"
     confirm_to_added_to_desktop: "] will be added to desktop. Are you sure?"
     specify_indispensable: "Please specify all input indispensable items (with red asterisk)."
     error_java_applet: "Your browser doesn't support Java Applet, or Java is not installed on your PC."
@@ -1001,6 +1006,8 @@ en:
     cc: "Cc:"
     bcc: "Bcc:"
     empty: "Empty"
+    restore: "Restore"
+    duplicate: "Duplicate"
   cap:
     suffix: ":"
     to: "To :"
@@ -1052,6 +1059,8 @@ en:
     send_to: "To"
     mail_content: "Mail Content"
     mail_body: "Message:"
+    restore_from_log: "Restore from Log"
+    original: "Original"
   zeptair:
     id: "Zeptair-ID"
     vpn: "Zeptair VPN"

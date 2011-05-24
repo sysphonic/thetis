@@ -389,6 +389,10 @@ de:
       zeptair_dist: "Distribution Package"
     message_arrived: "Eine Mitteilung ist zu Ihren Artikel angekommen."
     not_created_or_not_public: "(Nicht erstellt o. nicht veröffentlicht)"
+    reset_restore: "Reset to before restoration"
+    copies_folder: "Copies"
+    confirm_to_duplicate: "This item will be duplicated in the following folder. Are you sure?"
+    clear_ref_original: "Clear reference to the original"
     one: "1 Artikel"
     other: "%{count} Artikel"
   log:
@@ -847,6 +851,7 @@ de:
     error_detected: "Folgenden Feher wurden entdeckt."
     drag_to_change_orger: "Ziehen um Reihenfolge zu verändern."
     confirm_to_delete: "] wird gelöscht. Sind Sie sicher?"
+    confirm_to_delete_num: " %{name} wird gelöscht. Sind Sie sicher?"
     confirm_to_added_to_desktop: "] wird aufs Desktop hinzufügen. Sind Sie sicher?"
     specify_indispensable: "Bitte geben Sie alle unabdingbare Artikel (mit rotem Asterisk) an."
     error_java_applet: "Mit ihrem Browser wirkt Java Applet nicht, oder Java ist nicht installiert."
@@ -1001,6 +1006,8 @@ de:
     cc: "Cc:"
     bcc: "Bcc:"
     empty: "Leer"
+    restore: "Restore"
+    duplicate: "Duplicate"
   cap:
     suffix: ":"
     to: "To :"
@@ -1052,6 +1059,8 @@ de:
     send_to: "Zu"
     mail_content: "Mail Inhalt"
     mail_body: "Mitteilung:"
+    restore_from_log: "Restore from Log"
+    original: "Original"
   zeptair:
     id: "Zeptair-ID"
     vpn: "Zeptair VPN"

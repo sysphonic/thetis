@@ -390,6 +390,10 @@ ja:
       zeptair_dist: "配布パッケージ"
     message_arrived: "あなたの記事にメッセージが追加されました。"
     not_created_or_not_public: "（未作成または非公開）"
+    reset_restore: "復元前に戻す"
+    copies_folder: "コピーフォルダ"
+    confirm_to_duplicate: "この記事を次のフォルダに複製します。よろしいですか？"
+    clear_ref_original: "原本への参照を削除する"
     one: "1件"
     other: "%{count}件"
   log:
@@ -848,6 +852,7 @@ ja:
     error_detected: "次のエラーを検知しました。"
     drag_to_change_orger: "ドラッグして順番を入れ替えられます。"
     confirm_to_delete: "」を削除します。よろしいですか？"
+    confirm_to_delete_num: "件の%{name}を削除します。よろしいですか？"
     confirm_to_added_to_desktop: "」をデスクトップに追加します。よろしいですか？"
     specify_indispensable: "すべての入力必須項目（赤い*印）を埋めてください。"
     error_java_applet: "お使いのブラウザがJavaアプレットに対応していないか、PCにJavaがインストールされていません。"
@@ -1002,6 +1007,8 @@ ja:
     cc: "Cc:"
     bcc: "Bcc:"
     empty: "空にする"
+    restore: "復元"
+    duplicate: "複製"
   cap:
     suffix: "："
     to: "あて先："
@@ -1053,6 +1060,8 @@ ja:
     send_to: "送信先"
     mail_content: "メール内容"
     mail_body: "本文："
+    restore_from_log: "ログから復元"
+    original: "原本"
   zeptair:
     id: "Zeptair-ID"
     vpn: "Zeptair VPN"

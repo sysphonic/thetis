@@ -31,42 +31,75 @@ unless @for_print
 <% end %>
     </td>
     <td>
-      <table align="right" width="40%" cellpadding="0" cellspacing="1">
-        <tr height="18">
-        <% if @item.xtype == Item::XTYPE_PROJECT %>
-          <td rowspan="2" valign="middle" style="padding-right:10px;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <table align="right" width="40%" cellpadding="0" cellspacing="1">
+              <tr height="18">
+              <% if @item.xtype == Item::XTYPE_PROJECT %>
+                <td rowspan="2" valign="middle" style="padding-right:10px;">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+                </td>
+              <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
+                <td rowspan="2" valign="middle" style="padding-right:10px;">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
+                </td>
+              <% end %>
+                <td class="td_entry_info_cap" nowrap><%= t('item.registered_by') %></td>
+                <td class="td_entry_info_cap" nowrap><%= t('activerecord.attributes.updated_at') %></td>
+              <% unless @workflow.nil? or @workflow.issued_at.nil? %>
+                <td class="td_entry_info_cap" nowrap><%= Workflow.human_attribute_name('issued_at') %></td>
+              <% end %>
+                <td class="td_entry_info_cap" nowrap><%= Item.human_attribute_name('public') %></td>
+              </tr>
+              <tr height="18">
+                <td class="td_entry_info_val" nowrap>
+                  <%= @item.disp_registered_by(@users_cache) %>
+                </td>
+                <td class="td_entry_info_val" nowrap>
+                  <% unless @item.updated_at.nil? %>
+                    <%= @item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
+                  <% end %>
+                </td>
+              <% unless @workflow.nil? or @workflow.issued_at.nil? %>
+                <td class="td_entry_info_val" nowrap>
+                  <%= @workflow.issued_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
+                </td>
+              <% end %>
+                <td class="td_entry_info_val" nowrap>
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%=h (@item.public) ? 'check_ok.gif' : 'check_ng.gif' %>">
+                </td>
+              </tr>
+            </table>
           </td>
-        <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
-          <td rowspan="2" valign="middle" style="padding-right:10px;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
-          </td>
-        <% end %>
-          <td class="td_entry_info_cap" nowrap><%= t('item.registered_by') %></td>
-          <td class="td_entry_info_cap" nowrap><%= t('activerecord.attributes.updated_at') %></td>
-        <% unless @workflow.nil? or @workflow.issued_at.nil? %>
-          <td class="td_entry_info_cap" nowrap><%= Workflow.human_attribute_name('issued_at') %></td>
-        <% end %>
-          <td class="td_entry_info_cap" nowrap><%= Item.human_attribute_name('public') %></td>
         </tr>
-        <tr height="18">
-          <td class="td_entry_info_val" nowrap>
-            <%=h @item.disp_registered_by(@users_cache) %>
-          </td>
-          <td class="td_entry_info_val" nowrap>
-            <% unless @item.updated_at.nil? %>
-              <%=h @item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
-            <% end %>
-          </td>
-        <% unless @workflow.nil? or @workflow.issued_at.nil? %>
-          <td class="td_entry_info_val" nowrap>
-            <%=h @workflow.issued_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
-          </td>
-        <% end %>
-          <td class="td_entry_info_val" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%=h (@item.public) ? 'check_ok.gif' : 'check_ng.gif' %>">
+    <% if @item.is_a_copy? %>
+        <tr>
+          <td>
+            <table align="right" width="40%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td nowrap width="20%" style="padding-right:5px;">
+                  <%= t('cap.original') %><%= t('cap.suffix') %>
+                </td>
+                <td nowrap>
+                  <%
+                  source_item = Item.find(@item.source_id)
+                  if source_item.nil?
+                  %>
+                    <%= t('paren.deleted') %>
+                  <% elsif source_item.check_user_auth(login_user, 'r', true) %>
+                    <a href="<%= url_for(:controller => 'items', :action => 'show', :id => source_item.id) %>">
+                      <u><%= truncate(source_item.title, :length => 30) %></u>
+                    </a>
+                  <% else %>
+                    <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %>
+                  <% end %>
+                </td>
+              </tr>
+            </table>
           </td>
         </tr>
+    <% end %>
       </table>
     </td>
   </tr>
@@ -80,7 +113,7 @@ unless @for_print
          <% unless @item.folder_id.nil? %>
           <td width="40">&nbsp;&nbsp;</td>
           <td id="folder_path" align="left" nowrap width="80%" style="color:red; font-size:12pt; line-height:1.0;">
-            <%=h @item.get_folder_path %>
+            <%= @item.get_folder_path %>
           </td>
          <% end %>
         </tr>
@@ -110,12 +143,18 @@ end
   <tr height="20"><td></td></tr>
   <tr>
   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-    <%= h t('btn.back') %>
+    <%= t('btn.back') %>
   </td>
   <td width="20"></td>
   <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for :controller => 'items', :action => 'show_for_print', :id => @item.id %>').focus(); thetisBox.remove();">
-    <%= h t('btn.for_print') %>
+    <%= t('btn.for_print') %>
   </td>
+<% unless login_user.nil? or @item.is_a_copy? %>
+  <td width="20"></td>
+  <td class="img_button_td" onclick="doDuplicate();">
+    <%= t('btn.duplicate') %>
+  </td>
+<% end %>
 <% if !login_user.nil? and @item.editable?(login_user.id) %>
   <td width="20"></td>
   <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'edit', :id => @item.id %>'">
@@ -831,6 +870,29 @@ function doDelete(id, title)
 <% if @team.nil? %>
   }
 <% end %>
+}
+
+function doDuplicate()
+{
+  confm("<%= t('item.confirm_to_duplicate') %>\n&nbsp;&nbsp;/<%= t('folder.my_folder') %>/<%= Item.copies_folder %>", "_doDuplicate()");
+}
+
+function _doDuplicate()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+          "<%= url_for :controller => 'items', :action => 'duplicate', :id => @item.id %>",
+          {
+            parameters:"authenticity_token=<%= form_authenticity_token %>",
+            asynchronous:true,
+            evalScripts:false,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              request.responseText.evalScripts();
+            }
+          }
+        );
 }
 
 function _doDelete(id)

@@ -1,0 +1,16 @@
+<%= form_tag( {:controller => 'schedules', :action => 'delete_holidays'}, :name => 'form_holidays', :method => 'post') %>
+  <select id="holidays" name="holidays[]" class="select_multi" size="15" multiple style="width:220px;">
+  <%
+  unless @holidays.nil?
+    @holidays.each do |schedule|
+      disp = schedule.start.strftime(Schedule::SYS_DATE_FORM) + ', ' + schedule.title
+  %>
+    <option value="<%= schedule.id %>"><%=h disp %></option>
+  <%
+    end
+  end
+  %>
+  </select>
+</form>
+
+<%= render :partial => 'common/flash_notice' %>

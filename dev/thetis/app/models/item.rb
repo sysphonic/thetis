@@ -43,6 +43,26 @@ class Item < ActiveRecord::Base
   validates_presence_of	:title
 
 
+  #=== self.copies_folder
+  #
+  #Gets the name of the Copies Folder.
+  #
+  #return:: Name of the Copies Folder.
+  #
+  def self.copies_folder
+    I18n.t('item.copies_folder')
+  end
+
+  #=== is_a_copy?
+  #
+  #Checks if the Item is a copy of the other Item.
+  #
+  #return:: true if the Item is a copy, false otherwise.
+  #
+  def is_a_copy?
+    return !self.source_id.nil?
+  end
+
   #=== self.profile_title_def
   #
   #Returns default title of the Profile-sheet.
@@ -191,9 +211,10 @@ class Item < ActiveRecord::Base
   #
   #_user_id_:: New owner's ID.
   #_folder_id_:: Parent Folder-ID.
+  #_attrs_:: Array of symbols of required attributes. All if not specified.
   #return:: Instance of the copied Item.
   #
-  def copy(user_id, folder_id)
+  def copy(user_id, folder_id, attrs=nil)
 
     item = Item.new_by_type(self.xtype, folder_id)
 
@@ -204,6 +225,7 @@ class Item < ActiveRecord::Base
     item.public = self.public
     item.updated_at = self.updated_at
     item.created_at = self.created_at
+    item.source_id = self.id
     if self.original_by.nil? and self.user_id != 0
       item.original_by = self.user_id
     else
@@ -222,28 +244,36 @@ class Item < ActiveRecord::Base
     end
 
     # Workflow
-    unless self.workflow.nil?
-      copied_workflow = self.workflow.copy(user_id, item.id)
+    if attrs.nil? or attrs.include?(:workflow)
+      unless self.workflow.nil?
+        copied_workflow = self.workflow.copy(user_id, item.id)
+      end
     end
 
     # Comments
-    unless self.comments.nil?
-      self.comments.each do |comment|
-        comment.copy(item.id)
+    if attrs.nil? or attrs.include?(:comment)
+      unless self.comments.nil?
+        self.comments.each do |comment|
+          comment.copy(item.id)
+        end
       end
     end
 
     # Images
-    unless self.images.nil?
-      self.images.each do |image|
-        image.copy(item.id)
+    if attrs.nil? or attrs.include?(:image)
+      unless self.images.nil?
+        self.images.each do |image|
+          image.copy(item.id)
+        end
       end
     end
 
     # Attachments
-    unless self.attachments.nil?
-      self.attachments.each do |attachment|
-        attachment.copy(item.id, item.user_id)
+    if attrs.nil? or attrs.include?(:attachment)
+      unless self.attachments.nil?
+        self.attachments.each do |attachment|
+          attachment.copy(item.id, item.user_id)
+        end
       end
     end
 
@@ -565,8 +595,8 @@ class Item < ActiveRecord::Base
       end
     elsif self.xtype == Item::XTYPE_RESEARCH
       begin
-        user = User.find user_id
-        if user.admin? User::AUTH_RESEARCH
+        user = User.find(user_id)
+        if user.admin?(User::AUTH_RESEARCH)
           return true
         end
       rescue StandardError => err
@@ -606,7 +636,7 @@ class Item < ActiveRecord::Base
   def deletable?(user_id, admin=nil)
 
     if admin.nil?
-      admin = User.find(user_id).admin? User::AUTH_ITEM
+      admin = User.find(user_id).admin?(User::AUTH_ITEM)
     end
 
     return true if admin
