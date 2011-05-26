@@ -30,6 +30,23 @@
     pre { font-size: 1.0em; background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    .comment_body_red {
+      border:outset 2px deeppink;
+      font-size:10.5pt;
+      padding:15px;
+      line-height:1.9;
+      background-color:white;
+    }
+    .comment_tab_red {
+      border-right:solid 1px firebrick;
+      color:white;
+      font-size:10.5pt;
+      padding:3px;
+      padding-left:10px;
+      padding-right:20px;
+      line-height:1.3;
+      background-color:deeppink;
+    }
   -->
 </style>
 </HEAD>
@@ -157,6 +174,24 @@
                       </td>
                     </tr>
                   </table>
+
+                  <table cellspacing="0" cellpadding="0" align="center" width="95%" >
+                    <tr>
+                      <td class="comment_tab_red" align="left" nowrap>
+                        <b>&laquo; CAUTION ! &raquo;</b>
+                      </td>
+                      <td width="90%" align="right" style="color:red;"></td>
+                    </tr>
+                    <tr>
+                      <td class="comment_body_red" colspan="3" align="left">
+                        <span style="font-weight:bold; color:red;">&raquo;</span>
+                        Source-code got from the repository above and the data created or updated with it
+                        are out of any support during the future, even when moving back to the official release after the fact.<br/>
+                        <span style="font-weight:bold; color:red;">&raquo;</span>
+                        Especially note that the version followed by '+' means it has already begun to be modified to the next release.<br/>
+                      </td>
+                    </tr>
+                  </table>
                 </TD>
               </TR>
             </TABLE>
@@ -178,23 +213,29 @@
                     <tr>
                       <td>
                         <h2>Dependencies</h2>
-                          <ul>
-                            <li type="square">
-                              Ruby 1.9.2
-                            </li>
-                            <li type="square">
-                              Rails 3.0.7
-                            </li>
-                            <li type="square">
-                              MySQL
-                            </li>
-                          </ul>
+                        <ul>
+                          <li type="square">
+                            Ruby 1.9.2
+                          </li>
+                          <li type="square">
+                            Rails 3.0.7
+                          </li>
+                          <li type="square">
+                            MySQL
+                          </li>
+                        </ul>
                         <h2>Install</h2>
-                        <p><a href="http://sysphonic.com/en/thetis_install.html" target="_blank">http://sysphonic.com/en/thetis_install.html</a></p>
+                        <div style="padding:0px 20px;">
+                          <a href="http://sysphonic.com/en/thetis_install.html" target="_blank">http://sysphonic.com/en/thetis_install.html</a>
+                        </div>
                         <h2>License</h2>
-                        <p>Modified BSD License (See LICENSE file)</p>
+                        <div style="padding:0px 20px;">
+                          Modified BSD License (See LICENSE file)
+                        </div>
                         <h2>Authors</h2>
-                        <p>MORITA Shintaro, Sysphonic</p>
+                        <div style="padding:0px 20px;">
+                          MORITA Shintaro, Sysphonic
+                        </div>
                       </td>
                     </tr>
                   </table>

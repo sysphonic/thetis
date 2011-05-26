@@ -30,6 +30,23 @@
     pre { font-size: 1.0em; background: #000; color: #fff; padding: 15px;}
     hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
     .footer { text-align:center; padding-top:30px; font-style: italic; }
+    .comment_body_red {
+      border:outset 2px deeppink;
+      font-size:10.5pt;
+      padding:15px;
+      line-height:1.9;
+      background-color:white;
+    }
+    .comment_tab_red {
+      border-right:solid 1px firebrick;
+      color:white;
+      font-size:10.5pt;
+      padding:3px;
+      padding-left:10px;
+      padding-right:20px;
+      line-height:1.3;
+      background-color:deeppink;
+    }
   -->
 </style>
 </HEAD>
@@ -157,6 +174,24 @@
                       </td>
                     </tr>
                   </table>
+
+                  <table cellspacing="0" cellpadding="0" align="center" width="95%" >
+                    <tr>
+                      <td class="comment_tab_red" align="left" nowrap>
+                        <b>◎ 注 意 ！</b>
+                      </td>
+                      <td width="90%" align="right" style="color:red;"></td>
+                    </tr>
+                    <tr>
+                      <td class="comment_body_red" colspan="3" align="left">
+                        <span style="font-weight:bold; color:red;">&raquo;</span>
+                        上のリポジトリから取得されたソースコードおよび、
+                        そのソースコードを使用して作成／更新されたことのあるデータは（その後正式リリース版に戻したとしても）将来に渡って動作は保証されません。<br/>
+                        <span style="font-weight:bold; color:red;">&raquo;</span>
+                        特に、バージョン表記の末尾に「+」が付いているものは、次のリリースに向かってすでに修正が始まっていることを表します。<br/>
+                      </td>
+                    </tr>
+                  </table>
                 </TD>
               </TR>
             </TABLE>
@@ -178,23 +213,29 @@
                     <tr>
                       <td>
                         <h2>Dependencies</h2>
-                          <ul>
-                            <li type="square">
-                              Ruby 1.9.2
-                            </li>
-                            <li type="square">
-                              Rails 3.0.7
-                            </li>
-                            <li type="square">
-                              MySQL
-                            </li>
-                          </ul>
+                        <ul>
+                          <li type="square">
+                            Ruby 1.9.2
+                          </li>
+                          <li type="square">
+                            Rails 3.0.7
+                          </li>
+                          <li type="square">
+                            MySQL
+                          </li>
+                        </ul>
                         <h2>Install</h2>
-                        <p><a href="http://sysphonic.com/ja/thetis_install.html" target="_blank">http://sysphonic.com/ja/thetis_install.html</a></p>
+                        <div style="padding:0px 20px;">
+                          <a href="http://sysphonic.com/ja/thetis_install.html" target="_blank">http://sysphonic.com/ja/thetis_install.html</a>
+                        </div>
                         <h2>License</h2>
-                        <p>Modified BSD License (See LICENSE file)</p>
+                        <div style="padding:0px 20px;">
+                          Modified BSD License (See LICENSE file)
+                        </div>
                         <h2>Authors</h2>
-                        <p>MORITA Shintaro, Sysphonic</p>
+                        <div style="padding:0px 20px;">
+                          MORITA Shintaro, Sysphonic
+                        </div>
                       </td>
                     </tr>
                   </table>
