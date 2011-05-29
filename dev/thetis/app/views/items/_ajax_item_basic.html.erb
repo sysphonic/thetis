@@ -35,6 +35,24 @@
       <%= text_field 'item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++' %>
     </td>
   </tr>
+<% if !@item.nil? and @item.is_a_copy? %>
+  <tr>
+    <td class="item_cap_td" style="background-color:#97DCFF"><%= t('cap.original') %></td>
+    <td class="item_value_td">
+    <%
+    source_item = Item.find(@item.source_id)
+    if source_item.nil?
+    %>
+      <%= t('paren.deleted') %><br/>
+    <% elsif source_item.check_user_auth(login_user, 'r', true) %>
+      <%= source_item.title %><br/>
+    <% else %>
+      <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %><br/>
+    <% end %>
+      <input type="checkbox" id="check_clear_original" name="check_clear_original" value="1" onclick="modifiedBasic++;"><label for="check_clear_original"><%= t('item.clear_ref_original') %></label><br/>
+    </td>
+  </tr>
+<% end %>
   <tr>
     <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_folder_id"><%= h Folder.human_name %></label></td>
     <td class="item_value_td">
@@ -197,24 +215,6 @@
       </table>
     </td>
   </tr>
-<% if !@item.nil? and @item.is_a_copy? %>
-  <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><%= t('cap.original') %></td>
-    <td class="item_value_td">
-    <%
-    source_item = Item.find(@item.source_id)
-    if source_item.nil?
-    %>
-      <%= t('paren.deleted') %><br/>
-    <% elsif source_item.check_user_auth(login_user, 'r', true) %>
-      <%= source_item.title %><br/>
-    <% else %>
-      <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %><br/>
-    <% end %>
-      <input type="checkbox" id="check_clear_original" name="check_clear_original" value="1" onclick="modifiedBasic++;"><label for="check_clear_original"><%= t('item.clear_ref_original') %></label><br/>
-    </td>
-  </tr>
-<% end %>
 </table>
 <script type="text/javascript">
 <% unless @item.nil? %>

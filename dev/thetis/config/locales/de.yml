@@ -391,7 +391,7 @@ de:
     not_created_or_not_public: "(Nicht erstellt o. nicht veröffentlicht)"
     reset_restore: "Reset to before restoration"
     copies_folder: "Copies"
-    confirm_to_duplicate: "This item will be duplicated in the following folder. Are you sure?"
+    confirm_to_duplicate: "This item will be duplicated (without comments) in the following folder. Are you sure?"
     clear_ref_original: "Clear reference to the original"
     one: "1 Artikel"
     other: "%{count} Artikel"

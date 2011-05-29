@@ -314,6 +314,7 @@ class ItemsController < ApplicationController
       flash[:notice] = 'ERROR:' + t('msg.system_error')
     else
       item.xtype = Item::XTYPE_INFO
+      item.public = false
       item.title += ItemsHelper.get_next_revision(login_user.id, item.id)
       copied_item = item.copy(login_user.id, copies_folder.id, [:image, :attachment])
 
@@ -393,6 +394,11 @@ class ItemsController < ApplicationController
       folder.save!
 
       params[:item][:folder_id] = folder.id
+    end
+
+    if params[:check_clear_original] == '1'
+      params[:item][:original_by] = nil
+      params[:item][:source_id] = nil
     end
 
     if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
