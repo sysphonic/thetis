@@ -49,7 +49,8 @@
     <% else %>
       <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %><br/>
     <% end %>
-      <input type="checkbox" id="check_clear_original" name="check_clear_original" value="1" onclick="modifiedBasic++;"><label for="check_clear_original"><%= t('item.clear_ref_original') %></label><br/>
+      <input type="checkbox" id="check_clear_original" name="check_clear_original" value="1" onclick="modifiedBasic++;"><label for="check_clear_original"><%= t('item.clear_ref_original') %></label>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.clear_ref_original_info') %>');">
     </td>
   </tr>
 <% end %>

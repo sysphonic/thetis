@@ -72,6 +72,10 @@ folders_cache = {}
           <td align="right">
             <input type="hidden" name="thumbnails" value="false" />
             <input type="checkbox" id="thumbnails" name="thumbnails" value="true" <%= (params[:thumbnails]!='false')?'checked':'' %> onclick="submit(); prog('TOP-RIGHT');"><label for="thumbnails"><%=h t('item.show_thumbnails') %></label>
+
+            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteMulti();">
+            <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
           </td>
         </tr>
       </table>
@@ -86,6 +90,7 @@ folders_cache = {}
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
+      prms.delete('check_item')
       pagination = will_paginate(@item_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>
@@ -138,6 +143,7 @@ users_cache = {}
 
             <% if item.xtype == Item::XTYPE_PROJECT %>
               &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+              <div id="div_project_<%= item.id %>" style="display:none;"><%= item.title %></div>
             <% elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
               &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
             <% end %>
@@ -175,11 +181,7 @@ users_cache = {}
   <% end %>
   <% if !login_user.nil? and item.deletable?(login_user.id) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <%
-      del_type = 'null'
-      del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
-      %>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>); return false;" />
+      <%= check_box :check_item, item.id, :class => 'check_item' %>
     </td>
   <% end %>
   </tr>
@@ -207,20 +209,87 @@ function doShowItem(item_id)
   location.href = "<%= url_for :controller => 'items', :action => 'show' %>?id=" + item_id + "&" + params;
 }
 
-function doDelete(item_id, title, del_type)
+function doDeleteMulti()
 {
-  if (del_type == "<%= Item::XTYPE_PROJECT %>") {
-    confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+title+"<%=h t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDelete("+item_id+")");
-  } else {
-    confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDelete("+item_id+")");
+  var elems = document.getElementsByClassName("check_item", document.form_list);
+  var count = 0;
+  var teams = new Array();
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      var item_id = elems[i].id.split("_")[2];
+      var div_project = $("div_project_" + item_id);
+      if (div_project) {
+        teams.push(div_project.innerHTML);
+      }
+      count++;
+    }
   }
+  if (count <= 0) {
+    return;
+  }
+  var msg = count + "<%= t('item.confirm_to_delete') %>";
+  if (teams.length > 0) {
+    msg += "<br/>";
+    msg += "<%= t('item.confirm_to_delete_teams') %><br/>";
+    msg += "<%= t('folder.delete_team_folder_info2') %>";
+    msg += "<ul>";
+    for (var i=0; i < teams.length; i++) {
+      msg += "<li>" + teams[i] + "</li>";
+    }
+    msg += "</ul>";
+  }
+  confm(msg, "_doDeleteMulti()");
 }
 
-function _doDelete(item_id)
+function _doDeleteMulti()
 {
-  prog("TOP-RIGHT");
-  document.form_list.action = "<%= url_for :controller => 'items', :action => 'destroy' %>?id="+item_id;
+  document.form_list.action = "<%= url_for :controller => 'items', :action => 'destroy_multi' %>";
   document.form_list.submit();
+
+  prog("TOP-RIGHT");
+}
+
+function doMoveMulti()
+{
+  var elems = document.getElementsByClassName("check_item", document.form_list);
+  var count = 0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  showFolderTreeToMove(<%= @folder_id %>);
+}
+
+function getCheckedItemsParam()
+{
+  var params = new Array;
+
+  var elems = document.getElementsByClassName("check_item", document.form_list);
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      var user_id = elems[i].id.split("_")[2];
+      params[params.length] = "check_item["+user_id+"]=1";
+    }
+  }
+  return params;
+}
+
+function showFolderTreeToMove(folder_id)
+{
+  var additionalParams = getCheckedItemsParam();
+
+  additionalParams.push("thumbnails=<%= params[:thumbnails] %>");
+  additionalParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(additionalParams);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'items', :action => 'move_multi' %>", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>", folder_id);
 }
 
 function showURL()
@@ -321,6 +390,21 @@ function onLoadSub()
   showFolderTreeToSelect("<%=h params[:folderTree] %>");
 }
 <% end %>
+
+function selectAll()
+{
+  var elems = document.getElementsByClassName("check_item", document.form_list);
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
 
 //-->
 </script>

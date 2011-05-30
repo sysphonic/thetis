@@ -179,7 +179,7 @@ class ItemsController < ApplicationController
 
     @item = Item.find(params[:id])
 
-    login_user =  session[:login_user]
+    login_user = session[:login_user]
 
     unless @item.check_user_auth(login_user, 'r', true)
 
@@ -254,13 +254,21 @@ class ItemsController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
+    login_user = session[:login_user]
+
+    @item = Item.find(params[:id])
+
     unless params[:thetisBoxSelKeeper].nil?
+
       folder_id = params[:thetisBoxSelKeeper].split(':').last
 
-      @item = Item.find(params[:id])
-      @item.update_attribute(:folder_id, folder_id)
+      if Folder.check_user_auth(folder_id, login_user, 'w', true)
 
-      flash[:notice] = t('msg.move_success')
+        @item.update_attribute(:folder_id, folder_id)
+        flash[:notice] = t('msg.move_success')
+      else
+        flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
+      end
     end
 
     render(:partial => 'ajax_move', :layout => false)
@@ -270,6 +278,55 @@ class ItemsController < ApplicationController
 
     flash[:notice] = 'ERROR:' + err.to_s[0, 64]
     render(:partial => 'ajax_move', :layout => false)
+  end
+
+  #=== move_multi
+  #
+  #Moves multiple Items.
+  #
+  def move_multi
+    Log.add_info(request, params.inspect)
+
+    if params[:check_item].nil? or params[:thetisBoxSelKeeper].nil?
+      list
+      render(:action => 'list')
+      return
+    end
+
+    login_user = session[:login_user]
+    is_admin = login_user.admin?(User::AUTH_ITEM)
+
+    folder_id = params[:thetisBoxSelKeeper].split(':').last
+
+    unless Folder.check_user_auth(folder_id, login_user, 'w', true)
+      flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
+
+      list
+      render(:action => 'list')
+      return
+    end
+
+    count = 0
+    params[:check_item].each do |item_id, value|
+      if value == '1'
+
+        begin
+          item = Item.find(item_id)
+          next if !is_admin and item.user_id != login_user.id
+
+          item.update_attribute(:folder_id, folder_id)
+
+        rescue StandardError => err
+          Log.add_error(request, err)
+        end
+
+        count += 1
+      end
+    end
+    flash[:notice] = t('item.moved', :count => count)
+
+    list
+    render(:action => 'list')
   end
 
   #=== destroy
@@ -288,13 +345,53 @@ class ItemsController < ApplicationController
     if params[:from_action].nil?
       render(:text => params[:id])
     else
-      params.delete :controller
-      params.delete :action
-      params.delete :id
+      params.delete(:controller)
+      params.delete(:action)
+      params.delete(:id)
       flash[:notice] = t('msg.delete_success')
       params[:action] = params[:from_action]
       redirect_to(params)
     end
+  end
+
+  #=== destroy_multi
+  #
+  #Deletes multiple Items.
+  #
+  def destroy_multi
+    Log.add_info(request, params.inspect)
+
+    if params[:check_item].nil?
+      list
+      render(:action => 'list')
+      return
+    end
+
+    login_user = session[:login_user]
+    is_admin = login_user.admin?(User::AUTH_ITEM)
+
+    count = 0
+    params[:check_item].each do |item_id, value|
+      if value == '1'
+
+        begin
+          item = Item.find(item_id)
+          next if !is_admin and item.user_id != login_user.id
+
+          item.destroy
+
+        rescue StandardError => err
+          Log.add_error(request, err)
+        end
+
+        count += 1
+      end
+    end
+    flash[:notice] = t('item.deleted', :count => count)
+
+    params[:folder_id] = session[:folder_id]
+    list
+    render(:action => 'list')
   end
 
   #=== duplicate
