@@ -17,6 +17,11 @@ class Address < ActiveRecord::Base
 
   validates_presence_of :name
 
+  public::BOOK_PRIVATE = 'book_private'
+  public::BOOK_COMMON = 'book_common'
+  public::BOOK_BOTH = 'book_both'
+
+
   #=== self.destroy
   #
   #Overrides ActionRecord::Base.destroy().
@@ -256,5 +261,132 @@ class Address < ActiveRecord::Base
     end
 
     return err_msgs
+  end
+
+  #=== get_emails
+  #
+  #Gets array of E-mail Addresses.
+  #
+  #return:: Array of E-mail Addresses.
+  #
+  def get_emails
+    emails = [self.email1, self.email2, self.email3]
+    emails.compact!
+    emails.delete('')
+    return emails
+  end
+
+  #=== private?
+  #
+  #Gets if this Address is private.
+  #
+  #return:: true if this Address is private, false otherwise.
+  #
+  def private?
+    return (self.owner_id != 0)
+  end
+
+  #=== for_all?
+  #
+  #Gets if this Address is for all Users.
+  #
+  #return:: true if this Address is for all Users, false otherwise.
+  #
+  def for_all?
+    return (self.owner_id == 0 and self.get_groups_a.empty? and self.get_teams_a.empty?)
+  end
+
+  #=== get_groups_a
+  #
+  #Gets Groups array which this Address belongs to.
+  #
+  #return:: Groups array without empty element. If no Groups, returns empty array.
+  #
+  def get_groups_a
+
+    return [] if self.groups.nil? or self.groups.empty?
+
+    array = self.groups.split('|')
+    array.compact!
+    array.delete('')
+
+    return array
+  end
+
+  #=== get_teams_a
+  #
+  #Gets Teams array which this Address belongs to.
+  #
+  #return:: Teams array without empty element. If no Teams, returns empty array.
+  #
+  def get_teams_a
+
+    return [] if self.teams.nil? or self.teams.empty?
+
+    array = self.teams.split('|')
+    array.compact!
+    array.delete('')
+
+    return array
+  end
+
+  #=== self.get_for
+  #
+  #Gets Addresses available for specified User.
+  #
+  #_user_:: Target User.
+  #_book_:: Target book.
+  #return:: Array of Addresses.
+  #
+  def self.get_for(user, book=Address::BOOK_BOTH)
+
+    return [] if (user.nil? and book == Address::BOOK_PRIVATE)
+
+    con = AddressbookHelper.get_scope_condition_for(user, book)
+
+    return Address.find(:all, :conditions => con) || []
+  end
+
+  #=== visible?
+  #
+  #Gets if the specified Address is visible for the specified User.
+  #
+  #_user_:: Target User.
+  #return:: true if the specified Address is visible, false otherwise.
+  #
+  def visible?(user)
+
+    return true if self.for_all?
+
+    return false if user.nil?
+
+    return true if (user.admin?(User::AUTH_ADDRESSBOOK) or self.owner_id == user.id)
+
+    groups = self.get_groups_a
+    teams = self.get_teams_a
+
+    user.get_groups_a(true).each do |group_id|
+      return true if groups.include?(group_id)
+    end
+
+    user.get_teams_a.each do |team_id|
+      return true if teams.include?(team_id)
+    end
+
+    return false
+  end
+
+  #=== editable?
+  #
+  #Gets if the specified Address is editable by the specified User.
+  #
+  #_user_:: Target User.
+  #return:: true if the specified Address is editable, false otherwise.
+  #
+  def editable?(user)
+
+    return false if user.nil?
+
+    return (user.admin?(User::AUTH_ADDRESSBOOK) or self.owner_id == user.id)
   end
 end

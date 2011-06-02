@@ -26,7 +26,7 @@
 
 showAddressTab = function(name)
 {
-  var nameArray = new Array("direct", "addressbook");
+  var nameArray = new Array("direct", "addrbook_private", "addrbook_common");
 
   var tab = null;
   for (i=0; i<nameArray.length; i++) {
@@ -88,14 +88,21 @@ addAddress = function(valPrefix, textPrefix)
     }
     $("addr_direct").value = "";
 
-  } else if ($("div_addressbook").style.display != "none") {
-    moveListWithPrefix($("address_candidates"), $("addresses_selected"), valPrefix, textPrefix)
+  } else if ($("div_addrbook_private").style.display != "none") {
+    moveListWithPrefix($("addr_private_candidates"), $("addresses_selected"), valPrefix, textPrefix)
+
+  } else if ($("div_addrbook_common").style.display != "none") {
+    moveListWithPrefix($("addr_common_candidates"), $("addresses_selected"), valPrefix, textPrefix)
   }
 }
 
 removeAddress = function()
 {
-  moveListTrimPrefix($("addresses_selected"), $("address_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+  if ($("div_addrbook_common").style.display != "none") {
+    moveListTrimPrefix($("addresses_selected"), $("addr_common_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+  } else {
+    moveListTrimPrefix($("addresses_selected"), $("addr_private_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+  }
 }
 
 var thetisBoxSaveProgress = new ThetisBox;

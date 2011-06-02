@@ -67,7 +67,7 @@ class LogsController < ApplicationController
 
       key_array = keyword.split(nil)
       key_array.each do |key|
-        key = "%" + key + "%"
+        key = '%' + key + '%'
         ary << "((User.id = Log.user_id) and (User.name like '#{key}' or User.fullname like '#{key}'))"
         ary << "(Log.updated_at like '#{key}' or remote_ip like '#{key}' or log_type like '#{key}' or access_path like '#{key}' or detail like '#{key}' )"
         con << '(' + ary.join(' or ') + ')'

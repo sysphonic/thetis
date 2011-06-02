@@ -124,7 +124,7 @@ end
               </tr>
             <% unless @schedule.get_excepts_a.empty? %>
               <tr>
-                <td nowrap><%= h t('schedule.cap_except') %></td>
+                <td nowrap><%= t('schedule.cap_except') %></td>
                 <td>
                   <%=h @schedule.get_excepts_a.join(', ') %>
                 </td>
@@ -191,6 +191,7 @@ end
         <td class="item_cap_td" nowrap><%=h t('msg.members') %></td>
         <td class="item_value_td">
         <%
+        @users_cache ||= {}
         @groups_cache ||= {}
         @teams_cache ||= {}
 
@@ -209,6 +210,7 @@ end
 
             begin
               user = User.find(user_id)
+              @users_cache[user_id.to_i] = user.get_name
 
               user.get_groups_a.each do |group_id|
                 group_name = Group.get_path(group_id, @groups_cache)
@@ -224,7 +226,7 @@ end
               Log.add_error(request, err)
             end
 
-            disp = User.get_name(user_id)
+            disp = User.get_name(user_id, @users_cache)
             belongs_to = ''
             unless org_names.empty?
               belongs_to = disp + ' @ <br/>&nbsp;&nbsp;' + org_names.join('<br/>&nbsp;&nbsp;')
@@ -232,7 +234,7 @@ end
 
             sep = (users.last == user_id)?'':', '
           %>
-          <a class="a_underline" href="#" nowrap onclick="msg('<%=ApplicationHelper.h_s_quote belongs_to %>'); return false;"><%=h disp %></a><%= sep %>
+          <a class="a_underline" href="#" nowrap onclick="msg('<%=ApplicationHelper.h_s_quote(belongs_to) %>'); return false;"><%=h disp %></a><%= sep %>
           <% end %>
           </div>
         <% end %>
@@ -309,10 +311,10 @@ end
         <td class="item_cap_td" nowrap><%=h t('msg.created_by') %></td>
         <td class="item_value_td">
         <%
-        users_cache = {}
+        @users_cache ||= {}
         unless @schedule.created_by.nil?
         %>
-          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.created_by, users_cache) %></b></span>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.created_by, @users_cache) %></b></span>
           &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
         <% end %>
         </td>
@@ -321,7 +323,7 @@ end
         <td class="item_cap_td" nowrap><%=h t('msg.updated_by') %></td>
         <td class="item_value_td">
         <% unless @schedule.updated_by.nil? %>
-          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.updated_by, users_cache) %></b></span>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.updated_by, @users_cache) %></b></span>
           &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
         <% end %>
         </td>

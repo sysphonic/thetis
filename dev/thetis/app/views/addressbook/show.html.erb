@@ -10,12 +10,12 @@
             <table align="center" width="90%" cellspacing="0" cellpadding="0">
               <tr>
                 <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= h t('cap.basic_info') %></b>
+                  <b><%= t('cap.basic_info') %></b>
                 </td>
               </tr>
             </table>
 
-            <div id="div_basic" style="width:100%;" align="center">
+            <div style="width:100%;" align="center">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding:20px 0px;">
@@ -88,8 +88,8 @@
                   </td>
                 </tr>
               </table>
-              <br/>
             </div>
+            <div style="height:10px;"></div>
 
           <%
           if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
@@ -101,19 +101,21 @@
             <table align="center" width="90%" cellspacing="0" cellpadding="0">
               <tr>
                 <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= h Address.human_attribute_name('address') %></b>
+                  <b><%= Address.human_attribute_name('address') %></b>
                 </td>
               </tr>
             </table>
 
-            <div id="div_address" style="width:100%;" align="center">
+            <div style="width:100%;" align="center">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding:20px 0px;">
                     <table align="center" width="85%" cellpadding="0" cellspacing="2">
                     <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_postalcode"><%=h Address.human_attribute_name('postalcode') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.postalcode %>
                         </td>
@@ -121,7 +123,9 @@
                     <% end %>
                     <% unless @address.address.nil? or @address.address.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_address"><%=h Address.human_attribute_name('address') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_address"><%= Address.human_attribute_name('address') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.address %>
                         </td>
@@ -129,7 +133,9 @@
                     <% end %>
                     <% unless @address.url.nil? or @address.url.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_url"><%=h Address.human_attribute_name('url') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_url"><%= Address.human_attribute_name('url') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.url %>
                         </td>
@@ -137,7 +143,9 @@
                     <% end %>
                     <% unless @address.organization.nil? or @address.organization.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_organization"><%=h Address.human_attribute_name('organization') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.organization %>
                         </td>
@@ -145,7 +153,9 @@
                     <% end %>
                     <% unless @address.title.nil? or @address.title.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_title"><%=h Address.human_attribute_name('title') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_title"><%= Address.human_attribute_name('title') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.title %>
                         </td>
@@ -164,19 +174,21 @@
             <table align="center" width="90%" cellspacing="0" cellpadding="0">
               <tr>
                 <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= h Address.human_attribute_name('memo') %></b>
+                  <b><%= Address.human_attribute_name('memo') %></b>
                 </td>
               </tr>
             </table>
 
-            <div id="div_memo" style="width:100%;" align="center">
+            <div style="width:100%;" align="center">
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center" style="padding:20px 0px;">
                     <table align="center" width="85%" cellpadding="0" cellspacing="2">
                     <% unless @address.memo.nil? or @address.memo.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_memo"><%=h Address.human_attribute_name('memo') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+                          <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
+                        </td>
                         <td class="item_value_td">
                           <%=h @address.memo %>
                         </td>
@@ -188,6 +200,38 @@
               </table>
             </div>
           <% end %>
+
+            <table align="center" width="90%" cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+                  <b><%= t('schedule.scope') %></b>
+                </td>
+              </tr>
+            </table>
+
+            <div style="width:100%;" align="center">
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding:20px 0px;">
+                    <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                      <tr>
+                        <td align="left">
+                          <%
+                          empty_msg = ''
+                          if @address.private?
+                            empty_msg = t('scope.private')
+                          elsif @address.for_all?
+                            empty_msg = t('msg.all_users')
+                          end
+                          %>
+                          <%= render(:partial => 'common/show_scope', :locals => {:obj => @address, :empty_msg => empty_msg}) %>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
+            </div>
 
           </td>
         </tr>

@@ -19,7 +19,7 @@ class AddressbookController < ApplicationController
   include LoginChecker
 
   before_filter :check_login
-  before_filter :check_owner, :only => [:show, :edit, :update]
+  before_filter :check_owner, :only => [:edit, :update]
 
   require 'digest/md5'
   require 'nkf'
@@ -33,7 +33,8 @@ class AddressbookController < ApplicationController
   #
   def new
     Log.add_info(request, params.inspect)
-    render(:layout => (!request.xhr?))
+
+    render(:action => 'edit', :layout => (!request.xhr?))
   end
 
   #=== create
@@ -43,21 +44,27 @@ class AddressbookController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    @address = Address.new(params[:address])
+    login_user = session[:login_user]
 
-    @address.owner_id = session[:login_user].id
-    @address.created_at = Time.now
+    unless AddressbookHelper.arrange_per_scope(params, login_user)
+      flash[:notice] = t('msg.need_to_be_owner')
+      redirect_to(:controller => 'desktop', :action => 'show')
+      return
+    end
+
+    @address = Address.new(params[:address])
 
     begin
       @address.save!
     rescue
-      render(:controller => 'addressbook', :action => 'new', :layout => (!request.xhr?))
+      render(:controller => 'addressbook', :action => 'edit', :layout => (!request.xhr?))
       return
     end
 
     flash[:notice] = t('msg.register_success')
 
-    redirect_to(:controller => 'addressbook', :action => 'list')
+    list
+    render(:action => 'list')
   end
 
   #=== edit
@@ -90,7 +97,14 @@ class AddressbookController < ApplicationController
 
     @address = Address.find(params[:id])
     if @address.nil?
-      flash[:notice] = t('address.already_deleted')
+      render(:text => 'ERROR:' + t('address.already_deleted'))
+      return
+    else
+      login_user = session[:login_user]
+      unless @address.visible?(login_user)
+        render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
+        return
+      end
     end
     render(:layout => (!request.xhr?))
   end
@@ -104,14 +118,21 @@ class AddressbookController < ApplicationController
 
     @address = Address.find(params[:id])
 
+    login_user = session[:login_user]
+
+    unless AddressbookHelper.arrange_per_scope(params, login_user)
+      flash[:notice] = t('msg.need_to_be_owner')
+      redirect_to(:controller => 'desktop', :action => 'show')
+      return
+    end
+
     if @address.update_attributes(params[:address])
       flash[:notice] = t('msg.update_success')
+      list
+      render(:action => 'list')
     else
       render(:controller => 'addressbook', :action => 'edit', :layout => (!request.xhr?))
     end
-
-    list
-    render(:action => 'list')
   end
 
   #=== list
@@ -119,28 +140,23 @@ class AddressbookController < ApplicationController
   #Shows Addresses list.
   #
   def list
-    if params[:action] == 'list'
+    if (params[:action] == 'list')
       Log.add_info(request, params.inspect)
     end
 
     login_user = session[:login_user]
 
-    con = []
-
-    if params[:user_id].nil? or params[:user_id].empty?
-      con << "(Address.owner_id = #{login_user.id})"
-    else
-      unless login_user.admin?(User::AUTH_ADDRESSBOOK) or login_user.id.to_s == params[:user_id].to_s
-        render(:text => t('msg.need_to_be_admin'))
-        return
-      end
-      con << "(Address.owner_id = #{params[:user_id]})"
+    if params[:filter_book].nil? or params[:filter_book].empty?
+      params[:filter_book] = Address::BOOK_BOTH
     end
 
-    if keyword = params[:keyword]
-      key_array = keyword.split(nil)
+    con = []
+    con << AddressbookHelper.get_scope_condition_for(login_user, params[:filter_book])
+
+    if params[:keyword]
+      key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = "%" + key + "%"
+        key = '%' + key + '%'
         con << "(name like '#{key}' or email1 like '#{key}' or email2 like '#{key}' or email3 like '#{key}' or name_ruby like '#{key}' or nickname like '#{key}' or screenname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' or memo like '#{key}' )"
       end
     end
@@ -154,9 +170,9 @@ class AddressbookController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
-      @sort_col = "xorder"
-      @sort_type = "ASC"
+    if (@sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?)
+      @sort_col = 'xorder'
+      @sort_type = 'ASC'
     end
 
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
@@ -193,7 +209,6 @@ class AddressbookController < ApplicationController
     Log.add_info(request, params.inspect)
 
     login_user = session[:login_user]
-    is_admin = login_user.admin?(User::AUTH_ADDRESSBOOK)
 
     if params[:check_address].nil?
       list
@@ -207,7 +222,7 @@ class AddressbookController < ApplicationController
 
         begin
           address = Address.find(address_id)
-          address.destroy if is_admin or address.owner_id == login_user.id
+          address.destroy if address.editable?(login_user)
         rescue StandardError => err
           Log.add_error(request, err)
         end
@@ -216,7 +231,9 @@ class AddressbookController < ApplicationController
       end
     end
     flash[:notice] = t('address.deleted', :count => count)
-    redirect_to(:action => 'list')
+
+    list
+    render(:action => 'list')
   end
 
   #=== export_csv
@@ -265,7 +282,7 @@ class AddressbookController < ApplicationController
 
     address_names = []
 #   address_emails = []
-    if mode == 'add'
+    if (mode == 'add')
       all_addresses.each do |address|
         address_names << address.name
 #       address_emails << address.email
@@ -300,7 +317,7 @@ class AddressbookController < ApplicationController
 
     CSV.parse(csv, opt) do |row|
       unless row.first.nil?
-        next if row.first.lstrip.index('#') == 0
+        next if (row.first.lstrip.index('#') == 0)
       end
 
       count += 1
@@ -308,13 +325,13 @@ class AddressbookController < ApplicationController
 
       address = Address.parse_csv_row(row)
 
-      check = address.check_import mode, address_names  #, address_emails
+      check = address.check_import(mode, address_names)  #, address_emails
 
       @imp_errs[count, true] = check unless check.empty?
 
       addresses << address
 
-      if mode == 'update'
+      if (mode == 'update')
         update_address = all_addresses.find do |u|
           u.id == address.id
         end
@@ -368,10 +385,10 @@ class AddressbookController < ApplicationController
     #    3: morita   <- Delete
     #     : morita   <- Create
     # But such a case is most likely to be considered as a 
-    # address's miss-operation. We can avoid this case with
+    # user's miss-operation. We can avoid this case with
     # 'opposite' process.
     del_cnt = 0
-    if @imp_errs.empty? and mode == 'update'
+    if (@imp_errs.empty? and mode == 'update')
       all_addresses.each do |address|
         address.destroy
         del_cnt += 1
@@ -380,7 +397,7 @@ class AddressbookController < ApplicationController
 
     if @imp_errs.empty?
       flash[:notice] = t('address.imported', :count => addresses.length)
-      if del_cnt > 0
+      if (del_cnt > 0)
         flash[:notice] << '<br/>' + t('address.deleted', :count => del_cnt)
       end
     end
@@ -399,7 +416,7 @@ class AddressbookController < ApplicationController
 
     login_user = session[:login_user]
 
-    return if params[:id].nil? or params[:id].empty? or login_user.nil?
+    return if (params[:id].nil? or params[:id].empty? or login_user.nil?)
 
     address = Address.find(params[:id])
 

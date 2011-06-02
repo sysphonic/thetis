@@ -52,7 +52,7 @@ class ZeptairXlogsController < ApplicationController
 
       key_array = keyword.split(nil)
       key_array.each do |key|
-        key = "%" + key + "%"
+        key = '%' + key + '%'
         ary << "((User.id = ZeptairXlog.user_id) and (User.name like '#{key}' or User.fullname like '#{key}'))"
         ary << "(ZeptairXlog.req_at like '#{key}' or cs_uri like '#{key}' or c_agent like '#{key}' or cs_protocol like '#{key}' or s_port like '#{key}' or zeptair_id like '#{key}' )"
         con << '(' + ary.join(' or ') + ')'

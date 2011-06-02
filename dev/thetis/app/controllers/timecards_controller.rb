@@ -453,10 +453,10 @@ class TimecardsController < ApplicationController
     end
 
     con = ['User.id > 0']
-    if keyword = params[:keyword]
-      key_array = keyword.split(nil)
+    if params[:keyword]
+      key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = "%" + key + "%"
+        key = '%' + key + '%'
         con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
       end
     end

@@ -37,8 +37,8 @@ class ZeptairDistController < ApplicationController
 
     con = []
 
-    if keyword = params[:keyword]
-      key_array = keyword.split(nil)
+    if params[:keyword]
+      key_array = params[:keyword].split(nil)
       key_array.each do |key| 
         key = "\'%" + key + "%\'"
         con << "(name like #{key} or email like #{key} or fullname like #{key} or address like #{key} or organization like #{key})"

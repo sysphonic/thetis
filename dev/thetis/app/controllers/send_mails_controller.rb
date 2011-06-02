@@ -112,7 +112,7 @@ class SendMailsController < ApplicationController
       end
 
       sent_folder = MailFolder.get_for(login_user, MailFolder::XTYPE_SENT)
-  
+
       mail_account = MailAccount.find(email.mail_account_id)
       if mail_account.user_id != login_user.id
         raise t('msg.need_to_be_owner')

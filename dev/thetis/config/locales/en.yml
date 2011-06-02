@@ -1066,6 +1066,9 @@ en:
     mail_body: "Message:"
     restore_from_log: "Restore from Log"
     original: "Original"
+  scope:
+    private: "Private"
+    common: "Common"
   zeptair:
     id: "Zeptair-ID"
     vpn: "Zeptair VPN"

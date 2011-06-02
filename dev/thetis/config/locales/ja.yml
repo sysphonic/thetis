@@ -1067,6 +1067,9 @@ ja:
     mail_body: "本文："
     restore_from_log: "ログから復元"
     original: "原本"
+  scope:
+    private: "プライベート"
+    common: "共有"
   zeptair:
     id: "Zeptair-ID"
     vpn: "Zeptair VPN"

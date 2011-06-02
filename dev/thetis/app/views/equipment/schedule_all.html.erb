@@ -44,18 +44,24 @@ calDisp.setStyle( "frame_color", "#3333CC" );
     <td align="right" nowrap width="30%">
   <%
   display = [[h(t('equipment.all')), 'all']]
-# unless login_user.nil?
-#   groups_a = login_user.get_groups_a
-#   groups_a.each do |group_id|
-#     display << [h(Group.get_name(group_id)), 'group_'+group_id]
-#   end
-#   teams_a = login_user.get_teams_a
-#   teams_a.each do |team_id|
-#     display << [h(Team.get_name(team_id)), 'team_'+team_id]
-#   end
-# end
+  unless login_user.nil?
+    group_obj_cache = {}
+    groups_a = login_user.get_groups_a(true, group_obj_cache)
+    groups_a.each do |group_id|
+      if group_obj_cache[group_id].nil?
+        group_name = Group.get_name(group_id)
+      else
+        group_name = group_obj_cache[group_id].name
+      end
+      display << [h(group_name), 'group_'+group_id]
+    end
+    teams_a = login_user.get_teams_a
+    teams_a.each do |team_id|
+      display << [h(Team.get_name(team_id)), 'team_'+team_id]
+    end
+  end
   %>
-  <%= h t('cap.display') %> <%= select_tag 'display',
+  <%= t('cap.display') %> <%= select_tag 'display',
                            options_for_select(display, params[:display]),
                            :onchange => "prog('TOP-RIGHT'); submit();"
             %>
@@ -109,13 +115,16 @@ next_week = @date + 7
     <table width="100%" cellspacing="0" cellpadding="0">
       <tr>
         <td align="left">
-          <%= Equipment.get_name @equipment_id %>
+          <% disp = Equipment.get_name(@equipment_id) %>
+          <a class="a_underline" href="#" onclick="showEquipment(<%= @equipment_id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;">
+            <%= disp %>
+          </a>
         </td>
       </tr>
       <tr height="5"><td></td></tr>
       <tr>
         <td>
-          <%= render :partial => 'weektable' %>
+          <%= render(:partial => 'weektable') %>
         </td>
       </tr>
       <tr height="10"><td></td></tr>
@@ -135,11 +144,11 @@ function showDetail(schedule_id, title)
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.title = "<%= Schedule.human_name %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
   new Ajax.Request(
-          "<%= url_for :controller => 'schedules', :action => 'show' %>?id=" + schedule_id,
+          "<%= url_for(:controller => 'schedules', :action => 'show') %>?id=" + schedule_id,
           {
             method:"get",
             asynchronous:true,
@@ -163,19 +172,32 @@ function showDetail(schedule_id, title)
 function editDetail(date, id)
 {
   prog("TOP-RIGHT");
-  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&edit_id="+id;
+  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&edit_id="+id;
 }
 
 function doDelete(date, id, title)
 {
-  confm("<%=h t('paren.square.left') %>"+title+"<%=h t('equipment.confirm_to_delete_related') %>", "_doDelete('"+date+"', '"+id+"')");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('equipment.confirm_to_delete_related') %>", "_doDelete('"+date+"', '"+id+"')");
 }
 
 function _doDelete(date, id)
 {
   prog("TOP-RIGHT");
-  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&doDelete="+id;
+  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&doDelete="+id;
 }
 
+function showEquipment(equipment_id, name)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "<%= t('menu.equipment') %>";
+  thetisBox.show(
+            "CENTER",
+            (mainWidth*7/10)+","+(mainHeight*7/10),
+            "IFRAME",
+            "",
+            name,
+            "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
+          );
+}
 //-->
 </script>

@@ -53,10 +53,13 @@
                   <table cellspacing="2" cellpadding="0" width="100%">
                     <tr>
                       <td id="tab_direct" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('direct'); this.bgColor='cornflowerblue'" bgColor="cornflowerblue" onMouseOver="if($('div_direct').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_direct').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
-                        <%= h t('btn.direct_input') %>
+                        <%= t('btn.direct_input') %>
                       </td>
-                      <td id="tab_addressbook" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('addressbook'); this.bgColor='cornflowerblue';" bgColor="cornflowerblue" onMouseOver="if($('div_addressbook').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_addressbook').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
-                        <%= h t('btn.address_book') %>
+                      <td id="tab_addrbook_private" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('addrbook_private'); this.bgColor='cornflowerblue';" bgColor="cornflowerblue" onMouseOver="if($('div_addrbook_private').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_addrbook_private').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+                        <%= t('btn.address_book') %><%= t('paren.round.left') %><%= t('scope.private') %><%= t('paren.round.right') %>
+                      </td>
+                      <td id="tab_addrbook_common" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('addrbook_common'); this.bgColor='cornflowerblue';" bgColor="cornflowerblue" onMouseOver="if($('div_addrbook_common').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_addrbook_common').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+                        <%= t('btn.address_book') %><%= t('paren.round.left') %><%= t('scope.common') %><%= t('paren.round.right') %>
                       </td>
                       <td>&nbsp;</td>
                     </tr>
@@ -79,23 +82,28 @@
                     </table>
                   </div>
 
-                  <div id="div_addressbook" style="display:none; width:100%;" align="center">
+                  <%
+                  [
+                    ['div_addrbook_private', 'addr_private_candidates', Address::BOOK_PRIVATE],
+                    ['div_addrbook_common', 'addr_common_candidates', Address::BOOK_COMMON]
+                  ].each do |addrbook_param|
+                  %>
+
+                  <div id="<%= addrbook_param[0] %>" style="display:none; width:100%;" align="center">
                     <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
                       <tr>
                         <td align="center" style="padding:20px 0px;">
 
-                          <select id="address_candidates" class="select_candidates" size="5" multiple style="width:95%">
+                          <select id="<%= addrbook_param[1] %>" class="select_candidates" size="5" multiple style="width:95%">
                           <%
                           addrs_available = PseudoHash.new
 
-                          all_addresses = Address.find_all("owner_id=#{login_user.id}") || []
+                          addresses = Address.get_for(login_user, addrbook_param[2])
 
-                          all_addresses.each do |address|
+                          addresses.each do |address|
                             address_id = address.id.to_s
 
-                            mail_addrs = [address.email1, address.email2, address.email3]
-                            mail_addrs.compact!
-                            mail_addrs.delete ''
+                            mail_addrs = address.get_emails
                             next if mail_addrs.empty?
 
                             addrs_available[address_id, true] = []
@@ -126,6 +134,8 @@
                       </tr>
                     </table>
                   </div>
+
+                  <% end %>
 
                 </td>
               </tr>
@@ -194,7 +204,7 @@
   <tr height="30"><td></td></tr>
   <tr>
     <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-      <b><%= h t('cap.mail_content') %></b>
+      <b><%= t('cap.mail_content') %></b>
     </td>
   </tr>
   <tr height="15"><td></td></tr>
@@ -203,15 +213,15 @@
       <table align="center" width="90%" cellspacing="0" cellpadding="0">
         <tr>
           <td align="left">
-            <%= h t('cap.subject') %>&nbsp;
-            <%= text_field 'email', 'subject', :size => '43', :style => 'width:80%;' %>
+            <%= t('cap.subject') %>&nbsp;
+            <%= text_field('email', 'subject', :size => '43', :style => 'width:80%;') %>
           </td>
         </tr>
         <tr height="20"><td></td></tr>
         <tr>
           <td align="left" valign="top" id="td_view">
             <%= t('cap.mail_body') %><br/>
-            <%= text_area 'email', 'message', :rows => '15', :style => 'width:100%;' %>
+            <%= text_area('email', 'message', :rows => '15', :style => 'width:100%;') %>
           </td>
         </tr>
       </table>

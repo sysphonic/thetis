@@ -1,15 +1,16 @@
-# This file is auto-generated from the current state of the database. Instead of editing this file, 
-# please use the migrations feature of Active Record to incrementally modify your database, and
-# then regenerate this schema definition.
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
 #
-# Note that this schema.rb definition is the authoritative source for your database schema. If you need
-# to create the application database on another system, you should be using db:schema:load, not running
-# all the migrations from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100101043800) do
+ActiveRecord::Schema.define(:version => 20110524100000) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "owner_id"
@@ -39,24 +40,47 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
   end
 
   create_table "attachments", :force => true do |t|
-    t.string  "title"
-    t.text    "memo"
-    t.string  "name"
-    t.integer "size"
-    t.string  "content_type"
-    t.binary  "content",      :limit => 2147483647
-    t.integer "item_id"
-    t.integer "xorder"
-    t.string  "location"
-    t.integer "comment_id"
+    t.string   "title"
+    t.text     "memo"
+    t.string   "name"
+    t.integer  "size"
+    t.string   "content_type"
+    t.binary   "content",      :limit => 2147483647
+    t.integer  "item_id"
+    t.integer  "xorder"
+    t.string   "location"
+    t.integer  "comment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "digest_md5"
   end
 
   create_table "comments", :force => true do |t|
-    t.integer  "user_id",     :null => false
-    t.integer  "item_id",     :null => false
+    t.integer  "user_id",    :null => false
+    t.integer  "item_id",    :null => false
     t.text     "message"
     t.datetime "updated_at"
     t.string   "xtype"
+  end
+
+  create_table "emails", :force => true do |t|
+    t.integer  "user_id",         :null => false
+    t.integer  "mail_account_id"
+    t.integer  "mail_folder_id"
+    t.string   "from_address"
+    t.string   "subject"
+    t.text     "to_addresses"
+    t.text     "cc_addresses"
+    t.text     "bcc_addresses"
+    t.string   "uid"
+    t.integer  "priority"
+    t.datetime "sent_at"
+    t.string   "status"
+    t.string   "xtype"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.text     "message"
+    t.string   "reply_to"
   end
 
   create_table "equipment", :force => true do |t|
@@ -70,7 +94,7 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
   create_table "folders", :force => true do |t|
     t.string   "name"
     t.integer  "parent_id",    :default => 0, :null => false
-    t.integer  "owner_id",     :default => 0, :null => false
+    t.integer  "owner_id"
     t.integer  "xorder"
     t.text     "read_users"
     t.text     "write_users"
@@ -91,14 +115,16 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
   end
 
   create_table "images", :force => true do |t|
-    t.string  "title"
-    t.text    "memo"
-    t.string  "name"
-    t.integer "size"
-    t.string  "content_type"
-    t.binary  "content",      :limit => 2147483647
-    t.integer "item_id"
-    t.integer "xorder"
+    t.string   "title"
+    t.text     "memo"
+    t.string   "name"
+    t.integer  "size"
+    t.string   "content_type"
+    t.binary   "content",      :limit => 2147483647
+    t.integer  "item_id"
+    t.integer  "xorder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "items", :force => true do |t|
@@ -115,6 +141,7 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.integer  "xorder"
     t.datetime "created_at"
     t.integer  "original_by"
+    t.integer  "source_id"
   end
 
   create_table "logs", :force => true do |t|
@@ -133,7 +160,7 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.string   "smtp_server"
     t.integer  "smtp_port"
     t.string   "smtp_secure_conn"
-    t.boolean  "smtp_auth"
+    t.string   "smtp_auth_method"
     t.string   "smtp_username"
     t.string   "smtp_password"
     t.string   "pop_server"
@@ -151,10 +178,11 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.integer  "xorder"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "smtp_auth"
   end
 
   create_table "mail_attachments", :force => true do |t|
-    t.integer  "mail_id"
+    t.integer  "email_id"
     t.string   "name"
     t.integer  "size"
     t.string   "content_type"
@@ -171,25 +199,6 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.integer  "xorder"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "mails", :force => true do |t|
-    t.integer  "user_id",         :null => false
-    t.integer  "mail_account_id"
-    t.integer  "mail_folder_id"
-    t.string   "from_address"
-    t.string   "subject"
-    t.text     "to_addresses"
-    t.text     "cc_addresses"
-    t.text     "bcc_addresses"
-    t.string   "uid"
-    t.integer  "priority"
-    t.datetime "sent_at"
-    t.string   "status"
-    t.string   "xtype"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.datetime "deleted_at"
   end
 
   create_table "paid_holidays", :force => true do |t|
@@ -282,7 +291,7 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
   end
 
   create_table "schedules", :force => true do |t|
-    t.string   "title",        :default => "",  :null => false
+    t.string   "title",        :default => "", :null => false
     t.text     "detail"
     t.integer  "created_by"
     t.datetime "created_at"
@@ -292,14 +301,16 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.text     "equipment"
     t.datetime "start"
     t.datetime "end"
-    t.string   "scope",        :default => "0", :null => false
-    t.datetime "repeat_start"
-    t.datetime "repeat_end"
+    t.string   "scope",                        :null => false
+    t.date     "repeat_start"
+    t.date     "repeat_end"
     t.text     "repeat_rule"
     t.text     "except"
     t.boolean  "allday"
     t.text     "items"
     t.string   "xtype"
+    t.text     "groups"
+    t.text     "teams"
   end
 
   create_table "settings", :force => true do |t|
@@ -373,6 +384,8 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.string   "pass_md5"
     t.date     "birthday"
     t.integer  "xorder",       :default => 9999
+    t.string   "zeptair_id"
+    t.string   "time_zone"
   end
 
   create_table "workflows", :force => true do |t|
@@ -383,6 +396,30 @@ ActiveRecord::Schema.define(:version => 20100101043800) do
     t.datetime "issued_at"
     t.integer  "original_by"
     t.datetime "decided_at"
+  end
+
+  create_table "zeptair_xlogs", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "zeptair_id"
+    t.integer  "descriptor"
+    t.string   "c_addr"
+    t.integer  "c_port"
+    t.string   "s_addr"
+    t.integer  "s_port"
+    t.integer  "time_taken"
+    t.integer  "cs_bytes"
+    t.integer  "sc_bytes"
+    t.integer  "cs_org_bytes"
+    t.integer  "sc_org_bytes"
+    t.float    "cs_comp_ratio"
+    t.float    "sc_comp_ratio"
+    t.string   "cs_protocol"
+    t.string   "cs_operation"
+    t.string   "cs_uri"
+    t.string   "sc_status"
+    t.string   "c_agent"
+    t.datetime "req_at",        :null => false
+    t.datetime "fin_at",        :null => false
   end
 
 end

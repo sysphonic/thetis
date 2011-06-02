@@ -64,12 +64,10 @@
 <div id="div_equipment" style="overflow:auto; background-color:white;">
 <table id="list_equipment" align="center" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap onClick="sortList('equipment.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="28%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="57%" nowrap onClick="sortList('note')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
-  <!--
-    <th class="list_th" width="30%"  nowrap onClick="sortList('belongs_to')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
-  -->
+    <th class="list_th" width="5%"  nowrap onClick="sortList('equipment.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="28%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="30%" nowrap onClick="sortList('note')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="27%"  nowrap onClick="sortList('belongs_to')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}
@@ -84,33 +82,49 @@ users_cache = {}
       </a>
     </td>
     <td class="<%=td_class %>" nowrap><pre><%=h truncate(equipment.note, :length => 30) %></pre></td>
-  <!--
     <td class="<%=td_class %>" nowrap>
+  <!--
       <% equipment.get_users_a.each do |user_id| %>
-        <%=h User.get_name(user_id, users_cache) %><br/>
+        <%= User.get_name(user_id, users_cache) %><br/>
       <% end %>
-      <% equipment.get_groups_a.each do |group_id| %>
-        <%=h Group.get_path(group_id, groups_cache) %><br/>
-      <% end %>
-      <% equipment.get_teams_a.each do |team_id| %>
-        <%=h Team.get_name(team_id) %><br/>
-      <% end %>
-    </td>
   -->
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="location.href='<%= url_for(:controller => 'equipment', :action => 'edit', :id => equipment) %>';">
+      <%
+      teams_cache = {}
+
+      groups = equipment.get_groups_a
+      teams = equipment.get_teams_a
+      %>
+      <% unless groups.empty? %>
+        <%= t('group.plural') %><%= t('cap.suffix') %>
+        <div style="padding-left:20px;">
+        <% groups.each do |group_id| %>
+          <%= Group.get_path(group_id, groups_cache) %><br/>
+        <% end %>
+        </div>
+      <% end %>
+      <% unless teams.empty? %>
+        <%= t('team.plural') %><%= t('cap.suffix') %>
+        <div style="padding-left:20px;">
+        <% teams.each do |team_id| %>
+          <%= Team.get_name(team_id, teams_cache) %><br/>
+        <% end %>
+        </div>
+      <% end %>
     </td>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <%= check_box :check_equipment, equipment.id, :class => 'check_equipment' %>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'edit', :id => equipment) %>';">
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box(:check_equipment, equipment.id, :class => 'check_equipment') %>
     </td>
   </tr>
 <% end %>
 </table>
 </div>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
-<%= hidden_field_tag 'sort_type', params[:sort_type] %>
-<%= hidden_field_tag 'group_id', @group_id %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+<%= hidden_field_tag('group_id', @group_id) %>
 
 </form>
 
@@ -127,7 +141,7 @@ function clearGroup()
 function sortList(col)
 {
   var type = "<%= @sort_type %>";
-  
+
   if (col == "<%= @sort_col %>") {
     type = (type == "ASC") ? "DESC" : "ASC";
   }

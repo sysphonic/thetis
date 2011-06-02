@@ -33,6 +33,8 @@ class EquipmentController < ApplicationController
   #
   def new
     Log.add_info(request, params.inspect)
+
+    render(:action => 'edit', :layout => (!request.xhr?))
   end
 
   #=== create
@@ -42,18 +44,32 @@ class EquipmentController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
+    if params[:groups].nil? or params[:groups].empty?
+      params[:equipment][:groups] = nil
+    else
+      params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
+    end
+
+    if params[:teams].nil? or params[:teams].empty?
+      params[:equipment][:teams] = nil
+    else
+      params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
+    end
+
     @equipment = Equipment.new(params[:equipment])
 
     begin
       @equipment.save!
     rescue StandardError => err
       Log.add_error(request, err)
-      render(:controller => 'equipment', :action => 'new')
+      render(:controller => 'equipment', :action => 'edit')
       return
     end
 
     flash[:notice] = t('msg.register_success')
-    redirect_to(:controller => 'equipment', :action => 'list')
+
+    list
+    render(:action => 'list')
   end
 
   #=== edit
@@ -73,10 +89,9 @@ class EquipmentController < ApplicationController
   def show
     Log.add_info(request, params.inspect)
 
+    login_user = session[:login_user]
+
     @equipment = Equipment.find(params[:id])
-    if @equipment.nil?
-      flash[:notice] = t('equipment.already_deleted')
-    end
   end
 
   #=== update
@@ -87,9 +102,23 @@ class EquipmentController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @equipment = Equipment.find(params[:id])
+
+    if (params[:groups].nil? or params[:groups].empty?)
+      params[:equipment][:groups] = nil
+    else
+      params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
+    end
+
+    if (params[:teams].nil? or params[:teams].empty?)
+      params[:equipment][:teams] = nil
+    else
+      params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
+    end
+
     if @equipment.update_attributes(params[:equipment])
-      # flash[:notice] = t('msg.register_success')
-      redirect_to(:controller => 'equipment', :action => 'list')
+      flash[:notice] = t('msg.update_success')
+      list
+      render(:action => 'list')
     else
       render(:controller => 'equipment', :action => 'edit', :id => params[:id])
     end
@@ -109,8 +138,8 @@ class EquipmentController < ApplicationController
     @sort_type = params[:sort_type]
 
     if @sort_col.nil? or @sort_type.nil?
-      @sort_col = "id"
-      @sort_type = "ASC"
+      @sort_col = 'id'
+      @sort_type = 'ASC'
     end
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
@@ -126,13 +155,13 @@ class EquipmentController < ApplicationController
   #
   def destroy
     Log.add_info(request, params.inspect)
-  
+
     if params[:check_equipment].nil?
       list
       render(:action => 'list')
       return
     end
-    
+
     count = 0
     params[:check_equipment].each do |equipment_id, value|
       if value == '1'
@@ -142,7 +171,8 @@ class EquipmentController < ApplicationController
       end
     end
     flash[:notice] = count.to_s + t('equipment.deleted')
-    redirect_to(:action => 'list')
+    list
+    render(:action => 'list')
   end
 
   #=== schedule_all
@@ -156,10 +186,33 @@ class EquipmentController < ApplicationController
     if date_s.nil? or date_s.empty?
       @date = Date.today
     else
-      @date = Date.parse date_s
+      @date = Date.parse(date_s)
     end
 
-    equipment = Equipment.find(:all)
+    login_user = session[:login_user]
+
+    if login_user.nil? or params[:display].nil? or params[:display] == 'all'
+      params[:display] = 'all'
+      con = EquipmentHelper.get_scope_condition_for(login_user)
+    else
+      display_type = params[:display].split('_').first
+      display_id = params[:display].split('_').last
+
+      case display_type
+       when 'group'
+        if login_user.get_groups_a(true).include?(display_id)
+          con = "(groups like '%|#{display_id}|%')"
+        end
+       when 'team'
+        if login_user.get_teams_a.include?(display_id)
+          con = "(teams like '%|#{display_id}|%')"
+        end
+      end
+    end
+
+    return if con.nil?
+
+    equipment = Equipment.find(:all, :conditions => con)
 
     @equip_schedule_hash = PseudoHash.new
     unless equipment.nil?
@@ -168,7 +221,5 @@ class EquipmentController < ApplicationController
         @equip_schedule_hash[equip.id.to_s, true] = Schedule.get_equipment_week(equip.id, @date, holidays)
       end
     end
-
-    params[:display] = 'all'
   end
 end

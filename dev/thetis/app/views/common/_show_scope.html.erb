@@ -1,0 +1,26 @@
+<%
+@groups_cache ||= {}
+@teams_cache ||= {}
+
+groups = obj.get_groups_a
+teams = obj.get_teams_a
+%>
+<% unless groups.empty? %>
+  <%= t('group.plural') %><%= t('cap.suffix') %>
+  <div style="padding-left:20px;">
+  <% groups.each do |group_id| %>
+    <%= Group.get_path(group_id, @groups_cache) %><br/>
+  <% end %>
+  </div>
+<% end %>
+<% unless teams.empty? %>
+  <%= t('team.plural') %><%= t('cap.suffix') %>
+  <div style="padding-left:20px;">
+  <% teams.each do |team_id| %>
+    <%= Team.get_name(team_id, @teams_cache) %><br/>
+  <% end %>
+  </div>
+<% end %>
+<% if (groups.empty? and teams.empty?) %>
+  <%= empty_msg %>
+<% end %>

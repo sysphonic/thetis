@@ -2,26 +2,34 @@
 form_idx = Time.now.to_f.to_s.gsub('.', '_')
 %>
 
+<% if (@address.nil? or @address.id == 0) %>
+<%= form_tag({:controller => 'addressbook', :action => 'create'}, :method => 'post', :name => 'form_address'+form_idx) %>
+<% else %>
 <%= form_tag({:controller => 'addressbook', :action => 'update', :id => @address.id}, :method => 'post', :name => 'form_address'+form_idx) %>
+<% end %>
 
-<table width="80%" align="center" cellspacing="0" cellpadding="0">
+<table width="90%" align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
     <td valign="top">
-      <%= render :partial => 'address_form' %>
+      <%= render(:partial => 'address_form') %>
     </td>
   </tr>
 </table>
 
 </form>
 
-<table width="80%" cellspacing="0" cellpadding="0">
+<table align="center" width="80%" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center">
       <table cellspacing="0" cellpadding="0">
         <tr>
-          <td class="img_button_td" onclick="prog('TOP-RIGHT'); document.form_address<%= form_idx %>.submit();">
-              <%=h t('btn.update')%>
+          <td class="img_button_td" onclick="doRegister();">
+          <% if (@address.nil? or @address.id == 0) %>
+            <%= t('btn.register')%>
+          <% else %>
+            <%= t('btn.update')%>
+          <% end %>
           </td>
         </tr>
       </table>
@@ -29,3 +37,21 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
   </tr>
   <tr height="40"><td></td></tr>
 </table>
+
+<script type="text/javascript">
+doRegister = function()
+{
+  if ($("scope_common")) {
+    if ($("scope_common").checked) {
+      selectListAll($("groups_selected"));
+      selectListAll($("teams_selected"));
+    } else {
+      deselectListAll($("groups_selected"));
+      deselectListAll($("teams_selected"));
+    }
+  }
+
+  prog("TOP-RIGHT");
+  document.form_address<%= form_idx %>.submit();
+}
+</script>

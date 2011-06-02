@@ -173,6 +173,14 @@ class SchedulesController < ApplicationController
       if params[:equipment].nil? or params[:equipment].empty?
         params[:schedule][:equipment] = nil
       else
+        params[:equipment].each do |equipment_id|
+          equipment = Equipment.find(equipment_id)
+          if equipment.nil? or !equipment.is_accessible_by(login_user)
+            flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
+            redirect_to(:action => 'day', :id => params[:date])
+            return
+          end
+        end
         params[:schedule][:equipment] = '|' + params[:equipment].join('|') + '|'
       end
 

@@ -11,13 +11,15 @@
 #
 #== Note:
 #
-#* 
+#* Filters added to this controller will be run for all controllers in the application.
+#* Likewise, all the methods added will be available for all controllers.
 #
-require 'will_paginate'
 
-# Filters added to this controller will be run for all controllers in the application.
-# Likewise, all the methods added will be available for all controllers.
 class ApplicationController < ActionController::Base
+
+  require 'will_paginate'
+  require RAILS_ROOT+'/lib/iain-http_accept_language/lib/http_accept_language'
+
 # helper :all # include all helpers, all the time
   protect_from_forgery
   filter_parameter_logging :password
@@ -26,7 +28,7 @@ class ApplicationController < ActionController::Base
   before_filter :gate_process
 
   begin
-    if User.count <= 0
+    if (User.count <= 0)
       User.create_init_user
     end
   rescue
@@ -53,7 +55,7 @@ class ApplicationController < ActionController::Base
   #
   def paginate_by_sql(model, sql, per_page, options={})
     if options[:count]
-      if options[:count].is_a? Integer
+      if options[:count].is_a?(Integer)
         total = options[:count]
       else
         total = model.count_by_sql(options[:count])

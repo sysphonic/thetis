@@ -369,6 +369,13 @@ function selectListAll(list)
   }
 }
 
+function deselectListAll(list)
+{
+  for (var i=0; i < list.length; i++) {
+    list.options[i].selected = false;
+  }
+}
+
 function getClientRegion()
 {
   var obj = new Object();
