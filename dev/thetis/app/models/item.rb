@@ -73,21 +73,33 @@ class Item < ActiveRecord::Base
     return I18n.t('item.profile_title')
   end
 
+  #=== get_registrant_id
+  #
+  #Gets registrant User-ID of this Item.
+  #
+  #return:: Registrant User-ID of this Item.
+  #
+  def get_registrant_id
+
+    return (self.original_by.nil?)?(self.user_id):(self.original_by)
+  end
+
   #=== disp_registered_by
   #
   #Returns string to show User who registered this Item.
   #
   #_users_cache_:: Hash to accelerate response. {user_id, user_name}
+  #_user_obj_cache_:: Hash to accelerate response. {user_id, user}
   #return:: String to show User who registered this Item.
   #
-  def disp_registered_by(users_cache = nil)
+  def disp_registered_by(users_cache=nil, user_obj_cache=nil)
 
-    user_name = User.get_name(self.user_id, users_cache)
+    user_name = User.get_name(self.user_id, users_cache, user_obj_cache)
 
     if self.original_by.nil?
       disp = user_name
     else
-      disp = User.get_name(self.original_by, users_cache) + ' (' + I18n.t('item.owner') + ':' + user_name + ')'
+      disp = User.get_name(self.original_by, users_cache, user_obj_cache) + ' (' + I18n.t('item.owner') + ':' + user_name + ')'
     end
     return disp
   end

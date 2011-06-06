@@ -14,7 +14,9 @@
 #* 
 #
 module WorkflowsHelper
+
   private::MY_WF_ROOT = '$Workflows'
+
 
   #=== self.get_my_wf_folder
   #
@@ -129,6 +131,47 @@ module WorkflowsHelper
     where << " and (Item.folder_id = #{folder_id})"
 
     order_by = ' order by Workflow.id DESC'
+
+    sql << where + order_by
+
+    return sql
+  end
+
+  #=== self.get_tmpl_list_sql
+  #
+  #Gets SQL for templates list of Workflows.
+  #
+  #_folder_id_:: Folder-ID of templates of Workflows.
+  #_group_ids_:: Array of target Group-IDs.
+  #return:: SQL for templates list of Workflows.
+  #
+  def self.get_tmpl_list_sql(folder_id, group_ids=nil)
+
+    sql = 'select distinct Workflow.* from workflows Workflow, items Item'
+
+    where = " where (Item.folder_id = #{folder_id})"
+    where << ' and (Workflow.item_id = Item.id)'
+
+    unless group_ids.nil? or group_ids.empty?
+
+      unless group_ids.instance_of?(Array)
+        group_ids = [group_ids]
+      end
+
+      scope_con = []
+      group_ids.each do |group_id|
+        if group_id.to_s == '0'
+          scope_con << "(Workflow.groups is null)"
+        else
+          scope_con << "(Workflow.groups like '%|#{group_id}|%')"
+        end
+      end
+      unless scope_con.empty?
+        where << " and (#{scope_con.join(' or ')})"
+      end
+    end
+
+    order_by = ' order by Item.xorder ASC'
 
     sql << where + order_by
 

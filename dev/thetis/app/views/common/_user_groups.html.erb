@@ -1,0 +1,32 @@
+
+<%
+unless @user_groups.nil?
+  @user_groups.each do |group_id, group_path|
+%>
+<div id="user_groups_<%= group_id %>" style="display:none;"><%= group_path %></div>
+
+  <% end %>
+
+<script type="text/javascript">
+
+showUserGroups = function(user_name, groups)
+{
+  var info = "<%= t('group.plural') %><%= t('cap.suffix') %>";
+  info += "<div style='padding-left:20px;'>";
+  var groupArray = groups.split(",");
+  for (var i=0; i < groupArray.length; i++) {
+    info += $("user_groups_"+groupArray[i]).innerHTML + "<br/>";
+  }
+  info += "</div>";
+
+  var thetisBox = new ThetisBox;
+  thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/user.gif'> " + user_name;
+  thetisBox.bgcolor_title = "#22B9FE";
+  thetisBox.bgcolor_body = "#C5EFFF";
+  thetisBox.show("CENTER", "", "MESSAGE", "", info, "");
+}
+
+</script>
+
+<% end %>
+

@@ -171,12 +171,31 @@ class GroupsController < ApplicationController
   #=== get_users
   #
   #<Ajax>
-  #Gets Users in specified Group.
+  #Gets Users in the specified Group.
   #
   def get_users
     Log.add_info(request, params.inspect)
 
     @users = Group.get_users(params[:id])
     render(:partial => 'ajax_group_users', :layout => false)
+  end
+
+  #=== get_workflows
+  #
+  #<Ajax>
+  #Gets Workflows which belong to the specified Group.
+  #
+  def get_workflows
+    Log.add_info(request, params.inspect)
+
+    @group_id = (params[:id] || '0')  # '0' for ROOT
+
+    ary = TemplatesHelper.get_tmpl_folder
+
+    unless ary.nil? or ary.empty?
+      @tmpl_workflows_folder = ary[2]
+    end
+
+    render(:partial => 'ajax_workflows', :layout => false)
   end
 end

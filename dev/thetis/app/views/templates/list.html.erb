@@ -1,6 +1,6 @@
 <% HistoryHelper.set_back(request) %>
 
-<%= render :partial => 'common/error', :locals => {:obj => @user} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr height="10"><td></td></tr>
@@ -16,7 +16,7 @@
           <tr>
             <td class="item_cap_td" style="width:40%;" nowrap><%=h t('item.profile_sheet') %></td>
             <td class="item_value_td">
-              <%= render :partial => 'system' %>
+              <%= render(:partial => 'system') %>
             </td>
           </tr>
         </table>
@@ -33,14 +33,14 @@
           <tr>
             <td class="item_value_td">
               <div id="div_ajax_local">
-                <%= render :partial => 'ajax_local' %>
+                <%= render(:partial => 'ajax_local') %>
               </div>
 
               <table align="right" width="120" cellspacing="0" cellpadding="0">
                 <tr height="6"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgcolor="gray" onClick="doCreateLocal();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.create') %>
+                    <%= t('btn.create') %>
                   </td>
                 </tr>
               </table>
@@ -57,19 +57,21 @@
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%;"><%=h t('workflow.plural') %></td>
+            <td class="item_cap_td" nowrap style="width:100%;">
+              <%= t('workflow.plural') %>
+            </td>
           </tr>
           <tr>
             <td class="item_value_td">
               <div id="div_ajax_workflows">
-                <%= render :partial => 'ajax_workflows' %>
+                <%= render(:partial => 'ajax_workflows') %>
               </div>
 
               <table align="right" width="120" cellspacing="0" cellpadding="0">
                 <tr height="6"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreateWorkflow();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.create') %>
+                    <%= t('btn.create') %>
                   </td>
                 </tr>
               </table>
@@ -102,7 +104,7 @@ function doCreateLocal()
 
   new Ajax.Updater(
               "div_ajax_local",
-              "<%= url_for :controller => 'templates', :action => 'create_local' %>",
+              "<%= url_for(:controller => 'templates', :action => 'create_local') %>",
               {
                 parameters:"authenticity_token=<%= form_authenticity_token %>",
                 asynchronous:true,
@@ -121,7 +123,7 @@ function doCreateWorkflow()
 
   new Ajax.Updater(
               "div_ajax_workflows",
-              "<%= url_for :controller => 'templates', :action => 'create_workflow' %>",
+              "<%= url_for(:controller => 'templates', :action => 'create_workflow') %>",
               {
                 parameters:"authenticity_token=<%= form_authenticity_token %>",
                 asynchronous:true,
@@ -136,7 +138,7 @@ function doCreateWorkflow()
 
 function doDeleteLocal(item_id, title)
 {
-  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('msg.confirm_to_delete') %>", "_doDeleteLocal("+item_id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteLocal("+item_id+")");
 }
 
 function _doDeleteLocal(item_id)
@@ -145,7 +147,7 @@ function _doDeleteLocal(item_id)
 
   new Ajax.Updater(
       "div_ajax_local",
-      "<%= url_for :controller => 'templates', :action => 'destroy_local' %>?id=" + item_id,
+      "<%= url_for(:controller => 'templates', :action => 'destroy_local') %>?id=" + item_id,
       {
         parameters:"authenticity_token=<%= form_authenticity_token %>",
         asynchronous:true,
@@ -157,7 +159,7 @@ function _doDeleteLocal(item_id)
 
 function doDeleteWorkflow(item_id, title)
 {
-  confm("<%= h t('paren.square.left') %>" + title + "<%= h t('msg.confirm_to_delete') %>", "_doDeleteWorkflow("+item_id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteWorkflow("+item_id+")");
 }
 
 function _doDeleteWorkflow(item_id)
@@ -166,7 +168,7 @@ function _doDeleteWorkflow(item_id)
 
   new Ajax.Updater(
       "div_ajax_workflows",
-      "<%= url_for :controller => 'templates', :action => 'destroy_workflow' %>?id=" + item_id,
+      "<%= url_for(:controller => 'templates', :action => 'destroy_workflow') %>?id=" + item_id,
       {
         parameters:"authenticity_token=<%= form_authenticity_token %>",
         asynchronous:true,

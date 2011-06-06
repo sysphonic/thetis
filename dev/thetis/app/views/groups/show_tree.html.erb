@@ -3,15 +3,29 @@
 
 <table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style='background-color:burlywood; border:solid 2px; border-top-color:palegoldenrod; border-left-color:palegoldenrod; border-bottom-color:dimgray; border-right-color:dimgray;' cellspacing='10'>
   <tr>
-    <td align="left" nowrap style="padding:5px 20px;">
-    <% if session[:login_user].admin?(User::AUTH_GROUP) %>
-      <input type="button" value="<%= h t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
-      <input type="button" value="<%= h t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
-      <input type="button" value="<%= h t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
-      <input type="button" value="<%= h t('btn.move') %>" onClick="doMove();" style="width:80px;"/>
-    <% else %>
-      <%=h t('group.only_admin_can_edit_tree') %>
-    <% end %>
+    <td>
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="left" nowrap style="padding:5px 20px;">
+          <% if session[:login_user].admin?(User::AUTH_GROUP) %>
+            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;"/>
+          <% else %>
+            <%= t('group.only_admin_can_edit_tree') %>
+          <% end %>
+          </td>
+          <td align="right" style="padding:5px 20px;">
+            <%
+            options = []
+            options << [h(User.human_name), 'user']
+            options << [h(Workflow.human_name), 'workflow']
+            %>
+            <%= select_tag('select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px;') %>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
   <tr height="100%">
@@ -114,33 +128,29 @@ function onLoadSub()
   var folderImgs = new Array(
                         new Array("<%=h group_folder_open %>", "<%=h group_folder_close %>")
                       );
-  var array = new Array(new Array("0", "/(root)", "", "doGetUsers('0');", 0));
+  var array = new Array(new Array("0", "/(root)", "", "selectGroup('0');", 0));
   var firstMenuId = ThetisBox.buildTree("", array, null, "groupTree", "selKeeper", folderImgs);
   <% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
-    <% count = 0 %>
-    <% child_groups.each do |group| %>
-          new Array("<%= group.id %>", "/<%=h group.name %>", "", "doGetUsers('<%= group.id %>');", 0)
-        <%
-          count += 1
-          if count < child_groups.length
-        %>
-          ,
-        <%
-          end
-        %>
-    <% end %>
-        );
+    <% child_groups.each_with_index do |group, idx| %>
+        new Array("<%= group.id %>", "/<%=h group.name %>", "", "selectGroup('<%= group.id %>');", 0)
+      <% if idx < (child_groups.length - 1) %>
+        ,
+    <%
+      end
+    end
+    %>
+      );
   ThetisBox.buildTree("<%= parent_id %>", array, null, "groupTree", "selKeeper", folderImgs, false);
   <% end %>
   //selectTree("selKeeper", firstMenuId, null);
-  //doGetUsers(firstMenuId.split(':')[1]);
+  //selectGroup(firstMenuId.split(':')[1]);
 }
 
 function doCreate(pos)
 {
   if (document.form_group_tree.selKeeper.value == "") {
-    msg("<%=h t('group.select_parent') %>");
+    msg("<%= t('group.select_parent') %>");
     return;
   }
   var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
@@ -149,7 +159,7 @@ function doCreate(pos)
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'groups', :action => 'create' %>\" method=\"post\" onsubmit=\"new Ajax.Updater('groupTree:"+group_id+"', '<%= url_for :controller => 'groups', :action => 'create' %>', {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'create') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'create') %>', {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedGroupId="+group_id, "authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('group.specify_name') %>", "");
 }
@@ -157,13 +167,13 @@ function doCreate(pos)
 function doRename(pos)
 {
   if (document.form_group_tree.selKeeper.value == "") {
-    msg("<%=h t('group.select') %>");
+    msg("<%= t('group.select') %>");
     return;
   }
   var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
 
   if (group_id == "0") {
-    msg("<%= h t('group.root_group_restricted') %>");
+    msg("<%= t('group.root_group_restricted') %>");
     return;
   }
 
@@ -171,7 +181,7 @@ function doRename(pos)
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'groups', :action => 'rename' %>?id="+group_id+"\" method=\"post\" onsubmit=\"new Ajax.Updater('a_groupTree:"+group_id+"', '<%= url_for :controller => 'groups', :action => 'rename' %>?id="+group_id+"', {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"\" method=\"post\" onsubmit=\"new Ajax.Updater('a_groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"', {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array('selectedGroupId='+group_id, "authenticity_token=<%= form_authenticity_token %>"));
   var name = trim($("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
   thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('group.specify_name') %>", name);
@@ -180,20 +190,20 @@ function doRename(pos)
 function doDelete()
 {
   if (document.form_group_tree.selKeeper.value == "") {
-    msg("<%=h t('group.select') %>");
+    msg("<%= t('group.select') %>");
     return;
   }
   var group_id = document.form_group_tree.selKeeper.value.split(":")[1]; 
 
   if (group_id == "0") {
-    msg("<%= h t('group.root_group_restricted') %>");
+    msg("<%= t('group.root_group_restricted') %>");
     return;
   }
 
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var name = trim($("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
-  confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+name+"<%=h t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%=h t('group.delete_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDelete("+group_id+")");
+  confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%= t('group.delete_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+group_id+")");
 }
 
 function _doDelete(group_id)
@@ -201,7 +211,7 @@ function _doDelete(group_id)
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
           "base_groupTree:"+group_id,
-          "<%= url_for :controller => 'groups', :action => 'destroy' %>?id="+group_id,
+          "<%= url_for(:controller => 'groups', :action => 'destroy') %>?id="+group_id,
           {
             asynchronous:true,
             evalScripts:true,
@@ -218,13 +228,13 @@ function _doDelete(group_id)
 function doMove()
 {
   if (document.form_group_tree.selKeeper.value == "") {
-    msg("<%=h t('group.select') %>");
+    msg("<%= t('group.select') %>");
     return;
   }
   var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
 
   if (group_id == "0") {
-    msg("<%= h t('group.root_group_restricted') %>");
+    msg("<%= t('group.root_group_restricted') %>");
     return;
   }
 
@@ -233,14 +243,49 @@ function doMove()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'groups', :action => 'move' %>?id="+group_id, "<%=h t('group.select_dest')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>?id="+group_id, "0");
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'groups', :action => 'move') %>?id="+group_id, "<%= t('group.select_dest')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>?id="+group_id, "0");
 }
 
 function doGetUsers(group_id)
 {
   var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater("div_view", "<%= url_for :controller => 'groups', :action => 'get_users' %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_users') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
 }
+
+function doGetWorkflows(group_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_workflows') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+}
+
+function selectGroup(group_id)
+{
+  var select_opt = $('select_opt');
+
+  if (select_opt == null) {
+    doGetUsers(group_id);
+  } else {
+    switch ($('select_opt').value)
+    {
+      case 'user': doGetUsers(group_id); break;
+      case 'workflow': doGetWorkflows(group_id); break;
+    }
+  }
+}
+
+function changeOption(val)
+{
+  var group_id = document.form_group_tree.selKeeper.value.split(':')[1];
+  if (!group_id) {
+    return false;
+  }
+
+  switch (val) {
+    case 'user': doGetUsers(group_id); break;
+    case 'workflow': doGetWorkflows(group_id); break;
+  }
+}
+
 //-->
 </script>

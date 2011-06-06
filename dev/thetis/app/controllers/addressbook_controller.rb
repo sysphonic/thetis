@@ -97,7 +97,7 @@ class AddressbookController < ApplicationController
 
     @address = Address.find(params[:id])
     if @address.nil?
-      render(:text => 'ERROR:' + t('address.already_deleted'))
+      render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.human_name))
       return
     else
       login_user = session[:login_user]

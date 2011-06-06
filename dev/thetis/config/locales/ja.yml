@@ -144,7 +144,6 @@ ja:
     license_detail: "詳しくは、LICENSEファイルをご参照ください。"
   address:
     new: "新しいアドレス"
-    already_deleted: "このアドレスは削除済みです。"
     deleted:
       one: "1件削除されました。"
       other: "%{count}件削除されました。"
@@ -252,7 +251,6 @@ ja:
     select_mine: "自分のデスクトップを選択"
   email:
     name: "E-mail"
-    already_deleted: "このメールは削除済みです。"
     address_not_found: "該当するメールアドレスが見つかりませんでした。"
     sent: "メールが送信されました。"
     greeting1: ""
@@ -262,7 +260,6 @@ ja:
     initial_password: "初期パスワードは次の通りです。"
   equipment:
     belongs_to: "所属"
-    already_deleted: "この設備は削除済みです。"
     deleted: "件の設備が削除されました。"
     confirm_to_delete: "件の設備を削除します。よろしいですか？"
     confirm_to_delete_related: "」がすべてのユーザーのスケジュールから削除されます。よろしいですか？"
@@ -559,7 +556,6 @@ ja:
     data: "データ"
     feed_content: "内容も通知する"
   schedule:
-    already_deleted: "このスケジュールは削除されています。"
     no_day_in_rule: "該当する日付がないため、保存できませんでした。"
     need_auth_to_edit_destroy: "このスケジュールを編集・削除する権限がありません。"
     conflict_equipment: "重複して設備を予約しているスケジュールがあります（「設備予約」ページで確認できます）。"
@@ -601,7 +597,6 @@ ja:
     specified: "指定の並び順"
   team:
     plural: "チーム"
-    already_deleted: "このチームは削除済みです。"
     need_to_be_member: "チームメンバーのみがこの操作を行えます。"
     status:
       standby: "スタンバイ"
@@ -733,7 +728,6 @@ ja:
     plural: "ユーザー"
     u_name: "ユーザー名"
     title: "役職"
-    already_deleted: "このユーザーは削除済みです。"
     deleted: "件のユーザーを削除しました。"
     status_reset: "件のユーザーのステータスをリセットしました。"
     notification_sent: "通知メールが"
@@ -935,6 +929,7 @@ ja:
     please_login: "ログインしてください。"
     all_users: "全員"
     myself: "自分"
+    already_deleted: "この%{name}は削除済みです。"
   btn:
     ok: "OK"
     cancel: "キャンセル"

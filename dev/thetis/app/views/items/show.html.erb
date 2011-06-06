@@ -8,6 +8,11 @@ login_user = session[:login_user]
 @for_print = (params[:action] == 'show_for_print')
 
 @users_cache = {}
+@user_obj_cache = {}
+
+@user_groups = {}
+@groups_cache = {}
+@group_obj_cache = {}
 %>
 
 <table cellspacing="0" cellpadding="0" width="100%">
@@ -25,9 +30,9 @@ unless @for_print
   end
   if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id)
 %>
-      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= h t('btn.add_to_desktop') %>" title="<%= h t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
   <% end %>
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= h t('item.show_url') %>" title="<%= h t('item.show_url') %>" onclick="showURL();">
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= t('item.show_url') %>" title="<%= t('item.show_url') %>" onclick="showURL();">
 <% end %>
     </td>
     <td>
@@ -54,7 +59,12 @@ unless @for_print
               </tr>
               <tr height="18">
                 <td class="td_entry_info_val" nowrap>
-                  <%= @item.disp_registered_by(@users_cache) %>
+                  <%
+                  user_name, u_groups = UsersHelper.get_groups_info(@item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+                  %>
+                  <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+                    <%= @item.disp_registered_by(@users_cache, @user_obj_cache) %>
+                  </a>
                 </td>
                 <td class="td_entry_info_val" nowrap>
                   <% unless @item.updated_at.nil? %>
@@ -112,8 +122,10 @@ unless @for_print
           </td>
          <% unless @item.folder_id.nil? %>
           <td width="40">&nbsp;&nbsp;</td>
-          <td id="folder_path" align="left" nowrap width="80%" style="color:red; font-size:12pt; line-height:1.0;">
-            <%= @item.get_folder_path %>
+          <td id="folder_path" align="left" nowrap width="80%">
+            <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
+              <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path %></span>
+            </a>
           </td>
          <% end %>
         </tr>
@@ -142,11 +154,11 @@ end
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
     <%= t('btn.back') %>
   </td>
   <td width="20"></td>
-  <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for :controller => 'items', :action => 'show_for_print', :id => @item.id %>').focus(); thetisBox.remove();">
+  <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for(:controller => 'items', :action => 'show_for_print', :id => @item.id) %>').focus(); thetisBox.remove();">
     <%= t('btn.for_print') %>
   </td>
 <% unless login_user.nil? or @item.is_a_copy? %>
@@ -157,14 +169,14 @@ end
 <% end %>
 <% if !login_user.nil? and @item.editable?(login_user.id) %>
   <td width="20"></td>
-  <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'edit', :id => @item.id %>'">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
+  <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
+    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
   </td>
 <% end %>
 <% if !login_user.nil? and @item.movable_wf?(login_user.id) %>
   <td width="20"></td>
   <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%=ApplicationHelper.h_s_quote @item.title %>');">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%=h t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
+    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
   </td>
 
 <script type="text/javascript">
@@ -178,11 +190,11 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   thetisBox.title = title;
   thetisBox.progress = true;
 
-  var form_tag = "<form action=\"<%= url_for :controller => 'items', :action => 'move' %>?id="+item_id+"\" method=\"post\" onsubmit=\"ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('folder_path', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'move') %>?id="+item_id+"\" method=\"post\" onsubmit=\"ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('folder_path', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('item.select_folder_to_move_to')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>", folder_id);
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 //-->
 </script>
@@ -190,7 +202,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 <% if !login_user.nil? and @item.deletable?(login_user.id) %>
   <td width="20"></td>
   <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>');">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" /> <%= h t('btn.delete') %>
+    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
   </td>
 <% end %>
   </tr>
@@ -217,9 +229,9 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
                 <b><%= h Workflow.human_name %></b>
               </td>
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
-                <span style="background-color:palegreen;">&nbsp;<a href="#top"><%=h t('btn.top') %></a>&nbsp;</span>
+                <span style="background-color:palegreen;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:palegreen;">&nbsp;<a href="#" onclick="var divWorkflow=$('div_workflow'); if (divWorkflow.style.display=='none') {divWorkflow.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%=h t('btn.close') %>';} else {divWorkflow.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%=h t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%=h t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:palegreen;">&nbsp;<a href="#" onclick="var divWorkflow=$('div_workflow'); if (divWorkflow.style.display=='none') {divWorkflow.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divWorkflow.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -253,7 +265,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
             <tr height="10"><td></td></tr>
             <tr>
               <td>
-                <%=h t('workflow.issue_button_info') %>
+                <%= t('workflow.issue_button_info') %>
               </td>
             </tr>
           </table>
@@ -266,7 +278,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
             <tr height="10"><td></td></tr>
             <tr>
               <td class="img_button_td" onclick="doWfIssue();">
-                <%=h t('btn.issue') %>
+                <%= t('btn.issue') %>
               </td>
             </tr>
           </table>
@@ -289,10 +301,10 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
 function doWfRespond()
 {
   if (!$("xtype_ack").checked && !$("xtype_nak").checked) {
-    msg("<%=h t('workflow.select_response_status') %>");
+    msg("<%= t('workflow.select_response_status') %>");
     return;
   }
-  confm("<%=h t('workflow.confirm_to_respond') %>", "_doWfRespond()");
+  confm("<%= t('workflow.confirm_to_respond') %>", "_doWfRespond()");
 }
 
 function _doWfRespond()
@@ -315,7 +327,7 @@ function _doWfRespond()
 
 function doWfIssue()
 {
-  confm("<%=h t('workflow.confirm_to_issue') %>", "_doWfIssue()");
+  confm("<%= t('workflow.confirm_to_issue') %>", "_doWfIssue()");
 }
 
 function _doWfIssue()
@@ -324,7 +336,7 @@ function _doWfIssue()
 
   new Ajax.Updater(
                 "div_wf_ajax",
-                "<%= url_for :controller => 'items', :action => 'wf_issue', :id => @item.id %>",
+                "<%= url_for(:controller => 'items', :action => 'wf_issue', :id => @item.id) %>",
                 {
                   parameters:"authenticity_token=<%= form_authenticity_token %>",
                   asynchronous:true,
@@ -356,9 +368,9 @@ function _doWfIssue()
             <b><%= h Team.human_name %></b>
           </td>
           <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
-            <span style="background-color:#FFE0D1;">&nbsp;<a href="#top"><%=h t('btn.top') %></a>&nbsp;</span>
+            <span style="background-color:#FFE0D1;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
             &nbsp;
-            <span style="background-color:#FFE0D1;">&nbsp;<a href="#" onclick="var divTeam=$('div_team'); if (divTeam.style.display=='none') {divTeam.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%=h t('btn.close') %>';} else {divTeam.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%=h t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%=h t('btn.close') %></a>&nbsp;</span>
+            <span style="background-color:#FFE0D1;">&nbsp;<a href="#" onclick="var divTeam=$('div_team'); if (divTeam.style.display=='none') {divTeam.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divTeam.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
           </td>
         </tr>
       </table>
@@ -372,7 +384,7 @@ function _doWfIssue()
   <table width="95%" cellpadding="5" align="center"> 
     <tr> 
       <td align="left" style="font-size:14pt; line-height:1.0;">
-        <%=h t('cap.information') %>
+        <%= t('cap.information') %>
         <hr size="1" />
       </td>
     </tr>
@@ -380,7 +392,7 @@ function _doWfIssue()
 
   <div id="div_team_info">
 
-    <%= render :partial => 'ajax_team_info' %>
+    <%= render(:partial => 'ajax_team_info') %>
 
   </div>
 
@@ -391,7 +403,7 @@ function _doWfIssue()
   <table width="95%" cellpadding="5" align="center"> 
     <tr> 
       <td align="left" style="font-size:14pt; line-height:1.0;">
-        <%=h t('team.organize') %>
+        <%= t('team.organize') %>
         <hr size="1" />
       </td>
     </tr>
@@ -402,8 +414,8 @@ function _doWfIssue()
       <tr> 
         <td align="left"> 
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif">&nbsp;
-          <%=h t('team.organize_info1') %><span style="color:green;"><b><%=h t('item.owner_full') %></b></span>
-          <%=h t('team.organize_info2') %>
+          <%= t('team.organize_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span>
+          <%= t('team.organize_info2') %>
         </td>
       </tr>
     </table>
@@ -417,7 +429,7 @@ function _doWfIssue()
             <table cellspacing="0" cellpadding="0" align="left" width="450">
               <tr>
                 <td align="left">
-                  <%= h t('team.cap.applicants') %><br/>
+                  <%= t('team.cap.applicants') %><br/>
                   <select id="team_candidates" class="select_candidates" size="5" multiple="multiple">
                   <%
                   unless @team.nil?
@@ -446,11 +458,11 @@ function _doWfIssue()
                   <table cellspacing="0" cellpadding="0" width="100%">
                     <tr>
                       <td align="left" valign="bottom" width="33%">
-                        <%= h t('cap.members') %>
+                        <%= t('cap.members') %>
                       </td>
                       <td align="center" width="34%" nowrap>
-                        <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('btn.add') %>" onclick="moveList($('team_candidates'), $('team_members')); return false;" style="width:80px;">
-                        <input type="button" value="<%= raw(t('arrow.up')) %><%=h t('btn.remove') %>" onclick="moveList($('team_members'), $('team_candidates')); return false;" style="width:80px;">
+                        <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="moveList($('team_candidates'), $('team_members')); return false;" style="width:80px;">
+                        <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="moveList($('team_members'), $('team_candidates')); return false;" style="width:80px;">
                       </td>
                       <td width="33%">&nbsp;</td>
                     </tr>
@@ -476,7 +488,7 @@ function _doWfIssue()
               <tr height="20"><td></td></tr>
               <tr>
                 <td class="img_button_td" onclick="selectListAll($('team_members')); doOrganizeTeam(document.form_team);">
-                  <%=h t('btn.register') %>
+                  <%= t('btn.register') %>
                 </td>
               </tr>
             </table>
@@ -508,7 +520,7 @@ else
     <% if login_user.nil? %>
 
     <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
-      <tr><td align="center"><%=h t('team.application_info') %></td></tr>
+      <tr><td align="center"><%= t('team.application_info') %></td></tr>
     </table>
 
     <%
@@ -519,8 +531,8 @@ else
         <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
           <tr>
             <td align="center">
-              <%=h t('team.is_member') %>
-              &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('team.leave_info') %>');">
+              <%= t('team.is_member') %>
+              &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('team.leave_info') %>');">
             </td>
           </tr>
         </table>
@@ -567,9 +579,9 @@ end
                 <b><%= t('zeptair.dist.state') %></b>
               </td>
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
-                <span style="background-color:#D4DEFF;">&nbsp;<a href="#top"><%=h t('btn.top') %></a>&nbsp;</span>
+                <span style="background-color:#D4DEFF;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:#D4DEFF;">&nbsp;<a href="#" onclick="var divMessage=$('div_zeptair_dist_res'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%=h t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%=h t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%=h t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:#D4DEFF;">&nbsp;<a href="#" onclick="var divMessage=$('div_zeptair_dist_res'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -712,7 +724,7 @@ function showZeptairDistUsers()
             "IFRAME",
             "",
             "",
-            "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id, :read_only => 'true' %>"
+            "<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id, :read_only => 'true') %>"
           );
 }
 </script>
@@ -744,12 +756,12 @@ end
           <table cellspacing="0" cellpadding="0" width="100%">
             <tr>
               <td align="left" style="color:white; font-size:11pt; line-height:14pt; text-indent:10px;">
-                <b><%= h t('item.message') %></b>
+                <b><%= t('item.message') %></b>
               </td>
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
-                <span style="background-color:navajowhite;">&nbsp;<a href="#top"><%=h t('btn.top') %></a>&nbsp;</span>
+                <span style="background-color:navajowhite;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:navajowhite;">&nbsp;<a href="#" onclick="var divMessage=$('div_message'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%=h t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%=h t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%=h t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:navajowhite;">&nbsp;<a href="#" onclick="var divMessage=$('div_message'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -762,9 +774,9 @@ end
       <tr> 
         <td align="left"> 
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif">&nbsp;
-          <%=h t('item.message_info1') %><span style="color:green;"><b><%=h t('item.owner_full') %></b></span><%=h t('item.message_info2') %><span style="color:green;"><b><%=h t('item.owner_full') %></b></span><%=h t('item.message_info3') %>
-          <%=h t('item.message_info4') %><span style="color:green;"><b><%=h t('item.owner_full') %></b></span><%=h t('item.message_info5') %><br/>
-          <%=h t('item.message_info6') %><span style="color:green;"><b><%=h t('item.owner_full') %></b></span><%=h t('item.message_info7') %>
+          <%= t('item.message_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info2') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info3') %>
+          <%= t('item.message_info4') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info5') %><br/>
+          <%= t('item.message_info6') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info7') %>
         </td>
       </tr>
       <tr height="10"><td></td></tr>
@@ -784,7 +796,7 @@ end
       </tr>
       <tr height="20"><td></td></tr>
     <% if login_user.nil? %>
-      <tr><td align="center"><%=h t('item.login_to_register_messages') %></td></tr>
+      <tr><td align="center"><%= t('item.login_to_register_messages') %></td></tr>
       <tr height="20"><td></td></tr>
     <% end %>
     </table>
@@ -810,7 +822,7 @@ end
                 <table cellspacing="0" cellpadding="0" width="100%">
                   <tr>
                     <td width="80" valign="middle" nowrap align="left" style="padding-left:10px; font-size:10pt;">
-                      <%=h t('item.file') %> :
+                      <%= t('item.file') %> :
                     </td>
                     <td valign="middle">
                       <%= file_field :comment, :file, :size => '60', :style => 'width:100%' %>
@@ -846,6 +858,8 @@ end
   <tr height="20"><td></td></tr>
 </table>
 
+<%= render(:partial => 'common/user_groups') %>
+
 <script type="text/javascript">
 <!--
 <% unless params[:a_name].nil? %>
@@ -863,10 +877,10 @@ function doDelete(id, title)
     team_id = $("team_id").value;
   }
   if (team_id == null || team_id.length <= 0) {
-    confm("<%=h t('paren.square.left') %>"+title+"<%=h t('msg.confirm_to_delete') %>", "_doDelete("+id+")");
+    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+id+")");
   } else {
 <% end %>
-    confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+title+"<%=h t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDelete("+id+")");
+    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+id+")");
 <% if @team.nil? %>
   }
 <% end %>
@@ -882,7 +896,7 @@ function _doDuplicate()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'items', :action => 'duplicate', :id => @item.id %>",
+          "<%= url_for(:controller => 'items', :action => 'duplicate', :id => @item.id) %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -900,7 +914,7 @@ function _doDelete(id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'items', :action => 'destroy' %>?id="+id,
+          "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+id,
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -909,7 +923,7 @@ function _doDelete(id)
                 //thetisBoxProgress.remove();
                 var avoid_0 = encodeURIComponent('items/show');
                 var avoid_1 = encodeURIComponent('items/edit');
-                location.href = "<%= url_for :controller => 'history', :action => 'back' %>?avoid[]="+avoid_0+"&avoid[]="+avoid_1;
+                location.href = "<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]="+avoid_0+"&avoid[]="+avoid_1;
             }
           }
         );
@@ -955,7 +969,7 @@ function doRegisterComment(frm)
           },
           function(){
             thetisBoxProgress.remove();
-            msg("<%=h t('msg.system_error')%>");
+            msg("<%= t('msg.system_error')%>");
           }
         );
 }
@@ -965,7 +979,7 @@ function editComment(comment_id)
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
 
-  var form_tag = "<form action=\"<%= url_for :controller => 'items', :action => 'update_comment' %>\" method=\"post\" onsubmit=\"if (!_checkComment($('thetisBoxEdit-"+thetisBox.id+"'))) { return false; } ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_comment_"+comment_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'update_comment') %>\" method=\"post\" onsubmit=\"if (!_checkComment($('thetisBoxEdit-"+thetisBox.id+"'))) { return false; } ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_comment_"+comment_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("comment_id="+comment_id, "authenticity_token=<%= form_authenticity_token %>"));
 
@@ -984,7 +998,7 @@ function _checkComment(txaComment)
 
 function doDeleteComment(comment_id)
 {
-  confm("<%= h t('item.confirm_to_delete_message') %>", "_doDeleteComment("+comment_id+")");
+  confm("<%= t('item.confirm_to_delete_message') %>", "_doDeleteComment("+comment_id+")");
 }
 
 function _doDeleteComment(comment_id)
@@ -993,7 +1007,7 @@ function _doDeleteComment(comment_id)
 
   new Ajax.Updater(
         "div_comment_"+comment_id,
-        "<%= url_for :controller => 'items', :action => 'destroy_comment' %>",
+        "<%= url_for(:controller => 'items', :action => 'destroy_comment') %>",
         {
           parameters:"comment_id="+comment_id+"&authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
@@ -1007,7 +1021,7 @@ function _doDeleteComment(comment_id)
 
 function doDeleteCommentAttachment(div_id, comment_id, attach_id, title)
 {
-  confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDeleteCommentAttachment('"+div_id+"', "+comment_id+", "+attach_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteCommentAttachment('"+div_id+"', "+comment_id+", "+attach_id+")");
 }
 
 function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
@@ -1016,7 +1030,7 @@ function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
 
   new Ajax.Updater(
         "div_comment_"+comment_id,
-        "<%= url_for :controller => 'items', :action => 'delete_comment_attachment' %>",
+        "<%= url_for(:controller => 'items', :action => 'delete_comment_attachment') %>",
         {
           parameters:"comment_id="+comment_id+"&attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
@@ -1044,7 +1058,7 @@ function showURL()
                           (mainWidth/10*8)+",320",
                           "TRAY",
                           "",
-                          "<%=h t('cap.url_to_this_page') %>",
+                          "<%= t('cap.url_to_this_page') %>",
                           request.responseText
                         );
                 request.responseText.evalScripts();
@@ -1055,7 +1069,7 @@ function showURL()
 
 function addToDesktop()
 {
-  confm("<%=h t('paren.square.left') + truncate(@item.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
+  confm("<%= t('paren.square.left') + truncate(@item.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
 }
 
 function _addToDesktop()
@@ -1063,7 +1077,7 @@ function _addToDesktop()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'add_toy' %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
+          "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -1075,7 +1089,7 @@ function _addToDesktop()
                 thetisBoxProgress.remove();
 
                 if (Number(request.responseText) > 0) {
-                  tips("<%=h t('msg.add_to_desktop_success')%>");
+                  tips("<%= t('msg.add_to_desktop_success')%>");
                 }
               }
           }
@@ -1094,7 +1108,7 @@ function attachFile(comment_id)
   var content = getFileSelector("onFileSelectOK("+comment_id+")", "onFileSelectCancel()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "<%= form_authenticity_token %>", "comment_file");
 
   thetisBoxAttachFile = new ThetisBox;
-  thetisBoxAttachFile.title = "<%=h t('item.attach_file') %>";
+  thetisBoxAttachFile.title = "<%= t('item.attach_file') %>";
   thetisBoxAttachFile.overflow = "hide";
   thetisBoxAttachFile.show("CENTER", "400,200", "TRAY", "", "", content);
 }
@@ -1105,7 +1119,7 @@ function onFileSelectOK(comment_id)
 
   ajaxUploadFile(
           document.form_file,
-          "<%= url_for :controller => 'items', :action => 'add_comment_attachment' %>?comment_id=" + comment_id,
+          "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>?comment_id=" + comment_id,
           "div_comment_" + comment_id,
           function(){
             var comments_table = $("comments_table");
@@ -1119,7 +1133,7 @@ function onFileSelectOK(comment_id)
           },
           function(){
             thetisBoxProgress.remove();
-            msg("<%=h t('msg.system_error')%>");
+            msg("<%= t('msg.system_error')%>");
 
             thetisBoxAttachFile.remove();
             thetisBoxAttachFile = null;

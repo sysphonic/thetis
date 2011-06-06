@@ -52,6 +52,24 @@ class TemplatesController < ApplicationController
 
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
+    @group_id = params[:group_id]
+
+    if @group_id.nil? or @group_id.empty?
+      @group_id = '0'   # '0' for ROOT
+    elsif @group_id == '0'
+      ;
+    else
+      group = nil
+      begin
+        group = Group.find(@group_id)
+      rescue
+      end
+      if group.nil?
+        render(:text => 'ERROR:' + t('msg.already_deleted', :name => Group.human_name))
+        return
+      end
+    end
+
     unless @tmpl_workflows_folder.nil?
       item = Item.new_workflow(@tmpl_workflows_folder.id)
       item.title = t('workflow.new')
@@ -62,12 +80,17 @@ class TemplatesController < ApplicationController
       workflow.item_id = item.id
       workflow.user_id = 0
       workflow.status = Workflow::STATUS_NOT_APPLIED
+      if @group_id == '0'
+        workflow.groups = nil
+      else
+        workflow.groups = '|' + @group_id + '|'
+      end
       workflow.save!
     else
       Log.add_error(request, nil, '/'+TemplatesHelper::TMPL_ROOT+'/'+TemplatesHelper::TMPL_WORKFLOWS+' NOT found!')
     end
 
-    render(:partial => 'ajax_workflows', :layout => false)
+    render(:partial => 'groups/ajax_group_workflows', :layout => false)
   end
 
   #=== destroy_workflow
@@ -80,10 +103,15 @@ class TemplatesController < ApplicationController
 
     Item.find(params[:id]).destroy
 
-    # Get $Templates and its sub folders to update partial division.
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
-    render(:partial => 'ajax_workflows', :layout => false)
+    @group_id = params[:group_id]
+
+    if @group_id.nil? or @group_id.empty?
+      @group_id = '0'   # '0' for ROOT
+    end
+
+    render(:partial => 'groups/ajax_group_workflows', :layout => false)
   end
 
   #=== create_local

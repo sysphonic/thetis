@@ -9,7 +9,7 @@ unless @group.nil?
   menu_id = 'a_' + div_id
   selKeeper_id = 'selKeeper'
   %>
-  <a id="<%= menu_id %>" value="" href="javaScript:doGetUsers('<%= @group.id %>'); if ($('<%= selKeeper_id %>').value == '<%= menu_id %>') { ThetisBox.toggleTree('<%= div_id %>'); } ThetisBox.selectTree('<%= selKeeper_id %>', '<%= menu_id %>', null)">
+  <a id="<%= menu_id %>" value="" href="javaScript:selectGroup('<%= @group.id %>'); if ($('<%= selKeeper_id %>').value == '<%= menu_id %>') { ThetisBox.toggleTree('<%= div_id %>'); } ThetisBox.selectTree('<%= selKeeper_id %>', '<%= menu_id %>', null)">
     <%
     group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.gif'
     group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'

@@ -125,7 +125,7 @@ class SchedulesController < ApplicationController
         schedule = Schedule.find(params[:id])
       rescue StandardError => err
         Log.add_error(request, err)
-        flash[:notice] = 'ERROR:' + t('schedule.already_deleted')
+        flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.human_name)
         redirect_to(:action => 'day', :id => date.strftime(Schedule::SYS_DATE_FORM))
         return
       end
@@ -293,7 +293,7 @@ class SchedulesController < ApplicationController
       schedule = Schedule.find(params[:id])
     rescue StandardError => err
       Log.add_error(request, err)
-      flash[:notice] = 'ERROR:' + t('schedule.already_deleted')
+      flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.human_name)
       render(:text => '')
       return
     end

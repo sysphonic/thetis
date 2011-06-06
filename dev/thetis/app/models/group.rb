@@ -15,6 +15,7 @@
 #
 class Group < ActiveRecord::Base
 
+  extend CachedRecord
   include TreeElement
 
   #=== self.destroy
@@ -146,9 +147,10 @@ class Group < ActiveRecord::Base
   #
   #_group_id_:: Target Group-ID.
   #_groups_cache_:: Hash to accelerate response. {group_id, path}
+  #_group_obj_cache_:: Hash to accelerate response. {group_id, group}
   #return:: Group path like "/parent_name1/parent_name2/this_name".
   #
-  def self.get_path(group_id, groups_cache=nil)
+  def self.get_path(group_id, groups_cache=nil, group_obj_cache=nil)
 
     unless groups_cache.nil?
       path = groups_cache[group_id.to_i]
@@ -179,11 +181,7 @@ class Group < ActiveRecord::Base
         end
       end
 
-      begin
-        group = Group.find(group_id)
-      rescue
-        group = nil
-      end
+      group = Group.find_with_cache(group_id, group_obj_cache)
 
       id_ary.unshift(group_id.to_i) unless groups_cache.nil?
 

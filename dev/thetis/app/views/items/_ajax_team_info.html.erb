@@ -21,20 +21,19 @@
     <td class="item_value_td" nowrap>
     <%
     unless @team.nil?
-      groups_cache = Hash.new
+      @users_cache ||= {}
+      @user_obj_cache ||= {}
+
+      @groups_cache ||= {}
+      @group_obj_cache ||= {}
 
       @team.get_users_a.each do |user_id|
-        user_name = User.get_name(user_id, @users_cache)
+        user_name = User.get_name(user_id, @users_cache, @user_obj_cache)
         group_names = []
         begin
-          user = User.find(user_id)
+          user = User.find_with_cache(user_id, @user_obj_cache)
           user.get_groups_a.each do |group_id|
-            g_name = groups_cache[group_id]
-            if g_name.nil?
-              g_name = Group.get_path(group_id)
-              groups_cache[group_id] = g_name
-            end
-            group_names << g_name
+            group_names << Group.get_path(group_id, @groups_cache, @group_obj_cache)
           end
         rescue
         end

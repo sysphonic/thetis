@@ -137,7 +137,16 @@
                           <label for="address_url"><%= Address.human_attribute_name('url') %></label>
                         </td>
                         <td class="item_value_td">
+                        <%
+                        urls = ApplicationHelper.extract_uri_a(@address.url)
+                        if urls.nil?
+                        %>
                           <%=h @address.url %>
+                        <% else %>
+                          <a href="<%=h urls.first %>" target="_blank">
+                            <%=h @address.url %>
+                          </a>
+                        <% end %>
                         </td>
                       </tr>
                     <% end %>

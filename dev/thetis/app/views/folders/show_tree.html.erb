@@ -19,20 +19,20 @@ groups_cache = {}
       <table width="100%" cellspacing="0" cellpadding="0">
          <tr>
             <td align="left" style="background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
-    <% if @group_id.nil? or @group_id.empty? %>
+            <% if @group_id.nil? or @group_id.empty? %>
               <div class="td_button_gray" align="left" nowrap style="width:110px; background-color:gray;" onClick="showGroupTreeToSelect('0');" onMouseOver="this.style.backgroundColor='lawngreen'" onMouseOut="this.style.backgroundColor='gray'">
-                <%=h t('btn.select_group') %>
+                <%= t('btn.select_group') %>
               </div>
-    <% else %>
+            <% else %>
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="left" nowrap style="text-indent:10px;">
-                    <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span></a>
-                    &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                    <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span></a>
+                    &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                   </td>
                 </tr>
               </table>
-    <% end %>
+            <% end %>
             </td>
         </tr>
       </table>
@@ -43,20 +43,20 @@ groups_cache = {}
     <td>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-   <% if !login_user.nil? %>
+        <% if !login_user.nil? %>
           <td align="left" nowrap style="padding:5px 20px;">
-            <input type="button" value="<%= h t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
-            <input type="button" value="<%= h t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
-            <input type="button" value="<%= h t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
-            <input type="button" value="<%= h t('btn.move') %>" onClick="doMove();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;" />
           </td>
-   <% else %>
+        <% else %>
           <td align="left" style="padding:5px 20px;">
-            <%=h t('folder.login_to_edit_tree') %>
+            <%= t('folder.login_to_edit_tree') %>
           </td>
-   <% end %>
+        <% end %>
           <td align="right" style="padding:5px 20px;">
-   <% unless login_user.nil? %>
+        <% unless login_user.nil? %>
             <%
             options = []
             options << [h(t('folder.opt.items_list')), 'items']
@@ -66,7 +66,7 @@ groups_cache = {}
             options << [h(t('folder.opt.display_control')), 'disp']
             %>
             <%= select_tag 'select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px;' %>
-   <% end %>
+        <% end %>
           </td>
         </tr>
       </table>
@@ -293,11 +293,11 @@ function checkName(val)
   var val = trim(val, false);
 
   if (val.charAt(0) == '$') {
-    msg("<%=h t('folder.reserved_name') %>");
+    msg("<%= t('folder.reserved_name') %>");
     return false;
   }
   if (val.indexOf('/') >= 0) {
-    msg("<%=h t('folder.reserved_char') %>");
+    msg("<%= t('folder.reserved_char') %>");
     return false;
   }
   return true;
@@ -308,7 +308,7 @@ function checkSystemFolder(folder_id)
   var xtype = $("xtype_"+folder_id).innerHTML;
 
   if (xtype == "<%= Folder::XTYPE_SYSTEM %>") {
-    msg("<%=h t('folder.blocked_by_system') %>");
+    msg("<%= t('folder.blocked_by_system') %>");
     return false;
   }
   return true;
@@ -319,7 +319,7 @@ function checkMyFolder(folder_id)
   var xtype = $("xtype_"+folder_id).innerHTML;
 
   if (xtype == "<%= Folder::XTYPE_USER %>") {
-    msg("<%=h t('folder.my_folder_restricted') %>");
+    msg("<%= t('folder.my_folder_restricted') %>");
     return false;
   }
   return true;
@@ -330,7 +330,7 @@ function checkGroupFolder(folder_id)
   var xtype = $("xtype_"+folder_id).innerHTML;
 
   if (xtype == "<%= Folder::XTYPE_GROUP %>") {
-    msg("<%=h t('folder.group_folder_restricted') %>");
+    msg("<%= t('folder.group_folder_restricted') %>");
     return false;
   }
   return true;
@@ -341,7 +341,7 @@ function checkTeamFolder(folder_id)
   var xtype = $("xtype_"+folder_id).innerHTML;
 
   if (xtype == "<%= Folder::XTYPE_TEAM %>") {
-    msg("<%=h t('folder.team_folder_restricted') %>");
+    msg("<%= t('folder.team_folder_restricted') %>");
     return false;
   }
   return true;
@@ -350,7 +350,7 @@ function checkTeamFolder(folder_id)
 function doCreate(pos)
 {
   if (document.form_folder_tree.selKeeper.value == "") {
-    msg("<%=h t('folder.select_parent') %>");
+    msg("<%= t('folder.select_parent') %>");
     return;
   }
   var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
@@ -363,7 +363,7 @@ function doCreate(pos)
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'create' %>\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'create') %>\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
 }
@@ -371,13 +371,13 @@ function doCreate(pos)
 function doRename(pos)
 {
   if (document.form_folder_tree.selKeeper.value == '') {
-    msg("<%=h t('folder.select') %>");
+    msg("<%= t('folder.select') %>");
     return;
   }
   var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
 
   if (folder_id == "0") {
-    msg("<%= h t('folder.root_folder_restricted') %>");
+    msg("<%= t('folder.root_folder_restricted') %>");
     return;
   }
 
@@ -390,7 +390,7 @@ function doRename(pos)
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'rename' %>?id="+folder_id+"\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('a_folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'rename') %>?id="+folder_id+"\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('a_folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
   var name = trim($("folderTree:"+folder_id+"_name").innerHTML);
   thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
@@ -399,13 +399,13 @@ function doRename(pos)
 function doDelete()
 {
   if (document.form_folder_tree.selKeeper.value == '') {
-    msg("<%=h t('folder.select') %>");
+    msg("<%= t('folder.select') %>");
     return;
   }
   var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1]; 
 
   if (folder_id == "0") {
-    msg("<%= h t('folder.root_folder_restricted') %>");
+    msg("<%=  t('folder.root_folder_restricted') %>");
     return;
   }
 
@@ -419,14 +419,14 @@ function doDelete()
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
   var name = trim($("folderTree:"+folder_id+"_name").innerHTML);
-  confm("<%=h t('paren.square.left') %>"+name+"<%=h t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
+  confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
 }
 
 function _doDelete(folder_id)
 {
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Request(
-              "<%= url_for :controller => 'folders', :action => 'destroy' %>?id="+folder_id,
+              "<%= url_for(:controller => 'folders', :action => 'destroy') %>?id="+folder_id,
               {
                 asynchronous:true,
                 evalScripts:true,
@@ -446,13 +446,13 @@ function _doDelete(folder_id)
 function doMove()
 {
   if (document.form_folder_tree.selKeeper.value == "") {
-    msg("<%=h t('folder.select') %>");
+    msg("<%= t('folder.select') %>");
     return;
   }
   var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
 
   if (folder_id == "0") {
-    msg("<%= h t('folder.root_folder_restricted') %>");
+    msg("<%= t('folder.root_folder_restricted') %>");
     return;
   }
 
@@ -468,8 +468,8 @@ function doMove()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'folders', :action => 'move' %>?id="+folder_id, "<%=h t('folder.select_dest')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>?id="+folder_id, "0");
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'folders', :action => 'move') %>?id="+folder_id, "<%= t('folder.select_dest')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
 function selectFolder(folder_id)
@@ -509,25 +509,25 @@ function changeOption(val)
 function doDeleteItem(item_id, folder_id, title, del_type)
 {
   if (del_type == "<%= Item::XTYPE_PROJECT %>") {
-    confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+title+"<%=h t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
+    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
   } else {
-    confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
+    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
   }
 }
 
 function _doDeleteItem(item_id, folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'ajax_delete_item' %>?id="+item_id+"&folder_id="+folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'ajax_delete_item') %>?id="+item_id+"&folder_id="+folder_id);
 }
 
 function doGetItems(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_items' %>?id="+folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_items') %>?id="+folder_id);
 }
 
 function doGetItemsOrder(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_items_order' %>?id="+folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_items_order') %>?id="+folder_id);
 }
 
 function doGetFoldersOrder(folder_id)
@@ -536,17 +536,17 @@ function doGetFoldersOrder(folder_id)
   <% unless @group_id.nil? %>
   param = "&group_id=<%= @group_id %>";
   <% end %>
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_folders_order' %>?id="+folder_id+param);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_folders_order') %>?id="+folder_id+param);
 }
 
 function doGetAuth(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_users' %>?id="+folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>?id="+folder_id);
 }
 
 function doGetDispCtrl(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_disp_ctrl' %>?id="+folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_disp_ctrl') %>?id="+folder_id);
 }
 
 function doUpdateView(action)
@@ -588,7 +588,7 @@ function selectTabUsers(folder_id)
 {
   var applyFunc = getApplyFunc(folder_id);
   if (applyFunc != null) {
-    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabUsers("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+    confm("<%= t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabUsers("+folder_id+")", "<%= t('btn.btn_yes') %>", "<%= t('btn.btn_no') %>");
   } else{
     _selectTabUsers(folder_id);
   }
@@ -596,20 +596,20 @@ function selectTabUsers(folder_id)
 
 function _selectTabUsers(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_users' %>?id=" + folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>?id=" + folder_id);
 }
 
 function doApplyAuthUsers(folder_id)
 {
   selectListAll($("users_auth"));
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_users' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_users') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
 }
 
 function selectTabGroups(folder_id)
 {
   var applyFunc = getApplyFunc(folder_id);
   if (applyFunc != null) {
-    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabGroups("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+    confm("<%= t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabGroups("+folder_id+")", "<%= t('btn.btn_yes') %>", "<%= t('btn.btn_no') %>");
   } else{
     _selectTabGroups(folder_id);
   }
@@ -617,20 +617,20 @@ function selectTabGroups(folder_id)
 
 function _selectTabGroups(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_groups' %>?id=" + folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_groups') %>?id=" + folder_id);
 }
 
 function doApplyAuthGroups(folder_id)
 {
   selectListAll($("groups_auth"));
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_groups' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_groups') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
 }
 
 function selectTabTeams(folder_id)
 {
   var applyFunc = getApplyFunc(folder_id);
   if (applyFunc != null) {
-    confm("<%=h t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabTeams("+folder_id+")", "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+    confm("<%= t('msg.confirm_to_save_change') %>", applyFunc, "_selectTabTeams("+folder_id+")", "<%= t('btn.btn_yes') %>", "<%= t('btn.btn_no') %>");
   } else{
     _selectTabTeams(folder_id);
   }
@@ -638,13 +638,13 @@ function selectTabTeams(folder_id)
 
 function _selectTabTeams(folder_id)
 {
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'get_auth_teams' %>?id=" + folder_id);
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_teams') %>?id=" + folder_id);
 }
 
 function doApplyAuthTeams(folder_id)
 {
   selectListAll($("teams_auth"));
-  doUpdateView("<%= url_for :controller => 'folders', :action => 'set_auth_teams' %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_teams') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
 }
 
 function showGroupTreeToSelect(group_id)
@@ -652,14 +652,14 @@ function showGroupTreeToSelect(group_id)
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'folders', :action => 'show_tree' %>", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'folders', :action => 'show_tree') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 function clearGroup()
 {
   prog("TOP-RIGHT");
-  location.href = "<%= url_for :controller => 'folders', :action => 'show_tree' %>";
+  location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>";
 }
 
 //-->

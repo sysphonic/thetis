@@ -18,6 +18,8 @@ class User < ActiveRecord::Base
 
   require 'csv'
 
+  extend CachedRecord
+
   validates_uniqueness_of :name
 # Comment out considering about administrative users.
 #  validates_uniqueness_of :email
@@ -312,9 +314,10 @@ class User < ActiveRecord::Base
   #
   #_user_id_:: Target User-ID
   #_users_cache_:: Hash to accelerate response. {user_id, user_name}
+  #_user_obj_cache_:: Hash to accelerate response. {user_id, user}
   #return:: User name. If not found, prearranged string.
   #
-  def self.get_name(user_id, users_cache = nil)
+  def self.get_name(user_id, users_cache=nil, user_obj_cache=nil)
 
     return '' if user_id.nil?
 
@@ -326,11 +329,8 @@ class User < ActiveRecord::Base
     if user_id.to_s == '0'
       user_name = I18n.t('user.system')
     else
-      begin
-        user = User.find(user_id)
-      rescue StandardError => err
-        Log.add_error(nil, err)
-      end
+      user = User.find_with_cache(user_id, user_obj_cache)
+
       if user.nil?
         user_name = user_id.to_s + ' '+ I18n.t('paren.deleted')
       else
@@ -410,7 +410,7 @@ class User < ActiveRecord::Base
   #
   #_incl_parents_:: Flag to require parent Group-IDS by return.
   #_group_obj_cache_:: Hash to accelerate response. {group_id, group}
-  #return:: Array of Group-IDs. If no groups, returns empty array.
+  #return:: Array of Group-IDs.
   #
   def get_groups_a(incl_parents=false, group_obj_cache=nil)
 
@@ -442,7 +442,7 @@ class User < ActiveRecord::Base
       array |= parent_ids
     end
 
-    return array
+    return array.uniq
   end
 
   #=== get_teams_a

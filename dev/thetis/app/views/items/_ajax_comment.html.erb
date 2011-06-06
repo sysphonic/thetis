@@ -1,4 +1,11 @@
-<% login_user = session[:login_user] %>
+<%
+login_user = session[:login_user]
+@user_obj_cache ||= {}
+
+@group_obj_cache ||= {}
+@groups_cache ||= {}
+@user_groups ||= {}
+%>
 
 <% unless @comment.nil? %>
   <table cellspacing="0" cellpadding="0" width="100%">
@@ -8,35 +15,40 @@
           <tr>
             <td class="comment_tab_td" align="left" nowrap width="25%" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/comment_tab.png') top left repeat-x;">
               <div class="comment_name" nowrap>
-                <% user_name = User.get_name(@comment.user_id, @users_cache) %>
-                <b><%=h user_name %></b>&nbsp;&nbsp;(<%= @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
+                <%
+                user_name, u_groups = UsersHelper.get_groups_info(@comment.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+                %>
+                <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+                  <b style="color:white;"><%=h user_name %></b>
+                </a>
+                &nbsp;(<%= @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
               </div>
             </td>
             <td align="left" style="padding-left:15px;">
-          <%
-          unless login_user.nil? or params[:action] == 'bbs'
-            login_id = login_user.id
-            if login_id == @comment.user_id or login_id == @item.user_id or login_user.admin?(User::AUTH_ITEM)
-          %>
+            <%
+            unless login_user.nil? or params[:action] == 'bbs'
+              login_id = login_user.id
+              if login_id == @comment.user_id or login_id == @item.user_id or login_user.admin?(User::AUTH_ITEM)
+            %>
               <table cellspacing="0" cellpadding="0" align="left" width="75">
                 <tr>
-            <% if login_id == @comment.user_id %>
+                <% if login_id == @comment.user_id %>
                   <td>
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
                   </td>
                   <td>
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%=h t('item.attach_file') %>" title="<%=h t('item.attach_file') %>" onclick="attachFile(<%= @comment.id %>);" />
                   </td>
-            <% end %>
+                <% end %>
                   <td>
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteComment(<%= @comment.id %>); return false;" />
                   </td>
                 </tr>
               </table>
-          <%
+            <%
+              end
             end
-          end
-          %>
+            %>
             </td>
           </tr>
           <tr>
@@ -71,8 +83,8 @@
           profile_sheet = profiles_cache[@comment.user_id]
 
           if profile_sheet.nil?
+            user = User.find_with_cache(@comment.user_id, @user_obj_cache)
             begin
-              user = User.find(@comment.user_id)
               profile_sheet = Item.find(user.item_id)
               profiles_cache[@comment.user_id] = profile_sheet unless profiles_cache.nil?
             rescue

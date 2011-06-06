@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(:version => 20110524100000) do
     t.integer  "xorder"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "groups"
+    t.text     "teams"
   end
 
   create_table "attachments", :force => true do |t|
@@ -396,6 +398,7 @@ ActiveRecord::Schema.define(:version => 20110524100000) do
     t.datetime "issued_at"
     t.integer  "original_by"
     t.datetime "decided_at"
+    t.text     "groups"
   end
 
   create_table "zeptair_xlogs", :force => true do |t|

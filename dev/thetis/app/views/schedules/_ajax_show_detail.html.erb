@@ -3,7 +3,7 @@
   <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
       <td align="center">
-        <%=h t('paren.deleted') %>
+        <%= t('paren.deleted') %>
       </td>
     </tr>
   </table>
@@ -19,12 +19,12 @@
 
 <%
 if params[:from] == 'desktop'
-  href = url_for :controller => 'schedules', :action => 'show_in_day', :id => @schedule.id, :date => Date.today.strftime(Schedule::SYS_DATE_FORM)
+  href = url_for(:controller => 'schedules', :action => 'show_in_day', :id => @schedule.id, :date => Date.today.strftime(Schedule::SYS_DATE_FORM))
 %>
           <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;">
             <%=h @schedule.title %>
           </a>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.move_to_schedule') %>" title="<%=h t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.move_to_schedule') %>" title="<%= t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
 <% else %>
           <%=h @schedule.title %>
 <%
@@ -34,12 +34,12 @@ if params[:from] == 'desktop'
   if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(login_user.id.to_s))
 %>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= h t('btn.add_to_desktop') %>" title="<%= h t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+          <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
 
 <script type="text/javascript">
 addToDesktop = function()
 {
-  confm("<%=h t('paren.square.left') + truncate(@schedule.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
+  confm("<%= t('paren.square.left') + truncate(@schedule.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
 }
 
 _addToDesktop = function()
@@ -47,7 +47,7 @@ _addToDesktop = function()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'add_toy' %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
+          "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -59,7 +59,7 @@ _addToDesktop = function()
                 thetisBoxProgress.remove();
 
                 if (Number(request.responseText) > 0) {
-                  tips("<%=h t('msg.add_to_desktop_success')%>");
+                  tips("<%= t('msg.add_to_desktop_success')%>");
                 }
               }
           }
@@ -73,7 +73,7 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><%=h t('schedule.time') %></td>
+        <td class="item_cap_td" nowrap><%= t('schedule.time') %></td>
         <td class="item_value_td">
 
           <% if @schedule.repeat? %>
@@ -85,7 +85,7 @@ end
 
             <table cellspacing="0" cellpadding="0" width="100%" style="padding-left:20px;">
               <tr>
-                <td width="20%" nowrap><%= h t('schedule.cap_rule') %></td>
+                <td width="20%" nowrap><%= t('schedule.cap_rule') %></td>
                 <td>
                   <%
                   rules_locale = []
@@ -97,11 +97,11 @@ end
                 </td>
               </tr>
               <tr>
-                <td nowrap><%= h t('schedule.cap_term') %></td>
+                <td nowrap><%= t('schedule.cap_term') %></td>
                 <td>
                   <% if @schedule.repeat_start.nil? and @schedule.repeat_end.nil? %>
 
-                    <%=h t('paren.not_specified') %>
+                    <%= t('paren.not_specified') %>
 
                   <% else %>
 
@@ -159,7 +159,7 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><label for="schedule_detail"><%=h t('btn.detail') %></label></td>
+        <td class="item_cap_td" nowrap><label for="schedule_detail"><%= t('btn.detail') %></label></td>
         <td class="item_value_td">
          <pre><%=h @schedule.detail %></pre>
         </td>
@@ -188,11 +188,16 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><%=h t('msg.members') %></td>
+        <td class="item_cap_td" nowrap><%= t('msg.members') %></td>
         <td class="item_value_td">
         <%
         @users_cache ||= {}
+        @user_obj_cache ||= {}
+
+        @user_groups ||= {}
         @groups_cache ||= {}
+        @group_obj_cache ||= {}
+
         @teams_cache ||= {}
 
         users = @schedule.get_users_a
@@ -205,36 +210,10 @@ end
           <div style="padding-left:20px;">
           <%
           users.each do |user_id|
-
-            org_names = []
-
-            begin
-              user = User.find(user_id)
-              @users_cache[user_id.to_i] = user.get_name
-
-              user.get_groups_a.each do |group_id|
-                group_name = Group.get_path(group_id, @groups_cache)
-                org_names << group_name
-              end
-
-              #Hide team_name for security.
-              # user.get_teams_a.each do |team_id|
-              #   team_name = Team.get_name(team_id, @teams_cache)
-              #   org_names << team_name
-              # end
-            rescue StandardError => err
-              Log.add_error(request, err)
-            end
-
-            disp = User.get_name(user_id, @users_cache)
-            belongs_to = ''
-            unless org_names.empty?
-              belongs_to = disp + ' @ <br/>&nbsp;&nbsp;' + org_names.join('<br/>&nbsp;&nbsp;')
-            end
-
+            user_name, u_groups = UsersHelper.get_groups_info(user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             sep = (users.last == user_id)?'':', '
           %>
-          <a class="a_underline" href="#" nowrap onclick="msg('<%=ApplicationHelper.h_s_quote(belongs_to) %>'); return false;"><%=h disp %></a><%= sep %>
+          <a class="a_underline" href="#" nowrap onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;"><%= user_name %></a><%= sep %>
           <% end %>
           </div>
         <% end %>
@@ -243,7 +222,7 @@ end
           <%= t('group.plural') %><%= t('cap.suffix') %>
           <div style="padding-left:20px;">
           <% groups.each do |group_id| %>
-            <%= Group.get_path(group_id, @groups_cache) %><br/>
+            <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
           <% end %>
           </div>
         <% end %>
@@ -260,7 +239,7 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><label for="schedule_equipment"><%=h t('menu.equipment') %></label></td>
+        <td class="item_cap_td" nowrap><label for="schedule_equipment"><%= t('menu.equipment') %></label></td>
         <td class="item_value_td">
           <%
           equipments = @schedule.get_equipment_a
@@ -279,7 +258,7 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><label for="schedule_items"><%=h t('menu.items') %></label></td>
+        <td class="item_cap_td" nowrap><label for="schedule_items"><%= t('menu.items') %></label></td>
         <td class="item_value_td">
           <ul style="padding-left:20px;">
           <%
@@ -300,7 +279,7 @@ end
               <%=h disp %>
             <% if auth_read %></a><% end %>
             <% if !login_user.nil? and !item.nil? and item.editable?(login_user.id) %>
-            &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
+            &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
             <% end %>
           </li>
           <% end %>
@@ -308,22 +287,23 @@ end
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><%=h t('msg.created_by') %></td>
+        <td class="item_cap_td" nowrap><%= t('msg.created_by') %></td>
         <td class="item_value_td">
         <%
         @users_cache ||= {}
+        @user_obj_cache ||= {}
         unless @schedule.created_by.nil?
         %>
-          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.created_by, @users_cache) %></b></span>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.created_by, @users_cache, @user_obj_cache) %></b></span>
           &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
         <% end %>
         </td>
       </tr>
       <tr>
-        <td class="item_cap_td" nowrap><%=h t('msg.updated_by') %></td>
+        <td class="item_cap_td" nowrap><%= t('msg.updated_by') %></td>
         <td class="item_value_td">
         <% unless @schedule.updated_by.nil? %>
-          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.updated_by, @users_cache) %></b></span>
+          <span style="color:darkgreen;"><b><%=h User.get_name(@schedule.updated_by, @users_cache, @user_obj_cache) %></b></span>
           &nbsp;<span style="font-size:10pt;vertical-align:middle;">(<%=h @schedule.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
         <% end %>
         </td>
@@ -333,6 +313,7 @@ end
   </div>
   <br/>
 
+<%= render(:partial => 'common/user_groups') %>
 
 <script type="text/javascript">
 
@@ -346,21 +327,21 @@ showItem = function(item_id, title)
             "IFRAME",
             "",
             "",
-            "<%= url_for :controller => 'items', :action => 'show_for_print' %>?id=" + item_id
+            "<%= url_for(:controller => 'items', :action => 'show_for_print') %>?id=" + item_id
           );
 }
 
 showEquipment = function(equipment_id, name)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('menu.equipment') %>";
+  thetisBox.title = "<%= t('menu.equipment') %>";
   thetisBox.show(
             "CENTER",
             (mainWidth*7/10)+","+(mainHeight*7/10),
             "IFRAME",
             "",
             name,
-            "<%= url_for :controller => 'equipment', :action => 'show' %>?id=" + equipment_id + "&popup=true"
+            "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
           );
 }
 

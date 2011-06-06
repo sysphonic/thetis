@@ -185,7 +185,7 @@ module ItemsHelper
           array << '(Folder.read_groups like \'%|'+group_id+'|%\')'
         end
       end
-      where_read_groups = array.join ' or '
+      where_read_groups = array.join(' or ')
 
       array = []
       unless user.nil?
@@ -194,18 +194,18 @@ module ItemsHelper
           array << '(Folder.read_teams like \'%|'+team_id+'|%\')'
         end
       end
-      where_read_teams = array.join ' or '
+      where_read_teams = array.join(' or ')
 
       array = []
       array << '('+where_read_users+')' unless where_read_users.empty?
       array << '('+where_read_groups+')' unless where_read_groups.empty?
       array << '('+where_read_teams+')' unless where_read_teams.empty?
-      where_restrict = array.join ' or '
+      where_restrict = array.join(' or ')
 
       array = []
       array << '('+where_restrict+')' unless where_restrict.empty?
       array << '((Folder.read_users is null) and (Folder.read_groups is null) and (Folder.read_teams is null))'
-      where_restrict = array.join ' or '
+      where_restrict = array.join(' or ')
 
       where << ' and ((Item.folder_id = 0) or ((Item.folder_id = Folder.id) and ('+where_restrict+')))'
 

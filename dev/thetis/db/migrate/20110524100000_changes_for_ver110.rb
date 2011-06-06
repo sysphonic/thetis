@@ -6,7 +6,6 @@ class ChangesForVer110 < ActiveRecord::Migration
     add_column :addresses, :teams, :text
 
     add_column :workflows, :groups, :text
-    add_column :workflows, :teams, :text
   end
 
   def self.down
@@ -16,6 +15,5 @@ class ChangesForVer110 < ActiveRecord::Migration
     remove_column :addresses, :teams
 
     remove_column :workflows, :groups
-    remove_column :workflows, :teams
   end
 end

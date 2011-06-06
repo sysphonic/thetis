@@ -143,7 +143,6 @@ en:
     license_detail: "Please see LICENSE file for more detail."
   address:
     new: "New Address"
-    already_deleted: "This Address has already been deleted."
     deleted:
       one: "1 address has been deleted."
       other: "%{count} addresses have been deleted."
@@ -251,7 +250,6 @@ en:
     select_mine: "Select My Desktop"
   email:
     name: "E-mail"
-    already_deleted: "This E-mail has already been deleted."
     address_not_found: "Specified E-mail address is not found."
     sent: "E-mail has been sent."
     greeting1: "Dear"
@@ -261,7 +259,6 @@ en:
     initial_password: "Your initial password is:"
   equipment:
     belongs_to: "Belongs to"
-    already_deleted: "This Equipment has already been deleted."
     deleted: " equipment is/are deleted."
     confirm_to_delete: " equipment will be deleted. Are you sure?"
     confirm_to_delete_related: "] will be deleted from all related users' schedules. Are you sure?"
@@ -558,7 +555,6 @@ en:
     data: "Data"
     feed_content: "Feed Content"
   schedule:
-    already_deleted: "The specified schedule has already been deleted."
     no_day_in_rule: "Cannot save because no corresponding day exits in the Rules."
     need_auth_to_edit_destroy: "You don't have authority to edit or destroy this Schedule."
     conflict_equipment: "There are schedules which conflict about their equipment each other (You can check it on Equipment page)."
@@ -600,7 +596,6 @@ en:
     specified: "Specified order"
   team:
     plural: "Teams"
-    already_deleted: "This team has already been deleted."
     need_to_be_member: "Only the member of the team can this operation."
     status:
       standby: "Standby"
@@ -732,7 +727,6 @@ en:
     plural: "Users"
     u_name: "User name"
     title: "Title"
-    already_deleted: "This User has already been deleted."
     deleted: " user(s) is/are deleted."
     status_reset: " user(s) have been reset."
     notification_sent: "Notifications have been sent to "
@@ -934,6 +928,7 @@ en:
     please_login: "Please LOGIN for further operation."
     all_users: "All Users"
     myself: "Myself"
+    already_deleted: "This %{name} has already been deleted."
   btn:
     ok: "OK"
     cancel: "Cancel"

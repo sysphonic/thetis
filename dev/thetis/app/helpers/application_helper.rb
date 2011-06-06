@@ -15,8 +15,21 @@
 #
 module ApplicationHelper
   require 'tempfile'
+  require 'uri'     # for URI.extract()
   require RAILS_ROOT+'/lib/ya2yaml/lib/ya2yaml'
 
+
+  #=== self.extract_uri_a
+  #
+  #Gets the URI expression from the specified string.
+  #
+  #_str_:: Target string.
+  #return:: Array of extracted URI.
+  #
+  def self.extract_uri_a(str)
+
+    return URI.extract(str)
+  end
 
   #=== self.get_sort_direction_exp
   #

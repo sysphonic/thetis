@@ -143,7 +143,6 @@ de:
     license_detail: "Bitte befragen Sie LICENSE Datei für Detail."
   address:
     new: "Neue Adresse"
-    already_deleted: "This Address has already been deleted."
     deleted:
       one: "1 address has been deleted."
       other: "%{count} addresses have been deleted."
@@ -251,7 +250,6 @@ de:
     select_mine: "Meinen Desktop auswählen"
   email:
     name: "E-Mail"
-    already_deleted: "Dieser E-mail wurde schon gelöscht."
     address_not_found: "Die angegebene E-Mail-Adresse konnte nicht lokalisiert werden."
     sent: "E-Mail wurde abgesandt."
     greeting1: "Herr/Frau"
@@ -261,7 +259,6 @@ de:
     initial_password: "Ihr Anfangspasswort ist:"
   equipment:
     belongs_to: "Organisation"
-    already_deleted: "Die Einrichtunge wurde schon gelöscht."
     deleted: " Einrichtung(en) wurde(n) gelöscht."
     confirm_to_delete: " Einrichtung(en) werden gelöscht. Sind Sie sicher?"
     confirm_to_delete_related: "] wird von Zeitpläne aller entsprechenden Benutzern gelöscht. Sind Sie sicher?"
@@ -558,7 +555,6 @@ de:
     data: "Data"
     feed_content: "Mitteilen Inhalt"
   schedule:
-    already_deleted: "Der Zeitplan wurde schon gelöscht."
     no_day_in_rule: "Konnte es speichern nicht weil keinen entsprechenden Tag gefunden wird."
     need_auth_to_edit_destroy: "Sie haben keine Befugnisse diesen Zeitplan zu bearbeiten oder löschen."
     conflict_equipment: "Es geben Zeitpläne die sich um Einrichtung im Konflikt befinden (Sie können es auf Einrichtungen Seite bestätigen)."
@@ -600,7 +596,6 @@ de:
     specified: "Angegebene Reihe"
   team:
     plural: "Teams"
-    already_deleted: "Das Team wurde schon gelöscht."
     need_to_be_member: "Nur kann Mitglieder des Teams diese Operation."
     status:
       standby: "Standby"
@@ -732,7 +727,6 @@ de:
     plural: "Benutzern"
     u_name: "Benutzername"
     title: "Titel"
-    already_deleted: "Der Benutzer wurde schon gelöscht."
     deleted: " Benutzer(n) wurde(n) gelöscht."
     status_reset: " Benutzern wurden zurückgesetzt."
     notification_sent: "E-Mail wurde gesandt zu "
@@ -934,6 +928,7 @@ de:
     please_login: "Bitte LOGIN weiter zu führen."
     all_users: "Alle Benutzern"
     myself: "Über mich"
+    already_deleted: "Dieser/Diese/Das %{name} wurde schon gelöscht."
   btn:
     ok: "OK"
     cancel: "Abbrechen"

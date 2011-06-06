@@ -1,0 +1,67 @@
+
+<table class="info_area" width="100%" height="100%" cellpadding="10" cellspacing="0">
+  <tr>
+    <td valign="top">
+      <div id="div_ajax_workflows">
+
+        <%= render(:partial => 'ajax_group_workflows') %>
+
+      </div>
+
+      <table align="right" width="120" cellspacing="0" cellpadding="0">
+        <tr height="6"><td></td></tr>
+        <tr>
+          <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreateWorkflow();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+            <%= t('btn.create') %>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+doCreateWorkflow = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_ajax_workflows",
+              "<%= url_for(:controller => 'templates', :action => 'create_workflow', :group_id => @group_id) %>",
+              {
+                parameters:"authenticity_token=<%= form_authenticity_token %>",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBox.remove();
+                }
+              }
+            );
+  return true;
+}
+
+doDeleteWorkflow = function(item_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteWorkflow("+item_id+")");
+}
+
+_doDeleteWorkflow = function(item_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_workflows",
+      "<%= url_for(:controller => 'templates', :action => 'destroy_workflow') %>?id=" + item_id,
+      {
+        parameters:"group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); }
+      }
+    );
+}
+
+</script>

@@ -665,13 +665,14 @@ class Folder < ActiveRecord::Base
   #
   #_folder_id_:: Target Folder-ID.
   #_order_by_:: Order. ex. 'xorder ASC'
+  #_add_con_:: Additional condition.
   #return:: Items in the Folder.
   #
-  def self.get_items_admin(folder_id, order_by=nil)
+  def self.get_items_admin(folder_id, order_by=nil, add_con=nil)
 
     sort_field, sort_direction = FoldersHelper.get_sort_params(folder_id, order_by)
 
-    sql = ItemsHelper.get_list_sql(nil, nil, folder_id, sort_field, sort_direction, 0, true, nil)
+    sql = ItemsHelper.get_list_sql(nil, nil, folder_id, sort_field, sort_direction, 0, true, add_con)
     return Item.find_by_sql(sql)
   end
 

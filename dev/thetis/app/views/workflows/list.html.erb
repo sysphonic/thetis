@@ -12,17 +12,29 @@
 
         <table align="center" width="100%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%; background-color:burlywood;"><%=h t('btn.create') %></td>
+            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+              <%= t('btn.create') %>
+            </td>
           </tr>
           <tr>
             <td class="item_value_td">
-              <span style="color:blueviolet;"><%=h t('workflow.select_to_issue') %></span><br/>
+              <span style="color:blueviolet;"><%= t('workflow.select_to_issue') %></span><br/>
               <select id="select_workflow" name="select_workflow" class="select_multi" size="5" style="width:100%;">
               <%
               unless @tmpl_workflows_folder.nil?
-                items = Folder.get_items_admin(@tmpl_workflows_folder.id, 'xorder ASC')
-                unless items.nil?
-                  items.each do |item|
+                @group_obj_cache ||= {}
+                group_ids = login_user.get_groups_a(true, @group_obj_cache)
+                unless group_ids.include?('0')
+                  group_ids << '0'
+                end
+                group_ids.each do |group_id|
+                  sql = WorkflowsHelper.get_tmpl_list_sql(@tmpl_workflows_folder.id, group_id)
+                  workflows = Workflow.find_by_sql(sql)
+                  next if workflows.nil?
+
+                  workflows.each do |workflow|
+                    item = workflow.item
+                    next if item.nil?
               %>
                 <option value="<%= item.id %>"><%=h item.title %></option>
               <%
@@ -35,18 +47,18 @@
                 <tr height="5"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" style="padding:0px;" align="center" nowrap bgColor="gray" onClick="doCreate(); return false;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= raw(t('arrow.down')) %> <%=h t('btn.create') %>
+                    <%= raw(t('arrow.down')) %> <%= t('btn.create') %>
                   </td>
                 </tr>
               </table>
             </td>
           </tr>
 
-          <tr height="15"><td></td></tr>
+          <tr height="5"><td></td></tr>
 
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%; background-color:burlywood;">
-              <%=h t('workflow.issuing_list') %>&nbsp;
+            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+              <%= t('workflow.issuing_list') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=ApplicationHelper.h_s_quote t('workflow.issuing_list_info') %>');">
             </td>
           </tr>
@@ -54,7 +66,7 @@
           <tr>
             <td>
               <div id="div_ajax_workflow" width="100%" style="overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
-                <%= render :partial => 'ajax_workflow' %>
+                <%= render(:partial => 'ajax_workflow') %>
               </div>
             </td>
           </tr>
@@ -65,20 +77,20 @@
 
         <table align="center" width="100%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%; background-color:burlywood;">
-              <%=h t('workflow.received_list') %>&nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('workflow.received_list_info') %><br/><%=h t('arrow.right_full') %><%=ApplicationHelper.h_s_quote Workflow.decided_inbox %>');">
+            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+              <%= t('workflow.received_list') %>&nbsp;
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= t('arrow.right_full') %><%=ApplicationHelper.h_s_quote Workflow.decided_inbox %>');">
             </td>
           </tr>
           <tr height="5"><td></td></tr>
           <tr>
             <td>
               <div id="workflow_list_received" width="100%" style="overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
-                <%= render :partial => 'received_list' %>
+                <%= render(:partial => 'received_list') %>
               </div>
             </td>
           </tr>
-<% if WorkflowsHelper.exists_decided_inbox?(login_user.id) %>
+        <% if WorkflowsHelper.exists_decided_inbox?(login_user.id) %>
           <tr height="5"><td></td></tr>
           <tr>
             <td align="center">
@@ -104,7 +116,7 @@ function showDecidedInbox(folder_id)
   var thetisBox = new ThetisBox;
 
   new Ajax.Request(
-          "<%= url_for :controller => 'folders', :action => 'get_items' %>?id=" + folder_id + "&read_only=true",
+          "<%= url_for(:controller => 'folders', :action => 'get_items') %>?id=" + folder_id + "&read_only=true",
           {
             method:"get",
             asynchronous:true,
@@ -128,7 +140,7 @@ function showDecidedInbox(folder_id)
 }
 </script>
 
-<% end %>
+        <% end %>
         </table>
 
     </td>
@@ -143,7 +155,7 @@ function showDecidedInbox(folder_id)
 function doCreate()
 {
   if (getListSelected($("select_workflow")).length <= 0) {
-    msg("<%=h t('workflow.select_to_create') %>");
+    msg("<%= t('workflow.select_to_create') %>");
     return;
   }
 
@@ -163,7 +175,7 @@ function doCreate()
 
 function doDelete(workflow_id, title)
 {
-  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('msg.confirm_to_delete') %>", "_doDelete("+workflow_id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDelete("+workflow_id+")");
 }
 
 function _doDelete(workflow_id)
@@ -172,7 +184,7 @@ function _doDelete(workflow_id)
 
   new Ajax.Updater(
         "div_ajax_workflow",
-        "<%= url_for :controller => 'workflows', :action => 'destroy' %>?id=" + workflow_id,
+        "<%= url_for(:controller => 'workflows', :action => 'destroy') %>?id=" + workflow_id,
         {
           parameters:"authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
@@ -188,11 +200,11 @@ function showFolderTreeToSelect(folder_id, workflow_id, title)
   thetisBox.title = title;
   thetisBox.progress = true;
 
-  var form_tag = "<form action=\"<%= url_for :controller => 'workflows', :action => 'move' %>?id="+workflow_id+"\" method=\"post\" onsubmit=\"ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_ajax_workflow', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'workflows', :action => 'move') %>?id="+workflow_id+"\" method=\"post\" onsubmit=\"ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_ajax_workflow', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('item.select_folder_to_move_to')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>", folder_id);
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 
 //-->
