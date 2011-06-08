@@ -6,6 +6,7 @@ en:
       address: "Address"
       user: "User"
       item: "Item"
+      image: "Image"
       folder: "Folder"
       group: "Group"
       team: "Team"
@@ -17,6 +18,7 @@ en:
       timecard: "Timecard"
       email: "E-mail"
       mail_account: "E-mail Account"
+      desktop: "Desktop"
     attributes:
       id: "ID"
       updated_at: "Updated at"
@@ -44,6 +46,9 @@ en:
         xorder: "Order"
       attachment:
         memo: "Memo"
+      desktop:
+        theme: "Theme"
+        background_color: "Background Color"
       equipment:
         name: "Equipment name"
         note: "Memo"
@@ -227,12 +232,11 @@ en:
     select_smtp_auth: "Please select SMTP-Auth type."
     invalid_smtp_port: "The SMTP Port number must be between 1 and 65535."
   desktop:
-    name: "Desktop"
     drop_to_remove: "Drop here to remove."
     news:
       title: "Latest (Partial)"
       caption: "Drag items to your Desktop."
-      show: "Show News-Tray"
+      tray: "News-Tray"
     label:
       confirm_to_delete: "This label will be deleted. Are you sure?"
       create: "New Label"
@@ -248,6 +252,11 @@ en:
     before_login_info3: "* <i>Automatically except My Folder.</i>"
     currently_selected: "Currently Selected"
     select_mine: "Select My Desktop"
+    theme:
+      bolt: "Bolt"
+      grape: "Grape"
+    pop_up: "Pop-up"
+    show_backgound_image: "Show Backgound Image"
   email:
     name: "E-mail"
     address_not_found: "Specified E-mail address is not found."

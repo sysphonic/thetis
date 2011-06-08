@@ -8,7 +8,7 @@
   default_page: /thetis/desktop/show
   default_topicbox: "1"
   header_menus: []
-  header_title: "<i><span style=\"color:mediumblue;filter:shadow(color=black,direction=135);\">Change</span> <span style=\"color:darkblue\">this <b>Text!</b></span></i>"
+  header_title: "<i><span style=\"color:mediumblue;\">Change</span> <span style=\"color:darkblue\">this <b>Text!</b></span></i>"
   symbol_title: "Replace Me!"
 ? !ruby/symbol log
 : 

@@ -1,5 +1,5 @@
 #
-#= DesktopHelper
+#= DesktopsHelper
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
@@ -13,7 +13,33 @@
 #
 #* 
 #
-module DesktopHelper
+module DesktopsHelper
+
+  #=== self.get_user_before_login
+  #
+  #Gets User specified to be taken before LOGIN.
+  #
+  #return:: User specified to be taken before LOGIN.
+  #
+  def self.get_user_before_login
+
+    user = nil
+
+    yaml = ApplicationHelper.get_config_yaml
+    unless yaml[:desktop].nil?
+      user_before_login = yaml[:desktop]['user_before_login']
+
+      unless user_before_login.nil? or user_before_login.empty?
+        begin
+          user = User.find(user_before_login)
+        rescue StandardError => err
+          Log.add_error(nil, err)
+        end
+      end
+    end
+
+    return user
+  end
 
   #=== self.merge_toys
   #

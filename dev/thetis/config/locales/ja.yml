@@ -6,6 +6,7 @@ ja:
       address: "アドレス"
       user: "ユーザー"
       item: "記事"
+      image: "画像"
       folder: "フォルダ"
       group: "グループ"
       team: "チーム"
@@ -17,6 +18,7 @@ ja:
       timecard: "タイムカード"
       email: "メール"
       mail_account: "メールアカウント"
+      desktop: "デスクトップ"
     attributes:
       id: "ID"
       updated_at: "更新日時"
@@ -44,6 +46,9 @@ ja:
         xorder: "表示順"
       attachment:
         memo: "メモ"
+      desktop:
+        theme: "テーマ"
+        background_color: "背景色"
       equipment:
         name: "設備名"
         note: "メモ"
@@ -228,12 +233,11 @@ ja:
     select_smtp_auth: "SMTP-Authの種類を選択してください。"
     invalid_smtp_port: "SMTPポート番号は1～65535までにしてください。"
   desktop:
-    name: "デスクトップ"
     drop_to_remove: "削除したいものはここに載せてください"
     news:
       title: "最新情報（一部）"
       caption: "デスクトップにドラッグしてください。"
-      show: "新着トレイの表示"
+      tray: "最新トレイ"
     label:
       confirm_to_delete: "この付箋紙を削除します。よろしいですか？"
       create: "新しい付箋紙"
@@ -249,6 +253,11 @@ ja:
     before_login_info3: "* <i>My Folder は自動的に除かれます.</i>"
     currently_selected: "現在の選択"
     select_mine: "自分のデスクトップを選択"
+    theme:
+      bolt: "ボルト"
+      grape: "ぶどう"
+    pop_up: "ポップアップ"
+    show_backgound_image: "背景に画像を表示する"
   email:
     name: "E-mail"
     address_not_found: "該当するメールアドレスが見つかりませんでした。"

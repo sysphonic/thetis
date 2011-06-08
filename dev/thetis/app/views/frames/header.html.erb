@@ -8,7 +8,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <%= stylesheet_link_tag 'thetis101' %>
-<%= javascript_include_tag 'prototype', 'thetis/common101', 'thetis/thetis098' %>
+<%= javascript_include_tag 'prototype', 'thetis/common101', 'thetis/thetis110' %>
 
 <style type=text/css>
 A:link {
@@ -55,7 +55,6 @@ function changeHeight(elem)
     $("offset_from_top").value = 0;
 
     frameset_vertical.rows = vertical_rows_org;
-    tr_img.style.height = "45px";
     tr_img.style.display = "table-row";
     elem.innerHTML = "&and;";
   } else {
@@ -65,7 +64,6 @@ function changeHeight(elem)
     ary[0] = 19;
     $("offset_from_top").value = orgHeight - ary[0];
     frameset_vertical.rows = ary.join(",");
-    tr_img.style.height = "0px";
     tr_img.style.display = "none";
     elem.innerHTML = "&or;";
   }
@@ -90,8 +88,8 @@ function changeHeight(elem)
               <table id="table_login_user" cellspacing="0" cellpadding="0" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
                 <tr>
                   <td align="center" nowrap style="padding:5px; padding-left:10px; padding-right:10px; line-height:1.0;">
-                    <%= h t('cap.login') %> 
-                    <span id="login_name"></span>&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>">
+                    <%= t('cap.login') %> 
+                    <span id="login_name"></span>&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>">
                   </td>
                 </tr>
               </table>
@@ -127,9 +125,9 @@ function changeHeight(elem)
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td style="font-size:11pt; text-indent:30px; line-height:17px;" align="left">
-            <a href="#" onclick="eval('var ret=false; try{ top.main.showTopicBox(); ret=true; }catch(e){}'); if (!ret) { alert('<%=h t('topicbox.info') %>'); } return false;"><span style="color:white;"><%=h t('topicbox.title') %></span></a>
+            <a href="#" onclick="eval('var ret=false; try{ top.main.showTopicBox(); ret=true; }catch(e){}'); if (!ret) { alert('<%= t('topicbox.info') %>'); } return false;"><span style="color:white;"><%= t('topicbox.title') %></span></a>
               <span style="color:lightblue;">/ </span>
-            <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%=h t('menu.note') %></span></a>
+            <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>
               <span style="color:lightblue;">/ </span>
             <%
             headlines = PseudoHash.new

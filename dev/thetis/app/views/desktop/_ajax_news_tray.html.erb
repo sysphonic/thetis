@@ -127,7 +127,7 @@ TrayDragObserver.prototype = {
     if (toy.className != 'toy_tray') {
       return;
     }
-    $("div_desktop").style.backgroundColor = "#A9CDF9";
+    $("div_desktop").style.backgroundColor = "<%= Desktop.background_color(session[:color]) %>";
     draggable.options.snap = false;
   }
 }

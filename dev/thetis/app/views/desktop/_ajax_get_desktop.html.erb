@@ -14,28 +14,60 @@ end
 @users_cache = {}
 %>
 
-<span>
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:#A9CDF9; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
-  <tr class="desktop_tr">
-    <td class="desktop_td" id="cell_0x0" align="left" valign="top" style="width:10%;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
-    <td class="desktop_td" id="cell_1x0" align="center" valign="top" style="width:80%;" nowrap>
-      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%=h t('msg.desktop_public') %></span><% end %>
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:<%= @desktop.get_background_color %>; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
+  <tr class="desktop_tr" height="30%">
+    <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :left)}'); background-repeat:no-repeat; background-position:top left;" %>
+    <td class="desktop_td" id="cell_0x0" align="left" valign="top" style="width:30%; <%= raw(corner_img_style) %>">
+      &nbsp;
     </td>
-    <td class="desktop_td" id="cell_2x0" align="right" valign="top" style="width:10%;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+    <td class="desktop_td" id="cell_1x0" align="center" valign="top" style="width:40%;" nowrap>
+      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%= t('msg.desktop_public') %></span><% end %>
+    </td>
+    <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :right)}'); background-repeat:no-repeat; background-position:top right;" %>
+    <td class="desktop_td" id="cell_2x0" align="right" valign="top" style="width:30%; <%= raw(corner_img_style) %>">
+      &nbsp;
+    </td>
   </tr>
-  <tr class="desktop_tr">
-    <td class="desktop_td" id="cell_0x2" align="left" valign="bottom">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
-    <td class="desktop_td" id="cell_1x0" align="center" valign="bottom" nowrap>
-      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%=h t('msg.desktop_public') %></span><% end %>
+  <tr class="desktop_tr" height="40%">
+    <td class="desktop_td" id="cell_0x1" align="left" valign="middle" style="width:10%;">
     </td>
-    <td class="desktop_td" id="cell_2x2" align="right" valign="bottom">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/bolt.png" /></td>
+    <%
+    if @desktop.img_enabled
+      bg_img_style = 'background-image:url(\'' + url_for(:controller => 'desktop', :action => 'get_image') + '\'); background-repeat:no-repeat; background-position:center center;'
+    else
+      bg_img_style = ''
+    end
+    %>
+    <td class="desktop_td" id="cell_1x1" align="center" valign="middle" style="<%= raw(bg_img_style) %>">
+      &nbsp;
+    </td>
+    <td class="desktop_td" id="cell_2x1" align="right" valign="middle" style="width:10%;">
+    </td>
+  </tr>
+  <tr class="desktop_tr" height="30%">
+    <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:bottom, :left)}'); background-repeat:no-repeat; background-position:bottom left;" %>
+    <td class="desktop_td" id="cell_0x2" align="left" valign="bottom" style="<%= raw(corner_img_style) %>">
+      &nbsp;
+    </td>
+    <td class="desktop_td" id="cell_1x2" align="center" valign="bottom" nowrap>
+      <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%= t('msg.desktop_public') %></span><% end %>
+    </td>
+    <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:bottom, :right)}'); background-repeat:no-repeat; background-position:bottom right;" %>
+    <td class="desktop_td" id="cell_2x2" align="right" valign="bottom" style="<%= raw(corner_img_style) %>">
+      &nbsp;
+    </td>
   </tr>
 </table>
-</span>
+
+<% unless login_user.nil? %>
+<table id="menubox" cellpadding="0" cellspacing="0" style="height:50px; position:absolute; display:none;">
+  <tr>
+    <td align="center" valign="middle">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="editConfig();" />
+    </td>
+  </tr>
+</table>
+<% end %>
 
 <!-- Toolbox -->
 <span style="display:none;">
@@ -45,8 +77,8 @@ end
 <table id="toolbox" width="80%" cellpadding="0" cellspacing="0" style="height:105px; position:absolute; display:none;">
   <tr>
     <td width="90" align="center" valign="middle">
-      <div id="recyclebox" width="10" style="height:100%;" onclick="tipsRecyclebox()" title="<%=h t('desktop.drop_to_remove') %>">
-        <img id="recyclebox_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png" alt="<%=h t('desktop.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
+      <div id="recyclebox" width="10" style="height:100%;" onclick="tipsRecyclebox()" title="<%= t('desktop.drop_to_remove') %>">
+        <img id="recyclebox_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png" alt="<%= t('desktop.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
     </td>
     <td width="10">
       &nbsp;
@@ -57,14 +89,14 @@ end
         <% if $thetis_config[:menu]['req_login_schedules'] == '1' and login_user.nil? %>
         <% else %>
           <td width="25%" style="cursor:pointer;;" align="center" valign="middle">
-            <div id="tool_calendar" style="vertical-align:middle;" title="<%=h t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_calendar.png" alt="<%=h t('calendar.name') %>" />
+            <div id="tool_calendar" style="vertical-align:middle;" title="<%= t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_calendar.png" alt="<%= t('calendar.name') %>" />
             </div>
           </td>
         <% end %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_label" style="vertical-align:middle;" title="<%=h t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_label.png" alt="<%=h t('desktop.label.create') %>" />
+            <div id="tool_label" style="vertical-align:middle;" title="<%= t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_label.png" alt="<%= t('desktop.label.create') %>" />
             </div>
           </td>
           <td width="20%" style="cursor:pointer;" align="center" style="vertical-align:middle">
@@ -76,26 +108,26 @@ end
               end
             %>
             <input id="biorhythm_req_birth" type="hidden" value="<%= req_birth %>" />
-            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%=h t('biorhythm.show') %>" onclick="if ($('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" alt="<%=h t('biorhythm.show') %>">
+            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%= t('biorhythm.show') %>" onclick="if ($('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" alt="<%= t('biorhythm.show') %>">
             </div>
             <% end %>
           </td>
         <% unless login_user.nil? %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_postlabel" style="vertical-align:middle;" title="<%=h t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" alt="<%=h t('desktop.label.post') %>" />
+            <div id="tool_postlabel" style="vertical-align:middle;" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" alt="<%= t('desktop.label.post') %>" />
             </div>
           </td>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_addressbook" style="vertical-align:middle;" title="<%=h t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_addressbook.png" alt="<%=h t('address.book') %>" />
+            <div id="tool_addressbook" style="vertical-align:middle;" title="<%= t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_addressbook.png" alt="<%= t('address.book') %>" />
             </div>
           </td>
         <% end %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_tray" style="vertical-align:middle;" onclick="showTray()" title="<%=h t('desktop.news.show') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_tray.png" alt="<%=h t('desktop.news.show') %>">
+            <div id="tool_tray" style="vertical-align:middle;" onclick="showTray()" title="<%= t('desktop.news.tray') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_tray.png" alt="<%= t('desktop.news.tray') %>">
             </div>
           </td>
         </tr>
@@ -176,7 +208,7 @@ Droppables.add(
           accept: "toy_tray",
           onHover:function(element)
           {
-            $("div_desktop").style.backgroundColor = "#A4DFF8";
+            $("div_desktop").style.backgroundColor = "<%= Desktop.background_color(session[:color], true) %>";
           },
           onDrop:function(element)
           {
@@ -229,6 +261,11 @@ Droppables.add(
 
 var desktop = $("div_desktop");
 desktop.style.display = "block";
+
+<% unless login_user.nil? %>
+$("menubox").style.display = "inline";
+<% end %>
+
 $("toolbox").style.display = "inline";
 
 doResize();
@@ -250,6 +287,34 @@ unless @toys.nil?
 end
 %>
 
+editConfig = function()
+{
+  var thetisBox = new ThetisBox;
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'desktop', :action => 'edit_config') %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "<%= t('btn.config') %>";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*80/100)+','+(mainHeight*85/100),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
 doRemoveToy = function(element_id)
 {
   var xtype = $(element_id+"_type").innerHTML;
@@ -263,9 +328,9 @@ _doRemoveToy = function(element_id)
   var id = element_id.split("_")[1];
 
   var thetisBoxProgress = prog("CENTER");
-  
+
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'drop_on_recyclebox' %>?id="+id,
+          "<%= url_for(:controller => 'desktop', :action => 'drop_on_recyclebox') %>?id="+id,
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -287,7 +352,7 @@ _doRemoveToy = function(element_id)
 showCalendar = function()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('calendar.name') %>";
+  thetisBox.title = "<%= t('calendar.name') %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
 
@@ -315,14 +380,14 @@ editLabel = function(toy_id)
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for :controller => 'desktop', :action => 'update_label' %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'update_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
 
   // for users without LOGIN
   var axis = getAxis(toy_id);
 
   thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%=h t('cap.edit_message') %>", restoreHTML($(toy_id+"_msg").innerHTML));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML($(toy_id+"_msg").innerHTML));
 }
 
 createLabel = function()
@@ -332,10 +397,10 @@ createLabel = function()
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for :controller => 'desktop', :action => 'create_label' %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'create_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater($('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%=h t('cap.edit_new_label') %>", "");
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
 }
 
 //////////////////////////
@@ -366,18 +431,18 @@ createPostLabel = function()
   thetisBoxPostLabel = new ThetisBox;
   thetisBoxPostLabel.bgcolor_title = "deeppink";
   thetisBoxPostLabel.bgcolor_body = "lightpink";
-  thetisBoxPostLabel.title = "<%=h t('desktop.label.post') %>";
+  thetisBoxPostLabel.title = "<%= t('desktop.label.post') %>";
   thetisBoxPostLabel.overflow = "hide";
   thetisBoxPostLabel.show("CENTER", "540,400", "TRAY", "", "", content);
 }
 
 getPostLabelEditor = function(onOk, onCancel)
 {
-  content = "<form name='form_postlabel' action=\"<%= url_for :controller => 'desktop', :action => 'post_label' %>\" method=\"post\" onsubmit='"+onOk+"'>";
+  content = "<form name='form_postlabel' action=\"<%= url_for(:controller => 'desktop', :action => 'post_label') %>\" method=\"post\" onsubmit='"+onOk+"'>";
   content += "<table width='100%' style='height:100%; background-color:#FFDDE3;' cellspacing='10'>";
   content += "  <tr>";
   content += "    <td>";
-  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%=h t('cap.to') %></div>";
+  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%= t('cap.to') %></div>";
   content += "      <table cellspacing='0' cellpadding='0'>";
   content += "        <tr>";
   content += "          <td>";
@@ -388,13 +453,13 @@ getPostLabelEditor = function(onOk, onCancel)
   content += "            <table cellspacing='0' cellpadding='0' width='100%'>";
   content += "              <tr>";
   content += "                <td align='center'>";
-  content += "                  <input type='button' value='<%=h t('btn.add') %>' onclick='addPostTo();' style='width:80px;'>";
+  content += "                  <input type='button' value='<%= t('btn.add') %>' onclick='addPostTo();' style='width:80px;'>";
   content += "                </td>";
   content += "              </tr>";
   content += "              <tr height='5'><td></td></tr>";
   content += "              <tr>";
   content += "                <td align='center'>";
-  content += "                  <input type='button' value='<%=h t('btn.remove') %>' onclick='removePostTo();' style='width:80px;'>";
+  content += "                  <input type='button' value='<%= t('btn.remove') %>' onclick='removePostTo();' style='width:80px;'>";
   content += "                </td>";
   content += "              </tr>";
   content += "            </table>";
@@ -405,7 +470,7 @@ getPostLabelEditor = function(onOk, onCancel)
   content += "  </tr>";
   content += "  <tr>";
   content += "    <td>";
-  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%=h t('cap.message') %></div>";
+  content += "      <div style='text-align:left; font-size:10pt; line-height:1.8;'><%= t('cap.message') %></div>";
   content += "      <textarea id='txaPostLabel' name='txaPostLabel' wrap='off' tabindex='1' style='width:99%; height:120px;'></textarea>";
   content += "    </td>";
   content += "  </tr>";
@@ -418,7 +483,7 @@ getPostLabelEditor = function(onOk, onCancel)
   content += "          </td>";
   content += "          <td width='30'>&nbsp;</td>";
   content += "          <td>";
-  content += "            <input type='button' value='<%=h t('btn.cancel')%>' tabindex='3' style='width:90px; height:25px' onClick='"+onCancel+"'>";
+  content += "            <input type='button' value='<%= t('btn.cancel')%>' tabindex='3' style='width:90px; height:25px' onClick='"+onCancel+"'>";
   content += "          </td>";
   content += "        </tr>";
   content += "      </table>";
@@ -485,13 +550,13 @@ addPostTo = function()
   var thetisBox = new ThetisBox;
 
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'get_group_users' %>",
+          "<%= url_for(:controller => 'desktop', :action => 'get_group_users') %>",
           {
             method:"get",
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<%=h t('desktop.label.sel_users_to_post') %>";
+                thetisBox.title = "<%= t('desktop.label.sel_users_to_post') %>";
                 thetisBox.overflow = "hide";
                 thetisBox.show(
                           "CENTER",
@@ -523,7 +588,7 @@ showAddressBook = function()
             "IFRAME",
             "",
             "",
-            "<%= url_for :controller => 'addressbook', :action => 'list' %>"
+            "<%= url_for(:controller => 'addressbook', :action => 'list') %>"
           );
 }
 
@@ -661,7 +726,7 @@ tipsRecyclebox = function()
   
   var thetisBox = new ThetisBox;
   thetisBox.bgcolor_body = "#FFFF80";
-  thetisBox.show(x+","+y, "", "TIPS", "", "<%=h t('desktop.drop_to_remove')%>", "");
+  thetisBox.show(x+","+y, "", "TIPS", "", "<%= t('desktop.drop_to_remove')%>", "");
 }
 </SCRIPT>
 

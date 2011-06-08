@@ -4,6 +4,7 @@
 
 <script type="text/javascript">
 var oEditor;
+tabs = new Array("workflow", "basic", "description", "image", "attachment");
 </script>
 
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
@@ -23,7 +24,7 @@ var users_cache = new Array();
       <table id="tmpl_button" align="left" width="120" cellspacing="0" cellpadding="0">
         <tr>
           <td class="td_button_gray" align="center" nowrap bgColor="gray" onClick="showTemplateTreeToSelect();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%=h t('btn.template') %>
+            <%= t('btn.template') %>
           </td>
         </tr>
       </table>
@@ -37,21 +38,21 @@ var users_cache = new Array();
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow'); this.bgColor='orange'" bgColor="orange" onMouseOver="if($('div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
+        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if($('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
             <%= h Workflow.human_name %>
         </td>
       <% end %>
-        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic'); this.bgColor='blue'" bgColor="blue" onMouseOver="if($('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
-            <%= h t('cap.basic_info') %>
+        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if($('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+            <%= t('cap.basic_info') %>
         </td>
-        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description'); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('tab_div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= h Item.human_attribute_name('description') %>
         </td>
-        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image'); this.bgColor='red'" bgColor="red" onMouseOver="if($('div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
-            <%= h t('image.plural') %>
+        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image', tabs); this.bgColor='red'" bgColor="red" onMouseOver="if($('tab_div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
+            <%= t('image.plural') %>
         </td>
-        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment'); this.bgColor='brown'" bgColor="brown" onMouseOver="if($('div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
-            <%= h t('attachment.plural_full') %>
+        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment', tabs); this.bgColor='brown'" bgColor="brown" onMouseOver="if($('tab_div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+            <%= t('attachment.plural_full') %>
         </td>
         <td>&nbsp;</td>
       </tr>
@@ -63,7 +64,7 @@ var users_cache = new Array();
     <td align="center" colspan="2">
 
     <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-      <div id="div_workflow">
+      <div id="tab_div_workflow">
         <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
         <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFF8D7" style="border:solid 5px gold;">
           <tr>
@@ -78,16 +79,16 @@ var users_cache = new Array();
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-                    <%= h t('btn.back') %>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                    <%= t('btn.back') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doSave();">
-                    <%= h t('btn.save') %>
+                    <%= t('btn.save') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doShow();">
-                    <%= h t('btn.show') %>
+                    <%= t('btn.show') %>
                   </td>
                 </tr>
               </table>
@@ -99,7 +100,7 @@ var users_cache = new Array();
       </div>
     <% end %>
 
-      <div id="div_basic">
+      <div id="tab_div_basic">
         <%= form_tag( {:controller => 'items', :action => 'set_basic', :id => @item }, :id => 'form_basic', :method => 'post') %>
         <table cellspacing="0" cellpadding="0" width="100%" bgcolor="aliceblue" style="border:solid 5px cornflowerblue;">
           <tr>
@@ -114,16 +115,16 @@ var users_cache = new Array();
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-                    <%= h t('btn.back') %>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                    <%= t('btn.back') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doSave();">
-                    <%= h t('btn.save') %>
+                    <%= t('btn.save') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doShow();">
-                    <%= h t('btn.show') %>
+                    <%= t('btn.show') %>
                   </td>
                 </tr>
               </table>
@@ -134,7 +135,7 @@ var users_cache = new Array();
         </form>
       </div>
 
-      <div id="div_description" style="display:none;">
+      <div id="tab_div_description" style="display:none;">
       <%= form_tag( {:controller => 'items', :action => 'set_description', :id => @item }, :id => 'form_description', :method => 'post') %>
       <table cellspacing="0" cellpadding="0" width="100%" bgcolor="honeydew" style="border:solid 5px yellowgreen;">
         <tr>
@@ -149,7 +150,7 @@ var users_cache = new Array();
           <td>
             <table align="center" cellspacing="0" cellpadding="0">
               <tr>
-                <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
+                <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                   <%= t('btn.back') %>
                 </td>
               <% unless @item.id.nil? %>
@@ -175,7 +176,7 @@ var users_cache = new Array();
       </form>
       </div>
 
-      <div id="div_image" style="display:none;">
+      <div id="tab_div_image" style="display:none;">
 
        <%= form_tag( {:controller => 'items', :action => 'set_image', :id => @item }, :id => 'form_image', :name => 'form_image', :method => 'post', :enctype => 'multipart/form-data') %>
 
@@ -192,16 +193,16 @@ var users_cache = new Array();
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-                    <%= h t('btn.back') %>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                    <%= t('btn.back') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doSave();">
-                    <%= h t('btn.register') %>
+                    <%= t('btn.register') %>
                   </td>
                     <td width="15"></td>
                   <td class="img_button_td" onclick="doShow();">
-                    <%= h t('btn.show') %>
+                    <%= t('btn.show') %>
                   </td>
                 </tr>
               </table>
@@ -213,7 +214,7 @@ var users_cache = new Array();
 
       </div>
 
-      <div id="div_attachment" style="display:none;">
+      <div id="tab_div_attachment" style="display:none;">
 
        <%= form_tag( {:controller => 'items', :action => 'set_attachment', :id => @item }, :id => 'form_attachment', :name => 'form_attachment', :method => 'post', :enctype => 'multipart/form-data') %>
 
@@ -230,16 +231,16 @@ var users_cache = new Array();
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-                    <%= h t('btn.back') %>
+                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                    <%= t('btn.back') %>
                   </td>
                   <td width="15"></td>
                   <td class="img_button_td" onclick="doSave();">
-                    <%= h t('btn.register') %>
+                    <%= t('btn.register') %>
                   </td>
                     <td width="15"></td>
                   <td class="img_button_td" onclick="doShow();">
-                    <%= h t('btn.show') %>
+                    <%= t('btn.show') %>
                   </td>
                 </tr>
               </table>
@@ -259,47 +260,10 @@ var users_cache = new Array();
 <script type="text/javascript">
 <!--
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-  showTab("workflow");
+  showTab("workflow", tabs);
 <% else %>
-  showTab("basic");
+  showTab("basic", tabs);
 <% end %>
-
-function showTab(name)
-{
-  var nameArray = new Array("workflow", "basic", "description", "image", "attachment");
-
-  var tab = null;
-  for (i=0; i<nameArray.length; i++) {
-    tab = $("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.style.cursor = "pointer";
-      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
-    }
-  }
-  var target_tab = $("tab_"+name);
-  target_tab.style.cursor = "default";
-  var bg = target_tab.bgColor;
-
-  for (i=0; i<nameArray.length; i++) {
-    tab = $("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.bgColor = "silver";
-    }
-  }
-
-  target_tab.bgColor = bg;
-
-  for (i=0; i<nameArray.length; i++) {
-    div = $("div_"+nameArray[i]);
-    if (div != null) {
-      div.style.display = "none";
-    }
-  }
-
-  div = $("div_"+name);
-  div.style.visibility = "visible";
-  div.style.display = "inline";
-}
 
 function _ajaxPost(form_id, p_url, target_id, func_complete, func_error)
 {
@@ -395,7 +359,7 @@ function addWfOrder()
   d.name = d.id;
   d.type = "hidden";
   $("form_workflow").appendChild(d);
-  addList(order_list, "<%=h t('workflow.order_prefix') %>"+order_id, order_id, true);
+  addList(order_list, "<%= t('workflow.order_prefix') %>"+order_id, order_id, true);
   if (getListSelected(order_list).length <= 0) {
     order_list.options[order_list.length-1].selected = true;
   }
@@ -419,7 +383,7 @@ function addWfUser()
 {
   var order_ary=getListSelected($("orders"));
   if (order_ary <= 0) {
-    msg("<%=h t('workflow.select_order')%>");
+    msg("<%= t('workflow.select_order')%>");
     return;
   }
   var add_ary = moveList($("user_candidates"), $("users_selected"));
@@ -454,14 +418,14 @@ function checkWorkflow()
 {
   var list = $("orders");
   if (list.length <= 0) {
-    msg("<%= h t('workflow.specify_orders') %>");
+    msg("<%= t('workflow.specify_orders') %>");
     return false;
   }
   for (var i=0; i<list.length; i++) {
     var order_id = list.options[i].value;
     var divOrder=$("order-"+order_id);
     if (divOrder.value == null || divOrder.value.length <= 0) {
-      msg("<%= h t('workflow.specify_users_for1') %>"+order_id+"<%= h t('workflow.specify_users_for2') %>");
+      msg("<%= t('workflow.specify_users_for1') %>"+order_id+"<%= t('workflow.specify_users_for2') %>");
       return false;
     }
   }
@@ -474,7 +438,7 @@ function checkGeneral()
 {
   var title = trim($("item_title").value, false);
   if (title.length <= 0) {
-    msg("<%=h t('item.specify_title') %>");
+    msg("<%= t('item.specify_title') %>");
     return false;
   }
   return true;
@@ -539,7 +503,7 @@ var saveFuncsIdx = 0;
 function doSave()
 {
   if (saveFuncsIdx > 0) {
-    msg("<%=h t('item.being_registered') %>");
+    msg("<%= t('item.being_registered') %>");
     return;
   }
 
@@ -553,7 +517,7 @@ function doSave()
   // Workflow
   if (isModifiedWorkflow()) {
     if (!checkWorkflow()) {
-      showTab("workflow");
+      showTab("workflow", tabs);
       $("tab_workflow").bgColor="orange";
       return false;
     }
@@ -562,7 +526,7 @@ function doSave()
           function() {
             _ajaxPost(
                     "form_workflow",
-                    "<%= url_for :controller => 'items', :action => 'set_workflow' %>?id="+$("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_workflow') %>?id="+$("item_id").value,
                     "div_item_workflow",
                     function(){ onSaveComplete("workflow") },
                     function(){ onSaveError("workflow") }
@@ -575,7 +539,7 @@ function doSave()
   // Basic
   if (isModifiedBasic()) {
     if (!checkBasic()) {
-      showTab("basic");
+      showTab("basic", tabs);
       $("tab_basic").bgColor="blue";
       return false;
     }
@@ -583,7 +547,7 @@ function doSave()
           function() {
             _ajaxPost(
                     "form_basic",
-                    "<%= url_for :controller => 'items', :action => 'set_basic' %>?id="+$("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_basic') %>?id="+$("item_id").value,
                     "div_item_basic",
                     function(){ onSaveComplete("basic") },
                     function(){ onSaveError("basic") }
@@ -600,7 +564,7 @@ function doSave()
           function() {
               _ajaxPost(
                     "form_description",
-                    "<%= url_for :controller => 'items', :action => 'set_description' %>?id="+$("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_description') %>?id="+$("item_id").value,
                     "div_item_description",
                     function(){ onSaveComplete("description") },
                     function(){ onSaveError("description") }
@@ -616,7 +580,7 @@ function doSave()
           function() {
             ajaxUploadFile(
                     "form_image",
-                    "<%= url_for :controller => 'items', :action => 'set_image' %>?id="+$("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_image') %>?id="+$("item_id").value,
                     "div_item_image",
                     function(){
                       setTimeout(setSortableImg, 100);
@@ -635,7 +599,7 @@ function doSave()
           function() {
             ajaxUploadFile(
                     "form_attachment",
-                    "<%= url_for :controller => 'items', :action => 'set_attachment' %>?id="+$("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_attachment') %>?id="+$("item_id").value,
                     "div_item_attachment",
                     function(){
                       setTimeout(setSortableAttach, 100);
@@ -670,14 +634,14 @@ function onSaveComplete(tab_name)
     if (move_to_show) {
       _doShow();
     } else {
-      tips("<%=h t('msg.save_success') %>");
+      tips("<%= t('msg.save_success') %>");
     }
   }
 }
 
 function onSaveError(tab_name)
 {
-  showTab(tab_name);
+  showTab(tab_name, tabs);
 
   saveFuncsIdx = 0;
   thetisBoxProgress.remove();
@@ -689,12 +653,12 @@ var move_to_show = false;
 function doShow()
 {
   if ($("item_id").value=="") {
-    msg("<%=h t('item.register_first') %>");
+    msg("<%= t('item.register_first') %>");
     return;
   }
   if (isModifiedWorkflow() || isModifiedBasic() || isModifiedDescription() || isModifiedImage() || isModifiedAttachment()) {
     var actions = new Array("move_to_show = true; doSave();", "_doShow();");
-    confm("<%=h t('msg.confirm_to_save_change') %>", actions, null, "<%=h t('btn.btn_yes') %>", "<%=h t('btn.btn_no') %>");
+    confm("<%= t('msg.confirm_to_save_change') %>", actions, null, "<%= t('btn.btn_yes') %>", "<%= t('btn.btn_no') %>");
   } else {
     _doShow();
   }
@@ -703,7 +667,7 @@ function doShow()
 function _doShow()
 {
   prog("TOP-RIGHT");
-  location.href = "<%= url_for :controller => 'items', :action => 'show' %>?id="+$("item_id").value;
+  location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id="+$("item_id").value;
 }
 
 function showTemplateTreeToSelect()
@@ -711,11 +675,11 @@ function showTemplateTreeToSelect()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'templates', :action => 'copy' %>", "<%=h t('item.select_template')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'templates', :action => 'ajax_get_tree' %>", 0);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'templates', :action => 'copy') %>", "<%= t('item.select_template')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'templates', :action => 'ajax_get_tree') %>", 0);
 
   if (isModifiedBasic() || isModifiedDescription()) {
-    msg("<%=h t('item.apply_template_info') %>");
+    msg("<%= t('item.apply_template_info') %>");
   }
 }
 
@@ -723,9 +687,9 @@ function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'items', :action => 'get_group_users' %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'items', :action => 'get_group_users') %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 //-->

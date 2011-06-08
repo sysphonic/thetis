@@ -22,11 +22,11 @@ class DesktopController < ApplicationController
   if $thetis_config[:menu]['req_login_desktop'] == '1'
     before_filter :check_login
   else
-    before_filter :check_login, :only => [:post_label, :get_group_users]
+    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :get_group_users]
   end
   before_filter :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
 
-  before_filter :only => [:configure, :update_config] do |controller|
+  before_filter :only => [:update_config] do |controller|
     controller.check_auth(User::AUTH_DESKTOP)
   end
 
@@ -75,25 +75,55 @@ class DesktopController < ApplicationController
     toy.user_id = login_user.id
     toy.xtype = Toy::XTYPE_ITEM
     toy.target_id = item.id
-    toy.x, toy.y = DesktopHelper.find_empty_block login_user
+    toy.x, toy.y = DesktopsHelper.find_empty_block(login_user)
     toy.save!
 
     render(:text => t('file.uploaded'))
   end
 
-  #=== configure
+  #=== edit_config
   #
-  #Shows form of configuration.
+  #Shows form of Desktop configuration.
   #
-  def configure
+  def edit_config
     Log.add_info(request, params.inspect)
 
-    @yaml = ApplicationHelper.get_config_yaml
+    login_user = session[:login_user]
+
+    if login_user.admin?(User::AUTH_DESKTOP)
+      @yaml = ApplicationHelper.get_config_yaml
+    end
+
+    @desktop = Desktop.get_for(login_user)
+
+    render(:layout => (!request.xhr?))
+  end
+
+  #=== update_pref
+  #
+  #Updates Desktop preference.
+  #
+  def update_pref
+    Log.add_info(request, params.inspect)
+
+    login_user = session[:login_user]
+
+    desktop = Desktop.get_for(login_user, true)
+
+    params[:desktop].delete(:user_id)
+
+    desktop.update_attributes(params[:desktop])
+    session[:color] = desktop.background_color
+
+    params.delete(:desktop)
+
+    show
+    render(:action => 'show')
   end
 
   #=== update_config
   #
-  #Updates configuration about desktop.
+  #Updates Desktop configuration.
   #
   def update_config
     Log.add_info(request, params.inspect)
@@ -118,6 +148,14 @@ class DesktopController < ApplicationController
   #Shows empty desktop.
   #
   def show
+    user = session[:login_user]
+
+    if user.nil?
+      user = DesktopsHelper.get_user_before_login
+    end
+
+    @desktop = Desktop.get_for(user)
+    session[:color] = @desktop.background_color
   end
 
   #=== open_desktop
@@ -132,19 +170,8 @@ class DesktopController < ApplicationController
 
     is_config_desktop = false
     if user.nil?
-      yaml = ApplicationHelper.get_config_yaml
-      unless yaml[:desktop].nil?
-        user_before_login = yaml[:desktop]['user_before_login']
-
-        unless user_before_login.nil? or user_before_login.empty?
-          begin
-            user = User.find(user_before_login)
-            is_config_desktop = true
-          rescue StandardError => err
-            Log.add_error(request, err)
-          end
-        end
-      end
+      user = DesktopsHelper.get_user_before_login
+      is_config_desktop = true
     end
 
     @toys = Toy.get_for_user(user)
@@ -172,7 +199,33 @@ class DesktopController < ApplicationController
                 }
     end
 
+    @desktop = Desktop.get_for(user)
+
     render(:partial => 'ajax_get_desktop', :layout => false)
+  end
+
+  #=== get_image
+  #
+  #Gets the background image of the Desktop.
+  #
+  def get_image
+
+    user = session[:login_user]
+
+    if user.nil?
+      user = DesktopsHelper.get_user_before_login
+    end
+
+    desktop = Desktop.get_for(user, true)
+
+    if desktop.nil?
+      render(:text => '')
+      return
+    end
+
+    response.headers["Content-Type"] = desktop.img_content_type
+    response.headers["Content-Disposition"] = "inline"
+    render(:text => desktop.img_content)
   end
 
   #=== get_news_tray
@@ -192,22 +245,22 @@ class DesktopController < ApplicationController
 
     # Item
     latests = Item.get_toys(login_user)
-    deleted_ary = DesktopHelper.merge_toys desktop_toys, latests, deleted_ary
+    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Comment
     latests = Comment.get_toys(login_user)
-    deleted_ary = DesktopHelper.merge_toys desktop_toys, latests, deleted_ary
+    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Workflow
     latests = Workflow.get_toys(login_user)
-    deleted_ary = DesktopHelper.merge_toys desktop_toys, latests, deleted_ary
+    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Schedule
     latests = Schedule.get_toys(login_user)
-    deleted_ary = DesktopHelper.merge_toys desktop_toys, latests, deleted_ary
+    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     deleted_ary.each do |toy|
@@ -266,7 +319,7 @@ class DesktopController < ApplicationController
     toy.user_id = login_user.id
     toy.xtype = params[:xtype]
     toy.target_id = params[:target_id].to_i
-    toy.x, toy.y = DesktopHelper.find_empty_block(login_user)
+    toy.x, toy.y = DesktopsHelper.find_empty_block(login_user)
     toy.save!
 
     render(:text => toy.id.to_s)
@@ -335,10 +388,10 @@ class DesktopController < ApplicationController
     if login_user.nil?
       t = Time.now
       @toy.id = (t.hour.to_s + t.min.to_s + t.sec.to_s).to_i
-      @toy.x, @toy.y = DesktopHelper.find_empty_block(login_user)
+      @toy.x, @toy.y = DesktopsHelper.find_empty_block(login_user)
     else
       @toy.user_id = login_user.id
-      @toy.x, @toy.y = DesktopHelper.find_empty_block(login_user)
+      @toy.x, @toy.y = DesktopsHelper.find_empty_block(login_user)
       @toy.save!
     end
 
@@ -413,7 +466,7 @@ class DesktopController < ApplicationController
       toy.message = params[:txaPostLabel]
       toy.user_id = user.id
       toy.posted_by = login_user.id
-      toy.x, toy.y = DesktopHelper.find_empty_block(user)
+      toy.x, toy.y = DesktopsHelper.find_empty_block(user)
       toy.save!
     end
 

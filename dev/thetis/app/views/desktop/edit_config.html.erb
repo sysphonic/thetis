@@ -1,0 +1,196 @@
+<%
+login_user = session[:login_user]
+is_admin = login_user.admin?(User::AUTH_DESKTOP)
+%>
+
+<%= render(:partial => 'common/error', :locals => {:obj => @desktop}) %>
+
+<script type="text/javascript">
+tabs = new Array("basic", "admin");
+</script>
+
+<table cellspacing="0" cellpadding="0" width="90%">
+  <tr height="10"><td></td></tr>
+  <tr>
+    <td align="center">
+
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr>
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+            <%= t('cap.basic_info') %>
+          </td>
+        <% if is_admin %>
+          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+            <%= t('menu.for_admin') %>
+          </td>
+        <% end %>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+
+      <div id="tab_div_basic" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+
+              <%= form_tag( {:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
+
+                <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                  <tr>
+                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                      <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
+                    </td>
+                    <td class="item_value_td">
+                      <%
+                      options = []
+                      options << [h(t('desktop.theme.bolt')), Desktop::THEME_BOLT]
+                      options << [h(t('desktop.theme.grape')), Desktop::THEME_GRAPE]
+                      %>
+                      <%= select_tag 'desktop[theme]', options_for_select(options, (@desktop.nil?)?(nil):(@desktop.theme)), :style => 'width:200px;' %>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                      <label for="desktop_background_color"><%= Desktop.human_attribute_name('background_color') %></label>
+                    </td>
+                    <td class="item_value_td">
+
+                      <table align="left" cellpadding="0" cellspacing="5">
+                        <tr height="40">
+                          <td id="td_bgcolor_blue" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BLUE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BLUE) %>; cursor:pointer; border:solid 3px dimgray;">
+                          </td>
+                          <td id="td_bgcolor_pink" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_PINK %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_PINK) %>; cursor:pointer; border:solid 3px dimgray;">
+                          </td>
+                          <td id="td_bgcolor_orange" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_ORANGE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_ORANGE) %>; cursor:pointer; border:solid 3px dimgray;">
+                          </td>
+                          <td id="td_bgcolor_brown" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BROWN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BROWN) %>; cursor:pointer; border:solid 3px dimgray;">
+                          </td>
+                          <td id="td_bgcolor_green" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_GREEN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_GREEN) %>; cursor:pointer; border:solid 3px dimgray;">
+                          </td>
+                        </tr>
+                      </table>
+                      <input type="hidden" id="desktop_background_color" name="desktop[background_color]" value="" />
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                      <label for="desktop_options"><%= t('desktop.pop_up') %></label>
+                    </td>
+                    <td class="item_value_td">
+                      <%= check_box(:desktop, :popup_news) %><label for="desktop_popup_news"><%= t('desktop.news.tray') %></label><br/>
+                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.human_name %></label><br/>
+                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.human_name %></label><br/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                      <label for="desktop_image"><%= Image.human_name %></label>
+                    </td>
+                    <td class="item_value_td">
+                      <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
+                      <%= file_field(:desktop, :file, :style => 'width:100%', :size => '50') %>
+                    </td>
+                  </tr>
+                </table>
+
+              </form>
+
+              <table align="center" cellspacing="0" cellpadding="0">
+                <tr height="10"><td></td></tr>
+                <tr>
+                  <td class="img_button_td" onclick="doUpdatePref();">
+                    <%= t('btn.update')%>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    <% if is_admin %>
+      <div id="tab_div_admin" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+          <tr>
+            <td align="left" style="padding:20px 10px;">
+
+              <%= form_tag( {:controller => 'desktop', :action => 'update_config'}, :name => 'form_desktop_config', :method => 'post') %>
+
+                <div id="div_user_before_login" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+                  <%= render(:partial => 'ajax_user_before_login') %>
+                </div>
+                <input type="hidden" id="user_before_login" name="desktop[user_before_login]" value="" />
+
+              </form>
+
+            </td>
+          </tr>
+        </table>
+      </div>
+    <% end %>
+
+    </td>
+  </tr>
+  <tr height="20"><td></td></tr>
+</table>
+
+<script type="text/javascript">
+
+selectBgColor = function(color)
+{
+  var nameArray = new Array("blue", "pink", "orange", "brown", "green");
+
+  for (var i=0; i < nameArray.length; i++) {
+    td_bgcolor = $("td_bgcolor_"+nameArray[i]);
+    if (td_bgcolor != null) {
+      td_bgcolor.style.border = "solid 1px dimgray";
+    }
+  }
+  var target = $("td_bgcolor_"+color);
+  if (target) {
+    $('desktop_background_color').value = color;
+    target.style.border = "solid 3px lime";
+  }
+}
+
+<% unless @desktop.nil? or @desktop.background_color.nil? %>
+selectBgColor("<%= @desktop.background_color %>");
+<% end %>
+
+doUpdatePref = function()
+{
+  prog("TOP-RIGHT");
+  document.form_desktop_pref.submit();
+}
+
+doUpdateConfig = function(user_id)
+{
+  $("user_before_login").value = user_id;
+
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_user_before_login",
+              document.form_desktop_config.action,
+              {
+                asynchronous:true,
+                evalScripts:true,
+                parameters:Form.serialize(document.form_desktop_config),
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+  return true;
+}
+
+showTab("basic", tabs);
+
+</script>

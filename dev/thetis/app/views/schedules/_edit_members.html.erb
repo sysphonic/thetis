@@ -1,4 +1,8 @@
 
+<script type="text/javascript">
+tabs = new Array("users", "groups", "teams");
+</script>
+
 <% login_user = session[:login_user] %>
 
 <table cellspacing="0" cellpadding="0" width="100%">
@@ -6,13 +10,13 @@
     <td style="vertical-align:top;">
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr height="20">
-          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users'); this.bgColor='blue';" bgcolor="blue" onMouseOver="if($('div_mem_users').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users', tabs); this.bgColor='blue';" bgcolor="blue" onMouseOver="if($('tab_div_users').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
               <%= t('user.plural') %>
           </td>
-          <td id="tab_groups" class="td_item_tab" nowrap onclick="showTab('groups'); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('div_mem_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_groups" class="td_item_tab" nowrap onclick="showTab('groups', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('tab_div_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
               <%= t('group.plural') %>
           </td>
-          <td id="tab_teams" class="td_item_tab" nowrap onclick="showTab('teams'); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('div_mem_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('div_mem_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+          <td id="tab_teams" class="td_item_tab" nowrap onclick="showTab('teams', tabs); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('tab_div_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
               <%= t('team.plural') %>
           </td>
         </tr>
@@ -23,7 +27,7 @@
   <tr>
     <td style="border:solid 1px gray; background-color:#FFFAFD;">
 
-      <div id="div_mem_users">
+      <div id="tab_div_users">
         <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
           <tr>
             <td id="div_selectUsers">
@@ -67,7 +71,7 @@
           </tr>
         </table>
       </div>
-      <div id="div_mem_groups" style="display:none;">
+      <div id="tab_div_groups" style="display:none;">
         <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
           <tr>
             <td>
@@ -115,7 +119,7 @@
           </tr>
         </table>
       </div>
-      <div id="div_mem_teams" style="display:none;">
+      <div id="tab_div_teams" style="display:none;">
         <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
           <tr>
             <td>
@@ -170,44 +174,7 @@
 
 <script type="text/javascript">
 
-showTab = function(name)
-{
-  var nameArray = new Array("users", "groups", "teams");
-
-  var tab = null;
-  for (i=0; i<nameArray.length; i++) {
-    tab = $("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.style.cursor = "pointer";
-      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
-    }
-  }
-  var target_tab = $("tab_"+name);
-  target_tab.style.cursor = "default";
-  var bg = target_tab.bgColor;
-
-  for (i=0; i<nameArray.length; i++) {
-    tab = $("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.bgColor = "silver";
-    }
-  }
-
-  target_tab.bgColor = bg;
-
-  for (i=0; i<nameArray.length; i++) {
-    div = $("div_mem_"+nameArray[i]);
-    if (div != null) {
-      div.style.display = "none";
-    }
-  }
-
-  div = $("div_mem_"+name);
-  div.style.visibility = "visible";
-  div.style.display = "inline";
-}
-
-showTab("users");
+showTab("users", tabs);
 
 </script>
 

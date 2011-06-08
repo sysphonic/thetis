@@ -6,6 +6,7 @@ de:
       address: "Adresse"
       user: "Benutzer"
       item: "Artikel"
+      image: "Bild"
       folder: "Ordner"
       group: "Gruppe"
       team: "Team"
@@ -17,6 +18,7 @@ de:
       timecard: "Stechkarte"
       email: "E-Mail"
       mail_account: "E-Mail Konto"
+      desktop: "Desktop"
     attributes:
       id: "ID"
       updated_at: "Erneut an"
@@ -44,6 +46,9 @@ de:
         xorder: "Reihe"
       attachment:
         memo: "Notiz"
+      desktop:
+        theme: "Theme"
+        background_color: "Hintergrund Color"
       equipment:
         name: "Einrichtungsname"
         note: "Notiz"
@@ -227,12 +232,11 @@ de:
     select_smtp_auth: "Please select SMTP-Auth Typ."
     invalid_smtp_port: "Die SMTP-Port-Nummer muss zwischen 1 und 65535 liegen."
   desktop:
-    name: "Desktop"
     drop_to_remove: "Hier stellen um zu löschen."
     news:
       title: "Neuigkeiten (zum Teil)"
       caption: "Ziehen Sie den Einzelteil auf Ihren Desktop."
-      show: "Neuigkeiten-Tablett zeigen"
+      tray: "Neuigkeiten-Tablett"
     label:
       confirm_to_delete: "Dieser Zettel wird gelöscht. Sind Sie sicher?"
       create: "Neuer Zettel"
@@ -248,6 +252,11 @@ de:
     before_login_info3: "* <i>My Folder wird automatisch ausgenommen.</i>"
     currently_selected: "Gegenwärtigen Ausgewählte"
     select_mine: "Meinen Desktop auswählen"
+    theme:
+      bolt: "Bolt"
+      grape: "Traube"
+    pop_up: "Pop-up"
+    show_backgound_image: "Hintergrund Bild zeigen"
   email:
     name: "E-Mail"
     address_not_found: "Die angegebene E-Mail-Adresse konnte nicht lokalisiert werden."

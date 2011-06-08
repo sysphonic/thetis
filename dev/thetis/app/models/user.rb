@@ -110,7 +110,7 @@ class User < ActiveRecord::Base
   def self.get_auth_names
     auth_names = {
       AUTH_ALL => I18n.t('user.auth_all'),
-      AUTH_DESKTOP => I18n.t('desktop.name'),
+      AUTH_DESKTOP => Desktop.human_name,
       AUTH_ITEM => Item.human_name,
       AUTH_FOLDER => Folder.human_name,
       AUTH_USER => User.human_name,
@@ -1062,7 +1062,7 @@ class User < ActiveRecord::Base
     toy.user_id = self.id
     toy.xtype = Toy::XTYPE_FOLDER
     toy.target_id = my_folder.id
-    toy.x, toy.y = DesktopHelper.find_empty_block(self)
+    toy.x, toy.y = DesktopsHelper.find_empty_block(self)
     toy.save!
 
     # Profile Sheet

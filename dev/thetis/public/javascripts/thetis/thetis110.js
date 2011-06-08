@@ -1,3 +1,39 @@
+
+showTab = function(name, nameArray)
+{
+  var tab = null;
+  for (var i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.style.cursor = "pointer";
+      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+    }
+  }
+  var target_tab = $("tab_"+name);
+  target_tab.style.cursor = "default";
+  var bg = target_tab.bgColor;
+
+  for (var i=0; i<nameArray.length; i++) {
+    tab = $("tab_"+nameArray[i]);
+    if (tab != null) {
+      tab.bgColor = "silver";
+    }
+  }
+
+  target_tab.bgColor = bg;
+
+  for (var i=0; i<nameArray.length; i++) {
+    div = $("tab_div_"+nameArray[i]);
+    if (div != null) {
+      div.style.display = "none";
+    }
+  }
+
+  div = $("tab_div_"+name);
+  div.style.visibility = "visible";
+  div.style.display = "inline";
+}
+
 showErrorMsg = function(target_element)
 {
   var errorExps = document.getElementsByClassName("errorExplanation", target_element);

@@ -10,13 +10,13 @@
 
 <script type="text/javascript">
 <!--
-document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/grad.png) right repeat-y";
+document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/grad_<%= (session[:color].nil?)?(Desktop.get_for(nil).background_color):(session[:color]) %>.png) right repeat-y";
 
 function onLoadSub()
 {
 <%
-open_url_h = ApplicationHelper.get_fwd_params(params)
-open_url_h = open_url_h.update({:controller => 'desktop', :action => 'open_desktop'})
+open_url_h = {:controller => 'desktop', :action => 'open_desktop'}
+open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
 %>
   new Ajax.Updater(
             $("div_desktop").parentNode,
@@ -26,7 +26,9 @@ open_url_h = open_url_h.update({:controller => 'desktop', :action => 'open_deskt
               asynchronous:true,
               evalScripts:true,
               onComplete:function(request){
+            <% if @desktop.popup_news %>
                   setTimeout("showTray()", 100);
+            <% end %>
                 }
             }
           );
@@ -64,20 +66,20 @@ function showTray()
   }
 
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'get_news_tray' %>",
+          "<%= url_for(:controller => 'desktop', :action => 'get_news_tray') %>",
           {
             method:"get",
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<%=h t('desktop.news.title') %>";
+                thetisBox.title = "<%= t('desktop.news.title') %>";
                 thetisBox.overflow = "scroll";
                 thetisBox.show(
                           trayX+","+trayY,
                           trayWidth+","+trayHeight,
                           "TRAY",
                           "",
-                          "<%=h t('desktop.news.caption') %>",
+                          "<%= t('desktop.news.caption') %>",
                           request.responseText.stripScripts()
                         );
                 thetisBoxProgress.remove();
@@ -111,7 +113,7 @@ function requestBirthday()
             "",
             "INPUT",
             "",
-            "<%=h t('msg.specify_birthday') %><br/>&nbsp;&nbsp;&nbsp;<%=h t('msg.ex_birthday') %><br/><%=h t('msg.howto_change_birthday') %>",
+            "<%= t('msg.specify_birthday') %><br/>&nbsp;&nbsp;&nbsp;<%= t('msg.ex_birthday') %><br/><%= t('msg.howto_change_birthday') %>",
             ""
           );
 }
@@ -122,7 +124,7 @@ function saveBirthday(birthday)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'users', :action => 'update', :id => login_user.id %>&user[birthday]="+birthday,
+          "<%= url_for(:controller => 'users', :action => 'update', :id => login_user.id) %>&user[birthday]="+birthday,
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -147,10 +149,10 @@ function showBiorhythm()
   thetisBox.setOnClose("showToolBiorhythm(true);");
   thetisBox.bgcolor_title = "darkviolet";
   thetisBox.bgcolor_body = "thistle";
-  thetisBox.title = "<%=h t('biorhythm.name') %>";
+  thetisBox.title = "<%= t('biorhythm.name') %>";
 
   new Ajax.Request(
-          "<%= url_for :controller => 'desktop', :action => 'show_biorhythm' %>",
+          "<%= url_for(:controller => 'desktop', :action => 'show_biorhythm') %>",
           {
             method:"get",
             asynchronous:true,
