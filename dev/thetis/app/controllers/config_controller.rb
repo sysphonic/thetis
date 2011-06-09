@@ -89,8 +89,6 @@ class ConfigController < ApplicationController
           case key
             when 'symbol_image'
               ConfigHelper.save_img('symbol.png', val) if val.size > 0
-            when 'header_image'
-              ConfigHelper.save_img('header.png', val) if val.size > 0
             else
               yaml[cat][key] = val
           end

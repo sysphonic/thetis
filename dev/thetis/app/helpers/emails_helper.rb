@@ -1,5 +1,5 @@
 #
-#= EmailHelper
+#= EmailsHelper
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
@@ -13,7 +13,7 @@
 #
 #* 
 #
-module EmailHelper
+module EmailsHelper
 
   #=== self.quote_message
   #
@@ -23,7 +23,7 @@ module EmailHelper
   #return:: Message in quoted format.
   #
   def self.quote_message(email)
-    sender = EmailHelper.get_sender_exp(email.from_address)
+    sender = EmailsHelper.get_sender_exp(email.from_address)
     return "\n\n(#{email.get_sent_at_exp}), #{sender} wrote:\n" \
            + email.message.split("\n").map!{|line| '> ' + line}.join("\n")
   end

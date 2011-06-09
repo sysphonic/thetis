@@ -213,7 +213,7 @@ end
             user_name, u_groups = UsersHelper.get_groups_info(user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             sep = (users.last == user_id)?'':', '
           %>
-          <a class="a_underline" href="#" nowrap onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;"><%= user_name %></a><%= sep %>
+          <% unless u_groups.empty? %><a class="a_underline" href="#" nowrap onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;"><% end %><%= user_name %><% unless u_groups.empty? %></a><% end %><%= sep %>
           <% end %>
           </div>
         <% end %>

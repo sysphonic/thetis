@@ -16,7 +16,6 @@ THETIS_RELATIVE_URL_ROOT = '/thetis'
 $thetis_config = YAML.load_file(File.join(File.dirname(__FILE__), '../config/_config.yml'))
 
 THETIS_SYMBOL_IMAGE = 'images/custom/symbol.png'
-THETIS_HEADER_IMAGE = 'images/custom/header.png'
 
 THETIS_TOPICS_URL = THETIS_RELATIVE_URL_ROOT + '/custom/topics.html'
 THETIS_NOTE_URL = THETIS_RELATIVE_URL_ROOT + '/custom/note.html'

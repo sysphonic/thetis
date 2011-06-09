@@ -1,0 +1,22 @@
+<%
+unless @desktop.nil?
+  case @desktop.background_color
+%>
+<%  when Desktop::BGCOLOR_PINK %>
+  thetisBox.bgcolor_title = "deeppink";
+  thetisBox.bgcolor_body = "pink";
+<%  when Desktop::BGCOLOR_ORANGE %>
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+<%  when Desktop::BGCOLOR_BROWN %>
+  thetisBox.bgcolor_title = "burlywood";
+  thetisBox.bgcolor_body = "wheat";
+<%  when Desktop::BGCOLOR_GREEN %>
+  thetisBox.bgcolor_title = "yellowgreen";
+  thetisBox.bgcolor_body = "#CEFFA6";
+<%
+   else
+    ;
+  end
+end
+%>

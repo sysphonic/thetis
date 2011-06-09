@@ -63,14 +63,19 @@ tabs = new Array("basic", "admin");
                       <table align="left" cellpadding="0" cellspacing="5">
                         <tr height="40">
                           <td id="td_bgcolor_blue" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BLUE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BLUE) %>; cursor:pointer; border:solid 3px dimgray;">
+                            &nbsp;
                           </td>
                           <td id="td_bgcolor_pink" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_PINK %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_PINK) %>; cursor:pointer; border:solid 3px dimgray;">
+                            &nbsp;
                           </td>
                           <td id="td_bgcolor_orange" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_ORANGE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_ORANGE) %>; cursor:pointer; border:solid 3px dimgray;">
+                            &nbsp;
                           </td>
                           <td id="td_bgcolor_brown" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BROWN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BROWN) %>; cursor:pointer; border:solid 3px dimgray;">
+                            &nbsp;
                           </td>
                           <td id="td_bgcolor_green" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_GREEN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_GREEN) %>; cursor:pointer; border:solid 3px dimgray;">
+                            &nbsp;
                           </td>
                         </tr>
                       </table>
@@ -94,7 +99,12 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
                       <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
-                      <%= file_field(:desktop, :file, :style => 'width:100%', :size => '50') %>
+                      <div align="left" style="padding:5px 0px 5px 30px;">
+                        <img width="120" src="<%= url_for(:controller => 'desktop', :action => 'get_image') %>" />
+                      </div>
+                      <div align="left" style="padding-left:20px;">
+                        <%= file_field(:desktop, :file, :style => 'width:100%', :size => '50') %>
+                      </div>
                     </td>
                   </tr>
                 </table>

@@ -14,7 +14,14 @@ end
 @users_cache = {}
 %>
 
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:<%= @desktop.get_background_color %>; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
+<%
+if @desktop.img_enabled
+  bg_img_style = 'background-image:url(\'' + url_for(:controller => 'desktop', :action => 'get_image') + '\'); background-repeat:no-repeat; background-position:center center;'
+else
+  bg_img_style = ''
+end
+%>
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:<%= @desktop.get_background_color %>; <%= raw(bg_img_style) %> border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
   <tr class="desktop_tr" height="30%">
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :left)}'); background-repeat:no-repeat; background-position:top left;" %>
     <td class="desktop_td" id="cell_0x0" align="left" valign="top" style="width:30%; <%= raw(corner_img_style) %>">
@@ -31,14 +38,7 @@ end
   <tr class="desktop_tr" height="40%">
     <td class="desktop_td" id="cell_0x1" align="left" valign="middle" style="width:10%;">
     </td>
-    <%
-    if @desktop.img_enabled
-      bg_img_style = 'background-image:url(\'' + url_for(:controller => 'desktop', :action => 'get_image') + '\'); background-repeat:no-repeat; background-position:center center;'
-    else
-      bg_img_style = ''
-    end
-    %>
-    <td class="desktop_td" id="cell_1x1" align="center" valign="middle" style="<%= raw(bg_img_style) %>">
+    <td class="desktop_td" id="cell_1x1" align="center" valign="middle">
       &nbsp;
     </td>
     <td class="desktop_td" id="cell_2x1" align="right" valign="middle" style="width:10%;">
@@ -183,7 +183,7 @@ unless @toys.nil?
     <img src="<%= icon_img %>" style="cursor:move;" />
 
   <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
-    <a href="#" onclick="showScheduleDetail('<%=ApplicationHelper.h_s_quote truncate(toy.name, :length => 20) %>', '<%= toy.address %>'); return false;">
+    <a href="#" onclick="showScheduleDetail(null, '<%= toy.target_id %>', '<%=ApplicationHelper.h_s_quote(truncate(toy.name, :length => 20)) %>'); return false;">
   <% else %>
     <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
   <% end %>
@@ -199,6 +199,10 @@ unless @toys.nil?
 end
 %>
 
+<input type="hidden" id="desktop_bgcolor" name="desktop_bgcolor" value="<%= @desktop.get_background_color %>" />
+
+<%= render(:partial => 'common/schedule_func') %>
+
 
 <script type="text/javascript">
 //<![CDATA[
@@ -208,7 +212,7 @@ Droppables.add(
           accept: "toy_tray",
           onHover:function(element)
           {
-            $("div_desktop").style.backgroundColor = "<%= Desktop.background_color(session[:color], true) %>";
+            $("div_desktop").style.backgroundColor = "<%= @desktop.get_background_color(true) %>";
           },
           onDrop:function(element)
           {
@@ -299,7 +303,7 @@ editConfig = function()
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<%= t('btn.config') %>";
+                thetisBox.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif' /> <%= Desktop.human_name %> <%= t('btn.config') %>";
                 thetisBox.show(
                           "CENTER",
                           (mainWidth*80/100)+','+(mainHeight*85/100),

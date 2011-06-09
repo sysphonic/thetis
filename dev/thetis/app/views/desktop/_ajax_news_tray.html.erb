@@ -30,7 +30,7 @@
     <img src="<%= icon_img %>" style="cursor:move;" />
 
   <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
-    <a href="#" onclick="showScheduleDetail('<%=ApplicationHelper.h_s_quote truncate(toy.name, :length => 20) %>', '<%= toy.address %>'); return false;">
+    <a href="#" onclick="showScheduleDetail(null, '<%= toy.target_id %>', '<%=ApplicationHelper.h_s_quote(truncate(toy.name, :length => 20)) %>'); return false;">
   <% else %>
     <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
   <% end %>
@@ -127,7 +127,7 @@ TrayDragObserver.prototype = {
     if (toy.className != 'toy_tray') {
       return;
     }
-    $("div_desktop").style.backgroundColor = "<%= Desktop.background_color(session[:color]) %>";
+    $("div_desktop").style.backgroundColor = $("desktop_bgcolor").value;
     draggable.options.snap = false;
   }
 }

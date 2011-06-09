@@ -117,10 +117,11 @@ class Desktop < ActiveRecord::Base
   #
   #Gets selected background-color value of CSS
   #
+  #_highlight_::Flag to require highlight color.
   #return:: Selected background-color value of CSS.
   #
-  def get_background_color
-    return Desktop.background_color(self.background_color)
+  def get_background_color(highlight=false)
+    return Desktop.background_color(self.background_color, highlight)
   end
 
   #=== file

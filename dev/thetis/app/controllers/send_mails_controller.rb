@@ -55,7 +55,7 @@ class SendMailsController < ApplicationController
         @email = Email.new
         @email.user_id = login_user.id
         @email.subject = 'Re: ' + org_email.subject
-        @email.message = EmailHelper.quote_message(org_email)
+        @email.message = EmailsHelper.quote_message(org_email)
 
         @email.to_addresses = org_email.reply_to || org_email.from_address
 
@@ -63,7 +63,7 @@ class SendMailsController < ApplicationController
         @email = Email.new
         @email.user_id = login_user.id
         @email.subject = 'Re: ' + org_email.subject
-        @email.message = EmailHelper.quote_message(org_email)
+        @email.message = EmailsHelper.quote_message(org_email)
 
         @email.to_addresses = org_email.reply_to || org_email.from_address
         @email.cc_addresses = org_email.cc_addresses
@@ -72,7 +72,7 @@ class SendMailsController < ApplicationController
       when 'forward'
         @email = SendMailsHelper.get_mail_to_send(login_user)
         @email.subject = 'FW: ' + org_email.subject
-        @email.message = EmailHelper.quote_message(org_email)
+        @email.message = EmailsHelper.quote_message(org_email)
 
         unless org_email.mail_attachments.nil? or org_email.mail_attachments.empty?
           @email.status = Email::STATUS_TEMPORARY

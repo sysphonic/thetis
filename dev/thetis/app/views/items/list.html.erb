@@ -215,10 +215,14 @@ folders_cache = {}
     <td class="<%= td_class %>">
       <%
       user_name, u_groups = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+      unless u_groups.empty?
       %>
       <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+      <% end %>
         <%=h truncate(item.disp_registered_by(@users_cache, @user_obj_cache), :length => 10) %>
+      <% unless u_groups.empty? %>
       </a>
+      <% end %>
     </td>
 
   <% if !login_user.nil? and item.editable?(login_user.id) %>

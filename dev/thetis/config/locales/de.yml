@@ -208,8 +208,6 @@ de:
     app_title: "Titel der Applikation"
     emblem_title: "Titel unter Sinnbild"
     emblem_image: "Sinnbild"
-    header_title: "Titel im Kopfbereich"
-    header_image: "Bild des Kopfbereiches"
     default_page: "Vorgegebene Seite"
     show_topicbox: "Topic Box zeigen."
     show_topicbox_info: "Effektiv nur wenn Vorgegebene Seite eine der Seiten in Thetis ist."

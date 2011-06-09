@@ -209,8 +209,6 @@ ja:
     app_title: "アプリケーション名"
     emblem_title: "標章欄タイトル"
     emblem_image: "標章欄画像"
-    header_title: "ヘッダー・タイトル"
-    header_image: "ヘッダー画像"
     default_page: "デフォルトページ"
     show_topicbox: "トピックボックスを表示する"
     show_topicbox_info: "デフォルトページがThetisのページの場合のみ有効です。"

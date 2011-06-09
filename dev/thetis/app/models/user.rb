@@ -192,6 +192,7 @@ class User < ActiveRecord::Base
 
     Toy.destroy_all("(user_id=#{self.id})")
     Research.destroy_all("(user_id=#{self.id})")
+    Desktop.destroy_all("(user_id=#{self.id})")
 
     # Timecard and PaidHoliday
     Timecard.destroy_all("(user_id=#{self.id})")

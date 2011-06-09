@@ -81,6 +81,22 @@ class DesktopController < ApplicationController
     render(:text => t('file.uploaded'))
   end
 
+  #=== get_schedule
+  #
+  #Gets today's Schedule table.
+  #
+  def get_schedule
+    Log.add_info(request, params.inspect)
+
+    login_user = session[:login_user]
+
+    @date = Date.parse(params[:date])
+
+    @schedules = Schedule.get_user_day(login_user, @date)
+
+    render(:partial => 'schedule', :layout => false)
+  end
+
   #=== edit_config
   #
   #Shows form of Desktop configuration.
@@ -113,7 +129,6 @@ class DesktopController < ApplicationController
     params[:desktop].delete(:user_id)
 
     desktop.update_attributes(params[:desktop])
-    session[:color] = desktop.background_color
 
     params.delete(:desktop)
 
@@ -155,7 +170,6 @@ class DesktopController < ApplicationController
     end
 
     @desktop = Desktop.get_for(user)
-    session[:color] = @desktop.background_color
   end
 
   #=== open_desktop

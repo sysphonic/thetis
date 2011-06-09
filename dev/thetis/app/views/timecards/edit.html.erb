@@ -66,11 +66,11 @@ tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
         <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
     <tr height="10"><td></td></tr>
@@ -95,7 +95,7 @@ end
 <%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
   <table class="timecard" align="center" width="95%" cellpadding="0" cellspacing="0">
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('cap.classification') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('cap.classification') %></td>
       <td class="item_value_td">
       <% if editable or !@timecard.nil? %>
         <span style="padding:0px 5px;">
@@ -128,7 +128,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('timecard.labor_time') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('timecard.labor_time') %></td>
       <td class="item_value_td">
       <% if editable %>
         <select id="start_hour" onchange="changeHour(this.value, $('start_min'));">
@@ -195,13 +195,13 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%=h t('cap.option') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('cap.option') %></td>
       <td class="item_value_td">
       <% if editable %>
         <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
-        <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%=h t('timecard.business_trip') %></label>
+        <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %></label>
       <% elsif !@timecard.nil? and @timecard.business_trip? %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%=h t('timecard.business_trip') %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %>
       <% end %>
       </td>
     </tr>
@@ -236,17 +236,17 @@ end
   <table id="buttons_with_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_with_clear %>">
     <tr height="10"><td></td></tr>
     <tr>
-      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-        <%=h t('btn.back') %>
+      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+        <%= t('btn.back') %>
       </td>
     <% if editable %>
       <td width="10"></td>
       <td class="img_button_td" onclick="doRegister();">
-        <%=h t('btn.register') %>
+        <%= t('btn.register') %>
       </td>
       <td width="10"></td>
       <td class="img_button_td" onclick="doClear();">
-        <%=h t('btn.clear') %>
+        <%= t('btn.clear') %>
       </td>
     <% end %>
     </tr>
@@ -254,13 +254,13 @@ end
   </table>
   <table id="buttons_without_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_without_clear %>">
     <tr height="10"><td></td></tr>
-      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-        <%=h t('btn.back') %>
+      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+        <%= t('btn.back') %>
       </td>
     <% if editable %>
       <td width="10"></td>
       <td class="img_button_td" onclick="doRegister();">
-        <%=h t('btn.register') %>
+        <%= t('btn.register') %>
       </td>
     <% end %>
     </tr>
@@ -281,6 +281,8 @@ end
 </div>
 
 <br/>
+
+<%= render(:partial => 'common/schedule_func') %>
 
 <script type="text/javascript">
 <!--
@@ -325,7 +327,7 @@ function doRegister()
   if (checkOff($("timecard_workcode").value)) {
     $("timecard_start").value = "";
   } else if (start_hour == "" || start_min == "") {
-    msg("<%=h t('timecard.specify_start_time') %>");
+    msg("<%= t('timecard.specify_start_time') %>");
     return false;
   } else {
     $("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
@@ -340,7 +342,7 @@ function doRegister()
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for :controller => 'timecards', :action => 'update' %>?id=" + $("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'update') %>?id=" + $("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -356,61 +358,14 @@ function doRegister()
 
 function doClear()
 {
-  confm("<%=h t('timecard.confirm_to_clear_record') %>", "_doClear()");
+  confm("<%= t('timecard.confirm_to_clear_record') %>", "_doClear()");
 }
 
 function _doClear()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  location.href = "<%= url_for :controller => 'timecards', :action => 'destroy' %>?id=" + $("timecard_id").value + "&user_id=<%= @selected_user.id %>";
-}
-
-function showDetail(date, schedule_id, title)
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h Schedule.human_name %>";
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
-  new Ajax.Request(
-          "<%= url_for :controller => 'schedules', :action => 'show' %>?id=" + schedule_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*80/100,
-                          "TRAY",
-                          "",
-                          title,
-                          "<br/>"+request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
-
-function editDetail(date, id)
-{
-  prog("TOP-RIGHT");
-  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&edit_id="+id;
-}
-
-function doDelete(date, id, title)
-{
-  confm("<%=h t('paren.square.left') %>"+title+"<%=h t('schedule.confirm_to_delete') %>", "_doDelete('"+date+"', '"+id+"')");
-}
-
-function _doDelete(date, id)
-{
-  prog("TOP-RIGHT");
-  location.href="<%= url_for :controller => 'schedules', :action => 'day' %>?id="+date+"&doDelete="+id;
+  location.href = "<%= url_for(:controller => 'timecards', :action => 'destroy') %>?id=" + $("timecard_id").value + "&user_id=<%= @selected_user.id %>";
 }
 
 var thetisBox = null;
@@ -435,7 +390,7 @@ function inputBreak(org_start, org_end)
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);
 
   thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('timecard.input_break') %>";
+  thetisBox.title = "<%= t('timecard.input_break') %>";
   thetisBox.overflow = "hide";
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
@@ -446,7 +401,7 @@ function onBreakOK()
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for :controller => 'timecards', :action => 'update_break' %>?id=" + $("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'update_break') %>?id=" + $("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -469,7 +424,7 @@ function onBreakCancel()
 
 function doDeleteBreak(org_start, org_end)
 {
-  confm("<%=h t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%=h t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
+  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
 }
 
 function _doDeleteBreak(org_start, org_end)
@@ -478,7 +433,7 @@ function _doDeleteBreak(org_start, org_end)
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for :controller => 'timecards', :action => 'delete_break' %>?id=" + $("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'delete_break') %>?id=" + $("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -548,9 +503,9 @@ function showDescSelector()
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('timecard.select_from_recent_desc') %>";
+  thetisBox.title = "<%= t('timecard.select_from_recent_desc') %>";
   new Ajax.Request(
-          "<%= url_for :controller => 'timecards', :action => 'recent_descriptions' %>",
+          "<%= url_for(:controller => 'timecards', :action => 'recent_descriptions') %>",
           {
             method:"get",
             asynchronous:true,

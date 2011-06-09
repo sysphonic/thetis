@@ -31,18 +31,6 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('config.header_title') %></td>
-            <td class="item_value_td">
-              <input type="text" id="general_header_title" name="general[header_title]" value="" style="width:95%" />
-            </td>
-          </tr>
-          <tr>
-            <td class="item_cap_td" nowrap><%=h t('config.header_image') %></td>
-            <td class="item_value_td">
-              <input type="file" name="general[header_image]" size="30" style="width:95%" />
-            </td>
-          </tr>
-          <tr>
             <td class="item_cap_td" nowrap><%=h t('config.default_page') %></td>
             <td class="item_value_td" nowrap>
               <input type="text" id="general_default_page" name="general[default_page]" value="" style="width:95%" /><br/>
@@ -323,7 +311,6 @@ function onLoadSub()
 function forBugfulIE()
 {
   // Bugful IE decides width of an input-text control depending on the length of its content.
-  $("general_header_title").value = restoreHTML("<%=h @yaml[:general]['header_title'] %>");
   $("general_default_page").value = restoreHTML("<%=h @yaml[:general]['default_page'] %>");
   $("topic_caption").value = restoreHTML("<%=h @yaml[:topic]['caption'] %>");
 }

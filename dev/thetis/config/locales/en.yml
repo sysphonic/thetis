@@ -208,8 +208,6 @@ en:
     app_title: "Application Title"
     emblem_title: "Emblem Title"
     emblem_image: "Emblem Image"
-    header_title: "Header Title"
-    header_image: "Header Image"
     default_page: "Default Page"
     show_topicbox: "Show Topic Box."
     show_topicbox_info: "Effective only when Default Page is one of pages in Thetis."

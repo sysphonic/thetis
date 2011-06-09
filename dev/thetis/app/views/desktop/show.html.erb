@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
 <!--
-document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/grad_<%= (session[:color].nil?)?(Desktop.get_for(nil).background_color):(session[:color]) %>.png) right repeat-y";
+document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/grad_<%= @desktop.background_color %>.png) right repeat-y";
 
 function onLoadSub()
 {
@@ -29,9 +29,53 @@ open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
             <% if @desktop.popup_news %>
                   setTimeout("showTray()", 100);
             <% end %>
+            <% if @desktop.popup_schedule %>
+                  setTimeout("showSchedule()", 100);
+            <% end %>
                 }
             }
           );
+}
+
+function showSchedule()
+{
+  var desktop = $("div_desktop");
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+<%= render(:partial => 'theitsbox_color') %>
+  var trayWidth = Math.floor(deskWidth * 2 / 3) - 2;
+  var trayHeight = 220;
+  var trayX = deskPos[0] + 2;
+  var trayY = deskPos[1] + 2;
+
+  <% date_s = Date.today.strftime(Schedule::SYS_DATE_FORM) %>
+  new Ajax.Request(
+          "<%= url_for(:controller => 'desktop', :action => 'get_schedule', :date => date_s) %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "<%= date_s %>";
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          trayX+","+trayY,
+                          trayWidth+","+trayHeight,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
 }
 
 function showToolTray(sw)
@@ -55,14 +99,16 @@ function showTray()
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
+<%= render(:partial => 'theitsbox_color') %>
   thetisBox.setOnClose("showToolTray(true);");
   var trayWidth = Math.floor(deskWidth / 3);
   var trayHeight = deskHeight;
   var trayX = deskPos[0] + deskWidth - trayWidth + 2;
-  var trayY = deskPos[1] + 4;
+  var trayY = deskPos[1] + 2;
   if (is_MS) {
-    trayX -= 2;
-    trayY -= 2;
+    trayX -= 3;
+  } else {
+    trayHeight += 4
   }
 
   new Ajax.Request(
@@ -167,37 +213,6 @@ function showBiorhythm()
                           request.responseText
                         );
                 thetisBoxProgress.remove();
-              }
-          }
-        );
-}
-
-function showScheduleDetail(title, url)
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h Schedule.human_name %>";
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
-  new Ajax.Request(
-          url,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                var desktop = $("div_desktop");
-                thetisBox.show(
-                          "CENTER",
-                          desktop.clientWidth*2/3+","+desktop.clientHeight*80/100,
-                          "TRAY",
-                          "",
-                          title,
-                          "<br/>"+request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
               }
           }
         );

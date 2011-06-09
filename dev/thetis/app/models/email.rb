@@ -54,7 +54,7 @@ class Email < ActiveRecord::Base
       email_to = self.to_addresses.split(Email::ADDRESS_SEPARATOR)
       recipients.concat(email_to)
       email_to.map! { |addr|
-        EmailHelper.encode_disp_name(addr)
+        EmailsHelper.encode_disp_name(addr)
       }
     end
     if self.cc_addresses.nil? or self.cc_addresses.empty?
@@ -63,7 +63,7 @@ class Email < ActiveRecord::Base
       email_cc = self.cc_addresses.split(Email::ADDRESS_SEPARATOR)
       recipients.concat(email_cc)
       email_cc.map! { |addr|
-        EmailHelper.encode_disp_name(addr)
+        EmailsHelper.encode_disp_name(addr)
       }
     end
     if self.bcc_addresses.nil? or self.bcc_addresses.empty?
@@ -74,12 +74,12 @@ class Email < ActiveRecord::Base
     end
 
     sender = self.from_address
-    email_from = EmailHelper.encode_disp_name(sender)
+    email_from = EmailsHelper.encode_disp_name(sender)
 
     if !self.reply_to.nil? and !self.reply_to.empty?
       reply_to = self.reply_to
     elsif !mail_account.reply_to.nil? and !mail_account.reply_to.empty?
-      reply_to = EmailHelper.encode_disp_name(mail_account.reply_to)
+      reply_to = EmailsHelper.encode_disp_name(mail_account.reply_to)
     else
       reply_to = nil
     end

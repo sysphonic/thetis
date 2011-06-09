@@ -17,10 +17,14 @@ login_user = session[:login_user]
               <div class="comment_name" nowrap>
                 <%
                 user_name, u_groups = UsersHelper.get_groups_info(@comment.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+                unless u_groups.empty?
                 %>
                 <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+                <% end %>
                   <b style="color:white;"><%=h user_name %></b>
+                <% unless u_groups.empty? %>
                 </a>
+                <% end %>
                 &nbsp;(<%= @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
               </div>
             </td>

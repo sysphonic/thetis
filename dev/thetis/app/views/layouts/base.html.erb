@@ -138,16 +138,20 @@ function doResize()
         elems[i].style.width = mainWidth / 3 + "px";
       }
     }
-    var menubox = $("menubox");
-    if (menubox != null) {
-      menubox.style.top = 30 + "px";
-      menubox.style.left = 50 + "px";
-    }
 
     var toolbox = $("toolbox");
+    var toolbox_top = mainHeight - 30;
+    var toolbox_left = 50;
     if (toolbox != null) {
-      toolbox.style.top = (mainHeight - toolbox.clientHeight - 30) + "px";
-      toolbox.style.left = 50 + "px";
+      toolbox_top = mainHeight - toolbox.clientHeight - 30;
+      toolbox.style.top = toolbox_top + "px";
+      toolbox.style.left = toolbox_left + "px";
+    }
+
+    var menubox = $("menubox");
+    if (menubox != null) {
+      menubox.style.top = (toolbox_top - 30) + "px";
+      menubox.style.left = (toolbox_left + 30) + "px";
     }
 
   } else if (div = $("div_list")) {

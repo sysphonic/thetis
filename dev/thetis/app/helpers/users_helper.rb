@@ -31,11 +31,13 @@ module UsersHelper
 
     user = User.find_with_cache(user_id, user_obj_cache)
     u_groups = []
-    user.get_groups_a(false, group_obj_cache).each do |group_id|
-      if user_groups[group_id].nil?
-        user_groups[group_id] = Group.get_path(group_id, groups_cache, group_obj_cache)
+    unless user.nil?
+      user.get_groups_a(false, group_obj_cache).each do |group_id|
+        if user_groups[group_id].nil?
+          user_groups[group_id] = Group.get_path(group_id, groups_cache, group_obj_cache)
+        end
+        u_groups << group_id
       end
-      u_groups << group_id
     end
     user_name = User.get_name(user_id, users_cache, user_obj_cache)
 
