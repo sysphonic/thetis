@@ -1,0 +1,99 @@
+<%
+login_user = session[:login_user]
+date_s = @date.strftime(Schedule::SYS_DATE_FORM)
+%>
+
+<table id="desktop_timecard" cellspacing="0" cellpadding="0" width="100%">
+  <tr>
+    <td align="center" style="padding:5px; font-size:14pt;">
+
+      <%= form_tag( {:controller => 'timecards', :action => 'update'}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
+
+        <select id="start_hour" style="font-size:14pt;">
+          <option value=""></option>
+        <%
+        THETIS_HOURS.each do |hour|
+          selected = ''
+          if !@timecard.nil? and !@timecard.start.nil? and hour == @timecard.start.hour
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
+        <% end %>
+        </select>
+        :
+        <select id="start_min" style="font-size:14pt;">
+          <option value=""></option>
+        <%
+        THETIS_MINUTES.each do |min|
+          selected = ''
+          if !@timecard.nil? and !@timecard.start.nil? and min == @timecard.start.min
+            selected = 'selected'
+          end
+        %>
+          <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
+        <% end %>
+        </select>
+
+        <input type="hidden" name="id" value="<%= (@timecard.nil?)?'':(@timecard.id) %>" />
+        <input type="hidden" name="timecard[user_id]" value="<%= login_user.id %>" />
+        <input type="hidden" name="timecard[workcode]" value="<%= Timecard::WKCODE_WK_NORMAL %>" />
+        <input type="hidden" name="timecard[date]" value="<%= date_s %>" />
+        <input type="hidden" id="timecard_start" name="timecard[start]" />
+
+        <table align="center" cellspacing="0" cellpadding="0">
+          <tr height="5"><td></td></tr>
+          <tr>
+            <td class="img_button_td" onclick="doRegister();">
+              <%= t('timecard.attendance')%>
+            </td>
+          </tr>
+          <tr height="10"><td></td></tr>
+        </table>
+
+      </form>
+
+    </td>
+  </tr>
+</table>
+
+<div id="div_dummy_result" style="display:none;"></div>
+
+<script type="text/javascript">
+
+doRegister = function()
+{
+  var start_hour = $("start_hour").value;
+  var start_min = $("start_min").value;
+  var start_date = "<%= date_s %>";
+
+  if (start_hour == "" || start_min == "") {
+    msg("<%= t('timecard.specify_start_time') %>");
+    return false;
+  } else {
+    $("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
+  }
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Updater(
+              $("div_dummy_result"),
+              document.form_timecard.action,
+              {
+                method:"get",
+                parameters:Form.serialize(document.form_timecard),
+                asynchronous:true,
+                evalScripts:false,
+                onComplete:function(request) {
+                  thetisBoxProgress.remove();
+                  try {
+                    request.responseText.evalScripts();
+                  } catch (e) {}
+
+                  ThetisBox.getContainer($("desktop_timecard")).remove();
+                }
+              }
+            );
+}
+
+</script>

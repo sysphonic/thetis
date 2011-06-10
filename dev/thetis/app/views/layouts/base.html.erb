@@ -36,13 +36,13 @@ login_user = session[:login_user]
 login_name = (login_user.nil?)?'':login_user.name
 login_admin = (!login_user.nil? and login_user.admin?)?'true':'false'
 %>
-setHeaderLogin("<%=h login_name %>");
-setLeftLogin("<%=h login_name %>", <%= login_admin %>);
+setHeaderLogin();
+setLeftLogin();
 
 function setHeaderLogin()
 {
   try {
-    top.header.setLoginName("<%=h login_name %>");
+    top.header.setLoginName("<%=h truncate(login_name, :length => 10) %>");
   } catch(e) {
     setTimeout("setHeaderLogin();", 100);
   }

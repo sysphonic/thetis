@@ -14,9 +14,8 @@
 #* 
 #
 class Desktop < ActiveRecord::Base
-  validates_length_of :img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024
-  validates_format_of :img_content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i
-  validates_presence_of :img_name, :img_size, :img_content_type, :img_content
+  validates_length_of :img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true
+  validates_format_of :img_content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i, :allow_nil => true
 
   public::THEME_BOLT = 'bolt'
   public::THEME_GRAPE = 'grape'

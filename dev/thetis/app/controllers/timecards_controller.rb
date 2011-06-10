@@ -140,7 +140,7 @@ class TimecardsController < ApplicationController
 
   #=== edit
   #
-  #Shows the form to edit timecard.
+  #Shows the form to edit Timecard.
   #
   def edit
     Log.add_info(request, params.inspect)
@@ -166,10 +166,7 @@ class TimecardsController < ApplicationController
       @selected_user = User.find(params[:user_id])
     end
 
-    begin
-      @timecard = Timecard.find(:first, :conditions => ['user_id=? and date=?', @selected_user.id, date_s])
-    rescue
-    end
+    @timecard = Timecard.get_for(@selected_user.id, date_s)
 
     if @selected_user == login_user
       @schedules = Schedule.get_user_day(login_user, @date)
@@ -203,16 +200,18 @@ class TimecardsController < ApplicationController
 
     login_user = session[:login_user]
 
-    if params[:user_id].nil?
+    if params[:user_id].nil? or params[:user_id].empty?
+      @selected_user = login_user
+    elsif login_user.id.to_s == params[:user_id]
       @selected_user = login_user
     else
-      @selected_user = User.find(params[:user_id])
-
-      if @selected_user.id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
+      unless login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
       end
+
+      @selected_user = User.find(params[:user_id])
     end
 
     if Timecard.off?(params[:timecard]['workcode'])
@@ -243,10 +242,17 @@ class TimecardsController < ApplicationController
       end
     end
 
+    if (login_user.id.to_s != params[:timecard][:user_id] and !login_user.admin?(User::AUTH_TIMECARD)) \
+        or (!@timecard.user_id.nil? and @timecard.user_id.to_s != params[:timecard][:user_id])
+      Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
+      redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
+      return
+    end
+
     if @timecard.update_attributes(params[:timecard])
 
       if @timecard.off? and !@timecard.get_breaks_a.empty?
-        @timecard.update_breaks nil
+        @timecard.update_breaks(nil)
       end
 
       flash[:notice] = t('msg.update_success')

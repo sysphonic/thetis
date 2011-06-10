@@ -417,7 +417,7 @@ class Timecard < ActiveRecord::Base
  public
   #=== self.get_for
   #
-  #Gets Timecards of the specified User and Date.
+  #Gets Timecard of the specified User and Date.
   #
   #_user_id_:: Target User-ID.
   #_date_:: Target Date.
@@ -425,7 +425,7 @@ class Timecard < ActiveRecord::Base
   #
   def self.get_for(user_id, date)
     begin
-      con = ['user_id = ? and date = ?', user_id, date]
+      con = ['user_id=? and date=?', user_id, date]
       return Timecard.find(:first, :conditions => con)
     rescue
     end

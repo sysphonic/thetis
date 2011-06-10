@@ -17,6 +17,8 @@ function onLoadSub()
 <%
 open_url_h = {:controller => 'desktop', :action => 'open_desktop'}
 open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
+
+date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
 %>
   new Ajax.Updater(
             $("div_desktop").parentNode,
@@ -27,11 +29,24 @@ open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
               evalScripts:true,
               onComplete:function(request){
             <% if @desktop.popup_news %>
-                  setTimeout("showTray()", 100);
+                  setTimeout("showTray()", 50);
             <% end %>
-            <% if @desktop.popup_schedule %>
+            <%
+            if @desktop.popup_schedule and !session[:schedule_popped_up]
+              session[:schedule_popped_up] = true
+            %>
                   setTimeout("showSchedule()", 100);
             <% end %>
+            <%
+            if !login_user.nil? and @desktop.popup_timecard
+              timecard = Timecard.get_for(login_user.id, date_s)
+              if timecard.nil? or timecard.start.nil?
+            %>
+                  setTimeout("showTimecard()", 150);
+            <%
+              end
+            end
+            %>
                 }
             }
           );
@@ -53,9 +68,48 @@ function showSchedule()
   var trayX = deskPos[0] + 2;
   var trayY = deskPos[1] + 2;
 
-  <% date_s = Date.today.strftime(Schedule::SYS_DATE_FORM) %>
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'get_schedule', :date => date_s) %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "<%= date_s %>";
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          trayX+","+trayY,
+                          trayWidth+","+trayHeight,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+function showTimecard()
+{
+  var desktop = $("div_desktop");
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var thetisBox = new ThetisBox;
+<%= render(:partial => 'theitsbox_color') %>
+  var trayWidth = 200;
+  var trayHeight = 180;
+  var trayX = deskPos[0] + 2;
+  var trayY = deskPos[1] + deskHeight - trayHeight;
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'desktop', :action => 'edit_timecard', :date => date_s) %>",
           {
             method:"get",
             asynchronous:true,

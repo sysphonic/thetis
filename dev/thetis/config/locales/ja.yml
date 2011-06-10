@@ -488,6 +488,7 @@ ja:
     round:
       left: "（"
       right: "）"
+      enclose: "（%{name}）"
     square:
       left: "「"
       right: "」"

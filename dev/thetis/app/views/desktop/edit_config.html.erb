@@ -89,8 +89,8 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
                       <%= check_box(:desktop, :popup_news) %><label for="desktop_popup_news"><%= t('desktop.news.tray') %></label><br/>
-                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.human_name %></label><br/>
-                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.human_name %></label><br/>
+                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.human_name %> <%= t('paren.round.enclose', :name => t('timecard.commence_at')) %></label><br/>
+                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.human_name %> <%= t('paren.round.enclose', :name => t('login.name')) %></label><br/>
                     </td>
                   </tr>
                   <tr>
@@ -100,7 +100,9 @@ tabs = new Array("basic", "admin");
                     <td class="item_value_td">
                       <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
                       <div align="left" style="padding:5px 0px 5px 30px;">
+                      <% if !@desktop.img_size.nil? and @desktop.img_size > 0 %>
                         <img width="120" src="<%= url_for(:controller => 'desktop', :action => 'get_image') %>" />
+                      <% end %>
                       </div>
                       <div align="left" style="padding-left:20px;">
                         <%= file_field(:desktop, :file, :style => 'width:100%', :size => '50') %>

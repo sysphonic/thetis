@@ -97,6 +97,29 @@ class DesktopController < ApplicationController
     render(:partial => 'schedule', :layout => false)
   end
 
+  #=== edit_timecard
+  #
+  #Shows the form to edit Timecard on Desktop.
+  #
+  def edit_timecard
+    Log.add_info(request, params.inspect)
+
+    login_user = session[:login_user]
+
+    date_s = params[:date]
+
+    if date_s.nil? or date_s.empty?
+      @date = Date.today
+      date_s = @date.strftime(Schedule::SYS_DATE_FORM)
+    else
+      @date = Date.parse(date_s)
+    end
+
+    @timecard = Timecard.get_for(login_user.id, date_s)
+
+    render(:partial => 'timecard', :layout => false)
+  end
+
   #=== edit_config
   #
   #Shows form of Desktop configuration.

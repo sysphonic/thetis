@@ -29,8 +29,7 @@ module CachedRecord
     else
       begin
         obj = self.find(obj_id)
-      rescue StandardError => err
-        Log.add_error(nil, err)
+      rescue
         obj = nil
       end
 

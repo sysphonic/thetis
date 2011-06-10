@@ -86,13 +86,13 @@ function doUpdateTime()
 function getDay(date)
 {
   switch (date.getDay()) {
-    case 0: return "<%=h t('wday.sun') %>";
-    case 1: return "<%=h t('wday.mon') %>";
-    case 2: return "<%=h t('wday.tue') %>";
-    case 3: return "<%=h t('wday.wed') %>";
-    case 4: return "<%=h t('wday.thu') %>";
-    case 5: return "<%=h t('wday.fri') %>";
-    case 6: return "<%=h t('wday.sat') %>";
+    case 0: return "<%= t('wday.sun') %>";
+    case 1: return "<%= t('wday.mon') %>";
+    case 2: return "<%= t('wday.tue') %>";
+    case 3: return "<%= t('wday.wed') %>";
+    case 4: return "<%= t('wday.thu') %>";
+    case 5: return "<%= t('wday.fri') %>";
+    case 6: return "<%= t('wday.sat') %>";
   }
 }
 
@@ -105,18 +105,18 @@ function setLogin(login_name, is_admin)
   }
 
   if (login_name != null && login_name.length > 0) {
-    $("menu_login").innerHTML= "<%=h t('btn.logout') %>";
+    $("menu_login").innerHTML= "<%= t('btn.logout') %>";
   } else {
-    $("menu_login").innerHTML= "<%=h t('btn.login') %>";
+    $("menu_login").innerHTML= "<%= t('btn.login') %>";
   }
 }
 
 function doLogin()
 {
-  if ($("menu_login").innerHTML == "<%=h t('btn.logout') %>") {
-    top.main.location.href = "<%= url_for :controller => 'login', :action => 'logout' %>";
+  if ($("menu_login").innerHTML == "<%= t('btn.logout') %>") {
+    top.main.location.href = "<%= url_for(:controller => 'login', :action => 'logout') %>";
   } else {
-    top.main.location.href = "<%= url_for :controller => 'login', :action => 'index' %>";
+    top.main.location.href = "<%= url_for(:controller => 'login', :action => 'index') %>";
   }
 }
 
@@ -289,62 +289,62 @@ setTimeout("doUpdateTime()", 1000);
           </TD>
         </TR>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'schedules', :action => 'day' %>?id='+getDateString(); return false;" onMouseOver="activateMenu('schedule', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'schedules', :action => 'day') %>?id='+getDateString(); return false;" onMouseOver="activateMenu('schedule', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.schedule') %></A>
           </TD>
         </TR>
       <% if $thetis_config[:menu]['disp_equipment'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'equipment', :action => 'schedule_all' %>?id='+getDateString(); return false;" onMouseOver="activateMenu('equipment', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all') %>?id='+getDateString(); return false;" onMouseOver="activateMenu('equipment', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.equipment') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_workflow'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'workflows', :action => 'list' %>'; return false;" onMouseOver="activateMenu('workflow', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'workflows', :action => 'list') %>'; return false;" onMouseOver="activateMenu('workflow', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.workflow') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_research'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'researches', :action => 'index' %>'; return false;" onMouseOver="activateMenu('research', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'researches', :action => 'index') %>'; return false;" onMouseOver="activateMenu('research', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.research') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_user_list'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'users', :action => 'list' %>'; return false;" onMouseOver="activateMenu('user_list', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; return false;" onMouseOver="activateMenu('user_list', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.user_list') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_mail'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'mail_folders', :action => 'show_tree', :tips => 'true' %>'; return false;" onMouseOver="activateMenu('mail', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'mail_folders', :action => 'show_tree', :tips => 'true') %>'; return false;" onMouseOver="activateMenu('mail', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.mail') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_addressbook'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'addressbook', :action => 'list' %>'; return false;" onMouseOver="activateMenu('addressbook', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'addressbook', :action => 'list') %>'; return false;" onMouseOver="activateMenu('addressbook', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.addressbook') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_paintmail'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'paintmail', :action => 'index' %>'; return false;" onMouseOver="activateMenu('paintmail', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'paintmail', :action => 'index') %>'; return false;" onMouseOver="activateMenu('paintmail', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= _('PaintMail') %></A>
           </TD>
         </TR>
       <% end %>
       <% if $thetis_config[:menu]['disp_timecard'] == '1' %>
         <TR height="31">
-          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for :controller => 'timecards', :action => 'month' %>'; return false;" onMouseOver="activateMenu('timecard', this);" onMouseOut="deactivateMenu(this);">
+          <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); top.main.location.href='<%= url_for(:controller => 'timecards', :action => 'month') %>'; return false;" onMouseOver="activateMenu('timecard', this);" onMouseOut="deactivateMenu(this);">
             <A href="#" onclick="return false;" style="color:#404040;"><%= t('menu.timecard') %></A>
           </TD>
         </TR>
@@ -356,7 +356,7 @@ setTimeout("doUpdateTime()", 1000);
           <tr height="5"><td></td></tr>
           <tr height="31">
             <td class="menu_td" align="center" onMouseOver="activateAdminMenu(this);" onMouseOut="deactivateAdminMenu(this);">
-              <a href="#" class="a_underline" onclick="progMain(); top.main.location.href='<%= url_for :controller => 'frames', :action => 'admin' %>'; return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
+              <a href="#" class="a_underline" onclick="progMain(); top.main.location.href='<%= url_for(:controller => 'frames', :action => 'admin') %>'; return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
             </td>
           </tr>
