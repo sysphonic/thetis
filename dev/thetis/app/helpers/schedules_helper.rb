@@ -15,6 +15,25 @@
 #
 module SchedulesHelper
 
+  #=== self.check_valid_members
+  #
+  #Checks if there is a valid entry in specified members.
+  #
+  #_members_:: Members array.
+  #_exists_cache_:: Hash to accelerate response. {member_id, exists?}
+  #_klass_:: Class to call exists?() method.
+  #return:: true if there is a valid entry, false otherwise.
+  #
+  def self.check_valid_members(members, exists_cache, klass)
+    members.each do |member_id|
+      if exists_cache[member_id].nil?
+        exists_cache[member_id] = klass.exists?(member_id)
+      end
+      return true if exists_cache[member_id]
+    end
+    return false
+  end
+
   #=== self.zone_datetime
   #
   #Gets zoned date time.

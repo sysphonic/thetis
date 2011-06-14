@@ -22,68 +22,6 @@ class Address < ActiveRecord::Base
   public::BOOK_BOTH = 'book_both'
 
 
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target User-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Address-ID.
-  #
-  def self.delete(id)
-
-    Address.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    Address.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Address.destroy() instead of Address.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Address.destroy() instead of Address.delete_all()!'
-  end
-
   #=== self.find_all
   #
   #Finds all Addresses in order to display with specified condition.

@@ -265,8 +265,7 @@ end
           @schedule.get_items_a.each do |item_id|
             begin
               item = Item.find(item_id)
-            rescue StandardError => err
-              Log.add_error(request, err)
+            rescue
             end
 
             disp = Item.get_title(item_id)

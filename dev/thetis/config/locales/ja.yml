@@ -469,6 +469,7 @@ ja:
     teams_manage: "チーム管理"
     schedules_manage: "スケジュール管理"
     equipment_manage: "設備管理"
+    addressbook_manage: "アドレス帳（共有）管理"
     templates: "テンプレート （プロフィールシート含む）"
     research_manage: "アンケート管理"
     settings: "設定"
@@ -626,7 +627,8 @@ ja:
     application_info: "（このプロジェクトチームに応募するためにはログインしてください。）"
     is_member: "（あなたはこのプロジェクトチームのメンバーです。）"
     all: "すべてのチーム"
-    confirm_to_delete: "」を削除します。記事（プロジェクト定義書）は残ります。"
+    confirm_to_delete: "」とその記事（プロジェクト定義書）を削除します。"
+    request_to_delete: "システムに負荷が掛かるのを防ぐため、必要なければこの記事（プロジェクト定義書）を削除してください。\nまたは編集画面で「通常の記事」に変更すれば、内容とコメントを残せます。"
     one: "1件"
     other: "%{count}件"
   tel:

@@ -101,31 +101,15 @@ class TeamsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     begin
-      Team.destroy(params[:id])
-    rescue
+      team = Team.find(params[:id])
+      Item.destroy(team.item_id)
+    rescue StandardError => err
+      Log.add_error(request, err)
     end
 
     list
     flash[:notice] = t('msg.delete_success')
     render(:action => 'list')
-  end
-
-  #=== get_users_a
-  #
-  #Gets Users array who belong to this Team.
-  #
-  #return:: Groups array without empty element. If no Groups, returns empty array.
-  #
-  def get_groups_a
-    Log.add_info(request, params.inspect)
-
-    return [] if self.groups.nil? or self.groups.empty?
-
-    array = self.groups.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
   end
 
  private

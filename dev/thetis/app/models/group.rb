@@ -79,6 +79,9 @@ class Group < ActiveRecord::Base
       group.destroy
     end
 
+    # Schedules
+    Schedule.trim_on_destroy_member(:group, self.id)
+
     super()
   end
 

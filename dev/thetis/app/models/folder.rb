@@ -702,8 +702,8 @@ class Folder < ActiveRecord::Base
   def force_destroy
 
     childs = Folder.get_childs(self.id, nil, true, true, true)
-    childs.each do |folder|
 
+    childs.each do |folder|
       begin
         folder.destroy
       rescue StandardError => err
@@ -714,15 +714,14 @@ class Folder < ActiveRecord::Base
       items.each do |item|
         item.destroy
       end
-
     end
 
     items = Item.find(:all, :conditions => ['folder_id=?', self.id])
     items.each do |item|
       item.destroy
     end
-    self.destroy
 
+    self.destroy
   end
 
   #=== get_disp_ctrl_h
@@ -869,7 +868,6 @@ class Folder < ActiveRecord::Base
       array = self.write_users.split('|')
       array.compact!
       array.delete('')
-
     end
 
     return array
@@ -890,9 +888,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.read_users = '|'
-    self.read_users << users.join('|') + '|'
-    
+    self.read_users = '|' + users.uniq.join('|') + '|'
   end
 
   #=== set_write_users
@@ -910,9 +906,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.write_users = '|'
-    self.write_users << users.join('|') + '|'
-
+    self.write_users = '|' + users.uniq.join('|') + '|'
   end
 
   #=== get_read_groups_a
@@ -970,7 +964,6 @@ class Folder < ActiveRecord::Base
       array = self.write_groups.split('|')
       array.compact!
       array.delete('')
-
     end
 
     return array
@@ -991,9 +984,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.read_groups = '|'
-    self.read_groups << groups.join('|') + '|'
-
+    self.read_groups = '|' + groups.uniq.join('|') + '|'
   end
 
   #=== set_write_groups
@@ -1011,9 +1002,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.write_groups = '|'
-    self.write_groups << groups.join('|') + '|'
-
+    self.write_groups = '|' + groups.uniq.join('|') + '|'
   end
 
   #=== get_read_teams_a
@@ -1071,7 +1060,6 @@ class Folder < ActiveRecord::Base
       array = self.write_teams.split('|')
       array.compact!
       array.delete('')
-
     end
 
     return array
@@ -1092,9 +1080,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.read_teams = '|'
-    self.read_teams << teams.join('|') + '|'
-
+    self.read_teams = '|' + teams.uniq.join('|') + '|'
   end
 
   #=== set_write_teams
@@ -1112,9 +1098,7 @@ class Folder < ActiveRecord::Base
       return
     end
 
-    self.write_teams = '|'
-    self.write_teams << teams.join('|') + '|'
-
+    self.write_teams = '|' + teams.uniq.join('|') + '|'
   end
 
   #=== remove_auth_user
@@ -1146,19 +1130,28 @@ class Folder < ActiveRecord::Base
 
     group_id = group.id.to_s
 
+    read_updated = false
+    write_updated = false
+
     ary = self.get_read_groups_a
-    ary.delete(group_id)
-    self.set_read_groups(ary)
+    if ary.include?(group_id)
+      ary.delete(group_id)
+      self.set_read_groups(ary)
+      read_updated = true
+    end
 
     ary = self.get_write_groups_a
-    ary.delete(group_id)
-    self.set_write_groups(ary)
+    if ary.include?(group_id)
+      ary.delete(group_id)
+      self.set_write_groups(ary)
+      write_updated = true
+    end
 
     members = group.get_users_a
 
     unless members.empty?
-      self.set_read_users(self.get_read_users_a | members)
-      self.set_write_users(self.get_write_users_a | members)
+      self.set_read_users(self.get_read_users_a | members) if read_updated
+      self.set_write_users(self.get_write_users_a | members) if write_updated
     end
   end
 
@@ -1172,19 +1165,28 @@ class Folder < ActiveRecord::Base
 
     team_id = team.id.to_s
 
+    read_updated = false
+    write_updated = false
+
     ary = self.get_read_teams_a
-    ary.delete(team_id)
-    self.set_read_teams(ary)
+    if ary.include?(team_id)
+      ary.delete(team_id)
+      self.set_read_teams(ary)
+      read_updated = true
+    end
 
     ary = self.get_write_teams_a
-    ary.delete(team_id)
-    self.set_write_teams(ary)
+    if ary.include?(team_id)
+      ary.delete(team_id)
+      self.set_write_teams(ary)
+      write_updated = true
+    end
 
     members = team.get_users_a
 
     unless members.empty?
-      self.set_read_users(self.get_read_users_a | members)
-      self.set_write_users(self.get_write_users_a | members)
+      self.set_read_users(self.get_read_users_a | members) if read_updated
+      self.set_write_users(self.get_write_users_a | members) if write_updated
     end
   end
 

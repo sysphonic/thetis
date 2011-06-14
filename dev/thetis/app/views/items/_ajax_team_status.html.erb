@@ -5,7 +5,7 @@ team = @item.team
 if team.nil?
 %>
 
-  <%=h t('paren.not_organized') %>
+  <%= t('paren.not_organized') %>
 
 <% else %>
 
@@ -14,23 +14,26 @@ if team.nil?
       <td style="text-align:left; width:30%;">
         <%=h team.get_status_name %>
       </td>
-      <% if !login_user.nil? and login_user.id == @item.user_id %>
+    <%
+    if !login_user.nil? \
+        and (login_user.admin?(User::AUTH_TEAM) or login_user.id == @item.user_id)
+    %>
       <td align="left">
         <table cellpadding="0" cellspacing="0">
           <tr>
         <% if team.status == Team::STATUS_ACTIVATED %>
-            <td class="img_button_td" onclick="doChangeStatus(<%= team.id %>, '<%= Team::STATUS_DEACTIVATED %>');">
-              <%=h t('btn.deactivate') %>
+            <td class="img_button_td" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_DEACTIVATED %>');">
+              <%= t('btn.deactivate') %>
             </td>
         <% else %>
-            <td class="img_button_td" onclick="doChangeStatus(<%= team.id %>, '<%= Team::STATUS_ACTIVATED %>');">
-              <%=h t('btn.activate') %>
+            <td class="img_button_td" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_ACTIVATED %>');">
+              <%= t('btn.activate') %>
             </td>
         <% end %>
           </tr>
         </table>
       </td>
-      <% end %>
+    <% end %>
     </tr>
   </table>
 
@@ -41,20 +44,21 @@ if team.nil?
 
 <script type="text/javascript">
 
-doChangeStatus = function(team_id, status)
+doChangeTeamStatus = function(team_id, status)
 {
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
               "div_team_status",
-              "<%= url_for :controller => 'items', :action => 'change_team_status' %>",
+              "<%= url_for(:controller => 'items', :action => 'change_team_status') %>",
               {
+                method:"get",
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request) {
                   thetisBox.remove();
                 },
-                parameters: "team_id="+team_id+"&status="+status+"&authenticity_token=<%= form_authenticity_token %>"
+                parameters: "team_id="+team_id+"&status="+status
               }
             );
 }

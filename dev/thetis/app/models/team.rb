@@ -50,6 +50,86 @@ class Team < ActiveRecord::Base
     return Team.status_name(self.status)
   end
 
+  #=== update_status
+  #
+  #Updates status of the Team.
+  #
+  #_new_stat_:: New status.
+  #
+  def update_status(new_stat)
+
+    self.update_attributes({:status => new_stat, :req_to_del_at => nil})
+  end
+
+  #=== need_req_to_del?
+  #
+  #Checks if it is needed to request to delete this Team.
+  #
+  #return:: true if confirmation required, false otherwise.
+  #
+  def need_req_to_del?
+
+    return false if self.status != Team::STATUS_DEACTIVATED
+
+    if self.req_to_del_at.nil?
+      return true if self.updated_at.nil?
+
+      base_dt = self.updated_at
+      pending_months = 3
+    else
+      base_dt = self.req_to_del_at
+      pending_months = 1
+    end
+
+    expired_date = (UtilDate.create(base_dt).get_date >> pending_months)
+
+    return UtilDate.create(expired_date).before?(Date.today)
+  end
+
+  #=== done_req_to_del
+  #
+  #Register the current time as the last request time
+  #to delete this Team.
+  #
+  def done_req_to_del
+
+    return if self.status != Team::STATUS_DEACTIVATED
+
+    self.update_attributes({:req_to_del_at => Time.now})
+  end
+
+  #=== self.check_req_to_del_for
+  #
+  #Check if the specified User has any Teams which it is needed
+  #to request to delete.
+  #
+  #_user_id_:: Target User-ID.
+  #return:: true or false.
+  #
+  def self.check_req_to_del_for(user_id)
+
+    con = "xtype='#{Item::XTYPE_PROJECT}'"
+
+    project_items = Item.find(:all, :conditions => con)
+    return if project_items.nil? or project_items.empty?
+
+    project_items.each do |item|
+      team = item.team
+      next if team.nil?
+
+      if team.need_req_to_del?
+        comment = Comment.new
+        comment.user_id = 0   # 0 for System
+        comment.item_id = item.id
+        comment.xtype = Comment::XTYPE_MSG
+        comment.message = I18n.t('team.request_to_delete')
+        comment.save
+
+        team.done_req_to_del
+      end
+    end
+  end
+
   #=== self.get_for
   #
   #Gets Teams of the specified User.
@@ -110,6 +190,9 @@ class Team < ActiveRecord::Base
         folder.save
       end
     end
+
+    # Schedules
+    Schedule.trim_on_destroy_member(:team, self.id)
 
     super()
   end

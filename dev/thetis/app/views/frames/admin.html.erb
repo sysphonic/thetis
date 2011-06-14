@@ -44,6 +44,9 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
             <% if login_user.admin?(User::AUTH_EQUIPMENT) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>'; return false;"><%= t('menu.equipment_manage') %></a></li>
             <% end %>
+            <% if login_user.admin?(User::AUTH_ADDRESSBOOK) %>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'addressbook', :action => 'list', :admin => 'true') %>'; return false;"><%= t('menu.addressbook_manage') %></a></li>
+            <% end %>
             <% if login_user.admin?(User::AUTH_ITEM) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'templates', :action => 'list') %>'; return false;"><%= t('menu.templates') %></a></li>
             <% end %>

@@ -151,7 +151,13 @@ class AddressbookController < ApplicationController
     end
 
     con = []
-    con << AddressbookHelper.get_scope_condition_for(login_user, params[:filter_book])
+    if !login_user.nil? \
+        and login_user.admin?(User::AUTH_ADDRESSBOOK) \
+        and params[:admin] == 'true'
+      con = ['owner_id=0']
+    else
+      con << AddressbookHelper.get_scope_condition_for(login_user, params[:filter_book])
+    end
 
     if params[:keyword]
       key_array = params[:keyword].split(nil)

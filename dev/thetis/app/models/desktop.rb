@@ -102,9 +102,9 @@ class Desktop < ActiveRecord::Base
      when BGCOLOR_PINK
       return (highlight)?'#F6D1F4':'#F1BEEE'
      when BGCOLOR_ORANGE
-      return (highlight)?'#FFC6A0':'#F9B873'
+      return (highlight)?'#FFC6A0':'#F9BF9C'
      when BGCOLOR_BROWN
-      return (highlight)?'#FFC1A2':'#FBAE88'
+      return (highlight)?'#F9E1C1':'#F6CEAB'
      when BGCOLOR_GREEN
       return (highlight)?'#D7FFBF':'#BFF49F'
      else     # when BGCOLOR_BLUE

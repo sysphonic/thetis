@@ -8,9 +8,9 @@
     </td>
     <td width="10" rowspan="3">&nbsp;</td>
     <td align="right" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
 <% unless session[:login_user].nil? %>
-  <%= h t('cap.targets') %> <%= select_tag 'filter',
+  <%= t('cap.targets') %> <%= select_tag 'filter',
                            options_for_select([[h(t('team.all')), 'all'],
                                               [h(Team.status_name(Team::STATUS_STANDBY)), Team::STATUS_STANDBY],
                                               [h(Team.status_name(Team::STATUS_ACTIVATED)), Team::STATUS_ACTIVATED], 
@@ -18,8 +18,8 @@
                                               params[:filter])
             %>
 <% end %>
-      <input type="button" value="<%= h t('btn.search') %>" onClick="form_list.action='<%= url_for :controller => 'teams', :action => 'search' %>'; prog('TOP-RIGHT'); form_list.submit();"/>
-      <input type="button" value="<%= h t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'teams', :action => 'list' %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'teams', :action => 'search') %>'; prog('TOP-RIGHT'); form_list.submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>';"/>
     </td>
   </tr>
   <tr height="2"><td></td></tr>
@@ -34,7 +34,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td class="pagination_td" align="center">
-      <%= h t('cap.total') %><%= h t('team', :count => @total_num) %>
+      <%= t('cap.total') %><%= t('team', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
@@ -50,11 +50,11 @@
 <div id="div_teams" style="overflow:scroll; background-color:white;">
 <table id="list_teams" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap onClick="sortList('teams.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('teams.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('teams.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('teams.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_th" width="30%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Team.human_attribute_name('name') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="28%" nowrap style="cursor:default;"><%= h t('team.team_folder') %></th>
+    <th class="list_th" width="28%" nowrap style="cursor:default;"><%= t('team.team_folder') %></th>
     <th class="list_th" width="12%" nowrap onClick="sortList('status')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h Team.human_attribute_name('status') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('status', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= h t('msg.members') %></th>
+    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= t('msg.members') %></th>
   </tr>
 <%
 users_cache = {}
@@ -64,8 +64,14 @@ users_cache = {}
   <tr height="33">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h team.id %></td>
     <td align="left" nowrap class="<%= td_class %>">
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => team.item_id %>#team'; return false;">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
+      <% if team.need_req_to_del? %>
+        <span style="color:red;">
+          <%=h truncate(team.name, :length => 20) %>
+        </span>
+      <% else %>
         <%=h truncate(team.name, :length => 20) %>
+      <% end %>
       </a>
     </td>
     <td class="<%= td_class %>" nowrap>
@@ -84,20 +90,20 @@ users_cache = {}
     </td>
 <!--
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'edit', :id => team.id) %>';" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'edit', :id => team.id) %>';" />
     </td>
 -->
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete('<%=ApplicationHelper.h_s_quote truncate(team.name, :length => 20)%>', <%= team.id %>); return false;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete('<%=ApplicationHelper.h_s_quote truncate(team.name, :length => 20)%>', <%= team.id %>); return false;" />
     </td>
   </tr>
 <% end %>
 </table>
 </div>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
-<%= hidden_field_tag 'sort_type', params[:sort_type] %>
-<%= hidden_field_tag 'folder_id', @folder_id %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+<%= hidden_field_tag('folder_id', @folder_id) %>
 
 </form>
 
@@ -119,13 +125,13 @@ function sortList(col)
 
 function doDelete(name, team_id)
 {
-  confm("<div style='padding-bottom:10px;'><%=h t('paren.square.left') %>"+name+"<%=h t('team.confirm_to_delete') %></div><div style='padding-bottom:10px;'><%=h t('folder.delete_team_folder_info2') %></div><%=h t('msg.confirm_sure') %>", "_doDelete("+team_id+")");
+  confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('team.confirm_to_delete') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+team_id+")");
 }
 
 function _doDelete(team_id)
 {
   prog("TOP-RIGHT");
-  document.form_list.action = "<%= url_for :controller => 'teams', :action => 'destroy' %>?id=" + team_id;
+  document.form_list.action = "<%= url_for(:controller => 'teams', :action => 'destroy') %>?id=" + team_id;
   document.form_list.submit();
 }
 

@@ -1,6 +1,6 @@
 
 <script type="text/javascript">
-tabs = new Array("groups", "teams");
+scope_tabs = new Array("groups", "teams");
 </script>
 
 <% login_user = session[:login_user] %>
@@ -10,10 +10,10 @@ tabs = new Array("groups", "teams");
     <td style="vertical-align:top;">
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr height="20">
-          <td id="tab_groups" class="td_item_tab" nowrap onclick="showTab('groups', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('tab_div_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_groups" class="td_item_tab" nowrap onclick="showTab('groups', scope_tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if($('tab_div_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('group.plural') %>
           </td>
-          <td id="tab_teams" class="td_item_tab" nowrap onclick="showTab('teams', tabs); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('tab_div_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+          <td id="tab_teams" class="td_item_tab" nowrap onclick="showTab('teams', scope_tabs); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('tab_div_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if ($('tab_div_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
             <%= t('team.plural') %>
           </td>
         </tr>
@@ -137,7 +137,7 @@ removeScope = function(attr_name)
   moveList($(attr_name+"s_selected"), $(attr_name+"_candidates"));
 }
 
-showTab("groups", tabs);
+showTab("groups", scope_tabs);
 
 </script>
 

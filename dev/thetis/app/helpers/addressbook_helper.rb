@@ -64,7 +64,7 @@ module AddressbookHelper
   #Gets the SQL condition clause about membership
   #of the specified User.
   #
-  #_user_:: The target User.
+  #_user_:: Target User.
   #_book_:: Target book.
   #return:: SQL condition clause..
   #

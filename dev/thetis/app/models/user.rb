@@ -187,25 +187,30 @@ class User < ActiveRecord::Base
     folder = User.get_my_folder(self.id)
     folder.force_destroy unless folder.nil?
 
-    # Application for Team
+    # Application for Teams
     Comment.destroy_all("(user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')")
 
     Toy.destroy_all("(user_id=#{self.id})")
     Research.destroy_all("(user_id=#{self.id})")
     Desktop.destroy_all("(user_id=#{self.id})")
 
-    # Timecard and PaidHoliday
+    # Timecards and PaidHolidays
     Timecard.destroy_all("(user_id=#{self.id})")
     PaidHoliday.destroy_all("(user_id=#{self.id})")
 
-    # MailFolder, Email, MailAccount and Address
+    # MailFolders, Emails and MailAccounts
     MailFolder.destroy_all("(user_id=#{self.id})")
     Email.destroy_by_user(self.id)
-    MailAccount.destroy_all("(user_id=#{self.id})")
+    MailAccount.destroy_by_user(self.id)
+
+    # Addresses in private Addressbook
     Address.destroy_all("(owner_id=#{self.id})")
 
-    # Setting
+    # Settings
     Setting.destroy_all("(user_id=#{self.id})")
+
+    # Schedules
+    Schedule.trim_on_destroy_member(:user, self.id)
 
     super()
   end

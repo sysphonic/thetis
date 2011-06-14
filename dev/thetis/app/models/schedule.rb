@@ -873,6 +873,42 @@ private
   end
 
  public
+  #=== self.trim_on_destroy_member
+  #
+  #Deletes Schedules which cannot be refered by anyone any more.
+  #
+  #_type_:: Type of the deleted member. (:user / :group / :team)
+  #_member_id_:: ID of the deleted member.
+  #
+  def self.trim_on_destroy_member(type, member_id)
+    user_exists_cache = {}
+    group_exists_cache = {}
+    team_exists_cache = {}
+
+    case type
+     when :user
+      user_exists_cache[member_id.to_s] = false
+      con = "(users like '%|#{member_id}|%')"
+     when :group
+      group_exists_cache[member_id.to_s] = false
+      con = "(groups like '%|#{member_id}|%')"
+     when :team
+      team_exists_cache[member_id.to_s] = false
+      con = "(teams like '%|#{member_id}|%')"
+     else
+      return
+    end
+    con << " and (scope != '#{Schedule::SCOPE_ALL}')"
+
+    schedules = Schedule.find(:all, :conditions => con) || []
+    schedules.each do |schedule|
+      break if SchedulesHelper.check_valid_members(schedule.get_users_a, user_exists_cache, User)
+      break if SchedulesHelper.check_valid_members(schedule.get_groups_a, group_exists_cache, Group)
+      break if SchedulesHelper.check_valid_members(schedule.get_teams_a, team_exists_cache, Team)
+      schedule.destroy
+    end
+  end
+
   #=== get_users_a
   #
   #Gets Users array related to this Schedule.

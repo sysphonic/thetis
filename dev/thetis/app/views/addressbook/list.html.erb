@@ -11,17 +11,21 @@ login_user = session[:login_user]
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="showAddressNew();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="showAddressNew();">
           </td>
           <td align="right" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+          <% if params[:admin] == 'true' %>
+            <%= t('address.book') %><%= t('cap.suffix') %><%= t('scope.common') %>
+          <% else %>
             <%= t('address.book') %><%= t('cap.suffix') %><%= select_tag 'filter_book',
                                      options_for_select([[t('msg.all'), Address::BOOK_BOTH],
                                                         [t('scope.private'), Address::BOOK_PRIVATE],
                                                         [t('scope.common'), Address::BOOK_COMMON]],
                                                         params[:filter_book])  %>
-            <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for :controller => 'addressbook', :action => 'search' %>'; form_list.submit(); prog('TOP-RIGHT');"/>
-            <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for :controller => 'addressbook', :action => 'list' %>'; prog('TOP-RIGHT');"/>
+          <% end %>
+            <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'addressbook', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for(:controller => 'addressbook', :action => 'list') %>'; prog('TOP-RIGHT');"/>
           </td>
         </tr>
       </table>
@@ -93,7 +97,7 @@ login_user = session[:login_user]
     </td>
   <% if address.editable?(login_user) %>
     <td class="<%=td_class %>" width="20" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>');" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>');" />
     </td>
     <td class="<%=td_class %>" width="20" style="text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
@@ -104,8 +108,9 @@ login_user = session[:login_user]
 </table>
 </div>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
-<%= hidden_field_tag 'sort_type', params[:sort_type] %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+<%= hidden_field_tag('admin', params[:admin]) %>
 
 </form>
 
@@ -140,12 +145,12 @@ function doDelete()
   if (count <= 0) {
     return;
   }
-  confm(count+"<%= h t('address.confirm_delete') %>", "_doDelete()");
+  confm(count+"<%= t('address.confirm_delete') %>", "_doDelete()");
 }
 
 function _doDelete()
 {
-  document.form_list.action = "<%= url_for :controller => 'addressbook', :action => 'destroy' %>";
+  document.form_list.action = "<%= url_for(:controller => 'addressbook', :action => 'destroy') %>";
   document.form_list.submit();
 
   prog("TOP-RIGHT");
@@ -207,13 +212,13 @@ function showAddressNew()
   thetisBox.bgcolor_body = "#FFDA8B";
 
   new Ajax.Request(
-          "<%= url_for :controller => 'addressbook', :action => 'new' %>",
+          "<%= url_for(:controller => 'addressbook', :action => 'new') %>",
           {
             method:"get",
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%=h t('address.new') %>";
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
                 thetisBox.overflow = "scroll";
                 thetisBox.show(
                           "CENTER",
@@ -242,6 +247,7 @@ function showAddressEdit(address_id, address_name)
           "<%= url_for(:controller => 'addressbook', :action => 'edit') %>?id="+address_id,
           {
             method:"get",
+            parameters:"admin=<%= params[:admin] %>",
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
@@ -273,7 +279,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
 <table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0">
   <tr style="height:20px;">
     <td align="right" style="color:blueviolet; padding-right:10px; padding-top:10px;">
-      <%=h t('address.imported', :count => @imp_cnt) %><br/>
+      <%= t('address.imported', :count => @imp_cnt) %><br/>
     </td>
   </tr>
   <tr>
@@ -287,7 +293,7 @@ err_cnt = 0
         <tr>
         <% if address_cnt > 0 %>
           <td align="right" valign="top" style="padding-left:3px; padding-right:3px;">
-            <%=h t('address.cap_with_num', :num => address_cnt) %>
+            <%= t('address.cap_with_num', :num => address_cnt) %>
           </td>
           <td align="left" valign="top" style="padding-left:3px; padding-right:3px;">
         <% else %>
@@ -321,10 +327,10 @@ end
 function showImportError()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('cap.import_error') %>";
+  thetisBox.title = "<%= t('cap.import_error') %>";
   thetisBox.bgcolor_title = "crimson";
   thetisBox.bgcolor_body = "salmon";
-  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%=h t('msg.error_detected') %>", $("imp_errs").innerHTML);
+  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", $("imp_errs").innerHTML);
 }
 
 function onLoadSub()

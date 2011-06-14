@@ -56,6 +56,26 @@ class MailAccount < ActiveRecord::Base
     self.uidl.nil? or !self.uidl.split(MailAccount::UIDL_SEPARATOR).include?(uid)
   end
 
+  #=== self.destroy_by_user
+  #
+  #Destroy all MailAccounts of specified User's.
+  #
+  #_user_id_:: Target User-ID.
+  #_add_con_:: Additional condition to query with.
+  #
+  def self.destroy_by_user(user_id, add_con=nil)
+
+    con = "user_id=#{user_id}"
+    con << " and (#{add_con})" unless add_con.nil? or add_con.empty?
+    mail_accounts = MailAccount.find(:all, :conditions => con)
+
+    unless mail_accounts.nil?
+      mail_accounts.each do |mail_account|
+        mail_account.destroy
+      end
+    end
+  end
+
   #=== self.destroy
   #
   #Overrides ActionRecord::Base.destroy().

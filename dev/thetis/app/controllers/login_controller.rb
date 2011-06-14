@@ -56,6 +56,7 @@ class LoginController < ApplicationController
     else
 
       user.update_attribute(:login_at, Time.now)
+      Team.check_req_to_del_for(user.id)
 
       session[:login_user] = user
       session[:settings] = Setting.get_for(user.id) || {}

@@ -570,8 +570,7 @@ class Item < ActiveRecord::Base
 
     begin
       item = Item.find(item_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue
     end
     if item.nil?
       return item_id.to_s + ' '+ I18n.t('paren.deleted')

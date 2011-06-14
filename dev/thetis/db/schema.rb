@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524100000) do
+ActiveRecord::Schema.define(:version => 20110524100100) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "owner_id"
@@ -63,6 +63,22 @@ ActiveRecord::Schema.define(:version => 20110524100000) do
     t.text     "message"
     t.datetime "updated_at"
     t.string   "xtype"
+  end
+
+  create_table "desktops", :force => true do |t|
+    t.integer  "user_id"
+    t.string   "theme"
+    t.string   "background_color"
+    t.boolean  "popup_news"
+    t.boolean  "popup_timecard"
+    t.boolean  "popup_schedule"
+    t.boolean  "img_enabled"
+    t.string   "img_name"
+    t.integer  "img_size"
+    t.string   "img_content_type"
+    t.binary   "img_content",      :limit => 2147483647
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "emails", :force => true do |t|
@@ -325,10 +341,13 @@ ActiveRecord::Schema.define(:version => 20110524100000) do
   end
 
   create_table "teams", :force => true do |t|
-    t.string  "name"
-    t.integer "item_id", :default => 0, :null => false
-    t.text    "users"
-    t.string  "status"
+    t.string   "name"
+    t.integer  "item_id",       :default => 0, :null => false
+    t.text     "users"
+    t.string   "status"
+    t.datetime "req_to_del_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "timecards", :force => true do |t|

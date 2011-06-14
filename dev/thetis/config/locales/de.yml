@@ -468,6 +468,7 @@ de:
     teams_manage: "Teams verwalten"
     schedules_manage: "Zeitpläne verwalten"
     equipment_manage: "Einrichtungen verwalten"
+    addressbook_manage: "Addressbook (Common) verwalten"
     templates: "Vorlagen (inklusive Profil)"
     research_manage: "Umfrage verwalten"
     settings: "Einstellungen"
@@ -625,7 +626,8 @@ de:
     application_info: "(Bitte LOGIN um sich beim Team des Projekts zu bewerben.)"
     is_member: "(Sie sind Mitglieder/Mitgliederin des Teams dieses Projekt.)"
     all: "Alle Teams"
-    confirm_to_delete: "] wird gelöscht. Der Artikel (Projekt Definition) wird weiterbleiben."
+    confirm_to_delete: "] und den Artikel (Projekt Definition) werden gelöscht."
+    request_to_delete: "To keep the system light-weighted, please delete this Item (Project Definition) unless necessary.\nAlternatively you can apply 'Normal' type to this Item on Edit screen to keep its content and messages."
     one: "1 Team"
     other: "%{count} Teams"
   tel:

@@ -7,14 +7,30 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   <tr>
     <td align="center" style="padding:5px; font-size:14pt;">
 
+      <%
+      sel_val = nil
+      unless login_user.login_at.nil?
+        time_val = login_user.login_at.strftime('%H%M').to_i
+        THETIS_HOURS.each do |hour|
+          THETIS_MINUTES.each do |min|
+            ref_val = hour * 100 + min
+            if time_val <= ref_val
+              sel_val = ref_val
+              break
+            end
+          end
+          break unless sel_val.nil?
+        end
+      end
+      %>
+
       <%= form_tag( {:controller => 'timecards', :action => 'update'}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
 
         <select id="start_hour" style="font-size:14pt;">
-          <option value=""></option>
         <%
         THETIS_HOURS.each do |hour|
           selected = ''
-          if !@timecard.nil? and !@timecard.start.nil? and hour == @timecard.start.hour
+          if !sel_val.nil? and ((sel_val / 100) == hour.to_i)
             selected = 'selected'
           end
         %>
@@ -23,11 +39,10 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         </select>
         :
         <select id="start_min" style="font-size:14pt;">
-          <option value=""></option>
         <%
         THETIS_MINUTES.each do |min|
           selected = ''
-          if !@timecard.nil? and !@timecard.start.nil? and min == @timecard.start.min
+          if !sel_val.nil? and ((sel_val % 100) == min.to_i)
             selected = 'selected'
           end
         %>

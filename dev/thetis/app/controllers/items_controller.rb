@@ -1370,7 +1370,7 @@ class ItemsController < ApplicationController
     team_id = params[:team_id]
     begin
       team = Team.find(team_id)
-      team.update_attribute(:status, params[:status])
+      team.update_status(params[:status])
 
       @item = team.item
 

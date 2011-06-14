@@ -468,6 +468,7 @@ en:
     teams_manage: "Teams Management"
     schedules_manage: "Schedules Management"
     equipment_manage: "Equipment Management"
+    addressbook_manage: "Addressbook (Common) Management"
     templates: "Templates (including Profile Sheet)"
     research_manage: "Research Management"
     settings: "Settings"
@@ -625,7 +626,8 @@ en:
     application_info: "(Please LOGIN to apply for the Team of this project.)"
     is_member: "(You are a member of the Team for this project.)"
     all: "All Teams"
-    confirm_to_delete: "] will be deleted. The Item (Project Definition) will remain."
+    confirm_to_delete: "] and its Item (Project Definition) will be deleted."
+    request_to_delete: "To keep the system light-weighted, please delete this Item (Project Definition) unless necessary.\nAlternatively you can apply 'Normal' type to this Item on Edit screen to keep its content and messages."
     one: "1 team"
     other: "%{count} teams"
   tel:
