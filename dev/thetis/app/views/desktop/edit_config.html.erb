@@ -16,11 +16,11 @@ tabs = new Array("basic", "admin");
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if($('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if($('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if($('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>
@@ -34,7 +34,7 @@ tabs = new Array("basic", "admin");
     <td align="center">
 
       <div id="tab_div_basic" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkseagreen;">
           <tr>
             <td align="center" style="padding:20px 0px;">
 
@@ -42,7 +42,7 @@ tabs = new Array("basic", "admin");
 
                 <table align="center" width="85%" cellpadding="0" cellspacing="2">
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                    <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
                     </td>
                     <td class="item_value_td">
@@ -55,7 +55,7 @@ tabs = new Array("basic", "admin");
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                    <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_background_color"><%= Desktop.human_attribute_name('background_color') %></label>
                     </td>
                     <td class="item_value_td">
@@ -84,7 +84,7 @@ tabs = new Array("basic", "admin");
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                    <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_options"><%= t('desktop.pop_up') %></label>
                     </td>
                     <td class="item_value_td">
@@ -94,7 +94,7 @@ tabs = new Array("basic", "admin");
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#98FF33;" nowrap>
+                    <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_image"><%= Image.human_name %></label>
                     </td>
                     <td class="item_value_td">
@@ -129,7 +129,7 @@ tabs = new Array("basic", "admin");
 
     <% if is_admin %>
       <div id="tab_div_admin" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkseagreen;">
           <tr>
             <td align="left" style="padding:20px 10px;">
 

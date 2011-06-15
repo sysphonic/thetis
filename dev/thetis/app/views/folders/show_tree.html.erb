@@ -65,7 +65,7 @@ groups_cache = {}
             options << [h(t('folder.opt.authorities')), 'auth']
             options << [h(t('folder.opt.display_control')), 'disp']
             %>
-            <%= select_tag 'select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px;' %>
+            <%= select_tag('select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
         <% end %>
           </td>
         </tr>
@@ -228,8 +228,7 @@ function onLoadSub()
   <% @folder_tree.each do |parent_id, child_folders| %>
   array = new Array(
     <%
-    count = 0
-    child_folders.each do |folder|
+    child_folders.each_with_index do |folder, idx|
 
       case folder.xtype
         when Folder::XTYPE_USER
@@ -267,8 +266,7 @@ function onLoadSub()
     %>
     new Array("<%= folder.id %>", " <%=h folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
     <%
-      count += 1
-      if count < child_folders.length
+      if idx < (child_folders.length - 1)
     %>
     ,
     <%

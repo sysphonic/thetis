@@ -63,7 +63,10 @@ end
 <table id="menubox" cellpadding="0" cellspacing="0" style="height:50px; position:absolute; display:none;">
   <tr>
     <td align="center" valign="middle">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="editConfig();" />
+      <div onMouseOver="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png';" onMouseOut="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png';">
+        <img name="mini_window_1" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png" onclick="editConfig();" style="cursor:pointer;" />
+      </div>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png" style="display:none;" alt="" />
     </td>
   </tr>
 </table>
@@ -291,9 +294,16 @@ unless @toys.nil?
 end
 %>
 
+var thetisBoxConfig = null;
+
 editConfig = function()
 {
-  var thetisBox = new ThetisBox;
+  if (thetisBoxConfig != null) {
+    return;
+  }
+  thetisBoxConfig = new ThetisBox;
+  thetisBoxConfig.setOnClose(function(){ thetisBoxConfig = null; });
+
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
@@ -303,8 +313,8 @@ editConfig = function()
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif' /> <%= Desktop.human_name %> <%= t('btn.config') %>";
-                thetisBox.show(
+                thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png' /> <%= Desktop.human_name %> <%= t('btn.config') %>";
+                thetisBoxConfig.show(
                           "CENTER",
                           (mainWidth*80/100)+','+(mainHeight*85/100),
                           "TRAY",

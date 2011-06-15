@@ -5,7 +5,7 @@
     <table align="center" cellspacing="0" cellpadding="0">
       <tr>
         <td>
-          <%=h t('team.now_applying') %>
+          <%= t('team.now_applying') %>
         </td>
       </tr>
       <tr>
@@ -13,7 +13,7 @@
           <table align="center" cellspacing="0" cellpadding="0">
             <tr>
               <td class="img_button_td" onclick="doTeamCancel();">
-                <%=h t('btn.cancel') %>
+                <%= t('btn.cancel') %>
               </td>
             </tr>
           </table>
@@ -30,7 +30,7 @@
 
 doTeamCancel = function()
 {
-  confm("<%=h t('team.confirm_cancel') %>", "_doTeamCancel()");
+  confm("<%= t('team.confirm_cancel') %>", "_doTeamCancel()");
 }
 
 _doTeamCancel = function()

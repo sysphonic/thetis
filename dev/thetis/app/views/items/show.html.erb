@@ -151,7 +151,7 @@ case @item.layout
     render_target = 'showA'
 end
 %>
-<%= render :partial => render_target %>
+<%= render(:partial => render_target) %>
 
 <% unless @for_print %>
 
@@ -254,7 +254,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
               <td id="div_wf_ajax">
 
                 <% @orders = @workflow.get_orders %>
-                <%= render :partial => "ajax_workflow", :locals=>{:login_user=>login_user} %>
+                <%= render(:partial => "ajax_workflow", :locals=>{:login_user=>login_user}) %>
 
               </td>
             </tr>
@@ -505,9 +505,9 @@ function _doWfIssue()
 
 <%
 else
-  comment = login_user.get_project_application(@item.id) if !login_user.nil?
+  @comment = login_user.get_project_application(@item.id) if !login_user.nil?
 
-  if @team.nil? or (!@team.nil? and @team.status != Team::STATUS_DEACTIVATED) or !comment.nil?
+  if @team.nil? or (!@team.nil? and @team.status != Team::STATUS_DEACTIVATED) or !@comment.nil?
 %>
 
   <table width="95%" cellpadding="5" align="center"> 
@@ -529,7 +529,7 @@ else
 
     <%
     else
-      if comment.nil?
+      if @comment.nil?
         if !@team.nil? and @team.get_users_a.include?(login_user.id.to_s)
     %>
         <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
@@ -543,13 +543,13 @@ else
 
       <% else %>
 
-        <%= render :partial => 'ajax_team_apply' %>
+        <%= render(:partial => 'ajax_team_apply') %>
     <%
         end
       else
     %>
 
-    <%= render :partial => 'ajax_team_cancel' %>
+    <%= render(:partial => 'ajax_team_cancel') %>
 
     <%
       end
@@ -794,7 +794,7 @@ end
       <tr>
         <td>
           <div id="div_comments">
-            <%= render :partial => "ajax_comments" %>
+            <%= render(:partial => 'ajax_comments') %>
           </div>
         </td>
       </tr>

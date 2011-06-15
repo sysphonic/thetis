@@ -203,6 +203,24 @@ table.timecard td {
   background-color:#DF8A1E;
 }
 
+.comment_sys_body_td {
+  border:solid 1pt #EA3C50;
+  font-size:13px;
+  padding:5px;
+  line-height:1.7;
+  background-color:#FFEDED;
+}
+
+.comment_sys_tab_td {
+  color:white;
+  font-size:13px;
+  padding:3px;
+  padding-left:10px;
+  padding-right:20px;
+  line-height:1.0;
+  background-color:#EA3C50;
+}
+
 .img_button_td {
   vertical-align:middle;
   background-repeat:no-repeat;

@@ -260,7 +260,7 @@ class Group < ActiveRecord::Base
 
   #=== self.get_childs
   #
-  #Gets childs array of the specified Group.
+  #Gets child nodes array of the specified Group.
   #
   #_group_id_:: Target Group-ID.
   #_recursive_:: Specify true if recursive search is required.

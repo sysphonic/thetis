@@ -139,7 +139,7 @@ class Folder < ActiveRecord::Base
     return folder_tree
   end
 
-  #=== self.get_condtions_for()
+  #=== self.get_condtions_for
   #
   #Gets conditions parameter for specified User.
   #
@@ -160,24 +160,25 @@ class Folder < ActiveRecord::Base
         where_users = '(read_users like \'%|'+user.id.to_s+'|%\') or (write_users like \'%|'+user.id.to_s+'|%\')'
 
         array = []
-        groups = user.get_groups_a
+        group_obj_cache = {}
+        groups = user.get_groups_a(true, group_obj_cache)
         groups.each do |group_id|
           array << '(read_groups like \'%|'+group_id+'|%\') or (write_groups like \'%|'+group_id+'|%\')'
         end
-        where_groups = array.join ' or '
+        where_groups = array.join(' or ')
 
         array = []
         teams = user.get_teams_a
         teams.each do |team_id|
           array << '(read_teams like \'%|'+team_id+'|%\') or (write_teams like \'%|'+team_id+'|%\')'
         end
-        where_teams = array.join ' or '
+        where_teams = array.join(' or ')
 
         array = []
         array << '('+where_users+')' unless where_users.empty?
         array << '('+where_groups+')' unless where_groups.empty?
         array << '('+where_teams+')' unless where_teams.empty?
-        restrict = array.join ' or '
+        restrict = array.join(' or ')
       end
     end
 
@@ -190,7 +191,7 @@ class Folder < ActiveRecord::Base
       end
       array << '((read_users is null) and (read_groups is null) and (read_teams is null))'
       array << '((write_users is null) and (write_groups is null) and (write_teams is null))'
-      con = ['(' + array.join(' or ') + ')']
+      con = '(' + array.join(' or ') + ')'
     end
 
     return con
@@ -258,7 +259,7 @@ class Folder < ActiveRecord::Base
     folder_tree[tree_id, true] = Folder.find_by_sql(sql)
 
     folder_tree[tree_id].each do |folder|
-      folder_tree = Folder.get_tree(folder_tree, nil, folder.id.to_s, true)
+      folder_tree = Folder.get_tree(folder_tree, nil, folder, true)
     end
 
     return Folder.sort_tree(folder_tree)
@@ -275,28 +276,74 @@ class Folder < ActiveRecord::Base
   #_admin_:: Administrator flag.
   #return:: Folder tree.
   #
-  def self.get_tree(folder_tree, conditions, tree_id, admin)
+  def self.get_tree(folder_tree, conditions, parent, admin)
+
+    if parent.instance_of?(Folder)
+      tree_id = parent.id.to_s
+    else
+      tree_id = parent.to_s
+      parent = nil
+      if tree_id != '0'
+        begin
+          parent = Folder.find(tree_id)
+        rescue
+        end
+        return folder_tree if parent.nil?
+      end
+    end
+
+    group_obj_cache = {}
+    folder_tree[tree_id, true] = []
+    if !parent.nil? and (parent.xtype == Folder::XTYPE_GROUP)
+      Group.get_childs(parent.owner_id, false, true).each do |group|
+        group_obj_cache[group.id] = group
+        con = Marshal.load(Marshal.dump(conditions)) unless conditions.nil?
+        if con.nil?
+          con = ''
+        else
+          con << ' and '
+        end
+        con << "(xtype='#{Folder::XTYPE_GROUP}') and (owner_id=#{group.id})"
+        begin
+          group_folder = Folder.find(:first, :conditions => con)
+        rescue => evar
+          Log.add_error(nil, evar)
+        end
+        unless group_folder.nil?
+          folder_tree[tree_id] << group_folder
+        end
+      end
+    end
 
     con = Marshal.load(Marshal.dump(conditions)) unless conditions.nil?
     if con.nil?
-      con = ['']
+      con = ''
     else
-      con[0] << ' and '
+      con << ' and '
     end
-    con[0] << 'parent_id=?'
-    con << tree_id
-    folder_tree[tree_id, true] = Folder.find(:all, :conditions => con, :order => 'xorder ASC, id ASC')
+    con << "parent_id=#{tree_id}"
+    folder_tree[tree_id] += Folder.find(:all, :conditions => con, :order => 'xorder ASC, id ASC')
 
     delete_ary = []
 
     folder_tree[tree_id].each do |folder|
 
-      if !admin and folder.xtype == Folder::XTYPE_SYSTEM
+      if !admin and (folder.xtype == Folder::XTYPE_SYSTEM)
         delete_ary << folder
         next
       end
 
-      folder_tree = Folder.get_tree(folder_tree, conditions, folder.id.to_s, admin)
+      if (tree_id == '0') and (folder.xtype == Folder::XTYPE_GROUP)
+        group = Group.find_with_cache(folder.owner_id, group_obj_cache)
+        unless group.nil?
+          if group.parent_id != 0
+            delete_ary << folder
+            next
+          end
+        end
+      end
+
+      folder_tree = Folder.get_tree(folder_tree, conditions, folder, admin)
     end
 
     folder_tree[tree_id] -= delete_ary
@@ -498,7 +545,7 @@ class Folder < ActiveRecord::Base
     end
 
     # group auth
-    user_groups = user.get_groups_a
+    user_groups = user.get_groups_a(true)
     user_groups.each do |group_id|
       return true if groups.include?(group_id)
     end
@@ -550,7 +597,7 @@ class Folder < ActiveRecord::Base
 
   #=== self.get_childs_for
   #
-  #Gets childs array of the Folder for specified User.
+  #Gets child nodes array of the Folder for specified User.
   #Implemented as a class-method because of considering about root Folder
   #which has no record in DB.
   #
@@ -571,14 +618,14 @@ class Folder < ActiveRecord::Base
       end
     end
 
-    con = Folder.get_condtions_for user, admin
+    con = Folder.get_condtions_for(user, admin)
 
     return Folder.get_childs(folder_id, con, recursive, admin, ret_obj)
   end
 
   #=== self.get_childs
   #
-  #Gets childs array of the Folder.
+  #Gets child nodes array of the Folder.
   #Implemented as a class-method because of considering about root Folder
   #which has no record in DB.
   #
@@ -600,7 +647,7 @@ class Folder < ActiveRecord::Base
 
       folder_tree.each do |parent_id, childs|
         if ret_obj
-          array = array | childs
+          array |= childs
         else
           childs.each do |folder|
             folder_id = folder.id.to_s
@@ -613,16 +660,14 @@ class Folder < ActiveRecord::Base
 
       con = Marshal.load(Marshal.dump(conditions))
       if con.nil?
-        con = ['']
+        con = ''
       else
-        con[0] << ' and '
+        con << ' and '
       end
-      con[0] << 'parent_id = ?'
-      con << folder_id
+      con << "parent_id=#{folder_id}"
 
       unless admin
-        con[0] << ' and (xtype is null or not (xtype = ?))'
-        con << Folder::XTYPE_SYSTEM
+        con << " and (xtype is null or not (xtype='#{Folder::XTYPE_SYSTEM}'))"
       end
 
       folders = Folder.find(:all, :conditions => con, :order => 'xorder ASC')

@@ -61,10 +61,11 @@ folders_cache = {}
   <tr height="5"><td></td></tr>
 </table>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
-<%= hidden_field_tag 'sort_type', params[:sort_type] %>
-<%= hidden_field_tag 'thumbnails', params[:thumbnails] %>
-<%= hidden_field_tag 'from_action', params[:from_action] %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+<%= hidden_field_tag('thumbnails', params[:thumbnails]) %>
+<%= hidden_field_tag('from_action', params[:from_action]) %>
+<%= hidden_field_tag('folder_id', params[:folder_id]) %>
 
 </form>
 
@@ -172,6 +173,7 @@ folders_cache = {}
 </div>
 
 <%= render(:partial => 'common/user_groups') %>
+
 
 <script type="text/javascript">
 <!--

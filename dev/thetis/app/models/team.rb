@@ -65,13 +65,14 @@ class Team < ActiveRecord::Base
   #
   #Checks if it is needed to request to delete this Team.
   #
+  #_ignore_former_req_:: Flag to ignore the former requests.
   #return:: true if confirmation required, false otherwise.
   #
-  def need_req_to_del?
+  def need_req_to_del?(ignore_former_req=false)
 
     return false if self.status != Team::STATUS_DEACTIVATED
 
-    if self.req_to_del_at.nil?
+    if ignore_former_req or self.req_to_del_at.nil?
       return true if self.updated_at.nil?
 
       base_dt = self.updated_at
@@ -95,7 +96,15 @@ class Team < ActiveRecord::Base
 
     return if self.status != Team::STATUS_DEACTIVATED
 
+    class << self
+      def record_timestamps; false; end
+    end
+
     self.update_attributes({:req_to_del_at => Time.now})
+
+    class << self
+      remove_method :record_timestamps
+    end
   end
 
   #=== self.check_req_to_del_for

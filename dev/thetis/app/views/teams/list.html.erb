@@ -65,14 +65,16 @@ users_cache = {}
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h team.id %></td>
     <td align="left" nowrap class="<%= td_class %>">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
-      <% if team.need_req_to_del? %>
+    <% if team.need_req_to_del?(true) %>
         <span style="color:red;">
           <%=h truncate(team.name, :length => 20) %>
         </span>
-      <% else %>
-        <%=h truncate(team.name, :length => 20) %>
-      <% end %>
       </a>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="showRequestToDel();">
+    <% else %>
+        <%=h truncate(team.name, :length => 20) %>
+      </a>
+    <% end %>
     </td>
     <td class="<%= td_class %>" nowrap>
       <%
@@ -133,6 +135,11 @@ function _doDelete(team_id)
   prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'teams', :action => 'destroy') %>?id=" + team_id;
   document.form_list.submit();
+}
+
+function showRequestToDel()
+{
+  msg("<%= raw(t('team.request_to_delete')).gsub("\n", '<br/>') %>");
 }
 
 //-->

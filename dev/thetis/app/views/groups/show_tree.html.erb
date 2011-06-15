@@ -22,7 +22,7 @@
             options << [h(User.human_name), 'user']
             options << [h(Workflow.human_name), 'workflow']
             %>
-            <%= select_tag('select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px;') %>
+            <%= select_tag('select_opt', options_for_select(options, session[:group_option]), :onChange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
           </td>
         </tr>
       </table>
@@ -143,8 +143,14 @@ function onLoadSub()
       );
   ThetisBox.buildTree("<%= parent_id %>", array, null, "groupTree", "selKeeper", folderImgs, false);
   <% end %>
-  //selectTree("selKeeper", firstMenuId, null);
-  //selectGroup(firstMenuId.split(':')[1]);
+
+<% unless session[:group_id].nil? or session[:group_id].empty? %>
+  var menuId = "a_groupTree:<%= session[:group_id] %>";
+  ThetisBox.selectTree("selKeeper", menuId, null, true);
+  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
+    selectGroup(<%= session[:group_id] %>);
+  }
+<% end %>
 }
 
 function doCreate(pos)

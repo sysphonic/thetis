@@ -65,26 +65,26 @@ module TreeElement
 
   #=== self.get_childs
   #
-  #Gets childs array of the specified node.
+  #Gets child nodes array of the specified node.
   #
-  #_cls_:: Class of tree element.
+  #_klass_:: Class of tree element.
   #_node_id_:: Target node-ID.
   #_recursive_:: Specify true if recursive search is required.
   #_ret_obj_:: Flag to require node instances by return.
   #return:: Array of child node-IDs, or Groups if ret_obj is true.
   #
-  def self.get_childs(cls, node_id, recursive, ret_obj)
+  def self.get_childs(klass, node_id, recursive, ret_obj)
 
     array = []
 
     if recursive
 
-      tree = cls.get_tree(PseudoHash.new, nil, node_id)
+      tree = klass.get_tree(PseudoHash.new, nil, node_id)
       return array if tree.nil?
 
       tree.each do |parent_id, childs|
         if ret_obj
-          array = array | childs
+          array |= childs
         else
           childs.each do |node|
             node_id = node.id.to_s
@@ -95,7 +95,7 @@ module TreeElement
 
     else
 
-      nodes = cls.find(:all, :conditions => ['parent_id=?', node_id])
+      nodes = klass.find(:all, :conditions => ['parent_id=?', node_id])
       if ret_obj
         array = nodes
       else
@@ -110,7 +110,7 @@ module TreeElement
 
   #=== get_childs
   #
-  #Gets childs array of this node.
+  #Gets child nodes array of this node.
   #
   #_recursive_:: Specify true if recursive search is required.
   #_ret_obj_:: Flag to require node instances by return.
@@ -126,7 +126,7 @@ module TreeElement
   #Gets tree of Groups.
   #Called recursive.
   #
-  def self.get_tree(cls, tree, conditions, node_id, order_by)
+  def self.get_tree(klass, tree, conditions, node_id, order_by)
 
     con = Marshal.load(Marshal.dump(conditions)) unless conditions.nil?
 
@@ -138,10 +138,10 @@ module TreeElement
     con[0] << 'parent_id=?'
     con << node_id
 
-    tree[node_id, true] = cls.find(:all, :conditions => con, :order => order_by)
+    tree[node_id, true] = klass.find(:all, :conditions => con, :order => order_by)
 
     tree[node_id].each do |node|
-      tree = cls.get_tree(tree, conditions, node.id.to_s)
+      tree = klass.get_tree(tree, conditions, node.id.to_s)
     end
 
     return tree

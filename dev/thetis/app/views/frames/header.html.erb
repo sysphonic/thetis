@@ -90,7 +90,7 @@ function progMain()
     <td style="border-right:1px solid darkslateblue; border-bottom:1px solid darkslateblue; border-top:1px solid white; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_menu.png'); background-repeat:repeat-x;" bgcolor="#BDBDFF">
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
-          <td style="font-size:11pt; text-indent:30px; line-height:17px;" align="left">
+          <td style="padding-bottom:2px; font-size:11pt; text-indent:30px; line-height:1.0;" align="left">
             <a href="#" onclick="eval('var ret=false; try{ top.main.showTopicBox(); ret=true; }catch(e){}'); if (!ret) { alert('<%= t('topicbox.info') %>'); } return false;"><span style="color:white;"><%= t('topicbox.title') %></span></a>
               <span style="color:lightblue;">/ </span>
             <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>

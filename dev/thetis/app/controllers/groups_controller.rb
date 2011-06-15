@@ -177,6 +177,10 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @users = Group.get_users(params[:id])
+
+    session[:group_id] = params[:id]
+    session[:group_option] = 'user'
+
     render(:partial => 'ajax_group_users', :layout => false)
   end
 
@@ -195,6 +199,9 @@ class GroupsController < ApplicationController
     unless ary.nil? or ary.empty?
       @tmpl_workflows_folder = ary[2]
     end
+
+    session[:group_id] = params[:id]
+    session[:group_option] = 'workflow'
 
     render(:partial => 'ajax_workflows', :layout => false)
   end

@@ -114,12 +114,21 @@ class ItemsController < ApplicationController
         when Item::FOLDER_ALL
           ;
         when Item::FOLDER_CURRENT
-          folder_ids = @folder_id
+          folder_ids = [@folder_id]
         when Item::FOLDER_LOWER
           folder_ids = Folder.get_childs(@folder_id, nil, true, false, false)
           folder_ids.unshift(@folder_id)
         else
-          folder_ids = @folder_id
+          folder_ids = [@folder_id]
+      end
+      unless folder_ids.nil?
+        delete_ary = []
+        folder_ids.each do |folder_id|
+          unless Folder.check_user_auth(folder_id, login_user, 'r', true)
+            delete_ary << folder_id
+          end
+        end
+        folder_ids -= delete_ary unless delete_ary.empty?
       end
     end
 
