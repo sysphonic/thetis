@@ -302,6 +302,8 @@ editConfig = function()
     return;
   }
   thetisBoxConfig = new ThetisBox;
+  thetisBoxConfig.bgcolor_title = "limegreen";
+  thetisBoxConfig.bgcolor_body = "lightcyan";
   thetisBoxConfig.setOnClose(function(){ thetisBoxConfig = null; });
 
   var thetisBoxProgress = prog("CENTER");

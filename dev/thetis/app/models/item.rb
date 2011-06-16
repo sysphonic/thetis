@@ -595,10 +595,17 @@ class Item < ActiveRecord::Base
   #
   #Checks if the Item can be edited by specified User.
   #
-  #_user_id_:: Operating User.
+  #_user_:: Operating User.
   #return:: true if the Item can be edited, false otherwise.
   #
-  def editable?(user_id)
+  def editable?(user)
+
+    if user.instance_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_i
+      user = nil
+    end
 
     if self.xtype == Item::XTYPE_WORKFLOW
       if !self.workflow.nil? and self.workflow.status != Workflow::STATUS_NOT_ISSUED
@@ -606,59 +613,94 @@ class Item < ActiveRecord::Base
       end
     elsif self.xtype == Item::XTYPE_RESEARCH
       begin
-        user = User.find(user_id)
-        if user.admin?(User::AUTH_RESEARCH)
-          return true
-        end
+        user ||= User.find(user_id)
       rescue StandardError => err
         Log.add_error(nil, err)
+        return false
       end
+      return true if user.admin?(User::AUTH_RESEARCH)
     end
 
-    return self.user_id == user_id.to_i
+    return (self.user_id == user_id.to_i)
   end
 
-  #=== movable_wf?
+  #=== movable?
   #
-  #Checks if the Item has Workflow and can be moved by specified User.
+  #Checks if the Item can be moved by the specified User.
   #
-  #_user_id_:: Operating User.
-  #return:: true if the Item has Workflow and can be moved, false otherwise.
+  #_user_:: Operating User.
+  #return:: true if the Item can be moved, false otherwise.
   #
-  def movable_wf?(user_id)
+  def movable?(user)
 
-    if self.xtype == Item::XTYPE_WORKFLOW
-      if !self.workflow.nil? and self.workflow.decided?
-        return (self.user_id == user_id.to_i)
-      end
+    if user.instance_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_i
+      user = nil
     end
 
-    return false
+    if self.xtype == Item::XTYPE_WORKFLOW
+      unless self.workflow.nil?
+        if self.workflow.decided?
+          return (self.user_id == user_id.to_i)
+        else
+          return false
+        end
+      end
+    elsif self.xtype == Item::XTYPE_RESEARCH
+      return false
+    end
+
+    return true if (self.user_id == user_id.to_i)
+
+    begin
+      user ||= User.find(user_id)
+    rescue StandardError => err
+      Log.add_error(nil, err)
+      return false
+    end
+
+    return user.admin?(User::AUTH_ITEM)
   end
 
   #=== deletable?
   #
   #Checks if the Item can be deleted by specified User.
   #
-  #_user_id_:: Operating User.
+  #_user_:: Operating User.
   #_admin_:: Specify administrative authority if necessary.
   #return:: true if the Item can be deleted, false otherwise.
   #
-  def deletable?(user_id, admin=nil)
+  def deletable?(user, admin=nil)
+
+    if user.instance_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_i
+      user = nil
+    end
+
+    begin
+      user ||= User.find(user_id)
+    rescue StandardError => err
+      Log.add_error(nil, err)
+      return false
+    end
 
     if admin.nil?
-      admin = User.find(user_id).admin?(User::AUTH_ITEM)
+      admin = user.admin?(User::AUTH_ITEM)
     end
 
     return true if admin
 
     if self.xtype == Item::XTYPE_WORKFLOW
-      if !self.workflow.nil? and self.workflow.status == Workflow::STATUS_ACTIVE
+      if !self.workflow.nil? and (self.workflow.status == Workflow::STATUS_ACTIVE)
         return false
       end
     end
 
-    return self.user_id == user_id.to_i
+    return (self.user_id == user_id.to_i)
   end
 
   #=== featured?

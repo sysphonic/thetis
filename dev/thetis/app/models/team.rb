@@ -70,7 +70,7 @@ class Team < ActiveRecord::Base
   #
   def need_req_to_del?(ignore_former_req=false)
 
-    return false if self.status != Team::STATUS_DEACTIVATED
+    return false if self.status == Team::STATUS_ACTIVATED
 
     if ignore_former_req or self.req_to_del_at.nil?
       return true if self.updated_at.nil?

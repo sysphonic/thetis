@@ -60,7 +60,7 @@ folders_cache = {}
                 if !session_folder.nil? and Folder.exists?(session_folder)
                   if session_folder != '0'
                 %>
-                  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= t('btn.back') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :folder_id => session_folder) %>';">
+                  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= Folder.get_path(session_folder, folders_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :folder_id => session_folder) %>';">
                 <%
                   end
                 end

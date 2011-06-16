@@ -627,7 +627,7 @@ de:
     is_member: "(Sie sind Mitglieder/Mitgliederin des Teams dieses Projekt.)"
     all: "Alle Teams"
     confirm_to_delete: "] und den Artikel (Projekt Definition) werden gelöscht."
-    request_to_delete: "To keep the system light-weighted, please delete this Item (Project Definition) unless necessary.\nAlternatively you can apply 'Normal' type to this Item on Edit screen to keep its content and messages."
+    request_to_delete: "To keep the system light-weighted, it is important not to leave Teams unnecessarily remaining. Please delete this Item (Project Definition) unless necessary.\nAlternatively you can apply 'Normal' type to this Item on Edit screen to keep its content and messages."
     one: "1 Team"
     other: "%{count} Teams"
   tel:

@@ -161,24 +161,24 @@ end
   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
     <%= t('btn.back') %>
   </td>
-  <td width="20"></td>
+  <td width="10"></td>
   <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for(:controller => 'items', :action => 'show_for_print', :id => @item.id) %>').focus(); thetisBox.remove();">
     <%= t('btn.for_print') %>
   </td>
 <% unless login_user.nil? or @item.is_a_copy? %>
-  <td width="20"></td>
+  <td width="10"></td>
   <td class="img_button_td" onclick="doDuplicate();">
     <%= t('btn.duplicate') %>
   </td>
 <% end %>
-<% if !login_user.nil? and @item.editable?(login_user.id) %>
-  <td width="20"></td>
+<% if !login_user.nil? and @item.editable?(login_user) %>
+  <td width="10"></td>
   <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
   </td>
 <% end %>
-<% if !login_user.nil? and @item.movable_wf?(login_user.id) %>
-  <td width="20"></td>
+<% if !login_user.nil? and @item.movable?(login_user) %>
+  <td width="10"></td>
   <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%=ApplicationHelper.h_s_quote @item.title %>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
   </td>
@@ -203,8 +203,8 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 //-->
 </script>
 <% end %>
-<% if !login_user.nil? and @item.deletable?(login_user.id) %>
-  <td width="20"></td>
+<% if !login_user.nil? and @item.deletable?(login_user) %>
+  <td width="10"></td>
   <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
   </td>
