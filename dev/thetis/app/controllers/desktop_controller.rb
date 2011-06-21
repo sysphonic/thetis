@@ -17,12 +17,10 @@ class DesktopController < ApplicationController
   protect_from_forgery :except => :drop_file
   layout 'base'
 
-  include LoginChecker
-
   if $thetis_config[:menu]['req_login_desktop'] == '1'
     before_filter :check_login
   else
-    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :get_group_users]
+    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :get_group_users, :drop_file]
   end
   before_filter :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
 
@@ -44,15 +42,6 @@ class DesktopController < ApplicationController
     end
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     my_folder = login_user.get_my_folder
     if my_folder.nil?

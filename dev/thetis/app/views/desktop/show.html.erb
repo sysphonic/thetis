@@ -134,10 +134,15 @@ function showTimecard()
 
 function showToolTray(sw)
 {
+  var tool_tray = $("tool_tray");
+
+  if (!tool_tray)
+    return;
+
   if (sw) {
-    $("tool_tray").style.display = "block";
+    tool_tray.style.display = "block";
   } else {
-    $("tool_tray").style.display = "none";
+    tool_tray.style.display = "none";
   }
 }
 

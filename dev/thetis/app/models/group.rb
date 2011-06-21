@@ -82,6 +82,10 @@ class Group < ActiveRecord::Base
     # Schedules
     Schedule.trim_on_destroy_member(:group, self.id)
 
+    # Locations and OfficeMaps
+    Location.destroy_all("(group_id=#{self.id})")
+    OfficeMap.destroy_all("(group_id=#{self.id})")
+
     super()
   end
 

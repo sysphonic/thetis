@@ -19,6 +19,23 @@ module ApplicationHelper
   require RAILS_ROOT+'/lib/ya2yaml/lib/ya2yaml'
 
 
+  #=== self.get_timestamp
+  #
+  #Gets timestamp string for the specified ActiveRecord object.
+  #Useful to display images always up-to-date.
+  #
+  #_obj_:: Target ActiveRecord.
+  #return:: Timestamp string.
+  #
+  def self.get_timestamp(obj)
+
+    if obj.updated_at.nil?
+      return nil
+    else
+      return obj.updated_at.strftime('%Y%m%d%H%M%S')
+    end
+  end
+
   #=== self.extract_uri_a
   #
   #Gets the URI expression from the specified string.

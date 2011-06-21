@@ -300,14 +300,12 @@ attachments_num = item_attachments.length
                        <td>
                          <table align="center" width="100" cellspacing="0" cellpadding="0">
                   <%
-                  img_cnt = 0
-                  item_images.each do |image|
-                   img_cnt += 1
-                   break if img_cnt > max_bbs_img
+                  item_images.each_with_index do |image, idx|
+                    break if idx >= max_bbs_img
                   %>
                            <tr>
                              <td width="90" style="padding:5px">
-                               <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :rand => rand(10000000000)) %>
+                               <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :timestamp => ApplicationHelper.get_timestamp(image)) %>
                                <img style="cursor:pointer" src="<%= img_url %>" width="120" onclick="doShowItem(<%=item.id %>);" />
                              </td>
                            </tr>

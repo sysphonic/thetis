@@ -44,6 +44,7 @@ class User < ActiveRecord::Base
   public::AUTH_MAIL = 'mail'
   public::AUTH_ADDRESSBOOK = 'address'
   public::AUTH_ZEPTAIR = 'zeptair'
+  public::AUTH_LOCATION = 'location'
 
   public::XORDER_MAX = 9999
 
@@ -125,6 +126,7 @@ class User < ActiveRecord::Base
       AUTH_MAIL => Email.human_name,
       AUTH_ADDRESSBOOK => I18n.t('address.book'),
       AUTH_ZEPTAIR => I18n.t('zeptair.vpn'),
+      AUTH_LOCATION => Location.human_name,
     }
 
     return auth_names
@@ -211,6 +213,9 @@ class User < ActiveRecord::Base
 
     # Schedules
     Schedule.trim_on_destroy_member(:user, self.id)
+
+    # Locations
+    Location.destroy_all("(user_id=#{self.id})")
 
     super()
   end

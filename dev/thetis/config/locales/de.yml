@@ -19,6 +19,8 @@ de:
       email: "E-Mail"
       mail_account: "E-Mail Konto"
       desktop: "Desktop"
+      location: "Location"
+      office_map: "Office Map"
     attributes:
       id: "ID"
       updated_at: "Erneut an"
@@ -464,7 +466,7 @@ de:
     general_conf: "Generelle Einstellungen"
     desktop_manage: "Desktop verwalten"
     users_manage: "Benutzern verwalten"
-    groups_manage: "Gruppe verwalten (Benutzern und Arbeitsabläufe)"
+    groups_manage: "Gruppe verwalten (Benutzern, Arbeitsabläufe und Maps)"
     teams_manage: "Teams verwalten"
     schedules_manage: "Zeitpläne verwalten"
     equipment_manage: "Einrichtungen verwalten"
@@ -484,6 +486,11 @@ de:
       user_regist: "Benachrichtigung von Benutzerregistrierung"
       user_account: "Benachrichtigung von Benutzerkonto"
       message_arrived: "Benachrichtigung von Neuer Mitteilung"
+  office_map:
+    confirm_to_delete: "This Map will be deleted. Are you sure?"
+    enable_map: "Enable this Map"
+    drop_to_remove: "Drop here when leaving"
+    confirm_to_leave: "You are leaving. Are you sure?"
   paren:
     round:
       left: "("

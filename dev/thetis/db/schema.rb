@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110524100100) do
+ActiveRecord::Schema.define(:version => 20110524100300) do
 
   create_table "addresses", :force => true do |t|
     t.integer  "owner_id"
@@ -162,6 +162,16 @@ ActiveRecord::Schema.define(:version => 20110524100100) do
     t.integer  "source_id"
   end
 
+  create_table "locations", :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "group_id"
+    t.integer  "x"
+    t.integer  "y"
+    t.string   "memo"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "logs", :force => true do |t|
     t.datetime "updated_at"
     t.integer  "user_id"
@@ -215,6 +225,19 @@ ActiveRecord::Schema.define(:version => 20110524100100) do
     t.integer  "user_id"
     t.string   "xtype"
     t.integer  "xorder"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "office_maps", :force => true do |t|
+    t.integer  "group_id"
+    t.boolean  "img_enabled"
+    t.string   "img_name"
+    t.integer  "img_size"
+    t.string   "img_content_type"
+    t.binary   "img_content",      :limit => 2147483647
+    t.integer  "img_width"
+    t.integer  "img_height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

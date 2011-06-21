@@ -1,0 +1,404 @@
+
+<%
+login_user = session[:login_user]
+@users_cache = {}
+@user_obj_cache = {}
+
+@user_groups = {}
+@groups_cache = {}
+@group_obj_cache = {}
+%>
+
+<%
+if @office_map.img_enabled
+  img_url = url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :timestamp => ApplicationHelper.get_timestamp(@office_map))
+else
+  img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
+end
+%>
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:snow; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
+  <tr class="desktop_tr">
+    <td class="desktop_td" align="center" valign="middle">
+      <img id="img_map" src="<%= raw(img_url) %>" />
+    </td>
+  </tr>
+</table>
+
+<!-- Toolbox -->
+<span style="display:none;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
+</span>
+
+<table id="toolbox" width="80%" cellpadding="0" cellspacing="0" style="position:absolute; display:none; background-color:white; border:inset 2px gray;">
+  <tr>
+    <td width="90" align="center" valign="middle" rowspan="2" style="padding:3px 0px;">
+      <div id="exit" width="10" style="height:100%;" onclick="tipsExit()" title="<%= t('office_map.drop_to_remove') %>">
+        <img id="exit_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png" alt="<%= t('office_map.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
+    </td>
+    <td width="70%">
+    <%
+    if @location.nil?
+      location_id = "location_xx"
+    %>
+      <div class="location_tray" id="<%= location_id %>" align="left" style="z-index:1000; cursor:move;">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy.png" />
+        <%= login_user.get_name %>
+      </div>
+      <%= draggable_element(location_id, :revert => false) %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td align="left">
+      <table width="100%" cellspacing="0" cellpadding="0">
+         <tr>
+          <td align="left" width="120" style="padding-bottom:5px;">
+  <% if @group_id.nil? %>
+            <table width="120" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                  <%= t('btn.select_group') %>
+                </td>
+              </tr>
+            </table>
+  <% else %>
+            <table width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td align="left" nowrap>
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, @groups_cache) %></a>
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+                </td>
+              </tr>
+            </table>
+  <% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- Locations -->
+<%
+unless @locations.nil?
+  @locations.each do |location|
+    location_id = "location_#{location.id}"
+
+    width_limit = '';
+    width_limit = 'width:200px;' if location.get_name.length >= 30;
+%>
+  <div class="location_on_map" id="<%= location_id %>" align="left" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
+    <%
+    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
+    icon_img = img_root + 'boy.png'
+    %>
+    <img src="<%= icon_img %>" style="cursor:move;" />
+    <%
+    user_name, u_groups = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+    unless u_groups.empty?
+    %>
+    <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+    <% end %>
+      <%=h truncate(user_name, :length => 30) %>
+    <% unless u_groups.empty? %>
+    </a>
+    <% end %>
+  </div>
+
+  <%= draggable_element(location_id, :revert => false) %>
+<%
+  end
+end
+%>
+
+<%= render(:partial => 'common/user_groups') %>
+
+<script type="text/javascript">
+
+var TrayDragObserver = Class.create();
+TrayDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_tray") {
+      return;
+    }
+
+    removeElem(loc);
+    document.body.appendChild(loc);   // not on $("div_desktop"), to show over the tray.
+    Position.absolutize(loc);
+
+    loc.style.zIndex = 100000;
+  },
+  onDrag: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_tray") {
+      return;
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_tray") {
+      return;
+    }
+    $("div_desktop").style.backgroundColor = "snow";
+    draggable.options.snap = false;
+  }
+}
+Draggables.addObserver( new TrayDragObserver() );
+
+</script>
+
+<script type="text/javascript">
+//<![CDATA[
+Droppables.add(
+        "div_desktop",
+        {
+          accept: "location_tray",
+          onHover:function(element)
+          {
+            $("div_desktop").style.backgroundColor = "white";
+          },
+          onDrop:function(element)
+          {
+            var axis = getAxis(element.id);
+
+            new Ajax.Request(
+                    "<%= url_for(:controller => 'locations', :action => 'on_moved') %>",
+                    {
+                      asynchronous:true,
+                      evalScripts:true,
+                      parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>",
+                      onComplete:function(request){
+                                    element.id = "location_" + request.responseText;
+                                    element.className = "location_on_map";
+                                  }
+                    }
+                  );
+          }
+        }
+      )
+//]]>
+
+//<![CDATA[
+Droppables.add(
+        "exit",
+        {
+          accept: "location_on_map",
+          onHover:function(element)
+          {
+            $("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png";
+          },
+          onDrop:function(element)
+          {
+            doRemoveLocation(element.id);
+          }
+        }
+      )
+//]]>
+</script>
+
+
+<SCRIPT language="javascript" type="text/javascript">
+
+var desktop = $("div_desktop");
+desktop.style.display = "block";
+
+$("toolbox").style.display = "inline";
+
+doResize();
+
+var deskWidth = desktop.clientWidth;
+var deskHeight = desktop.clientHeight;
+var deskPos = Position.cumulativeOffset(desktop);
+
+<%
+unless @locations.nil?
+  @locations.each do |location|
+%>
+  loc = $("location_<%= location.id %>");
+  loc.style.left = (deskPos[0] + deskWidth * <%= location.x %> / 10000) + "px";
+  loc.style.top = (deskPos[1] + deskHeight * <%= location.y %> / 10000) + "px";
+  loc.style.display = "inline";
+<%
+  end
+end
+%>
+
+doRemoveLocation = function(element_id)
+{
+  confm("<%= t('office_map.confirm_to_leave') %>", "_doRemoveLocation('"+element_id+"')");
+}
+
+_doRemoveLocation = function(element_id)
+{
+  var id = element_id.split("_")[1];
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'locations', :action => 'drop_on_exit') %>?id="+id,
+          {
+            parameters:"authenticity_token=<%= form_authenticity_token %>",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+              setTimeout(
+                  function(){
+                    var loc = $(element_id);
+                    removeElem(loc);
+                  },
+                  100
+                );
+            }
+          }
+        );
+}
+
+bound = function(location_id)
+{
+  var loc = $(location_id);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var locPos = Position.cumulativeOffset(loc);
+  loc.style.position = "absolute";
+  var locWidth = loc.clientWidth;
+  var locHeight = loc.clientHeight;
+
+  var updated = false;
+
+  if (locPos[0] < deskPos[0]) {
+    locPos[0] = deskPos[0] + 5;
+    updated = true;
+  }
+  if (locPos[1] < deskPos[1]) {
+    locPos[1] = deskPos[1] + 5;
+    updated = true;
+  }
+  if (locPos[0] + locWidth > deskPos[0] + deskWidth) {
+    locPos[0] = deskPos[0] + deskWidth - locWidth - 25;
+    updated = true;
+  }
+  if (locPos[1] + locHeight > deskPos[1] +deskHeight) {
+    locPos[1] = deskPos[1] + deskHeight - locHeight - 25;
+    updated = true;
+  }
+
+  if (updated) {
+    loc.style.left = locPos[0] + "px";
+    loc.style.top = locPos[1] + "px";
+  }
+}
+
+getAxis = function(location_id)
+{
+  var loc = $(location_id);
+  var locPos = Position.cumulativeOffset(loc);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var xAxis = Math.floor(Math.max(0, locPos[0]-deskPos[0]) / deskWidth * 10000);
+  if (xAxis >= 10000) {
+    xAxis = 9500;
+  }
+  var yAxis = Math.floor(Math.max(0, locPos[1]-deskPos[1]) / deskHeight * 10000);
+  if (yAxis >= 10000) {
+    yAxis = 9500;
+  }
+
+  return new Array(xAxis, yAxis);
+}
+
+save = function(location_id)
+{
+  bound(location_id);
+
+  var axis = getAxis(location_id);
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'locations', :action => 'on_moved') %>?id=" + encodeURIComponent(location_id.split("_")[1]),
+          {
+            asynchronous:true,
+            evalScripts:true,
+            parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>"
+          }
+        );
+}
+
+var DesktopDragObserver = Class.create();
+DesktopDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_on_map") {
+      return;
+    }
+
+    bound(loc.id);
+  },
+  onDrag: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_on_map") {
+      return;
+    }
+    var locWidth = loc.clientWidth;
+    var locHeight = loc.clientHeight;
+    var locPos = Position.cumulativeOffset(loc);
+
+    var deskWidth = desktop.clientWidth;
+    var deskHeight = desktop.clientHeight;
+    var deskPos = Position.cumulativeOffset(desktop);
+
+    if (locPos[0] < deskPos[0]
+        || locPos[1] < deskPos[1]
+        || locPos[0] + locWidth > deskPos[0] +deskWidth
+        || locPos[1] + locHeight > deskPos[1] +deskHeight
+       ) {
+      try {
+        document.selection.empty();
+      } catch (e) {}
+      draggable.endDrag(event);
+
+      setTimeout("bound('"+loc.id+"');", 100);
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    var loc = draggable.element;
+    if (loc.className != "location_on_map") {
+      return;
+    }
+    setTimeout("save('"+loc.id+"');", 100);
+    $("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png";
+  }
+}
+Draggables.addObserver( new DesktopDragObserver() );
+
+tipsExit = function()
+{
+  var exitPos = Position.cumulativeOffset($("exit"));
+  var x = exitPos[0] + 50;
+  var y = exitPos[1] - 50;
+  
+  var thetisBox = new ThetisBox;
+  thetisBox.bgcolor_body = "#FFFF80";
+  thetisBox.show(x+","+y, "", "TIPS", "", "<%= t('office_map.drop_to_remove')%>", "");
+}
+
+showGroupTreeToSelect = function(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'locations', :action => 'open_map') %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+</SCRIPT>
+

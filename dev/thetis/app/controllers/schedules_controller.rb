@@ -16,8 +16,6 @@
 class SchedulesController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   if $thetis_config[:menu]['req_login_schedules'] == '1'
     before_filter :check_login
   else

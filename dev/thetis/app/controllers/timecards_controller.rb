@@ -16,9 +16,7 @@
 class TimecardsController < ApplicationController
   layout 'base', :except => [:export]
 
-  include LoginChecker
-
-  before_filter :check_login, :except => [:export]
+  before_filter :check_login
   before_filter :only => [:configure, :update_config, :update_default_break, :delete_default_break, :paidhld_update, :paidhld_update_multi, :search, :users] do |controller|
     controller.check_auth(User::AUTH_TIMECARD)
   end
@@ -108,18 +106,7 @@ class TimecardsController < ApplicationController
   def export
     Log.add_info(request, '')   # Not to show passwords.
 
-    org_login_user = session[:login_user]
-
-    if org_login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    else
-      login_user = org_login_user
-    end
+    login_user = session[:login_user]
 
     unless params[:user_id].nil?
       if params[:user_id] != login_user.id.to_s and !login_user.admin?(User::AUTH_TIMECARD)
@@ -129,13 +116,7 @@ class TimecardsController < ApplicationController
       end
     end
 
-    session[:login_user] = login_user
-
     month
-
-    if org_login_user.nil?
-      session[:login_user] = nil
-    end
   end
 
   #=== edit

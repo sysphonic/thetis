@@ -16,11 +16,15 @@
 class GroupsController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login
-  before_filter :except => [:get_tree, :ajax_get_tree, :get_path] do |controller|
+  before_filter :except => [:get_tree, :ajax_get_tree, :get_path, :get_workflows, :get_map] do |controller|
     controller.check_auth(User::AUTH_GROUP)
+  end
+  before_filter :only => [:get_workflows] do |controller|
+    controller.check_auth(User::AUTH_WORKFLOW)
+  end
+  before_filter :only => [:get_map] do |controller|
+    controller.check_auth(User::AUTH_LOCATION)
   end
 
 
@@ -204,5 +208,23 @@ class GroupsController < ApplicationController
     session[:group_option] = 'workflow'
 
     render(:partial => 'ajax_workflows', :layout => false)
+  end
+
+  #=== get_map
+  #
+  #<Ajax>
+  #Gets OfficeMap related to the specified Group.
+  #
+  def get_map
+    Log.add_info(request, params.inspect)
+
+    @group_id = (params[:id] || '0')  # '0' for ROOT
+
+    @office_map = OfficeMap.get_for_group(@group_id)
+
+    session[:group_id] = params[:id]
+    session[:group_option] = 'office_map'
+
+    render(:partial => 'ajax_map', :layout => false)
   end
 end

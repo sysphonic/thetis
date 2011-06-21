@@ -16,8 +16,6 @@
 class LogsController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login
   before_filter do |controller|
     controller.check_auth(User::AUTH_LOG)

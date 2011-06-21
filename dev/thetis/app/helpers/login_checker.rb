@@ -22,6 +22,15 @@ module LoginChecker
   #
   def check_login
     if session[:login_user].nil?
+
+      unless params[:user].nil?
+        user = User.authenticate(params[:user])
+        unless user.nil?
+          LoginHelper.on_login(user, session)
+          return
+        end
+      end
+
       Log.add_check(request, '[check_login]'+request.to_s)
 
       flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')

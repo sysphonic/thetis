@@ -16,8 +16,6 @@
 class ResearchesController < ApplicationController
   layout 'base', :except => :index
 
-  include LoginChecker
-
   before_filter :check_login, :except => [:index]
   before_filter :except => [:index, :show_receipt, :edit_page, :save_page, :do_confirm] do |controller|
     controller.check_auth(User::AUTH_RESEARCH)

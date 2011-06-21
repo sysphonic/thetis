@@ -16,9 +16,7 @@
 class ZeptairDistController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
-  before_filter :check_login, :only => [:users]
+  before_filter :check_login
   before_filter :only => [:users] do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)
   end
@@ -129,15 +127,6 @@ class ZeptairDistController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     attach = Attachment.find(params[:attach_id])
     if attach.nil? or attach.item.nil? \

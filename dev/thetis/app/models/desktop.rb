@@ -47,7 +47,7 @@ class Desktop < ActiveRecord::Base
         rescue
         end
       else
-        sql = 'select user_id, theme, background_color, popup_news, popup_timecard, popup_schedule, img_enabled, img_name, img_size, img_content_type, created_at, updated_at from desktops'
+        sql = 'select id, user_id, theme, background_color, popup_news, popup_timecard, popup_schedule, img_enabled, img_name, img_size, img_content_type, created_at, updated_at from desktops'
         sql << ' where user_id=' + user.id.to_s
         begin
           desktop = Desktop.find_by_sql(sql).first

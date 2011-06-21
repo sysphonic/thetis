@@ -16,8 +16,6 @@
 class ItemsController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   if $thetis_config[:menu]['req_login_items'] == '1'
     before_filter :check_login
   else

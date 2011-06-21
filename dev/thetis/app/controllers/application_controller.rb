@@ -27,6 +27,8 @@ class ApplicationController < ActionController::Base
   before_filter :set_locale
   before_filter :gate_process
 
+  include LoginChecker
+
   begin
     if (User.count <= 0)
       User.create_init_user
@@ -35,7 +37,6 @@ class ApplicationController < ActionController::Base
   end
 
   def set_locale
-
     if params[:locale]
       cookies[:locale] = {
         :value => params[:locale],

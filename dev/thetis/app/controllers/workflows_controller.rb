@@ -16,8 +16,6 @@
 class WorkflowsController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login
   before_filter :check_owner, :only => [:move, :destroy]
 

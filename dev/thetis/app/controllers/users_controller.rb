@@ -16,8 +16,6 @@
 class UsersController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login, :except => [:new, :create]
   before_filter :check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet]
 
@@ -55,9 +53,9 @@ class UsersController < ApplicationController
         params[:user][:birthday] = params[:user][:birthday_y] + '-' + params[:user][:birthday_m] + '-' + params[:user][:birthday_d]
       rescue
       end
-      params[:user].delete :birthday_y
-      params[:user].delete :birthday_m
-      params[:user].delete :birthday_d
+      params[:user].delete(:birthday_y)
+      params[:user].delete(:birthday_m)
+      params[:user].delete(:birthday_d)
     end
 
     @user = User.new(params[:user])

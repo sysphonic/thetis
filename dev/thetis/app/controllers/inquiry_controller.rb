@@ -17,6 +17,9 @@ class InquiryController < ApplicationController
 
   require 'csv'
 
+  before_filter :check_login
+
+
   #=== auth
   #
   #Gets authorities of the User.
@@ -25,15 +28,6 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     render(:text => login_user.auth)
   end
@@ -46,15 +40,6 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     groups_cache = {}
     ary = []
@@ -76,15 +61,6 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     if params[:group_id].nil?
       group_id = '0'
@@ -125,15 +101,6 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     add_con = "((Item.xtype in ('#{Item::XTYPE_INFO}','#{Item::XTYPE_PROJECT}')) or ((Item.xtype = '#{Item::XTYPE_WORKFLOW}') and (Item.original_by is not null)))"
     sql = ItemsHelper.get_list_sql(login_user, nil, nil, nil, nil, 10, false, add_con)

@@ -7,26 +7,26 @@
         <tr height="5"><td></td></tr>
         <tr>
           <td colspan="2" align="center">
-            <img src="<%= url_for(:controller => 'items', :action => 'get_image', :id => @image.id, :rand => rand(10000000000)) %>" width="90" height="60"/>
+            <img src="<%= url_for(:controller => 'items', :action => 'get_image', :id => @image.id, :timestamp => ApplicationHelper.get_timestamp(@image)) %>" width="90" height="60"/>
           </td>
         </tr>
         <tr height="5"><td></td></tr>
         <tr>
           <td class="item_cap_td" style="background-color:pink"><%= h t('item.new_file') %></td>
           <td class="item_value_td">
-            <%= file_field :image, :file, :size => '43', :style => 'width:100%' %><br/>
+            <%= file_field(:image, :file, :size => '43', :style => 'width:100%') %><br/>
           </td>
         </tr>
         <tr>
           <td class="item_cap_td" style="background-color:pink"><%= h Item.human_attribute_name('title') %></td>
           <td class="item_value_td">
-            <%= text_field :image, :title, :style => 'width:70%'  %><br/>
+            <%= text_field(:image, :title, :style => 'width:70%') %><br/>
           </td>
         </tr>
         <tr>
           <td class="item_cap_td" style="background-color:pink"><%= h Image.human_attribute_name('memo') %></td>
           <td class="item_value_td">
-            <%= text_area :image, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+            <%= text_area(:image, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
           </td>
         </tr>
         <tr height="10"><td></td></tr>

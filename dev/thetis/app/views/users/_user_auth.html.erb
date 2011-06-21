@@ -5,7 +5,7 @@
   <table align="center" width="90%" cellpadding="0" cellspacing="2">
     <tr>
       <td class="item_cap_td" nowrap style="width:100%">
-        <span nowrap><%=h t('cap.admin_authorities') %></span>
+        <span nowrap><%= t('cap.admin_authorities') %></span>
       </td>
     </tr>
     <tr>
@@ -28,7 +28,7 @@
               [ User::AUTH_DESKTOP, User::AUTH_ITEM, User::AUTH_FOLDER, User::AUTH_USER,
                 User::AUTH_GROUP, User::AUTH_TEAM, User::AUTH_SCHEDULE,
                 User::AUTH_EQUIPMENT, User::AUTH_LOG, User::AUTH_RESEARCH, User::AUTH_TIMECARD,
-                User::AUTH_MAIL, User::AUTH_ZEPTAIR ].each do |auth|
+                User::AUTH_MAIL, User::AUTH_ZEPTAIR, User::AUTH_LOCATION ].each do |auth|
                 auth_available[auth, true] = User.get_auth_name(auth)
               end
 
@@ -50,13 +50,13 @@
               <table cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                   <td align="center">
-                    <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%=h t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList($('auth_candidates'), $('auth_selected')); return false;" style="width:80px;">
+                    <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList($('auth_candidates'), $('auth_selected')); return false;" style="width:80px;">
                   </td>
                 </tr>
                 <tr height="10"><td></td></tr>
                 <tr>
                   <td align="center">
-                    <input type="button" id="btn_remove" <%= (check_all)?'disabled':'' %> value="<%= raw(t('arrow.left')) %><%=h t('btn.remove') %>" onclick="moveList($('auth_selected'), $('auth_candidates')); return false;" style="width:80px;">
+                    <input type="button" id="btn_remove" <%= (check_all)?'disabled':'' %> value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList($('auth_selected'), $('auth_candidates')); return false;" style="width:80px;">
                   </td>
                 </tr>
               </table>
@@ -92,16 +92,16 @@ doUpdateAuth = function()
   var thetisBox = prog("TOP-RIGHT");
   selectListAll($("auth_selected"));
   new Ajax.Request(
-              "<%= url_for :controller => 'users', :action => 'update_auth', :id => @user.id %>",
+              "<%= url_for(:controller => 'users', :action => 'update_auth', :id => @user.id) %>",
               {
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request){
                   thetisBox.remove();
                   if (request.responseText == "") {
-                    tips("<%=h t('user.auth_updated') %>");
+                    tips("<%= t('user.auth_updated') %>");
                   } else {
-                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                    msg("<%= t('msg.system_error') %><br/>"+request.responseText);
                   }
                 },
                 parameters:Form.serialize(document.form_ajax_userAuth)

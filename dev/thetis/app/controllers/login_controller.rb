@@ -55,11 +55,7 @@ class LoginController < ApplicationController
 
     else
 
-      user.update_attribute(:login_at, Time.now)
-      Team.check_req_to_del_for(user.id)
-
-      session[:login_user] = user
-      session[:settings] = Setting.get_for(user.id) || {}
+      LoginHelper.on_login(user, session)
 
       if params[:fwd_controller].nil? or params[:fwd_controller].empty?
         prms = ApplicationHelper.get_fwd_params(params)

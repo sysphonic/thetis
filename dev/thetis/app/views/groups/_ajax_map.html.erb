@@ -1,0 +1,71 @@
+
+<table class="info_area" width="100%" height="100%" cellpadding="10" cellspacing="0" style="background-color:lavender;">
+  <tr>
+    <td valign="top">
+      <div id="div_ajax_map" align="left">
+
+        <%= render(:partial => 'ajax_group_map') %>
+
+      </div>
+
+      <table align="center" cellpadding="0" cellspacing="0">
+        <tr height="20"><td></td></tr>
+        <tr>
+          <td class="img_button_td" onclick="doRegister();">
+            <%= t('btn.register') %>
+          </td>
+        <% unless @office_map.nil? %>
+          <td width="10"></td>
+          <td class="img_button_td" onclick="doClear();">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" /> <%= t('btn.clear') %>
+          </td>
+        <% end %>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+doRegister = function()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  ajaxUploadFile(
+          document.form_group_map,
+          document.form_group_map.action,
+          "div_ajax_map",
+          function(){
+            thetisBoxProgress.remove();
+          },
+          function(){ /*ERROR*/ }
+        );
+  return true;
+}
+
+doClear = function()
+{
+  confm("<%= t('office_map.confirm_to_delete') %>", "_doClear()");
+}
+
+_doClear = function()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Updater(
+          "div_ajax_map",
+          "<%= url_for(:controller => 'locations', :action => 'delete_map', :group_id => @group_id) %>",
+          {
+            asynchronous:true,
+            parameters:Form.serialize(document.form_group_map),
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+            }
+          }
+        );
+}
+
+</script>

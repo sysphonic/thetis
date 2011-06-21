@@ -16,8 +16,6 @@
 class FramesController < ApplicationController
   layout 'title', :only => [:admin]
 
-  include LoginChecker
-
   before_filter :check_login, :only => [:admin]
   before_filter :only => [:admin] do |controller|
     controller.check_auth(nil)

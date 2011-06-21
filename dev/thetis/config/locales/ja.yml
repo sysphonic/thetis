@@ -19,6 +19,8 @@ ja:
       email: "メール"
       mail_account: "メールアカウント"
       desktop: "デスクトップ"
+      location: "位置情報"
+      office_map: "マップ"
     attributes:
       id: "ID"
       updated_at: "更新日時"
@@ -465,7 +467,7 @@ ja:
     general_conf: "動作設定"
     desktop_manage: "デスクトップ管理"
     users_manage: "ユーザー管理"
-    groups_manage: "グループ管理 （ユーザー／ワークフロー）"
+    groups_manage: "グループ管理 （ユーザー／ワークフロー／マップ）"
     teams_manage: "チーム管理"
     schedules_manage: "スケジュール管理"
     equipment_manage: "設備管理"
@@ -485,6 +487,11 @@ ja:
       user_regist: "ユーザー登録完了のお知らせ"
       user_account: "ログイン情報のお知らせ"
       message_arrived: "メッセージ追加のお知らせ"
+  office_map:
+    confirm_to_delete: "このマップを削除します。よろしいですか？"
+    enable_map: "このマップを有効にする"
+    drop_to_remove: "退出する場合はここに載せてください"
+    confirm_to_leave: "退出します。よろしいですか？"
   paren:
     round:
       left: "（"

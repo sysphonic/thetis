@@ -131,11 +131,11 @@ function doResize()
     if (!is_MS) {
       var elems = document.getElementsByClassName("desktop_tr");
       for (var i=0; elems != null && i < elems.length; i++) {
-        elems[i].style.height = (h-1) / 3 + "px";
+        elems[i].style.height = (h-1) / elems.length + "px";
       }
       elems = document.getElementsByClassName("desktop_td");
       for (var i=0; elems != null && i < elems.length; i++) {
-        elems[i].style.width = mainWidth / 3 + "px";
+        elems[i].style.width = mainWidth / elems.length + "px";
       }
     }
 
@@ -150,8 +150,14 @@ function doResize()
 
     var menubox = $("menubox");
     if (menubox != null) {
-      menubox.style.top = (toolbox_top - 40) + "px";
+      menubox.style.top = (toolbox_top - 70) + "px";
       menubox.style.left = (toolbox_left + 33) + "px";
+    }
+
+    var img_map = $("img_map");
+    if (img_map != null) {
+      img_map.width = mainWidth * 4 / 5;
+      img_map.height = mainHeight * 4 / 5;
     }
 
   } else if (div = $("div_list")) {

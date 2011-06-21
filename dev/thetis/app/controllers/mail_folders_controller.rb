@@ -14,8 +14,6 @@
 class MailFoldersController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login
   before_filter :check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty]
   before_filter :check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :ajax_delete_mail, :get_mail_raw, :move_mail]

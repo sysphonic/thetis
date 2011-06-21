@@ -21,6 +21,7 @@
             options = []
             options << [h(User.human_name), 'user']
             options << [h(Workflow.human_name), 'workflow']
+            options << [h(OfficeMap.human_name), 'office_map']
             %>
             <%= select_tag('select_opt', options_for_select(options, session[:group_option]), :onChange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
           </td>
@@ -265,6 +266,12 @@ function doGetWorkflows(group_id)
   new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_workflows') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
 }
 
+function doGetMaps(group_id)
+{
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_map') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+}
+
 function selectGroup(group_id)
 {
   var select_opt = $('select_opt');
@@ -276,6 +283,7 @@ function selectGroup(group_id)
     {
       case 'user': doGetUsers(group_id); break;
       case 'workflow': doGetWorkflows(group_id); break;
+      case 'office_map': doGetMaps(group_id); break;
     }
   }
 }
@@ -290,6 +298,7 @@ function changeOption(val)
   switch (val) {
     case 'user': doGetUsers(group_id); break;
     case 'workflow': doGetWorkflows(group_id); break;
+    case 'office_map': doGetMaps(group_id); break;
   }
 }
 

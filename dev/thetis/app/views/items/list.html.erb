@@ -179,7 +179,7 @@ folders_cache = {}
           </td>
         <% if params[:thumbnails]!='false' and !item_images.nil? and item_images.length > 0 %>
           <td width="90">
-             <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => item_images[0].id, :rand => rand(10000000000)) %>
+             <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => item_images[0].id, :timestamp => ApplicationHelper.get_timestamp(item_images[0])) %>
              <img style="cursor:pointer" src="<%= img_url %>" width="90" height="60" onclick="doShowItem(<%=item.id %>);" />
           </td>
         <% end %>

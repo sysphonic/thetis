@@ -16,8 +16,6 @@
 class TemplatesController < ApplicationController
   layout 'base'
 
-  include LoginChecker
-
   before_filter :check_login
   before_filter :except => [:copy, :ajax_get_tree] do |controller|
     controller.check_auth(User::AUTH_TEMPLATE)

@@ -17,6 +17,9 @@ class ZeptairPostController < ApplicationController
 
   require 'csv'
 
+  before_filter :check_login
+
+
   #=== upload
   #
   #Uploads a attachment file.
@@ -31,17 +34,8 @@ class ZeptairPostController < ApplicationController
 
     login_user = session[:login_user]
 
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
-
     post_item = ZeptairPostHelper.get_item_for(login_user)
-  
+
     Attachment.create(params, post_item, 0)
 
     post_item.update_attribute(:updated_at, Time.now)
@@ -59,15 +53,6 @@ class ZeptairPostController < ApplicationController
     attach = Attachment.find(params[:id])
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     post_item = ZeptairPostHelper.get_item_for(login_user)
 
@@ -94,15 +79,6 @@ class ZeptairPostController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     unless login_user.admin?(User::AUTH_ZEPTAIR)
       render(:text => 'ERROR:' + t('msg.need_to_be_admin'))
@@ -160,15 +136,6 @@ class ZeptairPostController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     login_user = session[:login_user]
-
-    if login_user.nil?
-      login_user = User.authenticate(params[:user])
-
-      if login_user.nil?
-        render(:text => 'ERROR:' + t('msg.need_to_login'))
-        return
-      end
-    end
 
     target_user = nil
 

@@ -32,7 +32,7 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
             <% if login_user.admin?(User::AUTH_USER) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; return false;"><%= t('menu.users_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_GROUP) %>
+            <% if login_user.admin?(User::AUTH_GROUP) or login_user.admin?(User::AUTH_WORKFLOW) or login_user.admin?(User::AUTH_LOCATION) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'groups', :action => 'show_tree') %>'; return false;"><%= t('menu.groups_manage') %></a></li>
             <% end %>
             <% if login_user.admin?(User::AUTH_TEAM) %>
