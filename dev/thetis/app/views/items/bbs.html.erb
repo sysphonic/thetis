@@ -191,10 +191,10 @@ folders_cache = {}
         <TR>
           <TD align="left" style="font-size:11pt; padding:5px; line-height:14pt; text-indent:60px;">
             <%
-            user_name, u_groups = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+            user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             unless u_groups.empty?
             %>
-            <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+            <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
             <% end %>
               <span style="color:green;">by <%=h item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
             <% unless u_groups.empty? %>

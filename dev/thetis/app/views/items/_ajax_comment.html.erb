@@ -22,10 +22,10 @@ login_user = session[:login_user]
             <td class="comment_tab_td" align="left" nowrap width="25%" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/comment_tab.png') top left repeat-x;">
           <% end %>
               <%
-              user_name, u_groups = UsersHelper.get_groups_info(@comment.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+              user_name, u_groups, figure = UsersHelper.get_groups_info(@comment.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
               unless u_groups.empty?
               %>
-              <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+              <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
               <% end %>
                 <b style="color:white;"><%=h user_name %></b>
               <% unless u_groups.empty? %>

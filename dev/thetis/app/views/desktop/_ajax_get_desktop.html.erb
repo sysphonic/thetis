@@ -60,11 +60,11 @@ end
 </table>
 
 <% unless login_user.nil? %>
-<table id="menubox" cellpadding="0" cellspacing="0" style="height:70px; position:absolute; display:none;">
-  <tr height="35">
+<table id="menubox" cellpadding="0" cellspacing="0" style="height:85px; position:absolute; display:none;">
+  <tr height="50">
     <td align="center" valign="middle">
       <div onMouseOver="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png';" onMouseOut="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png';">
-        <img name="blue_sphere" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png" onclick="doShowLocations();" style="cursor:pointer;" />
+        <img name="blue_sphere" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png" onclick="doShowLocations();" title="" style="cursor:pointer;" />
       </div>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png" style="display:none;" alt="" />
     </td>
@@ -755,20 +755,8 @@ tipsRecyclebox = function()
 
 doShowLocations = function()
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-            $("div_desktop").parentNode,
-            "<%= url_for(:controller => 'locations', :action => 'open_map') %>",
-            {
-              method:"get",
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){
-                thetisBoxProgress.remove();
-              }
-            }
-          );
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'locations', :action => 'open_map') %>";
 }
 
 </SCRIPT>

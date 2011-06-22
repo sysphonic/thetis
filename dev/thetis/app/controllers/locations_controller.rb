@@ -26,7 +26,6 @@ class LocationsController < ApplicationController
 
   #=== open_map
   #
-  #<Ajax>
   #Gets Locations of Users.
   #
   def open_map
@@ -34,45 +33,65 @@ class LocationsController < ApplicationController
 
     login_user = session[:login_user]
 
-    group_id = nil
+    @group_id = nil
+
     if !params[:thetisBoxSelKeeper].nil?
-      group_id = params[:thetisBoxSelKeeper].split(':').last
+      @group_id = params[:thetisBoxSelKeeper].split(':').last
     elsif !params[:group_id].nil? and !params[:group_id].empty?
-      group_id = params[:group_id]
+      @group_id = params[:group_id]
+    end
+
+    if params[:keyword]
+      con = []
+      key_array = params[:keyword].split(nil)
+      key_array.each do |key| 
+        key = '%' + key + '%'
+        con << "(name like '#{key}' or fullname like '#{key}' or email like '#{key}')"
+      end
+      unless con.empty?
+        begin
+          @target_user = User.find(:first, :conditions => con.join(' and '))
+        rescue
+        end
+        unless @target_user.nil?
+          target_location = Location.get_for(@target_user)
+          unless target_location.nil?
+            @group_id ||= target_location.group_id
+          end
+        end
+      end
     end
 
     @location = Location.get_for(login_user)
     unless @location.nil?
-      group_id ||= @location.group_id
+      @group_id ||= @location.group_id
     end
 
     group_ids = []
     group_obj_cache = {}
-    if group_id.nil?
+    if @group_id.nil?
       group_ids = login_user.get_groups_a(true, group_obj_cache)
       group_ids << '0'  # '0' for ROOT
     else
-      group_ids << group_id
-      if group_id != 0
-        group = Group.find_with_cache(group_id, group_obj_cache)
+      group_ids << @group_id
+      if @group_id.to_i != 0
+        group = Group.find_with_cache(@group_id, group_obj_cache)
         group_ids |= group.get_parents(false, group_obj_cache)
       end
     end
 
-    @group_id = nil
-    group_ids.each do |group_id|
-      @office_map = OfficeMap.get_for_group(group_id)
+    @map_group_id = nil
+    group_ids.each do |grp_id|
+      @office_map = OfficeMap.get_for_group(grp_id)
       if @office_map.img_enabled and (@office_map.img_size > 0)
-        @group_id = @office_map.group_id
+        @map_group_id = @office_map.group_id
         break
       end
     end
 
-    @locations = Location.get_for_group(@group_id)
+    @locations = Location.get_for_group(@map_group_id)
 
-    @location = nil if !@location.nil? and (@location.group_id != @group_id)
-
-    render(:partial => 'ajax_get_map', :layout => false)
+    @location = nil if !@location.nil? and (@location.group_id != @map_group_id)
   end
 
   #=== get_image

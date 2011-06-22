@@ -9,7 +9,7 @@ unless @user_groups.nil?
 
 <script type="text/javascript">
 
-showUserGroups = function(user_name, groups)
+showUserGroups = function(user_name, groups, figure)
 {
   var info = "<%= t('group.plural') %><%= t('cap.suffix') %>";
   info += "<div style='padding-left:20px;'>";
@@ -19,8 +19,14 @@ showUserGroups = function(user_name, groups)
   }
   info += "</div>";
 
+  if (figure == "") {
+    figure = "user.gif";
+  } else {
+    figure += ".png";
+  }
+
   var thetisBox = new ThetisBox;
-  thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/user.gif'> " + user_name;
+  thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/"+figure+"'> " + user_name;
   thetisBox.bgcolor_title = "#22B9FE";
   thetisBox.bgcolor_body = "#C5EFFF";
   thetisBox.show("CENTER", "", "MESSAGE", "", info, "");

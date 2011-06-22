@@ -13,28 +13,28 @@
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="prim_cap_td" nowrap><label for="user_name"><%=h t('user.u_name') %></label></td>
+            <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
             <td class="item_value_td">
               <%=h @user.name %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_email"><%=h User.human_attribute_name('email') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_email"><%= User.human_attribute_name('email') %></label></td>
             <td class="item_value_td">
               <%=h @user.email %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_fullname"><%=h User.human_attribute_name('fullname') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_fullname"><%= User.human_attribute_name('fullname') %></label></td>
             <td class="item_value_td">
               <%=h @user.fullname %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_address"><%=h User.human_attribute_name('address') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_address"><%= User.human_attribute_name('address') %></label></td>
             <td class="item_value_td">
               <% unless @user.postalcode.nil? or @user.postalcode.empty? %>
-                <%=h t('cap.postalcode') %> <%=h @user.postalcode %><br/>
+                <%= t('cap.postalcode') %> <%=h @user.postalcode %><br/>
               <% end %>
               <pre><%=h @user.address %></pre>
             </td>
@@ -50,7 +50,7 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_tel"><%=h t('cap.tel') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_tel"><%= t('cap.tel') %></label></td>
             <td class="item_value_td">
               <% unless @user.tel1.nil? or @user.tel1.empty? %>
                 <%=h @user.tel1_note %>: <%=h @user.tel1 %><br/>
@@ -64,32 +64,38 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_fax"><%=h User.human_attribute_name('fax') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_fax"><%= User.human_attribute_name('fax') %></label></td>
             <td class="item_value_td">
               <%=h @user.fax %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_organization"><%=h User.human_attribute_name('organization') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
             <td class="item_value_td">
               <%=h @user.organization %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_url"><%=h User.human_attribute_name('url') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_url"><%= User.human_attribute_name('url') %></label></td>
             <td class="item_value_td">
               <%=h @user.url %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_title"><%=h t('user.title') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_title"><%= t('user.title') %></label></td>
             <td class="item_value_td">
               <%=h @user.title %>
             </td>
           </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><label for="user_figure"><%= User.human_attribute_name('figure') %></label></td>
+            <td class="item_value_td">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @user.get_figure %>.png" />
+            </td>
+          </tr>
           <tr height="15"><td></td></tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('item.profile_sheet') %></td>
+            <td class="item_cap_td" nowrap><%= t('item.profile_sheet') %></td>
             <td class="item_value_td">
               <!-- Profile Sheet -->
               <%
@@ -100,14 +106,14 @@
                 <%=h truncate(item.title, :length => 20) %>
               </a>
               <% else %>
-              <%=h t('item.not_created_or_not_public') %>
+              <%= t('item.not_created_or_not_public') %>
               <% end %>
             </td>
           </tr>
         <% if login_user.admin?(User::AUTH_USER) %>
           <tr height="15"><td></td></tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_created_at"><%=h User.human_attribute_name('created_at') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_created_at"><%= User.human_attribute_name('created_at') %></label></td>
             <td class="item_value_td">
               <%
               created_at = ''
@@ -117,7 +123,7 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_login_at"><%=h User.human_attribute_name('login_at') %></label></td>
+            <td class="item_cap_td" nowrap><label for="user_login_at"><%= User.human_attribute_name('login_at') %></label></td>
             <td class="item_value_td">
               <%
               login_at = ''
@@ -145,7 +151,7 @@
   <tr height="20"><td></td></tr>
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+      <%= t('btn.back') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>

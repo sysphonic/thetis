@@ -7,9 +7,9 @@
   <%= hidden_field 'user', 'id' %>
   <table align="center" width="85%" cellpadding="0" cellspacing="2">
     <tr>
-      <td class="prim_cap_td" nowrap><label for="user_name"><%=h t('user.u_name') %></label></td>
+      <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'name', :style => 'ime-mode:disabled' %><sup style="color:red">*</sup>
+        <%= text_field('user', 'name', :style => 'ime-mode:disabled') %><sup style="color:red">*</sup>
       </td>
     </tr>
   <%
@@ -30,7 +30,7 @@
       </td>
     </tr>
     <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%=h t('password.confirm') %></label></td>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.confirm') %></label></td>
       <td class="item_value_td">
         <%= password_field 'user', 'password_confirmation' %><sup style="color:red">*</sup>
       </td>
@@ -39,19 +39,19 @@
     <tr>
       <td class="item_cap_td" nowrap><label for="user_email"><%=h User.human_attribute_name('email') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'email', :style => 'ime-mode:disabled' %><sup style="color:red">*</sup>
+        <%= text_field('user', 'email', :style => 'ime-mode:disabled') %><sup style="color:red">*</sup>
       </td>
     </tr>
     <tr>
       <td class="item_cap_td" nowrap><label for="user_fullname"><%=h User.human_attribute_name('fullname') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'fullname' %>
+        <%= text_field('user', 'fullname') %>
       </td>
     </tr>
     <tr>
       <td class="item_cap_td" nowrap><label for="user_address"><%=h User.human_attribute_name('address') %></label></td>
       <td class="item_value_td">
-        <%=h t('cap.postalcode') %> <%= text_field 'user', 'postalcode', :style => 'width:100px; ime-mode:disabled' %><br/>
+        <%= t('cap.postalcode') %> <%= text_field('user', 'postalcode', :style => 'width:100px; ime-mode:disabled;') %><br/>
         <%= text_area 'user', 'address', :style => 'width:100%', :rows => '3' %>
       </td>
     </tr>
@@ -77,7 +77,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_tel"><%=h t('cap.tel') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_tel"><%= t('cap.tel') %></label></td>
       <td class="item_value_td">
         <%
         options = []
@@ -95,36 +95,44 @@ end
           tel3_note = @user.tel3_note
         end
         %>
-        <%= select_tag 'user[tel1_note]', options_for_select(options, tel1_note) %>
-        <%= text_field 'user', 'tel1', :style => 'ime-mode:disabled' %><br/>
-        <%= select_tag 'user[tel2_note]', options_for_select(options, tel2_note) %>
-        <%= text_field 'user', 'tel2', :style => 'ime-mode:disabled' %><br/>
-        <%= select_tag 'user[tel3_note]', options_for_select(options, tel3_note) %>
-        <%= text_field 'user', 'tel3', :style => 'ime-mode:disabled' %><br/>
+        <%= select_tag('user[tel1_note]', options_for_select(options, tel1_note)) %>
+        <%= text_field('user', 'tel1', :style => 'ime-mode:disabled') %><br/>
+        <%= select_tag('user[tel2_note]', options_for_select(options, tel2_note)) %>
+        <%= text_field('user', 'tel2', :style => 'ime-mode:disabled') %><br/>
+        <%= select_tag('user[tel3_note]', options_for_select(options, tel3_note)) %>
+        <%= text_field('user', 'tel3', :style => 'ime-mode:disabled') %><br/>
       </td>
     </tr>
     <tr>
       <td class="item_cap_td" nowrap><label for="user_fax"><%=h User.human_attribute_name('fax') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'fax', :style => 'ime-mode:disabled' %>
+        <%= text_field('user', 'fax', :style => 'ime-mode:disabled') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_organization"><%=h User.human_attribute_name('organization') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
       <td class="item_value_td">
-        <%= text_area 'user', 'organization', :style => "width:100%", :rows => '3' %>
+        <%= text_area('user', 'organization', :style => "width:100%", :rows => '3') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_url"><%=h User.human_attribute_name('url') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_url"><%= User.human_attribute_name('url') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'url', :style => 'width:100%; ime-mode:disabled' %>
+        <%= text_field('user', 'url', :style => 'width:100%; ime-mode:disabled;') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_title"><%=h t('user.title') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_title"><%= t('user.title') %></label></td>
       <td class="item_value_td">
-        <%= text_field 'user', 'title', :style => 'width:80%; vertical-align:middle;' %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showTitleSelector();" style="cursor:pointer;" />
+        <%= text_field('user', 'title', :style => 'width:80%; vertical-align:middle;') %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showTitleSelector();" style="cursor:pointer;" />
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><label for="user_figure"><%= User.human_attribute_name('figure') %></label></td>
+      <td class="item_value_td">
+        <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy_green.png" title="Boy green" alt="Boy green" /></label>
+        &nbsp;&nbsp;
+        <%= radio_button('user', 'figure', 'girl_pink') %><label for="item_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" alt="Girl pink" /></label>
       </td>
     </tr>
   <% if params[:action] == 'edit' and login_user.id == @user.id %>
@@ -148,14 +156,14 @@ end
           options << [month, month]
         end
         %>
-        <%= select_tag 'user[birthday_m]', options_for_select(options, def_birth_m.to_i) %>
+        <%= select_tag('user[birthday_m]', options_for_select(options, def_birth_m.to_i)) %>
         <%
         options = []
         (1..31).each do |day|
           options << [day, day]
         end
         %>
-        <%= select_tag 'user[birthday_d]', options_for_select(options, def_birth_d.to_i) %>
+        <%= select_tag('user[birthday_d]', options_for_select(options, def_birth_d.to_i)) %>
       </td>
     </tr>
   <% end %>
@@ -179,7 +187,7 @@ function showTitleSelector()
   var content = getTitleSelector("onTitleSelectOK()", "onTitleSelectCancel()");
 
   selector = new ThetisBox;
-  selector.title = "<%=h t('user.select_title') %>";
+  selector.title = "<%= t('user.select_title') %>";
   selector.overflow = "hide";
   selector.show("CENTER", "350,200", "TRAY", "", "", content);
 }
@@ -227,8 +235,8 @@ function getTitleSelector(onOk, onCancel)
   content += "  </tr>";
   content += "  <tr>";
   content += "    <td align='center' valign='top'>";
-  content += "      <input type='button' value='<%= h t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
-  content += "      &nbsp;<input type='button' value='<%= h t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr height='100%'>";

@@ -163,7 +163,7 @@ ActiveRecord::Schema.define(:version => 20110524100300) do
   end
 
   create_table "locations", :force => true do |t|
-    t.integer  "user_id"
+    t.integer  "user_id",    :null => false
     t.integer  "group_id"
     t.integer  "x"
     t.integer  "y"
@@ -230,14 +230,12 @@ ActiveRecord::Schema.define(:version => 20110524100300) do
   end
 
   create_table "office_maps", :force => true do |t|
-    t.integer  "group_id"
+    t.integer  "group_id",                               :null => false
     t.boolean  "img_enabled"
     t.string   "img_name"
     t.integer  "img_size"
     t.string   "img_content_type"
     t.binary   "img_content",      :limit => 2147483647
-    t.integer  "img_width"
-    t.integer  "img_height"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -430,6 +428,7 @@ ActiveRecord::Schema.define(:version => 20110524100300) do
     t.integer  "xorder",       :default => 9999
     t.string   "zeptair_id"
     t.string   "time_zone"
+    t.string   "figure"
   end
 
   create_table "workflows", :force => true do |t|

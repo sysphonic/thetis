@@ -115,6 +115,7 @@ de:
         title: "Stellenbezeichnung"
         time_zone: "Time Zone"
         birthday: "Geburtstag"
+        figure: "Icon"
       workflow:
         status: "Zustand"
       zeptair_xlog:

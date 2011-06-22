@@ -51,6 +51,20 @@ class User < ActiveRecord::Base
   public::ZEPTID_PLACE_HOLDER = '#'
 
 
+  #=== get_figure
+  #
+  #Gets User's figure.
+  #
+  #return:: User's figure.
+  #
+  def get_figure
+    if self.figure.nil? or self.figure.empty?
+      return 'boy_green'
+    else
+      return self.figure
+    end
+  end
+
   #=== allowed_zept_connection?
   #
   #Gets if the User is allowed to connect with Zeptair VPN.
@@ -788,6 +802,7 @@ class User < ActiveRecord::Base
       ary << User.human_attribute_name('title')
       ary << User.human_attribute_name('time_zone')
       ary << I18n.t('zeptair.id')
+      ary << User.human_attribute_name('figure')
 
       csv << ary
 
@@ -815,6 +830,7 @@ class User < ActiveRecord::Base
         ary << user.title
         ary << user.time_zone
         ary << user.zeptair_id
+        ary << user.figure
 
         csv << ary
       end
@@ -867,6 +883,7 @@ class User < ActiveRecord::Base
     user.title =        (row[18].nil?)?nil:(row[18].strip)
     user.time_zone =    (row[19].nil?)?nil:(row[19].strip)
     user.zeptair_id =   (row[20].nil?)?nil:(row[20].strip)
+    user.figure =       (row[21].nil?)?nil:(row[21].strip)
 
     return user
   end

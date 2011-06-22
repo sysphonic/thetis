@@ -25,7 +25,7 @@ module UsersHelper
   #_user_obj_cache_:: Cache with {User-ID, User}.
   #_groups_cache_:: Cache with {Group-ID, Group path}.
   #_group_obj_cache_:: Cache with {Group-ID, Group}.
-  #return:: Array of [User name, Group-IDs].
+  #return:: Array of [User name, Group-IDs, User's figure].
   #
   def self.get_groups_info(user_id, user_groups, users_cache, user_obj_cache, groups_cache, group_obj_cache)
 
@@ -41,7 +41,7 @@ module UsersHelper
     end
     user_name = User.get_name(user_id, users_cache, user_obj_cache)
 
-    return [user_name, u_groups]
+    return [user_name, u_groups, (user.nil?)?(nil):user.get_figure]
   end
 
   #=== self.generate_htpasswd_pass

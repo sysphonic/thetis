@@ -7,8 +7,6 @@ class CreateOfficeMaps < ActiveRecord::Migration
       t.column :img_size, :integer
       t.column :img_content_type, :string
       t.column :img_content, :longblob
-      t.column :img_width, :integer
-      t.column :img_height, :integer
 
       t.timestamps
     end

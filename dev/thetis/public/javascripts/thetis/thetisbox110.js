@@ -89,7 +89,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       f = f.replace(reObj, "onsubmit=\""+avoidEmpty+" $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
       content += f;
     } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"post\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
+      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
     content += "<table width='100%' height='100%' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='10'>";
     if (hasTitlebar) {
@@ -154,7 +154,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       f = f.replace(reObj, "onsubmit=\""+avoidEmpty+" $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
       content += f;
     } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"post\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
+      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
     content += "<table width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='10'>";
     if (hasTitlebar) {
@@ -216,7 +216,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       f = f.replace(reObj, "onsubmit=\"if(this.thetisBoxSelKeeper.value.length <= 0 || this.action.length <= 0) { return false }; $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
       content += f;
     } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"post\" action=\""+action+"\" onsubmit=\"if (this.thetisBoxSelKeeper.value.length <= 0){return false;}"+prog+" ThetisBox.hide('"+this.id+"'); \">";
+      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\"if (this.thetisBoxSelKeeper.value.length <= 0){return false;}"+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
     content += "<table width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='10'>";
     if (hasTitlebar) {
@@ -744,7 +744,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   setTree: function(url, selectId)
   {
     var d = document.createElement("div");
-    d.innerHTML = "<form method='post' name='form_ajax_thetisBoxTree'>"
+    d.innerHTML = "<form method='get' name='form_ajax_thetisBoxTree'>"
         + "<input type='hidden' name='rootDiv' value='thetisBoxTree-"+this.id+"' />"
         + "<input type='hidden' name='selKeeper' value='thetisBoxSelKeeper-"+this.id+"' />"
         + "<input type='hidden' name='selId' value='a_thetisBoxTree-"+this.id+":"+selectId+"' />"

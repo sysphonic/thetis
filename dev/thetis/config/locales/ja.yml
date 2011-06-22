@@ -115,6 +115,7 @@ ja:
         title: "役職"
         time_zone: "タイムゾーン"
         birthday: "生年月日"
+        figure: "アイコン"
       workflow:
         status: "ステータス"
         issued_at: "発行日時"

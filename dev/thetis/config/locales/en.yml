@@ -115,6 +115,7 @@ en:
         title: "Official Title"
         time_zone: "Time Zone"
         birthday: "Birthday"
+        figure: "Icon"
       workflow:
         status: "Status"
       zeptair_xlog:

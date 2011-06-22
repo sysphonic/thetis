@@ -29,19 +29,22 @@ end
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
 </span>
 
-<table id="toolbox" width="80%" cellpadding="0" cellspacing="0" style="position:absolute; display:none; background-color:white; border:inset 2px gray;">
+<table class="location_on_map" id="toolbox" width="70%" cellpadding="0" cellspacing="0" style="z-index:1001; position:absolute; display:none; background-color:white; border:inset 2px gray;">
   <tr>
-    <td width="90" align="center" valign="middle" rowspan="2" style="padding:3px 0px;">
-      <div id="exit" width="10" style="height:100%;" onclick="tipsExit()" title="<%= t('office_map.drop_to_remove') %>">
+    <td width="20" rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
+      &nbsp;
+    </td>
+    <td width="8%" align="center" valign="middle" rowspan="3" style="padding:3px 20px;">
+      <div id="exit" style="height:100%;" onclick="tipsExit()" title="<%= t('office_map.drop_to_remove') %>">
         <img id="exit_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png" alt="<%= t('office_map.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
     </td>
-    <td width="70%">
+    <td width="90%" align="left">
     <%
     if @location.nil?
       location_id = "location_xx"
     %>
-      <div class="location_tray" id="<%= location_id %>" align="left" style="z-index:1000; cursor:move;">
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy.png" />
+      <div class="location_tray" id="<%= location_id %>" align="left" style="width:200px; z-index:1002; cursor:move;">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= login_user.get_figure %>.png" />
         <%= login_user.get_name %>
       </div>
       <%= draggable_element(location_id, :revert => false) %>
@@ -49,7 +52,7 @@ end
     </td>
   </tr>
   <tr>
-    <td align="left">
+    <td align="left" style="padding:3px 0px;">
       <table width="100%" cellspacing="0" cellpadding="0">
          <tr>
           <td align="left" width="120" style="padding-bottom:5px;">
@@ -65,7 +68,7 @@ end
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" nowrap>
-                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, @groups_cache) %></a>
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
                   &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
               </tr>
@@ -76,7 +79,18 @@ end
       </table>
     </td>
   </tr>
+  <tr>
+    <td align="left" style="padding:3px 0px;">
+      <%= form_tag( {:controller => 'locations', :action => 'open_map'}, :method => 'get', :name => 'form_map') %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
+        <%= text_field_tag('keyword', params[:keyword]) %>
+        <input type="button" value="<%= t('btn.search') %>" onClick="form_map.submit(); prog('TOP-RIGHT');"/>
+        <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'locations', :action => 'open_map') %>';"/>
+      </form>
+    </td>
+  </tr>
 </table>
+<%= draggable_element('toolbox', :revert => false) %>
 
 <!-- Locations -->
 <%
@@ -89,17 +103,19 @@ unless @locations.nil?
 %>
   <div class="location_on_map" id="<%= location_id %>" align="left" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
-    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
-    icon_img = img_root + 'boy.png'
+    user_name, u_groups, figure = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+    icon_img = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
+    is_target = (!@target_user.nil? and @target_user.id == location.user_id)
     %>
     <img src="<%= icon_img %>" style="cursor:move;" />
     <%
-    user_name, u_groups = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
     unless u_groups.empty?
     %>
-    <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>'); return false;">
+    <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
     <% end %>
+      <% if is_target %><b style="color:red;"><% end %>
       <%=h truncate(user_name, :length => 30) %>
+      <% if is_target %></b><% end %>
     <% unless u_groups.empty? %>
     </a>
     <% end %>
@@ -169,7 +185,7 @@ Droppables.add(
                     {
                       asynchronous:true,
                       evalScripts:true,
-                      parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>",
+                      parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @map_group_id %>&authenticity_token=<%= form_authenticity_token %>",
                       onComplete:function(request){
                                     element.id = "location_" + request.responseText;
                                     element.className = "location_on_map";
@@ -327,7 +343,7 @@ save = function(location_id)
           {
             asynchronous:true,
             evalScripts:true,
-            parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>"
+            parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @map_group_id %>&authenticity_token=<%= form_authenticity_token %>"
           }
         );
 }
@@ -392,13 +408,19 @@ tipsExit = function()
   thetisBox.show(x+","+y, "", "TIPS", "", "<%= t('office_map.drop_to_remove')%>", "");
 }
 
-showGroupTreeToSelect = function(group_id)
+function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'locations', :action => 'open_map') %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'locations', :action => 'open_map') %>", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
+
+function clearGroup()
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'locations', :action => 'open_map') %>";
+}
+
 </SCRIPT>
 
