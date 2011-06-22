@@ -29,7 +29,7 @@ end
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
 </span>
 
-<table class="location_on_map" id="toolbox" width="70%" cellpadding="0" cellspacing="0" style="z-index:1001; position:absolute; display:none; background-color:white; border:inset 2px gray;">
+<table class="location_on_map" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 2px gray;">
   <tr>
     <td width="20" rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
       &nbsp;
@@ -43,7 +43,7 @@ end
     if @location.nil?
       location_id = "location_xx"
     %>
-      <div class="location_tray" id="<%= location_id %>" align="left" style="width:200px; z-index:1002; cursor:move;">
+      <div class="location_tray" id="<%= location_id %>" align="left" style="width:200px; z-index:1000; cursor:move;">
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= login_user.get_figure %>.png" />
         <%= login_user.get_name %>
       </div>
@@ -90,7 +90,7 @@ end
     </td>
   </tr>
 </table>
-<%= draggable_element('toolbox', :revert => false) %>
+<%= draggable_element('toolbar', :revert => false) %>
 
 <!-- Locations -->
 <%
@@ -218,12 +218,10 @@ Droppables.add(
 
 <SCRIPT language="javascript" type="text/javascript">
 
+//doResize();
+
 var desktop = $("div_desktop");
 desktop.style.display = "block";
-
-$("toolbox").style.display = "inline";
-
-doResize();
 
 var deskWidth = desktop.clientWidth;
 var deskHeight = desktop.clientHeight;
@@ -242,12 +240,21 @@ unless @locations.nil?
 end
 %>
 
-doRemoveLocation = function(element_id)
+function onLoadSub()
+{
+  var toolbar = $("toolbar");
+  toolbar.style.display = "inline";
+  var toolbarHeight = toolbar.clientHeight;
+  toolbar.style.top = (mainHeight - toolbarHeight - 30) + "px";
+  toolbar.style.left = "50px";
+}
+
+function doRemoveLocation(element_id)
 {
   confm("<%= t('office_map.confirm_to_leave') %>", "_doRemoveLocation('"+element_id+"')");
 }
 
-_doRemoveLocation = function(element_id)
+function _doRemoveLocation(element_id)
 {
   var id = element_id.split("_")[1];
 
@@ -332,7 +339,7 @@ getAxis = function(location_id)
   return new Array(xAxis, yAxis);
 }
 
-save = function(location_id)
+function save(location_id)
 {
   bound(location_id);
 

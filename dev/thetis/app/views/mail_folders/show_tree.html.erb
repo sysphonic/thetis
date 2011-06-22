@@ -244,8 +244,9 @@ function showTips()
 function onLoadSub()
 {
   <%
-  mail_user_open = THETIS_RELATIVE_URL_ROOT + '/images/mail/mail_user_open.gif'
-  mail_user_close = THETIS_RELATIVE_URL_ROOT + '/images/mail/mail_user_close.gif'
+  figure = login_user.get_figure
+  mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
+  mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
   %>
   var folderImgs = new Array(
                       <% icons = MailFolder.get_icons(nil) %>
