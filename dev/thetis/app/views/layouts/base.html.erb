@@ -11,7 +11,7 @@
 
 <%= stylesheet_link_tag 'thetis101', :media => 'all' %>
 <%= javascript_include_tag 'prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar' %>
-<%= javascript_include_tag 'thetis/common101', 'thetis/thetis110', 'thetis/thetisbox110' %>
+<%= javascript_include_tag 'thetis/common101', 'thetis/thetis010', 'thetis/thetisbox110' %>
 <%= javascript_include_tag 'dojo/dojo', 'dojo/src/io/IframeIO' %>
 
 <style type="text/css">
@@ -129,13 +129,16 @@ function doResize()
     var h = mainHeight - 20;
     div.style.height = h + "px";
     if (!is_MS) {
-      var elems = document.getElementsByClassName("desktop_tr");
-      for (var i=0; elems != null && i < elems.length; i++) {
-        elems[i].style.height = (h-1) / elems.length + "px";
+      var deskTrs = document.getElementsByClassName("desktop_tr");
+      for (var i=0; deskTrs != null && i < deskTrs.length; i++) {
+        deskTrs[i].style.height = (h-1) / deskTrs.length + "px";
       }
-      elems = document.getElementsByClassName("desktop_td");
-      for (var i=0; elems != null && i < elems.length; i++) {
-        elems[i].style.width = mainWidth / elems.length + "px";
+      var deskTds = document.getElementsByClassName("desktop_td");
+      if (deskTds != null) {
+        var deskColNum = deskTds.length / deskTrs.length;
+        for (var i=0; i < deskColNum; i++) {
+          deskTds[i].style.width = mainWidth / deskColNum + "px";
+        }
       }
     }
 
@@ -152,12 +155,6 @@ function doResize()
     if (menubox != null) {
       menubox.style.top = (toolbox_top - 85) + "px";
       menubox.style.left = (toolbox_left + 26) + "px";
-    }
-
-    var img_map = $("img_map");
-    if (img_map != null) {
-      img_map.width = mainWidth * 4 / 5;
-      img_map.height = mainHeight * 4 / 5;
     }
 
   } else if (div = $("div_list")) {

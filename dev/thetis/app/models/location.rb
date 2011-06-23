@@ -48,7 +48,26 @@ class Location < ActiveRecord::Base
       con = "group_id=#{group_id}"
     end
 
+    Location.do_expire(con)
+
     return Location.find(:all, :conditions => con) || []
+  end
+
+  #=== self.do_expire
+  #
+  #Removes expired Locations.
+  #
+  #_add_con_:: Additional condition.
+  #
+  def self.do_expire(add_con=nil)
+
+    con = "(updated_at < '#{(Time.now.utc - 24*60*60).strftime('%Y-%m-%d %H:%M:%S')}')"
+
+    unless add_con.nil? or add_con.empty?
+      con << ' and (' + add_con + ')'
+    end
+
+    Location.destroy_all(con)
   end
 
   #=== get_name

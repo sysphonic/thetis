@@ -227,7 +227,7 @@ Droppables.add(
           },
           onDrop:function(element)
           {
-            var axis = getAxis(element.id);
+            var axis = getAxis($("div_desktop"), element.id);
 
             new Ajax.Request(
                     "<%= url_for(:controller => 'desktop', :action => 'drop_on_desktop') %>?id="+encodeURIComponent(element.id),
@@ -408,7 +408,7 @@ editLabel = function(toy_id)
   thetisBox.setFormTag(form_tag);
 
   // for users without LOGIN
-  var axis = getAxis(toy_id);
+  var axis = getAxis($("div_desktop"), toy_id);
 
   thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML($(toy_id+"_msg").innerHTML));
@@ -618,70 +618,13 @@ showAddressBook = function()
 
 //////////////////////////
 
-bound = function(toy_id)
-{
-  var toy = $(toy_id);
-
-  var deskWidth = desktop.clientWidth;
-  var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
-
-  var toyPos = Position.cumulativeOffset(toy);
-  toy.style.position = "absolute";
-  var toyWidth = toy.clientWidth;
-  var toyHeight = toy.clientHeight;
-
-  var updated = false;
-
-  if (toyPos[0] < deskPos[0]) {
-    toyPos[0] = deskPos[0] + 5;
-    updated = true;
-  }
-  if (toyPos[1] < deskPos[1]) {
-    toyPos[1] = deskPos[1] + 5;
-    updated = true;
-  }
-  if (toyPos[0] + toyWidth > deskPos[0] + deskWidth) {
-    toyPos[0] = deskPos[0] + deskWidth - toyWidth - 25;
-    updated = true;
-  }
-  if (toyPos[1] + toyHeight > deskPos[1] +deskHeight) {
-    toyPos[1] = deskPos[1] + deskHeight - toyHeight - 25;
-    updated = true;
-  }
-
-  if (updated) {
-    toy.style.left = toyPos[0] + "px";
-    toy.style.top = toyPos[1] + "px";
-  }
-}
-
-getAxis = function(toy_id)
-{
-  var toy = $(toy_id);
-  var toyPos = Position.cumulativeOffset(toy);
-
-  var deskWidth = desktop.clientWidth;
-  var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
-
-  var xAxis = Math.floor(Math.max(0, toyPos[0]-deskPos[0]) / deskWidth * 10000);
-  if (xAxis >= 10000) {
-    xAxis = 9500;
-  }
-  var yAxis = Math.floor(Math.max(0, toyPos[1]-deskPos[1]) / deskHeight * 10000);
-  if (yAxis >= 10000) {
-    yAxis = 9500;
-  }
-
-  return new Array(xAxis, yAxis);
-}
-
 save = function(toy_id)
 {
-  bound(toy_id);
+  var desktop = $("div_desktop");
 
-  var axis = getAxis(toy_id);
+  bound(desktop, toy_id);
+
+  var axis = getAxis(desktop, toy_id);
 
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'on_toys_moved') %>?id=" + encodeURIComponent(toy_id.split("_")[1]),
@@ -703,7 +646,7 @@ DesktopDragObserver.prototype = {
       return;
     }
 
-    bound(toy.id);
+    bound($("div_desktop"), toy.id);
   },
   onDrag: function(eventName, draggable, event) {
     var toy = draggable.element;
@@ -728,7 +671,7 @@ DesktopDragObserver.prototype = {
       } catch (e) {}
       draggable.endDrag(event);
 
-      setTimeout("bound('"+toy.id+"');", 100);
+      setTimeout("bound($('div_desktop'), '"+toy.id+"');", 100);
     }
   },
   onEnd: function(eventName, draggable, event) {

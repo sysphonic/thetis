@@ -10,16 +10,16 @@ login_user = session[:login_user]
 %>
 
 <%
-if @office_map.img_enabled
+if !@office_map.nil? and @office_map.img_enabled
   img_url = url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :timestamp => ApplicationHelper.get_timestamp(@office_map))
 else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
 end
 %>
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:snow; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:snow; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:ivory 2px solid;  border-bottom:ivory 2px solid; display:none;">
   <tr class="desktop_tr">
     <td class="desktop_td" align="center" valign="middle">
-      <img id="img_map" src="<%= raw(img_url) %>" />
+      <img id="img_map" src="<%= raw(img_url) %>" style="display:none;" />
     </td>
   </tr>
 </table>
@@ -29,7 +29,7 @@ end
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
 </span>
 
-<table class="location_on_map" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 2px gray;">
+<table class="toolbar" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 2px gray;">
   <tr>
     <td width="20" rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
       &nbsp;
@@ -178,7 +178,7 @@ Droppables.add(
           },
           onDrop:function(element)
           {
-            var axis = getAxis(element.id);
+            var axis = getAxis($("div_desktop"), element.id);
 
             new Ajax.Request(
                     "<%= url_for(:controller => 'locations', :action => 'on_moved') %>",
@@ -218,14 +218,25 @@ Droppables.add(
 
 <SCRIPT language="javascript" type="text/javascript">
 
-//doResize();
-
 var desktop = $("div_desktop");
 desktop.style.display = "block";
 
-var deskWidth = desktop.clientWidth;
-var deskHeight = desktop.clientHeight;
-var deskPos = Position.cumulativeOffset(desktop);
+function onLoadSub()
+{
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var img_map = $("img_map");
+  img_map.width = mainWidth * 90 / 100;
+  img_map.height = mainHeight * 90 / 100;
+  img_map.style.display = "block";
+
+  doResize();
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
 
 <%
 unless @locations.nil?
@@ -240,8 +251,6 @@ unless @locations.nil?
 end
 %>
 
-function onLoadSub()
-{
   var toolbar = $("toolbar");
   toolbar.style.display = "inline";
   var toolbarHeight = toolbar.clientHeight;
@@ -280,70 +289,13 @@ function _doRemoveLocation(element_id)
         );
 }
 
-bound = function(location_id)
-{
-  var loc = $(location_id);
-
-  var deskWidth = desktop.clientWidth;
-  var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
-
-  var locPos = Position.cumulativeOffset(loc);
-  loc.style.position = "absolute";
-  var locWidth = loc.clientWidth;
-  var locHeight = loc.clientHeight;
-
-  var updated = false;
-
-  if (locPos[0] < deskPos[0]) {
-    locPos[0] = deskPos[0] + 5;
-    updated = true;
-  }
-  if (locPos[1] < deskPos[1]) {
-    locPos[1] = deskPos[1] + 5;
-    updated = true;
-  }
-  if (locPos[0] + locWidth > deskPos[0] + deskWidth) {
-    locPos[0] = deskPos[0] + deskWidth - locWidth - 25;
-    updated = true;
-  }
-  if (locPos[1] + locHeight > deskPos[1] +deskHeight) {
-    locPos[1] = deskPos[1] + deskHeight - locHeight - 25;
-    updated = true;
-  }
-
-  if (updated) {
-    loc.style.left = locPos[0] + "px";
-    loc.style.top = locPos[1] + "px";
-  }
-}
-
-getAxis = function(location_id)
-{
-  var loc = $(location_id);
-  var locPos = Position.cumulativeOffset(loc);
-
-  var deskWidth = desktop.clientWidth;
-  var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
-
-  var xAxis = Math.floor(Math.max(0, locPos[0]-deskPos[0]) / deskWidth * 10000);
-  if (xAxis >= 10000) {
-    xAxis = 9500;
-  }
-  var yAxis = Math.floor(Math.max(0, locPos[1]-deskPos[1]) / deskHeight * 10000);
-  if (yAxis >= 10000) {
-    yAxis = 9500;
-  }
-
-  return new Array(xAxis, yAxis);
-}
-
 function save(location_id)
 {
-  bound(location_id);
+  var desktop = $("div_desktop");
 
-  var axis = getAxis(location_id);
+  bound(desktop, location_id);
+
+  var axis = getAxis(desktop, location_id);
 
   new Ajax.Request(
           "<%= url_for(:controller => 'locations', :action => 'on_moved') %>?id=" + encodeURIComponent(location_id.split("_")[1]),
@@ -360,46 +312,48 @@ DesktopDragObserver.prototype = {
   initialize: function() {
   },
   onStart: function(eventName, draggable, event) {
-    var loc = draggable.element;
-    if (loc.className != "location_on_map") {
+    var elem = draggable.element;
+    if (elem.className != "location_on_map"
+        && elem.className != "toolbar") {
       return;
     }
 
-    bound(loc.id);
+    bound($("div_desktop"), elem.id);
   },
   onDrag: function(eventName, draggable, event) {
-    var loc = draggable.element;
-    if (loc.className != "location_on_map") {
+    var elem = draggable.element;
+    if (elem.className != "location_on_map"
+        && elem.className != "toolbar") {
       return;
     }
-    var locWidth = loc.clientWidth;
-    var locHeight = loc.clientHeight;
-    var locPos = Position.cumulativeOffset(loc);
+    var elemWidth = elem.clientWidth;
+    var elemHeight = elem.clientHeight;
+    var elemPos = Position.cumulativeOffset(elem);
 
     var deskWidth = desktop.clientWidth;
     var deskHeight = desktop.clientHeight;
     var deskPos = Position.cumulativeOffset(desktop);
 
-    if (locPos[0] < deskPos[0]
-        || locPos[1] < deskPos[1]
-        || locPos[0] + locWidth > deskPos[0] +deskWidth
-        || locPos[1] + locHeight > deskPos[1] +deskHeight
+    if (elemPos[0] < deskPos[0]
+        || elemPos[1] < deskPos[1]
+        || elemPos[0] + elemWidth > deskPos[0] +deskWidth
+        || elemPos[1] + elemHeight > deskPos[1] +deskHeight
        ) {
       try {
         document.selection.empty();
       } catch (e) {}
       draggable.endDrag(event);
 
-      setTimeout("bound('"+loc.id+"');", 100);
+      setTimeout("bound($('div_desktop'), '"+elem.id+"');", 100);
     }
   },
   onEnd: function(eventName, draggable, event) {
-    var loc = draggable.element;
-    if (loc.className != "location_on_map") {
-      return;
+    var elem = draggable.element;
+
+    if (elem.className == "location_on_map") {
+      setTimeout("save('"+elem.id+"');", 100);
+      $("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png";
     }
-    setTimeout("save('"+loc.id+"');", 100);
-    $("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png";
   }
 }
 Draggables.addObserver( new DesktopDragObserver() );

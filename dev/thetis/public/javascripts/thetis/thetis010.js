@@ -1,3 +1,94 @@
+/**-----------------**-----------------**-----------------**
+ Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
+ http://sysphonic.com/
+
+ This module is released under New BSD License.
+
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+
+ * Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer. 
+
+ * Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution. 
+
+ * Neither the name of the Sysphonic nor the names of its contributors may
+   be used to endorse or promote products derived from this software without
+   specific prior written permission. 
+
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
+ OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ **-----------------**-----------------**-----------------**/
+
+bound = function(desktop, elem)
+{
+  var elem = $(elem);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var elemPos = Position.cumulativeOffset(elem);
+  elem.style.position = "absolute";
+  var elemWidth = elem.clientWidth;
+  var elemHeight = elem.clientHeight;
+
+  var updated = false;
+
+  if (elemPos[0] < deskPos[0]) {
+    elemPos[0] = deskPos[0] + 5;
+    updated = true;
+  }
+  if (elemPos[1] < deskPos[1]) {
+    elemPos[1] = deskPos[1] + 5;
+    updated = true;
+  }
+  if (elemPos[0] + elemWidth > deskPos[0] + deskWidth) {
+    elemPos[0] = deskPos[0] + deskWidth - elemWidth - 25;
+    updated = true;
+  }
+  if (elemPos[1] + elemHeight > deskPos[1] +deskHeight) {
+    elemPos[1] = deskPos[1] + deskHeight - elemHeight - 25;
+    updated = true;
+  }
+
+  if (updated) {
+    elem.style.left = elemPos[0] + "px";
+    elem.style.top = elemPos[1] + "px";
+  }
+}
+
+getAxis = function(desktop, elem)
+{
+  var elem = $(elem);
+  var elemPos = Position.cumulativeOffset(elem);
+
+  var deskWidth = desktop.clientWidth;
+  var deskHeight = desktop.clientHeight;
+  var deskPos = Position.cumulativeOffset(desktop);
+
+  var xAxis = Math.floor(Math.max(0, elemPos[0]-deskPos[0]) / deskWidth * 10000);
+  if (xAxis >= 10000) {
+    xAxis = 9500;
+  }
+  var yAxis = Math.floor(Math.max(0, elemPos[1]-deskPos[1]) / deskHeight * 10000);
+  if (yAxis >= 10000) {
+    yAxis = 9500;
+  }
+
+  return new Array(xAxis, yAxis);
+}
 
 showTab = function(name, nameArray)
 {

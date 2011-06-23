@@ -69,10 +69,10 @@ class LocationsController < ApplicationController
 
     group_ids = []
     group_obj_cache = {}
-    if @group_id.nil?
+    if @location.nil?
       group_ids = login_user.get_groups_a(true, group_obj_cache)
       group_ids << '0'  # '0' for ROOT
-    else
+    elsif !@group_id.nil?
       group_ids << @group_id
       if @group_id.to_i != 0
         group = Group.find_with_cache(@group_id, group_obj_cache)
