@@ -834,7 +834,7 @@ class Item < ActiveRecord::Base
 
         img = images.first
         feed_enclosure = FeedEntry::FeedEnclosure.new
-        feed_enclosure.url = root_url + ApplicationHelper.url_for(:controller => 'items', :action => 'get_image', :id => img.id, :timestamp => ApplicationHelper.get_timestamp(img))
+        feed_enclosure.url = root_url + ApplicationHelper.url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img))
         feed_enclosure.type = img.content_type
         feed_enclosure.length = img.size
         feed_enclosure.title = (img.title.nil? or img.title.empty?) ? img.name : img.title

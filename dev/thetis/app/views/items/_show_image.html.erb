@@ -7,7 +7,7 @@
           <table cellspacing="0" cellpadding="0">
             <tr>
               <td class="img_td" align="center">
-                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :timestamp => ApplicationHelper.get_timestamp(img)) %>
+                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img)) %>
                 <img id="<%= "img#{img.id}" %>" src="<%= img_url %>" />
               </td>
             </tr>

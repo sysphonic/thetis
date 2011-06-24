@@ -7,7 +7,7 @@
         <tr height="5"><td></td></tr>
         <tr>
           <td colspan="2" align="center">
-            <img src="<%= url_for(:controller => 'items', :action => 'get_image', :id => @image.id, :timestamp => ApplicationHelper.get_timestamp(@image)) %>" width="90" height="60"/>
+            <img src="<%= url_for(:controller => 'items', :action => 'get_image', :id => @image.id, :ts => ApplicationHelper.get_timestamp(@image)) %>" width="90" height="60"/>
           </td>
         </tr>
         <tr height="5"><td></td></tr>

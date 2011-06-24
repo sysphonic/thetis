@@ -5,7 +5,7 @@
   <%= check_box(:office_map, :img_enabled) %><label for="office_map_img_enabled"><%= t('office_map.enable_map') %></label><br/>
   <div align="left" style="padding:5px 0px 5px 30px;">
   <% if !@office_map.img_size.nil? and @office_map.img_size > 0 %>
-    <img width="120" src="<%= url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :timestamp => ApplicationHelper.get_timestamp(@office_map)) %>" />
+    <img width="120" src="<%= url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :ts => ApplicationHelper.get_timestamp(@office_map)) %>" />
   <% end %>
   </div>
   <div align="left" style="padding-left:20px;">

@@ -74,7 +74,7 @@
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="center">
-                    <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :timestamp => ApplicationHelper.get_timestamp(img)) %>
+                    <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img)) %>
                     <img id="<%= "img#{img.id}" %>" src="<%= img_url %>" width="90" height="60" />
                   </td>
                 </tr>

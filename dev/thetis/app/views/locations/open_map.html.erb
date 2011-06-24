@@ -11,7 +11,7 @@ login_user = session[:login_user]
 
 <%
 if !@office_map.nil? and @office_map.img_enabled
-  img_url = url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :timestamp => ApplicationHelper.get_timestamp(@office_map))
+  img_url = url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :ts => ApplicationHelper.get_timestamp(@office_map))
 else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
 end

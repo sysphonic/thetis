@@ -16,7 +16,7 @@ end
 
 <%
 if @desktop.img_enabled
-  bg_img_style = 'background-image:url(\'' + url_for(:controller => 'desktop', :action => 'get_image', :timestamp => ApplicationHelper.get_timestamp(@desktop)) + '\'); background-repeat:no-repeat; background-position:center center;'
+  bg_img_style = 'background-image:url(\'' + url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) + '\'); background-repeat:no-repeat; background-position:center center;'
 else
   bg_img_style = ''
 end
