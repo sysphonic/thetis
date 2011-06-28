@@ -244,6 +244,9 @@ class Toy < ActiveRecord::Base
       feed_entry.created_at      = toy.created_at
       feed_entry.updated_at      = toy.updated_at
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'desktop', :action => 'show', :id => ''))
+      # Updating position of PostLabel causes renew its timestamp!
+      #   FeedEntry.create_guid(toy, ApplicationHelper.get_timestamp(toy))
+      feed_entry.guid            = FeedEntry.create_guid(toy, nil)
       feed_entry.content         = (toy.message.nil?)?'':(toy.message.gsub(/^(.{0,200}).*/m,"\\1"))
       feed_entry.title           = '['+I18n.t('postlabel.name')+'] '+ I18n.t('postlabel.from') + User.get_name(toy.posted_by, users_cache)
 

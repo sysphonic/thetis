@@ -64,7 +64,7 @@ end
   <tr height="50">
     <td align="center" valign="middle">
       <div onMouseOver="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png';" onMouseOut="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png';">
-        <img name="blue_sphere" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png" onclick="doShowLocations();" title="" style="cursor:pointer;" />
+        <img name="blue_sphere" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png" onclick="doShowLocations();" title="<%= OfficeMap.human_name %>" style="cursor:pointer;" />
       </div>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png" style="display:none;" alt="" />
     </td>
@@ -72,7 +72,7 @@ end
   <tr height="35">
     <td align="center" valign="middle">
       <div onMouseOver="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png';" onMouseOut="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png';">
-        <img name="mini_window_1" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png" onclick="editConfig();" style="cursor:pointer;" />
+        <img name="mini_window_1" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png" onclick="editConfig();" title="<%= Desktop.human_name %> <%= t('btn.config') %>" style="cursor:pointer;" />
       </div>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png" style="display:none;" alt="" />
     </td>

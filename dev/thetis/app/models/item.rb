@@ -821,6 +821,7 @@ class Item < ActiveRecord::Base
       feed_entry.updated_at      = item.updated_at
       feed_entry.author          = item.disp_registered_by(users_cache)
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => item.id))
+      feed_entry.guid            = FeedEntry.create_guid(item, ApplicationHelper.get_timestamp(item))
       feed_entry.title           = '['+Item.human_name+'] '+item.title
       feed_entry.content     = (item.summary.nil?)?'(No summary)':(item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
       if $thetis_config[:feed]['feed_content'] == '1' and !item.description.nil?

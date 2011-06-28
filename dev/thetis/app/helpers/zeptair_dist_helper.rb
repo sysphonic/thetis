@@ -153,6 +153,7 @@ module ZeptairDistHelper
       feed_entry.updated_at      = item.updated_at
       feed_entry.author          = item.disp_registered_by(users_cache)
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => item.id))
+      feed_entry.guid            = FeedEntry.create_guid(item, ApplicationHelper.get_timestamp(item))
       feed_entry.title           = '['+Item.human_name+'] '+item.title
       feed_entry.content     = (item.summary.nil?)?'(No summary)':(item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
       if $thetis_config[:feed]['feed_content'] == '1' and !item.description.nil?
@@ -168,8 +169,9 @@ module ZeptairDistHelper
           feed_enclosure.url = root_url + ApplicationHelper.url_for(:controller => 'items', :action => 'get_attachment', :id => attach.id, :rand => rand(10000000000))
           feed_enclosure.type = attach.content_type
           feed_enclosure.length = attach.size
-          title = (attach.title.nil? or attach.title.empty?) ? attach.name : attach.title
-          feed_enclosure.title = "#{attach.id}:#{title}"
+          feed_enclosure.id = attach.id
+          feed_enclosure.name = attach.name
+          feed_enclosure.title = attach.title
           timestamp = attach.updated_at.utc.strftime(ACK_TIMESTAMP_FORM)
           feed_enclosure.updated_at = timestamp
           feed_enclosure.digest_md5 = attach.digest_md5

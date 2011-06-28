@@ -146,6 +146,7 @@ class Comment < ActiveRecord::Base
       feed_entry  = FeedEntry.new
       feed_entry.updated_at  = comment.updated_at
       feed_entry.link        = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => comment.item_id, :a_name => "comment_#{comment.id}"))
+      feed_entry.guid        = FeedEntry.create_guid(comment, ApplicationHelper.get_timestamp(comment))
       feed_entry.content     = (comment.message.nil?)?'':(comment.message.gsub(/^(.{0,200}).*/m,"\\1"))
       xtype_name = comment.get_xtype_name
       feed_entry.title           = '['+I18n.t('comment.name')+'] '+Item.get_title(comment.item_id)+': '+ xtype_name + I18n.t('comment.from') + User.get_name(comment.user_id, users_cache)

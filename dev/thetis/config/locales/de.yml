@@ -1095,6 +1095,7 @@ de:
     dist:
       state: "Distribution State"
       response: "Response"
+      title: "Zeptair Package Distribution"
   wday:
     sun: "So."
     mon: "Mo."

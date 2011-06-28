@@ -458,6 +458,7 @@ class Workflow < ActiveRecord::Base
       feed_entry.created_at      = workflow.item.created_at
       feed_entry.updated_at      = workflow.item.updated_at
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => workflow.item_id))
+      feed_entry.guid            = FeedEntry.create_guid(workflow, ApplicationHelper.get_timestamp(workflow.item))
       feed_entry.content         = (workflow.item.summary.nil?)?'':(workflow.item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
       feed_entry.title           = '['+I18n.t('workflow.name')+'] '+Item.get_title(workflow.item_id) + I18n.t('workflow.from') + User.get_name(workflow.item.user_id, users_cache)
 

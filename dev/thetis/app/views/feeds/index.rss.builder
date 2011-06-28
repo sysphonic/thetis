@@ -23,7 +23,15 @@ xml.rss('version'    => '2.0',
         xml.item do
           xml.title        entry.title
           xml.link         entry.link
-          xml.guid         entry.link
+          if @enable_custom_spec == true
+            xml.guid         entry.guid
+          else
+            guid = entry.link
+            if entry.guid.include?('@')
+              guid += '&ts=' + entry.guid.split('@').last
+            end
+            xml.guid       guid
+          end
           xml.description  entry.content
           xml.pubDate      entry.updated_at.to_formatted_s(:rfc822)
           xml.dc :creator, entry.author
@@ -35,6 +43,8 @@ xml.rss('version'    => '2.0',
                   :type => feed_enclosure.type
                 }
               if @enable_custom_spec == true
+                attrs[:id] = feed_enclosure.id
+                attrs[:name] = feed_enclosure.name
                 attrs[:title] = feed_enclosure.title
                 attrs[:updated] = feed_enclosure.updated_at
                 attrs[:digest_md5] = feed_enclosure.digest_md5

@@ -16,13 +16,17 @@
 #
 module LoginChecker
 
-  #=== check_login
+  #=== allow_midair_login
   #
-  #Filter method to check if current User has LOGIN session.
+  #Allows LOGIN on the fly if parameters contain authentication
+  #information.
+  #Call this filter alone (in other words, out of :check_login filter)
+  #if the target action does not require LOGIN for itself but allows
+  #the operationg User to act as LOGIN User.
   #
-  def check_login
-    if session[:login_user].nil?
+  def allow_midair_login
 
+    if session[:login_user].nil?
       unless params[:user].nil?
         user = User.authenticate(params[:user])
         unless user.nil?
@@ -30,7 +34,18 @@ module LoginChecker
           return
         end
       end
+    end
+  end
 
+  #=== check_login
+  #
+  #Filter method to check if current User has LOGIN session.
+  #
+  def check_login
+
+    allow_midair_login
+
+    if session[:login_user].nil?
       Log.add_check(request, '[check_login]'+request.to_s)
 
       flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
@@ -46,9 +61,10 @@ module LoginChecker
   #
   def check_auth(required_auth)
 
-    return if session[:login_user].nil?
+    return if session[:login_user].nil? and self.performed?
 
-    unless session[:login_user].admin?(required_auth)
+    if session[:login_user].nil? \
+        or !session[:login_user].admin?(required_auth)
       Log.add_check(request, '[check_auth]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_admin')

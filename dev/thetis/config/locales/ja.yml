@@ -1096,6 +1096,7 @@ ja:
     dist:
       state: "配布状況"
       response: "応答"
+      title: "Zeptair パッケージ配布"
   wday:
     sun: "日"
     mon: "月"

@@ -42,23 +42,28 @@ class LocationsController < ApplicationController
     end
 
     if params[:keyword]
-      con = []
+      con_prim = []
+      con_second = []
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
+        con_prim << "(name='#{key}' or fullname='#{key}' or email='#{key}')"
         key = '%' + key + '%'
-        con << "(name like '#{key}' or fullname like '#{key}' or email like '#{key}')"
+        con_second << "(name like '#{key}' or fullname like '#{key}' or email like '#{key}')"
       end
-      unless con.empty?
+      [con_prim, con_second].each do |con|
+        next if con.empty?
+
         begin
           @target_user = User.find(:first, :conditions => con.join(' and '))
         rescue
         end
-        unless @target_user.nil?
-          target_location = Location.get_for(@target_user)
-          unless target_location.nil?
-            @group_id ||= target_location.group_id
-          end
+        next if @target_user.nil?
+
+        target_location = Location.get_for(@target_user)
+        unless target_location.nil?
+          @group_id ||= target_location.group_id
         end
+        break
       end
     end
 
@@ -114,7 +119,7 @@ class LocationsController < ApplicationController
     end
 
 =begin
-# Too much striction
+# Too much restriction
     if !office_map.group_id.nil? and (office_map.group_id != 0)
       unless User.belongs_to_group?(login_user, office_map.group_id, true)
         render(:text => 'ERROR:' + t('msg.need_auth_to_access'))

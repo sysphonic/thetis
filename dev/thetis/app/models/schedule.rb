@@ -1142,7 +1142,7 @@ private
     end
 
     return self._get_feeds(alarms, '['+I18n.t('schedule.alarm_mark')+'] ', root_url, 'alarm')
-   end
+  end
 
  private
   #=== self._get_feeds
@@ -1227,6 +1227,7 @@ private
       date_s = schedule.updated_at.strftime(Schedule::SYS_DATE_FORM)
       feed_entry.link = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'schedules', :action => 'show_in_day', :id => schedule.id, :date => date_s), :type => type)
       # Every time 'link' parameter is changed, RSS client will take it for a new item.
+      feed_entry.guid = FeedEntry.create_guid(schedule, ApplicationHelper.get_timestamp(schedule))
 
       feed_entry.content     = descript
       feed_entry.title       = title_pref + schedule.title

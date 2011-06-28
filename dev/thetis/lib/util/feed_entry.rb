@@ -17,6 +17,7 @@ class FeedEntry
 
   @title = nil
   @link = nil
+  @guid = nil
   @content = nil
   @content_encoded = nil
   @created_at = nil
@@ -26,6 +27,7 @@ class FeedEntry
 
   attr_accessor :title
   attr_accessor :link
+  attr_accessor :guid
   attr_accessor :content
   attr_accessor :content_encoded
   attr_accessor :created_at
@@ -36,12 +38,22 @@ class FeedEntry
   def has_enclosure?
     return (!@enclosures.nil? and !@enclosures.to_a.empty?)
   end
+
+  def self.create_guid(obj, timestamp=nil)
+    guid = obj.class.to_s + '#' + obj.id.to_s
+    unless timestamp.nil?
+      guid << '@' + timestamp
+    end
+    return guid
+  end
 end
 
 class FeedEntry::FeedEnclosure
   @url = nil
   @type = nil
   @length = nil
+  @id = nil
+  @name = nil
   @title = nil
   @updated_at = nil
   @digest_md5 = nil
@@ -49,6 +61,8 @@ class FeedEntry::FeedEnclosure
   attr_accessor :url
   attr_accessor :type
   attr_accessor :length
+  attr_accessor :id
+  attr_accessor :name
   attr_accessor :title
   attr_accessor :updated_at
   attr_accessor :digest_md5

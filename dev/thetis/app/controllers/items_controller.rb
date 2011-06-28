@@ -20,6 +20,7 @@ class ItemsController < ApplicationController
     before_filter :check_login
   else
     before_filter :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]
+    before_filter :allow_midair_login, :only => [:get_attachment]
   end
   before_filter :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize, :move_in_team_folder]
   before_filter :check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment]

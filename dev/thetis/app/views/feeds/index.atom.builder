@@ -15,11 +15,21 @@ atom_feed(:root_url => @site_url,
   feed.author{|author| author.name(@author) }
 
   @entries.each do |entry|
-    feed.entry(entry,
-               :url       => entry.link,
-               :id        => entry.link,
-               :published => entry.created_at,
-               :updated   => entry.updated_at) do |item|
+    entry_attrs = {
+      :url       => entry.link,
+      :published => entry.created_at,
+      :updated   => entry.updated_at
+    }
+    if @enable_custom_spec == true
+      entry_attrs[:id] = entry.guid
+    else
+      guid = entry.link
+      if entry.guid.include?('@')
+        guid += '&ts=' + entry.guid.split('@').last
+      end
+      entry_attrs[:id] = guid
+    end
+    feed.entry(entry, entry_attrs) do |item|
       item.title(entry.title)
       item.content(entry.content, :type => 'html')
       item.author{|author| author.name(entry.author) }
@@ -33,6 +43,8 @@ atom_feed(:root_url => @site_url,
               :title => feed_enclosure.title
             }
           if @enable_custom_spec == true
+            attrs[:id] = feed_enclosure.id
+            attrs[:name] = feed_enclosure.name
             attrs[:updated] = feed_enclosure.updated_at
             attrs[:digest_md5] = feed_enclosure.digest_md5
           end
