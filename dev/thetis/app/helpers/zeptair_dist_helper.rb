@@ -141,7 +141,7 @@ module ZeptairDistHelper
   #_users_cache_:: Hash to accelerate response. {user_id, user_name}
   #return:: Array of FeedEntry.
   #
-  def self.get_feeds(user, root_url, users_cache = nil)
+  def self.get_feeds(user, root_url, users_cache=nil)
 
     entries = []
 
@@ -166,7 +166,7 @@ module ZeptairDistHelper
         feed_entry.enclosures = []
         attachments.each do |attach|
           feed_enclosure = FeedEntry::FeedEnclosure.new
-          feed_enclosure.url = root_url + ApplicationHelper.url_for(:controller => 'items', :action => 'get_attachment', :id => attach.id, :rand => rand(10000000000))
+          feed_enclosure.url = root_url + ApplicationHelper.url_for(:controller => 'items', :action => 'get_attachment', :id => attach.id, :ts => ApplicationHelper.get_timestamp(attach))
           feed_enclosure.type = attach.content_type
           feed_enclosure.length = attach.size
           feed_enclosure.id = attach.id

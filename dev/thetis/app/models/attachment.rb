@@ -122,6 +122,7 @@ class Attachment < ActiveRecord::Base
     attachment.content = self.content
     attachment.xorder = self.xorder
     attachment.location = self.location
+    attachment.digest_md5 = self.digest_md5
     attachment.item_id = item_id.to_i
 
     attachment.save!
@@ -271,15 +272,19 @@ class Attachment < ActiveRecord::Base
         end
       end
 
+      self.file = attrs[:file]
+      attrs.delete(:file)
+
       if new_location == Attachment::LOCATION_DIR
 
         path = AttachmentsHelper.get_parent_path(self)
         FileUtils.mkdir_p(path)
-        fpath = File.join(path, self.id.to_s + File.extname(attrs[:file].original_filename))
+        fpath = File.join(path, self.id.to_s + File.extname(self.name))
 
         open(fpath, 'wb') { |file|
-          file.write(attrs[:file].read)
+          file.write(self.content)
         }
+        self.content = nil
       end
     end
 

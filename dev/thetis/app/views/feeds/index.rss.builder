@@ -35,6 +35,7 @@ xml.rss('version'    => '2.0',
           xml.description  entry.content
           xml.pubDate      entry.updated_at.to_formatted_s(:rfc822)
           xml.dc :creator, entry.author
+          xml.author       entry.author
           if entry.has_enclosure?
             entry.enclosures.to_a.each do |feed_enclosure|
               attrs = {
