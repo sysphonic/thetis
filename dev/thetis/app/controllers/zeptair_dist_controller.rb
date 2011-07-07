@@ -128,19 +128,24 @@ class ZeptairDistController < ApplicationController
 
     login_user = session[:login_user]
 
-    attach = Attachment.find(params[:attach_id])
-    if attach.nil? or attach.item.nil? \
-        or attach.item.xtype != Item::XTYPE_ZEPTAIR_DIST
+    unless params[:attach_id].nil? or params[:attach_id].empty?
+      target = Attachment.find(params[:attach_id])
+    end
+    unless params[:cmd_id].nil? or params[:cmd_id].empty?
+      target = ZeptairCommand.find(params[:cmd_id])
+    end
+    if target.nil? or target.item.nil? \
+        or target.item.xtype != Item::XTYPE_ZEPTAIR_DIST
       render(:text => 'ERROR:' + t('msg.system_error'))
       return
     end
-    item = attach.item
+    item = target.item
 
     comment = ZeptairDistHelper.get_comment_of(item.id, login_user.id)
 
     case params[:status]
-      when 'saved'
-        new_entry = "#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}#{params[:timestamp]}"
+      when ZeptairDistHelper::ENTRY_STATUS_SAVED, ZeptairDistHelper::ENTRY_STATUS_EXECUTED, ZeptairDistHelper::ENTRY_STATUS_ERROR
+        new_entry = "#{target.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{target.id}#{ZeptairDistHelper::ACK_ID_SEP}#{params[:timestamp]}#{ZeptairDistHelper::ACK_TS_SEP}#{params[:status]}"
 
         if comment.nil?
           comment = Comment.new
@@ -150,6 +155,8 @@ class ZeptairDistController < ApplicationController
           comment.message = new_entry + "\n"
           comment.save!
         else
+          class_order = {'Attachment' => 0, 'ZeptairCommand' => 1}
+          target_order = class_order[target.class.to_s]
 
           entries = ZeptairDistHelper.get_ack_array_of(comment)
 
@@ -160,11 +167,23 @@ class ZeptairDistController < ApplicationController
             entries.each do |entry|
               next if entry.nil? or entry.empty?
 
-              entry_attach_id = entry.scan(/^(\d+)[=]/).flatten.first.to_i
-              if entry_attach_id == attach.id
+              regexp = Regexp.new("^([a-zA-Z]+)#{ZeptairDistHelper::ACK_CLASS_SEP}(\\d+)[#{ZeptairDistHelper::ACK_ID_SEP}]")
+              matched_ary = entry.scan(regexp)
+              next if matched_ary.nil?
+              matched_ary = matched_ary.flatten
+              next if matched_ary.length < 2
+
+              entry_class = matched_ary.first
+              entry_order = class_order[entry_class]
+              entry_id = matched_ary.last.to_i
+              if entry_class == target.class.to_s \
+                  and entry_id == target.id
                 msg << new_entry + "\n"
                 inserted = true
-              elsif !inserted and attach.id < entry_attach_id
+              elsif !inserted \
+                  and \
+                    ((entry_class == target.class.to_s and target.id < entry_id) \
+                      or (entry_class != target.class.to_s and target_order < entry_order))
                 msg << new_entry + "\n"
                 msg << entry + "\n"
                 inserted = true
@@ -186,7 +205,7 @@ class ZeptairDistController < ApplicationController
             entries = comment.message.split("\n")
           end
           msg = ''
-          exp = "^#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}"
+          exp = "^#{target.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{target.id}#{ZeptairDistHelper::ACK_ID_SEP}"
 
           entries.each do |entry|
             next if entry.nil? or entry.empty?

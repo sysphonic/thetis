@@ -32,7 +32,7 @@ module ApplicationHelper
     if obj.updated_at.nil?
       return nil
     else
-      return obj.updated_at.strftime('%Y%m%d%H%M%S')
+      return obj.updated_at.utc.strftime('%Y%m%d%H%M%S')
     end
   end
 

@@ -1,5 +1,6 @@
 <%
 attachments = @item.attachments_without_content
+zept_cmd = @item.zeptair_command
 %>
 
 <%= form_tag( {:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id}, :method => 'post', :name => 'form_list') %>
@@ -7,15 +8,15 @@ attachments = @item.attachments_without_content
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
     <td align="right" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-      <%= h t('cap.status') %><%= select_tag 'filter_status',
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <%= t('cap.status') %><%= select_tag 'filter_status',
                                options_for_select([[h(t('msg.all')), ''],
                                                   [h(t('zeptair.no_reply')), ZeptairDistHelper::STATUS_NO_REPLY],
                                                   [h(t('zeptair.replied')), ZeptairDistHelper::STATUS_REPLIED],
                                                   [h(t('msg.completed')), ZeptairDistHelper::STATUS_COMPLETE]], 
                                                   params[:filter_status])  %>
       <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>';"/>
+      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>';"/>
     </td>
   </tr>
   <tr height="5"><td></td></tr>
@@ -36,8 +37,8 @@ attachments = @item.attachments_without_content
             <table align="center" width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" nowrap>
-                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id) %></a>
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
               </tr>
             </table>
@@ -77,6 +78,9 @@ attachments = @item.attachments_without_content
 <% attachments.each_with_index do |attach, attach_idx| %>
     <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
 <% end %>
+<% unless zept_cmd.nil? %>
+    <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
+<% end %>
   </tr>
 <%
 @users.each_with_index do |user, idx|
@@ -88,7 +92,7 @@ attachments = @item.attachments_without_content
     <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if session[:login_user].admin?(User::AUTH_USER) %>
     <td class="<%=td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => user.id %>'; return false;">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>
@@ -109,7 +113,22 @@ attachments = @item.attachments_without_content
     <% else %>
       <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(attach)) %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
-      <% elsif !entries.find{|entry| entry.index("#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
+      <% elsif !entries.find{|entry| entry.index("#{attach.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+      <% else %>
+        <%= ZeptairDistHelper::MARK_NA %>
+      <% end %>
+    <% end %>
+    </td>
+<% end %>
+<% unless zept_cmd.nil? %>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <% if entries.nil? %>
+      <%= ZeptairDistHelper::MARK_NA %>
+    <% else %>
+      <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(zept_cmd)) %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+      <% elsif !entries.find{|entry| entry.index("#{zept_cmd.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{zept_cmd.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
       <% else %>
         <%= ZeptairDistHelper::MARK_NA %>
@@ -133,7 +152,7 @@ attachments = @item.attachments_without_content
 
 function clearGroup()
 {
-  document.form_list.action = "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>";
+  document.form_list.action = "<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>";
   document.form_list.group_id.value = "";
   document.form_list.submit();
   prog("TOP-RIGHT");
@@ -148,7 +167,7 @@ function sortList(col)
   }
 
   prog("TOP-RIGHT");
-  document.form_list.action = "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>";
+  document.form_list.action = "<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>";
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
   document.form_list.submit();
@@ -159,8 +178,8 @@ function showGroupTreeToSelect(group_id)
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'zeptair_dist', :action => 'users', :item_id => @item.id %>", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 //-->

@@ -388,6 +388,8 @@ ja:
     message_info6: "（メッセージ送信者のプロフィールシートが「公開する」に設定されている場合、"
     message_info7: "はそれを参照できます）"
     zeptair_dist_info: "Zeptair Clientの機能により、この記事の閲覧権限のあるユーザーに、添付ファイルが自動的に配布されます。（フィードや新着トレイには表示されません）"
+    zeptair_dist_cmd: "配布完了時にコマンドを実行する"
+    zeptair_dist_cmd_with_confirm: "実行前に確認ダイアログを表示する"
     login_to_register_messages: "（メッセージの登録にはログインが必要です）"
     register_message: "メッセージ登録"
     confirm_to_delete_message: "このメッセージを削除します。よろしいですか？"
@@ -1097,6 +1099,7 @@ ja:
       state: "配布状況"
       response: "応答"
       title: "Zeptair パッケージ配布"
+      command_exec: "コマンド"
   wday:
     sun: "日"
     mon: "月"

@@ -47,7 +47,7 @@ xml.rss('version'    => '2.0',
                 attrs[:id] = feed_enclosure.id
                 attrs[:name] = feed_enclosure.name
                 attrs[:title] = feed_enclosure.title
-                attrs[:updated] = feed_enclosure.updated_at
+                attrs[:timestamp] = feed_enclosure.updated_at
                 attrs[:digest_md5] = feed_enclosure.digest_md5
               end
               xml.enclosure(attrs)

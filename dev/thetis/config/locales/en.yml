@@ -387,6 +387,8 @@ en:
     message_info6: "(If your Profile Sheet is set as public, "
     message_info7: " can refer to it.)"
     zeptair_dist_info: "By the function of Zeptair Client, Attachment files of this Item will be distributed automatically to Users who have authority to view it. (Doesn't appear on Feeds or News Tray)"
+    zeptair_dist_cmd: "Execute commands when distribution completed"
+    zeptair_dist_cmd_with_confirm: "Show confirmation dialog before executing the commands"
     login_to_register_messages: "(Please LOGIN to register messages.)"
     register_message: "Register Message"
     confirm_to_delete_message: "This message will be deleted. Are you sure?"
@@ -1096,6 +1098,7 @@ en:
       state: "Distribution State"
       response: "Response"
       title: "Zeptair Package Distribution"
+      command_exec: "Cmd."
   wday:
     sun: "Sun"
     mon: "Mon"

@@ -20,6 +20,7 @@
 class Item < ActiveRecord::Base
   has_one :team, :dependent => :destroy
   has_one :workflow, :dependent => :destroy
+  has_one :zeptair_command, :dependent => :destroy
   has_many :comments, :dependent => :destroy
   has_many :images, :dependent => :destroy, :order=>'images.xorder'
   has_many :attachments, :dependent => :destroy, :order=>'attachments.xorder'

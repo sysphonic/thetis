@@ -26,8 +26,13 @@ class Location < ActiveRecord::Base
 
     location = nil
     begin
-      location = Location.find(:first, :conditions => ['user_id=?', user.id])
+      location = Location.find(:first, :conditions => "user_id=#{user.id}")
     rescue
+    end
+
+    if !location.nil? and location.expired?
+      location.destroy
+      location = nil
     end
 
     return location
@@ -68,6 +73,15 @@ class Location < ActiveRecord::Base
     end
 
     Location.destroy_all(con)
+  end
+
+  #=== expired?
+  #
+  #Gets if this Location has been expired.
+  #
+  def expired?
+
+    return (self.updated_at.utc < (Time.now.utc - 24*60*60))
   end
 
   #=== get_name

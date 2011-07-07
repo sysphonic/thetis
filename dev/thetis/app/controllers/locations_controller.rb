@@ -96,7 +96,13 @@ class LocationsController < ApplicationController
 
     @locations = Location.get_for_group(@map_group_id)
 
-    @location = nil if !@location.nil? and (@location.group_id != @map_group_id)
+    unless @location.nil?
+      if @location.group_id == @map_group_id
+        @location.update_attribute(:updated_at, Time.now)
+      else
+        @location = nil
+      end
+    end
   end
 
   #=== get_image

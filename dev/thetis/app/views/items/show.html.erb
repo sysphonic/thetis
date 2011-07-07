@@ -607,6 +607,7 @@ end
   <%
   else
     @attachments ||= @item.attachments_without_content
+    zept_cmd = @item.zeptair_command
     comment = ZeptairDistHelper.get_comment_of(@item.id, login_user.id)
     entries = ZeptairDistHelper.get_ack_array_of(comment)
   %>
@@ -631,6 +632,9 @@ end
             <% @attachments.each_with_index do |attach, attach_idx| %>
                 <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
             <% end %>
+            <% unless zept_cmd.nil? %>
+                <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
+            <% end %>
               </tr>
               <tr height="33">
                 <td nowrap>
@@ -649,6 +653,21 @@ end
                   <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(attach)) %>
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
                   <% elsif !entries.find{|entry| entry.index("#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+                  <% else %>
+                    <%= ZeptairDistHelper::MARK_NA %>
+                  <% end %>
+                <% end %>
+                </td>
+            <% end %>
+            <% unless zept_cmd.nil? %>
+                <td nowrap style="text-align:center;">
+                <% if entries.nil? %>
+                  <%= ZeptairDistHelper::MARK_NA %>
+                <% else %>
+                  <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(zept_cmd)) %>
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+                  <% elsif !entries.find{|entry| entry.index("#{zept_cmd.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{zept_cmd.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
                   <% else %>
                     <%= ZeptairDistHelper::MARK_NA %>

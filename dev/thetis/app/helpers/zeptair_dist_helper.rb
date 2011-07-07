@@ -15,29 +15,40 @@
 #
 module ZeptairDistHelper
 
+  public::ACK_CLASS_SEP = '#'
   public::ACK_ID_SEP = '='
-  public::ACK_TIMESTAMP_FORM = '%Y%m%d_%H%M%S'
+  public::ACK_TS_SEP = ':'
 
   public::STATUS_NO_REPLY = 'no_reply'
   public::STATUS_REPLIED = 'replied'
   public::STATUS_COMPLETE = 'complete'
+
+  public::ENTRY_STATUS_SAVED = 'saved'
+  public::ENTRY_STATUS_EXECUTED = 'executed'
+  public::ENTRY_STATUS_ERROR = 'error'
 
   public::MARK_NA = '--'
 
 
   #=== self.get_ack_entry_for
   #
-  #Gets the master ACK entry for the specified Attachment.
+  #Gets the master ACK entry for the specified record.
   #
-  #_attach_:: Target Attachment.
-  #return:: Master ACK entry for the specified Attachment.
+  #_target_:: Target record.
+  #return:: Master ACK entry for the specified record.
   #
-  def self.get_ack_entry_for(attach)
+  def self.get_ack_entry_for(target)
 
-    return nil if attach.nil? or attach.updated_at.nil?
+    return nil if target.nil? or target.updated_at.nil?
 
-    timestamp = attach.updated_at.utc.strftime(ACK_TIMESTAMP_FORM)
-    return "#{attach.id}#{ACK_ID_SEP}#{timestamp}"
+    completed_status = ''
+    if target.instance_of?(Attachment)
+      completed_status = ENTRY_STATUS_SAVED
+    elsif target.instance_of?(ZeptairCommand)
+      completed_status = ENTRY_STATUS_EXECUTED
+    end
+    timestamp = ApplicationHelper.get_timestamp(target)
+    return "#{target.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{target.id}#{ACK_ID_SEP}#{timestamp}#{ZeptairDistHelper::ACK_TS_SEP}#{completed_status}"
   end
 
   #=== self.get_comment_of
@@ -89,21 +100,34 @@ module ZeptairDistHelper
   #
   def self.completed_ack_message(item_id)
 
+    msg = ''
+
     sql = 'select id, updated_at from attachments'
-    sql << " where item_id=#{item_id}"
-    sql << ' order by id ASC'
+    sql << " where item_id=#{item_id} order by id ASC"
     begin
       attachments = Attachment.find_by_sql(sql)
     rescue StandardError => err
       Log.add_error(nil, err)
     end
 
-    return nil if attachments.nil?
+    unless attachments.nil?
+      attachments.each do |attach|
+        msg << ZeptairDistHelper.get_ack_entry_for(attach) + "\n"
+      end
+    end
 
-    msg = ''
-    attachments.each do |attach|
-      entry = ZeptairDistHelper.get_ack_entry_for(attach)
-      msg << "#{entry}\n"
+    sql = 'select id, updated_at from zeptair_commands'
+    sql << " where item_id=#{item_id} order by id ASC"
+    begin
+      zept_cmds = ZeptairCommand.find_by_sql(sql)
+    rescue StandardError => err
+      Log.add_error(nil, err)
+    end
+
+    unless zept_cmds.nil?
+      zept_cmds.each do |zept_cmd|
+        msg << ZeptairDistHelper.get_ack_entry_for(zept_cmd) + "\n"
+      end
     end
 
     return msg
@@ -154,12 +178,21 @@ module ZeptairDistHelper
       feed_entry.author          = item.disp_registered_by(users_cache)
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => item.id))
       feed_entry.guid            = FeedEntry.create_guid(item, ApplicationHelper.get_timestamp(item))
-      feed_entry.title           = '['+Item.human_name+'] '+item.title
-      feed_entry.content     = (item.summary.nil?)?'(No summary)':(item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
-      if $thetis_config[:feed]['feed_content'] == '1' and !item.description.nil?
-        feed_entry.content << "\n#{item.description}"
-        feed_entry.content_encoded = "<![CDATA[#{item.description}]]>"
+      feed_entry.title           = item.title
+      content = nil
+      zept_cmd = item.zeptair_command
+      unless zept_cmd.nil?
+        if zept_cmd.enabled
+          content = '<#ID:' + zept_cmd.id.to_s + "\n"
+          content << '<#Timestamp:' + ApplicationHelper.get_timestamp(zept_cmd) + "\n"
+          if zept_cmd.confirm_exec
+            content << '<#ConfirmExecute' + "\n"
+          end
+          content << zept_cmd.commands
+        end
       end
+      feed_entry.content         = content
+      feed_entry.content_encoded = "<![CDATA[#{item.description}]]>"
 
       attachments = item.attachments_without_content
       if !attachments.nil? and attachments.length > 0
@@ -172,8 +205,7 @@ module ZeptairDistHelper
           feed_enclosure.id = attach.id
           feed_enclosure.name = attach.name
           feed_enclosure.title = attach.title
-          timestamp = attach.updated_at.utc.strftime(ACK_TIMESTAMP_FORM)
-          feed_enclosure.updated_at = timestamp
+          feed_enclosure.updated_at = ApplicationHelper.get_timestamp(attach)
           feed_enclosure.digest_md5 = attach.digest_md5
           feed_entry.enclosures << feed_enclosure
         end

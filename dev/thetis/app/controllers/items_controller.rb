@@ -482,6 +482,12 @@ class ItemsController < ApplicationController
 
     login_user = session[:login_user]
 
+    if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
+        and !login_user.admin?(User::AUTH_ZEPTAIR)
+      render(:text => t('msg.need_to_be_admin'))
+      return
+    end
+
     folder_id = params[:item][:folder_id]
 
     unless Folder.check_user_auth(folder_id, login_user, 'w', true)
@@ -506,12 +512,6 @@ class ItemsController < ApplicationController
       params[:item][:source_id] = nil
     end
 
-    if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
-        and !login_user.admin?(User::AUTH_ZEPTAIR)
-      render(:text => t('msg.need_to_be_admin'))
-      return
-    end
-
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(folder_id)
       @item.attributes = params[:item]
@@ -522,28 +522,28 @@ class ItemsController < ApplicationController
 
       rename_team = false
       delete_team = false
+      delete_zept_cmd = false
 
       if @item.xtype == Item::XTYPE_PROJECT
 
         if params[:item][:xtype] == Item::XTYPE_PROJECT
-
           if params[:item][:title] != @item.title
             rename_team = true
           end
-
         else
-
           # No more Project
           delete_team = true
         end
+      elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST \
+              and params[:item][:xtype] != Item::XTYPE_ZEPTAIR_DIST
+        delete_zept_cmd = true
       end
 
       @item.update_attributes(params[:item])
 
       unless @item.team.nil?
-
         if rename_team
-          @item.team.rename @item.title
+          @item.team.rename(@item.title)
         end
 
         if delete_team
@@ -553,9 +553,30 @@ class ItemsController < ApplicationController
             Log.add_error(request, err)
           end
         end
+      end
 
+      unless @item.zeptair_command
+        if delete_zept_cmd
+          begin
+            @item.zeptair_command.destroy
+          rescue StandardError => err
+            Log.add_error(request, err)
+          end
+        end
       end
     end
+
+    if @item.xtype == Item::XTYPE_ZEPTAIR_DIST
+      if @item.zeptair_command.nil?
+        @item.zeptair_command = ZeptairCommand.new
+      end
+      params[:zeptair_command].delete(:item_id)
+      @item.zeptair_command.attributes = params[:zeptair_command]
+      if @item.zeptair_command.changed?
+        @item.zeptair_command.save!
+      end
+    end
+
     render(:partial => 'ajax_item_basic', :layout => false)
 
   rescue StandardError => err

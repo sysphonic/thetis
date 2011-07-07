@@ -19,11 +19,49 @@
   <% when Item::XTYPE_RESEARCH %>
       <%= Research.human_name %>
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_INFO, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_INFO, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
     <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
+      <%= radio_button 'item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'dispZeptCmdOpt(this.checked); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.zeptair_dist_info') %>');">
+
+      <div id="div_zept_cmd" style="padding-left:20px; display:<%= (@item.xtype == Item::XTYPE_ZEPTAIR_DIST)?'block':'none' %>;">
+        <div style="background-color:#FDFEFF; padding:2px 3px">
+          <%
+          zept_cmd = @item.zeptair_command
+          checked = (!zept_cmd.nil? and zept_cmd.enabled)?'checked':''
+          %>
+          <input name="zeptair_command[enabled]" type="hidden" value="0" />
+          <input type="checkbox" id="check_zept_cmd" name="zeptair_command[enabled]" value="1" onclick="dispZeptCmdEdit(this.checked); modifiedBasic++;" <%= checked %>><label for="check_zept_cmd"><%= t('item.zeptair_dist_cmd') %></label>
+          <div id="div_zept_cmd_edit" style="padding-left:20px; display:<%= (checked=='checked')?'block':'none' %>;">
+            <textarea id="zept_cmd" name="zeptair_command[commands]" rows="4" wrap="off" style="width:95%; background-color:black; color:white;" onChange="modifiedBasic++;"><%= (zept_cmd.nil?)?'':zept_cmd.commands %></textarea><br/>
+            <% checked = (!zept_cmd.nil? and zept_cmd.confirm_exec)?'checked':'' %>
+            <input name="zeptair_command[confirm_exec]" type="hidden" value="0" />
+            <input type="checkbox" id="check_zept_cmd_with_confirm" name="zeptair_command[confirm_exec]" value="1" onclick="modifiedBasic++;" <%= checked %>><label for="check_zept_cmd_with_confirm"><%= t('item.zeptair_dist_cmd_with_confirm') %></label>
+          </div>
+        </div>
+      </div>
+
+<script type="text/javascript">
+dispZeptCmdOpt = function(sw)
+{
+  if (sw) {
+    $("div_zept_cmd").style.display = "block";
+  } else {
+    $("div_zept_cmd").style.display = "none";
+  }
+}
+
+dispZeptCmdEdit = function(sw)
+{
+  if (sw) {
+    $("div_zept_cmd_edit").style.display = "block";
+  } else {
+    $("div_zept_cmd_edit").style.display = "none";
+  }
+}
+</script>
+
     <% end %>
   <% end %>
     </td>
