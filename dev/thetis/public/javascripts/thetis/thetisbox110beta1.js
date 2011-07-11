@@ -66,7 +66,7 @@ ThetisBox.getContainer = function(elem) {
 
 Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   initialize: function(element) {
-    this.element = $(element);
+    this.element = _x(element);
     this.id = ++__thetisbox_id;
   },
   // INPUT
@@ -586,10 +586,10 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       this.drawTray(true, p_caption);
     }
     
-    var box =  $("divThetisBox-"+this.id);
-    var edit = $("thetisBoxEdit-"+this.id);
-    var cap =  $("thetisBoxCaption-"+this.id);
-    var content =  $("thetisBoxContent-"+this.id);
+    var box =  _x("divThetisBox-"+this.id);
+    var edit = _x("thetisBoxEdit-"+this.id);
+    var cap =  _x("thetisBoxCaption-"+this.id);
+    var content =  _x("thetisBoxContent-"+this.id);
   
     // Default Value
     if (edit != null) {
@@ -628,7 +628,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
 
       var chg_h = null;
       switch (p_type) {
-        case "IFRAME":  chg_h = $("iframe_thetisbox-"+this.id); break;
+        case "IFRAME":  chg_h = _x("iframe_thetisbox-"+this.id); break;
         case "TRAY":    chg_h = content; break;
         default:        break;
       }
@@ -786,7 +786,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     var bodyScroll = ThetisBox.getBodyScroll();
 
     for (var i=0; i < excludeArray.length; i++) {
-      var excludeCtrl = $(excludeArray[i]);
+      var excludeCtrl = _x(excludeArray[i]);
       if (excludeCtrl == null) {
         //alert(excludeArray[i] + "is null!!");
         continue;
@@ -866,7 +866,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
 
 ThetisBox.hide = function(id) {
 
-  var box = $("divThetisBox-"+id);
+  var box = _x("divThetisBox-"+id);
   if (box == null) {
     return;
   }
@@ -876,7 +876,7 @@ ThetisBox.hide = function(id) {
 
 ThetisBox.remove = function(id) {
 
-  var box = $("divThetisBox-"+id);
+  var box = _x("divThetisBox-"+id);
   if (box == null) {
     return;
   }
@@ -910,7 +910,7 @@ ThetisBox.remove = function(id) {
 
 ThetisBox.isAlive = function() {
 
-  return ($("divThetisBox-"+id) != null);
+  return (_x("divThetisBox-"+id) != null);
 }
 
 ThetisBox.clear = function() {
@@ -933,13 +933,13 @@ ThetisBox.setOnClose = function(id, func) {
 // Default Buttons
 ThetisBox.fireDefaultButton = function(event, id, target) {
 
-  var box = $("divThetisBox-"+id);
+  var box = _x("divThetisBox-"+id);
 
   if (event.keyCode == 13) {    // [Enter]
     if (box.defaultFired) {
       return false;
     } else {
-      var defaultButton = $(target);
+      var defaultButton = _x(target);
 
       if (defaultButton != null && defaultButton.click != "undefined") {
         box.defaultFired = true;
@@ -975,14 +975,14 @@ ThetisBoxProgressor.prototype = {
 
   clear: function() {
     for (var i=1; i<=20; i++) {
-      $("thetisBoxProgress-"+this.id+"_"+i).style.backgroundColor = "transparent";
+      _x("thetisBoxProgress-"+this.id+"_"+i).style.backgroundColor = "transparent";
     }
     this.progressAt = 0;
     this.progressDirection = 1;
   },
 
   update: function() {
-    if ($("thetisBoxProgress-"+this.id+"_1") == null) {
+    if (_x("thetisBoxProgress-"+this.id+"_1") == null) {
       clearTimeout(this.progressTimer);
       return;
     }
@@ -1017,7 +1017,7 @@ ThetisBoxProgressor.prototype = {
       } else {
         bgcolor = "transparent";
       }
-      $("thetisBoxProgress-"+this.id+"_"+this.progressAt).style.backgroundColor = bgcolor;
+      _x("thetisBoxProgress-"+this.id+"_"+this.progressAt).style.backgroundColor = bgcolor;
     }
     this.progressTimer = setTimeout("ThetisBoxProgressor.progress("+this.id+")", pause?700:20);
   }
@@ -1127,9 +1127,9 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
 {
   var parent = null;
   if (parentTreeId == "") {
-    parent = $(rootDiv);
+    parent = _x(rootDiv);
   } else {
-    parent = $(rootDiv+":"+parentTreeId);
+    parent = _x(rootDiv+":"+parentTreeId);
     if (parent == null) {
       alert("No parentTree found! "+parentTreeId);
       return null;
@@ -1209,10 +1209,10 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
       }
       base.appendChild(d);
 
-      menu.href = "javaScript:"+onclick+" var selKeeper=$('"+selKeeperId+"'); if (selKeeper != null) { if (selKeeper.value == '"+menu.id+"') { ThetisBox.toggleTree('"+d.id+"'); } else { ThetisBox.openTree('"+d.id+"', true); } ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); }";
+      menu.href = "javaScript:"+onclick+" var selKeeper=_x('"+selKeeperId+"'); if (selKeeper != null) { if (selKeeper.value == '"+menu.id+"') { ThetisBox.toggleTree('"+d.id+"'); } else { ThetisBox.openTree('"+d.id+"', true); } ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); }";
 
     } else {
-      menu.href = "javaScript:"+onclick+" var selKeeper=$('"+selKeeperId+"'); if (selKeeper != null) { ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); }";
+      menu.href = "javaScript:"+onclick+" var selKeeper=_x('"+selKeeperId+"'); if (selKeeper != null) { ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); }";
     }
   }
   return firstMenuId;
@@ -1221,7 +1221,7 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
 ThetisBox.trimTree = function(rootDiv)
 {
   return;    // doesn't work
-  var d = $(rootDiv);
+  var d = _x(rootDiv);
   if (d == null) {
     return;
   }
@@ -1283,11 +1283,11 @@ ThetisBox._openTree = function(tree, open)
 
 ThetisBox.selectTree = function(selKeeperId, menuId, frm, forceOpen)
 {
-  var lastSelected = $(selKeeperId).value;
+  var lastSelected = _x(selKeeperId).value;
   if (lastSelected != "") {
-    $(lastSelected).style.backgroundColor = "";
+    _x(lastSelected).style.backgroundColor = "";
   }
-  var menuItem = $(menuId);
+  var menuItem = _x(menuId);
   if (menuItem == null) {
     return;
   }
@@ -1297,7 +1297,7 @@ ThetisBox.selectTree = function(selKeeperId, menuId, frm, forceOpen)
   } else {
     menuItem.style.backgroundColor = "aquamarine";
   }
-  $(selKeeperId).value = menuId;
+  _x(selKeeperId).value = menuId;
 
   if (forceOpen == true)
   {
@@ -1318,7 +1318,7 @@ ThetisBox.selectTree = function(selKeeperId, menuId, frm, forceOpen)
 
 ThetisBox.isSelectedTree = function(selKeeperId, menuId)
 {
-  return ($(selKeeperId).value == menuId);
+  return (_x(selKeeperId).value == menuId);
 }
 
 ThetisBox.getDivIdFromMenuId = function(menuId)
@@ -1333,7 +1333,7 @@ ThetisBox.getMenuIdFromDivId = function(divId)
 
 ThetisBox.getTreeSelect = function(id)
 {
-  var selKeeper = $("thetisBoxSelKeeper-"+id);
+  var selKeeper = _x("thetisBoxSelKeeper-"+id);
   if (selKeeper == null) {
     return null;
   }

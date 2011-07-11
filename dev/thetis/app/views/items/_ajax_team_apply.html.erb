@@ -5,34 +5,34 @@
     ---
 <% else %>
   <%= form_tag( {:controller => 'items', :action => 'add_comment', :id => @item.id }, :name => 'form_team_apply', :method => 'post') %>
-    <%= hidden_field 'comment', 'item_id', :value => @item.id %>
-    <%= hidden_field 'comment', 'user_id', :value => login_user.id %>
-    <%= hidden_field 'comment', 'xtype', :value => Comment::XTYPE_APPLY %>
+    <%= hidden_field('comment', 'item_id', :value => @item.id) %>
+    <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
+    <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_APPLY) %>
     <div style="padding-bottom:10px;">
-      <%=h t('team.apply_info') %><br/>
+      <%= t('team.apply_info') %><br/>
     </div>
     <table align="center" cellspacing="0" cellpadding="0">
       <tr>
         <td class="img_button_td" onclick="doTeamApply();">
-          <%=h t('btn.apply_for') %>
+          <%= t('btn.apply_for') %>
         </td>
       </tr>
     </table>
     <div style="padding-top:10px;">
-      <%=h t('team.message_info') %><br/>
+      <%= t('team.message_info') %><br/>
     </div>
   </form>
 <% end %>
 </div>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>
 
 
 <script type="text/javascript">
 
 doTeamApply = function()
 {
-  confm("<%=h t('team.confirm_apply_for') %>", "_doTeamApply()");
+  confm("<%= t('team.confirm_apply_for') %>", "_doTeamApply()");
 }
 
 _doTeamApply = function()

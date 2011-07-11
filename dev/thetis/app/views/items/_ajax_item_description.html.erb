@@ -1,5 +1,5 @@
 
-<%= render :partial => 'common/error', :locals => {:obj => @item} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
 <table align="center" width="90%" cellpadding="0" cellspacing="2">
   <tr height="10"><td></td></tr>
@@ -13,7 +13,7 @@
 -->
   <tr>
     <td>
-      <%= text_area 'item', 'description', :cols => '60', :rows => '20', :wrap => 'off', :style => 'display:none;' %>
+      <%= text_area('item', 'description', :cols => '60', :rows => '20', :wrap => 'off', :style => 'display:none;') %>
     </td>
   </tr>
 </table>

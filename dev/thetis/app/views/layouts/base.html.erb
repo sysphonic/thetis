@@ -11,7 +11,7 @@
 
 <%= stylesheet_link_tag 'thetis101', :media => 'all' %>
 <%= javascript_include_tag 'prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar' %>
-<%= javascript_include_tag 'thetis/common101', 'thetis/thetis010', 'thetis/thetisbox110' %>
+<%= javascript_include_tag 'thetis/common110beta3', 'thetis/thetis110beta2', 'thetis/thetisbox110beta1' %>
 <%= javascript_include_tag 'dojo/dojo', 'dojo/src/io/IframeIO' %>
 
 <style type="text/css">
@@ -27,9 +27,9 @@
 <!--
 
 ThetisBox.setTitle("<%=h $thetis_config[:general]['app_title'] %>");
-ThetisBox.setOK("<%=h t('btn.ok') %>");
-ThetisBox.setCancel("<%=h t('btn.cancel') %>");
-ThetisBox.setClose("<%=h t('btn.close') %>");
+ThetisBox.setOK("<%= t('btn.ok') %>");
+ThetisBox.setCancel("<%= t('btn.cancel') %>");
+ThetisBox.setClose("<%= t('btn.close') %>");
 ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/close.png");
 <%
 login_user = session[:login_user]
@@ -94,7 +94,7 @@ function showTopicBox()
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('topicbox.title') %>";
   thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%=h $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
-  $('divThetisBox-' + thetisBox.id).style.zIndex += 1;
+  _x("divThetisBox-" + thetisBox.id).style.zIndex += 1;
 }
 
 function _forBugfullIE(div, list)
@@ -118,13 +118,13 @@ function doResize()
   mainWidth = mainRegion.width;
   mainHeight = mainRegion.height;
 
-  var main_div = $("main_div");
+  var main_div = _x("main_div");
   main_div.style.height = mainHeight + "px";
   main_div.style.width = mainWidth + "px";
 
   var div = null;
 
-  if (div = $("div_desktop")) {
+  if (div = _x("div_desktop")) {
 
     var h = mainHeight - 20;
     div.style.height = h + "px";
@@ -142,7 +142,7 @@ function doResize()
       }
     }
 
-    var toolbox = $("toolbox");
+    var toolbox = _x("toolbox");
     var toolbox_top = mainHeight - 30;
     var toolbox_left = 50;
     if (toolbox != null) {
@@ -151,26 +151,26 @@ function doResize()
       toolbox.style.left = toolbox_left + "px";
     }
 
-    var menubox = $("menubox");
+    var menubox = _x("menubox");
     if (menubox != null) {
       menubox.style.top = (toolbox_top - 85) + "px";
       menubox.style.left = (toolbox_left + 26) + "px";
     }
 
-  } else if (div = $("div_list")) {
+  } else if (div = _x("div_list")) {
 
     div.style.height = (mainHeight - 125) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_items"));
+      _forBugfullIE(div, _x("list_items"));
     }
 
-  } else if ((div = $("folderTree")) || (div = $("groupTree"))) {
+  } else if ((div = _x("folderTree")) || (div = _x("groupTree"))) {
 
   <% if params[:controller] == 'folders' and !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
-    var h = mainHeight - 140;
+    var h = mainHeight - 130;
   <% else %>
-    var h = mainHeight - 100;
+    var h = mainHeight - 90;
   <% end %>
 
     div.style.height = h + "px";
@@ -181,22 +181,22 @@ function doResize()
     }
     div.style.width = (mainWidth-100)/2 + "px";
 
-    var view = $("div_view");
+    var view = _x("div_view");
     view.style.height = div.offsetHeight + "px";
     view.style.width = div.offsetWidth + "px";
 
-    $("td_tree").style.width = div.offsetWidth + "px";
-    $("td_view").style.width = div.offsetWidth + "px";
+    _x("td_tree").style.width = div.offsetWidth + "px";
+    _x("td_view").style.width = div.offsetWidth + "px";
 
-  } else if (div = $("mailTree")) {
+  } else if (div = _x("mailTree")) {
 
     var h = mainHeight - 120;
 
-    var td_tree = $("td_tree");
-    var td_view = $("td_view");
+    var td_tree = _x("td_tree");
+    var td_view = _x("td_view");
 
-    var div_mails = $("div_mails");
-    var div_mail_content = $("div_mail_content");
+    var div_mails = _x("div_mails");
+    var div_mail_content = _x("div_mail_content");
 
     div.style.width = (mainWidth-118) / 4 + "px";
     div.style.height = (h - 40 - 20) + "px";
@@ -206,10 +206,10 @@ function doResize()
     td_tree.style.height = h + "px" ;
     td_view.style.height  = td_tree.style.height;
 
-    var treeMainWidth = $("tree_main").clientWidth;
-    var mailTreePos = Position.cumulativeOffset(div);
-    var borderPos = Position.cumulativeOffset($("drag_v_border"));
-    var leftWidth = borderPos[0] - mailTreePos[0] - 24;
+    var treeMainWidth = _x("tree_main").clientWidth;
+    var mailTreePos = getPos(div);
+    var borderPos = getPos(_x("drag_v_border"));
+    var leftWidth = borderPos.x - mailTreePos.x - 24;
     div_mails.style.width  = (treeMainWidth - leftWidth - 38) + "px";
 //  div_mails.style.width  = td_view.style.width;
     div_mails.style.height = ((h-5) / 2) + "px";
@@ -217,88 +217,88 @@ function doResize()
     div_mail_content.style.width  = div_mails.style.width;
     div_mail_content.style.height = ((h-5) / 2) + "px";
 
-  } else if (div = $("div_users")) {
+  } else if (div = _x("div_users")) {
 
     div.style.height = (mainHeight - 130) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_users"));
+      _forBugfullIE(div, _x("list_users"));
     }
 
-  } else if (div = $("div_addresses")) {
+  } else if (div = _x("div_addresses")) {
 
     div.style.height = (mainHeight - 130) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_addresses"));
+      _forBugfullIE(div, _x("list_addresses"));
     }
 
-  } else if (div = $("div_logs")) {
+  } else if (div = _x("div_logs")) {
 
     div.style.height = (mainHeight - 130) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_logs"));
+      _forBugfullIE(div, _x("list_logs"));
     }
 
-  } else if (div = $("div_teams")) {
+  } else if (div = _x("div_teams")) {
 
     div.style.height = (mainHeight - 120) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_teams"));
+      _forBugfullIE(div, _x("list_teams"));
     }
 
-  } else if (div = $("div_equipment")) {
+  } else if (div = _x("div_equipment")) {
 
     div.style.height = (mainHeight - 120) + "px";
 
     if (is_MS) {
-      _forBugfullIE(div, $("list_equipment"));
+      _forBugfullIE(div, _x("list_equipment"));
     }
 
 /* GREP WITH BUGFULL-IE!
-  } else if (div = $("div_schedule")) {
+  } else if (div = _x("div_schedule")) {
 
     div.style.height = (mainHeight - 70) + "px";
 */
-  } else if (div = $("div_calendar")) {
+  } else if (div = _x("div_calendar")) {
 
     div.style.height = (mainHeight - 100) + "px";
 
-  } else if (div = $("div_workflow_list")) {
+  } else if (div = _x("div_workflow_list")) {
 
     div.style.height = (mainHeight - 40) + "px";
 
-    $("workflow_list_received").style.height = (mainHeight - 200) + "px";
-    $("div_ajax_workflow").style.height = (mainHeight - 330) + "px";
+    _x("workflow_list_received").style.height = (mainHeight - 200) + "px";
+    _x("div_ajax_workflow").style.height = (mainHeight - 330) + "px";
 
-  } else if (div = $("div_login")) {
+  } else if (div = _x("div_login")) {
 
     div.style.height = (mainHeight - 20) + "px";
 
   } else {
 
-    if (div = $("div_item_workflow")) {
+    if (div = _x("div_item_workflow")) {
       div.style.height = (mainHeight - 140) + "px";
     }
-    if (div = $("div_item_basic")) {
+    if (div = _x("div_item_basic")) {
       div.style.height = (mainHeight - 140) + "px";
     }
-    if (div = $("div_item_description")) {
+    if (div = _x("div_item_description")) {
       div.style.height = (mainHeight - 140) + "px";
     }
-    if (div = $("div_item_image")) {
+    if (div = _x("div_item_image")) {
       div.style.height = (mainHeight - 140) + "px";
     }
-    if (div = $("div_item_attachment")) {
+    if (div = _x("div_item_attachment")) {
       div.style.height = (mainHeight - 140) + "px";
     }
 
-    if (div = $("div_research_records")) {
+    if (div = _x("div_research_records")) {
       div.style.height = (mainHeight - 137) + "px";
     }
-    if (div = $("div_research_lists")) {
+    if (div = _x("div_research_lists")) {
       div.style.height = (mainHeight - 137) + "px";
     }
   }
@@ -324,9 +324,9 @@ window.onresize = doResize;
   </table>
 </div>
 
-<%= render :partial => 'layouts/popup' %>
+<%= render(:partial => 'layouts/popup') %>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>
 
 </body>
 </html>

@@ -41,15 +41,15 @@ if !acceptLangs.nil? and acceptLangs.split(',').first.downcase.index('ja') == 0
     content += "  </tr>";
     content += "  <tr>";
     content += "    <td align='left' style='border:1px solid blue; padding:10px;'>";
-    content += "      <input type='radio' id='mode_add' name='mode' value='add' /><label for='mode_add'> <%=h t('msg.add_only')%></label><br/>";
-    content += "      <input type='radio' id='mode_update' name='mode' value='update' /><label for='mode_update'> <%=h t('msg.update_all')%></label>";
+    content += "      <input type='radio' id='mode_add' name='mode' value='add' /><label for='mode_add'> <%= t('msg.add_only')%></label><br/>";
+    content += "      <input type='radio' id='mode_update' name='mode' value='update' /><label for='mode_update'> <%= t('msg.update_all')%></label>";
     content += "    </td>";
     content += "  </tr>";
   }
   content += "  <tr style='height:15px;'><td></td></tr>";
   content += "  <tr>";
   content += "    <td align='center'>";
-  content += "      <input type='button' value='<%= h t('btn.execute') %>' onclick='"+onOk+"' style='width:80px;' />";
+  content += "      <input type='button' value='<%= t('btn.execute') %>' onclick='"+onOk+"' style='width:80px;' />";
   content += "    </td>";
   content += "  </tr>";
   content += "</table>";

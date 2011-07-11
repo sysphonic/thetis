@@ -22,7 +22,7 @@
                     <table align="center" width="85%" cellpadding="0" cellspacing="2">
                     <% unless @address.name.nil? or @address.name.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name"><%=h Address.human_attribute_name('name') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name"><%= Address.human_attribute_name('name') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.name %>
                         </td>
@@ -30,7 +30,7 @@
                     <% end %>
                     <% unless @address.email1.nil? or @address.email1.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email1"><%=h Address.human_attribute_name('email1') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email1"><%= Address.human_attribute_name('email1') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.email1 %>
                         </td>
@@ -38,7 +38,7 @@
                     <% end %>
                     <% unless @address.email2.nil? or @address.email2.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email2"><%=h Address.human_attribute_name('email2') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email2"><%= Address.human_attribute_name('email2') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.email2 %>
                         </td>
@@ -46,7 +46,7 @@
                     <% end %>
                     <% unless @address.email3.nil? or @address.email3.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email3"><%=h Address.human_attribute_name('email3') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email3"><%= Address.human_attribute_name('email3') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.email3 %>
                         </td>
@@ -54,7 +54,7 @@
                     <% end %>
                     <% unless @address.tel1.nil? or @address.tel1.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel1"><%=h Address.human_attribute_name('tel1') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.tel1 %>
                         </td>
@@ -62,7 +62,7 @@
                     <% end %>
                     <% unless @address.tel2.nil? or @address.tel2.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel2"><%=h Address.human_attribute_name('tel2') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.tel2 %>
                         </td>
@@ -70,7 +70,7 @@
                     <% end %>
                     <% unless @address.tel3.nil? or @address.tel3.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel3"><%=h Address.human_attribute_name('tel3') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.tel3 %>
                         </td>
@@ -78,7 +78,7 @@
                     <% end %>
                     <% unless @address.fax.nil? or @address.fax.empty? %>
                       <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_fax"><%=h Address.human_attribute_name('fax') %></label></td>
+                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_fax"><%= Address.human_attribute_name('fax') %></label></td>
                         <td class="item_value_td">
                           <%=h @address.fax %>
                         </td>

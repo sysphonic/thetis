@@ -8,7 +8,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <%= stylesheet_link_tag 'thetis101' %>
-<%= javascript_include_tag 'prototype', 'thetis/common101', 'thetis/thetis010' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta3', 'thetis/thetis110beta2' %>
 
 <style type=text/css>
 A:link {
@@ -27,11 +27,11 @@ A:hover {
 function setLoginName(name)
 {
   if (name == null || name.length <= 0) {
-    $("login_name").innerHTML = "";
-    $("table_login_user").style.display = "none";
+    _x("login_name").innerHTML = "";
+    _x("table_login_user").style.display = "none";
   } else {
-    $("login_name").innerHTML = name;
-    $("table_login_user").style.display = "block";
+    _x("login_name").innerHTML = name;
+    _x("table_login_user").style.display = "block";
   }
 }
 
@@ -59,7 +59,7 @@ function progMain()
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td align="center" style="padding-left:5px;">
-            <a href="#" onclick="progMain(); top.main.location.href='<%= url_for :controller => 'users', :action => 'edit' %>'" style="color:navy;">
+            <a href="#" onclick="progMain(); top.main.location.href='<%= url_for(:controller => 'users', :action => 'edit') %>'" style="color:navy;">
               <table id="table_login_user" cellspacing="0" cellpadding="0" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
                 <tr>
                   <td align="center" nowrap style="padding:5px; padding-left:10px; padding-right:10px; line-height:1.0;">

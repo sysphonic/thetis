@@ -18,11 +18,11 @@ unless @user.nil? or @user.groups.nil?
           <tr>
             <td width="10"></td>
             <td width="15">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showGroupTreeToSelect('<%= group_id %>', true);" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showGroupTreeToSelect('<%= group_id %>', true);" />
             </td>
             <td width="10">&nbsp;</td>
             <td width="15">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%=ApplicationHelper.h_s_quote Group.get_path(group_id, groups_cache) %>', <%= @user.id %>); return false;" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%=ApplicationHelper.h_s_quote Group.get_path(group_id, groups_cache) %>', <%= @user.id %>); return false;" />
             </td>
           </tr>
         </table>

@@ -24,15 +24,15 @@
 
 <SCRIPT language="javascript" type="text/javascript">
 
-var desktop = $("div_desktop");
+var desktop = _x("div_desktop");
 
 var deskWidth = desktop.clientWidth;
 var deskHeight = desktop.clientHeight;
-var deskPos = Position.cumulativeOffset(desktop);
+var deskPos = getPos(desktop);
 
-var toy = $("<%= toy_id %>");
-toy.style.left = (deskPos[0] + deskWidth * <%= @toy.x %> / 10000) + "px";
-toy.style.top = (deskPos[1] + deskHeight * <%= @toy.y %> / 10000) + "px";
+var toy = _x("<%= toy_id %>");
+toy.style.left = (deskPos.x + deskWidth * <%= @toy.x %> / 10000) + "px";
+toy.style.top = (deskPos.y + deskHeight * <%= @toy.y %> / 10000) + "px";
 toy.style.display = "inline";
 
 </SCRIPT>

@@ -11,7 +11,7 @@
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" valign="top" style="padding:0px; color:royalblue; font-size:14pt;">
-                  <b><%=h t('cap.folders') %></b>
+                  <b><%= t('cap.folders') %></b>
                 </td>
               </tr>
               <%
@@ -20,7 +20,7 @@
               %>
               <tr height="30">
                 <td align="left" valign="top" style="padding-left:50px; color:navy;">
-                  <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder.parent_id %>'; document.form_list.submit(); return false;">/ <%=h t('folder.parent_path') %> </a><br/>
+                  <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder.parent_id %>'; document.form_list.submit(); return false;">/ <%= t('folder.parent_path') %> </a><br/>
                 </td>
               </tr>
               <% end %>

@@ -6,7 +6,7 @@
   <tr height="10"><td></td></tr>
   <tr>
     <td valign="top">
-      <%= render :partial => 'user_form' %>
+      <%= render(:partial => 'user_form') %>
     </td>
   </tr>
 </table>
@@ -15,13 +15,13 @@
   <tr height="20"><td></td></tr>
   <tr>
   <% if params[:from] == 'users_list' %>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%= h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
     <td width="15"></td>
   <% end %>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); document.form_user.submit();">
-        <%=h t('btn.register')%>
+        <%= t('btn.register')%>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -34,7 +34,7 @@
 <!--
 function showTips() {
   var thetisBox = new ThetisBox;
-  thetisBox.show("TOP-RIGHT", "", "MESSAGE", "", "<span class='font_msg_bold'><%=h t('user.u_name')%></span> <%=h t('msg.and')%> <span class='font_msg_bold'><%=h User.human_attribute_name('email')%></span><%=h t('user.required_for_registration')%><br/><span class='font_msg_bold' style='color:firebrick;'><%=h t('user.initial_password')%></span><%=h t('user.will_be_sent_by1')%><span class='font_msg_bold'><%=h User.human_attribute_name('email')%></span><%=h t('user.will_be_sent_by2')%><br/><%=h t('user.login_update_pwd_within1')%><span class='font_msg_bold'><%=h t('user.within_3_days')%></span><%=h t('user.login_update_pwd_within2')%>", "");
+  thetisBox.show("TOP-RIGHT", "", "MESSAGE", "", "<span class='font_msg_bold'><%= t('user.u_name')%></span> <%= t('msg.and')%> <span class='font_msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.required_for_registration')%><br/><span class='font_msg_bold' style='color:firebrick;'><%= t('user.initial_password')%></span><%= t('user.will_be_sent_by1')%><span class='font_msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.will_be_sent_by2')%><br/><%= t('user.login_update_pwd_within1')%><span class='font_msg_bold'><%= t('user.within_3_days')%></span><%= t('user.login_update_pwd_within2')%>", "");
 }
 //-->
 </script>

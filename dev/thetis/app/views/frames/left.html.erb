@@ -8,7 +8,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <%= stylesheet_link_tag 'thetis101' %>
-<%= javascript_include_tag 'prototype', 'thetis/common101', 'thetis/thetis010' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta3', 'thetis/thetis110beta2' %>
 
   <STYLE type=text/css>
   A:link {
@@ -43,7 +43,7 @@ function doResize()
   if (isNaN(height))  {
     height = mainHeight;
   }
-  $("left_table").style.height = height + "px";
+  _x("left_table").style.height = height + "px";
 }
 
 var min = -1;
@@ -51,7 +51,7 @@ function doUpdateTime()
 {
   setTimeout("doUpdateTime()", 1000);
 
-  var div_time = $("div_time");
+  var div_time = _x("div_time");
   if (div_time == null) {
     return;
   }
@@ -99,21 +99,21 @@ function getDay(date)
 function setLogin(login_name, is_admin)
 {
   if (is_admin) {
-    $("adminMenu").style.display = "block";
+    _x("adminMenu").style.display = "block";
   } else {
-    $("adminMenu").style.display = "none";
+    _x("adminMenu").style.display = "none";
   }
 
   if (login_name != null && login_name.length > 0) {
-    $("menu_login").innerHTML= "<%= t('btn.logout') %>";
+    _x("menu_login").innerHTML= "<%= t('btn.logout') %>";
   } else {
-    $("menu_login").innerHTML= "<%= t('btn.login') %>";
+    _x("menu_login").innerHTML= "<%= t('btn.login') %>";
   }
 }
 
 function doLogin()
 {
-  if ($("menu_login").innerHTML == "<%= t('btn.logout') %>") {
+  if (_x("menu_login").innerHTML == "<%= t('btn.logout') %>") {
     top.main.location.href = "<%= url_for(:controller => 'login', :action => 'logout') %>";
   } else {
     top.main.location.href = "<%= url_for(:controller => 'login', :action => 'index') %>";
@@ -191,11 +191,11 @@ function showAdminMenu(obj)
       offsetFromTop = parseInt(top.header.document.getElementById("offset_from_top").value, 10);
     } catch (e) {
     }
-    var pos = Position.cumulativeOffset(obj);
+    var pos = getPos(obj);
 
     var bodyScroll = top.main.getBodyScroll();
     adminMenu.style.left = bodyScroll.left + "px";
-    adminMenu.style.top = (bodyScroll.top + pos[1] - 110 + offsetFromTop) + "px";
+    adminMenu.style.top = (bodyScroll.top + pos.y - 110 + offsetFromTop) + "px";
     adminMenu.style.display = "block";
   }
 }
@@ -219,9 +219,9 @@ function progMain()
 
 function toggleSymbol(sw)
 {
-  var tr_top_space = $("tr_top_space");
-  var tr_symbol = $("tr_symbol");
-  var tr_drop_down = $("tr_drop_down");
+  var tr_top_space = _x("tr_top_space");
+  var tr_symbol = _x("tr_symbol");
+  var tr_drop_down = _x("tr_drop_down");
 
   if (sw) {
     tr_top_space.style.display = "table-row";

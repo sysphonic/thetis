@@ -83,17 +83,19 @@ class FeedsController < ApplicationController
     _build_site_info(root_url)
     @site_title = t('zeptair.dist.title')
 
-    @entries = ZeptairDistHelper.get_feeds(user, root_url)
+    if params[:admins].nil? or params[:admins].empty?
+      admins = nil
+    else
+      admins = params[:admins].split(',')
+    end
+
+    @entries = ZeptairDistHelper.get_feeds(user, root_url, admins)
     @enable_custom_spec = true
 
     respond_to do |format|
       format.html { render :action => 'index.rss' }
       format.rss
       format.atom
-=begin
-      format.html { render :action => 'index.atom' }
-      format.atom
-=end
     end
   end
 

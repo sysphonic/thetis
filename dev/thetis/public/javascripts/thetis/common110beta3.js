@@ -36,6 +36,26 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
+function _x(elemId)
+{
+  if (elemId && (typeof(elemId.valueOf())) == "string") {
+    return document.getElementById(elemId);
+  } else {
+    return elemId;
+  }
+}
+
+function posAbsolute(elem)
+{
+  var pos = getPos(elem);
+
+  elem.style.top    = pos.y + "px";
+  elem.style.left   = pos.x + "px";
+  elem.style.width  = elem.clientWidth + "px";
+  elem.style.height = elem.clientHeight + "px";
+  elem.style.position = "absolute";
+}
+
 function getNaviLanguage()
 {
   var lang = window.navigator.systemLanguage;
@@ -72,7 +92,7 @@ function addInputHidden(frm, id, name, value)
       }
     }
   }
-  var elem = document.createElement('input');
+  var elem = document.createElement("input");
   elem.type = "hidden";
   if (id != null) {
     elem.id = id;
@@ -82,9 +102,8 @@ function addInputHidden(frm, id, name, value)
   frm.appendChild(elem);
 }
 
-function removeElem(id)
+function removeElem(elem)
 {
-  var elem=$(id);
   if (elem != null) {
     elem.parentNode.removeChild(elem);
   }

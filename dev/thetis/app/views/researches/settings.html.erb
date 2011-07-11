@@ -10,11 +10,11 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
-              <%=h t('cap.control') %>
+              <%= t('cap.control') %>
             </td>
           </tr>
           <tr>
-            <td class="prim_cap_td" style="width:40%;" nowrap><%=h Research.human_attribute_name('status') %></td>
+            <td class="prim_cap_td" style="width:40%;" nowrap><%= Research.human_attribute_name('status') %></td>
             <td class="item_value_td" id="status">
               <%
               status = Research.get_status
@@ -35,16 +35,16 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" style="width:40%;" nowrap><%=h t('research.reception') %></td>
+            <td class="item_cap_td" style="width:40%;" nowrap><%= t('research.reception') %></td>
             <td class="item_value_td">
-              <input type="button" id="button_start" style="display:<%= disp_button_start %>; width:100px;" value="<%=h t('btn.start') %>" onclick="doStart()">
-              <input type="button" id="button_stop" style="display:<%= disp_button_stop %>; width:100px;" value="<%=h t('btn.stop') %>" onclick="doStop()">
+              <input type="button" id="button_start" style="display:<%= disp_button_start %>; width:100px;" value="<%= t('btn.start') %>" onclick="doStart()">
+              <input type="button" id="button_stop" style="display:<%= disp_button_stop %>; width:100px;" value="<%= t('btn.stop') %>" onclick="doStop()">
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" style="width:40%;"><%=h t('btn.reset_all_users') %></td>
+            <td class="item_cap_td" style="width:40%;"><%= t('btn.reset_all_users') %></td>
             <td class="item_value_td">
-              <input type="button" value="<%=h t('btn.reset') %>" onclick="doReset()" style="width:100px;">
+              <input type="button" value="<%= t('btn.reset') %>" onclick="doReset()" style="width:100px;">
             </td>
           </tr>
         </table>
@@ -57,7 +57,7 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
-              <%=h t('research.pages') %>&nbsp;
+              <%= t('research.pages') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= raw(t('research.pages_info')) %>');">
             </td>
           </tr>
@@ -65,7 +65,7 @@
             <td class="item_value_td">
               <%= form_tag( {:controller => 'researches', :action => 'destroy_q_page', :id => '' }, :name => 'form_ajax_page', :method => 'post') %>
                 <div id="div_ajax_page">
-                  <%= render :partial => 'ajax_q_page' %>
+                  <%= render(:partial => 'ajax_q_page') %>
                 </div>
               </form>
 
@@ -73,7 +73,7 @@
                 <tr height="6"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreatePage();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.create') %>
+                    <%= t('btn.create') %>
                   </td>
                 </tr>
               </table>
@@ -88,19 +88,19 @@
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%;"><%=h t('research.groups_for_statistics') %></td>
+            <td class="item_cap_td" nowrap style="width:100%;"><%= t('research.groups_for_statistics') %></td>
           </tr>
           <tr>
             <td class="item_value_td">
               <div id="div_statistics_groups">
-                <%= render :partial => 'ajax_statistics_groups' %>
+                <%= render(:partial => 'ajax_statistics_groups') %>
               </div>
 
               <table align="right" width="120" cellspacing="0" cellpadding="0">
                 <tr height="6"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0', false);" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.add_group') %>
+                    <%= t('btn.add_group') %>
                   </td>
                 </tr>
               </table>
@@ -116,7 +116,7 @@
       <!-- Choices Type -->
       <div id="div_choices" class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
 
-        <%= render :partial => 'ajax_q_ctrls' %>
+        <%= render(:partial => 'ajax_q_ctrls') %>
 
       </div>
 
@@ -127,8 +127,8 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -140,13 +140,13 @@
 function changeStatus(sw)
 {
   if (sw) {
-    $("status").innerHTML = "<%=h status_started %>";
-    $("button_start").style.display = "none";
-    $("button_stop").style.display = "block";
+    _x("status").innerHTML = "<%=h status_started %>";
+    _x("button_start").style.display = "none";
+    _x("button_stop").style.display = "block";
   } else {
-    $("status").innerHTML = "<%=h status_stopped %>";
-    $("button_start").style.display = "block";
-    $("button_stop").style.display = "none";
+    _x("status").innerHTML = "<%=h status_stopped %>";
+    _x("button_start").style.display = "block";
+    _x("button_stop").style.display = "none";
   }
 }
 
@@ -155,7 +155,7 @@ function doStart()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'researches', :action => 'start' %>",
+          "<%= url_for(:controller => 'researches', :action => 'start') %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -166,9 +166,9 @@ function doStart()
 
                 if (request.responseText == "") {
                   changeStatus(true);
-                  tips("<%=h t('msg.start_success')%>");
+                  tips("<%= t('msg.start_success')%>");
                 } else {
-                  msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                 }
               }
           }
@@ -177,7 +177,7 @@ function doStart()
 
 function doStop()
 {
-  confm("<%=h t('research.confirm_to_stop') %>", "_doStop()");
+  confm("<%= t('research.confirm_to_stop') %>", "_doStop()");
 }
 
 function _doStop()
@@ -185,7 +185,7 @@ function _doStop()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'researches', :action => 'stop' %>",
+          "<%= url_for(:controller => 'researches', :action => 'stop') %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -196,9 +196,9 @@ function _doStop()
 
                 if (request.responseText == "") {
                   changeStatus(false);
-                  tips("<%=h t('msg.stop_success')%>");
+                  tips("<%= t('msg.stop_success')%>");
                 } else {
-                  msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                 }
               }
           }
@@ -207,7 +207,7 @@ function _doStop()
 
 function doReset()
 {
-  confm("<%=h t('research.confirm_to_reset_users') %>", "_doReset()");
+  confm("<%= t('research.confirm_to_reset_users') %>", "_doReset()");
 }
 
 function _doReset()
@@ -215,7 +215,7 @@ function _doReset()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'researches', :action => 'reset' %>",
+          "<%= url_for(:controller => 'researches', :action => 'reset') %>",
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,
@@ -226,9 +226,9 @@ function _doReset()
 
                 if (request.responseText == "") {
                   changeStatus(false);
-                  tips("<%=h t('msg.reset_success')%>");
+                  tips("<%= t('msg.reset_success')%>");
                 } else {
-                  msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                 }
               }
           }
@@ -241,7 +241,7 @@ function doCreatePage()
 
   new Ajax.Updater(
               "div_ajax_page",
-              "<%= url_for :controller => 'researches', :action => 'create_q_page' %>",
+              "<%= url_for(:controller => 'researches', :action => 'create_q_page') %>",
               {
                 parameters:"authenticity_token=<%= form_authenticity_token %>",
                 asynchronous:true,
@@ -256,7 +256,7 @@ function doCreatePage()
 
 function doDeletePage(item_id, title)
 {
-  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('msg.confirm_to_delete') %>", "_doDeletePage("+item_id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeletePage("+item_id+")");
 }
 
 function _doDeletePage(item_id)
@@ -284,7 +284,7 @@ function renewCtrls()
 
   new Ajax.Updater(
               "div_choices",
-              "<%= url_for :controller => 'researches', :action => 'renew_q_ctrl' %>",
+              "<%= url_for(:controller => 'researches', :action => 'renew_q_ctrl') %>",
               {
                parameters:"authenticity_token=<%= form_authenticity_token %>",
                asynchronous:true,
@@ -298,12 +298,12 @@ function renewCtrls()
 
 function onSelectQCodes(q_id)
 {
-  var selTypes = $("sel_q_types");
+  var selTypes = _x("sel_q_types");
   selTypes.disabled = false;
 
   clearQCtrls();
 
-  q_param = $(q_id).value;
+  q_param = _x(q_id).value;
 
   if (q_param != null && q_param != "") {
     q_type = q_param.split(":")[0];
@@ -312,7 +312,7 @@ function onSelectQCodes(q_id)
     selTypes.value = q_type;
   }
 
-  $("q_cap").value = $(q_id + "_cap").innerHTML;
+  _x("q_cap").value = _x(q_id + "_cap").innerHTML;
 }
 
 function onSelectQTypes(q_type)
@@ -322,8 +322,8 @@ function onSelectQTypes(q_type)
 
 function showQCtrl(q_type, q_vals)
 {
-  var ctrlAlts = $("ctrl_alts");
-  var ctrlTextarea = $("ctrl_textarea");
+  var ctrlAlts = _x("ctrl_alts");
+  var ctrlTextarea = _x("ctrl_textarea");
 
   ctrlAlts.style.display = "none";
   ctrlTextarea.style.display = "none";
@@ -335,13 +335,13 @@ function showQCtrl(q_type, q_vals)
     case "checkbox":
     case "select":
       if (q_vals != null) {
-        $("ctrl_alts_vals").value = q_vals;
+        _x("ctrl_alts_vals").value = q_vals;
       }
       ctrlAlts.style.display = "block";
       break;
     case "textarea":
       if (q_vals != null) {
-        $("ctrl_textarea_rows").value = q_vals;
+        _x("ctrl_textarea_rows").value = q_vals;
       }
       ctrlTextarea.style.display = "block";
       break;
@@ -350,13 +350,13 @@ function showQCtrl(q_type, q_vals)
 
 function clearQCtrls()
 {
-  $("ctrl_alts_vals").value = "";
-  $("ctrl_textarea_rows").value = "";
+  _x("ctrl_alts_vals").value = "";
+  _x("ctrl_textarea_rows").value = "";
 }
 
 function makeQCtrlParam()
 {
-  var selTypes = $("sel_q_types");
+  var selTypes = _x("sel_q_types");
   var q_type = selTypes.value;
 
   var q_param = selTypes.value+":";
@@ -365,18 +365,18 @@ function makeQCtrlParam()
     case "radio":
     case "checkbox":
     case "select":
-      var vals = $("ctrl_alts_vals").value;
+      var vals = _x("ctrl_alts_vals").value;
       var lines = replaceAll(vals, "\r\n", "\n").split("\n");
       for (var i=0; i < lines.length; i++) {
         if (getByteSize(lines[i]) > 255) {
-          msg("<%=h t('msg.each_line_up_to_chars') %><br/>"+truncate(lines[i], 30));
+          msg("<%= t('msg.each_line_up_to_chars') %><br/>"+truncate(lines[i], 30));
           return null;
         }
       }
       q_param += vals;
       break;
     case "textarea":
-      q_param += $("ctrl_textarea_rows").value;
+      q_param += _x("ctrl_textarea_rows").value;
       break;
   }
   return q_param;
@@ -384,7 +384,7 @@ function makeQCtrlParam()
 
 function doApplyCtrl()
 {
-  var selCodes = $("sel_q_codes");
+  var selCodes = _x("sel_q_codes");
   var q_id = selCodes.value;
 
   var q_param = makeQCtrlParam();
@@ -392,12 +392,12 @@ function doApplyCtrl()
     return;
   }
 
-  $(q_id).value = q_param;
+  _x(q_id).value = q_param;
   item_id = q_id.split(":")[0];
   q_code = q_id.split(":")[1];
 
-  var cap = $("q_cap").value;
-  $(q_id + "_cap").innerHTML = cap
+  var cap = _x("q_cap").value;
+  _x(q_id + "_cap").innerHTML = cap
 
   var f = document.createElement("form");
   f.method = "POST";
@@ -410,7 +410,7 @@ function doApplyCtrl()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'researches', :action => 'update_q_ctrl' %>?item_id="+item_id+"&q_code="+q_code+"&caption="+encodeURIComponent(cap),
+          "<%= url_for(:controller => 'researches', :action => 'update_q_ctrl') %>?item_id="+item_id+"&q_code="+q_code+"&caption="+encodeURIComponent(cap),
           {
             asynchronous:true,
             evalScripts:false,
@@ -421,9 +421,9 @@ function doApplyCtrl()
                 removeElem(f);
 
                 if (request.responseText == "") {
-                  tips("<%=h t('msg.update_success')%>");
+                  tips("<%= t('msg.update_success')%>");
                 } else {
-                  msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                 }
               }
           }
@@ -432,7 +432,7 @@ function doApplyCtrl()
 
 function doResetCtrl()
 {
-  confm("<%=h t('research.confirm_to_reset_choices') %>", "_doResetCtrl()");
+  confm("<%= t('research.confirm_to_reset_choices') %>", "_doResetCtrl()");
 }
 
 function _doResetCtrl()
@@ -441,7 +441,7 @@ function _doResetCtrl()
 
   new Ajax.Updater(
               "div_choices",
-              "<%= url_for :controller => 'researches', :action => 'reset_q_ctrl' %>",
+              "<%= url_for(:controller => 'researches', :action => 'reset_q_ctrl') %>",
               {
                 parameters:"authenticity_token=<%= form_authenticity_token %>",
                 asynchronous:true,
@@ -457,26 +457,26 @@ function showGroupTreeToSelect(group_id, do_change)
 {
   var caption = "";
   if (do_change == true) {
-    caption = "<%=h t('group.select_to_change_to')%>";
+    caption = "<%= t('group.select_to_change_to')%>";
   } else {
-    caption = "<%=h t('group.select_to_add')%>";
+    caption = "<%= t('group.select_to_add')%>";
   }
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'researches', :action => 'add_statistics_group' %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_statistics_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_statistics_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   var params = new Array("authenticity_token=<%= form_authenticity_token %>");
   if (do_change == true) {
     params.push("current_id="+group_id);
   }
   thetisBox.setAdditionalParams(params);
   thetisBox.show("CENTER", "", "TREE", "", caption, "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 function doRemoveGroup(group_id, path)
 {
-  confm("<%=h t('paren.square.left') %>" + path + "<%=h t('msg.confirm_to_except') %>", "_doRemoveGroup("+group_id+")");
+  confm("<%= t('paren.square.left') %>" + path + "<%= t('msg.confirm_to_except') %>", "_doRemoveGroup("+group_id+")");
 }
 
 function _doRemoveGroup(group_id)
@@ -485,7 +485,7 @@ function _doRemoveGroup(group_id)
 
   new Ajax.Updater(
         "div_statistics_groups",
-        "<%= url_for :controller => 'researches', :action => 'delete_statistics_group' %>?group_id=" + group_id,
+        "<%= url_for(:controller => 'researches', :action => 'delete_statistics_group') %>?group_id=" + group_id,
         {
           parameters:"authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,

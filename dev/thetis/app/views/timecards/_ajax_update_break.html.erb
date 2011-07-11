@@ -39,7 +39,7 @@ end
   <table style="border-collapse:collapse; background-color:white" id="times_table" align="center" width="95%" cellpadding="0" cellspacing="0">
     <tr>
       <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
-        <%=h t('timecard.within_standard') %>
+        <%= t('timecard.within_standard') %>
       </td>
       <td class="item_value_td" colspan="2" width="60%" style="padding-left:15px; border:solid black 1px;">
         <%
@@ -59,7 +59,7 @@ end
     </tr>
     <tr>
       <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
-        <%=h t('timecard.usual_overtime') %>
+        <%= t('timecard.usual_overtime') %>
       </td>
       <td class="item_value_td" width="40%" style="padding-left:15px; border:solid black 1px;">
         <%
@@ -76,7 +76,7 @@ end
     </tr>
     <tr>
       <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
-        <%=h t('timecard.midnight_overtime') %>
+        <%= t('timecard.midnight_overtime') %>
       </td>
       <td class="item_value_td" style="padding-left:15px; border:solid black 1px;">
         <%= ApplicationHelper.float_exp(midnight_overtime / 60.0, 2) %>
@@ -102,7 +102,7 @@ end
     </tr>
     <tr>
       <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
-        <%=h t('timecard.break') %>
+        <%= t('timecard.break') %>
       </td>
       <td class="item_value_td" colspan="3" width="80%" style="padding-left:15px; border:solid black 1px;">
         <%
@@ -120,8 +120,8 @@ end
           )
         </span>
     <% if editable %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="inputBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
     <% end %>
         <br/>
         <% end %>
@@ -131,7 +131,7 @@ end
           <tr height="5"><td></td></tr>
           <tr>
             <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="inputBreak();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-              <%=h t('timecard.add_break') %>
+              <%= t('timecard.add_break') %>
             </td>
           </tr>
         </table>
@@ -140,16 +140,16 @@ end
     </tr>
   </table>
 
-  <%= render :partial => 'common/flash_notice' %>
+  <%= render(:partial => 'common/flash_notice') %>
 
   <input type="hidden" id="timecard_id" name="timecard_id" value="<%= @timecard.id %>" />
   
   <script type="text/javascript">
-    $("buttons_with_clear").style.display = "block";
-    $("buttons_without_clear").style.display = "none";
+    _x("buttons_with_clear").style.display = "block";
+    _x("buttons_without_clear").style.display = "none";
 
     <% unless params[:action] == 'edit' %>
-    changeWorkcode($("timecard_workcode").value);
+    changeWorkcode(_x("timecard_workcode").value);
     <% end %>
 
   </script>

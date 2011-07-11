@@ -1,13 +1,13 @@
 
 <% login_user = session[:login_user] %>
 
-<%= render :partial => 'common/error', :locals => {:obj => @item} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
 <table align="center" width="90%" cellpadding="0" cellspacing="2">
   <tr height="15"><td></td></tr>
 <% unless @item.nil? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_xtype"><%= h Item.human_attribute_name('xtype') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_xtype"><%= Item.human_attribute_name('xtype') %></label></td>
     <td class="item_value_td">
   <%
   case @item.xtype
@@ -19,10 +19,10 @@
   <% when Item::XTYPE_RESEARCH %>
       <%= Research.human_name %>
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_INFO, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
+      <%= radio_button('item', 'xtype', Item::XTYPE_INFO, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
+      <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
     <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
-      <%= radio_button 'item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'dispZeptCmdOpt(this.checked); modifiedBasic++' %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
+      <%= radio_button('item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'dispZeptCmdOpt(this.checked); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.zeptair_dist_info') %>');">
 
       <div id="div_zept_cmd" style="padding-left:20px; display:<%= (@item.xtype == Item::XTYPE_ZEPTAIR_DIST)?'block':'none' %>;">
@@ -46,18 +46,18 @@
 dispZeptCmdOpt = function(sw)
 {
   if (sw) {
-    $("div_zept_cmd").style.display = "block";
+    _x("div_zept_cmd").style.display = "block";
   } else {
-    $("div_zept_cmd").style.display = "none";
+    _x("div_zept_cmd").style.display = "none";
   }
 }
 
 dispZeptCmdEdit = function(sw)
 {
   if (sw) {
-    $("div_zept_cmd_edit").style.display = "block";
+    _x("div_zept_cmd_edit").style.display = "block";
   } else {
-    $("div_zept_cmd_edit").style.display = "none";
+    _x("div_zept_cmd_edit").style.display = "none";
   }
 }
 </script>
@@ -68,9 +68,9 @@ dispZeptCmdEdit = function(sw)
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_title"><%= h Item.human_attribute_name('title') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_title"><%= Item.human_attribute_name('title') %></label></td>
     <td class="item_value_td">
-      <%= text_field 'item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++' %>
+      <%= text_field('item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++') %>
     </td>
   </tr>
 <% if !@item.nil? and @item.is_a_copy? %>
@@ -93,28 +93,28 @@ dispZeptCmdEdit = function(sw)
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_folder_id"><%= h Folder.human_name %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_folder_id"><%= Folder.human_name %></label></td>
     <td class="item_value_td">
 <% if !@item.nil? and Folder.get_path(@item.folder_id).include?('/$') %>
   ---
-  <%= hidden_field_tag 'item[folder_id]', @item.folder_id %>
+  <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
 <% elsif !@item.nil? and @item.xtype == Item::XTYPE_PROFILE %>
   <%= @item.get_folder_path %>
-  <%= hidden_field_tag 'item[folder_id]', @item.folder_id %>
+  <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
 <% else %>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
            <td align="left" nowrap width="20%">
              <span id="div_folderPath" style="color:red">
                <%=h (@item.nil?)?'/(root)':@item.get_folder_path %>
-               <%= hidden_field_tag 'item[folder_id]', (@item.nil?)?'0':@item.folder_id %>
+               <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
              </span>
            </td>
            <td width="10"></td>
            <td nowrap>
              <table align="left" width="120" cellspacing="0" cellpadding="0">
                <tr>
-                 <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect($('item_folder_id').value); modifiedBasic++;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
+                 <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect(_x('item_folder_id').value); modifiedBasic++;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
                    <%= t('btn.select_folder') %>
                  </td>
                </tr>
@@ -123,7 +123,7 @@ dispZeptCmdEdit = function(sw)
         </tr>
       </table>
       <div style="padding-top:4px;">
-        <input type="checkbox" id="check_create_folder" name="check_create_folder" value="1" onclick="$('create_folder').style.display=(this.checked?'inline':'none'); modifiedBasic++;"><label for="check_create_folder"><%=h t('item.create_folder_path') %></label><br/>
+        <input type="checkbox" id="check_create_folder" name="check_create_folder" value="1" onclick="_x('create_folder').style.display=(this.checked?'inline':'none'); modifiedBasic++;"><label for="check_create_folder"><%= t('item.create_folder_path') %></label><br/>
         <div style="padding-top:4px; padding-left:30px;">
           <span id="create_folder" style="display:none;"> <%= t('item.subfolder_name') %><input name="create_folder_name" type="text" value="" onchange="modifiedBasic++;"></span>
         </div>
@@ -132,47 +132,47 @@ dispZeptCmdEdit = function(sw)
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_summary"><%= h Item.human_attribute_name('summary') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_summary"><%= Item.human_attribute_name('summary') %></label></td>
     <td class="item_value_td">
-      <%= text_area 'item', 'summary', :rows => "3", :wrap => "off", :style => 'width:100%', :onChange => 'modifiedBasic++' %>
+      <%= text_area('item', 'summary', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++') %>
     </td>
   </tr>
   <tr>
     <td class="item_cap_td" style="background-color:#97DCFF;">
       <label for="item_public">
         <%= Item.human_attribute_name('public') %>&nbsp;
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.public_info1') %><br/><%=h t('item.public_info2') %>');">
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.public_info1') %><br/><%= t('item.public_info2') %>');">
       </label>
     </td>
     <td class="item_value_td">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH) %>
       ---
-      <%= hidden_field_tag 'item[public]', '0' %>
+      <%= hidden_field_tag('item[public]', '0') %>
 <% else %>
-      <%= check_box 'item', 'public', :onChange => 'modifiedBasic++' %><label for="item_public"><%= h t('item.set_public') %></label>
+      <%= check_box('item', 'public', :onChange => 'modifiedBasic++') %><label for="item_public"><%= t('item.set_public') %></label>
 <% end %>
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_update_message"><%= h t('item.update_message') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_update_message"><%= t('item.update_message') %></label></td>
     <td class="item_value_td">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH or @item.xtype == Item::XTYPE_PROFILE)  %>
       ---
-      <%= hidden_field_tag 'item[update_message]', '' %>
+      <%= hidden_field_tag('item[update_message]', '') %>
 <% else %>
       <%= text_area 'item', 'update_message', :rows => "3", :wrap => "off", :style => 'width:100%', :onChange => 'modifiedBasic++' %>
-      &nbsp;<span style="color:blueviolet; font-size:9pt;"><%=h t('item.update_message_info') %></span>
+      &nbsp;<span style="color:blueviolet; font-size:9pt;"><%= t('item.update_message_info') %></span>
 <% end %>
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_layout"><%= h Item.human_attribute_name('layout') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_layout"><%= Item.human_attribute_name('layout') %></label></td>
     <td class="item_value_td">
       <table cellspacing="0" cellpadding="0">
         <tr>
           <td width="10"></td>
           <td valign="top">
-            <%= radio_button 'item', 'layout', 'A', :onClick => 'modifiedBasic++' %><label for="item_layout_a"> A</label>
+            <%= radio_button('item', 'layout', 'A', :onClick => 'modifiedBasic++') %><label for="item_layout_a"> A</label>
             <table border="1" cellspacing="0" cellpadding="0" width="50">
               <tr>
                 <td>
@@ -198,7 +198,7 @@ dispZeptCmdEdit = function(sw)
           </td>
           <td width="20"></td>
           <td valign="top">
-            <%= radio_button 'item', 'layout', 'B', :onClick => 'modifiedBasic++' %><label for="item_layout_b"> B</label>
+            <%= radio_button('item', 'layout', 'B', :onClick => 'modifiedBasic++') %><label for="item_layout_b"> B</label>
             <table border="1" cellspacing="0" cellpadding="0" width="50">
               <tr>
                 <td>
@@ -226,7 +226,7 @@ dispZeptCmdEdit = function(sw)
           </td>
           <td width="20"></td>
           <td valign="top">
-            <%= radio_button 'item', 'layout', 'C', :onClick => 'modifiedBasic++' %><label for="item_layout_c"> C</label>
+            <%= radio_button('item', 'layout', 'C', :onClick => 'modifiedBasic++') %><label for="item_layout_c"> C</label>
             <table border="1" cellspacing="0" cellpadding="0" width="50">
               <tr>
                 <td align="center" colspan="2">
@@ -264,9 +264,9 @@ function showFolderTreeToSelect(folder_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'folders', :action => 'get_path' %>\" onsubmit=\"new Ajax.Updater('div_folderPath', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('msg.select_folder_to_save_in')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'folders', :action => 'ajax_get_tree' %>", folder_id);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'get_path') %>\" onsubmit=\"new Ajax.Updater('div_folderPath', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('msg.select_folder_to_save_in')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 </script>
 

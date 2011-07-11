@@ -4,7 +4,7 @@
       <table align="left" width="120" cellspacing="0" cellpadding="0">
         <tr>
           <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect('<%= (@folder_id.nil?)?'0':@folder_id %>', '<%= (@schedule.nil?)?'':(@schedule.id) %>');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%=h t('btn.select_folder') %>
+            <%= t('btn.select_folder') %>
           </td>
         </tr>
       </table>
@@ -42,6 +42,6 @@
     next if items_selected.include?(item_id)
     disp = sprintf('[%2s] %s', item_id, title)
   %>
-    <option value="<%=h item_id %>"><%=h disp %></option>
+    <option value="<%= item_id %>"><%=h disp %></option>
   <% end %>
 </select>

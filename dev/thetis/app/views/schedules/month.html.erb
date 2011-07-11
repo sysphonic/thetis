@@ -15,12 +15,12 @@ login_user = session[:login_user]
         <table align="left" cellspacing="0" cellpadding="0" width="65">
           <tr>
             <td align="left" nowrap width="30">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'day', :id => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true' %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
             </td>
             <% if login_user.admin? User::AUTH_SCHEDULE %>
             <td width="5"></td>
             <td align="left" nowrap width="30">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'schedules', :action => 'configure' %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
             </td>
             <% end %>
           </tr>
@@ -29,7 +29,7 @@ login_user = session[:login_user]
       </td>
       <td align="center" nowrap width="40%">
         <% if login_user.nil? %>
-          &nbsp;&nbsp;<span style="color:navy"><%=h t('schedule.login_required') %></span>&nbsp;&nbsp;
+          &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
         <% end %>
       </td>
       <td align="right" nowrap width="30%">
@@ -47,7 +47,7 @@ login_user = session[:login_user]
           display << [h(t('group.other_group')), 'group_other']
         end
         %>
-        <%= h t('cap.display') %>
+        <%= t('cap.display') %>
         <%= select_tag 'display',
              options_for_select(display, params[:display]),
              :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
@@ -72,7 +72,7 @@ login_user = session[:login_user]
     <td align="right" width="25%">
     <% if params[:user_id].nil? and !login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
       <input type="hidden" name="timecard_icons" value="false" />
-      <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for :controller => 'schedules', :action => 'month' %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%=h t('timecard.show_icons') %></label>
+      <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
     <% end %>
     </td>
   </tr>
@@ -165,7 +165,7 @@ for wd in 0..6 do
       unless timecard.nil?
     %>
         <% alt = h(timecard.workcode_name) %>
-        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => date_s, :user_id => login_user.id %>'; return false;">
+        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => date_s, :user_id => login_user.id) %>'; return false;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
           <%
           options = ''
@@ -196,7 +196,7 @@ end
 %>
 </table>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
 </form>
 
 
@@ -205,7 +205,7 @@ end
 
 function doPageCalendar(date)
 {
-  var url = "<%= url_for :controller => 'schedules', :action => 'month' %>?date=" + date;
+  var url = "<%= url_for(:controller => 'schedules', :action => 'month') %>?date=" + date;
 
 <% unless params[:user_id].nil? %>
   url += "&user_id=<%= params[:user_id] %>";
@@ -217,7 +217,7 @@ function doPageCalendar(date)
 
 function doMoveToDay(date)
 {
-  var url = "<%= url_for :controller => 'schedules', :action => 'day' %>?date=" + date;
+  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?date=" + date;
 
 <% unless params[:user_id].nil? %>
   url += "&user_id=<%= params[:user_id] %>";
@@ -239,7 +239,7 @@ function selectMonth()
   var content = getYmSelector("onYmSelectOK()", "onYmSelectCancel()");
 
   thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('msg.select_month') %>";
+  thetisBox.title = "<%= t('msg.select_month') %>";
   thetisBox.overflow = "hide";
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
@@ -273,8 +273,8 @@ function getYmSelector(onOk, onCancel)
   content += "  </tr>";
   content += "  <tr>";
   content += "    <td align='center' valign='top'>";
-  content += "      <input type='button' value='<%= h t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
-  content += "      &nbsp;<input type='button' value='<%= h t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr height='100%'>";
@@ -302,9 +302,9 @@ function showGroupTree()
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'schedules', :action => 'get_group_users' %>\" onsubmit=\"var display=$('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", "");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_x('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show') %>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }
 
 //-->

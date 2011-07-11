@@ -20,24 +20,24 @@
                   <table cellspacing="5" align="center">
                     <tr>
                       <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
-                        <label for="user_name"><%=h t('user.u_name') %><%=h t('msg.colon') %></label>
+                        <label for="user_name"><%= t('user.u_name') %><%= t('msg.colon') %></label>
                       </td>
                       <td align="left">
-                        <%= text_field 'user', 'name', :style => "width:200px; ime-mode:disabled;" %>
+                        <%= text_field('user', 'name', :style => 'width:200px; ime-mode:disabled;') %>
                       </td>
                     </tr>
                     <tr>
                       <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
-                        <label for="user_password"><%=h User.human_attribute_name('password') %><%=h t('msg.colon') %></label>
+                        <label for="user_password"><%= User.human_attribute_name('password') %><%= t('msg.colon') %></label>
                       </td>
                       <td align="left">
-                        <%= password_field 'user', 'password', :style => "width:200px" %>
+                        <%= password_field('user', 'password', :style => 'width:200px') %>
                       </td>
                     </tr>
                     <tr height="10"><td></td></tr>
                     <tr>
                       <td colspan="2" align="center">
-                        <input type="submit" value="<%=h t('btn.login') %>" style="width:100px; height:28px;">
+                        <input type="submit" value="<%= t('btn.login') %>" style="width:100px; height:28px;">
                       </td>
                     </tr>
                   </table>
@@ -46,24 +46,24 @@
               <tr height="10">
                 <td align="right">
                 <% if $thetis_config[:menu]['open_user_reg'] == '1' %>
-                  <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'new' %>'; return false;">
-                    <%=h t('login.to_user_reg') %>
+                  <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new') %>'; return false;">
+                    <%= t('login.to_user_reg') %>
                   </a>
                    &nbsp;
                 <% end %>
-                  <a class="a_underline" href="#" onclick="showSendPassword(); return false;"><%=h t('login.to_send_password')%></a>
+                  <a class="a_underline" href="#" onclick="showSendPassword(); return false;"><%= t('login.to_send_password')%></a>
                   &nbsp;
                 </td>
               </tr>
             </table>
 
-            <%= hidden_field_tag 'fwd_controller', params[:fwd_controller] %>
-            <%= hidden_field_tag 'fwd_action', params[:fwd_action] %>
+            <%= hidden_field_tag('fwd_controller', params[:fwd_controller]) %>
+            <%= hidden_field_tag('fwd_action', params[:fwd_action]) %>
             <%
             unless params[:fwd_params].nil?
               params[:fwd_params].each do |key, val|
             %>
-              <%= hidden_field_tag "fwd_params[#{key}]", val %>
+              <%= hidden_field_tag("fwd_params[#{key}]", val) %>
             <%
               end
             end
@@ -103,7 +103,7 @@ function showSendPassword()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("TOP-RIGHT", "", "INPUT", "<%= url_for :controller => 'login', :action => 'send_password' %>", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
+  thetisBox.show("TOP-RIGHT", "", "INPUT", "<%= url_for(:controller => 'login', :action => 'send_password') %>", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
 }
 //-->
 </script>

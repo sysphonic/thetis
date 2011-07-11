@@ -10,10 +10,10 @@
       <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:10px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('config.general_settings') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('config.general_settings') %></td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('timecard.year_begins_from') %></td>
+            <td class="item_cap_td" nowrap><%= t('timecard.year_begins_from') %></td>
             <td class="item_value_td" style="width:70%;">
               <select id="year_begins_from" name="timecard[year_begins_from]">
               <%
@@ -27,11 +27,11 @@
                 <option value= "<%= month %>" <%= selected %>><%= month %></option>
               <% end %>
               </select>
-              <%=h t('timecard.month') %>
+              <%= t('timecard.month') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('timecard.month_begins_at') %></td>
+            <td class="item_cap_td" nowrap><%= t('timecard.month_begins_at') %></td>
             <td class="item_value_td" style="width:70%;">
               <select id="month_begins_at" name="timecard[month_begins_at]">
               <%
@@ -45,15 +45,15 @@
                 <option value= "<%= day %>" <%= selected %>><%= day %></option>
               <% end %>
               </select>
-              <%=h t('timecard.day') %>
+              <%= t('timecard.day') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('user.u_name') %></td>
+            <td class="item_cap_td" nowrap><%= t('user.u_name') %></td>
             <td class="item_value_td" style="width:70%;">
               <% checked = (@yaml_timecard['always_by_full_name']=='1')?'checked':'' %>
               <input name="timecard[always_by_full_name]" type="hidden" value="0" />
-              <input type="checkbox" id="always_by_full_name" name="timecard[always_by_full_name]" value="1" <%= checked %>><label for="always_by_full_name"><%=h t('timecard.always_fullname') %></label>
+              <input type="checkbox" id="always_by_full_name" name="timecard[always_by_full_name]" value="1" <%= checked %>><label for="always_by_full_name"><%= t('timecard.always_fullname') %></label>
             </td>
           </tr>
         </table>
@@ -62,10 +62,10 @@
       <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('menu.paid_holidays') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('menu.paid_holidays') %></td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('timecard.default_days') %></td>
+            <td class="item_cap_td" nowrap><%= t('timecard.default_days') %></td>
             <td class="item_value_td" style="width:70%">
               <%
               days = 0
@@ -73,11 +73,11 @@
                 days = @yaml_timecard['paidhld_per_year']
               end
               %>
-              <input type="text" id="paidhld_per_year" name="timecard[paidhld_per_year]" value="<%= days %>" style="width:50px" /> <%=h t('timecard.days_per_year') %>
+              <input type="text" id="paidhld_per_year" name="timecard[paidhld_per_year]" value="<%= days %>" style="width:50px" /> <%= t('timecard.days_per_year') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('timecard.carry_over') %></td>
+            <td class="item_cap_td" nowrap><%= t('timecard.carry_over') %></td>
             <td class="item_value_td">
               <%
               paidhld_carry_over = @yaml_timecard['paidhld_carry_over']
@@ -85,9 +85,9 @@
               checked_1_year = (paidhld_carry_over == PaidHoliday::CARRY_OVER_1_YEAR)?'checked':''
               checked_no_expiration = (paidhld_carry_over == PaidHoliday::CARRY_OVER_NO_EXPIRATION)?'checked':''
               %>
-              <input type="radio" id="paidhld_carryover_none" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NONE %>" <%= checked_none %>><label for="paidhld_carryover_none"><%=h t('msg.none') %></label><br/>
-              <input type="radio" id="paidhld_carryover_1_year" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_1_YEAR %>" <%= checked_1_year %>><label for="paidhld_carryover_1_year"><%=h t('timecard.one_year') %></label><br/>
-              <input type="radio" id="paidhld_carryover_no_expiration" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NO_EXPIRATION %>" <%= checked_no_expiration %>><label for="paidhld_carryover_no_expiration"><%=h t('timecard.no_expiration') %></label><br/>
+              <input type="radio" id="paidhld_carryover_none" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NONE %>" <%= checked_none %>><label for="paidhld_carryover_none"><%= t('msg.none') %></label><br/>
+              <input type="radio" id="paidhld_carryover_1_year" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_1_YEAR %>" <%= checked_1_year %>><label for="paidhld_carryover_1_year"><%= t('timecard.one_year') %></label><br/>
+              <input type="radio" id="paidhld_carryover_no_expiration" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NO_EXPIRATION %>" <%= checked_no_expiration %>><label for="paidhld_carryover_no_expiration"><%= t('timecard.no_expiration') %></label><br/>
             </td>
           </tr>
         </table>
@@ -100,20 +100,20 @@
       <div class="info_area" style="width:100%; padding-top:10px; padding-bottom:20px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%=h t('timecard.working_rules') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('timecard.working_rules') %></td>
           </tr>
           <tr>
-            <td class="item_cap_td"><%=h t('timecard.default_breaks') %></td>
+            <td class="item_cap_td"><%= t('timecard.default_breaks') %></td>
             <td class="item_value_td" style="width:70%;">
               <div id="div_break">
-                <%= render :partial => 'ajax_config_break' %>
+                <%= render(:partial => 'ajax_config_break') %>
               </div>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td">
-              <%=h t('timecard.standard_labor_time') %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('timecard.standard_labor_time_info')%><br/>');">
+              <%= t('timecard.standard_labor_time') %>
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.standard_labor_time_info')%><br/>');">
             </td>
             <td class="item_value_td" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
@@ -134,7 +134,7 @@
                   <option value="<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.hours') %>
+                <%= t('msg.hours') %>
                 <select id="standard_hours_min">
                 <%
                 cur_min = nil
@@ -151,10 +151,10 @@
                   <option value="<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.minutes') %>
+                <%= t('msg.minutes') %>
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
-                <%=h t('timecard.for_off_am') %><br/>
+                <%= t('timecard.for_off_am') %><br/>
                 <select id="standard_hours_hour_when_off_am">
                 <%
                 standard_hours_when_off_am = @yaml_timecard['standard_hours_when_off_am']
@@ -172,7 +172,7 @@
                   <option value="<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.hours') %>
+                <%= t('msg.hours') %>
                 <select id="standard_hours_min_when_off_am">
                 <%
                 cur_min = nil
@@ -189,10 +189,10 @@
                   <option value="<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.minutes') %>
+                <%= t('msg.minutes') %>
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
-                <%=h t('timecard.for_off_pm') %><br/>
+                <%= t('timecard.for_off_pm') %><br/>
                 <select id="standard_hours_hour_when_off_pm">
                 <%
                 standard_hours_when_off_pm = @yaml_timecard['standard_hours_when_off_pm']
@@ -210,7 +210,7 @@
                   <option value="<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.hours') %>
+                <%= t('msg.hours') %>
                 <select id="standard_hours_min_when_off_pm">
                 <%
                 cur_min = nil
@@ -227,18 +227,18 @@
                   <option value="<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
                 <% end %>
                 </select>
-                <%=h t('msg.minutes') %>
+                <%= t('msg.minutes') %>
               </div>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td">
-              <%=h t('timecard.commence_at') %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('timecard.commence_at_info')%><br/>');">
+              <%= t('timecard.commence_at') %>
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.commence_at_info')%><br/>');">
             </td>
             <td class="item_value_td" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
-                <select id="commence_at_hour" onchange="changeHour(this.value, $('commence_at_min'));">
+                <select id="commence_at_hour" onchange="changeHour(this.value, _x('commence_at_min'));">
                   <option value=""></option>
                 <%
                 commence_at = @yaml_timecard['commence_at']
@@ -257,7 +257,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="commence_at_min" onchange="changeMin(this.value, $('commence_at_hour'));">
+                <select id="commence_at_min" onchange="changeMin(this.value, _x('commence_at_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -276,8 +276,8 @@
                 </select>
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
-                <%=h t('timecard.for_off_am') %><br/>
-                <select id="commence_at_hour_when_off_am" onchange="changeHour(this.value, $('commence_at_min_when_off_am'));">
+                <%= t('timecard.for_off_am') %><br/>
+                <select id="commence_at_hour_when_off_am" onchange="changeHour(this.value, _x('commence_at_min_when_off_am'));">
                   <option value=""></option>
                 <%
                 commence_at_when_off_am = @yaml_timecard['commence_at_when_off_am']
@@ -296,7 +296,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="commence_at_min_when_off_am" onchange="changeMin(this.value, $('commence_at_hour_when_off_am'));">
+                <select id="commence_at_min_when_off_am" onchange="changeMin(this.value, _x('commence_at_hour_when_off_am'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -318,12 +318,12 @@
           </tr>
           <tr>
             <td class="item_cap_td">
-              <%=h t('timecard.close_at') %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('timecard.close_at_info')%><br/>');">
+              <%= t('timecard.close_at') %>
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.close_at_info')%><br/>');">
             </td>
             <td class="item_value_td" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
-                <select id="close_at_hour" onchange="changeHour(this.value, $('close_at_min'));">
+                <select id="close_at_hour" onchange="changeHour(this.value, _x('close_at_min'));">
                   <option value=""></option>
                 <%
                 close_at = @yaml_timecard['close_at']
@@ -342,7 +342,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="close_at_min" onchange="changeMin(this.value, $('close_at_hour'));">
+                <select id="close_at_min" onchange="changeMin(this.value, _x('close_at_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -361,8 +361,8 @@
                 </select>
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
-                <%=h t('timecard.for_off_pm') %><br/>
-                <select id="close_at_hour_when_off_pm" onchange="changeHour(this.value, $('close_at_min_when_off_pm'));">
+                <%= t('timecard.for_off_pm') %><br/>
+                <select id="close_at_hour_when_off_pm" onchange="changeHour(this.value, _x('close_at_min_when_off_pm'));">
                   <option value=""></option>
                 <%
                 close_at_when_off_pm = @yaml_timecard['close_at_when_off_pm']
@@ -381,7 +381,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="close_at_min_when_off_pm" onchange="changeMin(this.value, $('close_at_hour_when_off_pm'));">
+                <select id="close_at_min_when_off_pm" onchange="changeMin(this.value, _x('close_at_hour_when_off_pm'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -403,12 +403,12 @@
           </tr>
           <tr>
             <td class="item_cap_td">
-              <%=h t('timecard.midnight_span') %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=h t('timecard.midnight_span_info')%><br/>');">
+              <%= t('timecard.midnight_span') %>
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.midnight_span_info')%><br/>');">
             </td>
             <td class="item_value_td" style="width:70%">
               <span class="time_select">
-                <select id="midnight_from_hour" onchange="changeHour(this.value, $('midnight_from_min'));">
+                <select id="midnight_from_hour" onchange="changeHour(this.value, _x('midnight_from_min'));">
                   <option value=""></option>
                 <%
                 midnight_span = @yaml_timecard['midnight_span']
@@ -432,7 +432,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="midnight_from_min" onchange="changeMin(this.value, $('midnight_from_hour'));">
+                <select id="midnight_from_min" onchange="changeMin(this.value, _x('midnight_from_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -452,7 +452,7 @@
               </span>
               ~
               <span class="time_select">
-                <select id="midnight_to_hour" onchange="changeHour(this.value, $('midnight_to_min'));">
+                <select id="midnight_to_hour" onchange="changeHour(this.value, _x('midnight_to_min'));">
                   <option value=""></option>
                 <%
                 cur_hour = nil
@@ -470,7 +470,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="midnight_to_min" onchange="changeMin(this.value, $('midnight_to_hour'));">
+                <select id="midnight_to_min" onchange="changeMin(this.value, _x('midnight_to_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -510,12 +510,12 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
     <td width="15"></td>
     <td class="img_button_td" onclick="doRegister();">
-      <%=h t('btn.register') %>
+      <%= t('btn.register') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -545,55 +545,55 @@ function changeMin(value, hour)
 
 function checkRegister()
 {
-  var paidhld_per_year = $("paidhld_per_year").value;
+  var paidhld_per_year = _x("paidhld_per_year").value;
 
   if (isNaN(paidhld_per_year) || parseFloat(paidhld_per_year) < 0.0 || parseFloat(paidhld_per_year) > 365.0) {
-    msg("<%=h t('timecard.invalid_default_paid_holidays') %>");
+    msg("<%= t('timecard.invalid_default_paid_holidays') %>");
     return false;
   }
 
-  var standard_hours = $("standard_hours").value;
-  var standard_hours_when_off_am = $("standard_hours_when_off_am").value;
-  var standard_hours_when_off_pm = $("standard_hours_when_off_pm").value;
+  var standard_hours = _x("standard_hours").value;
+  var standard_hours_when_off_am = _x("standard_hours_when_off_am").value;
+  var standard_hours_when_off_pm = _x("standard_hours_when_off_pm").value;
   if (standard_hours != "") {
     standard_hours = parseFloat(standard_hours.replace(":", "."));
     if (standard_hours_when_off_am != "") {
       standard_hours_when_off_am = parseFloat(standard_hours_when_off_am.replace(":", "."));
       if (standard_hours_when_off_am > standard_hours) {
-        msg("<%=h t('timecard.invalid_standard_for_off_am') %>");
+        msg("<%= t('timecard.invalid_standard_for_off_am') %>");
         return false;
       }
     }
     if (standard_hours_when_off_pm != "") {
       standard_hours_when_off_pm = parseFloat(standard_hours_when_off_pm.replace(":", "."));
       if (standard_hours_when_off_pm > standard_hours) {
-        msg("<%=h t('timecard.invalid_standard_for_off_pm') %>");
+        msg("<%= t('timecard.invalid_standard_for_off_pm') %>");
         return false;
       }
     }
   }
 
-  var commence_at = $("commence_at").value;
-  var commence_at_when_off_am = $("commence_at_when_off_am").value;
+  var commence_at = _x("commence_at").value;
+  var commence_at_when_off_am = _x("commence_at_when_off_am").value;
   if (commence_at != "") {
     commence_at = parseFloat(commence_at.replace(":", "."));
     if (commence_at_when_off_am != "") {
       commence_at_when_off_am = parseFloat(commence_at_when_off_am.replace(":", "."));
       if (commence_at_when_off_am < commence_at) {
-        msg("<%=h t('timecard.invalid_commence_time_for_off_am') %>");
+        msg("<%= t('timecard.invalid_commence_time_for_off_am') %>");
         return false;
       }
     }
   }
 
-  var close_at = $("close_at").value;
-  var close_at_when_off_pm = $("close_at_when_off_pm").value;
+  var close_at = _x("close_at").value;
+  var close_at_when_off_pm = _x("close_at_when_off_pm").value;
   if (close_at != "") {
     close_at = parseFloat(close_at.replace(":", "."));
     if (close_at_when_off_pm != "") {
       close_at_when_off_pm = parseFloat(close_at_when_off_pm.replace(":", "."));
       if (close_at_when_off_pm > close_at) {
-        msg("<%=h t('timecard.invalid_close_time_for_off_pm') %>");
+        msg("<%= t('timecard.invalid_close_time_for_off_pm') %>");
         return false;
       }
     }
@@ -605,70 +605,70 @@ function checkRegister()
 function doRegister()
 {
   var hour = null, min = null;
-  hour = $("standard_hours_hour").value;
-  min = $("standard_hours_min").value;
+  hour = _x("standard_hours_hour").value;
+  min = _x("standard_hours_min").value;
   if (hour == "" || min == "" ) {
-    $("standard_hours").value = "";
+    _x("standard_hours").value = "";
   } else {
-    $("standard_hours").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("standard_hours").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("standard_hours_hour_when_off_am").value;
-  min = $("standard_hours_min_when_off_am").value;
+  hour = _x("standard_hours_hour_when_off_am").value;
+  min = _x("standard_hours_min_when_off_am").value;
   if (hour == "" || min == "" ) {
-    $("standard_hours_when_off_am").value = "";
+    _x("standard_hours_when_off_am").value = "";
   } else {
-    $("standard_hours_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("standard_hours_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("standard_hours_hour_when_off_pm").value;
-  min = $("standard_hours_min_when_off_pm").value;
+  hour = _x("standard_hours_hour_when_off_pm").value;
+  min = _x("standard_hours_min_when_off_pm").value;
   if (hour == "" || min == "" ) {
-    $("standard_hours_when_off_pm").value = "";
+    _x("standard_hours_when_off_pm").value = "";
   } else {
-    $("standard_hours_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("standard_hours_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("commence_at_hour").value;
-  min = $("commence_at_min").value;
+  hour = _x("commence_at_hour").value;
+  min = _x("commence_at_min").value;
   if (hour == "" || min == "" ) {
-    $("commence_at").value = "";
+    _x("commence_at").value = "";
   } else {
-    $("commence_at").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("commence_at").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("commence_at_hour_when_off_am").value;
-  min = $("commence_at_min_when_off_am").value;
+  hour = _x("commence_at_hour_when_off_am").value;
+  min = _x("commence_at_min_when_off_am").value;
   if (hour == "" || min == "" ) {
-    $("commence_at_when_off_am").value = "";
+    _x("commence_at_when_off_am").value = "";
   } else {
-    $("commence_at_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("commence_at_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("close_at_hour").value;
-  min = $("close_at_min").value;
+  hour = _x("close_at_hour").value;
+  min = _x("close_at_min").value;
   if (hour == "" || min == "" ) {
-    $("close_at").value = "";
+    _x("close_at").value = "";
   } else {
-    $("close_at").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("close_at").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = $("close_at_hour_when_off_pm").value;
-  min = $("close_at_min_when_off_pm").value;
+  hour = _x("close_at_hour_when_off_pm").value;
+  min = _x("close_at_min_when_off_pm").value;
   if (hour == "" || min == "" ) {
-    $("close_at_when_off_pm").value = "";
+    _x("close_at_when_off_pm").value = "";
   } else {
-    $("close_at_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
+    _x("close_at_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  var from_hour = $("midnight_from_hour").value;
-  var from_min = $("midnight_from_min").value;
-  var to_hour = $("midnight_to_hour").value;
-  var to_min = $("midnight_to_min").value;
+  var from_hour = _x("midnight_from_hour").value;
+  var from_min = _x("midnight_from_min").value;
+  var to_hour = _x("midnight_to_hour").value;
+  var to_min = _x("midnight_to_min").value;
   if (from_hour == "" || from_min == "" || to_hour == "" || to_min == "") {
-    $("midnight_span").value = "";
+    _x("midnight_span").value = "";
   } else {
-    $("midnight_span").value = from_hour + ":" + fillLeft(from_min, "0", 2) + "~" + to_hour + ":" + fillLeft(to_min, "0", 2);
+    _x("midnight_span").value = from_hour + ":" + fillLeft(from_min, "0", 2) + "~" + to_hour + ":" + fillLeft(to_min, "0", 2);
   }
 
   if (!checkRegister()) {
@@ -701,7 +701,7 @@ function inputBreak(org_start, org_end)
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);
 
   thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('timecard.input_break') %>";
+  thetisBox.title = "<%= t('timecard.input_break') %>";
   thetisBox.overflow = "hide";
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
@@ -712,7 +712,7 @@ function onBreakOK()
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for :controller => 'timecards', :action => 'update_default_break', :id => (@timecard.nil?)?'':@timecard.id %>",
+          "<%= url_for(:controller => 'timecards', :action => 'update_default_break', :id => (@timecard.nil?)?'':@timecard.id) %>",
           {
             asynchronous:true,
             evalScripts:false,
@@ -735,7 +735,7 @@ function onBreakCancel()
 
 function doDeleteBreak(org_start, org_end)
 {
-  confm("<%=h t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%=h t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
+  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
 }
 
 function _doDeleteBreak(org_start, org_end)
@@ -744,7 +744,7 @@ function _doDeleteBreak(org_start, org_end)
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for :controller => 'timecards', :action => 'delete_default_break', :id => (@timecard.nil?)?'':@timecard.id %>",
+          "<%= url_for(:controller => 'timecards', :action => 'delete_default_break', :id => (@timecard.nil?)?'':@timecard.id) %>",
           {
             asynchronous:true,
             evalScripts:false,

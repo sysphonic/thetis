@@ -151,10 +151,10 @@ folders_cache = {}
               <tr>
                 <td align="left" bgcolor="#ccffff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
 <div>
-  <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= h Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
+  <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
   <%= ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100))) %>
 </div>
-<span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= h Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
+<span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
 <br/>
 <% unless item.description.nil? or item.description.empty? %>
 <%=h truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>

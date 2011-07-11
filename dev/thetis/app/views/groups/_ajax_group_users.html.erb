@@ -1,19 +1,19 @@
 <% unless @users.nil? %>
 <table width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap style="cursor:default;"><%=h t('activerecord.attributes.id') %></th>
-    <th class="list_th" width="16%" nowrap style="cursor:default;"><%=h t('user.u_name') %></th>
-    <th class="list_th" width="20%" nowrap style="cursor:default;"><%=h User.human_attribute_name('fullname') %></th>
-    <th class="list_th" width="10%" nowrap style="cursor:default;"><%=h User.human_attribute_name('email') %></th>
-    <th class="list_th" width="26%" nowrap style="cursor:default;"><%=h t('user.title') %></th>
-    <th class="list_th" width="20%" nowrap style="cursor:default;"><%=h User.human_attribute_name('organization') %></th>
+    <th class="list_th" width="5%"  nowrap style="cursor:default;"><%= t('activerecord.attributes.id') %></th>
+    <th class="list_th" width="16%" nowrap style="cursor:default;"><%= t('user.u_name') %></th>
+    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= User.human_attribute_name('fullname') %></th>
+    <th class="list_th" width="10%" nowrap style="cursor:default;"><%= User.human_attribute_name('email') %></th>
+    <th class="list_th" width="26%" nowrap style="cursor:default;"><%= t('user.title') %></th>
+    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= User.human_attribute_name('organization') %></th>
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
     <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
     <td class="<%=td_class %>">
-      <a class="a_underline" nowrap href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'show', :id => user.id %>'; return false;" >
+      <a class="a_underline" nowrap href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;" >
         <%=h truncate(user.get_name, :length => 20) %>
       </a>
     </td>
@@ -22,7 +22,7 @@
     <td class="<%=td_class %>" nowrap><%=h truncate(user.title, :length => 10) %></td>
     <td class="<%=td_class %>" nowrap><%=h truncate(user.organization, :length => 30) %></td>
     <td class="<%=td_class %>" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
     </td>
   </tr>
 <% end %>

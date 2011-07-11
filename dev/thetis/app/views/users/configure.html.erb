@@ -11,21 +11,21 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
-              <%=h t('menu.settings') %>
+              <%= t('menu.settings') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('user.u_name') %></td>
+            <td class="item_cap_td" nowrap><%= t('user.u_name') %></td>
             <td class="item_value_td" style="width:70%;">
               <% checked = (@yaml[:user]['by_full_name']=='1')?'checked':'' %>
               <input name="user[by_full_name]" type="hidden" value="0" />
-              <input type="checkbox" id="user_by_full_name" name="user[by_full_name]" value="1" <%= checked %>><label for="user_by_full_name"><%=h t('user.show_by_full_name') %></label>
+              <input type="checkbox" id="user_by_full_name" name="user[by_full_name]" value="1" <%= checked %>><label for="user_by_full_name"><%= t('user.show_by_full_name') %></label>
             </td>
           </tr>
           <tr height="10"><td></td></tr>
           <tr>
             <td style="width:100%;" colspan="2" align="right">
-              <input type="button" style="width:100px;" value="<%=h t('btn.save') %>" onclick="doUpdateConfig();">
+              <input type="button" style="width:100px;" value="<%= t('btn.save') %>" onclick="doUpdateConfig();">
             </td>
           </tr>
         </table>
@@ -40,21 +40,21 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
-              <%=h t('user.official_titles') %>&nbsp;
+              <%= t('user.official_titles') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('user.official_titles_info')%>');">
             </td>
           </tr>
           <tr>
             <td class="item_value_td">
               <div id="div_ajax_title">
-                <%= render :partial => 'ajax_title' %>
+                <%= render(:partial => 'ajax_title') %>
               </div>
 
               <table align="right" width="120" cellspacing="0" cellpadding="0"">
                 <tr height="6"><td></td></tr>
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreateTitle();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.create') %>
+                    <%= t('btn.create') %>
                   </td>
                 </tr>
               </table>
@@ -72,8 +72,8 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -97,9 +97,9 @@ function doUpdateConfig()
                   thetisBox.remove();
 
                   if (request.responseText == "") {
-                    tips("<%=h t('msg.update_success')%>");
+                    tips("<%= t('msg.update_success')%>");
                   } else {
-                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                   }
                 }
               }
@@ -113,7 +113,7 @@ function doCreateTitle()
 
   new Ajax.Updater(
               "div_ajax_title",
-              "<%= url_for :controller => 'users', :action => 'create_title' %>",
+              "<%= url_for(:controller => 'users', :action => 'create_title') %>",
               {
                 parameters:"authenticity_token=<%= form_authenticity_token %>",
                 asynchronous:true,
@@ -128,7 +128,7 @@ function doCreateTitle()
 
 function doDeleteTitle(title)
 {
-  confm("<%=h t('paren.square.left') %>" + title + "<%=h t('msg.confirm_to_delete') %>", "_doDeleteTitle('"+esc_quotes(title)+"')");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteTitle('"+esc_quotes(title)+"')");
 }
 
 function _doDeleteTitle(title)
@@ -137,7 +137,7 @@ function _doDeleteTitle(title)
 
   new Ajax.Updater(
       "div_ajax_title",
-      "<%= url_for :controller => 'users', :action => 'destroy_title' %>",
+      "<%= url_for(:controller => 'users', :action => 'destroy_title') %>",
       {
         asynchronous:true,
         evalScripts:true,
@@ -151,7 +151,7 @@ function doRenameTitle(org)
 {
   var thetisBox = new ThetisBox;
   thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"_doRenameTitle('"+esc_quotes(org)+"', thetisBoxEdit.value); return false;\">");
-  thetisBox.show("CENTER", "", "INPUT", "", "<%=h t('user.specify_title_name') %>", org);
+  thetisBox.show("CENTER", "", "INPUT", "", "<%= t('user.specify_title_name') %>", org);
 }
 
 function _doRenameTitle(org, title)
@@ -160,13 +160,13 @@ function _doRenameTitle(org, title)
 
   new Ajax.Updater(
       "div_ajax_title",
-      "<%= url_for :controller => 'users', :action => 'rename_title' %>",
+      "<%= url_for(:controller => 'users', :action => 'rename_title') %>",
       {
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
           thetisBox.remove();
-          $("item_" + org).id = "item_" + title;
+          _x("item_" + org).id = "item_" + title;
         },
         parameters:"org_title=" + encodeURIComponent(org) + "&new_title=" + encodeURIComponent(title)+"&authenticity_token=<%= form_authenticity_token %>"
       }

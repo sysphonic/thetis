@@ -2,14 +2,14 @@
 
 <% date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil? %>
 
-<%= render :partial => 'common/jkl_calendar_init' %>
+<%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
 <!--
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
     function() {
-      $("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      _x("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       document.form_schedule.submit();
       prog("TOP-RIGHT");
     }
@@ -32,11 +32,11 @@ tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
         <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'group', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display] %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
     <tr height="5"><td></td></tr>
@@ -49,22 +49,22 @@ next_week = @date + 7
 <table class='timecard' width="100%">
   <tr>
     <td align="center" width="10%" rowspan="2" nowrap><%= User.human_name %></th>
-    <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%=h t('cap.class') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%=h Timecard.human_attribute_name('status') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%=h t('cap.option') %></td>
-    <td align="center" width="24%" bgcolor="#D6ECFA" colspan="3" nowrap><%=h t('timecard.labor_time') %></td>
-    <td align="center" width="25%" bgcolor="#D6ECFA" rowspan="2" nowrap><%=h Timecard.human_attribute_name('comment') %></td>
-    <td align="center" width="16%" bgcolor="#C6D3EF" colspan="2" nowrap><%=h t('timecard.overtime') %></td>
+    <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= t('cap.class') %></td>
+    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
+    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= t('cap.option') %></td>
+    <td align="center" width="24%" bgcolor="#D6ECFA" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
+    <td align="center" width="25%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
+    <td align="center" width="16%" bgcolor="#C6D3EF" colspan="2" nowrap><%= t('timecard.overtime') %></td>
 <% unless @selected_users.nil? or @selected_users.empty? %>
     <td align="center" width="1%" bgcolor="white" rowspan="2" style="border-top:0px; border-right:0px;"></td>
 <% end %>
   </tr>
   <tr>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.from') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.to') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%=h t('msg.hours_full') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.usual') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.midnight') %></td>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.from') %></td>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.to') %></td>
+    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('msg.hours_full') %></td>
+    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.usual') %></td>
+    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.midnight') %></td>
   </tr>
 <% if @selected_users.nil? or @selected_users.empty? %>
   <tr height="50">
@@ -83,7 +83,7 @@ else
 %>
   <tr bgcolor="<%= bgcolor %>">
     <td align="center">
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :id => date_s, :user_id => user.id, :display => params[:display] %>'; return false;">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'month', :id => date_s, :user_id => user.id, :display => params[:display]) %>'; return false;">
         <%= user.get_name_for_timecard(yaml) %>
       </a>
     </td>
@@ -116,25 +116,25 @@ else
     </td>
     <td align="center" nowrap>
       <% if !timecard.start.nil? and timecard.end.nil? %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%=h t('msg.not_fulfilled') %>" title="<%=h t('msg.not_fulfilled') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>">
       <%
       elsif !timecard.start.nil?
         check_ok = true
         if timecard.lateness?
           check_ok = false
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" alt="<%=h t('timecard.lateness') %>" title="<%=h t('timecard.lateness') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" alt="<%= t('timecard.lateness') %>" title="<%= t('timecard.lateness') %>">
         <%
         end
         if timecard.leaving_early?
           check_ok = false
         %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" alt="<%=h t('timecard.leaving_early') %>" title="<%=h t('timecard.leaving_early') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" alt="<%= t('timecard.leaving_early') %>" title="<%= t('timecard.leaving_early') %>">
       <%
         end
         if check_ok
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%=h t('btn.ok') %>" title="<%=h t('btn.ok') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%= t('btn.ok') %>" title="<%= t('btn.ok') %>">
       <%
         end
       end
@@ -196,7 +196,7 @@ else
       <% end %>
     </td>
     <td align="center" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%=h t('btn.detail') %>" title="<%=h t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'edit', :id => date_s, :user_id => user.id, :display => params[:display] %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => date_s, :user_id => user.id, :display => params[:display]) %>';">
     </td>
   </tr>
 <%

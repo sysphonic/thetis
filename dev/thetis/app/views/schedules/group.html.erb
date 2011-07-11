@@ -1,14 +1,14 @@
 
-<%= render :partial => 'common/jkl_calendar_init' %>
+<%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
 <!--
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
           function() {
-            $('date_wday').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+            _x("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             document.form_schedule.submit();
-            prog('TOP-RIGHT');
+            prog("TOP-RIGHT");
           }
         );
 calDisp.setStyle( "frame_color", "#3333CC" );
@@ -131,7 +131,7 @@ else
       <tr height="5"><td></td></tr>
       <tr>
         <td>
-          <%= render :partial => 'weektable' %>
+          <%= render(:partial => 'weektable') %>
         </td>
       </tr>
       <tr height="10"><td></td></tr>
@@ -151,7 +151,7 @@ function showScheduleDetail(schedule_id, title)
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h Schedule.human_name %>";
+  thetisBox.title = "<%= Schedule.human_name %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
   new Ajax.Request(
@@ -197,7 +197,7 @@ function showGroupTree()
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=$('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_x('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }

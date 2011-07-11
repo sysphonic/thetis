@@ -16,8 +16,8 @@ function getDescriptionWidth()
       <table align="center" style="width:600px;" cellpadding="0" cellspacing="2">
         <tr>
           <td valign="top">
-             <%= render :partial => 'show_summary' %>
-             <%= render :partial => 'show_description' %>
+             <%= render(:partial => 'show_summary') %>
+             <%= render(:partial => 'show_description') %>
           </td>
         </tr>
       </table>
@@ -31,13 +31,13 @@ function getDescriptionWidth()
           <td>&nbsp;</td>
        <% if @item.images_without_content.length > 0 %>
           <td width="10%">
-              <%= render :partial => 'show_image' %>
+              <%= render(:partial => 'show_image') %>
           </td>
        <% end %>
           <td>&nbsp;</td>
        <% if @item.attachments_without_content.length > 0 %>
           <td width="30%" valign="top">
-              <%= render :partial => 'show_attachment' %>
+              <%= render(:partial => 'show_attachment') %>
           </td>
        <% end %>
           <td>&nbsp;</td>

@@ -494,7 +494,7 @@ class Research < ActiveRecord::Base
         ctrl_name << '[]' if q_type == 'checkbox'
         vals = q_vals.gsub(/\r\n/, "\n").split("\n")
         vals.each do |val|
-          ctrl += "<%= radio_button 'research', '#{q_code}', h('#{val}') %> <%= h('#{val}') %><br/>\n"
+          ctrl += "<%= radio_button('research', '#{q_code}', h('#{val}')) %> <%= h('#{val}') %><br/>\n"
         end
 
       when 'checkbox'
@@ -519,13 +519,13 @@ class Research < ActiveRecord::Base
         end
 
         ctrl += "<% opts = options_for_select([#{opts.join(',')}], @research.#{q_code}) %>\n"
-        ctrl += "<%= select_tag 'research[#{q_code}]', opts %>\n"
+        ctrl += "<%= select_tag('research[#{q_code}]', opts) %>\n"
 
       when 'textarea'
         if q_vals.to_i == 1
-          ctrl += "<%= text_field 'research', '#{q_code}', :style => 'width:100%' %><br/>\n"
+          ctrl += "<%= text_field('research', '#{q_code}', :style => 'width:100%') %><br/>\n"
         else
-          ctrl += "<%= text_area 'research', '#{q_code}', :rows => '#{q_vals}', :style => 'width:100%' %><br/>\n"
+          ctrl += "<%= text_area('research', '#{q_code}', :rows => '#{q_vals}', :style => 'width:100%') %><br/>\n"
         end
     end
 

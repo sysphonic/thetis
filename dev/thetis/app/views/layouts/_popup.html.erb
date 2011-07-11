@@ -51,12 +51,12 @@ login_admin = (!login_user.nil? and login_user.admin?)
       <td align="center" style="padding:5px 7px;">
         <table cellspacing="1" cellpadding="0" width="150" align="center">
           <tr height="31">
-            <td class="menu_td" style="background:<%= style_bg_off %>;" align="center"  onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'frames', :action => 'admin' %>'; return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
+            <td class="menu_td" style="background:<%= style_bg_off %>;" align="center"  onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'frames', :action => 'admin') %>'; return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
               <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.admin_menu') %></a>
             </td>
           </tr>
           <tr height="31">
-            <td class="menu_td" style="background:<%= style_bg_off %>;" align="center"  onClick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'logs', :action => 'list' %>'; return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
+            <td class="menu_td" style="background:<%= style_bg_off %>;" align="center"  onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'list') %>'; return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
               <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.access_logs') %></a>
             </td>
           </tr>
@@ -93,7 +93,7 @@ login_admin = (!login_user.nil? and login_user.admin?)
 
   function hideAdminMenu()
   {
-    $("adminMenu").style.display = "none";
+    _x("adminMenu").style.display = "none";
   }
   </script>
 <% end %>

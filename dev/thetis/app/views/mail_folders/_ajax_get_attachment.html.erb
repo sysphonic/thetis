@@ -3,7 +3,7 @@
   <tr>
     <td align="left">
     <% @mail_attachs.each do |mail_attach| %>
-      <div onClick="location='<%= url_for :controller => 'mail_folders', :action => :get_mail_attachment, :id => mail_attach.id %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+      <div onClick="location='<%= url_for(:controller => 'mail_folders', :action => :get_mail_attachment, :id => mail_attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item.gif"><%= mail_attach.name %><br />
       </div>
     <% end %>
@@ -12,4 +12,4 @@
 </table>
 
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>

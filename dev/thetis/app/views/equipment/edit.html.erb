@@ -9,7 +9,7 @@
   <tr height="10"><td></td></tr>
   <tr>
     <td valign="top">
-      <%= render :partial => 'equipment_form' %>
+      <%= render(:partial => 'equipment_form') %>
     </td>
   </tr>
 </table>
@@ -37,8 +37,8 @@
 <script type="text/javascript">
 function doRegister()
 {
-  selectListAll($("groups_selected"));
-  selectListAll($("teams_selected"));
+  selectListAll(_x("groups_selected"));
+  selectListAll(_x("teams_selected"));
 
   prog("TOP-RIGHT");
   document.form_equipment.submit();

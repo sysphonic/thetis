@@ -7,17 +7,17 @@
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" style="width:20%;" nowrap><%=h Team.human_attribute_name('status') %></td>
+    <td class="prim_cap_td" style="width:20%;" nowrap><%= Team.human_attribute_name('status') %></td>
     <td class="item_value_td" id="status">
       <div id="div_team_status">
 
-        <%= render :partial => 'ajax_team_status' %>
+        <%= render(:partial => 'ajax_team_status') %>
 
       </div>
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="width:20%;" nowrap><%=h t('msg.members') %></td>
+    <td class="item_cap_td" style="width:20%;" nowrap><%= t('msg.members') %></td>
     <td class="item_value_td" nowrap>
     <%
     unless @team.nil?
@@ -50,7 +50,7 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="width:20%;" nowrap><%=h t('team.team_folder') %></td>
+    <td class="item_cap_td" style="width:20%;" nowrap><%= t('team.team_folder') %></td>
     <td class="item_value_td" nowrap>
     <%
     unless @team.nil? or login_user.nil?
@@ -75,14 +75,14 @@
   <tr height="15"><td></td></tr>
 </table>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>
 
 
 <script type="text/javascript">
 
 <% unless @team.nil? %>
-if ($("team_id") != null) {
-  $("team_id").value = "<%= @team.id %>";
+if (_x("team_id") != null) {
+  _x("team_id").value = "<%= @team.id %>";
 }
 <% end %>
 
@@ -90,7 +90,7 @@ if ($("team_id") != null) {
 
 doMoveInTeamFolder = function()
 {
-  confm("<%=h t('item.confirm_move_in_team_folder') %><br/><%=h t('item.move_in_team_folder_info') %>", "_doMoveInTeamFolder()");
+  confm("<%= t('item.confirm_move_in_team_folder') %><br/><%= t('item.move_in_team_folder_info') %>", "_doMoveInTeamFolder()");
 }
 
 _doMoveInTeamFolder = function()
@@ -99,7 +99,7 @@ _doMoveInTeamFolder = function()
 
   new Ajax.Updater(
                 "folder_path",
-                "<%= url_for :controller => 'items', :action => 'move_in_team_folder', :id => @item.id %>",
+                "<%= url_for(:controller => 'items', :action => 'move_in_team_folder', :id => @item.id) %>",
                 {
                   parameters:"authenticity_token=<%= form_authenticity_token %>",
                   asynchronous:true,

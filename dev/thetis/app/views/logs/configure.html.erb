@@ -11,11 +11,11 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
-              <%=h t('menu.settings') %>
+              <%= t('menu.settings') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('log.max_num') %></td>
+            <td class="item_cap_td" nowrap><%= t('log.max_num') %></td>
             <td class="item_value_td">
               <input type="text" id="log_max_num" name="log[max_num]" value="<%=h @yaml[:log]['max_num'] %>" style="ime-mode:disabled" />
             </td>
@@ -23,7 +23,7 @@
           <tr height="10"><td></td></tr>
           <tr>
             <td style="width:100%;" colspan="2" align="right">
-              <input type="button" style="width:100px;" value="<%=h t('btn.save') %>" onclick="doUpdateConfig();">
+              <input type="button" style="width:100px;" value="<%= t('btn.save') %>" onclick="doUpdateConfig();">
             </td>
           </tr>
         </table>
@@ -43,8 +43,8 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -55,9 +55,9 @@
 
 function doUpdateConfig()
 {
-  var val = $("log_max_num").value;
+  var val = _x("log_max_num").value;
   if (isNaN(val)) {
-    msg("<%=h t('log.max_num') %><%=h t('msg.must_be_numeric') %>");
+    msg("<%= t('log.max_num') %><%= t('msg.must_be_numeric') %>");
     return;
   }
 
@@ -74,9 +74,9 @@ function doUpdateConfig()
                   thetisBox.remove();
 
                   if (request.responseText == "") {
-                    tips("<%=h t('msg.update_success')%>");
+                    tips("<%= t('msg.update_success')%>");
                   } else {
-                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                   }
                 }
               }

@@ -1,12 +1,12 @@
 <div style="padding:3px;">
 <table class='timecard' width="100%">
   <tr>
-    <td align="center" width="14%" nowrap><%=h t('msg.year') %></th>
-    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.given_days') %></td>
-    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%=h t('timecard.carried_over') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" nowrap><%=h t('msg.total') %></td>
-    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.applied_days') %></td>
-    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%=h t('timecard.remainder') %></td>
+    <td align="center" width="14%" nowrap><%= t('msg.year') %></th>
+    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%= t('timecard.given_days') %></td>
+    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%= t('timecard.carried_over') %></td>
+    <td align="center" width="10%" bgcolor="#B9FFBC" nowrap><%= t('msg.total') %></td>
+    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%= t('timecard.applied_days') %></td>
+    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%= t('timecard.remainder') %></td>
   </tr>
 <%
 yaml = ApplicationHelper.get_config_yaml
@@ -67,7 +67,7 @@ else
     </td>
     <td align="center" style="color:blue;">
       -
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
     </td>
     <td align="center">-</td>
     <td align="center">-</td>
@@ -97,7 +97,7 @@ else
       <% given_num = (paid_hld.nil?)?0:paid_hld.num %>
       <%= given_num %>
     <% if edit %>
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= given_num %>);" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= given_num %>);" />
     <% end %>
     </td>
     <td align="center">
@@ -137,7 +137,7 @@ else
     </td>
     <td align="center" style="color:blue;">
       -
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
     </td>
     <td align="center">-</td>
     <td align="center">-</td>
@@ -151,4 +151,4 @@ end
 </table>
 </div>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>

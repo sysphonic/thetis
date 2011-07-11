@@ -16,11 +16,11 @@ tabs = new Array("basic", "admin");
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if($('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_x('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if($('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if ($('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_x('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>
@@ -51,7 +51,7 @@ tabs = new Array("basic", "admin");
                       options << [h(t('desktop.theme.bolt')), Desktop::THEME_BOLT]
                       options << [h(t('desktop.theme.grape')), Desktop::THEME_GRAPE]
                       %>
-                      <%= select_tag 'desktop[theme]', options_for_select(options, (@desktop.nil?)?(nil):(@desktop.theme)), :style => 'width:200px;' %>
+                      <%= select_tag('desktop[theme]', options_for_select(options, (@desktop.nil?)?(nil):(@desktop.theme)), :style => 'width:200px;') %>
                     </td>
                   </tr>
                   <tr>
@@ -160,14 +160,14 @@ selectBgColor = function(color)
   var nameArray = new Array("blue", "pink", "orange", "brown", "green");
 
   for (var i=0; i < nameArray.length; i++) {
-    td_bgcolor = $("td_bgcolor_"+nameArray[i]);
+    td_bgcolor = _x("td_bgcolor_"+nameArray[i]);
     if (td_bgcolor != null) {
       td_bgcolor.style.border = "solid 1px dimgray";
     }
   }
-  var target = $("td_bgcolor_"+color);
+  var target = _x("td_bgcolor_"+color);
   if (target) {
-    $('desktop_background_color').value = color;
+    _x('desktop_background_color').value = color;
     target.style.border = "solid 3px lime";
   }
 }
@@ -184,7 +184,7 @@ doUpdatePref = function()
 
 doUpdateConfig = function(user_id)
 {
-  $("user_before_login").value = user_id;
+  _x("user_before_login").value = user_id;
 
   var thetisBox = prog("TOP-RIGHT");
 

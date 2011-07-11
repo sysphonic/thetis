@@ -4,10 +4,10 @@
   <tr>
     <td style="font-size:11pt;" align="left">
 
-    <%= render :inline => File.read(File.join(Research.page_dir, "_q#{@page}.html.erb")) %>
+    <%= render(:inline => File.read(File.join(Research.page_dir, "_q#{@page}.html.erb"))) %>
 
-    <%= hidden_field_tag 'research_id', @research.id %>
-    <%= hidden_field_tag 'page', @page %>
+    <%= hidden_field_tag('research_id', @research.id) %>
+    <%= hidden_field_tag('page', @page) %>
 
     <table align="center" cellspacing="0" cellpadding="0">
       <tr height="10"><td></td></tr>

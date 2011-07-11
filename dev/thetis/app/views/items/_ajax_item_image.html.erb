@@ -1,5 +1,5 @@
 
-<%= render :partial => 'common/error', :locals => {:obj => @image} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @image}) %>
 
 <table align="center" width="90%" cellpadding="0" cellspacing="2">
   <tr height="20"><td></td></tr>
@@ -7,48 +7,48 @@
     <td valign="top">
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
-          <td class="item_cap_td" style="width:100%; background-color:lightpink;"><%= h t('item.add_images') %></td>
+          <td class="item_cap_td" style="width:100%; background-color:lightpink;"><%= t('item.add_images') %></td>
         </tr>
         <tr>
           <td class="item_value_td" width="80%">
             <table width="100%" cellpadding="0" cellspacing="2">
               <tr>
                 <td rowspan="3" width="20" align="center" bgColor="lightcoral">A</td>
-                <td class="item_cap_td" style="background-color:pink"><%= h t('item.file') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= t('item.file') %></td>
                 <td class="item_value_td">
-                  <%= file_field :image0, :file, :style => 'width:100%', :size => '50' %><br/>
+                  <%= file_field(:image0, :file, :style => 'width:100%', :size => '50') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= h Item.human_attribute_name('title') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= Item.human_attribute_name('title') %></td>
                 <td class="item_value_td">
-                  <%= text_field :image0, :title, :style => 'width:70%'  %><br/>
+                  <%= text_field(:image0, :title, :style => 'width:70%') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= h Image.human_attribute_name('memo') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= Image.human_attribute_name('memo') %></td>
                 <td class="item_value_td">
-                  <%= text_area :image0, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+                  <%= text_area(:image0, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
                 </td>
               </tr>
               <tr height="5"><td></td></tr>
               <tr>
                 <td rowspan="3" width="20" align="center" bgColor="lightcoral">B</td>
-                <td class="item_cap_td" style="background-color:pink"><%= h t('item.file') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= t('item.file') %></td>
                 <td class="item_value_td">
-                  <%= file_field :image1, :file, :style => 'width:100%', :size => '50' %><br/>
+                  <%= file_field(:image1, :file, :style => 'width:100%', :size => '50') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= h Item.human_attribute_name('title') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= Item.human_attribute_name('title') %></td>
                 <td class="item_value_td">
-                  <%= text_field :image1, :title, :style => 'width:70%' %><br/>
+                  <%= text_field(:image1, :title, :style => 'width:70%') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= h Image.human_attribute_name('memo') %></td>
+                <td class="item_cap_td" style="background-color:pink"><%= Image.human_attribute_name('memo') %></td>
                 <td class="item_value_td">
-                  <%= text_area :image1, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+                  <%= text_area(:image1, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
                 </td>
               </tr>
             </table>
@@ -67,7 +67,7 @@
           <tr>
             <td align="right" valign="middle" style="cursor:move;">
             <% if item_images.size > 1 %>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%=h t('msg.drag_to_change_orger') %>" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
             <td class="img_td" align="center" style="padding-left:5px; padding-right:5px; cursor:move;">
@@ -93,13 +93,13 @@
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editImageInfo(<%= img.id %>, '<%=ApplicationHelper.h_s_quote img.name %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editImageInfo(<%= img.id %>, '<%=ApplicationHelper.h_s_quote img.name %>');" />
                   </td>
                 </tr>
                 <tr height="5"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteImage(<%= img.id %>, '<%=ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteImage(<%= img.id %>, '<%=ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
                   </td>
                 </tr>
               </table>
@@ -118,7 +118,7 @@
 
 setSortableImg = function() {
   // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
-  Sortable.create("sortable_images", {onUpdate:function(){new Ajax.Request("<%= url_for :controller => 'items', :action => 'update_images_order' %>?id="+$("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_images", {name:"images_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
+  Sortable.create("sortable_images", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_images_order') %>?id="+_x("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_images", {name:"images_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
 }
 
 <% if item_images.size > 1 and params[:action] == 'edit' %>
@@ -138,7 +138,7 @@ editImageInfo = function(img_id, img_name)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for :controller => 'items', :action => 'edit_image_info' %>?image_id="+img_id,
+          "<%= url_for(:controller => 'items', :action => 'edit_image_info') %>?image_id="+img_id,
           {
             method:"get",
             asynchronous:true,
@@ -155,9 +155,9 @@ editImageInfo = function(img_id, img_name)
 
 onImageInfoOK = function()
 {
-  var btnOk = $("image_info_ok");
+  var btnOk = _x("image_info_ok");
   btnOk.disabled = true;
-  var btnCancel = $("image_info_cancel");
+  var btnCancel = _x("image_info_cancel");
   btnCancel.disabled = true;
 
   var thetisBoxProgress = prog("CENTER");
@@ -170,13 +170,13 @@ onImageInfoOK = function()
               setTimeout(setSortableImg, 100);
               thetisBoxProgress.remove();
               thetisBoxImageInfo.remove();
-              tips("<%=h t('msg.update_success')%>");
+              tips("<%= t('msg.update_success')%>");
           },
           function() {
               thetisBoxProgress.remove();
               btnOk.disabled = false;
               btnCancel.disabled = false;
-              msg("<%=h t('msg.system_error')%>");
+              msg("<%= t('msg.system_error')%>");
           }
         );
 }
@@ -188,7 +188,7 @@ onImageInfoCancel = function()
 
 doDeleteImage = function(img_id, title)
 {
-  confm("<%= h t('paren.square.left') %>"+title+"<%= h t('msg.confirm_to_delete') %>", "_doDeleteImage("+img_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteImage("+img_id+")");
 }
 
 _doDeleteImage = function(img_id)
@@ -197,7 +197,7 @@ _doDeleteImage = function(img_id)
 
   new Ajax.Updater(
               "div_item_image",
-              "<%= url_for :controller => 'items', :action => 'delete_image' %>",
+              "<%= url_for(:controller => 'items', :action => 'delete_image') %>",
               {
                 asynchronous:true,
                 evalScripts:true,

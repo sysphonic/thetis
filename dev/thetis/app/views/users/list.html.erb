@@ -14,25 +14,25 @@ groups_cache = {}
         <tr>
         <% if login_user.admin?(User::AUTH_USER) %>
           <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new', :from => 'users_list') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new', :from => 'users_list') %>';">
           </td>
           <td width="10"></td>
           <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= h t('btn.export_csv') %>" title="<%= h t('btn.export_csv') %>" onclick="exportCsv();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
           </td>
           <td width="10"></td>
           <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" alt="<%= h t('btn.import_csv') %>" title="<%= h t('btn.import_csv') %>" onclick="importCsv();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" alt="<%= t('btn.import_csv') %>" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
           </td>
           <td width="10"></td>
           <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= h t('btn.config') %>" title="<%= h t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'users', :action => 'configure' %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'configure') %>';">
           </td>
         <% end %>
           <td align="right" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= h t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-            <input type="button" value="<%= h t('btn.search') %>" onClick="form_list.action='<%= url_for :controller => 'users', :action => 'search' %>'; form_list.submit(); prog('TOP-RIGHT');"/>
-            <input type="button" value="<%= h t('btn.reset') %>" onClick="location.href='<%= url_for :controller => 'users', :action => 'list' %>'; prog('TOP-RIGHT');"/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'users', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; prog('TOP-RIGHT');"/>
           </td>
         </tr>
       </table>
@@ -48,7 +48,7 @@ groups_cache = {}
             <table width="100%" cellspacing="0" cellpadding="0">
               <tr>
                 <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                  <%=h t('btn.select_group') %>
+                  <%= t('btn.select_group') %>
                 </td>
               </tr>
             </table>
@@ -56,8 +56,8 @@ groups_cache = {}
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" nowrap>
-                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%=h t('btn.clear') %>" title="<%=h t('btn.clear') %>" onclick="clearGroup()" />
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
               </tr>
             </table>
@@ -65,9 +65,9 @@ groups_cache = {}
           </td>
           <td align="right">
   <% if login_user.admin?(User::AUTH_USER) %>
-            <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
-            <input type="button" value="<%=h t('btn.delete')%>" onclick="doDelete();">
-            <input type="button" value="<%=h t('btn.send_notification')%>" onclick="doNotify();">
+            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
+            <input type="button" value="<%= t('btn.send_notification')%>" onclick="doNotify();">
   <% else %>
             &nbsp;
   <% end %>
@@ -81,7 +81,7 @@ groups_cache = {}
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td class="pagination_td" align="center">
-      <%= h t('cap.total') %><%= h t('user', :count => @total_num) %>
+      <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
@@ -98,12 +98,12 @@ groups_cache = {}
 <div id="div_users" style="overflow:scroll; background-color:white;">
 <table id="list_users" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap onClick="sortList('User.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('activerecord.attributes.id') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="16%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('user.u_name') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="20%" nowrap onClick="sortList('fullname')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_attribute_name('fullname') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="26%"  nowrap onClick="sortList('email')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_attribute_name('email') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="10%"  nowrap onClick="sortList('xorder')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h t('user.title') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="20%"  nowrap onClick="sortList('groups')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= h User.human_attribute_name('organization') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="5%"  nowrap onClick="sortList('User.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="16%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('user.u_name') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%" nowrap onClick="sortList('fullname')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_attribute_name('fullname') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="26%"  nowrap onClick="sortList('email')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_attribute_name('email') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="10%"  nowrap onClick="sortList('xorder')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('user.title') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" width="20%"  nowrap onClick="sortList('groups')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_attribute_name('organization') %><span style="color:darkcyan; font-size:9pt;"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
@@ -124,10 +124,10 @@ groups_cache = {}
     </td>
   <% if login_user.admin?(User::AUTH_USER) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user.id, :from => 'users_list') %>';" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user.id, :from => 'users_list') %>';" />
     </td>
     <td class="<%=td_class %>" width="20" style="text-align:center;">
-      <%= check_box :check_user, user.id, :class => 'check_user' %>
+      <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   <% end %>
   </tr>
@@ -135,9 +135,9 @@ groups_cache = {}
 </table>
 </div>
 
-<%= hidden_field_tag 'sort_col', params[:sort_col] %>
-<%= hidden_field_tag 'sort_type', params[:sort_type] %>
-<%= hidden_field_tag 'group_id', @group_id %>
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+<%= hidden_field_tag('group_id', @group_id) %>
 
 </form>
 
@@ -190,7 +190,7 @@ function doExportCsv()
   thetisBox = null;
 
   // prog("TOP-RIGHT");
-  location="<%= url_for :controller => 'users', :action => 'export_csv' %>?enc="+enc;
+  location="<%= url_for(:controller => 'users', :action => 'export_csv') %>?enc="+enc;
 }
 
 function importCsv()
@@ -203,14 +203,14 @@ function importCsv()
   var content = getEncodingSelector("doImportCsv()", "import");
 
   thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('user.title_import') %>";
-  thetisBox.show("CENTER", "380,455", "TRAY", "", "<%=h t('user.specify_csv_encoding') %> ", content);
+  thetisBox.title = "<%= t('user.title_import') %>";
+  thetisBox.show("CENTER", "380,455", "TRAY", "", "<%= t('user.specify_csv_encoding') %> ", content);
 }
 
 function doImportCsv()
 {
   if (document.form_enc.imp_file.value == "") {
-    msg("<%=h t('user.specify_csv') %>");
+    msg("<%= t('user.specify_csv') %>");
     return "";
   }
   var enc = null;
@@ -221,7 +221,7 @@ function doImportCsv()
     }
   }
   if (enc == null) {
-    msg("<%=h t('user.select_encoding_of_csv') %>");
+    msg("<%= t('user.select_encoding_of_csv') %>");
     return;
   }
   var mode = null;
@@ -237,7 +237,7 @@ function doImportCsv()
   }
 
   document.form_enc.method = "post";
-  document.form_enc.action = "<%= url_for :controller => 'users', :action => 'import_csv' %>";
+  document.form_enc.action = "<%= url_for(:controller => 'users', :action => 'import_csv') %>";
   document.form_enc.submit();
 
   prog("TOP-RIGHT");
@@ -253,7 +253,7 @@ function doDelete()
     if (elems[i].checked) {
       var user_id = elems[i].id.split("_")[2];
       if (user_id == "<%= login_user.id %>") {
-        msg("<%= h t('user.cannot_remove_yourself') %>");
+        msg("<%= t('user.cannot_remove_yourself') %>");
         return;
       }
       count++;
@@ -262,12 +262,12 @@ function doDelete()
   if (count <= 0) {
     return;
   }
-  confm(count+"<%= h t('user.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('user.confirm_to_delete') %>", "_doDelete()");
 }
 
 function _doDelete()
 {
-  document.form_list.action = "<%= url_for :controller => 'users', :action => 'destroy' %>";
+  document.form_list.action = "<%= url_for(:controller => 'users', :action => 'destroy') %>";
   document.form_list.submit();
 
   prog("TOP-RIGHT");
@@ -287,7 +287,7 @@ function doNotify()
     }
   }
   if (count <= 0) {
-    msg("<%= h t('msg.select_users_to_notify') %>");
+    msg("<%= t('msg.select_users_to_notify') %>");
     return false;
   }
 
@@ -296,8 +296,8 @@ function doNotify()
   thetisBox.progress = true;
   thetisBox.show(
                 "CENTER", "540,200", "TEXTAREA",
-                "<%= url_for :controller => 'users', :action => 'notify' %>",
-                "<%=h t('msg.notify_info1') %>"+count+"<%=h t('msg.notify_info2') %><br/><%=h t('msg.notify_info3') %>",
+                "<%= url_for(:controller => 'users', :action => 'notify') %>",
+                "<%= t('msg.notify_info1') %>"+count+"<%= t('msg.notify_info2') %><br/><%= t('msg.notify_info3') %>",
                 ""
               );
 }
@@ -328,8 +328,8 @@ function showGroupTreeToSelect(group_id)
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'users', :action => 'list' %>", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'users', :action => 'list') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 //-->
@@ -393,10 +393,10 @@ end
 function showImportError()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%=h t('cap.import_error') %>";
+  thetisBox.title = "<%= t('cap.import_error') %>";
   thetisBox.bgcolor_title = "crimson";
   thetisBox.bgcolor_body = "salmon";
-  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%=h t('msg.error_detected') %>", $("imp_errs").innerHTML);
+  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", _x("imp_errs").innerHTML);
 }
 
 function onLoadSub()
@@ -408,4 +408,4 @@ function onLoadSub()
 
 <% end %>
 
-<%= render :partial => 'common/encoding_selector' %>
+<%= render(:partial => 'common/encoding_selector') %>

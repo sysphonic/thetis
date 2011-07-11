@@ -9,8 +9,8 @@
         &nbsp;
       </td>
       <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="window.open('http://www.microsoft.com/ie/')">
-        <pre id="<%= toy_id %>_msg"><%=h t('msg.warn_ie_version1') %>
-<%=h t('msg.warn_ie_version1') %></pre>
+        <pre id="<%= toy_id %>_msg"><%= t('msg.warn_ie_version1') %>
+<%= t('msg.warn_ie_version1') %></pre>
       </td>
     </tr>
   </table>
@@ -21,15 +21,15 @@
 
 <SCRIPT language="javascript" type="text/javascript">
 
-var desktop = $("div_desktop");
+var desktop = _x("div_desktop");
 
 var deskWidth = desktop.clientWidth;
 var deskHeight = desktop.clientHeight;
-var deskPos = Position.cumulativeOffset(desktop);
+var deskPos = getPos(desktop);
 
-var toy = $("<%= toy_id %>");
-toy.style.left = (deskPos[0] + deskWidth * 700 / 10000) + "px"; // 7%
-toy.style.top = (deskPos[1] + deskHeight * 2650 / 10000) + "px"; // 26.5%
+var toy = _x("<%= toy_id %>");
+toy.style.left = (deskPos.x + deskWidth * 700 / 10000) + "px"; // 7%
+toy.style.top = (deskPos.y + deskHeight * 2650 / 10000) + "px"; // 26.5%
 toy.style.display = "inline";
 
 </SCRIPT>

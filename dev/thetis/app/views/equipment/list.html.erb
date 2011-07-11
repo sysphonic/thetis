@@ -11,13 +11,13 @@
       <table width="100%" cellspacing="0" cellpadding="0">
          <tr>
             <td align="left" width="120" style="padding-top:5px; padding-bottom:5px;">
-              <a href="<%= url_for :controller => 'equipment', :action => 'new' %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= h t('btn.create') %>" title="<%= h t('btn.create') %>"></a>
+              <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>"></a>
     <% if @group_id.nil? or @group_id.empty? %>
       <!--
               <table width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.select_group') %>
+                    <%= t('btn.select_group') %>
                   </td>
                 </tr>
               </table>
@@ -26,16 +26,16 @@
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" nowrap>
-                  <%=h t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span>
-                  &nbsp;<a class="a_underline" href="javascript:clearGroup()"><%=h t('btn.bracket.clear') %></a>
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span>
+                  &nbsp;<a class="a_underline" href="javascript:clearGroup()"><%= t('btn.bracket.clear') %></a>
                 </td>
               </tr>
             </table>
     <% end %>
             </td>
             <td align="right">
-              <input type="button" value="<%=h t('btn.select_deselect_all')%>" onclick="selectAll();">
-              <input type="button" value="<%=h t('btn.delete')%>" onclick="doDelete(); return false;">
+              <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+              <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
             </td>
         </tr>
       </table>
@@ -47,7 +47,7 @@
 <table width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td class="pagination_td" align="center">
-      <%= h t('cap.total') %><%= h t('equipment', :count => @total_num) %>
+      <%= t('cap.total') %><%= t('equipment', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
@@ -77,7 +77,7 @@ users_cache = {}
   <tr height="33">
     <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h equipment.id %></td>
     <td class="<%=td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'equipment', :action => 'show', :id => equipment.id %>'; return false;">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'show', :id => equipment.id) %>'; return false;">
         <%=h truncate(equipment.name, :length => 20) %>
       </a>
     </td>
@@ -132,7 +132,7 @@ users_cache = {}
 <!--
 function clearGroup()
 {
-  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'list' %>";
+  document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'list') %>";
   document.form_list.group_id.value = "";
   document.form_list.submit();
   prog("TOP-RIGHT");
@@ -146,7 +146,7 @@ function sortList(col)
     type = (type == "ASC") ? "DESC" : "ASC";
   }
 
-  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'list' %>";
+  document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'list') %>";
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
   document.form_list.submit();
@@ -157,8 +157,8 @@ function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for :controller => 'equipment', :action => 'list' %>", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'equipment', :action => 'list') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 function selectAll()
@@ -188,12 +188,12 @@ function doDelete()
   }
   if (count <= 0) return;
 
-  confm(count+"<%= h t('equipment.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('equipment.confirm_to_delete') %>", "_doDelete()");
 }
 
 function _doDelete()
 {
-  document.form_list.action = "<%= url_for :controller => 'equipment', :action => 'destroy' %>";
+  document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'destroy') %>";
   document.form_list.submit();
 
   prog("TOP-RIGHT");

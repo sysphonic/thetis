@@ -12,31 +12,31 @@
         </tr>
         <tr height="5"><td></td></tr>
         <tr>
-          <td class="item_cap_td" style="background-color:#E5C27F"><%= h t('item.new_file') %></td>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= t('item.new_file') %></td>
           <td class="item_value_td">
-            <%= file_field :attachment, :file, :size => '43', :style => 'width:100%' %><br/>
+            <%= file_field(:attachment, :file, :size => '43', :style => 'width:100%') %><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:#E5C27F"><%= h Item.human_attribute_name('title') %></td>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= Item.human_attribute_name('title') %></td>
           <td class="item_value_td">
-            <%= text_field :attachment, :title, :style => 'width:70%'  %><br/>
+            <%= text_field(:attachment, :title, :style => 'width:70%')  %><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:#E5C27F"><%= h Attachment.human_attribute_name('memo') %></td>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= Attachment.human_attribute_name('memo') %></td>
           <td class="item_value_td">
-            <%= text_area :attachment, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+            <%= text_area(:attachment, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
           </td>
         </tr>
       <% if THETIS_ATTACHMENT_LOCATION_SELECTABLE %>
         <tr>
-          <td class="item_cap_td" style="background-color:#E5C27F"><%= h t('item.storage_location') %></td>
+          <td class="item_cap_td" style="background-color:#E5C27F"><%= t('item.storage_location') %></td>
           <td class="item_value_td">
           <% if @attachment.location == Attachment::LOCATION_DIR %>
-            <%=h t('item.location_file') %>
+            <%= t('item.location_file') %>
           <% else %>
-            <%=h t('item.location_db') %>
+            <%= t('item.location_db') %>
           <% end %>
           </td>
         </tr>
@@ -47,8 +47,8 @@
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <input id="attachment_info_ok" type="button" value="<%=h t('btn.register') %>" onclick="onAttachInfoOK()" style="width:80px;">
-                  &nbsp;&nbsp;<input id="attachment_info_cancel" type="button" value="<%=h t('btn.cancel') %>" onclick="onAttachInfoCancel()" style="width:80px;">
+                  <input id="attachment_info_ok" type="button" value="<%= t('btn.register') %>" onclick="onAttachInfoOK()" style="width:80px;">
+                  &nbsp;&nbsp;<input id="attachment_info_cancel" type="button" value="<%= t('btn.cancel') %>" onclick="onAttachInfoCancel()" style="width:80px;">
                 </td>
               </tr>
             </table>

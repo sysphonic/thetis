@@ -11,13 +11,13 @@ end
       <table width="100%" cellpadding="0" cellspacing="1">
         <tr height="20"><td></td></tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= h t('config.menu_name') %></td>
+          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_name') %></td>
           <td class="item_value_td">
             <input type="text" name="header_menu[name]" value="<%=h @header_menu_param[0] %>" style="width:95%" /><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= h t('config.menu_target') %></td>
+          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_target') %></td>
           <td class="item_value_td">
             <%
             [['main', t('config.menu_inside_thetis')], ['_blank', t('config.menu_new_window')]].each do |choice|
@@ -30,7 +30,7 @@ end
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= h t('config.menu_url') %></td>
+          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_url') %></td>
           <td class="item_value_td">
             <input type="text" name="header_menu[url]" value="<%=h @header_menu_param[2] %>" style="width:95%" /><br/>
           </td>
@@ -41,8 +41,8 @@ end
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center">
-                  <input id="header_menu_info_ok" type="button" value="<%=h t('btn.register') %>" onclick="onHeaderMenuInfoOK('<%=ApplicationHelper.h_s_quote @header_menu_param[0] %>');" style="width:80px;">
-                  &nbsp;&nbsp;<input id="header_menu_info_cancel" type="button" value="<%=h t('btn.cancel') %>" onclick="onHeaderMenuInfoCancel()" style="width:80px;">
+                  <input id="header_menu_info_ok" type="button" value="<%= t('btn.register') %>" onclick="onHeaderMenuInfoOK('<%=ApplicationHelper.h_s_quote @header_menu_param[0] %>');" style="width:80px;">
+                  &nbsp;&nbsp;<input id="header_menu_info_cancel" type="button" value="<%= t('btn.cancel') %>" onclick="onHeaderMenuInfoCancel()" style="width:80px;">
                 </td>
               </tr>
             </table>

@@ -1,10 +1,10 @@
 
-<%= render :partial => 'common/error', :locals => {:obj => @user} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
 <% login_user = session[:login_user] %>
 
 <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
-  <%= hidden_field 'user', 'id' %>
+  <%= hidden_field('user', 'id') %>
   <table align="center" width="85%" cellpadding="0" cellspacing="2">
     <tr>
       <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
@@ -24,7 +24,7 @@
   if req_pass
   %>
      <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%=h User.human_attribute_name('password') %></label></td>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%= User.human_attribute_name('password') %></label></td>
       <td class="item_value_td">
         <%= password_field 'user', 'password' %><sup style="color:red">*</sup>
       </td>
@@ -37,22 +37,22 @@
     </tr>
   <% end %>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_email"><%=h User.human_attribute_name('email') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_email"><%= User.human_attribute_name('email') %></label></td>
       <td class="item_value_td">
         <%= text_field('user', 'email', :style => 'ime-mode:disabled') %><sup style="color:red">*</sup>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_fullname"><%=h User.human_attribute_name('fullname') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_fullname"><%= User.human_attribute_name('fullname') %></label></td>
       <td class="item_value_td">
         <%= text_field('user', 'fullname') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_address"><%=h User.human_attribute_name('address') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_address"><%= User.human_attribute_name('address') %></label></td>
       <td class="item_value_td">
         <%= t('cap.postalcode') %> <%= text_field('user', 'postalcode', :style => 'width:100px; ime-mode:disabled;') %><br/>
-        <%= text_area 'user', 'address', :style => 'width:100%', :rows => '3' %>
+        <%= text_area('user', 'address', :style => 'width:100%', :rows => '3') %>
       </td>
     </tr>
     <tr>
@@ -62,7 +62,7 @@
 if THETIS_USER_TIMEZONE_SELECTABLE \
     or (!login_user.nil? and login_user.admin?(User::AUTH_USER))
 %>
-        <%= time_zone_select 'user', 'time_zone', nil, :default => THETIS_USER_TIMEZONE_DEFAULT %>
+        <%= time_zone_select('user', 'time_zone', nil, :default => THETIS_USER_TIMEZONE_DEFAULT) %>
 <%
 else
   if @user.nil? or @user.time_zone.nil? or @user.time_zone.empty?
@@ -104,7 +104,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_fax"><%=h User.human_attribute_name('fax') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_fax"><%= User.human_attribute_name('fax') %></label></td>
       <td class="item_value_td">
         <%= text_field('user', 'fax', :style => 'ime-mode:disabled') %>
       </td>
@@ -112,7 +112,7 @@ end
     <tr>
       <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
       <td class="item_value_td">
-        <%= text_area('user', 'organization', :style => "width:100%", :rows => '3') %>
+        <%= text_area('user', 'organization', :style => 'width:100%', :rows => '3') %>
       </td>
     </tr>
     <tr>
@@ -147,7 +147,7 @@ end
         def_birth_d = @user.birthday.strftime('%d')
       end
       %>
-      <td class="item_cap_td" nowrap><label for="user_birthday"><%=h User.human_attribute_name('birthday') %></label></td>
+      <td class="item_cap_td" nowrap><label for="user_birthday"><%= User.human_attribute_name('birthday') %></label></td>
       <td class="item_value_td">
         <input type="text" id="user_birthday_y" name="user[birthday_y]" value="<%= def_birth_y %>" size="30" style="width:50px; ime-mode:disabled">
         <%
@@ -214,7 +214,7 @@ function getTitleSelector(onOk, onCancel)
   %>
                     );
 
-  var def = $("user_title").value;
+  var def = _x("user_title").value;
 
   content = "<form name='form_title'>";
   content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
@@ -249,7 +249,7 @@ function getTitleSelector(onOk, onCancel)
 
 function onTitleSelectOK()
 {
-  $("user_title").value = document.form_title.title.value;
+  _x("user_title").value = document.form_title.title.value;
   selector.remove();
   selector = null;
 }

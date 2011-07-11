@@ -8,8 +8,8 @@
         <tr>
           <td align="left" nowrap style="padding:5px 20px;">
           <% if session[:login_user].admin?(User::AUTH_GROUP) %>
-            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(Position.cumulativeOffset(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(Position.cumulativeOffset(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;"/>
           <% else %>
@@ -69,10 +69,10 @@ BorderDragObserver.prototype = {
       return;
     }
     if (!is_MS && !is_Opera) {
-      var groupTree = $("groupTree");
-      var td_tree = $("td_tree");
-      var view = $("div_view");
-      var td_view = $("td_view");
+      var groupTree = _x("groupTree");
+      var td_tree = _x("td_tree");
+      var view = _x("div_view");
+      var td_view = _x("td_view");
       var orgWidthFolderTree = groupTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
@@ -90,18 +90,18 @@ BorderDragObserver.prototype = {
       return;
     }
     if (is_MS || is_Opera) {
-      var treeMainWidth = $("tree_main").clientWidth;
-      var groupTree = $("groupTree");
-      var td_tree = $("td_tree");
-      var view = $("div_view");
-      var td_view = $("td_view");
+      var treeMainWidth = _x("tree_main").clientWidth;
+      var groupTree = _x("groupTree");
+      var td_tree = _x("td_tree");
+      var view = _x("div_view");
+      var td_view = _x("td_view");
 
-      var groupTreePos = Position.cumulativeOffset(groupTree);
-      var borderPos = Position.cumulativeOffset(draggable.element);
+      var groupTreePos = getPos(groupTree);
+      var borderPos = getPos(draggable.element);
 
-//    alert("borderPos[0]="+borderPos[0]+", groupTreePos[0]="+groupTreePos[0]);
+//    alert("borderPos.x="+borderPos.x+", groupTreePos.x="+groupTreePos.x);
 
-      var leftWidth = borderPos[0] - groupTreePos[0] - 24;
+      var leftWidth = borderPos.x - groupTreePos.x - 24;
       groupTree.style.width = leftWidth + "px";
       td_tree.style.width = leftWidth + "px";
 
@@ -168,7 +168,7 @@ function doCreate(pos)
   thetisBox.progress = true;
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'create') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'create') %>', {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedGroupId="+group_id, "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('group.specify_name') %>", "");
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", "");
 }
 
 function doRename(pos)
@@ -190,8 +190,8 @@ function doRename(pos)
   thetisBox.progress = true;
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"\" method=\"post\" onsubmit=\"new Ajax.Updater('a_groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"', {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array('selectedGroupId='+group_id, "authenticity_token=<%= form_authenticity_token %>"));
-  var name = trim($("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
-  thetisBox.show((pos[0])+","+(pos[1]+25), "", "INPUT", "", "<%= t('group.specify_name') %>", name);
+  var name = trim(_x("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", name);
 }
 
 function doDelete()
@@ -209,7 +209,7 @@ function doDelete()
 
   ThetisBox.openTree("groupTree:"+group_id, true);
 
-  var name = trim($("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
+  var name = trim(_x("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
   confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%= t('group.delete_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+group_id+")");
 }
 
@@ -224,7 +224,7 @@ function _doDelete(group_id)
             evalScripts:true,
             onComplete:function(request){
               thetisBox.remove();
-              removeElem("base_groupTree:"+group_id);
+              removeElem(_x("base_groupTree:"+group_id));
               document.form_group_tree.selKeeper.value = "";
             },
             parameters:Form.serialize(document.form_group_tree)+"&authenticity_token=<%= form_authenticity_token %>"
@@ -274,12 +274,12 @@ function doGetMaps(group_id)
 
 function selectGroup(group_id)
 {
-  var select_opt = $('select_opt');
+  var select_opt = _x('select_opt');
 
   if (select_opt == null) {
     doGetUsers(group_id);
   } else {
-    switch ($('select_opt').value)
+    switch (_x('select_opt').value)
     {
       case 'user': doGetUsers(group_id); break;
       case 'workflow': doGetWorkflows(group_id); break;

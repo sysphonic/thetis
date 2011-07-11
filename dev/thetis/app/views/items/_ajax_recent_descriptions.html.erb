@@ -33,29 +33,29 @@ end
 
 <script type="text/javascript">
 
-if ($("div_before_restore").innerHTML != "") {
-  $("div_reset").style.display = "block";
+if (_x("div_before_restore").innerHTML != "") {
+  _x("div_reset").style.display = "block";
 }
 
 doSelectDesc = function(div_id)
 {
   if (oEditor) {
-    var div_before_restore = $("div_before_restore");
+    var div_before_restore = _x("div_before_restore");
     if (div_before_restore.innerHTML == "") {
       div_before_restore.innerHTML = oEditor.getData();
     }
-    oEditor.setData(restoreHTML($(div_id).innerHTML));
+    oEditor.setData(restoreHTML(_x(div_id).innerHTML));
   }
-  ThetisBox.getContainer($(div_id)).remove();
+  ThetisBox.getContainer(_x(div_id)).remove();
 }
 
 resetRestore = function()
 {
-  var div_before_restore = $("div_before_restore");
+  var div_before_restore = _x("div_before_restore");
   if (div_before_restore.innerHTML != "") {
     oEditor.setData(restoreHTML(div_before_restore.innerHTML));
   }
-  ThetisBox.getContainer($("div_reset")).remove();
+  ThetisBox.getContainer(_x("div_reset")).remove();
 }
 
 </script>

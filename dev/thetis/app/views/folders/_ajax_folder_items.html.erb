@@ -19,7 +19,7 @@ users_cache = {}
   <tr height="33">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h item.id %></td>
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => item %>'; return false;" >
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item) %>'; return false;" >
         <%=h truncate(item.title, :length => 20) %>
       </a>
       <% if !item.workflow.nil? and item.workflow.decided? %>
@@ -51,7 +51,7 @@ users_cache = {}
     if !login_user.nil? and item.editable?(login_user.id)
   %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
     </td>
   <%
     end
@@ -62,7 +62,7 @@ users_cache = {}
       del_type = 'null'
       del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
       %>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteItem(<%= item.id %>, <%= item.folder_id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>);" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteItem(<%= item.id %>, <%= item.folder_id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>);" />
     </td>
   <%
     end
@@ -73,4 +73,4 @@ users_cache = {}
 </table>
 <% end %>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>

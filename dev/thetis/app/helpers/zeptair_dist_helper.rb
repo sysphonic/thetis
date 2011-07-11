@@ -162,20 +162,43 @@ module ZeptairDistHelper
   #
   #_user_:: The target User.
   #_root_url_:: Root URL.
+  #_admins_:: Array of admin names to be accepted by the client.
   #_users_cache_:: Hash to accelerate response. {user_id, user_name}
   #return:: Array of FeedEntry.
   #
-  def self.get_feeds(user, root_url, users_cache=nil)
+  def self.get_feeds(user, root_url, admins, users_cache=nil)
 
     entries = []
+    user_obj_cache = {}
 
     add_con = "(Item.xtype='#{Item::XTYPE_ZEPTAIR_DIST}')"
+
+    unless admins.nil? or admins.empty?
+      admin_ids = []
+      admins.each do |admin_name|
+        begin
+          admin_user = User.find(:first, :conditions => "name='#{admin_name}'")
+        rescue
+        end
+        unless admin_user.nil?
+          admin_ids << admin_user.id
+          user_obj_cache[admin_user.id] = admin_user
+        end
+      end
+      unless admin_ids.empty?
+        add_con << "and (Item.user_id in (#{admin_ids.join(',')}))"
+      end
+    end
+
     sql = ItemsHelper.get_list_sql(user, nil, nil, nil, nil, 10, false, add_con)
     Item.find_by_sql(sql).each do |item|
+      owner = User.find_with_cache(item.user_id, user_obj_cache)
+      next if owner.nil?
+
       feed_entry  = FeedEntry.new
       feed_entry.created_at      = item.created_at
       feed_entry.updated_at      = item.updated_at
-      feed_entry.author          = item.disp_registered_by(users_cache)
+      feed_entry.author          = item.disp_registered_by(users_cache, user_obj_cache) + ':' + owner.name
       feed_entry.link            = root_url + ApplicationHelper.url_for(:controller => 'frames', :action => 'index', :default => ApplicationHelper.url_for(:controller => 'items', :action => 'show', :id => item.id))
       feed_entry.guid            = FeedEntry.create_guid(item, ApplicationHelper.get_timestamp(item))
       feed_entry.title           = item.title

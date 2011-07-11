@@ -8,7 +8,7 @@ unless @mail_folder.nil?
   menu_id = 'a_' + div_id
   selKeeper_id = 'selKeeper'
   %>
-  <a id="<%= menu_id %>" value="" href="javaScript:selectFolder('<%= @mail_folder.id %>'); if ($('<%= selKeeper_id %>').value == '<%= menu_id %>') { ThetisBox.toggleTree('<%= div_id %>'); } ThetisBox.selectTree('<%= selKeeper_id %>', '<%= menu_id %>', null)">
+  <a id="<%= menu_id %>" value="" href="javaScript:selectFolder('<%= @mail_folder.id %>'); if (_x('<%= selKeeper_id %>').value == '<%= menu_id %>') { ThetisBox.toggleTree('<%= div_id %>'); } ThetisBox.selectTree('<%= selKeeper_id %>', '<%= menu_id %>', null)">
     <%
     icons = @mail_folder.get_icons
     folder_open = icons[1]

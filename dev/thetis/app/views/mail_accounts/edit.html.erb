@@ -4,13 +4,13 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 <%= form_tag({:controller => 'mail_accounts', :action => 'update', :id => @mail_account.id}, :method => 'post', :name => 'form_mail_account'+form_idx) %>
 
-  <%= hidden_field 'mail_account', 'id' %>
+  <%= hidden_field('mail_account', 'id') %>
 
 <table width="80%" align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
     <td valign="top">
-      <%= render :partial => 'mail_account_form', :locals => {:form_idx => form_idx} %>
+      <%= render(:partial => 'mail_account_form', :locals => {:form_idx => form_idx}) %>
     </td>
   </tr>
 </table>
@@ -24,7 +24,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
       <table cellspacing="0" cellpadding="0">
         <tr>
           <td class="img_button_td" onclick="doRegister();">
-            <%=h t('btn.update')%>
+            <%= t('btn.update')%>
           </td>
         </tr>
       </table>

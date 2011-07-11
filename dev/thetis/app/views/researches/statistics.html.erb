@@ -6,11 +6,11 @@
     <td>
       <table cellspacing="2" cellpadding="0" align="left">
         <tr>
-          <td id="tab_statistics" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_statistics', 'div_statistics'); this.bgColor='brown';" bgColor="brown" onMouseOver="if($('div_statistics').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if($('div_statistics').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
-            <%= h t('menu.statistics') %>
+          <td id="tab_statistics" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_statistics', 'div_statistics'); this.bgColor='brown';" bgColor="brown" onMouseOver="if(_x('div_statistics').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_x('div_statistics').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+            <%= t('menu.statistics') %>
           </td>
-          <td id="tab_all" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_all', 'div_all'); this.bgColor='blue';" bgColor="silver" onMouseOver="if($('div_all').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if($('div_all').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
-            <%= h t('msg.all_records') %>
+          <td id="tab_all" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_all', 'div_all'); this.bgColor='blue';" bgColor="silver" onMouseOver="if(_x('div_all').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_x('div_all').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+            <%= t('msg.all_records') %>
           </td>
         </tr>
       </table>
@@ -29,7 +29,7 @@
           <tr height="20%"><td>&nbsp;</td></tr>
           <tr height="60%">
             <td valign="middle" align="center">
-              <%=h t('msg.no_data_to_display') %>
+              <%= t('msg.no_data_to_display') %>
             </td>
           </tr>
           <tr height="20%"><td>&nbsp;</td></tr>
@@ -67,7 +67,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
 
                 if users_ans.nil? or users_ans.empty?
                 %>
-                  <%=h t('paren.no_valid_values')%>
+                  <%= t('paren.no_valid_values')%>
                 <%
                 else
                   if users_cache.empty?
@@ -136,7 +136,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
                 %>
                 </ul>
                 <% else %>
-                  <%= render :partial => 'sum_table' %>
+                  <%= render(:partial => 'sum_table') %>
                 <%
                   end
                 end
@@ -155,8 +155,8 @@ users_cache = Hash.new    # user_id => Array of group_ids
       <td>
         <table align="center" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-              <%= h t('btn.back') %>
+            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+              <%= t('btn.back') %>
             </td>
           </tr>
         </table>
@@ -171,7 +171,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
     <tr>
       <td>
         <div id="div_research_records" style="overflow:auto;">
-          <%= render :partial => 'ajax_statistics_records' %>
+          <%= render(:partial => 'ajax_statistics_records') %>
         </div>
       </td>
     </tr>
@@ -180,8 +180,8 @@ users_cache = Hash.new    # user_id => Array of group_ids
       <td>
         <table align="center" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-              <%= h t('btn.back') %>
+            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+              <%= t('btn.back') %>
             </td>
           </tr>
         </table>
@@ -195,22 +195,22 @@ users_cache = Hash.new    # user_id => Array of group_ids
 <!--
 function showResearchTab(tab_id, div_id)
 {
-  $("tab_statistics").style.cursor = "pointer";
-  $("tab_all").style.cursor = "pointer";
+  _x("tab_statistics").style.cursor = "pointer";
+  _x("tab_all").style.cursor = "pointer";
 
-  var tab = $(tab_id);
+  var tab = _x(tab_id);
   tab.style.cursor = "default";
   var bg = tab.bgColor;
 
-  $("tab_statistics").bgColor = "silver";
-  $("tab_all").bgColor = "silver";
+  _x("tab_statistics").bgColor = "silver";
+  _x("tab_all").bgColor = "silver";
 
   tab.bgColor = bg;
 
-  $("div_statistics").style.display = "none";
-  $("div_all").style.display = "none";
+  _x("div_statistics").style.display = "none";
+  _x("div_all").style.display = "none";
 
-  var div = $(div_id);
+  var div = _x(div_id);
   div.style.display = "inline";
 }
 
@@ -221,9 +221,9 @@ function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'researches', :action => 'get_records_group' %>\" onsubmit=\"new Ajax.Updater('div_research_records', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'researches', :action => 'get_records_group') %>\" onsubmit=\"new Ajax.Updater('div_research_records', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 //-->

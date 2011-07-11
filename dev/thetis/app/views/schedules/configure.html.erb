@@ -17,7 +17,7 @@
               <table cellspacing="0" cellpadding="0">
                 <tr>
                   <td id="div_holidays">
-                    <%= render :partial => 'config_holidays' %>
+                    <%= render(:partial => 'config_holidays') %>
                   </td>
                   <td width="10">&nbsp;</td>
                   <td valign="top">
@@ -54,8 +54,8 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%=h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -79,7 +79,7 @@ function addHolidays()
                   + "parameters:Form.serialize(this)"
                 + "}"
                 + ");"
-  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays($('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays(_x('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   var cap = "<%= t('schedule.specify_holidays_info1') %><br/>"
@@ -97,7 +97,7 @@ function _addHolidays(val)
     return false;
   }
 
-  var list = $("holidays");
+  var list = _x("holidays");
   var holidays = new Array();
 
   for (var i=0; i < lines.length; i++) {
@@ -131,7 +131,7 @@ function _addHolidays(val)
 
 function removeHolidays()
 {
-  var sel_num = getListSelected($("holidays")).length;
+  var sel_num = getListSelected(_x("holidays")).length;
   if (sel_num <= 0) {
     return;
   }

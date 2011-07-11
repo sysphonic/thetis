@@ -11,7 +11,7 @@ login_user = session[:login_user]
       <table align="left" width="120" cellspacing="0" cellpadding="0">
         <tr>
           <td class="td_button_gray" align="left" nowrap bgColor="gray" onclick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%=h t('btn.select_group') %>
+            <%= t('btn.select_group') %>
           </td>
         </tr>
       </table>
@@ -19,7 +19,7 @@ login_user = session[:login_user]
     <td align="left" style="color:blue;">
       <% unless @group_id.nil? %>
         <%= Group.get_path(@group_id, @groups_cache) %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroup();" alt="<%= h t('btn.clear') %>" title="<%= h t('btn.clear') %>">
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroup();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
       <% end %>
     </td>
   </tr>
@@ -107,9 +107,9 @@ showGroupTreeToSelect = function(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'schedules', :action => 'get_group_users' %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%=h t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 doClearGroup = function()
@@ -118,7 +118,7 @@ doClearGroup = function()
 
   new Ajax.Updater(
               "div_selectUsers",
-              "<%= url_for :controller => 'schedules', :action => 'get_group_users' %>",
+              "<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>",
               {
                 method:"get",
                 asynchronous:true,

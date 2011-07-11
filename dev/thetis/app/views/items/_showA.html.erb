@@ -2,9 +2,9 @@
 function getDescriptionWidth()
 {
     var leftWidthPercent = 0;
-    var horizontalFrame = parent.document.getElementById('horizontalFrame');
+    var horizontalFrame = parent.document.getElementById("horizontalFrame");
     if (horizontalFrame != null) {
-      leftWidthPercent = horizontalFrame.cols.split('%')[0];
+      leftWidthPercent = horizontalFrame.cols.split("%")[0];
     }
     var mainWidthMax = screen.availWidth*(100-leftWidthPercent)/100;
     return (mainWidthMax*60/100);
@@ -16,12 +16,12 @@ function getDescriptionWidth()
       <table align="center" style="width:600px;" cellpadding="0" cellspacing="2">
         <tr>
           <td valign="top">
-             <%= render :partial => 'show_summary' %>
-             <%= render :partial => 'show_description' %>
+             <%= render(:partial => 'show_summary') %>
+             <%= render(:partial => 'show_description') %>
           </td>
         <% if @item.attachments_without_content.length > 0 %>
           <td valign="top" width="30%">
-             <%= render :partial => 'show_attachment' %>
+             <%= render(:partial => 'show_attachment') %>
           </td>
         <% end %>
         </tr>
@@ -31,7 +31,7 @@ function getDescriptionWidth()
  <% if @item.images_without_content.length > 0 %>
   <tr>
     <td>
-        <%= render :partial => 'show_image' %>
+        <%= render(:partial => 'show_image') %>
     </td>
   </tr>
  <% end %>

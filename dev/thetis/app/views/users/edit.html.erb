@@ -7,17 +7,17 @@
   <tr>
     <td width="54%" valign="top">
       <%= form_tag({:controller => 'users', :action => 'update', :id => @user.id}, :name => 'form_user_basic', :method => 'post') %>
-        <%= render :partial => 'user_form' %>
+        <%= render(:partial => 'user_form') %>
       </form>
       <div class="info_area" style="width:100%; padding-top:0px; padding-bottom:15px;" align="center">
-        <%= hidden_field 'user', 'id' %>
+        <%= hidden_field('user', 'id') %>
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('item.profile_sheet') %></td>
+            <td class="item_cap_td" nowrap><%= t('item.profile_sheet') %></td>
             <td class="item_value_td">
               <%= form_tag({:controller => 'items', :action => 'create_profile_sheet', :id => @user.id}, :name => 'form_ajax_userItem', :method => 'post') %>
                 <div id="div_ajax_userItem" style="padding-left:10px;">
-                  <%= render :partial => 'ajax_profile_sheet' %>
+                  <%= render(:partial => 'ajax_profile_sheet') %>
                 </div>
               </form>
             </td>
@@ -30,7 +30,7 @@
 
     <% if login_user.admin?(User::AUTH_USER) %>
       <!-- Authority -->
-      <%= render :partial => 'user_auth' %>
+      <%= render(:partial => 'user_auth') %>
 
       <div style="height:10px"></div>
 
@@ -38,17 +38,17 @@
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap><%=h t('group.plural') %></td>
+            <td class="item_cap_td" nowrap><%= t('group.plural') %></td>
             <td class="item_value_td">
               <div id="div_user_groups">
-                <%= render :partial => 'ajax_groups' %>
+                <%= render(:partial => 'ajax_groups') %>
               </div>
 
             <% if login_user.admin?(User::AUTH_USER) %>
               <table align="left" width="120" cellspacing="0" cellpadding="0">
                 <tr>
                   <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0', false);" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%=h t('btn.add_group') %>
+                    <%= t('btn.add_group') %>
                   </td>
                 </tr>
               </table>
@@ -65,7 +65,7 @@
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap>
-              <%=h t('team.plural') %>
+              <%= t('team.plural') %>
             </td>
             <td class="item_value_td">
               <div id="div_user_teams">
@@ -77,7 +77,7 @@
                     access_auth = team.item.check_user_auth(login_user, 'r', true)
                 %>
                 <li type="square">
-                <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => team.item.id %>'; return false;"><% end %>
+                <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item.id) %>'; return false;"><% end %>
                   <%=h team.name %>
                 <% if access_auth %></a><% end %><br/>
                 <%
@@ -131,7 +131,7 @@
 
     <% else %>
 
-      <%= render :partial => 'show_addition' %>
+      <%= render(:partial => 'show_addition') %>
 
     <% end %>
 
@@ -143,12 +143,12 @@
 <table align="center" cellspacing="0" cellpadding="0">
   <tr height="20"><td></td></tr>
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'history', :action => 'back' %>';">
-      <%= h t('btn.back') %>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
     </td>
     <td width="15"></td>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); document.form_user_basic.submit();">
-        <%= h t('btn.register') %>
+        <%= t('btn.register') %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>
@@ -161,7 +161,7 @@
 
 function doDelete(user_id, title)
 {
-  confm("<%= h t('paren.square.left') %>" + title + "<%= h t('msg.confirm_to_delete') %>", "_doDelete("+user_id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDelete("+user_id+")");
 }
 
 function _doDelete(user_id)
@@ -170,7 +170,7 @@ function _doDelete(user_id)
 
   new Ajax.Updater(
           "div_ajax_userItem",
-          "<%= url_for :controller => 'users', :action => 'destroy_profile_sheet' %>?id=" + user_id,
+          "<%= url_for(:controller => 'users', :action => 'destroy_profile_sheet') %>?id=" + user_id,
           {
             asynchronous:true,
             evalScripts:true,
@@ -192,22 +192,22 @@ function showGroupTreeToSelect(group_id, do_change)
 
   var caption = "";
   if (do_change == true) {
-    caption = "<%=h t('group.select_to_change_to')%>";
+    caption = "<%= t('group.select_to_change_to')%>";
   } else {
-    caption = "<%=h t('user.select_group_to_add_to')%>";
+    caption = "<%= t('user.select_group_to_add_to')%>";
   }
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for :controller => 'users', :action => 'add_to_group' %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_user_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'users', :action => 'add_to_group') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_user_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(additionalParams);
   thetisBox.show("CENTER", "", "TREE", "", caption, "");
-  thetisBox.setTree("<%= url_for :controller => 'groups', :action => 'ajax_get_tree' %>", group_id);
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
 function doRemoveGroup(group_id, path, user_id)
 {
-  confm("<%=h t('user.confirm_to_excluded_from1') %>" + path + "<%=h t('user.confirm_to_excluded_from2') %>", "_doRemoveGroup("+group_id+", "+user_id+")");
+  confm("<%= t('user.confirm_to_excluded_from1') %>" + path + "<%= t('user.confirm_to_excluded_from2') %>", "_doRemoveGroup("+group_id+", "+user_id+")");
 }
 
 function _doRemoveGroup(group_id, user_id)
@@ -216,7 +216,7 @@ function _doRemoveGroup(group_id, user_id)
 
   new Ajax.Updater(
         "div_user_groups",
-        "<%= url_for :controller => 'users', :action => 'exclude_from_group' %>?id=" + user_id + "&group_id=" + group_id,
+        "<%= url_for(:controller => 'users', :action => 'exclude_from_group') %>?id=" + user_id + "&group_id=" + group_id,
         {
           parameters:"authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
@@ -244,16 +244,16 @@ doUpdateZeptAllowed = function()
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Request(
-              "<%= url_for :controller => 'users', :action => 'update_zept_allowed', :id => @user.id %>",
+              "<%= url_for(:controller => 'users', :action => 'update_zept_allowed', :id => @user.id) %>",
               {
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request){
                   thetisBox.remove();
                   if (request.responseText == "") {
-                    tips("<%=h t('msg.update_success') %>");
+                    tips("<%= t('msg.update_success') %>");
                   } else {
-                    msg("<%=h t('msg.system_error')%><br/>"+request.responseText);
+                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
                   }
                 },
                 parameters:"zept_allowed="+zept_allowed

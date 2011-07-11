@@ -2,7 +2,7 @@
 
 <table align="center" width="95%" cellpadding="0" cellspacing="2">
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:darkseagreen;"><%=h Workflow.human_attribute_name('status') %></td>
+    <td class="item_cap_td" nowrap style="background-color:darkseagreen;"><%= Workflow.human_attribute_name('status') %></td>
     <td style="padding-left:5px;">
       <%
       back_style = ''
@@ -43,7 +43,7 @@
   @orders.each do |order|
   %>
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:lightgreen;"><%=h t('workflow.order_prefix')+(order_idx+1).to_s %></td>
+    <td class="item_cap_td" nowrap style="background-color:lightgreen;"><%= t('workflow.order_prefix')+(order_idx+1).to_s %></td>
     <td class="item_value_td">
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
@@ -66,7 +66,7 @@
                 @comment = cmnt
               %>
 
-              <%= render :partial => "ajax_wf_comment", :object => @comment %>
+              <%= render(:partial => 'ajax_wf_comment', :object => @comment) %>
 
             <%
                 end
@@ -75,29 +75,29 @@
             %>
             <% if !login_user.nil? and user_id == login_user.id and !expected_mark.empty? %>
             <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'doWfRespond(); return false;') %>
-              <%= hidden_field 'comment', 'item_id', :value => @item.id %>
-              <%= hidden_field 'comment', 'user_id', :value => login_user.id %>
+              <%= hidden_field('comment', 'item_id', :value => @item.id) %>
+              <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
               <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#A9CDF9">
                 <tr>
                   <td>
                     <span id="comment_ack">
-                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="$('comment_ack').style.backgroundColor='greenyellow'; $('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
+                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="_x('comment_ack').style.backgroundColor='greenyellow'; _x('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
                     </span>
                     &nbsp;
                     <span id="comment_nak">
-                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="$('comment_ack').style.backgroundColor=''; $('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
+                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="_x('comment_ack').style.backgroundColor=''; _x('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
                     </span>
                   </td>
                 </tr>
                 <tr>
                   <td style="font-size:8pt; color:midnightblue; padding-left:10px; padding-right:10px;">
-                      <%=h t('cap.comment') %>
-                      <%= text_area 'comment', 'message', :rows => "4", :value => "", :style => 'width:100%;' %>
+                      <%= t('cap.comment') %>
+                      <%= text_area('comment', 'message', :rows => '4', :value => '', :style => 'width:100%;') %>
                   </td>
                 </tr>
                 <tr>
                   <td align="center">
-                    <input name="commit" type="submit" value="<%=h t('btn.register') %>" style="width:80px;" />
+                    <input name="commit" type="submit" value="<%= t('btn.register') %>" style="width:80px;" />
                   </td>
                 </tr>
               </table>

@@ -9,6 +9,6 @@ end
 %>
   <a name="comment_<%= @comment.id %>"></a>
   <div id="div_comment_<%= @comment.id %>">
-    <%= render :partial => "ajax_comment", :locals => {:profiles_cache => profiles_cache} %>
+    <%= render(:partial => 'ajax_comment', :locals => {:profiles_cache => profiles_cache}) %>
   </div>
 <% end %>

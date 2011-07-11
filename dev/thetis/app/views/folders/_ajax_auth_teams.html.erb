@@ -7,7 +7,7 @@
       <table align="center" width="80%" cellpadding="0" cellspacing="0">
         <tr>
           <td align="left" valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
-            <%=h t('folder.cannot_be_edited') %>
+            <%= t('folder.cannot_be_edited') %>
           </td>
         </tr>
       </table>
@@ -23,13 +23,13 @@
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
           <td id="tab_users" class="td_item_tab" nowrap onClick="selectTabUsers(<%= @folder.id %>);" bgColor="silver" onMouseOver="this.bgColor='palegreen'" onMouseOut="this.bgColor='silver';">
-              <%= h t('user.plural') %>
+              <%= t('user.plural') %>
           </td>
           <td id="tab_groups" class="td_item_tab" nowrap onClick="selectTabGroups(<%= @folder.id %>);" bgColor="silver" onMouseOver="this.bgColor='palegreen'" onMouseOut="this.bgColor='silver';">
-              <%= h t('group.plural') %>
+              <%= t('group.plural') %>
           </td>
           <td id="tab_teams" class="td_item_tab" nowrap  bgColor="brown" style="cursor:default">
-              <%= h t('team.plural') %>
+              <%= t('team.plural') %>
           </td>
         </tr>
       </table>
@@ -47,7 +47,7 @@
               <table cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                   <td style="text-align:left;">
-                    <%= h t('cap.teams') %><br/>
+                    <%= t('cap.teams') %><br/>
                     <select id="team_candidates" name="team_candidates" class="select_multi" size="5" multiple="multiple">
                     <%
                      read_teams = @folder.get_read_teams_a
@@ -69,10 +69,10 @@
                     <table cellspacing="0" cellpadding="0" width="100%">
                       <tr>
                         <td align="center" nowrap>
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.read_write') %>" onclick="var ary=moveListWithSuffix($('team_candidates'), $('teams_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.read') %>" onclick="var ary=moveListWithSuffix($('team_candidates'), $('teams_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%=h t('auth.write') %>" onclick="var ary=moveListWithSuffix($('team_candidates'), $('teams_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.up')) %><%=h t('btn.remove') %>" onclick="var ary=moveListTrimSuffix($('teams_auth'), $('team_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="var ary=moveListWithSuffix(_x('team_candidates'), _x('teams_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="var ary=moveListWithSuffix(_x('team_candidates'), _x('teams_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="var ary=moveListWithSuffix(_x('team_candidates'), _x('teams_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="var ary=moveListTrimSuffix(_x('teams_auth'), _x('team_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
                         </td>
                       </tr>
                     </table>
@@ -108,7 +108,7 @@
                 <tr height="20"><td></td></tr>
                 <tr>
                 <td class="img_button_td" onclick="doApplyAuthTeams(<%= @folder.id %>);">
-                  <%=h t('btn.apply') %>
+                  <%= t('btn.apply') %>
                 </td>
                 </tr>
               </table>
@@ -124,7 +124,7 @@
 
 <% end %>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>
 
 <script type="text/javascript">
 

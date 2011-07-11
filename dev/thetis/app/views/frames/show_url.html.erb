@@ -9,10 +9,10 @@
         <tr height="7"><td></td></tr>
         <tr>
           <td align="left" style="padding-left:5px; color:navy;">
-            <%=h t('cap.from_outside') %><br/>
+            <%= t('cap.from_outside') %><br/>
           </td>
           <td align="right">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/select_all.gif" alt="<%=h t('btn.select_all') %>" title="<%=h t('btn.select_all') %>" onclick="selectAll('div_outside');" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/select_all.gif" alt="<%= t('btn.select_all') %>" title="<%= t('btn.select_all') %>" onclick="selectAll('div_outside');" />
           </td>
         </tr>
         <tr height="3"><td></td></tr>
@@ -24,10 +24,10 @@
         <tr height="10"><td></td></tr>
         <tr>
           <td align="left" style="padding-left:5px; color:navy;">
-            <%=h t('cap.from_inside') %><br/>
+            <%= t('cap.from_inside') %><br/>
           </td>
           <td align="right">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/select_all.gif" alt="<%=h t('btn.select_all') %>" title="<%=h t('btn.select_all') %>" onclick="selectAll('div_inside');" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/select_all.gif" alt="<%= t('btn.select_all') %>" title="<%= t('btn.select_all') %>" onclick="selectAll('div_inside');" />
           </td>
         </tr>
         <tr height="3"><td></td></tr>
@@ -46,7 +46,7 @@
 
 selectAll = function(div_name)
 {
-  var div = $(div_name);
+  var div = _x(div_name);
   div.focus();
   div.select();
 }

@@ -41,13 +41,13 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 <script type="text/javascript">
 doRegister = function()
 {
-  if ($("scope_common")) {
-    if ($("scope_common").checked) {
-      selectListAll($("groups_selected"));
-      selectListAll($("teams_selected"));
+  if (_x("scope_common")) {
+    if (_x("scope_common").checked) {
+      selectListAll(_x("groups_selected"));
+      selectListAll(_x("teams_selected"));
     } else {
-      deselectListAll($("groups_selected"));
-      deselectListAll($("teams_selected"));
+      deselectListAll(_x("groups_selected"));
+      deselectListAll(_x("teams_selected"));
     }
   }
 

@@ -5,7 +5,7 @@
       <table width="120" cellspacing="0" cellpadding="0">
         <tr>
           <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%=h t('btn.select_group') %>
+            <%= t('btn.select_group') %>
           </td>
         </tr>
       </table>
@@ -13,7 +13,7 @@
       <table cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" nowrap>
-            <%=h t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%=h Group.get_path(@group_id) %></a>
+            <%= t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%=h Group.get_path(@group_id) %></a>
           </td>
         </tr>
       </table>
@@ -30,9 +30,9 @@
     <td valign="middle" align="center">
 
   <% if @group_id.nil? or @group_id.empty? %>
-      <%=h t('group.select_to_show')%>
+      <%= t('group.select_to_show')%>
   <% else %>
-      <%=h t('msg.no_data_to_display') %>
+      <%= t('msg.no_data_to_display') %>
   <% end %>
 
     </td>
@@ -47,7 +47,7 @@ else
 %>
 
     <div align="center" style="padding-top:10px; width:100%; color:red; font-weight:bold;">
-      <%=h t('research.max_to_display1') %><%= @researches.length %><%=h t('research.max_to_display2') %>
+      <%= t('research.max_to_display1') %><%= @researches.length %><%= t('research.max_to_display2') %>
     </div>
     <br/>
 

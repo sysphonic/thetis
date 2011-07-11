@@ -6,7 +6,7 @@
 
     <table width="100%" cellspacing="5" cellpadding="0" style="font-size:10pt; padding:5px; line-height:2.0;">
       <tr>
-        <td colspan="6" style="padding-left:20px;"><%=h t('research.confirm_answer') %></td>
+        <td colspan="6" style="padding-left:20px;"><%= t('research.confirm_answer') %></td>
       </tr>
 
     <% @q_caps_h.each do |q_code, q_cap| %>
@@ -39,8 +39,8 @@
 
     </table>
 
-    <%= hidden_field_tag 'research_id', @research.id %>
-    <%= hidden_field_tag 'page', @page %>
+    <%= hidden_field_tag('research_id', @research.id) %>
+    <%= hidden_field_tag('page', @page) %>
 
     <table align="center" cellspacing="0" cellpadding="0" width="0" border="0" valign="top">
       <tr height="10"><td></td></tr>

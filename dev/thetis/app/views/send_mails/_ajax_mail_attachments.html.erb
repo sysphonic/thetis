@@ -4,7 +4,7 @@
     <tr>
       <td align="left">
         <%= t('cap.attach_file') %>&nbsp;
-        <%= file_field_tag 'attach_file', :style => 'width:80%;' %>
+        <%= file_field_tag('attach_file', :style => 'width:80%;') %>
       </td>
     </tr>
   </table>
@@ -13,7 +13,7 @@
     <tr>
       <td align="left">
         <%= t('cap.attach_file') %>&nbsp;
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%=h t('btn.add') %>" title="<%=h t('btn.add') %>" onclick="attachFile();" />
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%= t('btn.add') %>" title="<%= t('btn.add') %>" onclick="attachFile();" />
       </td>
     </tr>
     <tr>
@@ -24,7 +24,7 @@
           <% @email.mail_attachments.each do |attach| %>
             <span id="sendmail_attach_<%= attach.id %>">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
-              &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteAttachment('sendmail_attach_<%= attach.id %>', <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+              &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteAttachment('sendmail_attach_<%= attach.id %>', <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
             </span><br/>
           <% end %>
         <% end %>
@@ -40,4 +40,4 @@
   </table>
 <% end %>
 
-<%= render :partial => 'common/flash_notice' %>
+<%= render(:partial => 'common/flash_notice') %>

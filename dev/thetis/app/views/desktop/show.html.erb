@@ -21,7 +21,7 @@ open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
 date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
 %>
   new Ajax.Updater(
-            $("div_desktop").parentNode,
+            _x("div_desktop").parentNode,
             "<%= url_for(open_url_h) %>",
             {
               method:"get",
@@ -54,10 +54,10 @@ date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
 
 function showSchedule()
 {
-  var desktop = $("div_desktop");
+  var desktop = _x("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
+  var deskPos = getPos(desktop);
 
   var thetisBoxProgress = prog("CENTER");
 
@@ -65,8 +65,8 @@ function showSchedule()
 <%= render(:partial => 'theitsbox_color') %>
   var trayWidth = Math.floor(deskWidth * 2 / 3) - 2;
   var trayHeight = 220;
-  var trayX = deskPos[0] + 2;
-  var trayY = deskPos[1] + 2;
+  var trayX = deskPos.x + 2;
+  var trayY = deskPos.y + 2;
 
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'get_schedule', :date => date_s) %>",
@@ -94,10 +94,10 @@ function showSchedule()
 
 function showTimecard()
 {
-  var desktop = $("div_desktop");
+  var desktop = _x("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
+  var deskPos = getPos(desktop);
 
   var thetisBoxProgress = prog("CENTER");
 
@@ -105,8 +105,8 @@ function showTimecard()
 <%= render(:partial => 'theitsbox_color') %>
   var trayWidth = 200;
   var trayHeight = 180;
-  var trayX = deskPos[0] + 2;
-  var trayY = deskPos[1] + deskHeight - trayHeight;
+  var trayX = deskPos.x + 2;
+  var trayY = deskPos.y + deskHeight - trayHeight;
 
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'edit_timecard', :date => date_s) %>",
@@ -134,7 +134,7 @@ function showTimecard()
 
 function showToolTray(sw)
 {
-  var tool_tray = $("tool_tray");
+  var tool_tray = _x("tool_tray");
 
   if (!tool_tray)
     return;
@@ -148,10 +148,10 @@ function showToolTray(sw)
 
 function showTray()
 {
-  var desktop = $("div_desktop");
+  var desktop = _x("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
-  var deskPos = Position.cumulativeOffset(desktop);
+  var deskPos = getPos(desktop);
 
   showToolTray(false);
 
@@ -162,8 +162,8 @@ function showTray()
   thetisBox.setOnClose("showToolTray(true);");
   var trayWidth = Math.floor(deskWidth / 3);
   var trayHeight = deskHeight;
-  var trayX = deskPos[0] + deskWidth - trayWidth + 2;
-  var trayY = deskPos[1] + 2;
+  var trayX = deskPos.x + deskWidth - trayWidth + 2;
+  var trayY = deskPos.y + 2;
   if (is_MS) {
     trayX -= 3;
   } else {
@@ -196,7 +196,7 @@ function showTray()
 
 function showToolBiorhythm(sw)
 {
-  var tool_biorhythm = $("tool_biorhythm");
+  var tool_biorhythm = _x("tool_biorhythm");
 
   if (tool_biorhythm == null) {
     return;
@@ -237,7 +237,7 @@ function saveBirthday(birthday)
             onComplete:function(request) {
                 setTimeout("showBiorhythm()", 10);
                 thetisBoxProgress.remove();
-                $("biorhythm_req_birth").value = "false";
+                _x("biorhythm_req_birth").value = "false";
               }
           }
         );

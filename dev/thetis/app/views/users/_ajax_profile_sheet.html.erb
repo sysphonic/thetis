@@ -5,22 +5,22 @@ login_user = session[:login_user]
 if @item.nil?
   if !login_user.nil? and login_user.id == @user.id
 %>
-    <a class="a_underline" href="#" onclick="var thetisBox=prog('TOP-RIGHT'); new Ajax.Updater('div_ajax_userItem', '<%= url_for :controller => 'users', :action => 'create_profile_sheet', :id => @user.id %>', {asynchronous:true, evalScripts:true, onComplete:function(request){thetisBox.remove();}, parameters:Form.serialize(document.form_ajax_userItem)}); return false;">
-      <%=h t('btn.create') %>
+    <a class="a_underline" href="#" onclick="var thetisBox=prog('TOP-RIGHT'); new Ajax.Updater('div_ajax_userItem', '<%= url_for(:controller => 'users', :action => 'create_profile_sheet', :id => @user.id) %>', {asynchronous:true, evalScripts:true, onComplete:function(request){thetisBox.remove();}, parameters:Form.serialize(document.form_ajax_userItem)}); return false;">
+      <%= t('btn.create') %>
     </a>
   <% else %>
-      <%=h t('paren.not_created') %>
+      <%= t('paren.not_created') %>
 <%
   end
 else
 %>
-    <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => @item.id %>'; return false;">
+    <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => @item.id) %>'; return false;">
       <%=h truncate(@item.title, :length => 20) %>
     </a>
   <% if !login_user.nil? and @item.editable?(login_user.id) %>
-    &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>';" />
+    &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>';" />
   <% end %>
   <% if !login_user.nil? and @item.deletable?(login_user.id) %>
-    &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDelete(<%= @user.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>'); return false;" />
+    &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= @user.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>'); return false;" />
   <% end %>
 <% end %>

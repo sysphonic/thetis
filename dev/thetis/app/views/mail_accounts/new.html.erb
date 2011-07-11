@@ -8,7 +8,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
   <tr height="20"><td></td></tr>
   <tr>
     <td valign="top">
-      <%= render :partial => 'mail_account_form', :locals => {:form_idx => form_idx} %>
+      <%= render(:partial => 'mail_account_form', :locals => {:form_idx => form_idx}) %>
     </td>
   </tr>
 </table>
@@ -22,7 +22,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
       <table cellspacing="0" cellpadding="0">
         <tr>
           <td class="img_button_td" onclick="doRegister();">
-            <%=h t('btn.register')%>
+            <%= t('btn.register')%>
           </td>
         </tr>
       </table>

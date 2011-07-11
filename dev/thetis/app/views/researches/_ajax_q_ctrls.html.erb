@@ -1,10 +1,10 @@
 <table align="center" width="85%" cellpadding="0" cellspacing="2">
   <tr>
-    <td class="item_cap_td" nowrap style="width:100%;"><%=h t('research.choice_type') %></td>
+    <td class="item_cap_td" nowrap style="width:100%;"><%= t('research.choice_type') %></td>
   </tr>
   <tr>
     <td class="item_value_td" style="padding:0px; text-align:right;">
-      <input type="button" value="<%=h t('btn.reset') %>" onclick="doResetCtrl();" style="width:100px;" />
+      <input type="button" value="<%= t('btn.reset') %>" onclick="doResetCtrl();" style="width:100px;" />
     </td>
   </tr>
   <tr>
@@ -32,18 +32,18 @@
   </tr>
   <tr>
     <td class="item_value_td" nowrap>
-      <%=h t('research.q') %> <input id="q_cap" type="text" value="" style="width:80%;" />
+      <%= t('research.q') %> <input id="q_cap" type="text" value="" style="width:80%;" />
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('research.q_info') %>');">
     </td>
   </tr>
   <tr>
     <td class="item_value_td">
       <select id="sel_q_types" style="width:100%;" disabled="true" onchange="onSelectQTypes(this.value)">
-        <option value=""><%=h t('msg.select_type')%></option>
-        <option value="radio"><%=h t('research.radio_buttons')%></option>
-        <option value="checkbox"><%=h t('research.check_boxes')%></option>
-        <option value="select"><%=h t('research.dropdown_list')%></option>
-        <option value="textarea"><%=h t('research.textarea')%></option>
+        <option value=""><%= t('msg.select_type')%></option>
+        <option value="radio"><%= t('research.radio_buttons')%></option>
+        <option value="checkbox"><%= t('research.check_boxes')%></option>
+        <option value="select"><%= t('research.dropdown_list')%></option>
+        <option value="textarea"><%= t('research.textarea')%></option>
       </select><br/>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
@@ -58,7 +58,7 @@
                       <tr height="7"><td></td></tr>
                       <tr>
                         <td style="padding-left:5px; color:indianred;">
-                          <%=h t('research.specify_choice') %><br/>
+                          <%= t('research.specify_choice') %><br/>
                         </td>
                       </tr>
                       <tr height="3"><td></td></tr>
@@ -73,7 +73,7 @@
                 </tr>
                 <tr>
                   <td class="item_value_td" style="text-align:right;">
-                    <input type="button" value="<%=h t('btn.apply') %>" onclick="doApplyCtrl();" style="width:100px;" />
+                    <input type="button" value="<%= t('btn.apply') %>" onclick="doApplyCtrl();" style="width:100px;" />
                   </td>
                 </tr>
               </table>
@@ -88,7 +88,7 @@
                       <tr height="7"><td></td></tr>
                       <tr>
                         <td width="5%" nowrap style="padding-left:5px; color:indianred;">
-                          <%=h t('research.rows') %><br/>
+                          <%= t('research.rows') %><br/>
                         </td>
                         <td style="padding-left:5px;">
                           <input id='ctrl_textarea_rows' style="width:50;" />
@@ -100,7 +100,7 @@
                 </tr>
                 <tr>
                   <td class="item_value_td" style="text-align:right;">
-                    <input type="button" value="<%=h t('btn.apply') %>" onclick="doApplyCtrl();" style="width:100px;">
+                    <input type="button" value="<%= t('btn.apply') %>" onclick="doApplyCtrl();" style="width:100px;">
                   </td>
                 </tr>
               </table>

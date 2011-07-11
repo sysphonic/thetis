@@ -1,5 +1,5 @@
 
-<%= render :partial => 'common/error', :locals => {:obj => @attachment} %>
+<%= render(:partial => 'common/error', :locals => {:obj => @attachment}) %>
 
 <table align="center" width="90%" cellpadding="0" cellspacing="2">
   <tr height="20"><td></td></tr>
@@ -7,67 +7,67 @@
     <td valign="top">
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
-          <td class="item_cap_td" style="width:100%; background-color:#E5C27F;"><%= h t('item.add_attachment') %></td>
+          <td class="item_cap_td" style="width:100%; background-color:#E5C27F;"><%= t('item.add_attachment') %></td>
         </tr>
         <tr>
           <td class="item_value_td" width="80%">
             <table width="100%" cellpadding="0" cellspacing="2">
               <tr>
                 <td rowspan="<%= (THETIS_ATTACHMENT_LOCATION_SELECTABLE)?4:3 %>" width="20" align="center" bgColor="goldenrod">A</td>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h t('item.file') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= t('item.file') %></td>
                 <td class="item_value_td">
-                  <%= file_field :attachment0, :file, :style => 'width:100%', :size => '50' %><br/>
+                  <%= file_field(:attachment0, :file, :style => 'width:100%', :size => '50') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h Item.human_attribute_name('title') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= Item.human_attribute_name('title') %></td>
                 <td class="item_value_td">
-                  <%= text_field :attachment0, :title, :style => 'width:70%' %><br/>
+                  <%= text_field(:attachment0, :title, :style => 'width:70%') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h Attachment.human_attribute_name('memo') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= Attachment.human_attribute_name('memo') %></td>
                 <td class="item_value_td">
-                  <%= text_area :attachment0, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+                  <%= text_area(:attachment0, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
                 </td>
               </tr>
             <% if THETIS_ATTACHMENT_LOCATION_SELECTABLE %>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h t('item.storage_location') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= t('item.storage_location') %></td>
                 <td class="item_value_td">
-                  <%= radio_button :attachment0, :location, Attachment::LOCATION_DB, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DB) %><label for="attachment0_location_<%= Attachment::LOCATION_DB.downcase %>"><%=h t('item.location_db') %></label>
+                  <%= radio_button(:attachment0, :location, Attachment::LOCATION_DB, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DB)) %><label for="attachment0_location_<%= Attachment::LOCATION_DB.downcase %>"><%= t('item.location_db') %></label>
                   &nbsp;
-                  <%= radio_button :attachment0, :location, Attachment::LOCATION_DIR, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DIR) %><label for="attachment0_location_<%= Attachment::LOCATION_DIR.downcase %>"><%=h t('item.location_file') %></label>
+                  <%= radio_button(:attachment0, :location, Attachment::LOCATION_DIR, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DIR)) %><label for="attachment0_location_<%= Attachment::LOCATION_DIR.downcase %>"><%= t('item.location_file') %></label>
                 </td>
               </tr>
             <% end %>
               <tr height="5"><td></td></tr>
               <tr>
                 <td rowspan="<%= (THETIS_ATTACHMENT_LOCATION_SELECTABLE)?4:3 %>" width="20" align="center" bgColor="goldenrod">B</td>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h t('item.file') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= t('item.file') %></td>
                 <td class="item_value_td">
-                  <%= file_field :attachment1, :file, :style => 'width:100%', :size => '50' %><br/>
+                  <%= file_field(:attachment1, :file, :style => 'width:100%', :size => '50') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h Item.human_attribute_name('title') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= Item.human_attribute_name('title') %></td>
                 <td class="item_value_td">
-                  <%= text_field :attachment1, :title, :style => 'width:70%' %><br/>
+                  <%= text_field(:attachment1, :title, :style => 'width:70%') %><br/>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h Attachment.human_attribute_name('memo') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= Attachment.human_attribute_name('memo') %></td>
                 <td class="item_value_td">
-                  <%= text_area :attachment1, :memo, :rows => "3", :wrap => "off", :style => 'width:100%' %><br/>
+                  <%= text_area(:attachment1, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
                 </td>
               </tr>
             <% if THETIS_ATTACHMENT_LOCATION_SELECTABLE %>
               <tr>
-                <td class="item_cap_td" style="background-color:navajowhite"><%= h t('item.storage_location') %></td>
+                <td class="item_cap_td" style="background-color:navajowhite"><%= t('item.storage_location') %></td>
                 <td class="item_value_td">
-                  <%= radio_button :attachment1, :location, Attachment::LOCATION_DB, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DB) %><label for="attachment1_location_<%= Attachment::LOCATION_DB.downcase %>"><%=h t('item.location_db') %></label>
+                  <%= radio_button(:attachment1, :location, Attachment::LOCATION_DB, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DB)) %><label for="attachment1_location_<%= Attachment::LOCATION_DB.downcase %>"><%= t('item.location_db') %></label>
                   &nbsp;
-                  <%= radio_button :attachment1, :location, Attachment::LOCATION_DIR, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DIR) %><label for="attachment1_location_<%= Attachment::LOCATION_DIR.downcase %>"><%=h t('item.location_file') %></label>
+                  <%= radio_button(:attachment1, :location, Attachment::LOCATION_DIR, :checked => (THETIS_ATTACHMENT_LOCATION_DEFAULT == Attachment::LOCATION_DIR)) %><label for="attachment1_location_<%= Attachment::LOCATION_DIR.downcase %>"><%= t('item.location_file') %></label>
                 </td>
               </tr>
             <% end %>
@@ -88,7 +88,7 @@
           <tr>
             <td align="right" valign="middle" style="cursor:move;">
             <% if item_attachments.length > 1 %>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%=h t('msg.drag_to_change_orger') %>" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
             <td class="img_td" align="center" style="padding-left:5px; padding-right:5px; cursor:move;">
@@ -111,13 +111,13 @@
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%=h t('btn.edit') %>" title="<%=h t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%=ApplicationHelper.h_s_quote attach.name %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%=ApplicationHelper.h_s_quote attach.name %>');" />
                   </td>
                 </tr>
                 <tr height="5"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%=h t('btn.delete') %>" title="<%=h t('btn.delete') %>" onclick="doDeleteAttach(<%= attach.id %>, '<%=ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteAttach(<%= attach.id %>, '<%=ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
                   </td>
                 </tr>
               </table>
@@ -139,7 +139,7 @@
 
 setSortableAttach = function() {
   // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
-  Sortable.create("sortable_attachments", {onUpdate:function(){new Ajax.Request("<%= url_for :controller => 'items', :action => 'update_attachments_order' %>?id="+$("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_attachments", {name:"attachments_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
+  Sortable.create("sortable_attachments", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_attachments_order') %>?id="+_x("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_attachments", {name:"attachments_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
 }
 
 <% if item_attachments.length > 1 and params[:action] == 'edit' %>
@@ -176,9 +176,9 @@ editAttachInfo = function(attach_id, attach_name)
 
 onAttachInfoOK = function()
 {
-  var btnOk = $("attachment_info_ok");
+  var btnOk = _x("attachment_info_ok");
   btnOk.disabled = true;
-  var btnCancel = $("attachment_info_cancel");
+  var btnCancel = _x("attachment_info_cancel");
   btnCancel.disabled = true;
 
   var thetisBoxProgress = prog("CENTER");
@@ -191,13 +191,13 @@ onAttachInfoOK = function()
               setTimeout(setSortableAttach, 100);
               thetisBoxProgress.remove();
               thetisBoxAttachInfo.remove();
-              tips("<%=h t('msg.update_success')%>");
+              tips("<%= t('msg.update_success')%>");
           },
           function(){
               thetisBoxProgress.remove();
               btnOk.disabled = false;
               btnCancel.disabled = false;
-              msg("<%=h t('msg.system_error')%>");
+              msg("<%= t('msg.system_error')%>");
           }
         );
 }
@@ -209,12 +209,12 @@ onAttachInfoCancel = function()
 
 doDeleteAttach = function(attach_id, title)
 {
-  confm('<%= h t('paren.square.left') %>'+title+'<%= h t('msg.confirm_to_delete') %>', "_doDeleteAttach("+attach_id+")");
+  confm('<%= t('paren.square.left') %>'+title+'<%= t('msg.confirm_to_delete') %>', "_doDeleteAttach("+attach_id+")");
 }
 
 _doDeleteAttach = function(attach_id)
 {
-  var thetisBox = prog('TOP-RIGHT');
+  var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
               "div_item_attachment",

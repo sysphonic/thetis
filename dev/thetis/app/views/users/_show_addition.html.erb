@@ -6,7 +6,7 @@
   <table width="90%" cellpadding="0" cellspacing="2">
     <tr>
       <td class="item_cap_td" align="center"  nowrap style="width:100%;">
-        <%=h t('cap.admin_authorities') %>
+        <%= t('cap.admin_authorities') %>
       </td>
     </tr>
     <tr>
@@ -38,7 +38,7 @@
   <table width="90%" cellpadding="0" cellspacing="2">
     <tr>
       <td class="item_cap_td" align="center"  nowrap style="width:100%;">
-        <%=h t('group.plural') %>
+        <%= t('group.plural') %>
       </td>
     </tr>
     <tr>
@@ -71,7 +71,7 @@
   <table width="90%" cellpadding="0" cellspacing="2">
     <tr>
       <td class="item_cap_td" align="center"  nowrap style="width:100%;">
-        <%=h t('team.plural') %>
+        <%= t('team.plural') %>
       </td>
     </tr>
     <tr>
@@ -85,7 +85,7 @@
               access_auth = team.item.check_user_auth(login_user, 'r', true)
           %>
             <li type="square">
-            <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'items', :action => 'show', :id => team.item.id %>'; return false;"><% end %>
+            <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item.id) %>'; return false;"><% end %>
               <%=h team.name %>
             <% if access_auth %></a><% end %><br/>
           <%
