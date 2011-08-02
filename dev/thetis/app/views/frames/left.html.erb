@@ -7,8 +7,8 @@
 <META http-equiv="Content-Script-Type" content="text/JavaScript">
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<%= stylesheet_link_tag 'thetis101' %>
-<%= javascript_include_tag 'prototype', 'thetis/common110beta3', 'thetis/thetis110beta2' %>
+<%= stylesheet_link_tag 'thetis102' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta5', 'thetis/thetis110beta3' %>
 
   <STYLE type=text/css>
   A:link {
@@ -43,7 +43,7 @@ function doResize()
   if (isNaN(height))  {
     height = mainHeight;
   }
-  _x("left_table").style.height = height + "px";
+  _z("left_table").style.height = height + "px";
 }
 
 var min = -1;
@@ -51,7 +51,7 @@ function doUpdateTime()
 {
   setTimeout("doUpdateTime()", 1000);
 
-  var div_time = _x("div_time");
+  var div_time = _z("div_time");
   if (div_time == null) {
     return;
   }
@@ -99,21 +99,21 @@ function getDay(date)
 function setLogin(login_name, is_admin)
 {
   if (is_admin) {
-    _x("adminMenu").style.display = "block";
+    _z("adminMenu").style.display = "block";
   } else {
-    _x("adminMenu").style.display = "none";
+    _z("adminMenu").style.display = "none";
   }
 
   if (login_name != null && login_name.length > 0) {
-    _x("menu_login").innerHTML= "<%= t('btn.logout') %>";
+    _z("menu_login").innerHTML= "<%= t('btn.logout') %>";
   } else {
-    _x("menu_login").innerHTML= "<%= t('btn.login') %>";
+    _z("menu_login").innerHTML= "<%= t('btn.login') %>";
   }
 }
 
 function doLogin()
 {
-  if (_x("menu_login").innerHTML == "<%= t('btn.logout') %>") {
+  if (_z("menu_login").innerHTML == "<%= t('btn.logout') %>") {
     top.main.location.href = "<%= url_for(:controller => 'login', :action => 'logout') %>";
   } else {
     top.main.location.href = "<%= url_for(:controller => 'login', :action => 'index') %>";
@@ -219,9 +219,9 @@ function progMain()
 
 function toggleSymbol(sw)
 {
-  var tr_top_space = _x("tr_top_space");
-  var tr_symbol = _x("tr_symbol");
-  var tr_drop_down = _x("tr_drop_down");
+  var tr_top_space = _z("tr_top_space");
+  var tr_symbol = _z("tr_symbol");
+  var tr_drop_down = _z("tr_drop_down");
 
   if (sw) {
     tr_top_space.style.display = "table-row";

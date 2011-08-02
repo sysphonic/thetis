@@ -188,7 +188,7 @@
             <td class="item_value_td">
               <% checked = (@yaml[:smtp]['auth_enabled']=='1')?'checked':'' %>
               <input name="smtp[auth_enabled]" type="hidden" value="0" />
-              <input type="checkbox" id="smtp_auth_enabled" name="smtp[auth_enabled]" value="1" <%= checked %> onclick="_x('smtp_auth_param').style.display=this.checked?'block':'none';" /><label for="smtp_auth_enabled"><%= t('config.smtp_auth') %></label>
+              <input type="checkbox" id="smtp_auth_enabled" name="smtp[auth_enabled]" value="1" <%= checked %> onclick="_z('smtp_auth_param').style.display=this.checked?'block':'none';" /><label for="smtp_auth_enabled"><%= t('config.smtp_auth') %></label>
             </td>
           </tr>
         </table>
@@ -311,8 +311,8 @@ function onLoadSub()
 function forBugfulIE()
 {
   // Bugful IE decides width of an input-text control depending on the length of its content.
-  _x("general_default_page").value = restoreHTML("<%=h @yaml[:general]['default_page'] %>");
-  _x("topic_caption").value = restoreHTML("<%=h @yaml[:topic]['caption'] %>");
+  _z("general_default_page").value = restoreHTML("<%=h @yaml[:general]['default_page'] %>");
+  _z("topic_caption").value = restoreHTML("<%=h @yaml[:topic]['caption'] %>");
 }
 
 
@@ -320,9 +320,9 @@ var thetisBoxHeaderMenuInfo = null;
 
 function onHeaderMenuInfoOK(org_name)
 {
-  var btnOk = _x("header_menu_info_ok");
+  var btnOk = _z("header_menu_info_ok");
   btnOk.disabled = true;
-  var btnCancel = _x("header_menu_info_cancel");
+  var btnCancel = _z("header_menu_info_cancel");
   btnCancel.disabled = true;
 
   var thetisBoxProgress = prog("CENTER");
@@ -406,23 +406,23 @@ function doRegister()
 {
   var check_ary = new Array("general_default_page", "smtp_from_address", "smtp_server", "smtp_port");
 
-  if (_x("smtp_auth_enabled").checked) {
+  if (_z("smtp_auth_enabled").checked) {
     check_ary.push("smtp_user_name");
   }
 
   for (var i=0; i < check_ary.length; i++) {
-    if (_x(check_ary[i]).value.length <= 0) {
+    if (_z(check_ary[i]).value.length <= 0) {
       msg("<%= t('msg.specify_indispensable') %>");
       return;
     }
   }
 
-  if (_x("smtp_auth_enabled").checked) {
+  if (_z("smtp_auth_enabled").checked) {
     check_ary = new Array("smtp_auth_plain", "smtp_auth_login", "smtp_auth_cram_md5");
 
     var checked = false
     for (var i=0; i < check_ary.length; i++) {
-      if (_x(check_ary[i]).checked) {
+      if (_z(check_ary[i]).checked) {
         checked = true;
         break;
       }
@@ -433,7 +433,7 @@ function doRegister()
     }
   }
 
-  var smtp_port = _x("smtp_port").value;
+  var smtp_port = _z("smtp_port").value;
   if (isNaN(smtp_port) || parseInt(smtp_port, 10) < 1 || parseInt(smtp_port, 10) > 65535) {
     msg("<%= t('config.invalid_smtp_port') %>");
     return;

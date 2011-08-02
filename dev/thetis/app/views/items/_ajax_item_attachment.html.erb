@@ -139,7 +139,7 @@
 
 setSortableAttach = function() {
   // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
-  Sortable.create("sortable_attachments", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_attachments_order') %>?id="+_x("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_attachments", {name:"attachments_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
+  Sortable.create("sortable_attachments", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_attachments_order') %>?id="+_z("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_attachments", {name:"attachments_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
 }
 
 <% if item_attachments.length > 1 and params[:action] == 'edit' %>
@@ -176,9 +176,9 @@ editAttachInfo = function(attach_id, attach_name)
 
 onAttachInfoOK = function()
 {
-  var btnOk = _x("attachment_info_ok");
+  var btnOk = _z("attachment_info_ok");
   btnOk.disabled = true;
-  var btnCancel = _x("attachment_info_cancel");
+  var btnCancel = _z("attachment_info_cancel");
   btnCancel.disabled = true;
 
   var thetisBoxProgress = prog("CENTER");

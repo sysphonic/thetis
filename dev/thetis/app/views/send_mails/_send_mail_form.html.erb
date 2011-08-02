@@ -30,18 +30,18 @@ showAddressTab = function(name)
 
   var tab = null;
   for (i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.style.cursor = "pointer";
       tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
     }
   }
-  var target_tab = _x("tab_"+name);
+  var target_tab = _z("tab_"+name);
   target_tab.style.cursor = "default";
   var bg = target_tab.bgColor;
 
   for (i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.bgColor = "silver";
     }
@@ -50,18 +50,18 @@ showAddressTab = function(name)
   target_tab.bgColor = bg;
 
   for (i=0; i<nameArray.length; i++) {
-    div = _x("div_"+nameArray[i]);
+    div = _z("div_"+nameArray[i]);
     if (div != null) {
       div.style.display = "none";
     }
   }
 
-  div = _x("div_"+name);
+  div = _z("div_"+name);
   div.style.visibility = "visible";
   div.style.display = "inline";
 
   if (name == "direct") {
-    _x("addr_direct").focus();
+    _z("addr_direct").focus();
   }
 }
 
@@ -70,10 +70,10 @@ showAddressTab("direct");
 
 addAddress = function(valPrefix, textPrefix)
 {
-  if (_x("div_direct").style.display != "none") {
+  if (_z("div_direct").style.display != "none") {
 
-    var dst = _x("addresses_selected");
-    var addr_direct = _x("addr_direct").value;
+    var dst = _z("addresses_selected");
+    var addr_direct = _z("addr_direct").value;
 
     var duplex = false;
     for (var k=0; k<dst.length; k++) {
@@ -86,22 +86,22 @@ addAddress = function(valPrefix, textPrefix)
     if (!duplex) {
       dst.options[dst.length++] = new Option(textPrefix+addr_direct, valPrefix+addr_direct);
     }
-    _x("addr_direct").value = "";
+    _z("addr_direct").value = "";
 
-  } else if (_x("div_addrbook_private").style.display != "none") {
-    moveListWithPrefix(_x("addr_private_candidates"), _x("addresses_selected"), valPrefix, textPrefix)
+  } else if (_z("div_addrbook_private").style.display != "none") {
+    moveListWithPrefix(_z("addr_private_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
 
-  } else if (_x("div_addrbook_common").style.display != "none") {
-    moveListWithPrefix(_x("addr_common_candidates"), _x("addresses_selected"), valPrefix, textPrefix)
+  } else if (_z("div_addrbook_common").style.display != "none") {
+    moveListWithPrefix(_z("addr_common_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
   }
 }
 
 removeAddress = function()
 {
-  if (_x("div_addrbook_common").style.display != "none") {
-    moveListTrimPrefix(_x("addresses_selected"), _x("addr_common_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+  if (_z("div_addrbook_common").style.display != "none") {
+    moveListTrimPrefix(_z("addresses_selected"), _z("addr_common_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
   } else {
-    moveListTrimPrefix(_x("addresses_selected"), _x("addr_private_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+    moveListTrimPrefix(_z("addresses_selected"), _z("addr_private_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
   }
 }
 
@@ -111,7 +111,7 @@ var saveFuncsIdx = 0;
 
 doSend = function()
 {
-  if (_x("addresses_selected").length <= 0) {
+  if (_z("addresses_selected").length <= 0) {
     msg("<%= t('msg.specify_to_address') %>");
     return;
   }
@@ -141,7 +141,7 @@ doSave = function(do_smtp)
   // Basic
   saveFuncs.push(
         function() {
-          selectListAll(_x("addresses_selected"));
+          selectListAll(_z("addresses_selected"));
 
           var frm = document.form_send_mail<%= form_idx %>;
           var target_id = "div_sendmail_content";
@@ -150,12 +150,12 @@ doSave = function(do_smtp)
 
           new Ajax.Updater(
                     target_id,
-                    frm.action + "?id="+_x("email_id").value,
+                    frm.action + "?id="+_z("email_id").value,
                     {
                       asynchronous:true,
                       evalScripts:true,
                       onComplete:function(request){
-                                    if (showErrorMsg(_x(target_id)) == true) {
+                                    if (showErrorMsg(_z(target_id)) == true) {
                                       setTimeout(func_error, 10);
                                     } else {
                                       setTimeout(func_complete, 10);
@@ -169,14 +169,14 @@ doSave = function(do_smtp)
       );
 
   // Attachment
-  var attach_file = _x("attach_file");
+  var attach_file = _z("attach_file");
   if (attach_file && attach_file.value.length > 0) {
     saveFuncs.push(
           function() {
             var frm = document.form_sendmail_attach<%= form_idx %>;
             ajaxUploadFile(
                     frm,
-                    frm.action + "?id="+_x("email_id").value,
+                    frm.action + "?id="+_z("email_id").value,
                     "div_sendmail_attach",
                     function(){ onSaveComplete("attachment") },
                     function(){ onSaveError("attachment") }
@@ -190,7 +190,7 @@ doSave = function(do_smtp)
           function() {
             var frm = document.form_send_mail<%= form_idx %>;
             new Ajax.Request(
-                        "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_x("email_id").value,
+                        "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_z("email_id").value,
                         {
                           asynchronous:true,
                           evalScripts:true,
@@ -258,7 +258,7 @@ onFileSelectOK = function()
 
   ajaxUploadFile(
           document.form_file,
-          "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?id="+_x("email_id").value,
+          "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?id="+_z("email_id").value,
           "div_sendmail_attach",
           function(){
             thetisBoxProgress.remove();
@@ -302,7 +302,7 @@ _doDeleteAttachment = function(div_id, attach_id)
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
-            removeElem(_x(div_id));
+            removeElem(_z(div_id));
           }
         }
      );

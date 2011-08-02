@@ -1,3 +1,10 @@
+.list_th {
+  background-image: url("../images/list_th_off.png");
+}
+.img_button_td {
+  background-image: url("../images/button.png");
+}
+
 .sort_direction {
   color:darkcyan;
   font-size:9pt;

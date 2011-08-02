@@ -9,8 +9,8 @@
       <div id="div_description" style="padding:5px; text-align:left;"><%= raw(@item.description) %></div>
 <% unless params[:action] == 'show_for_print' %>
 <script type="text/javascript">
-    _x("div_description").style.width = getDescriptionWidth() + "px";
-    _x("div_description").style.overflow = "auto";
+    _z("div_description").style.width = getDescriptionWidth() + "px";
+    _z("div_description").style.overflow = "auto";
 </script>
 <% end %>
       </td>

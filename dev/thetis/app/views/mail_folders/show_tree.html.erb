@@ -133,11 +133,11 @@ BorderDragObserver.prototype = {
   onStart: function(eventName, draggable, event) {
     if (!is_MS && !is_Opera) {
       if (draggable.element.id == "drag_v_border") {
-        var mailTree = _x("mailTree");
-        var td_tree = _x("td_tree");
-        var td_view = _x("td_view");
-        var div_mails = _x("div_mails");
-        var div_mail_content = _x("div_mail_content");
+        var mailTree = _z("mailTree");
+        var td_tree = _z("td_tree");
+        var td_view = _z("td_view");
+        var div_mails = _z("div_mails");
+        var div_mail_content = _z("div_mail_content");
 
         var orgWidthMailTree = mailTree.offsetWidth;
         var orgWidthMails = div_mails.offsetWidth;
@@ -152,9 +152,9 @@ BorderDragObserver.prototype = {
             return [x, y];
         };
       } else if (draggable.element.id == "drag_h_border") {
-        var div_mails = _x("div_mails");
-        var div_mail_content = _x("div_mail_content");
-        var mail_body_view = _x("mail_body_view");
+        var div_mails = _z("div_mails");
+        var div_mail_content = _z("div_mail_content");
+        var mail_body_view = _z("mail_body_view");
 
         var orgHeightMails = div_mails.offsetHeight;
         var orgHeightMailContent = div_mail_content.offsetHeight;
@@ -173,12 +173,12 @@ BorderDragObserver.prototype = {
   onDrag: function(eventName, draggable, event) {
     if (is_MS || is_Opera) {
       if (draggable.element.id == "drag_v_border") {
-        var treeMainWidth = _x("tree_main").clientWidth;
-        var mailTree = _x("mailTree");
-        var td_tree = _x("td_tree");
-        var td_view = _x("td_view");
-        var div_mails = _x("div_mails");
-        var div_mail_content = _x("div_mail_content");
+        var treeMainWidth = _z("tree_main").clientWidth;
+        var mailTree = _z("mailTree");
+        var td_tree = _z("td_tree");
+        var td_view = _z("td_view");
+        var div_mails = _z("div_mails");
+        var div_mail_content = _z("div_mail_content");
 
         var mailTreePos = getPos(mailTree);
         var borderPos = getPos(draggable.element);
@@ -207,8 +207,8 @@ BorderDragObserver.prototype = {
         };
 */
       } else if (draggable.element.id == "drag_h_border") {
-        var div_mails = _x("div_mails");
-        var div_mail_content = _x("div_mail_content");
+        var div_mails = _z("div_mails");
+        var div_mail_content = _z("div_mail_content");
 
         var orgHeightMails = div_mails.offsetHeight;
         var orgHeightMailContent = div_mail_content.offsetHeight;
@@ -369,7 +369,7 @@ function doRename()
     msg("<%= t('folder.root_folder_restricted') %>");
     return;
   }
-  var xtype = _x("xtype_"+folder_id).innerHTML;
+  var xtype = _z("xtype_"+folder_id).innerHTML;
   if (xtype != "") {
     msg("<%= t('msg.predetermined_folder_restricted') %>");
     return;
@@ -381,7 +381,7 @@ function doRename()
   thetisBox.progress = true;
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'mail_folders', :action => 'rename') %>?id="+folder_id+"\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('a_mailTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.setAdditionalParams(new Array('selectedFolderId='+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
-  var name = trim(_x("mailTree:"+folder_id+"_name").innerHTML);
+  var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
   thetisBox.show("CENTER", "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
 }
 
@@ -397,7 +397,7 @@ function doDelete()
     msg("<%= t('folder.root_folder_restricted') %>");
     return;
   }
-  var xtype = _x("xtype_"+folder_id).innerHTML;
+  var xtype = _z("xtype_"+folder_id).innerHTML;
   if (xtype != 0 ) {
     msg("<%= t('msg.predetermined_folder_restricted') %>");
     return;
@@ -405,7 +405,7 @@ function doDelete()
 
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
-  var name = trim(_x("mailTree:"+folder_id+"_name").innerHTML);
+  var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
   confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
 }
 
@@ -420,7 +420,7 @@ function _doDelete(folder_id)
                 onComplete:function(request){
                   thetisBox.remove();
                   if (request.responseText == "") {
-                    removeElem(_x("base_mailTree:"+folder_id));
+                    removeElem(_z("base_mailTree:"+folder_id));
                     document.form_folder_tree.selKeeper.value = "";
                     clearMails();
                   }
@@ -444,7 +444,7 @@ function doMove()
     return;
   }
 
-  var xtype = _x("xtype_"+folder_id).innerHTML;
+  var xtype = _z("xtype_"+folder_id).innerHTML;
   if (xtype != 0 ) {
     msg("<%= t('msg.predetermined_folder_restricted') %>");
     return;
@@ -501,19 +501,19 @@ function clearMails()
 {
   clearMailContent();
 
-  _x("div_mails").innerHTML = "";
+  _z("div_mails").innerHTML = "";
 }
 
 function clearMailContent()
 {
-  _x("div_mail_content").innerHTML = "";
+  _z("div_mail_content").innerHTML = "";
 
-  if (_x("selected_row"))
+  if (_z("selected_row"))
   {
-    var sel_tr = _x("selected_row").value;
+    var sel_tr = _z("selected_row").value;
     if (sel_tr != "") {
-      set_tr_bgcolor(_x(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
-      _x("selected_row").value = "";
+      set_tr_bgcolor(_z(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
+      _z("selected_row").value = "";
     }
   }
 }
@@ -617,11 +617,11 @@ function showMailForm(action, is_new)
 
 function getSelectedRow()
 {
-  if (!_x("selected_row") || _x("selected_row").value == "") {
+  if (!_z("selected_row") || _z("selected_row").value == "") {
     msg("<%= t('msg.select_mail') %>");
     return null;
   }
-  return _x("selected_row").value;
+  return _z("selected_row").value;
 }
 
 function doDeleteMail()
@@ -636,11 +636,11 @@ function doDeleteMail()
 
   var title = "";
 
-  var cnt = _x(sel_tr).childNodes.length;
+  var cnt = _z(sel_tr).childNodes.length;
 
   for (var i=0; i < cnt; i++) {
-    if (_x(sel_tr).childNodes[i].title != null) {
-      title = _x(sel_tr).childNodes[i].title;
+    if (_z(sel_tr).childNodes[i].title != null) {
+      title = _z(sel_tr).childNodes[i].title;
       if (title.length <= 0) {
         title = "<%= t('cap.subject') %><%= t('paren.not_specified') %>";
       }
@@ -770,7 +770,7 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo.bgcolor_body = "aliceblue";
   thetisBoxHeaderInfo.title = title;
   thetisBoxHeaderInfo.close_by_icon_button = true;
-  thetisBoxHeaderInfo.show("TOP-RIGHT", "", "MESSAGE", "", _x("mail_header_"+email_id).innerHTML, "");
+  thetisBoxHeaderInfo.show("TOP-RIGHT", "", "MESSAGE", "", _z("mail_header_"+email_id).innerHTML, "");
 }
 
 //-->

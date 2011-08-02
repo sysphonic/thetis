@@ -6,7 +6,7 @@
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
     function() {
-      _x("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
       document.form_schedule.submit();
       prog("TOP-RIGHT");
     }
@@ -202,25 +202,25 @@ function showNewDetail()
 function doRegisterDetail(schedule_id)
 {
   // Check
-  if (_x("schedule_title").value.length <= 0) {
+  if (_z("schedule_title").value.length <= 0) {
     msg("<%= t('schedule.specify_title') %>");
     return;
   }
 
-  if (!_x("schedule_scope_all").checked
-      && _x("users_selected").length <= 0
-      && _x("groups_selected").length <= 0
-      && _x("teams_selected").length <= 0) {
+  if (!_z("schedule_scope_all").checked
+      && _z("users_selected").length <= 0
+      && _z("groups_selected").length <= 0
+      && _z("teams_selected").length <= 0) {
     msg("<%= t('schedule.specify_members') %>");
     return;
   }
 
-  if (_x("equipment_selected").length > 0 && _x("schedule_scope_private").checked) {
+  if (_z("equipment_selected").length > 0 && _z("schedule_scope_private").checked) {
     msg("<%= t('schedule.private_cannot_reserve_equipment') %>");
     return;
   }
 
-  if (!_x("schedule_scope_all").checked && !_x("schedule_scope_public").checked && !_x("schedule_scope_private").checked) {
+  if (!_z("schedule_scope_all").checked && !_z("schedule_scope_public").checked && !_z("schedule_scope_private").checked) {
     msg("<%= t('schedule.select_scope') %>");
     return;
   }
@@ -242,15 +242,15 @@ function doRegisterDetail(schedule_id)
     }
   }
 
-  var is_allday = _x("schedule_allday").checked;
+  var is_allday = _z("schedule_allday").checked;
 
   if (document.form_detail.is_repeat.checked) {
 
     // for Repeat
     // Time
     if (!is_allday) {
-      var start = new Date(2000, 1, 1, _x("repeat_start_hour").value, _x("repeat_start_min").value, 0);
-      var end = new Date(2000, 1, 1, _x("repeat_end_hour").value, _x("repeat_end_min").value, 0);
+      var start = new Date(2000, 1, 1, _z("repeat_start_hour").value, _z("repeat_start_min").value, 0);
+      var end = new Date(2000, 1, 1, _z("repeat_end_hour").value, _z("repeat_end_min").value, 0);
       if (start > end) {
         msg("<%= t('msg.specify_valid_time_term') %>");
         return;
@@ -258,8 +258,8 @@ function doRegisterDetail(schedule_id)
     }
 
     // Term
-    var startDate = _x("schedule_repeat_start").value.split("-");
-    var endDate = _x("schedule_repeat_end").value.split("-");
+    var startDate = _z("schedule_repeat_start").value.split("-");
+    var endDate = _z("schedule_repeat_end").value.split("-");
 
     start = new Date(startDate[0], startDate[1], startDate[2], 0, 0, 0);
     end = new Date(endDate[0], endDate[1], endDate[2], 0, 0, 0);
@@ -269,55 +269,55 @@ function doRegisterDetail(schedule_id)
     }
 
     // Rule
-    if (_x("repeat_rules").length <= 0) {
+    if (_z("repeat_rules").length <= 0) {
       msg("<%= t('schedule.specify_repeat_rule') %>");
       return;
     }
 
     if (is_allday) {
-      _x("schedule_start").value = null;
-      _x("schedule_end").value = null;
+      _z("schedule_start").value = null;
+      _z("schedule_end").value = null;
     } else {
-      _x("schedule_start").value = "2000-01-01 "+_x("repeat_start_hour").value+":"+_x("repeat_start_min").value;
-      _x("schedule_end").value = "2000-01-01 "+_x("repeat_end_hour").value+":"+_x("repeat_end_min").value;
+      _z("schedule_start").value = "2000-01-01 "+_z("repeat_start_hour").value+":"+_z("repeat_start_min").value;
+      _z("schedule_end").value = "2000-01-01 "+_z("repeat_end_hour").value+":"+_z("repeat_end_min").value;
     }
 
   } else {
 
     // for Once
-    var startDate = _x("start_date").value.split("-");
-    var endDate = _x("end_date").value.split("-");
+    var startDate = _z("start_date").value.split("-");
+    var endDate = _z("end_date").value.split("-");
 
     if (is_allday) {
-      _x("once_start_hour").value = 0;
-      _x("once_start_min").value = 0;
-      _x("once_end_hour").value = 0;
-      _x("once_end_min").value = 0;
+      _z("once_start_hour").value = 0;
+      _z("once_start_min").value = 0;
+      _z("once_end_hour").value = 0;
+      _z("once_end_min").value = 0;
     }
 
-    var start = new Date(startDate[0], startDate[1], startDate[2], _x("once_start_hour").value, _x("once_start_min").value, 0);
-    var end = new Date(endDate[0], endDate[1], endDate[2], _x("once_end_hour").value, _x("once_end_min").value, 0);
+    var start = new Date(startDate[0], startDate[1], startDate[2], _z("once_start_hour").value, _z("once_start_min").value, 0);
+    var end = new Date(endDate[0], endDate[1], endDate[2], _z("once_end_hour").value, _z("once_end_min").value, 0);
     if (start > end) {
       msg("<%= t('msg.specify_valid_time_term') %>");
       return;
     }
 
-    _x("schedule_start").value = _x("start_date").value+" "+_x("once_start_hour").value+":"+_x("once_start_min").value
-    _x("schedule_end").value = _x("end_date").value+" "+_x("once_end_hour").value+":"+_x("once_end_min").value
+    _z("schedule_start").value = _z("start_date").value+" "+_z("once_start_hour").value+":"+_z("once_start_min").value
+    _z("schedule_end").value = _z("end_date").value+" "+_z("once_end_hour").value+":"+_z("once_end_min").value
 
     if (is_allday) {
-      _x("schedule_start").value += " GMT";
-      _x("schedule_end").value += " GMT";
+      _z("schedule_start").value += " GMT";
+      _z("schedule_end").value += " GMT";
     }
   }
 
-  selectListAll(_x("repeat_rules"));
-  selectListAll(_x("users_selected"));
-  selectListAll(_x("groups_selected"));
-  selectListAll(_x("teams_selected"));
-  selectListAll(_x("equipment_selected"));
-  selectListAll(_x("excepts"));
-  selectListAll(_x("items_selected"));
+  selectListAll(_z("repeat_rules"));
+  selectListAll(_z("users_selected"));
+  selectListAll(_z("groups_selected"));
+  selectListAll(_z("teams_selected"));
+  selectListAll(_z("equipment_selected"));
+  selectListAll(_z("excepts"));
+  selectListAll(_z("items_selected"));
 
   var thetisBox = prog("TOP-RIGHT");
   document.form_detail.action = "<%= url_for(:controller => 'schedules', :action => 'save') %>?id=" + schedule_id;
@@ -333,11 +333,11 @@ function doRegisterDetail(schedule_id)
               onComplete:function(request){
                 thetisBox.remove();
 
-                _x("div_schedule_detail").innerHTML = "";
+                _z("div_schedule_detail").innerHTML = "";
 
                 if (is_MS) {    // Bugfull IE6.x/7.0 has a lot of serious BUGs in arrignment.
                   doResize();
-                  _x("main_div").style.overflow = "";
+                  _z("main_div").style.overflow = "";
                 }
                 tips("<%= t('msg.register_success') %>");
               },
@@ -377,7 +377,7 @@ function editScheduleDetail(date, id)
                   thetisBox.remove();
 /* GREP WITH BUGFULL-IE!
                   if (is_MS) {    // Bugfull IE6.x/7.0 has a lot of serious BUGS in arrignment.
-                    var div_schedule = _x("div_schedule");
+                    var div_schedule = _z("div_schedule");
                     if (Number(div_schedule.style.height.replace(/px/, "")) != div_schedule.offsetHeight) {
                       div_schedule.style.height = div_schedule.offsetHeight + "px";
                     }
@@ -406,7 +406,7 @@ function _doScheduleDelete(id)
             {
               asynchronous:true,
               evalScripts:true,
-              onComplete:function(request){ thetisBox.remove(); _x("div_schedule_detail").innerHTML=""; },
+              onComplete:function(request){ thetisBox.remove(); _z("div_schedule_detail").innerHTML=""; },
               parameters:Form.serialize(document.form_schedule)
             }
           );
@@ -428,7 +428,7 @@ function showGroupTree()
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_x('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_z('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }

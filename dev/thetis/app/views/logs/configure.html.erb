@@ -55,7 +55,7 @@
 
 function doUpdateConfig()
 {
-  var val = _x("log_max_num").value;
+  var val = _z("log_max_num").value;
   if (isNaN(val)) {
     msg("<%= t('log.max_num') %><%= t('msg.must_be_numeric') %>");
     return;

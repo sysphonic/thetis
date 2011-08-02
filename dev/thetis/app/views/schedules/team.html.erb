@@ -6,7 +6,7 @@
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
           function() {
-            _x("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+            _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
             document.form_schedule.submit();
             prog("TOP-RIGHT");
           }
@@ -179,7 +179,7 @@ function showGroupTree()
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_x('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_z('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }

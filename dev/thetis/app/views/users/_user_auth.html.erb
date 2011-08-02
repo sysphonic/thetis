@@ -13,7 +13,7 @@
         <%
         check_all = (@user.auth == User::AUTH_ALL)
         %>
-        <input type="checkbox" id="check_auth_all" name="check_auth_all" value="1" <%= (check_all)?'checked':'' %> onclick="_x('btn_add').disabled = _x('btn_remove').disabled = _x('auth_candidates').disabled = _x('auth_selected').disabled = this.checked;" /><label for="check_auth_all"><%=h User.get_auth_name(User::AUTH_ALL) %></label>
+        <input type="checkbox" id="check_auth_all" name="check_auth_all" value="1" <%= (check_all)?'checked':'' %> onclick="_z('btn_add').disabled = _z('btn_remove').disabled = _z('auth_candidates').disabled = _z('auth_selected').disabled = this.checked;" /><label for="check_auth_all"><%=h User.get_auth_name(User::AUTH_ALL) %></label>
       </td>
     </tr>
     <tr>
@@ -50,13 +50,13 @@
               <table cellspacing="0" cellpadding="0" width="100%">
                 <tr>
                   <td align="center">
-                    <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_x('auth_candidates'), _x('auth_selected')); return false;" style="width:80px;">
+                    <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_z('auth_candidates'), _z('auth_selected')); return false;" style="width:80px;">
                   </td>
                 </tr>
                 <tr height="10"><td></td></tr>
                 <tr>
                   <td align="center">
-                    <input type="button" id="btn_remove" <%= (check_all)?'disabled':'' %> value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList(_x('auth_selected'), _x('auth_candidates')); return false;" style="width:80px;">
+                    <input type="button" id="btn_remove" <%= (check_all)?'disabled':'' %> value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList(_z('auth_selected'), _z('auth_candidates')); return false;" style="width:80px;">
                   </td>
                 </tr>
               </table>
@@ -90,7 +90,7 @@
 doUpdateAuth = function()
 {
   var thetisBox = prog("TOP-RIGHT");
-  selectListAll(_x("auth_selected"));
+  selectListAll(_z("auth_selected"));
   new Ajax.Request(
               "<%= url_for(:controller => 'users', :action => 'update_auth', :id => @user.id) %>",
               {

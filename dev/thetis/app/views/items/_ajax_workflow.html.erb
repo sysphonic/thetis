@@ -81,11 +81,11 @@
                 <tr>
                   <td>
                     <span id="comment_ack">
-                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="_x('comment_ack').style.backgroundColor='greenyellow'; _x('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
+                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="_z('comment_ack').style.backgroundColor='greenyellow'; _z('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
                     </span>
                     &nbsp;
                     <span id="comment_nak">
-                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="_x('comment_ack').style.backgroundColor=''; _x('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
+                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="_z('comment_ack').style.backgroundColor=''; _z('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
                     </span>
                   </td>
                 </tr>

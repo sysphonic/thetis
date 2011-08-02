@@ -78,21 +78,21 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 doRegister = function()
 {
-  var start_hour = _x("start_hour").value;
-  var start_min = _x("start_min").value;
+  var start_hour = _z("start_hour").value;
+  var start_min = _z("start_min").value;
   var start_date = "<%= date_s %>";
 
   if (start_hour == "" || start_min == "") {
     msg("<%= t('timecard.specify_start_time') %>");
     return false;
   } else {
-    _x("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
+    _z("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
   }
 
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Updater(
-              _x("div_dummy_result"),
+              _z("div_dummy_result"),
               document.form_timecard.action,
               {
                 method:"get",
@@ -105,7 +105,7 @@ doRegister = function()
                     request.responseText.evalScripts();
                   } catch (e) {}
 
-                  ThetisBox.getContainer(_x("desktop_timecard")).remove();
+                  ThetisBox.getContainer(_z("desktop_timecard")).remove();
                 }
               }
             );

@@ -187,8 +187,8 @@ end
 <!--
 function showFolderTreeToSelect(folder_id, item_id, title)
 {
-  if (_x("folder_id_" + item_id)) {
-    folder_id = parseInt(_x("folder_id_" + item_id).innerHTML, 10);
+  if (_z("folder_id_" + item_id)) {
+    folder_id = parseInt(_z("folder_id_" + item_id).innerHTML, 10);
   }
   var thetisBox = new ThetisBox;
   thetisBox.title = title;
@@ -235,7 +235,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
                 <span style="background-color:palegreen;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:palegreen;">&nbsp;<a href="#" onclick="var divWorkflow=_x('div_workflow'); if (divWorkflow.style.display=='none') {divWorkflow.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divWorkflow.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:palegreen;">&nbsp;<a href="#" onclick="var divWorkflow=_z('div_workflow'); if (divWorkflow.style.display=='none') {divWorkflow.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divWorkflow.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -304,7 +304,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
 <!--
 function doWfRespond()
 {
-  if (!_x("xtype_ack").checked && !_x("xtype_nak").checked) {
+  if (!_z("xtype_ack").checked && !_z("xtype_nak").checked) {
     msg("<%= t('workflow.select_response_status') %>");
     return;
   }
@@ -346,9 +346,9 @@ function _doWfIssue()
                   asynchronous:true,
                   evalScripts:true,
                   onComplete:function(request) {
-                      removeElem(_x("issue_button"));
-                      removeElem(_x("edit_button"));
-                      removeElem(_x("delete_button"));
+                      removeElem(_z("issue_button"));
+                      removeElem(_z("edit_button"));
+                      removeElem(_z("delete_button"));
                       thetisBox.remove();
                   }
                 }
@@ -374,7 +374,7 @@ function _doWfIssue()
           <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
             <span style="background-color:#FFE0D1;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
             &nbsp;
-            <span style="background-color:#FFE0D1;">&nbsp;<a href="#" onclick="var divTeam=_x('div_team'); if (divTeam.style.display=='none') {divTeam.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divTeam.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+            <span style="background-color:#FFE0D1;">&nbsp;<a href="#" onclick="var divTeam=_z('div_team'); if (divTeam.style.display=='none') {divTeam.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divTeam.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
           </td>
         </tr>
       </table>
@@ -465,8 +465,8 @@ function _doWfIssue()
                         <%= t('cap.members') %>
                       </td>
                       <td align="center" width="34%" nowrap>
-                        <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="moveList(_x('team_candidates'), _x('team_members')); return false;" style="width:80px;">
-                        <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="moveList(_x('team_members'), _x('team_candidates')); return false;" style="width:80px;">
+                        <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="moveList(_z('team_candidates'), _z('team_members')); return false;" style="width:80px;">
+                        <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="moveList(_z('team_members'), _z('team_candidates')); return false;" style="width:80px;">
                       </td>
                       <td width="33%">&nbsp;</td>
                     </tr>
@@ -491,7 +491,7 @@ function _doWfIssue()
             <table align="center" cellspacing="0" cellpadding="0">
               <tr height="20"><td></td></tr>
               <tr>
-                <td class="img_button_td" onclick="selectListAll(_x('team_members')); doOrganizeTeam(document.form_team);">
+                <td class="img_button_td" onclick="selectListAll(_z('team_members')); doOrganizeTeam(document.form_team);">
                   <%= t('btn.register') %>
                 </td>
               </tr>
@@ -585,7 +585,7 @@ end
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
                 <span style="background-color:#D4DEFF;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:#D4DEFF;">&nbsp;<a href="#" onclick="var divMessage=_x('div_zeptair_dist_res'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:#D4DEFF;">&nbsp;<a href="#" onclick="var divMessage=_z('div_zeptair_dist_res'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -784,7 +784,7 @@ end
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
                 <span style="background-color:navajowhite;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
                 &nbsp;
-                <span style="background-color:navajowhite;">&nbsp;<a href="#" onclick="var divMessage=_x('div_message'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+                <span style="background-color:navajowhite;">&nbsp;<a href="#" onclick="var divMessage=_z('div_message'); if (divMessage.style.display=='none') {divMessage.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {divMessage.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
               </td>
             </tr>
           </table>
@@ -896,8 +896,8 @@ function doDelete(id, title)
 {
 <% if @team.nil? %>
   var team_id = null;
-  if (_x("team_id") != null){
-    team_id = _x("team_id").value;
+  if (_z("team_id") != null){
+    team_id = _z("team_id").value;
   }
   if (team_id == null || team_id.length <= 0) {
     confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+id+")");
@@ -970,7 +970,7 @@ function doOrganizeTeam(frm)
 
 function doRegisterComment(frm)
 {
-  var txaComment = _x("comment_message");
+  var txaComment = _z("comment_message");
 
   if (!_checkComment(txaComment)) {
     return false;
@@ -983,7 +983,7 @@ function doRegisterComment(frm)
           frm.action,
           "div_comments",
           function(){
-            var comments_table = _x("comments_table");
+            var comments_table = _z("comments_table");
             if (comments_table.style.display == "none") {
               comments_table.style.display = "block";
             }
@@ -1002,13 +1002,13 @@ function editComment(comment_id)
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
 
-  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'update_comment') %>\" method=\"post\" onsubmit=\"if (!_checkComment(_x('thetisBoxEdit-"+thetisBox.id+"'))) { return false; } ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_comment_"+comment_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'update_comment') %>\" method=\"post\" onsubmit=\"if (!_checkComment(_z('thetisBoxEdit-"+thetisBox.id+"'))) { return false; } ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_comment_"+comment_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("comment_id="+comment_id, "authenticity_token=<%= form_authenticity_token %>"));
 
   // GREP WITH ~.gsub('  ', '&nbsp; ')
   // Corresponds to ~.gsub(/&nbsp;/, " ") in the following line.
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "", restoreHTML(_x("comment_body" + comment_id).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "", restoreHTML(_z("comment_body" + comment_id).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
 }
 
 function _checkComment(txaComment)
@@ -1060,7 +1060,7 @@ function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
-            removeElem(_x(div_id));
+            removeElem(_z(div_id));
           }
         }
      );
@@ -1106,7 +1106,7 @@ function _addToDesktop()
             asynchronous:true,
             evalScripts:false,
             onComplete:function(request) {
-                var button = _x("add_to_desktop");
+                var button = _z("add_to_desktop");
                 removeElem(button);
 
                 thetisBoxProgress.remove();
@@ -1145,7 +1145,7 @@ function onFileSelectOK(comment_id)
           "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>?comment_id=" + comment_id,
           "div_comment_" + comment_id,
           function(){
-            var comments_table = _x("comments_table");
+            var comments_table = _z("comments_table");
             if (comments_table.style.display == "none") {
               comments_table.style.display = "block";
             }

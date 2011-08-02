@@ -36,7 +36,7 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
-function _x(elemId)
+function _z(elemId)
 {
   if (elemId && (typeof(elemId.valueOf())) == "string") {
     return document.getElementById(elemId);

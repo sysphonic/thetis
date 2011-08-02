@@ -33,7 +33,7 @@
 
 bound = function(desktop, elem)
 {
-  var elem = _x(elem);
+  var elem = _z(elem);
 
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
@@ -71,7 +71,7 @@ bound = function(desktop, elem)
 
 getAxis = function(desktop, elem)
 {
-  var elem = _x(elem);
+  var elem = _z(elem);
   var elemPos = Position.cumulativeOffset(elem);
 
   var deskWidth = desktop.clientWidth;
@@ -94,18 +94,18 @@ showTab = function(name, nameArray)
 {
   var tab = null;
   for (var i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.style.cursor = "pointer";
       tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
     }
   }
-  var target_tab = _x("tab_"+name);
+  var target_tab = _z("tab_"+name);
   target_tab.style.cursor = "default";
   var bg = target_tab.bgColor;
 
   for (var i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.bgColor = "silver";
     }
@@ -114,13 +114,13 @@ showTab = function(name, nameArray)
   target_tab.bgColor = bg;
 
   for (var i=0; i<nameArray.length; i++) {
-    div = _x("tab_div_"+nameArray[i]);
+    div = _z("tab_div_"+nameArray[i]);
     if (div != null) {
       div.style.display = "none";
     }
   }
 
-  div = _x("tab_div_"+name);
+  div = _z("tab_div_"+name);
   div.style.visibility = "visible";
   div.style.display = "inline";
 }
@@ -172,7 +172,7 @@ showPopupIcon = function(menu, obj, img_root, offsetFromTop)
       curPopup.style.display = "none";
     } catch (e) {}
   }
-  var icon = _x("popupImg_"+menu);
+  var icon = _z("popupImg_"+menu);
   if (icon == null) {
     curPopup = null;
     return;
@@ -229,7 +229,7 @@ showPopupIcon = function(menu, obj, img_root, offsetFromTop)
     return;
   }
 
-  var divPopupIcon = _x("popupIcon");
+  var divPopupIcon = _z("popupIcon");
   if (divPopupIcon == null) {
     divPopupIcon = document.createElement('div');
     divPopupIcon.id = "popupIcon";
@@ -239,7 +239,7 @@ showPopupIcon = function(menu, obj, img_root, offsetFromTop)
     divPopupIcon.innerHTML = "<img id='popupIconImg' src='' width='50'/>";
     document.body.appendChild(divPopupIcon);
   }
-  var divPopupIconImg = _x("popupIconImg");
+  var divPopupIconImg = _z("popupIconImg");
   divPopupIconImg.src = "";
 
   divPopupIconImg.src = img_root+icon;
@@ -262,8 +262,8 @@ hidePopupIcon = function()
   curPopup = null;
 
 /* Dynamic creation of [img src=""/] makes IE6/7 request the server with senseless URL.
-  var divPopupIcon = _x("popupIcon");
-  var divPopupIconImg = _x("popupIconImg");
+  var divPopupIcon = _z("popupIcon");
+  var divPopupIconImg = _z("popupIconImg");
 
   try {
     divPopupIconImg.src = "";
@@ -353,7 +353,7 @@ ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
                   }
                 }
 
-                _x(target_id).innerHTML = value.stripScripts();
+                _z(target_id).innerHTML = value.stripScripts();
                 value.evalScripts();
 
                 if (showErrorMsg(target_id) == true) {
@@ -399,7 +399,7 @@ _onUploadCompletedForOpera = function(target_id) {
     return;
 
   var value = data.documentElement.innerHTML;
-  _x(target_id).innerHTML = value.stripScripts();
+  _z(target_id).innerHTML = value.stripScripts();
   value.evalScripts();
 
   if (showErrorMsg(target_id) == true) {

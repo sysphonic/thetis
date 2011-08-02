@@ -13,16 +13,16 @@ tabs = new Array("basic", "address", "memo", "scope");
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_x('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_address" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('address', tabs); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if(_x('tab_div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_address" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('address', tabs); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if(_z('tab_div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= Address.human_attribute_name('address') %>
           </td>
-          <td id="tab_memo" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('memo', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_x('tab_div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_memo" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('memo', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= Address.human_attribute_name('memo') %>
           </td>
-          <td id="tab_scope" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('scope', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_x('tab_div_scope').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_scope').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_scope" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('scope', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_scope').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_scope').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= t('schedule.scope') %>
           </td>
           <td>&nbsp;</td>
@@ -203,9 +203,9 @@ tabs = new Array("basic", "address", "memo", "scope");
                 is_for_all = true
               end
               %>
-              <input type="radio" id="scope_private" name="scope" value="private" onclick="_x('div_edit_scope').style.display='none';" <%= (is_private)?'checked':'' %> /><label for="scope_private"><%= t('scope.private') %></label><br/>
-              <input type="radio" id="scope_all" name="scope" value="all" onclick="_x('div_edit_scope').style.display='none';" <%= (is_for_all)?'checked':'' %> /><label for="scope_all"><%= t('scope.common') %><%= t('paren.round.left') %><%= t('msg.all_users') %><%= t('paren.round.right') %></label><br/>
-              <input type="radio" id="scope_common" name="scope" value="common" onclick="_x('div_edit_scope').style.display='block';" <%= (is_private or is_for_all)?'':'checked' %> /><label for="scope_common"><%= t('scope.common') %></label><br/>
+              <input type="radio" id="scope_private" name="scope" value="private" onclick="_z('div_edit_scope').style.display='none';" <%= (is_private)?'checked':'' %> /><label for="scope_private"><%= t('scope.private') %></label><br/>
+              <input type="radio" id="scope_all" name="scope" value="all" onclick="_z('div_edit_scope').style.display='none';" <%= (is_for_all)?'checked':'' %> /><label for="scope_all"><%= t('scope.common') %><%= t('paren.round.left') %><%= t('msg.all_users') %><%= t('paren.round.right') %></label><br/>
+              <input type="radio" id="scope_common" name="scope" value="common" onclick="_z('div_edit_scope').style.display='block';" <%= (is_private or is_for_all)?'':'checked' %> /><label for="scope_common"><%= t('scope.common') %></label><br/>
               <div id="div_edit_scope" style="display:<%= (is_private)?'none':'block' %>; padding-left:10px">
                 <%= render(:partial => 'common/edit_scope', :locals => {:obj => @address}) %>
               </div>

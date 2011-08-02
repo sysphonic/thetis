@@ -142,7 +142,7 @@ TrayDragObserver.prototype = {
     }
 
     removeElem(loc);
-    document.body.appendChild(loc);   // not on _x("div_desktop"), to show over the tray.
+    document.body.appendChild(loc);   // not on _z("div_desktop"), to show over the tray.
     posAbsolute(loc);
 
     loc.style.zIndex = 100000;
@@ -158,7 +158,7 @@ TrayDragObserver.prototype = {
     if (loc.className != "location_tray") {
       return;
     }
-    _x("div_desktop").style.backgroundColor = "snow";
+    _z("div_desktop").style.backgroundColor = "snow";
     draggable.options.snap = false;
   }
 }
@@ -174,11 +174,11 @@ Droppables.add(
           accept: "location_tray",
           onHover:function(element)
           {
-            _x("div_desktop").style.backgroundColor = "white";
+            _z("div_desktop").style.backgroundColor = "white";
           },
           onDrop:function(element)
           {
-            var axis = getAxis(_x("div_desktop"), element.id);
+            var axis = getAxis(_z("div_desktop"), element.id);
 
             new Ajax.Request(
                     "<%= url_for(:controller => 'locations', :action => 'on_moved') %>",
@@ -204,7 +204,7 @@ Droppables.add(
           accept: "location_on_map",
           onHover:function(element)
           {
-            _x("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png";
+            _z("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png";
           },
           onDrop:function(element)
           {
@@ -218,7 +218,7 @@ Droppables.add(
 
 <SCRIPT language="javascript" type="text/javascript">
 
-var desktop = _x("div_desktop");
+var desktop = _z("div_desktop");
 desktop.style.display = "block";
 
 function onLoadSub()
@@ -227,7 +227,7 @@ function onLoadSub()
   var mainWidth = mainRegion.width;
   var mainHeight = mainRegion.height;
 
-  var img_map = _x("img_map");
+  var img_map = _z("img_map");
   img_map.width = mainWidth * 90 / 100;
   img_map.height = mainHeight * 90 / 100;
   img_map.style.display = "block";
@@ -242,7 +242,7 @@ function onLoadSub()
 unless @locations.nil?
   @locations.each do |location|
 %>
-  loc = _x("location_<%= location.id %>");
+  loc = _z("location_<%= location.id %>");
   loc.style.left = (deskPos.x + deskWidth * <%= location.x %> / 10000) + "px";
   loc.style.top = (deskPos.y + deskHeight * <%= location.y %> / 10000) + "px";
   loc.style.display = "inline";
@@ -251,7 +251,7 @@ unless @locations.nil?
 end
 %>
 
-  var toolbar = _x("toolbar");
+  var toolbar = _z("toolbar");
   toolbar.style.display = "inline";
   var toolbarHeight = toolbar.clientHeight;
   toolbar.style.top = (mainHeight - toolbarHeight - 30) + "px";
@@ -279,7 +279,7 @@ function _doRemoveLocation(element_id)
               thetisBoxProgress.remove();
               setTimeout(
                   function(){
-                    var loc = _x(element_id);
+                    var loc = _z(element_id);
                     removeElem(loc);
                   },
                   100
@@ -291,7 +291,7 @@ function _doRemoveLocation(element_id)
 
 function save(location_id)
 {
-  var desktop = _x("div_desktop");
+  var desktop = _z("div_desktop");
 
   bound(desktop, location_id);
 
@@ -318,7 +318,7 @@ DesktopDragObserver.prototype = {
       return;
     }
 
-    bound(_x("div_desktop"), elem.id);
+    bound(_z("div_desktop"), elem.id);
   },
   onDrag: function(eventName, draggable, event) {
     var elem = draggable.element;
@@ -344,7 +344,7 @@ DesktopDragObserver.prototype = {
       } catch (e) {}
       draggable.endDrag(event);
 
-      setTimeout("bound(_x('div_desktop'), '"+elem.id+"');", 100);
+      setTimeout("bound(_z('div_desktop'), '"+elem.id+"');", 100);
     }
   },
   onEnd: function(eventName, draggable, event) {
@@ -352,7 +352,7 @@ DesktopDragObserver.prototype = {
 
     if (elem.className == "location_on_map") {
       setTimeout("save('"+elem.id+"');", 100);
-      _x("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png";
+      _z("exit_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png";
     }
   }
 }
@@ -360,7 +360,7 @@ Draggables.addObserver( new DesktopDragObserver() );
 
 tipsExit = function()
 {
-  var exitPos = getPos(_x("exit"));
+  var exitPos = getPos(_z("exit"));
   var x = exitPos.x + 50;
   var y = exitPos.y - 50;
   

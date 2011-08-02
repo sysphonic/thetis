@@ -270,7 +270,7 @@ function doDeleteMulti()
   for (var i=0; elems!=null && i<elems.length; i++) {
     if (elems[i].checked) {
       var item_id = elems[i].id.split("_")[2];
-      var div_project = _x("div_project_" + item_id);
+      var div_project = _z("div_project_" + item_id);
       if (div_project) {
         teams.push(div_project.innerHTML);
       }
@@ -393,7 +393,7 @@ function _addToDesktop(xtype, target_id)
             asynchronous:true,
             evalScripts:false,
             onComplete:function(request) {
-                var button = _x("add_to_desktop");
+                var button = _z("add_to_desktop");
                 removeElem(button);
 
                 thetisBoxProgress.remove();

@@ -246,6 +246,7 @@ doUpdateZeptAllowed = function()
   new Ajax.Request(
               "<%= url_for(:controller => 'users', :action => 'update_zept_allowed', :id => @user.id) %>",
               {
+                method:"get",
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request){

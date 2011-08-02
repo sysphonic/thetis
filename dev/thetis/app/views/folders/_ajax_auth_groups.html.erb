@@ -72,10 +72,10 @@ else
                     <table cellspacing="0" cellpadding="0" width="100%">
                       <tr>
                         <td align="center" nowrap>
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="var ary=moveListWithSuffix(_x('group_candidates'), _x('groups_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="var ary=moveListWithSuffix(_x('group_candidates'), _x('groups_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="var ary=moveListWithSuffix(_x('group_candidates'), _x('groups_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="var ary=moveListTrimSuffix(_x('groups_auth'), _x('group_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="var ary=moveListWithSuffix(_z('group_candidates'), _z('groups_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="var ary=moveListWithSuffix(_z('group_candidates'), _z('groups_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="var ary=moveListWithSuffix(_z('group_candidates'), _z('groups_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="var ary=moveListTrimSuffix(_z('groups_auth'), _z('group_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_groups++;} return false;">
                         </td>
                       </tr>
                     </table>

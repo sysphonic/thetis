@@ -38,20 +38,20 @@ var users_cache = new Array();
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if(_x('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
+        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if(_z('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
             <%= Workflow.human_name %>
         </td>
       <% end %>
-        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if(_x('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
             <%= t('cap.basic_info') %>
         </td>
-        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if(_x('tab_div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if(_z('tab_div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= Item.human_attribute_name('description') %>
         </td>
-        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image', tabs); this.bgColor='red'" bgColor="red" onMouseOver="if(_x('tab_div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
+        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image', tabs); this.bgColor='red'" bgColor="red" onMouseOver="if(_z('tab_div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
             <%= t('image.plural') %>
         </td>
-        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment', tabs); this.bgColor='brown'" bgColor="brown" onMouseOver="if(_x('tab_div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('tab_div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment', tabs); this.bgColor='brown'" bgColor="brown" onMouseOver="if(_z('tab_div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
             <%= t('attachment.plural_full') %>
         </td>
         <td>&nbsp;</td>
@@ -267,7 +267,7 @@ var users_cache = new Array();
 
 function _ajaxPost(form_id, p_url, target_id, func_complete, func_error)
 {
-  var frm = _x(form_id);
+  var frm = _z(form_id);
 
   new Ajax.Updater(
             target_id,
@@ -276,7 +276,7 @@ function _ajaxPost(form_id, p_url, target_id, func_complete, func_error)
               asynchronous:true,
               evalScripts:true,
               onComplete:function(request){
-                            if (showErrorMsg(_x(target_id)) == true) {
+                            if (showErrorMsg(_z(target_id)) == true) {
                               setTimeout(func_error, 10);
                             } else {
                               setTimeout(func_complete, 10);
@@ -312,15 +312,15 @@ function isModifiedDescription()
 
 function isModifiedImage()
 {
-  if (_x("image0_file").value.length > 0) return true;
-  if (_x("image1_file").value.length > 0) return true;
+  if (_z("image0_file").value.length > 0) return true;
+  if (_z("image1_file").value.length > 0) return true;
   return false
 }
 
 function isModifiedAttachment()
 {
-  if (_x("attachment0_file").value.length > 0) return true;
-  if (_x("attachment1_file").value.length > 0) return true;
+  if (_z("attachment0_file").value.length > 0) return true;
+  if (_z("attachment1_file").value.length > 0) return true;
   return false
 }
 
@@ -328,13 +328,13 @@ function isModifiedAttachment()
 
 function onSelectWfOrder()
 {
-  var list = _x("users_selected");
+  var list = _z("users_selected");
   for (var i=0; i<list.length; i++) {
     users_cache[list.options[i].value] = list.options[i].text;
   }
   list.length=0;
-  var order_id = getListSelected(_x("orders"))[0];
-  var divOrder=_x("order-"+order_id);
+  var order_id = getListSelected(_z("orders"))[0];
+  var divOrder=_z("order-"+order_id);
   if (divOrder.value == null) {
     return;
   }
@@ -349,7 +349,7 @@ function onSelectWfOrder()
 
 function addWfOrder()
 {
-  var order_list = _x("orders");
+  var order_list = _z("orders");
   var order_id = 1;
   if (order_list.length > 0) {
     order_id = parseInt(order_list.options[order_list.length-1].value, 10) + 1;
@@ -358,7 +358,7 @@ function addWfOrder()
   d.id = "order-"+order_id;
   d.name = d.id;
   d.type = "hidden";
-  _x("form_workflow").appendChild(d);
+  _z("form_workflow").appendChild(d);
   addList(order_list, "<%= t('workflow.order_prefix') %>"+order_id, order_id, true);
   if (getListSelected(order_list).length <= 0) {
     order_list.options[order_list.length-1].selected = true;
@@ -369,26 +369,26 @@ function addWfOrder()
 
 function removeWfOrder()
 {
-  var order_list = _x("orders");
+  var order_list = _z("orders");
   var del_ary = deleteList(order_list);
   for (var i=0; i < del_ary.length; i++) {
-    _x("order-"+del_ary[i]).remove();
+    _z("order-"+del_ary[i]).remove();
   }
-  _x("users_selected").length=0;
+  _z("users_selected").length=0;
   modifiedWorkflow++;
   return false;
 }
 
 function addWfUser()
 {
-  var order_ary=getListSelected(_x("orders"));
+  var order_ary=getListSelected(_z("orders"));
   if (order_ary <= 0) {
     msg("<%= t('workflow.select_order')%>");
     return;
   }
-  var add_ary = moveList(_x("user_candidates"), _x("users_selected"));
+  var add_ary = moveList(_z("user_candidates"), _z("users_selected"));
   var order_id = order_ary[0];
-  var divOrder = _x("order-"+order_id);
+  var divOrder = _z("order-"+order_id);
   var array=add_ary;
   if (divOrder.value != null && divOrder.value.length > 0) {
     array = divOrder.value.split(",");
@@ -401,9 +401,9 @@ function addWfUser()
 
 function removeWfUser()
 {
-  var del_ary = moveList(_x("users_selected"), _x("user_candidates"));
-  var order_id = getListSelected(_x("orders"))[0];
-  var divOrder = _x("order-"+order_id);
+  var del_ary = moveList(_z("users_selected"), _z("user_candidates"));
+  var order_id = getListSelected(_z("orders"))[0];
+  var divOrder = _z("order-"+order_id);
   if (divOrder.value == null) {
     return;
   }
@@ -416,14 +416,14 @@ function removeWfUser()
 
 function checkWorkflow()
 {
-  var list = _x("orders");
+  var list = _z("orders");
   if (list.length <= 0) {
     msg("<%= t('workflow.specify_orders') %>");
     return false;
   }
   for (var i=0; i<list.length; i++) {
     var order_id = list.options[i].value;
-    var divOrder=_x("order-"+order_id);
+    var divOrder=_z("order-"+order_id);
     if (divOrder.value == null || divOrder.value.length <= 0) {
       msg("<%= t('workflow.specify_users_for1') %>"+order_id+"<%= t('workflow.specify_users_for2') %>");
       return false;
@@ -436,7 +436,7 @@ function checkWorkflow()
 
 function checkGeneral()
 {
-  var title = trim(_x("item_title").value, false);
+  var title = trim(_z("item_title").value, false);
   if (title.length <= 0) {
     msg("<%= t('item.specify_title') %>");
     return false;
@@ -446,7 +446,7 @@ function checkGeneral()
 
 function checkBasic()
 {
-  var frm = _x("form_basic");
+  var frm = _z("form_basic");
   if (frm.check_create_folder != null && frm.check_create_folder.checked) {
 
     var folder_name = trim(frm.create_folder_name.value, false);
@@ -518,15 +518,15 @@ function doSave()
   if (isModifiedWorkflow()) {
     if (!checkWorkflow()) {
       showTab("workflow", tabs);
-      _x("tab_workflow").bgColor="orange";
+      _z("tab_workflow").bgColor="orange";
       return false;
     }
-    addInputHidden(_x("form_workflow"), null, "item[folder_id]", _x("item_folder_id").value); 
+    addInputHidden(_z("form_workflow"), null, "item[folder_id]", _z("item_folder_id").value); 
     saveFuncs.push(
           function() {
             _ajaxPost(
                     "form_workflow",
-                    "<%= url_for(:controller => 'items', :action => 'set_workflow') %>?id="+_x("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_workflow') %>?id="+_z("item_id").value,
                     "div_item_workflow",
                     function(){ onSaveComplete("workflow") },
                     function(){ onSaveError("workflow") }
@@ -540,14 +540,14 @@ function doSave()
   if (isModifiedBasic()) {
     if (!checkBasic()) {
       showTab("basic", tabs);
-      _x("tab_basic").bgColor="blue";
+      _z("tab_basic").bgColor="blue";
       return false;
     }
     saveFuncs.push(
           function() {
             _ajaxPost(
                     "form_basic",
-                    "<%= url_for(:controller => 'items', :action => 'set_basic') %>?id="+_x("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_basic') %>?id="+_z("item_id").value,
                     "div_item_basic",
                     function(){ onSaveComplete("basic") },
                     function(){ onSaveError("basic") }
@@ -558,13 +558,13 @@ function doSave()
 
   // Description
   if (isModifiedDescription()) {
-    addInputHidden(_x("form_description"), null, "item[folder_id]", _x("item_folder_id").value);
-    _x("item_description").value = oEditor.getData();
+    addInputHidden(_z("form_description"), null, "item[folder_id]", _z("item_folder_id").value);
+    _z("item_description").value = oEditor.getData();
     saveFuncs.push(
           function() {
               _ajaxPost(
                     "form_description",
-                    "<%= url_for(:controller => 'items', :action => 'set_description') %>?id="+_x("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_description') %>?id="+_z("item_id").value,
                     "div_item_description",
                     function(){ onSaveComplete("description") },
                     function(){ onSaveError("description") }
@@ -575,12 +575,12 @@ function doSave()
 
   // Image
   if (isModifiedImage()) {
-    addInputHidden(_x("form_image"), null, "item[folder_id]", _x("item_folder_id").value);
+    addInputHidden(_z("form_image"), null, "item[folder_id]", _z("item_folder_id").value);
     saveFuncs.push(
           function() {
             ajaxUploadFile(
                     "form_image",
-                    "<%= url_for(:controller => 'items', :action => 'set_image') %>?id="+_x("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_image') %>?id="+_z("item_id").value,
                     "div_item_image",
                     function(){
                       setTimeout(setSortableImg, 100);
@@ -594,12 +594,12 @@ function doSave()
 
   // Attachment
   if (isModifiedAttachment()) {
-    addInputHidden(_x("form_attachment"), null, "item[folder_id]", _x("item_folder_id").value);
+    addInputHidden(_z("form_attachment"), null, "item[folder_id]", _z("item_folder_id").value);
     saveFuncs.push(
           function() {
             ajaxUploadFile(
                     "form_attachment",
-                    "<%= url_for(:controller => 'items', :action => 'set_attachment') %>?id="+_x("item_id").value,
+                    "<%= url_for(:controller => 'items', :action => 'set_attachment') %>?id="+_z("item_id").value,
                     "div_item_attachment",
                     function(){
                       setTimeout(setSortableAttach, 100);
@@ -613,7 +613,7 @@ function doSave()
 
   if (saveFuncs.length > 0) {
     thetisBoxProgress.show("TOP-RIGHT", "", "PROGRESS", "", "", "");
-    removeElem(_x("tmpl_button"));
+    removeElem(_z("tmpl_button"));
     setTimeout("onSaveComplete()", 10);
   }
 }
@@ -652,7 +652,7 @@ var move_to_show = false;
 
 function doShow()
 {
-  if (_x("item_id").value=="") {
+  if (_z("item_id").value=="") {
     msg("<%= t('item.register_first') %>");
     return;
   }
@@ -667,7 +667,7 @@ function doShow()
 function _doShow()
 {
   prog("TOP-RIGHT");
-  location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id="+_x("item_id").value;
+  location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id="+_z("item_id").value;
 }
 
 function showTemplateTreeToSelect()

@@ -7,8 +7,8 @@
 <META http-equiv="Content-Script-Type" content="text/JavaScript">
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<%= stylesheet_link_tag 'thetis101' %>
-<%= javascript_include_tag 'prototype', 'thetis/common110beta3', 'thetis/thetis110beta2' %>
+<%= stylesheet_link_tag 'thetis102' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta5', 'thetis/thetis110beta3' %>
 
 <style type=text/css>
 A:link {
@@ -27,11 +27,11 @@ A:hover {
 function setLoginName(name)
 {
   if (name == null || name.length <= 0) {
-    _x("login_name").innerHTML = "";
-    _x("table_login_user").style.display = "none";
+    _z("login_name").innerHTML = "";
+    _z("table_login_user").style.display = "none";
   } else {
-    _x("login_name").innerHTML = name;
-    _x("table_login_user").style.display = "block";
+    _z("login_name").innerHTML = name;
+    _z("table_login_user").style.display = "block";
   }
 }
 

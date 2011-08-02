@@ -105,9 +105,9 @@ TrayDragObserver.prototype = {
         };
     }
     removeElem(toy);
-    document.body.appendChild(toy);   // not on _x("div_desktop"), to show over the tray.
+    document.body.appendChild(toy);   // not on _z("div_desktop"), to show over the tray.
     posAbsolute(toy);
-    var nameLen = getByteSize(_x(toy.id+"_name").innerHTML);
+    var nameLen = getByteSize(_z(toy.id+"_name").innerHTML);
     if (nameLen > 30) {
       toy.style.width = "200px";
     } else {
@@ -127,7 +127,7 @@ TrayDragObserver.prototype = {
     if (toy.className != 'toy_tray') {
       return;
     }
-    _x("div_desktop").style.backgroundColor = _x("desktop_bgcolor").value;
+    _z("div_desktop").style.backgroundColor = _z("desktop_bgcolor").value;
     draggable.options.snap = false;
   }
 }

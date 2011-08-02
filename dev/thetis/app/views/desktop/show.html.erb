@@ -21,7 +21,7 @@ open_url_h = open_url_h.update(ApplicationHelper.get_fwd_params(params))
 date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
 %>
   new Ajax.Updater(
-            _x("div_desktop").parentNode,
+            _z("div_desktop").parentNode,
             "<%= url_for(open_url_h) %>",
             {
               method:"get",
@@ -54,7 +54,7 @@ date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
 
 function showSchedule()
 {
-  var desktop = _x("div_desktop");
+  var desktop = _z("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
   var deskPos = getPos(desktop);
@@ -94,7 +94,7 @@ function showSchedule()
 
 function showTimecard()
 {
-  var desktop = _x("div_desktop");
+  var desktop = _z("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
   var deskPos = getPos(desktop);
@@ -134,7 +134,7 @@ function showTimecard()
 
 function showToolTray(sw)
 {
-  var tool_tray = _x("tool_tray");
+  var tool_tray = _z("tool_tray");
 
   if (!tool_tray)
     return;
@@ -148,7 +148,7 @@ function showToolTray(sw)
 
 function showTray()
 {
-  var desktop = _x("div_desktop");
+  var desktop = _z("div_desktop");
   var deskWidth = desktop.clientWidth;
   var deskHeight = desktop.clientHeight;
   var deskPos = getPos(desktop);
@@ -196,7 +196,7 @@ function showTray()
 
 function showToolBiorhythm(sw)
 {
-  var tool_biorhythm = _x("tool_biorhythm");
+  var tool_biorhythm = _z("tool_biorhythm");
 
   if (tool_biorhythm == null) {
     return;
@@ -237,7 +237,7 @@ function saveBirthday(birthday)
             onComplete:function(request) {
                 setTimeout("showBiorhythm()", 10);
                 thetisBoxProgress.remove();
-                _x("biorhythm_req_birth").value = "false";
+                _z("biorhythm_req_birth").value = "false";
               }
           }
         );

@@ -207,13 +207,13 @@ else
                         <table cellspacing="0" cellpadding="0" width="100%">
                           <tr>
                             <td align="center">
-                              <input type="button" value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_x('rule_candidates'), _x('repeat_rules')); setForceTargetAll(); return false;" style="width:80px;">
+                              <input type="button" value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_z('rule_candidates'), _z('repeat_rules')); setForceTargetAll(); return false;" style="width:80px;">
                             </td>
                           </tr>
                           <tr height="10"><td></td></tr>
                           <tr>
                             <td align="center">
-                              <input type="button" value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList(_x('repeat_rules'), _x('rule_candidates')); setForceTargetAll(); return false;" style="width:80px;">
+                              <input type="button" value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList(_z('repeat_rules'), _z('rule_candidates')); setForceTargetAll(); return false;" style="width:80px;">
                             </td>
                           </tr>
                         </table>
@@ -236,13 +236,13 @@ else
             <%= t('schedule.cap_term') %><br/>
             <input type="text" id="schedule_repeat_start" name="schedule[repeat_start]" readonly value="<%= @schedule.repeat_start.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_start.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermStart();" />
             <span id="div_cal_repStart"></span>
-            <img class="img_btn" onclick="_x('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+            <img class="img_btn" onclick="_z('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
             &nbsp;<span style="color:firebrick">-</span>&nbsp;
 
             <input type="text" id="schedule_repeat_end" name="schedule[repeat_end]" readonly value="<%= @schedule.repeat_end.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_end.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermEnd();" />
             <span id="div_cal_repEnd"></span>
-            <img class="img_btn" onclick="_x('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+            <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
             <table cellspacing="0" cellpadding="0" width="100%" style="padding-top:5px;">
               <tr>
@@ -348,8 +348,8 @@ else
 <script type="text/javascript">
 editEquipment = function()
 {
-  _x("div_equipment_empty").style.display = "none";
-  _x("div_equipment").style.display = "block";
+  _z("div_equipment_empty").style.display = "none";
+  _z("div_equipment").style.display = "block";
 }
 </script>
 
@@ -439,8 +439,8 @@ editEquipment = function()
 <script type="text/javascript">
 editItems = function()
 {
-  _x("div_items_empty").style.display = "none";
-  _x("div_items").style.display = "block";
+  _z("div_items_empty").style.display = "none";
+  _z("div_items").style.display = "block";
 }
 </script>
 
@@ -558,12 +558,12 @@ setAllDay = function(sw)
 
 setRepeat = function(sw)
 {
-  var update_target = _x("update_target");
-  var update_target_hide = _x("update_target_hide");
+  var update_target = _z("update_target");
+  var update_target_hide = _z("update_target_hide");
 
   if (sw) {
-    _x("div_once").style.display = "none";
-    _x("div_repeat").style.display = "block";
+    _z("div_once").style.display = "none";
+    _z("div_repeat").style.display = "block";
     if (update_target != null) {
       if (forceTargetAll > 0) {
         update_target_hide.innerHTML = "<%= t('schedule.all_repeated') %>";
@@ -573,8 +573,8 @@ setRepeat = function(sw)
       }
     }
   } else {
-    _x("div_once").style.display = "block";
-    _x("div_repeat").style.display = "none";
+    _z("div_once").style.display = "block";
+    _z("div_repeat").style.display = "none";
     if (update_target != null) {
       update_target.style.display = "none";
       update_target_hide.style.display = "block";
@@ -587,7 +587,7 @@ setForceTargetAll = function(sw)
 {
   forceTargetAll++
 
-  var update_target = _x("update_target");
+  var update_target = _z("update_target");
 
   if (update_target != null) {
     var repeat_update_target = document.form_detail.repeat_update_target;
@@ -600,7 +600,7 @@ setForceTargetAll = function(sw)
       }
     }
 
-    var update_target_hide = _x("update_target_hide");
+    var update_target_hide = _z("update_target_hide");
 
     update_target.style.display = "none";
     update_target_hide.style.display = "block";
@@ -611,11 +611,11 @@ setForceTargetAll = function(sw)
 forceRepeat = function(sw)
 {
   if (sw) {
-    _x("div_once").style.display = "none";
-    _x("div_repeat").style.display = "block";
+    _z("div_once").style.display = "none";
+    _z("div_repeat").style.display = "block";
   } else {
-    _x("div_once").style.display = "block";
-    _x("div_repeat").style.display = "none";
+    _z("div_once").style.display = "block";
+    _z("div_repeat").style.display = "none";
   }
 }
 
@@ -624,8 +624,8 @@ showCalStart = function()
   var calStart = new JKL.Calendar("div_cal_start", "form_detail", "start_date");
   calStart.setFunc(
                 function() {
-                    var start = _x("start_date");
-                    var end = _x("end_date");
+                    var start = _z("start_date");
+                    var end = _z("end_date");
                     if (end.value != null && end.value != "" && start.value > end.value) {
                       end.value = start.value;
                     }
@@ -639,8 +639,8 @@ showCalEnd = function()
   var calEnd = new JKL.Calendar("div_cal_end", "form_detail", "end_date");
   calEnd.setFunc(
                 function() {
-                    var start = _x("start_date");
-                    var end = _x("end_date");
+                    var start = _z("start_date");
+                    var end = _z("end_date");
                     if (start.value != null && start.value != "" && end.value < start.value) {
                       start.value = end.value;
                     }
@@ -655,8 +655,8 @@ showCalTermStart = function()
   calRepStart.setFunc(
                 function() {
                     setForceTargetAll();
-                    var start = _x("schedule_repeat_start");
-                    var end = _x("schedule_repeat_end");
+                    var start = _z("schedule_repeat_start");
+                    var end = _z("schedule_repeat_end");
                     if (end.value != null && end.value != "" && start.value > end.value) {
                       end.value = start.value;
                     }
@@ -671,8 +671,8 @@ showCalTermEnd = function()
   calRepEnd.setFunc(
                 function() {
                     setForceTargetAll();
-                    var start = _x("schedule_repeat_start");
-                    var end = _x("schedule_repeat_end");
+                    var start = _z("schedule_repeat_start");
+                    var end = _z("schedule_repeat_end");
                     if (start.value != null && start.value != "" && end.value < start.value) {
                       start.value = end.value;
                     }
@@ -686,8 +686,8 @@ addRepeatExcept = function()
   var calExcept = new JKL.Calendar("div_cal_except", "form_detail", "except_day");
   calExcept.setFunc(
                 function() {
-                    var input_day = _x("except_day").value;
-                    var list = _x("excepts");
+                    var input_day = _z("except_day").value;
+                    var list = _z("excepts");
                     addList(list, input_day, input_day, false);
                     sortList(list, "DESC");
                     setForceTargetAll();
@@ -698,7 +698,7 @@ addRepeatExcept = function()
 
 removeRepeatExcept = function()
 {
-  var del_ary = deleteList(_x("excepts"));
+  var del_ary = deleteList(_z("excepts"));
 
   if (del_ary != null && del_ary.length > 0) {
     setForceTargetAll();
@@ -707,7 +707,7 @@ removeRepeatExcept = function()
 
 addMember = function(attr_name)
 {
-  var ret_ary = moveList(_x(attr_name+"_candidates"), _x(attr_name+"s_selected"));
+  var ret_ary = moveList(_z(attr_name+"_candidates"), _z(attr_name+"s_selected"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;
@@ -716,7 +716,7 @@ addMember = function(attr_name)
 
 removeMember = function(attr_name)
 {
-  var ret_ary = moveList(_x(attr_name+"s_selected"), _x(attr_name+"_candidates"));
+  var ret_ary = moveList(_z(attr_name+"s_selected"), _z(attr_name+"_candidates"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;
@@ -725,7 +725,7 @@ removeMember = function(attr_name)
 
 addEquipment = function()
 {
-  var ret_ary = moveList(_x("equipment_candidates"), _x("equipment_selected"));
+  var ret_ary = moveList(_z("equipment_candidates"), _z("equipment_selected"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;
@@ -734,7 +734,7 @@ addEquipment = function()
 
 removeEquipment = function()
 {
-  var ret_ary = moveList(_x("equipment_selected"), _x("equipment_candidates"));
+  var ret_ary = moveList(_z("equipment_selected"), _z("equipment_candidates"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;
@@ -743,7 +743,7 @@ removeEquipment = function()
 
 addItem = function()
 {
-  var ret_ary = moveList(_x("item_candidates"), _x("items_selected"));
+  var ret_ary = moveList(_z("item_candidates"), _z("items_selected"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;
@@ -752,7 +752,7 @@ addItem = function()
 
 removeItem = function()
 {
-  var ret_ary = moveList(_x("items_selected"), _x("item_candidates"));
+  var ret_ary = moveList(_z("items_selected"), _z("item_candidates"));
 
   if (ret_ary != null && ret_ary.length > 0) {
     reqTargetDay++;

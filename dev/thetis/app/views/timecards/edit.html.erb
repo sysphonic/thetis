@@ -12,7 +12,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
     function() {
-      _x("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+      _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
       var elem = document.createElement("input");
       elem.name = "user_id";
@@ -131,7 +131,7 @@ end
       <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('timecard.labor_time') %></td>
       <td class="item_value_td">
       <% if editable %>
-        <select id="start_hour" onchange="changeHour(this.value, _x('start_min'));">
+        <select id="start_hour" onchange="changeHour(this.value, _z('start_min'));">
           <option value=""></option>
         <%
         THETIS_HOURS.each do |hour|
@@ -143,7 +143,7 @@ end
           <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
         <% end %>
         </select>
-        <select id="start_min" onchange="changeMin(this.value, _x('start_hour'));">
+        <select id="start_min" onchange="changeMin(this.value, _z('start_hour'));">
           <option value=""></option>
         <%
         THETIS_MINUTES.each do |min|
@@ -160,7 +160,7 @@ end
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" alt="<%= t('msg.current_time') %>" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
         <% end %>
         ~
-        <select id="end_hour" onchange="changeHour(this.value, _x('end_min'));">
+        <select id="end_hour" onchange="changeHour(this.value, _z('end_min'));">
           <option value=""></option>
         <%
         THETIS_HOURS.each do |hour|
@@ -172,7 +172,7 @@ end
           <option value= "<%= hour %>" <%= selected %>><%= sprintf('%d', hour) %></option>
         <% end %>
         </select>
-        <select id="end_min" onchange="changeMin(this.value, _x('end_hour'));">
+        <select id="end_min" onchange="changeMin(this.value, _z('end_hour'));">
           <option value=""></option>
         <%
         THETIS_MINUTES.each do |min|
@@ -288,7 +288,7 @@ end
 <!--
 
 <% if editable %>
-changeWorkcode(_x("timecard_workcode").value);
+changeWorkcode(_z("timecard_workcode").value);
 <% end %>
 
 function changeHour(value, min)
@@ -311,10 +311,10 @@ function changeMin(value, hour)
 
 function doRegister()
 {
-  var start_hour = _x("start_hour").value;
-  var start_min = _x("start_min").value;
-  var end_hour = _x("end_hour").value;
-  var end_min = _x("end_min").value;
+  var start_hour = _z("start_hour").value;
+  var start_min = _z("start_min").value;
+  var end_hour = _z("end_hour").value;
+  var end_min = _z("end_min").value;
   
   var start_date = "<%= date_s %>";
   var next_date = "<%= (@date+1).strftime(Schedule::SYS_DATE_FORM) %>";
@@ -324,25 +324,25 @@ function doRegister()
     end_date = start_date;
   }
 
-  if (checkOff(_x("timecard_workcode").value)) {
-    _x("timecard_start").value = "";
+  if (checkOff(_z("timecard_workcode").value)) {
+    _z("timecard_start").value = "";
   } else if (start_hour == "" || start_min == "") {
     msg("<%= t('timecard.specify_start_time') %>");
     return false;
   } else {
-    _x("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
+    _z("timecard_start").value = start_date + " " + start_hour + ":" + start_min;
   }
   if (end_hour == "" || end_min == "") {
-    _x("timecard_end").value = "";
+    _z("timecard_end").value = "";
   } else {
-    _x("timecard_end").value = end_date + " " + end_hour + ":" + end_min;
+    _z("timecard_end").value = end_date + " " + end_hour + ":" + end_min;
   }
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'update') %>?id=" + _x("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'update') %>?id=" + _z("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -365,7 +365,7 @@ function _doClear()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  location.href = "<%= url_for(:controller => 'timecards', :action => 'destroy') %>?id=" + _x("timecard_id").value + "&user_id=<%= @selected_user.id %>";
+  location.href = "<%= url_for(:controller => 'timecards', :action => 'destroy') %>?id=" + _z("timecard_id").value + "&user_id=<%= @selected_user.id %>";
 }
 
 var thetisBox = null;
@@ -401,7 +401,7 @@ function onBreakOK()
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'update_break') %>?id=" + _x("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'update_break') %>?id=" + _z("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -433,7 +433,7 @@ function _doDeleteBreak(org_start, org_end)
 
   new Ajax.Updater(
           "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'delete_break') %>?id=" + _x("timecard_id").value,
+          "<%= url_for(:controller => 'timecards', :action => 'delete_break') %>?id=" + _z("timecard_id").value,
           {
             asynchronous:true,
             evalScripts:false,
@@ -452,13 +452,13 @@ function changeWorkcode(workcode)
 {
   var isOff = checkOff(workcode);
 
-  _x("start_hour").disabled = isOff;
-  _x("start_min").disabled = isOff;
-  _x("end_hour").disabled = isOff;
-  _x("end_min").disabled = isOff;
-  _x("timecard_options_business_trip").disabled = isOff;
+  _z("start_hour").disabled = isOff;
+  _z("start_min").disabled = isOff;
+  _z("end_hour").disabled = isOff;
+  _z("end_min").disabled = isOff;
+  _z("timecard_options_business_trip").disabled = isOff;
   
-  var times_table = _x("times_table");
+  var times_table = _z("times_table");
   if (times_table != null) {
     times_table.style.display = isOff?"none":"block";
   }
@@ -467,7 +467,7 @@ function changeWorkcode(workcode)
   for (var i=0; elems != null && i < elems.length; i++) {
     elems[i].style.display = "none";
   }
-  var workcode_icon = _x("workcode_icon_"+workcode);
+  var workcode_icon = _z("workcode_icon_"+workcode);
   if (workcode_icon) {
     workcode_icon.style.display = "inline";
   }
@@ -540,11 +540,11 @@ function setAppropriateTime(sw, hour_str, min_str)
   var minElem = null;
 
   if (sw == "start") {
-    hourElem = _x("start_hour");
-    minElem = _x("start_min");
+    hourElem = _z("start_hour");
+    minElem = _z("start_min");
   } else {
-    hourElem = _x("end_hour");
-    minElem = _x("end_min");
+    hourElem = _z("end_hour");
+    minElem = _z("end_min");
   }
 
   var hourIdx = -1;

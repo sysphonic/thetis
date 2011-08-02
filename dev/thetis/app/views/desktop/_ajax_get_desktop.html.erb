@@ -119,7 +119,7 @@ end
               end
             %>
             <input id="biorhythm_req_birth" type="hidden" value="<%= req_birth %>" />
-            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%= t('biorhythm.show') %>" onclick="if (_x('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%= t('biorhythm.show') %>" onclick="if (_z('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" alt="<%= t('biorhythm.show') %>">
             </div>
             <% end %>
@@ -223,11 +223,11 @@ Droppables.add(
           accept: "toy_tray",
           onHover:function(element)
           {
-            _x("div_desktop").style.backgroundColor = "<%= @desktop.get_background_color(true) %>";
+            _z("div_desktop").style.backgroundColor = "<%= @desktop.get_background_color(true) %>";
           },
           onDrop:function(element)
           {
-            var axis = getAxis(_x("div_desktop"), element.id);
+            var axis = getAxis(_z("div_desktop"), element.id);
 
             new Ajax.Request(
                     "<%= url_for(:controller => 'desktop', :action => 'drop_on_desktop') %>?id="+encodeURIComponent(element.id),
@@ -260,7 +260,7 @@ Droppables.add(
           accept: "toy_desktop",
           onHover:function(element)
           {
-            _x("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png";
+            _z("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png";
           },
           onDrop:function(element)
           {
@@ -274,14 +274,14 @@ Droppables.add(
 
 <SCRIPT language="javascript" type="text/javascript">
 
-var desktop = _x("div_desktop");
+var desktop = _z("div_desktop");
 desktop.style.display = "block";
 
 <% unless login_user.nil? %>
-_x("menubox").style.display = "inline";
+_z("menubox").style.display = "inline";
 <% end %>
 
-_x("toolbox").style.display = "inline";
+_z("toolbox").style.display = "inline";
 
 doResize();
 
@@ -293,7 +293,7 @@ var deskPos = getPos(desktop);
 unless @toys.nil?
   @toys.each do |toy|
 %>
-  toy = _x("toy_<%= toy.id %>");
+  toy = _z("toy_<%= toy.id %>");
   toy.style.left = (deskPos.x + deskWidth * <%= toy.x %> / 10000) + "px";
   toy.style.top = (deskPos.y + deskHeight * <%= toy.y %> / 10000) + "px";
   toy.style.display = "inline";
@@ -341,7 +341,7 @@ editConfig = function()
 
 doRemoveToy = function(element_id)
 {
-  var xtype = _x(element_id+"_type").innerHTML;
+  var xtype = _z(element_id+"_type").innerHTML;
   var disp_type = (xtype == "<%= Toy::XTYPE_LABEL %>" || xtype == "<%= Toy::XTYPE_POSTLABEL %>")?"<%= t('desktop.label.confirm_to_delete') %>":"<%= t('desktop.shortcut.confirm_to_delete') %>";
 
   confm(disp_type, "_doRemoveToy('"+element_id+"')");
@@ -363,7 +363,7 @@ _doRemoveToy = function(element_id)
               thetisBoxProgress.remove();
               setTimeout(
                   function(){
-                    var toy = _x(element_id);
+                    var toy = _z(element_id);
                     removeElem(toy);
                   },
                   100
@@ -397,21 +397,21 @@ user_param += login_user.id.to_s unless login_user.nil?
 
 editLabel = function(toy_id)
 {
-  var label = _x(toy_id);
+  var label = _z(toy_id);
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'update_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_x('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'update_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_z('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
 
   // for users without LOGIN
-  var axis = getAxis(_x("div_desktop"), toy_id);
+  var axis = getAxis(_z("div_desktop"), toy_id);
 
   thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_x(toy_id+"_msg").innerHTML));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
 }
 
 createLabel = function()
@@ -421,7 +421,7 @@ createLabel = function()
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'create_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_x('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'create_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_z('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
@@ -434,12 +434,12 @@ editPostLabel = function(toy_id, posted_by, user_name)
 {
   createPostLabel();
 
-  post_to = _x("post_to");
+  post_to = _z("post_to");
   post_to.options[post_to.length++] = new Option(user_name, posted_by);
 
-  toy_msg = _x(toy_id+"_msg");
+  toy_msg = _z(toy_id+"_msg");
   if (toy_msg.innerHTML != null) {
-    _x("txaPostLabel").innerHTML = "&gt; " + toy_msg.innerHTML.split('\n')[0];
+    _z("txaPostLabel").innerHTML = "&gt; " + toy_msg.innerHTML.split('\n')[0];
   }
 }
 
@@ -522,11 +522,11 @@ getPostLabelEditor = function(onOk, onCancel)
 onPostLabelOK = function()
 {
   if (ThetisBox.trim(document.form_postlabel.txaPostLabel.value, true).length <= 0
-      || _x("post_to").length <= 0 ) {
+      || _z("post_to").length <= 0 ) {
     return false;
   }
 
-  confm("<%= t('desktop.label.confirm_to_post1') %>"+_x("post_to").length+"<%= t('desktop.label.confirm_to_post2') %>", "_onPostLabelOK()");
+  confm("<%= t('desktop.label.confirm_to_post1') %>"+_z("post_to").length+"<%= t('desktop.label.confirm_to_post2') %>", "_onPostLabelOK()");
 }
 
 _onPostLabelOK = function()
@@ -535,7 +535,7 @@ _onPostLabelOK = function()
 
   var thetisBoxProgress = new ThetisBox;
   thetisBoxProgress.show("TOP-RIGHT", "", "PROGRESS", "", "", "");
-  selectListAll(_x("post_to"));
+  selectListAll(_z("post_to"));
 
   new Ajax.Request(
           document.form_postlabel.action,
@@ -564,7 +564,7 @@ onPostLabelCancel = function()
 
 removePostTo = function()
 {
-  var del_ary = deleteList(_x("post_to"));
+  var del_ary = deleteList(_z("post_to"));
 }
 
 addPostTo = function()
@@ -620,7 +620,7 @@ showAddressBook = function()
 
 save = function(toy_id)
 {
-  var desktop = _x("div_desktop");
+  var desktop = _z("div_desktop");
 
   bound(desktop, toy_id);
 
@@ -646,7 +646,7 @@ DesktopDragObserver.prototype = {
       return;
     }
 
-    bound(_x("div_desktop"), toy.id);
+    bound(_z("div_desktop"), toy.id);
   },
   onDrag: function(eventName, draggable, event) {
     var toy = draggable.element;
@@ -671,7 +671,7 @@ DesktopDragObserver.prototype = {
       } catch (e) {}
       draggable.endDrag(event);
 
-      setTimeout("bound(_x('div_desktop'), '"+toy.id+"');", 100);
+      setTimeout("bound(_z('div_desktop'), '"+toy.id+"');", 100);
     }
   },
   onEnd: function(eventName, draggable, event) {
@@ -680,14 +680,14 @@ DesktopDragObserver.prototype = {
       return;
     }
     setTimeout("save('"+toy.id+"');", 100);
-    _x("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png";
+    _z("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_off.png";
   }
 }
 Draggables.addObserver( new DesktopDragObserver() );
 
 tipsRecyclebox = function()
 {
-  var recycleboxPos = getPos(_x("recyclebox"));
+  var recycleboxPos = getPos(_z("recyclebox"));
   var x = recycleboxPos.x + 50;
   var y = recycleboxPos.y - 50;
   

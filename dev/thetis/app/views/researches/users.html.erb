@@ -175,7 +175,7 @@ function selectNotCommitted()
   var elems = document.getElementsByClassName("check_user", document.form_list);
   for (var i=0; elems != null && i < elems.length; i++) {
     var user_id = elems[i].id.split("_")[2];
-    elems[i].checked = (_x("committed_users").innerHTML.indexOf("|"+user_id+"|") < 0);
+    elems[i].checked = (_z("committed_users").innerHTML.indexOf("|"+user_id+"|") < 0);
   }
 }
 

@@ -214,7 +214,7 @@ function getTitleSelector(onOk, onCancel)
   %>
                     );
 
-  var def = _x("user_title").value;
+  var def = _z("user_title").value;
 
   content = "<form name='form_title'>";
   content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
@@ -249,7 +249,7 @@ function getTitleSelector(onOk, onCancel)
 
 function onTitleSelectOK()
 {
-  _x("user_title").value = document.form_title.title.value;
+  _z("user_title").value = document.form_title.title.value;
   selector.remove();
   selector = null;
 }

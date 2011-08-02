@@ -7,13 +7,13 @@
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_x('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_z('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_receive" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onMouseOver="if(_x('div_receive').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_receive" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onMouseOver="if(_z('div_receive').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('mail.receive') %>
           </td>
-          <td id="tab_send" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_x('div_send').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_x('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_send" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_z('div_send').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('mail.send') %>
           </td>
           <td>&nbsp;</td>
@@ -178,7 +178,7 @@
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_auth"><%= MailAccount.human_attribute_name('smtp_auth') %></label></td>
                   <td class="item_value_td">
-                    <%= check_box('mail_account', 'smtp_auth', :onClick => '_x("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
+                    <%= check_box('mail_account', 'smtp_auth', :onClick => '_z("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
                   </td>
                 </tr>
                 <tr>
@@ -226,18 +226,18 @@ showAddressTab = function(name)
 
   var tab = null;
   for (i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.style.cursor = "pointer";
       tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
     }
   }
-  var target_tab = _x("tab_"+name);
+  var target_tab = _z("tab_"+name);
   target_tab.style.cursor = "default";
   var bg = target_tab.bgColor;
 
   for (i=0; i<nameArray.length; i++) {
-    tab = _x("tab_"+nameArray[i]);
+    tab = _z("tab_"+nameArray[i]);
     if (tab != null) {
       tab.bgColor = "silver";
     }
@@ -246,13 +246,13 @@ showAddressTab = function(name)
   target_tab.bgColor = bg;
 
   for (i=0; i<nameArray.length; i++) {
-    div = _x("div_"+nameArray[i]);
+    div = _z("div_"+nameArray[i]);
     if (div != null) {
       div.style.display = "none";
     }
   }
 
-  div = _x("div_"+name);
+  div = _z("div_"+name);
   div.style.visibility = "visible";
   div.style.display = "inline";
 }
@@ -264,7 +264,7 @@ doRegister = function()
 {
   var form = document.form_mail_account<%= form_idx %>;
 
-  if (trim(_x("mail_account_title").value) == "") {
+  if (trim(_z("mail_account_title").value) == "") {
     msg("<%= t('mail_account.specify_title')%>");
     return;
   }

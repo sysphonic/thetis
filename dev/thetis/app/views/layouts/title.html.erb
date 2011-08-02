@@ -6,9 +6,9 @@
 <META http-equiv="Content-Script-Type" content="text/JavaScript">
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<%= stylesheet_link_tag 'thetis101' %>
+<%= stylesheet_link_tag 'thetis102' %>
 
-<%= javascript_include_tag 'prototype', 'thetis/common110beta3', 'thetis/thetis110beta2', 'thetis/thetisbox110beta1' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta5', 'thetis/thetis110beta3', 'thetis/thetisbox110beta2' %>
 
 <script type="text/javascript">
 <!--
@@ -34,7 +34,7 @@ function doResize()
   var mainWidth = mainRegion.width;
   var mainHeight = mainRegion.height;
 
-  var main_div = _x("main_div");
+  var main_div = _z("main_div");
   main_div.style.height = mainHeight + "px";
   main_div.style.width = mainWidth + "px";
 }
@@ -48,7 +48,7 @@ function showTopicBox()
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('topicbox.title') %>";
   thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%=h $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
-  _x('divThetisBox-' + thetisBox.id).style.zIndex += 1;
+  _z('divThetisBox-' + thetisBox.id).style.zIndex += 1;
 }
 
 window.onresize = doResize;

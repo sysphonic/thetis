@@ -140,13 +140,13 @@
 function changeStatus(sw)
 {
   if (sw) {
-    _x("status").innerHTML = "<%=h status_started %>";
-    _x("button_start").style.display = "none";
-    _x("button_stop").style.display = "block";
+    _z("status").innerHTML = "<%=h status_started %>";
+    _z("button_start").style.display = "none";
+    _z("button_stop").style.display = "block";
   } else {
-    _x("status").innerHTML = "<%=h status_stopped %>";
-    _x("button_start").style.display = "block";
-    _x("button_stop").style.display = "none";
+    _z("status").innerHTML = "<%=h status_stopped %>";
+    _z("button_start").style.display = "block";
+    _z("button_stop").style.display = "none";
   }
 }
 
@@ -298,12 +298,12 @@ function renewCtrls()
 
 function onSelectQCodes(q_id)
 {
-  var selTypes = _x("sel_q_types");
+  var selTypes = _z("sel_q_types");
   selTypes.disabled = false;
 
   clearQCtrls();
 
-  q_param = _x(q_id).value;
+  q_param = _z(q_id).value;
 
   if (q_param != null && q_param != "") {
     q_type = q_param.split(":")[0];
@@ -312,7 +312,7 @@ function onSelectQCodes(q_id)
     selTypes.value = q_type;
   }
 
-  _x("q_cap").value = _x(q_id + "_cap").innerHTML;
+  _z("q_cap").value = _z(q_id + "_cap").innerHTML;
 }
 
 function onSelectQTypes(q_type)
@@ -322,8 +322,8 @@ function onSelectQTypes(q_type)
 
 function showQCtrl(q_type, q_vals)
 {
-  var ctrlAlts = _x("ctrl_alts");
-  var ctrlTextarea = _x("ctrl_textarea");
+  var ctrlAlts = _z("ctrl_alts");
+  var ctrlTextarea = _z("ctrl_textarea");
 
   ctrlAlts.style.display = "none";
   ctrlTextarea.style.display = "none";
@@ -335,13 +335,13 @@ function showQCtrl(q_type, q_vals)
     case "checkbox":
     case "select":
       if (q_vals != null) {
-        _x("ctrl_alts_vals").value = q_vals;
+        _z("ctrl_alts_vals").value = q_vals;
       }
       ctrlAlts.style.display = "block";
       break;
     case "textarea":
       if (q_vals != null) {
-        _x("ctrl_textarea_rows").value = q_vals;
+        _z("ctrl_textarea_rows").value = q_vals;
       }
       ctrlTextarea.style.display = "block";
       break;
@@ -350,13 +350,13 @@ function showQCtrl(q_type, q_vals)
 
 function clearQCtrls()
 {
-  _x("ctrl_alts_vals").value = "";
-  _x("ctrl_textarea_rows").value = "";
+  _z("ctrl_alts_vals").value = "";
+  _z("ctrl_textarea_rows").value = "";
 }
 
 function makeQCtrlParam()
 {
-  var selTypes = _x("sel_q_types");
+  var selTypes = _z("sel_q_types");
   var q_type = selTypes.value;
 
   var q_param = selTypes.value+":";
@@ -365,7 +365,7 @@ function makeQCtrlParam()
     case "radio":
     case "checkbox":
     case "select":
-      var vals = _x("ctrl_alts_vals").value;
+      var vals = _z("ctrl_alts_vals").value;
       var lines = replaceAll(vals, "\r\n", "\n").split("\n");
       for (var i=0; i < lines.length; i++) {
         if (getByteSize(lines[i]) > 255) {
@@ -376,7 +376,7 @@ function makeQCtrlParam()
       q_param += vals;
       break;
     case "textarea":
-      q_param += _x("ctrl_textarea_rows").value;
+      q_param += _z("ctrl_textarea_rows").value;
       break;
   }
   return q_param;
@@ -384,7 +384,7 @@ function makeQCtrlParam()
 
 function doApplyCtrl()
 {
-  var selCodes = _x("sel_q_codes");
+  var selCodes = _z("sel_q_codes");
   var q_id = selCodes.value;
 
   var q_param = makeQCtrlParam();
@@ -392,12 +392,12 @@ function doApplyCtrl()
     return;
   }
 
-  _x(q_id).value = q_param;
+  _z(q_id).value = q_param;
   item_id = q_id.split(":")[0];
   q_code = q_id.split(":")[1];
 
-  var cap = _x("q_cap").value;
-  _x(q_id + "_cap").innerHTML = cap
+  var cap = _z("q_cap").value;
+  _z(q_id + "_cap").innerHTML = cap
 
   var f = document.createElement("form");
   f.method = "POST";

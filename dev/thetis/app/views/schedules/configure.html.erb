@@ -79,7 +79,7 @@ function addHolidays()
                   + "parameters:Form.serialize(this)"
                 + "}"
                 + ");"
-  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays(_x('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
+  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays(_z('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   var cap = "<%= t('schedule.specify_holidays_info1') %><br/>"
@@ -97,7 +97,7 @@ function _addHolidays(val)
     return false;
   }
 
-  var list = _x("holidays");
+  var list = _z("holidays");
   var holidays = new Array();
 
   for (var i=0; i < lines.length; i++) {
@@ -131,7 +131,7 @@ function _addHolidays(val)
 
 function removeHolidays()
 {
-  var sel_num = getListSelected(_x("holidays")).length;
+  var sel_num = getListSelected(_z("holidays")).length;
   if (sel_num <= 0) {
     return;
   }

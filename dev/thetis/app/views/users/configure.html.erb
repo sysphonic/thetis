@@ -166,7 +166,7 @@ function _doRenameTitle(org, title)
         evalScripts:true,
         onComplete:function(request){
           thetisBox.remove();
-          _x("item_" + org).id = "item_" + title;
+          _z("item_" + org).id = "item_" + title;
         },
         parameters:"org_title=" + encodeURIComponent(org) + "&new_title=" + encodeURIComponent(title)+"&authenticity_token=<%= form_authenticity_token %>"
       }

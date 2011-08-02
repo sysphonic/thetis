@@ -65,7 +65,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  #=== allowed_zept_connection?
+  #=== allowed_zept_connect?
   #
   #Gets if the User is allowed to connect with Zeptair VPN.
   #

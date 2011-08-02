@@ -145,11 +145,11 @@ end
   <input type="hidden" id="timecard_id" name="timecard_id" value="<%= @timecard.id %>" />
   
   <script type="text/javascript">
-    _x("buttons_with_clear").style.display = "block";
-    _x("buttons_without_clear").style.display = "none";
+    _z("buttons_with_clear").style.display = "block";
+    _z("buttons_without_clear").style.display = "none";
 
     <% unless params[:action] == 'edit' %>
-    changeWorkcode(_x("timecard_workcode").value);
+    changeWorkcode(_z("timecard_workcode").value);
     <% end %>
 
   </script>

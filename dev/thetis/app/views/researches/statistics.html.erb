@@ -6,10 +6,10 @@
     <td>
       <table cellspacing="2" cellpadding="0" align="left">
         <tr>
-          <td id="tab_statistics" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_statistics', 'div_statistics'); this.bgColor='brown';" bgColor="brown" onMouseOver="if(_x('div_statistics').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_x('div_statistics').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+          <td id="tab_statistics" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_statistics', 'div_statistics'); this.bgColor='brown';" bgColor="brown" onMouseOver="if(_z('div_statistics').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_z('div_statistics').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
             <%= t('menu.statistics') %>
           </td>
-          <td id="tab_all" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_all', 'div_all'); this.bgColor='blue';" bgColor="silver" onMouseOver="if(_x('div_all').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_x('div_all').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+          <td id="tab_all" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_all', 'div_all'); this.bgColor='blue';" bgColor="silver" onMouseOver="if(_z('div_all').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_z('div_all').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
             <%= t('msg.all_records') %>
           </td>
         </tr>
@@ -195,22 +195,22 @@ users_cache = Hash.new    # user_id => Array of group_ids
 <!--
 function showResearchTab(tab_id, div_id)
 {
-  _x("tab_statistics").style.cursor = "pointer";
-  _x("tab_all").style.cursor = "pointer";
+  _z("tab_statistics").style.cursor = "pointer";
+  _z("tab_all").style.cursor = "pointer";
 
-  var tab = _x(tab_id);
+  var tab = _z(tab_id);
   tab.style.cursor = "default";
   var bg = tab.bgColor;
 
-  _x("tab_statistics").bgColor = "silver";
-  _x("tab_all").bgColor = "silver";
+  _z("tab_statistics").bgColor = "silver";
+  _z("tab_all").bgColor = "silver";
 
   tab.bgColor = bg;
 
-  _x("div_statistics").style.display = "none";
-  _x("div_all").style.display = "none";
+  _z("div_statistics").style.display = "none";
+  _z("div_all").style.display = "none";
 
-  var div = _x(div_id);
+  var div = _z(div_id);
   div.style.display = "inline";
 }
 

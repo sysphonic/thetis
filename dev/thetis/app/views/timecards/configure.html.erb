@@ -238,7 +238,7 @@
             </td>
             <td class="item_value_td" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
-                <select id="commence_at_hour" onchange="changeHour(this.value, _x('commence_at_min'));">
+                <select id="commence_at_hour" onchange="changeHour(this.value, _z('commence_at_min'));">
                   <option value=""></option>
                 <%
                 commence_at = @yaml_timecard['commence_at']
@@ -257,7 +257,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="commence_at_min" onchange="changeMin(this.value, _x('commence_at_hour'));">
+                <select id="commence_at_min" onchange="changeMin(this.value, _z('commence_at_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -277,7 +277,7 @@
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
                 <%= t('timecard.for_off_am') %><br/>
-                <select id="commence_at_hour_when_off_am" onchange="changeHour(this.value, _x('commence_at_min_when_off_am'));">
+                <select id="commence_at_hour_when_off_am" onchange="changeHour(this.value, _z('commence_at_min_when_off_am'));">
                   <option value=""></option>
                 <%
                 commence_at_when_off_am = @yaml_timecard['commence_at_when_off_am']
@@ -296,7 +296,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="commence_at_min_when_off_am" onchange="changeMin(this.value, _x('commence_at_hour_when_off_am'));">
+                <select id="commence_at_min_when_off_am" onchange="changeMin(this.value, _z('commence_at_hour_when_off_am'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -323,7 +323,7 @@
             </td>
             <td class="item_value_td" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
-                <select id="close_at_hour" onchange="changeHour(this.value, _x('close_at_min'));">
+                <select id="close_at_hour" onchange="changeHour(this.value, _z('close_at_min'));">
                   <option value=""></option>
                 <%
                 close_at = @yaml_timecard['close_at']
@@ -342,7 +342,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="close_at_min" onchange="changeMin(this.value, _x('close_at_hour'));">
+                <select id="close_at_min" onchange="changeMin(this.value, _z('close_at_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -362,7 +362,7 @@
               </div>
               <div class="time_select" style="background-color:#FFE3EC; padding:5px 15px;" nowrap>
                 <%= t('timecard.for_off_pm') %><br/>
-                <select id="close_at_hour_when_off_pm" onchange="changeHour(this.value, _x('close_at_min_when_off_pm'));">
+                <select id="close_at_hour_when_off_pm" onchange="changeHour(this.value, _z('close_at_min_when_off_pm'));">
                   <option value=""></option>
                 <%
                 close_at_when_off_pm = @yaml_timecard['close_at_when_off_pm']
@@ -381,7 +381,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="close_at_min_when_off_pm" onchange="changeMin(this.value, _x('close_at_hour_when_off_pm'));">
+                <select id="close_at_min_when_off_pm" onchange="changeMin(this.value, _z('close_at_hour_when_off_pm'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -408,7 +408,7 @@
             </td>
             <td class="item_value_td" style="width:70%">
               <span class="time_select">
-                <select id="midnight_from_hour" onchange="changeHour(this.value, _x('midnight_from_min'));">
+                <select id="midnight_from_hour" onchange="changeHour(this.value, _z('midnight_from_min'));">
                   <option value=""></option>
                 <%
                 midnight_span = @yaml_timecard['midnight_span']
@@ -432,7 +432,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="midnight_from_min" onchange="changeMin(this.value, _x('midnight_from_hour'));">
+                <select id="midnight_from_min" onchange="changeMin(this.value, _z('midnight_from_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -452,7 +452,7 @@
               </span>
               ~
               <span class="time_select">
-                <select id="midnight_to_hour" onchange="changeHour(this.value, _x('midnight_to_min'));">
+                <select id="midnight_to_hour" onchange="changeHour(this.value, _z('midnight_to_min'));">
                   <option value=""></option>
                 <%
                 cur_hour = nil
@@ -470,7 +470,7 @@
                 <% end %>
                 </select>
                 :
-                <select id="midnight_to_min" onchange="changeMin(this.value, _x('midnight_to_hour'));">
+                <select id="midnight_to_min" onchange="changeMin(this.value, _z('midnight_to_hour'));">
                   <option value=""></option>
                 <%
                 cur_min = nil
@@ -545,16 +545,16 @@ function changeMin(value, hour)
 
 function checkRegister()
 {
-  var paidhld_per_year = _x("paidhld_per_year").value;
+  var paidhld_per_year = _z("paidhld_per_year").value;
 
   if (isNaN(paidhld_per_year) || parseFloat(paidhld_per_year) < 0.0 || parseFloat(paidhld_per_year) > 365.0) {
     msg("<%= t('timecard.invalid_default_paid_holidays') %>");
     return false;
   }
 
-  var standard_hours = _x("standard_hours").value;
-  var standard_hours_when_off_am = _x("standard_hours_when_off_am").value;
-  var standard_hours_when_off_pm = _x("standard_hours_when_off_pm").value;
+  var standard_hours = _z("standard_hours").value;
+  var standard_hours_when_off_am = _z("standard_hours_when_off_am").value;
+  var standard_hours_when_off_pm = _z("standard_hours_when_off_pm").value;
   if (standard_hours != "") {
     standard_hours = parseFloat(standard_hours.replace(":", "."));
     if (standard_hours_when_off_am != "") {
@@ -573,8 +573,8 @@ function checkRegister()
     }
   }
 
-  var commence_at = _x("commence_at").value;
-  var commence_at_when_off_am = _x("commence_at_when_off_am").value;
+  var commence_at = _z("commence_at").value;
+  var commence_at_when_off_am = _z("commence_at_when_off_am").value;
   if (commence_at != "") {
     commence_at = parseFloat(commence_at.replace(":", "."));
     if (commence_at_when_off_am != "") {
@@ -586,8 +586,8 @@ function checkRegister()
     }
   }
 
-  var close_at = _x("close_at").value;
-  var close_at_when_off_pm = _x("close_at_when_off_pm").value;
+  var close_at = _z("close_at").value;
+  var close_at_when_off_pm = _z("close_at_when_off_pm").value;
   if (close_at != "") {
     close_at = parseFloat(close_at.replace(":", "."));
     if (close_at_when_off_pm != "") {
@@ -605,70 +605,70 @@ function checkRegister()
 function doRegister()
 {
   var hour = null, min = null;
-  hour = _x("standard_hours_hour").value;
-  min = _x("standard_hours_min").value;
+  hour = _z("standard_hours_hour").value;
+  min = _z("standard_hours_min").value;
   if (hour == "" || min == "" ) {
-    _x("standard_hours").value = "";
+    _z("standard_hours").value = "";
   } else {
-    _x("standard_hours").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("standard_hours").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("standard_hours_hour_when_off_am").value;
-  min = _x("standard_hours_min_when_off_am").value;
+  hour = _z("standard_hours_hour_when_off_am").value;
+  min = _z("standard_hours_min_when_off_am").value;
   if (hour == "" || min == "" ) {
-    _x("standard_hours_when_off_am").value = "";
+    _z("standard_hours_when_off_am").value = "";
   } else {
-    _x("standard_hours_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("standard_hours_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("standard_hours_hour_when_off_pm").value;
-  min = _x("standard_hours_min_when_off_pm").value;
+  hour = _z("standard_hours_hour_when_off_pm").value;
+  min = _z("standard_hours_min_when_off_pm").value;
   if (hour == "" || min == "" ) {
-    _x("standard_hours_when_off_pm").value = "";
+    _z("standard_hours_when_off_pm").value = "";
   } else {
-    _x("standard_hours_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("standard_hours_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("commence_at_hour").value;
-  min = _x("commence_at_min").value;
+  hour = _z("commence_at_hour").value;
+  min = _z("commence_at_min").value;
   if (hour == "" || min == "" ) {
-    _x("commence_at").value = "";
+    _z("commence_at").value = "";
   } else {
-    _x("commence_at").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("commence_at").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("commence_at_hour_when_off_am").value;
-  min = _x("commence_at_min_when_off_am").value;
+  hour = _z("commence_at_hour_when_off_am").value;
+  min = _z("commence_at_min_when_off_am").value;
   if (hour == "" || min == "" ) {
-    _x("commence_at_when_off_am").value = "";
+    _z("commence_at_when_off_am").value = "";
   } else {
-    _x("commence_at_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("commence_at_when_off_am").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("close_at_hour").value;
-  min = _x("close_at_min").value;
+  hour = _z("close_at_hour").value;
+  min = _z("close_at_min").value;
   if (hour == "" || min == "" ) {
-    _x("close_at").value = "";
+    _z("close_at").value = "";
   } else {
-    _x("close_at").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("close_at").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  hour = _x("close_at_hour_when_off_pm").value;
-  min = _x("close_at_min_when_off_pm").value;
+  hour = _z("close_at_hour_when_off_pm").value;
+  min = _z("close_at_min_when_off_pm").value;
   if (hour == "" || min == "" ) {
-    _x("close_at_when_off_pm").value = "";
+    _z("close_at_when_off_pm").value = "";
   } else {
-    _x("close_at_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
+    _z("close_at_when_off_pm").value = hour + ":" + fillLeft(min, "0", 2);
   }
 
-  var from_hour = _x("midnight_from_hour").value;
-  var from_min = _x("midnight_from_min").value;
-  var to_hour = _x("midnight_to_hour").value;
-  var to_min = _x("midnight_to_min").value;
+  var from_hour = _z("midnight_from_hour").value;
+  var from_min = _z("midnight_from_min").value;
+  var to_hour = _z("midnight_to_hour").value;
+  var to_min = _z("midnight_to_min").value;
   if (from_hour == "" || from_min == "" || to_hour == "" || to_min == "") {
-    _x("midnight_span").value = "";
+    _z("midnight_span").value = "";
   } else {
-    _x("midnight_span").value = from_hour + ":" + fillLeft(from_min, "0", 2) + "~" + to_hour + ":" + fillLeft(to_min, "0", 2);
+    _z("midnight_span").value = from_hour + ":" + fillLeft(from_min, "0", 2) + "~" + to_hour + ":" + fillLeft(to_min, "0", 2);
   }
 
   if (!checkRegister()) {
