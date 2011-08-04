@@ -20,7 +20,7 @@ groups_cache = {}
          <tr>
             <td align="left" style="background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
             <% if @group_id.nil? or @group_id.empty? %>
-              <div class="td_button_gray" align="left" nowrap style="width:110px; background-color:gray;" onClick="showGroupTreeToSelect('0');" onMouseOver="this.style.backgroundColor='lawngreen'" onMouseOut="this.style.backgroundColor='gray'">
+              <div class="button_gray" style="width:110px;" onClick="showGroupTreeToSelect('0');">
                 <%= t('btn.select_group') %>
               </div>
             <% else %>

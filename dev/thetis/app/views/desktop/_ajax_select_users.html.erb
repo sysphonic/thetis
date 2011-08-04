@@ -11,13 +11,9 @@ groups_cache = {}
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td width="130">
-            <table align="left" width="120" cellspacing="0" cellpadding="0">
-              <tr>
-                <td class="td_button_gray" align="left" nowrap bgColor="gray" onclick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                  <%= t('btn.select_group') %>
-                </td>
-              </tr>
-            </table>
+            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');">
+              <%= t('btn.select_group') %>
+            </div>
           </td>
           <td align="left" style="color:blue;">
             <% unless @group_id.nil? %>

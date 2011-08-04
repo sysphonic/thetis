@@ -69,14 +69,9 @@
                 </div>
               </form>
 
-              <table align="right" width="120" cellspacing="0" cellpadding="0"">
-                <tr height="6"><td></td></tr>
-                <tr>
-                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="doCreatePage();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= t('btn.create') %>
-                  </td>
-                </tr>
-              </table>
+              <div class="button_gray" style="float:right; margin-top:3px;" onClick="doCreatePage();">
+                <%= t('btn.create') %>
+              </div>
             </td>
           </tr>
         </table>
@@ -96,14 +91,9 @@
                 <%= render(:partial => 'ajax_statistics_groups') %>
               </div>
 
-              <table align="right" width="120" cellspacing="0" cellpadding="0">
-                <tr height="6"><td></td></tr>
-                <tr>
-                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0', false);" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= t('btn.add_group') %>
-                  </td>
-                </tr>
-              </table>
+              <div class="button_gray" style="float:right; margin-top:3px;" onClick="showGroupTreeToSelect('0', false);">
+                <%= t('btn.add_group') %>
+              </div>
             </td>
           </tr>
         </table>

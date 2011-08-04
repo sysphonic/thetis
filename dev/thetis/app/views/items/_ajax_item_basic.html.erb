@@ -104,22 +104,18 @@ dispZeptCmdEdit = function(sw)
 <% else %>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-           <td align="left" nowrap width="20%">
-             <span id="div_folderPath" style="color:red">
-               <%=h (@item.nil?)?'/(root)':@item.get_folder_path %>
-               <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
-             </span>
-           </td>
-           <td width="10"></td>
-           <td nowrap>
-             <table align="left" width="120" cellspacing="0" cellpadding="0">
-               <tr>
-                 <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect(_z('item_folder_id').value); modifiedBasic++;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                   <%= t('btn.select_folder') %>
-                 </td>
-               </tr>
-             </table>
-           </td>
+          <td align="left" nowrap width="20%">
+            <span id="div_folderPath" style="color:red">
+              <%=h (@item.nil?)?'/(root)':@item.get_folder_path %>
+              <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
+            </span>
+          </td>
+          <td width="10"></td>
+          <td>
+            <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect(_z('item_folder_id').value); modifiedBasic++;">
+              <%= t('btn.select_folder') %>
+            </div>
+          </td>
         </tr>
       </table>
       <div style="padding-top:4px;">

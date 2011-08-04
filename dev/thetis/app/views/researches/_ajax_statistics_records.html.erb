@@ -2,13 +2,9 @@
    <tr>
     <td align="left" style="padding:5px; padding-top:10px; padding-left:10px;">
     <% if @group_id.nil? or @group_id.empty? %>
-      <table width="120" cellspacing="0" cellpadding="0">
-        <tr>
-          <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%= t('btn.select_group') %>
-          </td>
-        </tr>
-      </table>
+      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+        <%= t('btn.select_group') %>
+      </div>
     <% else %>
       <table cellspacing="0" cellpadding="0">
         <tr>

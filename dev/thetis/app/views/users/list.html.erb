@@ -40,27 +40,17 @@ groups_cache = {}
   </tr>
   <tr height="1"><td></td></tr>
   <tr>
-    <td align="right">
+    <td>
       <table width="100%" cellspacing="0" cellpadding="0">
-         <tr>
-          <td align="left" width="120" style="padding-bottom:5px;">
+        <tr>
+          <td align="left" nowrap style="padding-bottom:5px;">
   <% if @group_id.nil? or @group_id.empty? %>
-            <table width="100%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                  <%= t('btn.select_group') %>
-                </td>
-              </tr>
-            </table>
+            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+              <%= t('btn.select_group') %>
+            </div>
   <% else %>
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td align="left" nowrap>
-                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
-                </td>
-              </tr>
-            </table>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
   <% end %>
           </td>
           <td align="right">

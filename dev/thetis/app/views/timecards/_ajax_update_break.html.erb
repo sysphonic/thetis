@@ -127,14 +127,9 @@ end
         <% end %>
 
     <% if editable %>
-        <table align="left" width="120" cellspacing="0" cellpadding="0">
-          <tr height="5"><td></td></tr>
-          <tr>
-            <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="inputBreak();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-              <%= t('timecard.add_break') %>
-            </td>
-          </tr>
-        </table>
+        <div class="button_gray" style="float:left; margin-top:2px;" onClick="inputBreak();">
+          <%= t('timecard.add_break') %>
+        </div>
     <% end %>
       </td>
     </tr>

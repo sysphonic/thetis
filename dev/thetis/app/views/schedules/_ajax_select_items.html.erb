@@ -1,13 +1,9 @@
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td width="130">
-      <table align="left" width="120" cellspacing="0" cellpadding="0">
-        <tr>
-          <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showFolderTreeToSelect('<%= (@folder_id.nil?)?'0':@folder_id %>', '<%= (@schedule.nil?)?'':(@schedule.id) %>');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-            <%= t('btn.select_folder') %>
-          </td>
-        </tr>
-      </table>
+      <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect('<%= (@folder_id.nil?)?'0':@folder_id %>', '<%= (@schedule.nil?)?'':(@schedule.id) %>');">
+        <%= t('btn.select_folder') %>
+      </div>
     </td>
     <td align="left" style="color:red;">
       <% unless @folder_id.nil? %>

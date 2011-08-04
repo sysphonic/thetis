@@ -19,14 +19,9 @@
                 <%= render(:partial => 'ajax_local') %>
               </div>
 
-              <table align="right" width="120" cellspacing="0" cellpadding="0">
-                <tr height="6"><td></td></tr>
-                <tr>
-                  <td class="td_button_gray" align="left" nowrap bgcolor="gray" onClick="doCreateLocal();" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= t('btn.create') %>
-                  </td>
-                </tr>
-              </table>
+              <div class="button_gray" style="float:right; margin-top:3px;" onClick="doCreateLocal();">
+                <%= t('btn.create') %>
+              </div>
             </td>
           </tr>
         </table>

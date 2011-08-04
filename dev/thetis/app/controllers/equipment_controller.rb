@@ -129,20 +129,39 @@ class EquipmentController < ApplicationController
   def list
     Log.add_info(request, params.inspect)
 
-    conditions = nil
+    con = []
+
+    @group_id = nil
+    if !params[:thetisBoxSelKeeper].nil?
+      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    elsif !params[:group_id].nil? and !params[:group_id].empty?
+      @group_id = params[:group_id]
+    end
+    unless @group_id.nil?
+      if @group_id == '0'
+        con << "((groups like '%|0|%') or (groups is null))"
+      else
+        con << "(groups like '%|#{@group_id}|%')"
+      end
+    end
+
+    where = ''
+    unless con.empty?
+      where = ' where ' + con.join(' and ')
+    end
 
     order_by = nil
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_type.nil?
+    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     sql = 'select distinct Equipment.* from equipment Equipment'
-    sql << order_by
+    sql << where + order_by
 
     @equipment_pages, @equipment, @total_num = paginate_by_sql(Equipment, sql, 20)
   end

@@ -21,34 +21,21 @@ zept_cmd = @item.zeptair_command
   </tr>
   <tr height="5"><td></td></tr>
   <tr>
-    <td align="right">
-      <table width="100%" cellspacing="0" cellpadding="0">
-         <tr>
-          <td align="left" width="120" style="padding-bottom:5px;">
-        <% if @group_id.nil? or @group_id.empty? %>
-            <table width="100%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                  <%= t('btn.select_group') %>
-                </td>
-              </tr>
-            </table>
-        <% else %>
-            <table align="center" width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td align="left" nowrap>
-                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
-                </td>
-              </tr>
-            </table>
-        <% end %>
-          </td>
-          <td align="right">
-            &nbsp;
+    <td style="padding-bottom:5px;">
+    <% if @group_id.nil? or @group_id.empty? %>
+      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+        <%= t('btn.select_group') %>
+      </div>
+    <% else %>
+      <table width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="left" nowrap>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id) %></a>
+            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
           </td>
         </tr>
       </table>
+    <% end %>
     </td>
   </tr>
 </table>
@@ -177,8 +164,8 @@ function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setAdditionalParams(new Array("item_id=<%= @item.id %>", "authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'zeptair_dist', :action => 'users') %>", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 

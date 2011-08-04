@@ -69,16 +69,8 @@ table.timecard td {
   border-bottom:1px solid midnightblue;
 }
 
-.td_button_gray {
-  padding-left:10px;
-  padding-right:10px;
-  border-top:1px solid silver;
-  border-left:1px solid silver;
-  border-bottom:1px solid black;
-  border-right:1px solid black;
-  cursor: pointer;
-  color: white;
-}
+.button_gray{text-align:left; white-space:nowrap; padding:0px 10px; border-top:1px solid silver; border-left:1px solid silver; border-bottom:1px solid black; border-right:1px solid black; cursor:pointer; background-color:gray; color:white; width:100px; display:inline-block;}
+.button_gray:hover{background-color:lawngreen;}
 
 .select_multi {
   width:100%;

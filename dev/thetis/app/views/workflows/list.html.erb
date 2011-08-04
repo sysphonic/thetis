@@ -43,14 +43,9 @@
               end
               %>
               </select>
-              <table align="center" width="120" cellspacing="0" cellpadding="0">
-                <tr height="5"><td></td></tr>
-                <tr>
-                  <td class="td_button_gray" style="padding:0px;" align="center" nowrap bgColor="gray" onClick="doCreate(); return false;" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= raw(t('arrow.down')) %> <%= t('btn.create') %>
-                  </td>
-                </tr>
-              </table>
+              <div class="button_gray" style="display:block; margin:2px auto 0;" onClick="doCreate();">
+                <%= raw(t('arrow.down')) %> <%= t('btn.create') %>
+              </div>
             </td>
           </tr>
 

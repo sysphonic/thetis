@@ -1,47 +1,37 @@
 
 <% groups_cache = {} %>
 
-
 <%= form_tag( {:controller => 'equipment', :action => 'search'}, :method => 'post', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
-  <tr height="0"><td></td></tr>
   <tr>
-    <td align="right">
+    <td align="left">
+      <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>"></a>
+    </td>
+  </tr>
+  <tr height="1"><td></td></tr>
+  <tr>
+    <td>
       <table width="100%" cellspacing="0" cellpadding="0">
-         <tr>
-            <td align="left" width="120" style="padding-top:5px; padding-bottom:5px;">
-              <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>"></a>
+        <tr>
+          <td align="left" nowrap style="padding-bottom:5px;">
     <% if @group_id.nil? or @group_id.empty? %>
-      <!--
-              <table width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td class="td_button_gray" align="left" nowrap bgColor="gray" onClick="showGroupTreeToSelect('0');" onMouseOver="this.bgColor='lawngreen'" onMouseOut="this.bgColor='gray'">
-                    <%= t('btn.select_group') %>
-                  </td>
-                </tr>
-              </table>
-      -->
+            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+              <%= t('btn.select_group') %>
+            </div>
     <% else %>
-            <table width="100%" cellpadding="0" cellspacing="0">
-              <tr>
-                <td align="left" nowrap>
-                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span>
-                  &nbsp;<a class="a_underline" href="javascript:clearGroup()"><%= t('btn.bracket.clear') %></a>
-                </td>
-              </tr>
-            </table>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%=h Group.get_path(@group_id, groups_cache) %></a>
+            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup();" />
     <% end %>
-            </td>
-            <td align="right">
-              <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
-              <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
-            </td>
+          </td>
+          <td align="right">
+            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+          </td>
         </tr>
       </table>
     </td>
   </tr>
-  <tr height="0"><td></td></tr>
 </table>
 
 <table width="100%" cellpadding="0" cellspacing="0">
