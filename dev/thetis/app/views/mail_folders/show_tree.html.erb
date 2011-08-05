@@ -454,8 +454,8 @@ function doMove()
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>?id="+folder_id, "<%= t('folder.select_dest')%>", "");
+  thetisBox.setAdditionalParams(new Array("id="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
@@ -693,8 +693,8 @@ function doMoveMail()
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>?id="+email_id, "<%= t('folder.select_dest')%>", "");
+  thetisBox.setAdditionalParams(new Array("id="+email_id, "authenticity_token=<%= form_authenticity_token %>"));
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
