@@ -67,16 +67,16 @@
 <div id="div_logs" style="overflow:scroll; background-color:white;">
 <table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap onClick="sortList('logs.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="22%" nowrap onClick="sortList('updated_at')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="20%" nowrap onClick="sortList('user_id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="15%" nowrap onClick="sortList('remote_ip')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="7%"  nowrap onClick="sortList('log_type')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="28%" nowrap onClick="sortList('access_path')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="5%"  nowrap onClick="sortList('logs.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="22%" nowrap onClick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="20%" nowrap onClick="sortList('user_id')"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="15%" nowrap onClick="sortList('remote_ip')"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="7%"  nowrap onClick="sortList('log_type')"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="28%" nowrap onClick="sortList('access_path')"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}
-exist_cache = {}
+user_obj_cache = {}
 @logs.each_with_index do |log, idx|
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
@@ -87,20 +87,8 @@ exist_cache = {}
     user_exist = false
     user_name = ''
     unless log.user_id.nil?
-      if exist_cache[log.user_id].nil?
-        begin
-          user = User.find(log.user_id)
-          user_name = user.get_name
-          user_exist = true
-        rescue
-          user_name = log.user_id.to_s + ' ' + t('paren.deleted')
-        end
-        users_cache[log.user_id] = user_name
-        exist_cache[log.user_id] = user_exist
-      else
-        user_name = users_cache[log.user_id]
-        user_exist = exist_cache[log.user_id]
-      end
+      user_name = User.get_name(log.user_id, users_cache, user_obj_cache)
+      user_exist = !user_obj_cache[log.user_id].nil?
     end
     if user_exist == false
     %>

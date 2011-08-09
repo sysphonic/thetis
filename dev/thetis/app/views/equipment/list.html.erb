@@ -54,10 +54,10 @@
 <div id="div_equipment" style="overflow:auto; background-color:white;">
 <table id="list_equipment" align="center" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap onClick="sortList('equipment.id')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="28%" nowrap onClick="sortList('name')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="30%" nowrap onClick="sortList('note')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="27%"  nowrap onClick="sortList('belongs_to')" onMouseOver="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png)';" onMouseOut="this.style.backgroundImage='url(<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_off.png)';"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="5%"  nowrap onClick="sortList('equipment.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="28%" nowrap onClick="sortList('name')"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="30%" nowrap onClick="sortList('note')"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="27%"  nowrap onClick="sortList('belongs_to')"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}

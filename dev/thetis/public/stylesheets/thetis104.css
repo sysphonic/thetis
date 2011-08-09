@@ -1,9 +1,3 @@
-.list_th {
-  background-image: url("../images/list_th_off.png");
-}
-.img_button_td {
-  background-image: url("../images/button.png");
-}
 
 .sort_direction {
   color:darkcyan;
@@ -221,6 +215,7 @@ table.timecard td {
 }
 
 .img_button_td {
+  background-image: url("../images/button.png");
   vertical-align:middle;
   background-repeat:no-repeat;
   cursor: pointer;
@@ -274,25 +269,29 @@ table.timecard td {
   text-align:  left;
 }
 
-.list_th {
+.list_th,.list_sort{
+  background-image: url("../images/list_th_off.png");
   background-repeat:repeat-x;
   font-size:   10.5pt;
   line-height: 17pt;
-  cursor: pointer;
   white-space: nowrap;
+}
+.list_sort{
+  cursor: pointer;
+}
+.list_sort:hover {
+  background-image: url("../images/list_th_on.png");
 }
 
 .list_td_on{
   background-color:gainsboro;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0px 5px;
   text-align: left;
 }
 
 .list_td_off{
   background-color:white;
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0px 5px;
   text-align: left;
 }
 

@@ -1,12 +1,12 @@
 <% unless @users.nil? %>
 <table width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap style="cursor:default;"><%= t('activerecord.attributes.id') %></th>
-    <th class="list_th" width="16%" nowrap style="cursor:default;"><%= t('user.u_name') %></th>
-    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= User.human_attribute_name('fullname') %></th>
-    <th class="list_th" width="10%" nowrap style="cursor:default;"><%= User.human_attribute_name('email') %></th>
-    <th class="list_th" width="26%" nowrap style="cursor:default;"><%= t('user.title') %></th>
-    <th class="list_th" width="20%" nowrap style="cursor:default;"><%= User.human_attribute_name('organization') %></th>
+    <th class="list_th" width="5%"  nowrap><%= t('activerecord.attributes.id') %></th>
+    <th class="list_th" width="16%" nowrap><%= t('user.u_name') %></th>
+    <th class="list_th" width="20%" nowrap><%= User.human_attribute_name('fullname') %></th>
+    <th class="list_th" width="10%" nowrap><%= User.human_attribute_name('email') %></th>
+    <th class="list_th" width="26%" nowrap><%= t('user.title') %></th>
+    <th class="list_th" width="20%" nowrap><%= User.human_attribute_name('organization') %></th>
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
