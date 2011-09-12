@@ -1,6 +1,6 @@
 <% HistoryHelper.set_back(request) %>
 
-<%= form_tag( {:action => 'search'}, :method => 'post', :name => 'form_search') %>
+<%= form_tag( {:action => 'search'}, :method => 'get', :name => 'form_search') %>
 
 <%
 login_user = session[:login_user]
@@ -189,6 +189,7 @@ function doDelete(item_id, title, del_type)
 function _doDelete(item_id)
 {
   document.form_search.action = "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+item_id;
+  document.form_search.method = "post";
   document.form_search.submit();
 
   prog("TOP-RIGHT");

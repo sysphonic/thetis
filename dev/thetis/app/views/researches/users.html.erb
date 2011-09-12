@@ -13,7 +13,7 @@ groups_cache = {}
 %>
 <div id="committed_users" style="display:none;"><%= '|'+committed.join('|')+'|' %></div>
 
-<%= form_tag( {:controller => 'researches', :action => 'users'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'researches', :action => 'users'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -265,6 +265,7 @@ function _doResetSatus()
 
   prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'researches', :action => 'reset_users') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
 }
 //-->

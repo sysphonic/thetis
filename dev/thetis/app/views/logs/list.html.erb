@@ -1,5 +1,5 @@
 
-<%= form_tag( {:controller => 'logs', :action => 'search'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'logs', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -179,6 +179,7 @@ function doDelete()
 function _doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'destroy') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
   prog("TOP-RIGHT");
 }
@@ -191,6 +192,7 @@ function doDeleteAll()
 function _doDeleteAll()
 {
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'destroy_all') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
   prog("TOP-RIGHT");
 }

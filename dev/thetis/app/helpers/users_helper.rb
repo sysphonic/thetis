@@ -15,6 +15,40 @@
 #
 module UsersHelper
 
+  require 'digest/md5'
+
+  #=== self.get_initialized_user
+  #
+  #Gets a new User initialized with the specified attributes.
+  #
+  #_attrs_:: Attributes to apply to the new User.
+  #return:: New User initialized with the specified attributes.
+  #
+  def self.get_initialized_user(attrs=nil)
+
+    user = User.new(attrs)
+
+    #Initial Password
+    if attrs.nil? or !attrs.key?(:password)
+      chars = ('a'..'z').to_a + ('1'..'9').to_a 
+      newpass = Array.new(8, '').collect{chars[rand(chars.size)]}.join
+      user.password = newpass
+      user.password_confirmation = newpass
+    end
+    unless user.password.nil?
+      user.pass_md5 = Digest::MD5.hexdigest(user.password)
+    end
+    user.created_at = Time.now
+
+    # Official title and order to display
+    titles = User.get_config_titles
+    if !titles.nil? and titles.include?(user.title)
+      user.xorder = titles.index(user.title)
+    end
+
+    return user
+  end
+
   #=== self.get_groups_info
   #
   #Gets Groups information of the specified User.

@@ -1,4 +1,4 @@
-<%= form_tag( {:controller => 'items', :action => 'search' }, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'items', :action => 'search' }, :method => 'get', :name => 'form_list') %>
 
 <%
 login_user = session[:login_user]
@@ -282,6 +282,7 @@ function doDeleteMulti()
 function _doDeleteMulti()
 {
   document.form_list.action = "<%= url_for(:controller => 'items', :action => 'destroy_multi') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
 
   prog("TOP-RIGHT");

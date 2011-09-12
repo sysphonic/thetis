@@ -7,7 +7,8 @@ class ChangesForVer110 < ActiveRecord::Migration
 
     add_column :workflows, :groups, :text
 
-    add_column :users, :figure, :string
+    add_column :users,  :figure, :string
+    add_column :groups, :xtype, :string
 
     add_column :teams, :req_to_del_at, :datetime
     change_table :teams do |t|
@@ -36,7 +37,8 @@ class ChangesForVer110 < ActiveRecord::Migration
 
     remove_column :workflows, :groups
 
-    remove_column :users, :figure
+    remove_column :users,   :figure
+    remove_column :groups,  :xtype
 
     remove_column :teams, :req_to_del_at
     remove_column :teams, :created_at

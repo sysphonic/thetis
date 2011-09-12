@@ -1,7 +1,7 @@
 
 <% groups_cache = {} %>
 
-<%= form_tag( {:controller => 'equipment', :action => 'search'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'equipment', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -184,6 +184,7 @@ function doDelete()
 function _doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'destroy') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
 
   prog("TOP-RIGHT");

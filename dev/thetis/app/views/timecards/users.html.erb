@@ -5,7 +5,7 @@ login_user = session[:login_user]
 groups_cache = {}
 %>
 
-<%= form_tag( {:controller => 'timecards', :action => 'users'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'timecards', :action => 'users'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -261,6 +261,7 @@ function _onUpdateMultiOK()
   document.form_list.appendChild(elem);
 
   document.form_list.action = "<%= url_for(:controller => 'timecards', :action => 'paidhld_update_multi') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
   prog("TOP-RIGHT");
 }

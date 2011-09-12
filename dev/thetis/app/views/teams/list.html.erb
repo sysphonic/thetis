@@ -1,5 +1,5 @@
 
-<%= form_tag( {:controller => 'teams', :action => 'list'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'teams', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
 <table align="center"width="95%" cellspacing="3" cellpadding="0">
   <tr>
@@ -134,6 +134,7 @@ function _doDelete(team_id)
 {
   prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'teams', :action => 'destroy') %>?id=" + team_id;
+  document.form_list.method = "post";
   document.form_list.submit();
 }
 

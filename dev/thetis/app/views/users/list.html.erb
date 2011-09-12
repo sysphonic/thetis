@@ -5,7 +5,7 @@ login_user = session[:login_user]
 groups_cache = {}
 %>
 
-<%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -258,6 +258,7 @@ function doDelete()
 function _doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'users', :action => 'destroy') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
 
   prog("TOP-RIGHT");

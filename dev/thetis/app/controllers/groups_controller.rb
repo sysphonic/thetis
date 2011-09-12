@@ -69,7 +69,7 @@ class GroupsController < ApplicationController
   #
   def create
      Log.add_info(request, params.inspect)
-    
+
     if params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
       @group = nil
     else

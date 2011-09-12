@@ -3,7 +3,7 @@ attachments = @item.attachments_without_content
 zept_cmd = @item.zeptair_command
 %>
 
-<%= form_tag( {:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>

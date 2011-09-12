@@ -3,7 +3,7 @@
 login_user = session[:login_user]
 %>
 
-<%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
   <tr>
@@ -37,6 +37,7 @@ login_user = session[:login_user]
       <table width="100%" cellspacing="0" cellpadding="0">
          <tr>
           <td align="left" width="120" style="padding-bottom:5px;">
+          </td>
           <td align="right">
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
@@ -151,6 +152,7 @@ function doDelete()
 function _doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'addressbook', :action => 'destroy') %>";
+  document.form_list.method = "post";
   document.form_list.submit();
 
   prog("TOP-RIGHT");

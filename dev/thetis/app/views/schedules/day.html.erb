@@ -23,7 +23,7 @@ date_string = @date.strftime(Schedule::SYS_DATE_FORM)
 @teams_cache ||= {}
 %>
 
-<%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'post', :name => 'form_schedule', :id => 'form_schedule') %>
+<%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
 
 <% if params[:user_id].nil? %>
   <table align="center" width="98%" cellspacing="0" cellpadding="0">

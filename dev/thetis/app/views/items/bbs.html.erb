@@ -1,4 +1,4 @@
-<%= form_tag( {:controller => 'items', :action => 'bbs' }, :method => 'post', :name => 'form_list') %>
+<%= form_tag( {:controller => 'items', :action => 'bbs' }, :method => 'get', :name => 'form_list') %>
 
 <%
 login_user = session[:login_user]
@@ -421,6 +421,7 @@ function _doDelete(item_id)
 {
   prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+item_id;
+  document.form_list.method = "post";
   document.form_list.submit();
 }
 

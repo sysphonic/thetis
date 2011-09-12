@@ -58,26 +58,8 @@ class UsersController < ApplicationController
       params[:user].delete(:birthday_d)
     end
 
-    @user = User.new(params[:user])
-
-    #Initial Password
-    unless params[:user].key? :password
-      chars = ('a'..'z').to_a + ('1'..'9').to_a 
-      newpass = Array.new(8, '').collect{chars[rand(chars.size)]}.join
-      @user.password = newpass
-      @user.password_confirmation = newpass
-    end
-    unless @user.password.nil?
-      @user.pass_md5 = Digest::MD5.hexdigest(@user.password)
-    end
-    @user.created_at = Time.now
+    @user = UsersHelper.get_initialized_user(params[:user])
     @user.auth = User::AUTH_ALL if User.count <= 0
-
-    # Official title and order to display
-    titles = User.get_config_titles
-    if !titles.nil? and titles.include?(@user.title)
-      @user.xorder = titles.index(@user.title)
-    end
 
     begin
       @user.save!
