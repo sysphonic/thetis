@@ -124,7 +124,7 @@ class SchedulesController < ApplicationController
       rescue StandardError => err
         Log.add_error(request, err)
         flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.human_name)
-        redirect_to(:action => 'day', :id => date.strftime(Schedule::SYS_DATE_FORM))
+        redirect_to(:action => 'day', :date => date.strftime(Schedule::SYS_DATE_FORM))
         return
       end
 
@@ -175,7 +175,7 @@ class SchedulesController < ApplicationController
           equipment = Equipment.find(equipment_id)
           if equipment.nil? or !equipment.is_accessible_by(login_user)
             flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
-            redirect_to(:action => 'day', :id => params[:date])
+            redirect_to(:action => 'day', :date => params[:date])
             return
           end
         end
@@ -221,7 +221,7 @@ class SchedulesController < ApplicationController
         check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
         session[:edit_schedule] = check_schedule
         flash[:notice] = 'ERROR:' + t('schedule.no_day_in_rule')
-        redirect_to(:action => 'day', :id => params[:date])
+        redirect_to(:action => 'day', :date => params[:date])
         return
       end
 
@@ -272,7 +272,7 @@ class SchedulesController < ApplicationController
     Log.add_error(request, err)
 
     date = Date.parse(params[:date])
-    redirect_to(:action => 'day', :id => date.strftime(Schedule::SYS_DATE_FORM))
+    redirect_to(:action => 'day', :date => date.strftime(Schedule::SYS_DATE_FORM))
   end
 
   #=== edit
@@ -412,7 +412,7 @@ class SchedulesController < ApplicationController
     nearest_day = schedule.get_nearest_day(date)
     date_s = nearest_day.strftime(Schedule::SYS_DATE_FORM) unless nearest_day.nil?
 
-    redirect_to(:action => 'day', :id => date_s, :show_id => schedule.id)
+    redirect_to(:action => 'day', :date => date_s, :show_id => schedule.id)
 
   rescue StandardError => err
     Log.add_error(request, err)
@@ -459,11 +459,7 @@ class SchedulesController < ApplicationController
   def month
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       @date = Date.today
@@ -501,11 +497,7 @@ class SchedulesController < ApplicationController
   def week
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       @date = Date.today
@@ -522,11 +514,7 @@ class SchedulesController < ApplicationController
   def day
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       @date = Date.today

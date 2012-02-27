@@ -55,11 +55,7 @@ class TimecardsController < ApplicationController
 
     year_begins_from, month_begins_at = TimecardsHelper.get_fiscal_params
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       date = Date.today
@@ -128,11 +124,7 @@ class TimecardsController < ApplicationController
 
     login_user = session[:login_user]
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       @date = Date.today
@@ -399,11 +391,7 @@ class TimecardsController < ApplicationController
   def group
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
-      date_s = params[:date]
-    else
-      date_s = params[:id]
-    end
+    date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
       @date = Date.today

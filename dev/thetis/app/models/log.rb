@@ -95,6 +95,8 @@ class Log < ActiveRecord::Base
       logger.fatal(err.to_s)
     end
 
+    logger.fatal(detail) unless detail.nil?
+
     Log.add(ERROR, request, detail)
   end
 

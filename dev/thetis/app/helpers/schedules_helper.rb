@@ -132,7 +132,12 @@ module SchedulesHelper
     if login_user.nil? or user_id.nil?
       con = ["(scope='#{Schedule::SCOPE_ALL}')"]
     elsif login_user.admin?(User::AUTH_SCHEDULE) or login_user.id.to_s == user_id.to_s
-      members_con = SchedulesHelper.get_members_condition_for(User.find(user_id))
+      if login_user.id.to_s == user_id.to_s
+        target_user = login_user
+      else
+        target_user = User.find(user_id)
+      end
+      members_con = SchedulesHelper.get_members_condition_for(target_user)
       con = ["(scope='#{Schedule::SCOPE_ALL}' or #{members_con.join(' or ')})"]
     else
       con = []

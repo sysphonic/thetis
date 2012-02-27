@@ -2,11 +2,11 @@
 <%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
-<!--
+
 var calDisp = new JKL.Calendar("div_cal_disp", "form_equipment", "date");
 calDisp.setFunc(function() {_z('date_wday').innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'; document.form_equipment.submit(); prog('TOP-RIGHT');});
 calDisp.setStyle( "frame_color", "#3333CC" );
-//-->
+
 </script>
 
 <% login_user = session[:login_user] %>
@@ -137,7 +137,6 @@ next_week = @date + 7
 
 
 <script type="text/javascript">
-<!--
 
 function showDetail(schedule_id, title)
 {
@@ -199,5 +198,5 @@ function showEquipment(equipment_id, name)
             "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
           );
 }
-//-->
+
 </script>

@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -31,6 +31,12 @@
  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **-----------------**-----------------**-----------------**/
 
+toSysDateForm = function(date)
+{
+  return date;
+//  return replaceAll(date, "/", "-");
+}
+
 bound = function(desktop, elem)
 {
   var elem = _z(elem);
@@ -43,22 +49,25 @@ bound = function(desktop, elem)
   elem.style.position = "absolute";
   var elemWidth = elem.clientWidth;
   var elemHeight = elem.clientHeight;
+  var boundMargin = 5;
 
   var updated = false;
 
   if (elemPos[0] < deskPos[0]) {
-    elemPos[0] = deskPos[0] + 5;
+    elemPos[0] = deskPos[0] + boundMargin;
     updated = true;
   }
   if (elemPos[1] < deskPos[1]) {
-    elemPos[1] = deskPos[1] + 5;
+    elemPos[1] = deskPos[1] + boundMargin;
     updated = true;
   }
-  if (elemPos[0] + elemWidth > deskPos[0] + deskWidth) {
+  if (elemWidth < (deskWidth - 25 - boundMargin)
+      && (elemPos[0] + elemWidth) > (deskPos[0] + deskWidth)) {
     elemPos[0] = deskPos[0] + deskWidth - elemWidth - 25;
     updated = true;
   }
-  if (elemPos[1] + elemHeight > deskPos[1] +deskHeight) {
+  if (elemHeight < (deskHeight - 25 - boundMargin)
+      && (elemPos[1] + elemHeight) > (deskPos[1] + deskHeight)) {
     elemPos[1] = deskPos[1] + deskHeight - elemHeight - 25;
     updated = true;
   }
@@ -92,6 +101,26 @@ getAxis = function(desktop, elem)
 
 showTab = function(name, nameArray)
 {
+/*
+  var tab = null;
+  for (var i=0; i < nameArray.length; i++) {
+    tab = _z("tab_"+nameArray[i]);
+    if (!tab) {
+      continue;
+    }
+    if (name == nameArray[i]) {
+      tab.style.cursor = "default";
+      if (tab.className.indexOf("selected") < 0) {
+        tab.className += " selected";
+      }
+    } else {
+      tab.style.cursor = "pointer";
+      if (tab.className.indexOf("selected") >= 0) {
+        tab.className = tab.className.replace(" selected", "");
+      }
+    }
+  }
+*/
   var tab = null;
   for (var i=0; i<nameArray.length; i++) {
     tab = _z("tab_"+nameArray[i]);
@@ -319,6 +348,7 @@ confm = function(msg, action)
     thetisBox.button_cancel = arguments[4];
   }
   thetisBox.show("CENTER", "", "CONFIRM", action, msg, "");
+  return thetisBox;
 }
 
 var _thetis_ajax_item_data = null;

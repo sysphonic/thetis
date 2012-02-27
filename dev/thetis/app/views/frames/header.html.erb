@@ -8,7 +8,7 @@
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
 <%= stylesheet_link_tag 'thetis104' %>
-<%= javascript_include_tag 'prototype', 'thetis/common110beta5', 'thetis/thetis110beta3' %>
+<%= javascript_include_tag 'prototype', 'thetis/common110beta6', 'thetis/thetis110beta4' %>
 
 <style type=text/css>
 A:link {
@@ -77,7 +77,7 @@ function progMain()
               <table cellspacing="0" cellpadding="0" width="36" style="padding:0px; cursor:pointer;">
                 <tr>
                   <td align="center" valign="bottom">
-                    <img border="0" src="/thetis/images/feed_icon.png" title="<%= t('feed.cap') %>" alt="<%= t('feed.name') %>" />
+                    <img border="0" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/feed_icon.png" title="<%= t('feed.cap') %>" alt="<%= t('feed.name') %>" />
                   </td>
                 </tr>
               </table>

@@ -544,7 +544,7 @@ class FoldersController < ApplicationController
     if @group_id.nil? or @group_id.empty?
       @users = []
     else
-      @users = Group.get_users @group_id
+      @users = Group.get_users(@group_id)
     end
     render(:partial => 'ajax_auth_users', :layout => false)
 

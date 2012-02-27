@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -35,6 +35,16 @@ var appName = window.navigator.appName;
 var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sleipnir
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
+
+function getVerIE()
+{
+  var ie_ver = navigator.appVersion.match(/.*MSIE[ ]*[0]*([0-9]+)/)[1];
+  if (ie_ver) {
+    return parseInt(ie_ver, 10);
+  } else {
+    return -1;
+  }
+}
 
 function _z(elemId)
 {
@@ -100,6 +110,7 @@ function addInputHidden(frm, id, name, value)
   elem.name = name;
   elem.value = value;
   frm.appendChild(elem);
+  return elem;
 }
 
 function removeElem(elem)
@@ -499,24 +510,7 @@ function trim(str)
     return str;
   }
 
-  var start = -1;
-  var end = -1;
-  for (var i=0; i < str.length; i++){
-    if (str.charAt(i) != ' ' && str.charAt(i) != '\u3000') {
-      start = i;
-      break;
-    }
-  }
-  for (var i=str.length -1; i >= 0; i--) {
-    if (str.charAt(i) != ' ' && str.charAt(i) != '\u3000') {
-      end = i + 1;
-      break;
-    }
-  }
-  if (start == -1){
-    return '';
-  }
-  return str.substring(start, end);
+  return str.replace(/(^\s+)|(\s+$)/g, "");
 }
 
 function removeCtrlChar(str)
@@ -610,8 +604,15 @@ function getBodyScroll()
   return obj;
 }
 
+function isFunc(func)
+{
+  var targetType = typeof(func);
+  return (targetType && targetType == "function");
+}
+
 function isArray(x) { 
-  return ((typeof x == "object") && (x.constructor == Array));
+  var targetType = typeof(x);
+  return (targetType && (targetType == "object") && (x.constructor == Array));
 }
 
 function restoreHTML(html) { 

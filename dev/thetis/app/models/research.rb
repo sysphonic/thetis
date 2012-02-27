@@ -15,8 +15,6 @@
 #
 class Research < ActiveRecord::Base
 
-  require RAILS_ROOT+'/lib/ya2yaml/lib/ya2yaml'
-
   public::U_STATUS_IN_ACTON = 0
   public::U_STATUS_COMMITTED = 1
 

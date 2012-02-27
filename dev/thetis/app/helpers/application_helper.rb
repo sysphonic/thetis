@@ -16,7 +16,6 @@
 module ApplicationHelper
   require 'tempfile'
   require 'uri'     # for URI.extract()
-  require RAILS_ROOT+'/lib/ya2yaml/lib/ya2yaml'
 
 
   #=== self.get_timestamp

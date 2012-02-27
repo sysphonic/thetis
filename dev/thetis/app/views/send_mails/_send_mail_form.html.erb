@@ -145,8 +145,6 @@ doSave = function(do_smtp)
 
           var frm = document.form_send_mail<%= form_idx %>;
           var target_id = "div_sendmail_content";
-          var func_complete = function(){ onSaveComplete("basic") };
-          var func_error = function(){ onSaveError("basic") };
 
           new Ajax.Updater(
                     target_id,
@@ -156,9 +154,9 @@ doSave = function(do_smtp)
                       evalScripts:true,
                       onComplete:function(request){
                                     if (showErrorMsg(_z(target_id)) == true) {
-                                      setTimeout(func_error, 10);
+                                      setTimeout("onSaveError('basic')", 10);
                                     } else {
-                                      setTimeout(func_complete, 10);
+                                      setTimeout("onSaveComplete('basic')", 10);
                                     }
                                     showAddressTab("direct");
                                   },

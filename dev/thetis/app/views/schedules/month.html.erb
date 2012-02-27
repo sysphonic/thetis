@@ -15,7 +15,7 @@ login_user = session[:login_user]
         <table align="left" cellspacing="0" cellpadding="0" width="65">
           <tr>
             <td align="left" nowrap width="30">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
             </td>
             <% if login_user.admin? User::AUTH_SCHEDULE %>
             <td width="5"></td>
@@ -165,7 +165,7 @@ for wd in 0..6 do
       unless timecard.nil?
     %>
         <% alt = h(timecard.workcode_name) %>
-        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => date_s, :user_id => login_user.id) %>'; return false;">
+        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => login_user.id) %>'; return false;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
           <%
           options = ''

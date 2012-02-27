@@ -69,7 +69,7 @@ module TimecardsHelper
   #_month_begins_at_:: Setting at which day a month begins.
   #return:: Fiscal year.
   #
-  def self.get_fiscal_year(date, year_begins_from, month_begins_at) 
+  def self.get_fiscal_year(date, year_begins_from, month_begins_at)
     if year_begins_from <= 6
       if UtilDate.new(2000, date.month, date.day).before? Date.new(2000, year_begins_from, month_begins_at)
         return date.year - 1

@@ -249,8 +249,8 @@ function doRegisterDetail(schedule_id)
     // for Repeat
     // Time
     if (!is_allday) {
-      var start = new Date(2000, 1, 1, _z("repeat_start_hour").value, _z("repeat_start_min").value, 0);
-      var end = new Date(2000, 1, 1, _z("repeat_end_hour").value, _z("repeat_end_min").value, 0);
+      var start = new Date(2000, 0, 1, _z("repeat_start_hour").value, _z("repeat_start_min").value, 0);
+      var end = new Date(2000, 0, 1, _z("repeat_end_hour").value, _z("repeat_end_min").value, 0);
       if (start > end) {
         msg("<%= t('msg.specify_valid_time_term') %>");
         return;
@@ -261,8 +261,11 @@ function doRegisterDetail(schedule_id)
     var startDate = _z("schedule_repeat_start").value.split("-");
     var endDate = _z("schedule_repeat_end").value.split("-");
 
-    start = new Date(startDate[0], startDate[1], startDate[2], 0, 0, 0);
-    end = new Date(endDate[0], endDate[1], endDate[2], 0, 0, 0);
+    var startMonth = parseInt(startDate[1], 10) - 1;
+    var endMonth = parseInt(endDate[1], 10) - 1;
+
+    start = new Date(startDate[0], startMonth, startDate[2], 0, 0, 0);
+    end = new Date(endDate[0], endMonth, endDate[2], 0, 0, 0);
     if (start > end) {
       msg("<%= t('msg.specify_valid_time_term') %>");
       return;
@@ -295,8 +298,11 @@ function doRegisterDetail(schedule_id)
       _z("once_end_min").value = 0;
     }
 
-    var start = new Date(startDate[0], startDate[1], startDate[2], _z("once_start_hour").value, _z("once_start_min").value, 0);
-    var end = new Date(endDate[0], endDate[1], endDate[2], _z("once_end_hour").value, _z("once_end_min").value, 0);
+    var startMonth = parseInt(startDate[1], 10) - 1;
+    var endMonth = parseInt(endDate[1], 10) - 1;
+
+    var start = new Date(startDate[0], startMonth, startDate[2], _z("once_start_hour").value, _z("once_start_min").value, 0);
+    var end = new Date(endDate[0], endMonth, endDate[2], _z("once_end_hour").value, _z("once_end_min").value, 0);
     if (start > end) {
       msg("<%= t('msg.specify_valid_time_term') %>");
       return;

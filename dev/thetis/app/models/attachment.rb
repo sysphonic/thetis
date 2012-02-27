@@ -39,7 +39,7 @@ class Attachment < ActiveRecord::Base
   #
   #
   def file=(file)
-    write_attribute(:name, file.original_filename)
+    write_attribute(:name, file.original_filename.force_encoding(Encoding::UTF_8))
     write_attribute(:size, file.size)
     write_attribute(:content_type, file.content_type.strip) unless file.content_type.nil?
     write_attribute(:content, file.read)

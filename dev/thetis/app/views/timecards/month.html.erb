@@ -10,9 +10,9 @@
       last_month = Date.new(@year, @month, 1) << 1
       next_month = Date.new(@year, @month, 1) >> 1
       %>
-      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :id => last_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => last_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
       <span style="color:crimson; cursor:pointer;" onclick="selectMonth();"><u><%= sprintf('%4d - %02d', @year, @month) %></u></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :id => next_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => next_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
     </td>
     <td width="20%" align="right" style="padding-top:5px;">
     <% unless params[:display].nil? or params[:display].empty? or params[:display] == 'mine' %>
@@ -104,7 +104,7 @@ days.times do
       <% if @start_date.day != 1 and (day == @start_date or day.day == 1) %>
         <sup><%= day.month.to_s %>/</sup>
       <% end %>
-      <a class="a_underline" <%= raw(today_txt_style) %> href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => date_s, :user_id => params[:user_id], :display => params[:display]) %>'; return false;">
+      <a class="a_underline" <%= raw(today_txt_style) %> href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => params[:user_id], :display => params[:display]) %>'; return false;">
         <%= day.day.to_s + ' (' + Schedule.wday_name(day.wday) + ')' %>
       </a>
     </td>

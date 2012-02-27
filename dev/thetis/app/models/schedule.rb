@@ -542,38 +542,50 @@ class Schedule < ActiveRecord::Base
     return false if other.nil? or date.nil?
 
     t_src = self.start
-    year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
-    if self.repeat?
+    if self.repeat? or t_src.nil?
       year = date.year; month = date.month; day = date.day
+    else
+      year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    end
+    if self.allday?
+      hour = 0; min = 0; sec = 0
     end
     a_start = Time.local(year, month, day, hour, min, sec)
 
     t_src = self.end
-    year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    if self.repeat? or t_src.nil?
+      year = date.year; month = date.month; day = date.day
+    else
+      year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    end
     if self.allday?
       hour = 23; min = 59; sec = 59
-    end
-    if self.repeat?
-      year = date.year; month = date.month; day = date.day
     end
     a_end = Time.local(year, month, day, hour, min, sec)
 
     t_src = other.start
-    year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
-    if other.repeat?
+    if other.repeat? or t_src.nil?
       year = date.year; month = date.month; day = date.day
+    else
+      year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    end
+    if other.allday?
+      hour = 0; min = 0; sec = 0
     end
     b_start = Time.local(year, month, day, hour, min, sec)
 
     t_src = other.end
-    year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    if other.repeat? or t_src.nil?
+      year = date.year; month = date.month; day = date.day
+    else
+      year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
+    end
     if other.allday?
       hour = 23; min = 59; sec = 59
     end
-    if other.repeat?
-      year = date.year; month = date.month; day = date.day
-    end
     b_end = Time.local(year, month, day, hour, min, sec)
+
+# logger.fatal("#{a_start} ~ #{a_end} vs #{b_start} ~ #{b_end}")
 
     if a_end <= b_start or b_end <= a_start
       return false

@@ -5,6 +5,7 @@ require 'rails/all'
 
 require File.join(File.dirname(__FILE__), '../lib/pseudohash/pseudohash')
 require File.join(File.dirname(__FILE__), '../lib/util/feed_entry')
+require File.join(File.dirname(__FILE__), '../lib/ya2yaml/lib/ya2yaml')
 
 # If you have a Gemfile, require the gems listed there, including any gems
 # you've limited to :test, :development, or :production.

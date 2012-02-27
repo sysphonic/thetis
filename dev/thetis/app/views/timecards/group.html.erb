@@ -32,11 +32,11 @@ tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
         <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :id => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
     <tr height="5"><td></td></tr>
@@ -83,7 +83,7 @@ else
 %>
   <tr bgcolor="<%= bgcolor %>">
     <td align="center">
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'month', :id => date_s, :user_id => user.id, :display => params[:display]) %>'; return false;">
+      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'month', :date => date_s, :user_id => user.id, :display => params[:display]) %>'; return false;">
         <%= user.get_name_for_timecard(yaml) %>
       </a>
     </td>
@@ -196,7 +196,7 @@ else
       <% end %>
     </td>
     <td align="center" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :id => date_s, :user_id => user.id, :display => params[:display]) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => user.id, :display => params[:display]) %>';">
     </td>
   </tr>
 <%

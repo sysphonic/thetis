@@ -561,9 +561,12 @@ setRepeat = function(sw)
   var update_target = _z("update_target");
   var update_target_hide = _z("update_target_hide");
 
+  var div_once = _z("div_once");
+  var div_repeat = _z("div_repeat");
+
   if (sw) {
-    _z("div_once").style.display = "none";
-    _z("div_repeat").style.display = "block";
+    div_once.style.display = "none";
+    div_repeat.style.display = "block";
     if (update_target != null) {
       if (forceTargetAll > 0) {
         update_target_hide.innerHTML = "<%= t('schedule.all_repeated') %>";
@@ -573,8 +576,8 @@ setRepeat = function(sw)
       }
     }
   } else {
-    _z("div_once").style.display = "block";
-    _z("div_repeat").style.display = "none";
+    div_once.style.display = "block";
+    div_repeat.style.display = "none";
     if (update_target != null) {
       update_target.style.display = "none";
       update_target_hide.style.display = "block";
@@ -610,12 +613,15 @@ setForceTargetAll = function(sw)
 
 forceRepeat = function(sw)
 {
+  var div_once = _z("div_once");
+  var div_repeat = _z("div_repeat");
+
   if (sw) {
-    _z("div_once").style.display = "none";
-    _z("div_repeat").style.display = "block";
+    div_once.style.display = "none";
+    div_repeat.style.display = "block";
   } else {
-    _z("div_once").style.display = "block";
-    _z("div_repeat").style.display = "none";
+    div_once.style.display = "block";
+    div_repeat.style.display = "none";
   }
 }
 
