@@ -9,7 +9,7 @@ as the "source code".
 
                       **   **    **   **
 
-Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic
+Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic
 All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -56,8 +56,8 @@ JKL.Calendar based on ver.0.13
   http://www.kawa.net/works/js/jkl/calender.html
 (thetis/public/javascripts/jkl-calendar)
 
-Dojo ver.0.4.2(Ajax)
-  Copyright (c) 2005-2006, The Dojo Foundation
+Dojo ver.1.7.2
+  Copyright (c) 2004-2011, The Dojo Foundation
   http://dojotoolkit.org 
 (thetis/public/javascripts/dojo)
 

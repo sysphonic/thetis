@@ -357,34 +357,39 @@ var _thetis_ajax_item_func_error = null;
 
 ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
 {
-  dojo.io.bind ({
+  dojo.io.iframe.send({
+      handleAs: "html",
       url:      p_url,
       method:   "post",
-      formNode: form_id,
-      mimetype: "text/html",
-      load: function(type, data, evt) {
-
+      form: form_id,
+//      content:{
+//          "id" : 200
+//      },
+      load: function(response, ioArgs) {
+/*
                 if (is_Opera) {
-                  _thetis_ajax_item_data = data;
+                  _thetis_ajax_item_data = response;
                   _thetis_ajax_item_func_complete = func_complete;
                   _thetis_ajax_item_func_error = func_error;
                   setTimeout("_onUploadForOpera('"+target_id+"')", 100);
                   return;
                 }
-
+*/
+                var content = response.documentElement.innerHTML;
+/*
                 // needed due to problem with IframeIO: http://trac.dojotoolkit.org/ticket/674
-                if (data != null) {
-                  value = data.documentElement.innerHTML;
+                if (response != null) {
+                  content = response.documentElement.innerHTML;
                 } else {
-                  value = dojo.io.iframeContentWindow(dojo.io.IframeTransport.iframe).document.body.innerHTML;
-                  if (value.match("/<pre>(.*)</pre>/i")) {
+                  content = dojo.io.iframeContentWindow(dojo.io.IframeTransport.iframe).document.body.innerHTML;
+                  if (content.match("/<pre>(.*)</pre>/i")) {
                       // Internet Explorer [Jon Aquino 2006-05-06]
-                      value = RegExp.$1;
+                      content = RegExp.$1;
                   }
                 }
-
-                _z(target_id).innerHTML = value.stripScripts();
-                value.evalScripts();
+*/
+                _z(target_id).innerHTML = content.stripScripts();
+                content.evalScripts();
 
                 if (showErrorMsg(target_id) == true) {
                   setTimeout(func_error, 10);
@@ -392,16 +397,23 @@ ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
                   setTimeout(func_complete, 10);
                 }
             },
-      error: function(type, error) {
+      error: function(response, ioArgs) {
+/*
                     if (error.reason != null) {
                         var thetisBoxErr = new ThetisBox;
                         thetisBoxErr.show("TOP-RIGHT", "", "MESSAGE", "", error.reason, "");
+                    }
+*/
+                    if (response != null) {
+                        var thetisBoxErr = new ThetisBox;
+                        thetisBoxErr.show("TOP-RIGHT", "", "MESSAGE", "", response, "");
                     }
                     setTimeout(func_error(), 10);
                   }
   });
 }
 
+/*
 _onUploadForOpera = function(target_id) {
 
   var data = _thetis_ajax_item_data;
@@ -438,6 +450,7 @@ _onUploadCompletedForOpera = function(target_id) {
     setTimeout(func_complete, 10);
   }
 }
+*/
 
 function getFileSelector(onOk, onCancel, btnOk, btnCancel, authToken, input_name)
 {
