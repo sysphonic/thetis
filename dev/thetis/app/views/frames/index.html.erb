@@ -12,7 +12,7 @@
 
 <FRAMESET border="0" frameSpacing="0" cols="150,*" frameBorder="0">
   <FRAME name="left" src="<%= url_for(:controller => 'frames', :action => 'left') %>" noResize scrolling="no">
-  <FRAMESET id="frameset_vertical" name="frameset_vertical" border="0" rows="28,*,18" frameSpacing="0" frameBorder="no">
+  <FRAMESET id="frameset_vertical" name="frameset_vertical" border="0" rows="28,*,14" frameSpacing="0" frameBorder="no">
     <FRAME name="header" src="<%= url_for(:controller => 'frames', :action => 'header') %>" noResize scrolling="no">
     <%
     if params[:default].nil? or params[:default].empty?
