@@ -43,7 +43,20 @@ function doResize()
   if (isNaN(height))  {
     height = mainHeight;
   }
-  _z("left_table").style.height = height + "px";
+  var left_table = _z("left_table");
+  left_table.style.height = height + "px";
+
+  if (height < left_table.scrollHeight) {
+    toggleSymbol(false);
+  }
+/*
+  var frameset_top = top.document.getElementById("frameset_top");
+  if (frameset_top) {
+    if (frameset_top.scrollHeight < left_table.scrollHeight) {
+      toggleSymbol(false);
+    }
+  }
+*/
 }
 
 var min = -1;

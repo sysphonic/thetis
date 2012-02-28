@@ -875,7 +875,7 @@ en:
     specify_indispensable: "Please specify all input indispensable items (with red asterisk)."
     error_java_applet: "Your browser doesn't support Java Applet, or Java is not installed on your PC."
     warn_ie_version1: "Your browser is too old to operate this site properly."
-    warn_ie_version2: "Please upgrade your Internet Explorer up to ver.7.0 or later."
+    warn_ie_version2: "Please upgrade your Internet Explorer up to ver.8.0 or later."
     confirm_to_save_change: "Do you want to save the changes?"
     confirm_sure: "Are you sure?"
     unauthorized: "Unauthorized"

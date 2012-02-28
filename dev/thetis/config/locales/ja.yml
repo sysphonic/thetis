@@ -876,7 +876,7 @@ ja:
     specify_indispensable: "すべての入力必須項目（赤い*印）を埋めてください。"
     error_java_applet: "お使いのブラウザがJavaアプレットに対応していないか、PCにJavaがインストールされていません。"
     warn_ie_version1: "お使いのブラウザはこのサイトを適切に操作・表示するには古すぎます。"
-    warn_ie_version2: "インターネット・エクスプローラをお使いの場合はバージョン7.0以上にアップグレードしてください。"
+    warn_ie_version2: "インターネット・エクスプローラをお使いの場合はバージョン8.0以上にアップグレードしてください。"
     confirm_to_save_change: "変更を保存しますか？"
     confirm_sure: "よろしいですか？"
     unauthorized: "権限がありません"

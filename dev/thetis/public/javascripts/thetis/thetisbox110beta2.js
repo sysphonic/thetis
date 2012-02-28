@@ -1,6 +1,6 @@
 /**-----------------**-----------------**-----------------**
    ThetisBox ver.1.1.0
-     Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
+     Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
      http://sysphonic.com/
 
  This module is released under New BSD License.

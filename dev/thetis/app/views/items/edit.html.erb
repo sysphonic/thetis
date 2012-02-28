@@ -253,6 +253,9 @@ var users_cache = new Array();
   </tr>
 </table>
 
+
+<%= render(:partial => 'common/save_change_func') %>
+
 <script type="text/javascript">
 <!--
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
@@ -653,8 +656,7 @@ function doShow()
     return;
   }
   if (isModifiedWorkflow() || isModifiedBasic() || isModifiedDescription() || isModifiedImage() || isModifiedAttachment()) {
-    var actions = new Array("move_to_show = true; doSave();", "_doShow();");
-    confm("<%= t('msg.confirm_to_save_change') %>", actions, null, "<%= t('btn.btn_yes') %>", "<%= t('btn.btn_no') %>");
+    showConfirmSaveChange("move_to_show=true; doSave();", "_doShow();");
   } else {
     _doShow();
   }

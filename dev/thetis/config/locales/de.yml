@@ -875,7 +875,7 @@ de:
     specify_indispensable: "Bitte geben Sie alle unabdingbare Artikel (mit rotem Asterisk) an."
     error_java_applet: "Mit ihrem Browser wirkt Java Applet nicht, oder Java ist nicht installiert."
     warn_ie_version1: "Ihrer Browser ist zu alt sich diese Seiten richtig benehmen zu lassen."
-    warn_ie_version2: "Bitte nachrüsten Sie Ihren Internet Explorer zu ver.7.0 oder später."
+    warn_ie_version2: "Bitte nachrüsten Sie Ihren Internet Explorer zu ver.8.0 oder später."
     confirm_to_save_change: "Wollen Sie die Veränderungen speichern?"
     confirm_sure: "Sind Sie sicher?"
     unauthorized: "Nicht autorisiert"

@@ -411,7 +411,7 @@ editLabel = function(toy_id)
   var axis = getAxis(_z("div_desktop"), toy_id);
 
   thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
+  thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
 }
 
 createLabel = function()
@@ -424,7 +424,7 @@ createLabel = function()
   var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'create_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_z('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
   thetisBox.setFormTag(form_tag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
+  thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
 }
 
 //////////////////////////
@@ -707,7 +707,7 @@ doShowLocations = function()
 <% if login_user.nil? %>
   <%= render(:partial => 'warning_login') %>
 <% end %>
-<% if !@ie_ver.nil? and @ie_ver < 7.0 %>
+<% if !@ie_ver.nil? and @ie_ver < 8.0 %>
   <%= render(:partial => 'warning_browser') %>
 <% end %>
 

@@ -2,15 +2,15 @@
 <span>
   <% toy_id = "toy_warnBrowser" %>
 
-  <div class="toy_desktop" id="<%= toy_id %>" style='position:absolute; z-index:10000; display:none;'>
-  <table width='200' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;' cellspacing='7'>
+  <div class="toy_desktop" id="<%= toy_id %>" style="position:absolute; z-index:10000; display:none;">
+  <table class="label_frame" width="200" style="border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;" cellspacing="7">
     <tr>
       <td width="20" style="width:20px; cursor:move; background-color:deeppink; padding-left:10px;">
         &nbsp;
       </td>
       <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="window.open('http://www.microsoft.com/ie/')">
         <pre id="<%= toy_id %>_msg"><%= t('msg.warn_ie_version1') %>
-<%= t('msg.warn_ie_version1') %></pre>
+<%= t('msg.warn_ie_version2') %></pre>
       </td>
     </tr>
   </table>

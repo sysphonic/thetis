@@ -1,7 +1,7 @@
 
 <%
 login_user = session[:login_user]
-date_string = @day.strftime(Schedule::SYS_DATE_FORM)
+date_s = @day.strftime(Schedule::SYS_DATE_FORM)
 
 auth_read = @schedule.check_user_auth(login_user, 'r', true)
 auth_write = @schedule.check_user_auth(login_user, 'w', true)
@@ -32,19 +32,17 @@ end
   <td align="left" style="padding-left:5px; padding-top:5px; padding-bottom:5px; background-color:<%= bg_color %>; line-height:1.3; border-bottom:1px solid white;">
 
     <% if @schedule.allday %>
-      <ul style="padding-left:15px">
-        <li>
+      &bull;
       <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
       <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail(<%= @schedule.id %>, '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
         <%=h @schedule.title %>
       <% if auth_read %></a><% end %>
       <%= raw(scope) %>
       <% if auth_write %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_string %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_string %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" />
       <% end %>
-        </li>
-      </ul>
+      <br/>
     <%
     else
       if @schedule.within_a_day?
@@ -56,8 +54,8 @@ end
       end
       if auth_write
     %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_string %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_string %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" /><br/>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" /><br/>
       <% end %>
       <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
       <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail(<%= @schedule.id %>, '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
