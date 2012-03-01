@@ -144,14 +144,13 @@ end
 
 
 <script type="text/javascript">
-<!--
 
 function showScheduleDetail(schedule_id, title)
 {
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%= Schedule.human_name %>";
+  thetisBox.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
   new Ajax.Request(
@@ -166,8 +165,8 @@ function showScheduleDetail(schedule_id, title)
                           mainWidth*80/100+"," + mainHeight*80/100,
                           "TRAY",
                           "",
-                          title,
-                          "<br/>"+request.responseText
+                          "",
+                          request.responseText
                         );
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
@@ -179,7 +178,7 @@ function showScheduleDetail(schedule_id, title)
 function editScheduleDetail(date, id)
 {
   prog("TOP-RIGHT");
-  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&edit_id="+id;
+  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?date="+date+"&edit_id="+id;
 }
 
 function doScheduleDelete(date, id, title)
@@ -190,7 +189,7 @@ function doScheduleDelete(date, id, title)
 function _doScheduleDelete(date, id)
 {
   prog("TOP-RIGHT");
-  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&doDelete="+id;
+  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?date="+date+"&doDelete="+id;
 }
 
 function showGroupTree()
@@ -218,5 +217,4 @@ function showCalendar(user_id, user_name)
           );
 }
 
-//-->
 </script>

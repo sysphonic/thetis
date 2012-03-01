@@ -158,9 +158,9 @@ function doResize()
   } else if ((div = _z("folderTree")) || (div = _z("groupTree"))) {
 
   <% if params[:controller] == 'folders' and !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
-    var h = mainHeight - 130;
+    var h = mainHeight - 120;
   <% else %>
-    var h = mainHeight - 90;
+    var h = mainHeight - 80;
   <% end %>
 
     div.style.height = h + "px";
@@ -180,7 +180,7 @@ function doResize()
 
   } else if (div = _z("mailTree")) {
 
-    var h = mainHeight - 120;
+    var h = mainHeight - 110;
 
     var td_tree = _z("td_tree");
     var td_view = _z("td_view");
@@ -258,10 +258,10 @@ function doResize()
 
   } else if (div = _z("div_workflow_list")) {
 
-    div.style.height = (mainHeight - 40) + "px";
+    div.style.height = (mainHeight - 35) + "px";
 
-    _z("workflow_list_received").style.height = (mainHeight - 150) + "px";
-    _z("div_ajax_workflow").style.height = (mainHeight - 280) + "px";
+    _z("workflow_list_received").style.height = (mainHeight - 120) + "px";
+    _z("div_ajax_workflow").style.height = (mainHeight - 245) + "px";
 
   } else if (div = _z("div_login")) {
 

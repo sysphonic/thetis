@@ -4,8 +4,6 @@ login_user = session[:login_user]
 has_account = !MailAccount.get_default_for(login_user.id).nil?
 %>
 
-<div style="height:7px;"></div>
-
 <table id="tree_main" width="100%" cellspacing="0" cellpadding="0" style="background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
     <td style="padding:5px 0px;">
@@ -124,7 +122,6 @@ end
 <%= draggable_element('drag_h_border', :revert => false, :constraint => '"vertical"') %>
 
 <script type="text/javascript">
-<!--
 
 var BorderDragObserver = Class.create();
 BorderDragObserver.prototype = {
@@ -773,5 +770,4 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo.show("TOP-RIGHT", "", "MESSAGE", "", _z("mail_header_"+email_id).innerHTML, "");
 }
 
-//-->
 </script>

@@ -42,7 +42,7 @@ module HistoryHelper
       'desktop/show',
       'items/bbs', 'items/list',
       'folders/show_tree',
-      'schedules/day', 'schedules/month',
+      'schedules/index', 'schedules/day', 'schedules/week', 'schedules/month', 'schedules/group', 'schedules/team',
       'equipment/schedule_all',
       'workflows/list',
       'researches/users',
@@ -66,6 +66,22 @@ module HistoryHelper
   private::LAST_REQ_NUM = 2
 
  public
+  #=== self.get_last_in_session
+  #
+  #Gets last history parameters in the session.
+  #
+  #_session_:: Request session.
+  #return:: Last history parameters in the session.
+  #
+  def self.get_last_in_session(session)
+
+    if session[:history].nil? or session[:history].empty?
+      return nil
+    else
+      return session[:history].last
+    end
+  end
+
   #=== self.keep_last
   #
   #Keep the last request to move backward.
@@ -81,6 +97,7 @@ module HistoryHelper
 
     if HistoryHelper.acceptable?(request.parameters)
       prms = ApplicationHelper.dup_hash(request.parameters)
+      prms.delete('authenticity_token')
 
       last_reqs = request.session[:last_req_params] unless request.session.nil?
       if last_reqs.nil?

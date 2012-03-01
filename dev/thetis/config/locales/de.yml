@@ -830,6 +830,7 @@ de:
     received_list_info: "Kopien von beschlossenen Arbeitsabläufe werden automatisch im folgenden Ordner in My Folder speichern."
     select_to_create: "Bitte wählen Sie Arbeitsablauf zu erstellen aus."
   msg:
+    hyphen: "-"
     specify_birthday: "Bitte geben Sie Ihre Geburtstag an."
     ex_birthday: "z.B. 1971-09-28"
     howto_change_birthday: "(Sie können das auf Benutzer-Information Seite korrigieren.)"

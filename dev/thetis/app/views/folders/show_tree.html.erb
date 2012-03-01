@@ -10,8 +10,6 @@ login_user = session[:login_user]
 groups_cache = {}
 %>
 
-<div style="padding-top:7px;">
-
 <table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
 <% if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
   <tr>
@@ -96,8 +94,6 @@ groups_cache = {}
   </tr>
 </table>
 
-</div>
-
 <%
 @folder_tree.each do |parent_id, child_folders|
   child_folders.each do |folder|
@@ -140,7 +136,6 @@ end
 <%= draggable_element('drag_border', :revert => false, :constraint => '"horizontal"') %>
 
 <script type="text/javascript">
-<!--
 
 var BorderDragObserver = Class.create();
 BorderDragObserver.prototype = {
@@ -661,5 +656,4 @@ function clearGroup()
   location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>";
 }
 
-//-->
 </script>

@@ -830,6 +830,7 @@ en:
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
   msg:
+    hyphen: "-"
     specify_birthday: "Please specify your birthday."
     ex_birthday: "ex. 1971-09-28"
     howto_change_birthday: "(You can change it on User Information page.)"

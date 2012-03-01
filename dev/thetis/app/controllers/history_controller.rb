@@ -30,7 +30,7 @@ class HistoryController < ApplicationController
     last_params = nil
 
     while !session[:history].nil? and !session[:history].empty?
-      last_params = session[:history].last
+      last_params = HistoryHelper.get_last_in_session(session)
       session[:history].delete_at(-1)
 
       avoid = params[:avoid]
