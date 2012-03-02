@@ -282,10 +282,9 @@ end
 
 <br/>
 
-<%= render(:partial => 'common/schedule_func') %>
+<%= render(:partial => 'common/schedule_func', :locals => {:from => 'desktop'}) %>
 
 <script type="text/javascript">
-<!--
 
 <% if editable %>
 changeWorkcode(_z("timecard_workcode").value);
@@ -604,7 +603,6 @@ function _timeToVal(hour_str, min_str)
 {
   return (Number(hour_str)*100 + Number(min_str));
 }
-//-->
-</script>
 
+</script>
 

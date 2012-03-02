@@ -350,11 +350,11 @@ confm = function(msg, action)
   thetisBox.show("CENTER", "", "CONFIRM", action, msg, "");
   return thetisBox;
 }
-
+/*
 var _thetis_ajax_item_data = null;
 var _thetis_ajax_item_func_complete = null;
 var _thetis_ajax_item_func_error = null;
-
+*/
 ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
 {
   dojo.io.iframe.send({

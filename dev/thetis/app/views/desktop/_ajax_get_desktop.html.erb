@@ -212,7 +212,7 @@ end
 
 <input type="hidden" id="desktop_bgcolor" name="desktop_bgcolor" value="<%= @desktop.get_background_color %>" />
 
-<%= render(:partial => 'common/schedule_func') %>
+<%= render(:partial => 'common/schedule_func', :locals => {:from => 'desktop'}) %>
 
 
 <script type="text/javascript">

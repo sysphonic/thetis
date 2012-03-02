@@ -143,37 +143,9 @@ end
 %>
 
 
+<%= render(:partial => 'common/schedule_func') %>
+
 <script type="text/javascript">
-
-function showScheduleDetail(schedule_id, title)
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
-  new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'show') %>?id=" + schedule_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*80/100,
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
 
 function editScheduleDetail(date, id)
 {

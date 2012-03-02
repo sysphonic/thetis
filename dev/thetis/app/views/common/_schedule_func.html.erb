@@ -1,30 +1,51 @@
+<%
+from ||= nil
+%>
+
 <script type="text/javascript">
 
-showScheduleDetail = function(date, schedule_id, title)
+var thetisBoxScheduleDetail = null;
+
+showScheduleDetail = function(date, schedule_id, title, addParams)
 {
-  var thetisBoxProgress = prog("CENTER");
+  if (thetisBoxScheduleDetail != null) {
+    thetisBoxScheduleDetail.remove();
+    thetisBoxScheduleDetail = null;
+  }
 
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
+
+  if (!addParams) {
+    addParams = new Array();
+  }
+  addParams.push("id="+schedule_id);
+  addParams.push("date="+date);
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+
+  var thetisBoxProgress = prog("CENTER");
   new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'show') %>?id=" + schedule_id,
+          "<%= url_for(:controller => 'schedules', :action => 'show') %>",
           {
             method:"get",
             asynchronous:true,
-            parameters:"from=desktop",
+            parameters:addParams.join("&"),
             evalScripts:true,
             onComplete:function(request) {
+                thetisBoxProgress.remove();
+
                 thetisBox.show(
                           "CENTER",
                           mainWidth*80/100+"," + mainHeight*80/100,
                           "TRAY",
                           "",
                           "",
-                          request.responseText
+                          request.responseText.stripScripts()
                         );
-                thetisBoxProgress.remove();
                 request.responseText.evalScripts();
               }
           }
