@@ -62,10 +62,22 @@ class Schedule < ActiveRecord::Base
 
   #=== self.get_holidays
   #
-  #Gets all Schedules of holiday.
+  #Gets holiday Schedules.
+  #_from_date_:: From-date of the target span.
+  #_till_date_:: Till-date of the target span.
+  #return:: Holiday Schedules.
   #
-  def self.get_holidays
-    return Schedule.find(:all, :conditions => "xtype = '#{Schedule::XTYPE_HOLIDAY}'", :order => 'start DESC')
+  def self.get_holidays(from_date=nil, till_date=nil)
+
+    from_s = from_date.strftime(Schedule::SYS_DATE_FORM) unless from_date.nil?
+    till_s = till_date.strftime(Schedule::SYS_DATE_FORM) unless till_date.nil?
+
+    con = []
+    con << "(xtype='#{Schedule::XTYPE_HOLIDAY}')"
+    con << "('#{from_s}' <= end)" unless from_s.nil?
+    con << "(start <= '#{till_s}')" unless till_s.nil?
+
+    return Schedule.find(:all, :conditions => con.join(' and '), :order => 'start DESC')
   end
 
   #=== self.check_holiday

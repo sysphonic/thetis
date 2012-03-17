@@ -2,7 +2,7 @@
 
 var holidays = new Array(
 <%
-@holidays = Schedule.get_holidays
+@holidays ||= Schedule.get_holidays
 
 unless @holidays.nil?
 

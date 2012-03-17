@@ -185,7 +185,7 @@ function showCalendar(user_id, user_name)
             "IFRAME",
             "",
             "",
-            "<%= url_for(:controller => 'schedules', :action => 'month') %>?id=" + getDateString() + "&user_id=" + user_id
+            "<%= url_for(:controller => 'schedules', :action => 'month') %>?date=" + getDateString() + "&user_id=" + user_id
           );
 }
 

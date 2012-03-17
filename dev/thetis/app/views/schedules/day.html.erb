@@ -173,7 +173,7 @@ function onLoadSub()
 
 function doPageDay(date)
 {
-  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?id=" + date;
+  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?date=" + date;
 
 <% unless params[:user_id].nil? %>
   url += "&user_id=<%= params[:user_id] %>";
