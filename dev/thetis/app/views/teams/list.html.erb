@@ -38,6 +38,7 @@
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
+      prms['action'] = 'list'
       pagination = will_paginate(@team_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>

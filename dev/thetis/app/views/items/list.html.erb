@@ -66,7 +66,7 @@ folders_cache = {}
               my_folder = login_user.get_my_folder
               unless my_folder.nil?
             %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :folder_id => my_folder.id) %>';">
             <%
               end
             end
@@ -105,6 +105,7 @@ folders_cache = {}
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
       prms.delete('check_item')
+      prms['action'] = 'list'
       pagination = will_paginate(@item_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>
@@ -237,7 +238,6 @@ folders_cache = {}
 <%= render(:partial => 'common/user_groups') %>
 
 <script type="text/javascript">
-<!--
 
 function doShowItem(item_id)
 {
@@ -280,11 +280,11 @@ function doDeleteMulti()
 
 function _doDeleteMulti()
 {
+  prog("TOP-RIGHT");
+  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.action = "<%= url_for(:controller => 'items', :action => 'destroy_multi') %>";
   document.form_list.method = "post";
   document.form_list.submit();
-
-  prog("TOP-RIGHT");
 }
 
 function doMoveMulti()
@@ -444,6 +444,5 @@ function selectAll()
   }
 }
 
-//-->
 </script>
 

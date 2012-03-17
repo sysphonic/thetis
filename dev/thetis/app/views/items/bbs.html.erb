@@ -112,6 +112,7 @@ folders_cache = {}
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
+      prms['action'] = 'bbs'
       pagination = will_paginate(@item_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>

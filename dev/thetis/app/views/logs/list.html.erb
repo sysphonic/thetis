@@ -55,6 +55,7 @@
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
       prms.delete('check_log')
+      prms['action'] = 'list'
       pagination = will_paginate(@log_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>

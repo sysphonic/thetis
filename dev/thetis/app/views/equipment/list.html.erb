@@ -42,6 +42,7 @@
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
       prms.delete('check_equipment')
+      prms['action'] = 'list'
       pagination = will_paginate(@equipment_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>

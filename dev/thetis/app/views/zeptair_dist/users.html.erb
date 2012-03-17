@@ -47,6 +47,7 @@ zept_cmd = @item.zeptair_command
       <%
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
+      prms['action'] = 'users'
       pagination = will_paginate(@user_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>

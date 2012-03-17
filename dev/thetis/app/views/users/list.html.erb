@@ -76,6 +76,7 @@ groups_cache = {}
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
       prms.delete('check_user')
+      prms['action'] = 'list'
       pagination = will_paginate(@user_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>
