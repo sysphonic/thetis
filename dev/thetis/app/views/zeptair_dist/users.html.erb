@@ -57,7 +57,7 @@ zept_cmd = @item.zeptair_command
   <tr height="10"><td></td></tr>
 </table>
 
-<div id="div_users" style="overflow:scroll; background-color:white;">
+<div class="base_list" id="div_users">
 <table id="list_users" width="100%" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="5%"  nowrap onClick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>

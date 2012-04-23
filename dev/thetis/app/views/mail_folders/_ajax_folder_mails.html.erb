@@ -20,12 +20,12 @@
   sbj_style = (email.status == Email::STATUS_UNREAD)?'font-weight:bold; color:sienna;':'font-weight:normal; color:black;'
   show_header = (email.status != Email::STATUS_DRAFT)
 %>
-  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="33" onclick="onSelChanged(this, <%= email.id %>);" style="cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
-    <td class="<%= td_class %>" id="mail_subect_<%= email.id %>" title="<%=h email.subject %>" nowrap style="<%= sbj_style %> text-align:left;">
+  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="30" onclick="onSelChanged(this, <%= email.id %>);" style="cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
+    <td class="<%= td_class %>" id="mail_subect_<%= email.id %>" title="<%= email.subject %>" nowrap style="<%= sbj_style %> text-align:left;">
     <% if show_header %>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="_z('req_detail').value='true';">
     <% end %>
-      <%=h truncate(email.subject, :length => 30) %>
+      <%= truncate(email.subject, :length => 30) %>
       <div id="mail_header_<%= email.id %>" style="display:none;">
         <%= render(:partial => 'header_info',:locals => {:email => email}) %>
       </div>
@@ -38,13 +38,13 @@
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif">
       <% end %>
     </td>
-    <td class="<%= td_class %>" title="<%=h email.from_address %>" nowrap style="text-align:center;">
-      <%=h truncate(email.from_address, :length => 15) %>
+    <td class="<%= td_class %>" title="<%= email.from_address %>" nowrap style="text-align:center;">
+      <%= truncate(email.from_address, :length => 15) %>
     </td>
     <%
     sent_at = email.get_sent_at_exp
     %>
-    <td class="<%= td_class %>" title="<%=h sent_at %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" title="<%= sent_at %>" nowrap style="text-align:center;">
       <%= sent_at %>
     </td>
   </tr>

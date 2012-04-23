@@ -21,6 +21,7 @@ THETIS_SYMBOL_IMAGE = 'images/custom/symbol.png'
 THETIS_TOPICS_URL = THETIS_RELATIVE_URL_ROOT + '/custom/topics.html'
 THETIS_NOTE_URL = THETIS_RELATIVE_URL_ROOT + '/custom/note.html'
 
+THETIS_EMAIL_TYPES = ['', 'official', 'private', 'mobile']
 THETIS_TEL_TYPES = ['', 'External', 'Internal', 'Home', 'Mobile']
 
 THETIS_DATE_FORMAT_YMD = '%Y-%m-%d'
@@ -55,6 +56,8 @@ THETIS_RESEARCH_PAGE_DIR = File.join(File.dirname(__FILE__), '../data/research')
 
 THETIS_USER_TIMEZONE_DEFAULT = 'Tokyo'
 THETIS_USER_TIMEZONE_SELECTABLE = false
+
+THETIS_SESSION_EXPIRE_AFTER_MIN = 8 * 60
 
 module Thetis
   class Application < Rails::Application

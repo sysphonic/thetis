@@ -89,13 +89,13 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
                       <%= check_box(:desktop, :popup_news) %><label for="desktop_popup_news"><%= t('desktop.news.tray') %></label><br/>
-                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.human_name %> <%= t('paren.round.enclose', :name => t('timecard.commence_at')) %></label><br/>
-                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.human_name %> <%= t('paren.round.enclose', :name => t('login.name')) %></label><br/>
+                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.model_name.human %> <%= t('paren.round.enclose', :name => t('timecard.commence_at')) %></label><br/>
+                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.model_name.human %> <%= t('paren.round.enclose', :name => t('login.name')) %></label><br/>
                     </td>
                   </tr>
                   <tr>
                     <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
-                      <label for="desktop_image"><%= Image.human_name %></label>
+                      <label for="desktop_image"><%= Image.model_name.human %></label>
                     </td>
                     <td class="item_value_td">
                       <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>

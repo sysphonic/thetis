@@ -59,7 +59,7 @@ class ZeptairXlog < ActiveRecord::Base
       ary << ZeptairXlog.human_attribute_name('fin_at')
       ary << ZeptairXlog.human_attribute_name('req_at')
       ary << ZeptairXlog.human_attribute_name('time_taken')
-      ary << User.human_name
+      ary << User.model_name.human
       ary << I18n.t('zeptair.id')
       ary << ZeptairXlog.human_attribute_name('c_addr')
       ary << ZeptairXlog.human_attribute_name('c_port')

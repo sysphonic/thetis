@@ -28,7 +28,7 @@
       <div id="div_basic" style="width:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:20px 0px;">
+            <td align="center" style="padding:10px 0px 15px;">
               <table align="center" width="85%" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
@@ -89,7 +89,7 @@
       <div id="div_receive" style="display:none; width:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:20px 0px;">
+            <td align="center" style="padding:10px 0px 15px;">
               <table align="center" width="85%" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label></td>
@@ -151,7 +151,7 @@
       <div id="div_send" style="display:none; width:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:20px 0px;">
+            <td align="center" style="padding:10px 0px 15px;">
               <table align="center" width="85%" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label></td>
@@ -217,6 +217,11 @@
   </tr>
 </table>
 
+<% unless params[:mail_account_xtype].nil? %>
+<input type="hidden" name="mail_account_xtype" value="<%= params[:mail_account_xtype] %>" />
+<% end %>
+<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+
 
 <script type="text/javascript">
 
@@ -260,7 +265,7 @@ showAddressTab = function(name)
 showAddressTab("basic");
 
 
-doRegister = function()
+doRegisterAccount = function()
 {
   var form = document.form_mail_account<%= form_idx %>;
 
@@ -273,13 +278,14 @@ doRegister = function()
   new Ajax.Request(
               form.action,
               {
+                method:"post",
+                parameters:Form.serialize(form),
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request){
                   thetisBox.remove();
                   request.responseText.evalScripts();
-                },
-                parameters:Form.serialize(form)+"&authenticity_token=<%= form_authenticity_token %>"
+                }
               }
             );
 }

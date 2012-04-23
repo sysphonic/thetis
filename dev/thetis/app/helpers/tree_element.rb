@@ -79,7 +79,7 @@ module TreeElement
 
     if recursive
 
-      tree = klass.get_tree(PseudoHash.new, nil, node_id)
+      tree = klass.get_tree(Hash.new, nil, node_id)
       return array if tree.nil?
 
       tree.each do |parent_id, childs|
@@ -138,7 +138,7 @@ module TreeElement
     con[0] << 'parent_id=?'
     con << node_id
 
-    tree[node_id, true] = klass.find(:all, :conditions => con, :order => order_by)
+    tree[node_id] = klass.find(:all, {:conditions => con, :order => order_by})
 
     tree[node_id].each do |node|
       tree = klass.get_tree(tree, conditions, node.id.to_s)

@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -38,12 +38,14 @@ var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
 function getVerIE()
 {
-  var ie_ver = navigator.appVersion.match(/.*MSIE[ ]*[0]*([0-9]+)/)[1];
-  if (ie_ver) {
-    return parseInt(ie_ver, 10);
-  } else {
-    return -1;
+  var m = navigator.appVersion.match(/.*MSIE[ ]*[0]*([0-9]+)/);
+  if (m && m.length > 1) {
+    var ie_ver = m[1];
+    if (ie_ver) {
+      return parseInt(ie_ver, 10);
+    }
   }
+  return -1;
 }
 
 function _z(elemId)
@@ -95,7 +97,7 @@ function fillLeft(str, ch, len)
 function addInputHidden(frm, id, name, value)
 {
   if (frm.childNodes != null) {
-    for (var i=0; i<frm.childNodes.length; i++) {
+    for (var i=0; i < frm.childNodes.length; i++) {
       child = frm.childNodes[i];
       if (child.name == name) {
         frm.removeChild(child);
@@ -115,7 +117,7 @@ function addInputHidden(frm, id, name, value)
 
 function removeElem(elem)
 {
-  if (elem != null) {
+  if (elem && elem.parentNode) {
     elem.parentNode.removeChild(elem);
   }
 }
@@ -504,13 +506,17 @@ function truncate(str, len)
   return str;
 }
 
-function trim(str)
+function trim(str, trimWchar)
 {
   if (str == null) {
     return str;
   }
 
-  return str.replace(/(^\s+)|(\s+$)/g, "");
+  if (trimWchar) {
+    return str.replace(/(^[\s\u3000]+)|([\s\u3000]+$)/g, "");
+  } else {
+    return str.replace(/(^\s+)|(\s+$)/g, "");
+  }
 }
 
 function removeCtrlChar(str)
@@ -646,5 +652,35 @@ function set_tr_bgcolor(tr, color)
   for (var i=0; i < cnt; i++) {
     if (tr.childNodes[i].style)
       tr.childNodes[i].style.backgroundColor = color;
+  }
+}
+
+function checkMailAddr(addr)
+{
+  if (!addr) {
+    return false;
+  }
+
+  var check = addr.match(/^((([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+")((\.([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+"))*))@((([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\]))(\.(([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]*)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\])))*))$/);
+
+  if (check) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function checkMailAddrExp(addr)
+{
+  if (!addr) {
+    return false;
+  }
+
+  var check = addr.match(/^(((([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+")((\.([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+"))*))@((([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\]))(\.(([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\])))*))|((([^\x00-\x1f\x7f\"\(\)\,\:\;\<\>\@\[\]\\]+|"([^"\\]|(\\[\x21-\x7e]))*")*)\s*<(([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+")((\.([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+|"([\s!\x23-\x5b\x5d-\x7e]|(\\[\x21-\x7e]))+"))*))@((([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\]))(\.(([\w\!\#\$\%\&\'\*\+\-\.\/\=\?\^\_\`\{\}\|\~]+)|(\[(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})\])))*)>))$/);
+
+  if (check) {
+    return true;
+  } else {
+    return false;
   }
 }

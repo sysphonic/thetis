@@ -95,6 +95,6 @@ module AddressbookHelper
       scope_con << "(owner_id is null)"   # Should always get empty set
     end
 
-    return scope_con.join(' or ')
+    return '(' + scope_con.join(' or ') + ')'
   end
 end

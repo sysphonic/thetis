@@ -143,7 +143,7 @@ function showDetail(schedule_id, title)
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
-  thetisBox.title = "<%= Schedule.human_name %>";
+  thetisBox.title = "<%= Schedule.model_name.human %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
   new Ajax.Request(
@@ -158,8 +158,8 @@ function showDetail(schedule_id, title)
                           mainWidth*80/100+"," + mainHeight*80/100,
                           "TRAY",
                           "",
-                          title,
-                          "<br/>"+request.responseText
+                          "",
+                          request.responseText
                         );
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
@@ -194,7 +194,7 @@ function showEquipment(equipment_id, name)
             (mainWidth*7/10)+","+(mainHeight*7/10),
             "IFRAME",
             "",
-            name,
+            "",
             "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
           );
 }

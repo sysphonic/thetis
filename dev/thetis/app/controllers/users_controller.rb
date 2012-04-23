@@ -112,7 +112,7 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
     if @user.nil?
-      flash[:notice] = t('msg.already_deleted', :name => User.human_name)
+      flash[:notice] = t('msg.already_deleted', :name => User.model_name.human)
     end
   end
 
@@ -341,7 +341,7 @@ class UsersController < ApplicationController
 
     if user.nil?
 
-      render(:text => t('msg.already_deleted', :name => User.human_name))
+      render(:text => t('msg.already_deleted', :name => User.model_name.human))
     else
 
       user.update_attribute(:auth, auth)

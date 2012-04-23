@@ -243,6 +243,7 @@ ja:
       confirm_to_delete: "この付箋紙を削除します。よろしいですか？"
       create: "新しい付箋紙"
       post: "付箋紙のポスト"
+      to: "あて先"
       sel_users_to_post: "あて先ユーザーの選択"
       confirm_to_post1: "このメッセージを指定された"
       confirm_to_post2: "ユーザーにポストします。よろしいですか？"
@@ -261,6 +262,13 @@ ja:
     show_backgound_image: "背景に画像を表示する"
   email:
     name: "E-mail"
+    address: "メールアドレス"
+    sub_address: "予備メールアドレス"
+    type:
+      caption: "種別"
+      official: "職場用"
+      private: "私用"
+      mobile: "携帯"
     address_not_found: "該当するメールアドレスが見つかりませんでした。"
     sent: "メールが送信されました。"
     greeting1: ""
@@ -318,6 +326,8 @@ ja:
       folders_order: "フォルダの並び順"
       authorities: "権限設定"
       display_control: "表示設定"
+  mail_folder:
+    root_cannot_have_folders: "フォルダはルートには作成・移動できません。"
   group:
     plural: "グループ"
     cannot_be_parent: "親グループの指定が不正です。"
@@ -444,7 +454,7 @@ ja:
     secure_connection: "接続の保護"
     secure_auth: "認証の保護"
     enable_auth: "認証を有効にする"
-    title_info: "一人複数のアカウントを設定できるようになった時のために、自分にとって分かりやすいタイトルを付けてください。"
+    title_info: "自分にとって分かりやすいタイトルを付けてください。"
     specify_title: "アカウント名を指定してください。"
   menu:
     desktop: "デスクトップ"
@@ -495,6 +505,8 @@ ja:
     enable_map: "このマップを有効にする"
     drop_to_remove: "退出する場合はここに載せてください"
     confirm_to_leave: "退出します。よろしいですか？"
+  addressbook:
+    specify_name: "名前を指定してください。"
   paren:
     round:
       left: "（"
@@ -831,6 +843,10 @@ ja:
     received_list_info: "確定されたワークフローのコピーは My Folder の中の次のフォルダに自動的に保存されます。"
     select_to_create: "作成するワークフローを選択してください。"
   msg:
+    select_account: "アカウントを選択してください。"
+    session_reset: "ログイン情報が変わったため、画面を更新します。"
+    others: "その他"
+    main: "メイン"
     hyphen: "－"
     specify_birthday: "生年月日を入力してください。"
     ex_birthday: "例） 1971-09-28"
@@ -929,7 +945,7 @@ ja:
     allowed: "許可する"
     not_allowed: "許可しない"
     configure_mail_account: "メール・アカウントの設定を先におこなってください。"
-    specify_to_address: "宛先を指定してください。"
+    specify_to_address: "送信先を指定してください。"
     moved_to_trash: "ごみ箱に移動されました。"
     cannot_save_in_folder: "このフォルダには保存できません。"
     cannot_edit_multiple: "同時に複数の項目を編集することはできません。"
@@ -952,6 +968,8 @@ ja:
     myself: "自分"
     already_deleted: "この%{name}は削除済みです。"
   btn:
+    upper: "上へ"
+    lower: "下へ"
     ok: "OK"
     cancel: "キャンセル"
     close: "閉じる"
@@ -1024,15 +1042,15 @@ ja:
     address_book: "アドレス帳"
     account_setting: "アカウント設定"
     direct_input: "直接入力"
-    to: "宛先:"
-    cc: "Cc:"
-    bcc: "Bcc:"
+    to: "宛先に追加"
+    cc: "Cc に追加"
+    bcc: "Bcc に追加"
     empty: "空にする"
     restore: "復元"
     duplicate: "複製"
   cap:
     suffix: "："
-    to: "あて先："
+    to: "宛先:"
     cc: "Cc:"
     bcc: "Bcc:"
     message: "メッセージ ："
@@ -1084,6 +1102,7 @@ ja:
     restore_from_log: "ログから復元"
     original: "原本"
   scope:
+    caption: "種別"
     private: "プライベート"
     common: "共有"
   zeptair:

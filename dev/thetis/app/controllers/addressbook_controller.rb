@@ -95,7 +95,7 @@ class AddressbookController < ApplicationController
 
     @address = Address.find(params[:id])
     if @address.nil?
-      render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.human_name))
+      render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.model_name.human))
       return
     else
       login_user = session[:login_user]
@@ -152,12 +152,12 @@ class AddressbookController < ApplicationController
     if !login_user.nil? \
         and login_user.admin?(User::AUTH_ADDRESSBOOK) \
         and params[:admin] == 'true'
-      con = ['owner_id=0']
+      con = ['(owner_id=0)']
     else
       con << AddressbookHelper.get_scope_condition_for(login_user, params[:filter_book])
     end
 
-    if params[:keyword]
+    unless params[:keyword].nil? or params[:keyword].empty?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
         key = '%' + key + '%'

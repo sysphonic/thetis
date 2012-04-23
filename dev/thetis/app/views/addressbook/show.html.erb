@@ -1,251 +1,224 @@
-<table width="80%" align="center" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
-  <tr>
-    <td valign="top">
 
-      <table cellspacing="0" cellpadding="0" width="100%">
-        <tr>
-          <td align="center">
+<div style="padding:10px">
 
-            <table align="center" width="90%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= t('cap.basic_info') %></b>
-                </td>
-              </tr>
-            </table>
+  <table align="center" width="90%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= t('cap.basic_info') %></b>
+      </td>
+    </tr>
+  </table>
 
-            <div style="width:100%;" align="center">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:20px 0px;">
-                    <table align="center" width="85%" cellpadding="0" cellspacing="2">
-                    <% unless @address.name.nil? or @address.name.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name"><%= Address.human_attribute_name('name') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.name %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.email1.nil? or @address.email1.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email1"><%= Address.human_attribute_name('email1') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.email1 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.email2.nil? or @address.email2.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email2"><%= Address.human_attribute_name('email2') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.email2 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.email3.nil? or @address.email3.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_email3"><%= Address.human_attribute_name('email3') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.email3 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.tel1.nil? or @address.tel1.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.tel1 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.tel2.nil? or @address.tel2.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.tel2 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.tel3.nil? or @address.tel3.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.tel3 %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.fax.nil? or @address.fax.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_fax"><%= Address.human_attribute_name('fax') %></label></td>
-                        <td class="item_value_td">
-                          <%=h @address.fax %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <div style="height:10px;"></div>
+  <table align="center" width="85%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <% unless @address.name.nil? or @address.name.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_name"><%= Address.human_attribute_name('name') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.name %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.email1.nil? or @address.email1.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_email1"><%= Address.human_attribute_name('email1') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.email1 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.email2.nil? or @address.email2.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_email2"><%= Address.human_attribute_name('email2') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.email2 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.email3.nil? or @address.email3.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_email3"><%= Address.human_attribute_name('email3') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.email3 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.tel1.nil? or @address.tel1.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.tel1 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.tel2.nil? or @address.tel2.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.tel2 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.tel3.nil? or @address.tel3.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.tel3 %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.fax.nil? or @address.fax.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_fax"><%= Address.human_attribute_name('fax') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.fax %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
 
-          <%
-          if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
-             or (!@address.address.nil? and !@address.address.empty?) \
-             or (!@address.url.nil? and !@address.url.empty?) \
-             or (!@address.organization.nil? and !@address.organization.empty?) \
-             or (!@address.title.nil? and !@address.title.empty?)
-          %>
-            <table align="center" width="90%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= Address.human_attribute_name('address') %></b>
-                </td>
-              </tr>
-            </table>
+  <div style="height:10px;"></div>
 
-            <div style="width:100%;" align="center">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:20px 0px;">
-                    <table align="center" width="85%" cellpadding="0" cellspacing="2">
-                    <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
-                        </td>
-                        <td class="item_value_td">
-                          <%=h @address.postalcode %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.address.nil? or @address.address.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_address"><%= Address.human_attribute_name('address') %></label>
-                        </td>
-                        <td class="item_value_td">
-                          <%=h @address.address %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.url.nil? or @address.url.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_url"><%= Address.human_attribute_name('url') %></label>
-                        </td>
-                        <td class="item_value_td">
-                        <%
-                        urls = ApplicationHelper.extract_uri_a(@address.url)
-                        if urls.nil?
-                        %>
-                          <%=h @address.url %>
-                        <% else %>
-                          <a href="<%=h urls.first %>" target="_blank">
-                            <%=h @address.url %>
-                          </a>
-                        <% end %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.organization.nil? or @address.organization.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
-                        </td>
-                        <td class="item_value_td">
-                          <%=h @address.organization %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    <% unless @address.title.nil? or @address.title.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_title"><%= Address.human_attribute_name('title') %></label>
-                        </td>
-                        <td class="item_value_td">
-                          <%=h @address.title %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          <% end %>
+<%
+if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
+   or (!@address.address.nil? and !@address.address.empty?) \
+   or (!@address.url.nil? and !@address.url.empty?) \
+   or (!@address.organization.nil? and !@address.organization.empty?) \
+   or (!@address.title.nil? and !@address.title.empty?)
+%>
+  <table align="center" width="90%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= Address.human_attribute_name('address') %></b>
+      </td>
+    </tr>
+  </table>
 
-          <%
-          if (!@address.memo.nil? and !@address.memo.empty?)
-          %>
-            <table align="center" width="90%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= Address.human_attribute_name('memo') %></b>
-                </td>
-              </tr>
-            </table>
+  <table align="center" width="85%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.postalcode %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.address.nil? or @address.address.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_address"><%= Address.human_attribute_name('address') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.address %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.url.nil? or @address.url.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_url"><%= Address.human_attribute_name('url') %></label>
+      </td>
+      <td class="item_value_td">
+      <%
+      urls = ApplicationHelper.extract_uri_a(@address.url)
+      if urls.nil?
+      %>
+        <%= @address.url %>
+      <% else %>
+        <a href="<%= urls.first %>" target="_blank">
+          <%= @address.url %>
+        </a>
+      <% end %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.organization.nil? or @address.organization.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.organization %>
+      </td>
+    </tr>
+  <% end %>
+  <% unless @address.title.nil? or @address.title.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_title"><%= Address.human_attribute_name('title') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.title %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
 
-            <div style="width:100%;" align="center">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:20px 0px;">
-                    <table align="center" width="85%" cellpadding="0" cellspacing="2">
-                    <% unless @address.memo.nil? or @address.memo.empty? %>
-                      <tr>
-                        <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
-                          <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
-                        </td>
-                        <td class="item_value_td">
-                          <%=h @address.memo %>
-                        </td>
-                      </tr>
-                    <% end %>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </div>
-          <% end %>
+<%
+if (!@address.memo.nil? and !@address.memo.empty?)
+%>
+  <table align="center" width="90%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= Address.human_attribute_name('memo') %></b>
+      </td>
+    </tr>
+  </table>
 
-            <table align="center" width="90%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-                  <b><%= t('schedule.scope') %></b>
-                </td>
-              </tr>
-            </table>
+  <table align="center" width="85%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <% unless @address.memo.nil? or @address.memo.empty? %>
+    <tr>
+      <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
+        <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
+      </td>
+      <td class="item_value_td">
+        <%= @address.memo %>
+      </td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
 
-            <div style="width:100%;" align="center">
-              <table width="100%" cellpadding="0" cellspacing="0">
-                <tr>
-                  <td align="center" style="padding:20px 0px;">
-                    <table align="center" width="85%" cellpadding="0" cellspacing="2">
-                      <tr>
-                        <td align="left">
-                          <%
-                          empty_msg = ''
-                          if @address.private?
-                            empty_msg = t('scope.private')
-                          elsif @address.for_all?
-                            empty_msg = t('msg.all_users')
-                          end
-                          %>
-                          <%= render(:partial => 'common/show_scope', :locals => {:obj => @address, :empty_msg => empty_msg}) %>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-            </div>
+  <table align="center" width="90%" cellspacing="0" cellpadding="0">
+    <tr>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= t('schedule.scope') %></b>
+      </td>
+    </tr>
+  </table>
 
-          </td>
-        </tr>
-      </table>
+  <table align="center" width="85%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+    <tr>
+      <td align="left">
+        <%
+        empty_msg = ''
+        if @address.private?
+          empty_msg = t('scope.private')
+        elsif @address.for_all?
+          empty_msg = t('msg.all_users')
+        end
+        %>
+        <%= render(:partial => 'common/show_scope', :locals => {:obj => @address, :empty_msg => empty_msg}) %>
+      </td>
+    </tr>
+  </table>
+</div>
 
-    </td>
-  </tr>
-</table>

@@ -1,7 +1,6 @@
 
 <%
 login_user = session[:login_user]
-has_account = !MailAccount.get_default_for(login_user.id).nil?
 %>
 
 <table id="tree_main" width="100%" cellspacing="0" cellpadding="0" style="background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
@@ -41,16 +40,36 @@ has_account = !MailAccount.get_default_for(login_user.id).nil?
               <tr>
                 <td valign="top" style="border:inset 2px silver; padding:0px;">
                   <%= form_tag( {:controller => 'mail_folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
-                    <div id="mailTree" align="left" style="padding:10px; overflow:auto;"></div>
+                    <div id="mailTree" style="overflow:auto;"><div id="div_tree" style="text-align:left; margin:10px;"></div></div>
                     <input type='hidden' name='selKeeper' id='selKeeper' value='' /> 
                   </form>
                 </td>
               </tr>
               <tr height="40">
                 <td align="center" valign="middle" style="background-color:aliceblue;">
-                  <a href="#" onclick="showAccountSetting(); return false;">
+                  <a href="#" onclick="showAccountSetting(false); return false;">
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif">
                     <%= t('btn.account_setting') %>
+                  </a>
+<%
+=begin
+%>
+#                  <%
+#                  exist_xtypes = []
+#                  MailAccount.find_all("user_id=#{login_user.id}").each do |mail_account|
+#                    exist_xtypes << mail_account.xtype
+#                  end
+#
+#                  unless ([MailAccount::XTYPE_INTERNET, MailAccount::XTYPE_INTRANET] - exist_xtypes).empty?
+#                  %>
+#                  <% end %>
+<%
+=end
+%>
+                  &nbsp;
+                  <a href="#" onclick="showAccountSetting(true); return false;">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif">
+                    <%= t('btn.add') %>
                   </a>
                 </td>
               </tr>
@@ -108,11 +127,13 @@ has_account = !MailAccount.get_default_for(login_user.id).nil?
 
 
 <%
-@folder_tree.each do |parent_id, child_folders|
-  child_folders.each do |folder|
+unless @folder_tree.nil?
+  @folder_tree.each do |parent_id, child_folders|
+    child_folders.each do |folder|
 %>
   <span id="xtype_<%= folder.id %>" style="display:none;"><%= folder.xtype %></span>
 <%
+    end
   end
 end
 %>
@@ -140,12 +161,19 @@ BorderDragObserver.prototype = {
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
-            mailTree.style.width = (orgWidthMailTree + x - 10) + "px";
-            td_tree.style.width = (orgWidthMailTree + x) + "px";
+            var leftWidth = orgWidthMailTree + x;
+            var rightWidth = orgWidthMails - x;
+            if (leftWidth < 100 && x < 0) {
+              return [100-orgWidthMailTree, y];
+            } else if (rightWidth < 100 && x > 0) {
+              return [orgWidthMails-100, y];
+            }
+            mailTree.style.width = leftWidth + "px";
+            td_tree.style.width = leftWidth + "px";
 
-            div_mails.style.width = (orgWidthMails - x - 10) + "px";
+            div_mails.style.width = rightWidth + "px";
             div_mail_content.style.width = div_mails.style.width;
-            td_view.style.width = (orgWidthMails - x) + "px";
+            td_view.style.width = rightWidth + "px";
             return [x, y];
         };
       } else if (draggable.element.id == "drag_h_border") {
@@ -157,8 +185,15 @@ BorderDragObserver.prototype = {
         var orgHeightMailContent = div_mail_content.offsetHeight;
 
         draggable.options.snap = function(x, y) {
-          div_mails.style.height = (orgHeightMails + y) + "px";
-          div_mail_content.style.height = (orgHeightMailContent - y) + "px";
+          var upperHeight = orgHeightMails + y;
+          var lowerHeight = orgHeightMailContent - y;
+          if (upperHeight < 10 && y < 0) {
+            return [x, 10-orgHeightMails];
+          } else if (lowerHeight < 10 && y > 0) {
+            return [x, orgHeightMailContent-10];
+          }
+          div_mails.style.height = upperHeight + "px";
+          div_mail_content.style.height = lowerHeight + "px";
           if (mail_body_view) {
             mail_body_view.style.height = (mail_body_view.offsetHeight - y) + "px";
           }
@@ -170,39 +205,31 @@ BorderDragObserver.prototype = {
   onDrag: function(eventName, draggable, event) {
     if (is_MS || is_Opera) {
       if (draggable.element.id == "drag_v_border") {
-        var treeMainWidth = _z("tree_main").clientWidth;
         var mailTree = _z("mailTree");
         var td_tree = _z("td_tree");
         var td_view = _z("td_view");
         var div_mails = _z("div_mails");
         var div_mail_content = _z("div_mail_content");
 
-        var mailTreePos = getPos(mailTree);
-        var borderPos = getPos(draggable.element);
-
-//      alert("borderPos.x="+borderPos.x+", mailTreePos.x="+mailTreePos.x);
-
-        var leftWidth = borderPos.x - mailTreePos.x - 24;
-        mailTree.style.width = leftWidth + "px";
-        td_tree.style.width = leftWidth + "px";
-
-        div_mails.style.width = (treeMainWidth - leftWidth - 38) + "px";
-        div_mail_content.style.width = div_mails.style.width;
-        td_view.style.width = (treeMainWidth - leftWidth - 38) + "px";
-/*
         var orgWidthMailTree = mailTree.offsetWidth;
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
-            mailTree.style.width = (orgWidthMailTree + x - 10) + "px";
-            td_tree.style.width = (orgWidthMailTree + x) + "px";
+            var leftWidth = orgWidthMailTree + x;
+            var rightWidth = orgWidthMails - x;
+            if (leftWidth < 100 && x < 0) {
+              return [100-orgWidthMailTree, y];
+            } else if (rightWidth < 100 && x > 0) {
+              return [orgWidthMails-100, y];
+            }
+            mailTree.style.width = leftWidth + "px";
+            td_tree.style.width = leftWidth + "px";
 
-            div_mails.style.width = (orgWidthMails - x -10) + "px";
+            div_mails.style.width = rightWidth + "px";
             div_mail_content.style.width = div_mails.style.width;
-            td_view.style.width = (orgWidthMails - x) + "px";
+            td_view.style.width = rightWidth + "px";
             return [x, y];
         };
-*/
       } else if (draggable.element.id == "drag_h_border") {
         var div_mails = _z("div_mails");
         var div_mail_content = _z("div_mail_content");
@@ -211,8 +238,15 @@ BorderDragObserver.prototype = {
         var orgHeightMailContent = div_mail_content.offsetHeight;
 
         draggable.options.snap = function(x, y) {
-          div_mails.style.height = (orgHeightMails + y) + "px";
-          div_mail_content.style.height = (orgHeightMailContent - y) + "px";
+          var upperHeight = orgHeightMails + y;
+          var lowerHeight = orgHeightMailContent - y;
+          if (upperHeight < 10 && y < 0) {
+            return [x, 10-orgHeightMails];
+          } else if (lowerHeight < 10 && y > 0) {
+            return [x, orgHeightMailContent-10];
+          }
+          div_mails.style.height = upperHeight + "px";
+          div_mail_content.style.height = lowerHeight + "px";
           return [x, y];
         };
       }
@@ -231,12 +265,26 @@ BorderDragObserver.prototype = {
 Draggables.addObserver( new BorderDragObserver() );
 
 
-<% if params[:tips]=='true' and has_account %>
+<% if params[:tips]=='true' and !@mail_accounts.empty? %>
 function showTips()
 {
   tips("<%= t('mail.info_to_update') %>");
 }
 <% end %>
+
+var folderAccountsHash = {};
+
+function getMailAccountId(folder_id)
+{
+  return folderAccountsHash[folder_id];
+}
+
+function getCurrentFolderId()
+{
+  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+
+  return folder_id;
+}
 
 function onLoadSub()
 {
@@ -247,20 +295,26 @@ function onLoadSub()
   %>
   var folderImgs = new Array(
                       <% icons = MailFolder.get_icons(nil) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = MailFolder.get_icons(MailFolder::XTYPE_INBOX) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = MailFolder.get_icons(MailFolder::XTYPE_SENT) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = MailFolder.get_icons(MailFolder::XTYPE_DRAFTS) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = MailFolder.get_icons(MailFolder::XTYPE_TRASH) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
-                        new Array("<%=h mail_user_open %>", "<%=h mail_user_close %>")
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+                      <% icons = MailFolder.get_icons(MailFolder::XTYPE_ACCOUNT_ROOT) %>
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+                        new Array("<%= mail_user_open %>", "<%= mail_user_close %>")
                       );
-  var array = new Array(new Array("0", " <%=h login_user.get_name %>", "", "selectFolder('0');", 5 /* img_idx */));
-  var firstMenuId = ThetisBox.buildTree("", array, null, "mailTree", "selKeeper", folderImgs);
-  <% @folder_tree.each do |parent_id, child_folders| %>
+  var array = new Array(new Array("0", " <%= login_user.get_name %>", "", "selectFolder('0');", 6 /* img_idx */));
+  var firstMenuId = ThetisBox.buildTree("", array, null, "div_tree", "selKeeper", folderImgs);
+  <%
+  folder_accounts_h = {}
+  unless @folder_tree.nil?
+    @folder_tree.each do |parent_id, child_folders|
+  %>
   array = new Array(
     <%
     count = 0
@@ -275,13 +329,25 @@ function onLoadSub()
           img_idx = 3
         when MailFolder::XTYPE_TRASH
           img_idx = 4
+        when MailFolder::XTYPE_ACCOUNT_ROOT
+          img_idx = 5
         else
           img_idx = 0
       end
 
+      if folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT
+        folder_accounts_h[folder.id] = folder.mail_account_id
+      else
+        folder_accounts_h[folder.id] = folder_accounts_h[parent_id.to_i]
+      end
+
       folder_name = folder.name
+      if (folder_name.nil? or folder_name.empty?) \
+          and (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
+        folder_name = MailAccount.get_title(folder.mail_account_id)
+      end
     %>
-    new Array("<%= folder.id %>", " <%=h folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
+    new Array("<%= folder.id %>", " <%= folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
     <%
       count += 1
       if count < child_folders.length
@@ -292,34 +358,57 @@ function onLoadSub()
     end
     %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "mailTree", "selKeeper", folderImgs, false);
-  <% end %>
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "div_tree", "selKeeper", folderImgs, false);
+  <%
+    end
+  end
+  %>
+
+  <%
+  folder_accounts_h.each do |folder_id, mail_account_id|
+    next if mail_account_id.nil?
+  %>
+  folderAccountsHash["<%= folder_id %>"] = <%= mail_account_id %>;
+  <%
+  end
+  %>
 
 <% unless session[:mailfolder_id].nil? or session[:mailfolder_id].empty? %>
   var menuId = "a_mailTree:<%= session[:mailfolder_id] %>";
   ThetisBox.selectTree("selKeeper", menuId, null, true);
   if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
-    doUpdateMails(<%= session[:mailfolder_id] %>, false);
+    selectFolder(<%= session[:mailfolder_id] %>);
+//    doUpdateMails(<%= session[:mailfolder_id] %>, false);
   }
 <% end %>
 
-<% unless has_account %>
-  showAccountSetting();
+<% if @mail_accounts.empty? %>
+  showAccountSetting(true);
 <% end %>
 }
 
 function getMails()
 {
-  if (document.form_folder_tree.selKeeper.value == "") {
-    <%
-    inbox = MailFolder.get_for(login_user, MailFolder::XTYPE_INBOX)
-    %>
-    var menuId = "a_mailTree:<%= inbox.id %>";
-    ThetisBox.selectTree("selKeeper", menuId, null, true);
-  }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+<% if @mail_accounts.empty? %>
+  msg("<%= t('msg.configure_mail_account') %>");
+<% else %>
+<%
+=begin
+%>
+#  if (document.form_folder_tree.selKeeper.value == "") {
+#    <%
+#    inbox = MailFolder.get_for(login_user, @mail_account.id, MailFolder::XTYPE_INBOX)
+#    %>
+#    var menuId = "a_mailTree:<%= inbox.id %>";
+#    ThetisBox.selectTree("selKeeper", menuId, null, true);
+#  }
+<%
+=end
+%>
+  var folder_id = getCurrentFolderId();
 
   doUpdateMails(folder_id, true);
+<% end %>
 }
 
 function checkName(val)
@@ -343,14 +432,29 @@ function doCreate()
     msg("<%= t('folder.select_parent') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1];
+  var folder_id = getCurrentFolderId();
+
+  if (folder_id == "0") {
+    msg("<%= t('mail_folder.root_cannot_have_folders') %>");
+    return;
+  }
 
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'mail_folders', :action => 'create') %>\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('mailTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
+  addParams.push("selectedFolderId="+folder_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  thetisBox.setAdditionalParams(addParams);
   thetisBox.show("CENTER", "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
 }
 
@@ -360,7 +464,7 @@ function doRename()
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var folder_id = getCurrentFolderId();
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -377,7 +481,13 @@ function doRename()
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'mail_folders', :action => 'rename') %>?id="+folder_id+"\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('a_mailTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.setAdditionalParams(new Array('selectedFolderId='+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+  addParams.push("selectedFolderId="+folder_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  thetisBox.setAdditionalParams(addParams);
   var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
   thetisBox.show("CENTER", "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
 }
@@ -388,7 +498,7 @@ function doDelete()
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1]; 
+  var folder_id = getCurrentFolderId();
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -408,10 +518,20 @@ function doDelete()
 
 function _doDelete(folder_id)
 {
+  var addParams = new Array();
+  addParams.push("id="+folder_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
+
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Request(
-              "<%= url_for(:controller => 'mail_folders', :action => 'destroy') %>?id="+folder_id,
+              "<%= url_for(:controller => 'mail_folders', :action => 'destroy') %>",
               {
+                method:"post",
+                parameters:Form.serialize(document.form_folder_tree)+"&"+addParams.join("&"),
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request){
@@ -422,8 +542,7 @@ function _doDelete(folder_id)
                     clearMails();
                   }
                   request.responseText.evalScripts();
-                },
-                parameters:Form.serialize(document.form_folder_tree)+"&authenticity_token=<%= form_authenticity_token %>"
+                }
               }
             );
 }
@@ -434,7 +553,7 @@ function doMove()
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var folder_id = getCurrentFolderId();
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -451,7 +570,13 @@ function doMove()
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("id="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+  addParams.push("id="+folder_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  thetisBox.setAdditionalParams(addParams);
   thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
@@ -463,23 +588,33 @@ function selectFolder(folder_id)
 
 function doUpdateMails(folder_id, do_pop)
 {
-  var params = "";
-  if (do_pop) {
-    params = "&pop=true";
+  var params = new Array();
+  params.push("id="+folder_id);
+
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    params.push("mail_account_id="+mail_account_id);
   }
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>?id="+folder_id+params);
+  if (do_pop) {
+    params.push("pop=true");
+  }
+  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", params);
 }
 
 function showMail(email_id)
 {
-  doUpdateViewMailContent("<%= url_for(:controller => 'mail_folders', :action => 'get_mail_content') %>?id="+email_id);
+  var params = new Array();
+  params.push("id="+email_id);
+
+  doUpdateViewMailContent("<%= url_for(:controller => 'mail_folders', :action => 'get_mail_content') %>", params);
 }
 
-function doUpdateViewMailContent(action)
+function doUpdateViewMailContent(action, addParams)
 {
-  var params = "authenticity_token=<%= form_authenticity_token %>";
-  if (arguments.length >= 2) {
-    params += "&" + arguments[1];
+  var params = new Array();
+  params.push("authenticity_token=<%= form_authenticity_token %>");
+  if (addParams) {
+    params = params.concat(addParams);
   }
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
@@ -489,7 +624,7 @@ function doUpdateViewMailContent(action)
                   asynchronous: true,
                   evalScripts: true,
                   onComplete: function(request){ thetisBox.remove(); },
-                  parameters: params
+                  parameters: params.join("&")
                 }
               );
 }
@@ -515,10 +650,15 @@ function clearMailContent()
   }
 }
 
-function doUpdateViewMails(action)
+function doUpdateViewMails(action, addParams)
 {
   removeHeaderInfo();
   clearMailContent();
+
+  var params = new Array();
+  if (addParams) {
+    params = params.concat(addParams);
+  }
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
@@ -526,6 +666,7 @@ function doUpdateViewMails(action)
                 action,
                 {
                   method:"get",
+                  parameters: params.join("&"),
                   asynchronous: true,
                   evalScripts: true,
                   onComplete: function(request){ thetisBox.remove(); },
@@ -563,6 +704,9 @@ var _need_update = false;
 
 function showMailForm(action, is_new)
 {
+<% if @mail_accounts.empty? %>
+  msg("<%= t('msg.configure_mail_account') %>");
+<% else %>
   if (thetisBoxMailForm != null){
     msg("<%= t('msg.cannot_edit_multiple') %>");
     return;
@@ -576,7 +720,7 @@ function showMailForm(action, is_new)
   var on_close_func = function(){
                         thetisBoxMailForm = null;
                         if (_need_update) {
-                          var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+                          var folder_id = getCurrentFolderId();
                           if (folder_id) {
                             doUpdateMails(folder_id, false);
                           }
@@ -589,10 +733,18 @@ function showMailForm(action, is_new)
     thetisBoxMailForm.title = "<%= t('cap.edit_mail') %>";
   }
 
+  var addParams = new Array();
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
+
   new Ajax.Request(
           action,
           {
             method:"get",
+            parameters:addParams.join("&"),
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
@@ -601,8 +753,8 @@ function showMailForm(action, is_new)
                           mainWidth*80/100+"," + mainHeight*90/100,
                           "TRAY",
                           "",
-                          "<input type='button' value='<%= t('mail.send') %>' style='width:80px; height:30px;' onClick='doSend();'/>"
-                            +"&nbsp;<input type='button' value='<%= t('btn.save') %>' style='width:80px; height:30px;'  onClick='doSave(false);'/>",
+                          "<input type='button' value='<%= t('mail.send') %>' style='width:80px; height:24px;' onclick='doSend();'/>"
+                            +"&nbsp;<input type='button' value='<%= t('btn.save') %>' style='width:80px; height:24px;' onclick='doSave(false);'/>",
                           request.responseText
                         );
                 thetisBoxProgress.remove();
@@ -610,6 +762,7 @@ function showMailForm(action, is_new)
               }
           }
         );
+<% end %>
 }
 
 function getSelectedRow()
@@ -623,7 +776,7 @@ function getSelectedRow()
 
 function doDeleteMail()
 {
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var folder_id = getCurrentFolderId();
 
   var sel_tr = getSelectedRow();
   if (!sel_tr)
@@ -650,7 +803,16 @@ function doDeleteMail()
 
 function _doDeleteMail(email_id, folder_id)
 {
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>?id="+email_id+"&folder_id="+folder_id);
+  var params = new Array();
+  params.push("id="+email_id);
+  params.push("folder_id="+folder_id);
+
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    params.push("mail_account_id="+mail_account_id);
+  }
+
+  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", params);
 }
 
 function doEmpty()
@@ -659,14 +821,32 @@ function doEmpty()
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var folder_id = getCurrentFolderId();
+
+  if (folder_id == "0") {
+    msg("<%= t('msg.predetermined_folder_restricted') %>");
+    return;
+  }
+  var xtype = _z("xtype_"+folder_id).innerHTML;
+  if (xtype == "<%= MailFolder::XTYPE_ACCOUNT_ROOT %>") {
+    msg("<%= t('msg.predetermined_folder_restricted') %>");
+    return;
+  }
 
   confm("<%= t('mail.confirm_to_empty') %>", "_doEmpty("+folder_id+")");
 }
 
 function _doEmpty(folder_id)
 {
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'empty') %>?id="+folder_id);
+  var params = new Array();
+  params.push("id="+folder_id);
+
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    params.push("mail_account_id="+mail_account_id);
+  }
+
+  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", params);
 }
 
 function doDownloadMail()
@@ -686,11 +866,17 @@ function doMoveMail()
     return;
 
   var email_id = sel_tr.split("_")[1];
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var folder_id = getCurrentFolderId();
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("id="+email_id, "authenticity_token=<%= form_authenticity_token %>"));
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+  addParams.push("id="+email_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  thetisBox.setAdditionalParams(addParams);
   thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
@@ -714,8 +900,18 @@ function showAddressBook()
 
 var thetisBoxAccount = null;
 
-function showAccountSetting()
+function showAccountSetting(is_new)
 {
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+
+  if (!is_new) {
+    if (!folder_id || !mail_account_id) {
+      msg("<%= t('msg.select_account') %>");
+      return;
+    }
+  }
+
   var thetisBoxProgress = prog("CENTER");
 
   if (thetisBoxAccount != null){
@@ -725,11 +921,27 @@ function showAccountSetting()
 
   thetisBoxAccount = new ThetisBox;
   thetisBoxAccount.title = "<%= t('btn.account_setting') %>";
+  thetisBoxAccount.setOnClose = "thetisBoxAccount=null;";
+
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+
+  var action = null;
+  if (is_new) {
+    addParams.push("xtype=<%= params[:mail_account_xtype] %>");
+    action = "<%= url_for(:controller => 'mail_accounts', :action => 'new') %>";
+  } else {
+    addParams.push("id=" + mail_account_id);
+    action = "<%= url_for(:controller => 'mail_accounts', :action => 'edit') %>"
+  }
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'mail_accounts', :action => 'edit_default') %>",
+          action,
           {
             method:"get",
+            parameters:addParams.join("&"),
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {

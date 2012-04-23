@@ -20,6 +20,7 @@ class MailFolder < ActiveRecord::Base
   public::XTYPE_SENT = 'sent'
   public::XTYPE_DRAFTS = 'drafts'
   public::XTYPE_TRASH = 'trash'
+  public::XTYPE_ACCOUNT_ROOT = 'account_root'
 
   #=== get_icons
   #
@@ -59,6 +60,10 @@ class MailFolder < ActiveRecord::Base
         normal = img_root + 'mail/trash_open.png'
         open = img_root + 'mail/trash_open.png'
         close = img_root + 'mail/trash_close.png'
+      when MailFolder::XTYPE_ACCOUNT_ROOT
+        normal = img_root + 'mail/account_open.gif'
+        open = img_root + 'mail/account_open.gif'
+        close = img_root + 'mail/account_close.gif'
       else
         normal = img_root + 'mail/mail_folder.gif'
         open = img_root + 'mail/tree_mail_open.gif'
@@ -111,11 +116,16 @@ class MailFolder < ActiveRecord::Base
   #Gets conditions parameter for specified User.
   #
   #_user_:: Target User.
+  #_mail_account_ids_:: Array of the target MailAccount-IDs.
   #return:: Conditions.
   #
-  def self.get_condtions_for(user)
+  def self.get_condtions_for(user, mail_account_ids)
 
-    con = ['user_id=?']
+    if mail_account_ids.nil? or mail_account_ids.empty?
+      con = ["user_id=? and (mail_account_id is null)"]
+    else
+      con = ["user_id=? and (mail_account_id is null or mail_account_id in (#{mail_account_ids.join(',')}))"]
+    end
     con << user.id
 
     return con
@@ -126,16 +136,26 @@ class MailFolder < ActiveRecord::Base
   #Gets MailFolder for specified User and type.
   #
   #_user_:: Target User.
+  #_mail_account_id_:: Target MailAccount-ID.
   #_xtype_:: Target type.
   #return:: MailFolder.
   #
-  def self.get_for(user, xtype)
+  def self.get_for(user, mail_account_id, xtype)
 
-    con = MailFolder.get_condtions_for(user)
-    con[0] << " and xtype=?"
-    con << xtype
+    return nil if user.nil? or mail_account_id.nil?
 
-    return MailFolder.find(:first, :conditions => con)
+    if user.kind_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_s
+    end
+
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(mail_account_id=#{mail_account_id})"
+    con << "(xtype='#{xtype}')"
+
+    return MailFolder.find(:first, :conditions => con.join(' and '))
   end
 
   #=== self.get_tree_for
@@ -143,14 +163,15 @@ class MailFolder < ActiveRecord::Base
   #Gets MailFolder tree for specified User.
   #
   #_user_:: Target User.
+  #_mail_account_ids_:: Array of the target MailAccount-IDs.
   #return:: MailFolder tree.
   #
-  def self.get_tree_for(user)
+  def self.get_tree_for(user, mail_account_ids)
 
-    con = MailFolder.get_condtions_for(user)
+    con = MailFolder.get_condtions_for(user, mail_account_ids)
 
     # '0' for ROOT
-    folder_tree = MailFolder.get_tree(PseudoHash.new, con, '0')
+    folder_tree = MailFolder.get_tree(Hash.new, con, '0')
     return MailFolder.sort_tree(folder_tree)
   end
 

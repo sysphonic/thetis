@@ -1115,7 +1115,7 @@ private
 
     schedules = Schedule.find_by_sql(sql)
 
-    return self._get_feeds(schedules, '['+Schedule.human_name+'] ', root_url, 'schedule')
+    return self._get_feeds(schedules, '['+Schedule.model_name.human+'] ', root_url, 'schedule')
   end
 
   #=== self.get_alarm_feeds

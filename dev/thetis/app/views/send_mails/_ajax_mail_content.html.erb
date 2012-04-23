@@ -1,167 +1,42 @@
-
-<% login_user = session[:login_user] %>
+<%
+login_user = session[:login_user]
+%>
 
 <%= hidden_field('email', 'id') %>
 
 <table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="30"><td></td></tr>
-  <tr>
-    <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-      <b><%= t('mail.sender') %></b>
-    </td>
-  </tr>
   <tr height="15"><td></td></tr>
   <tr>
-    <td align="center">
+    <td style="min-width:80px; width:80px; text-align:center; font-weight:bold;">
+      <%= t('cap.sender') %>
+    </td>
+    <td align="left">
 
-      <table align="center" width="90%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="center">
-            <%
-            mail_account = MailAccount.get_default_for(login_user.id)
-            if mail_account.nil?
-            %>
-            <b style="color:red;"><%= t('msg.configure_mail_account') %></b>
-            <% else %>
-            <select name="mail_account" size="1" style="width:80%;">
-              <option value="<%= mail_account.id %>"><%=h mail_account.get_from_exp %></option>
-            </select>
-            <% end %>
-          </td>
-        </tr>
-      </table>
+      <% if @mail_account.nil? %>
+        <b style="color:red;"><%= t('msg.configure_mail_account') %></b>
+      <%
+      else
+        opts = []
+        mail_accounts = MailAccount.find_all("user_id=#{login_user.id}")
+        mail_accounts.each do |account|
+          opts << [account.get_from_exp + ' ' + t('paren.round.enclose', :name => account.get_title), account.id]
+        end
+      %>
+        <%= select_tag('mail_account_id', options_for_select(opts, @mail_account.id), :style => 'width:80%;') %>
+      <% end %>
     </td>
   </tr>
-  <tr height="30"><td></td></tr>
+  <tr height="10"><td></td></tr>
   <tr>
-    <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-      <b><%= t('cap.send_to') %></b>
+    <td style="text-align:center; font-weight:bold;">
+      <%= t('cap.send_to') %><%= t('cap.suffix') %>
     </td>
-  </tr>
-  <tr height="15"><td></td></tr>
-  <tr>
     <td align="center">
 
-      <table align="center" width="90%" cellspacing="0" cellpadding="0">
+      <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-          <td>
-
-            <table cellspacing="0" cellpadding="0" width="100%">
-              <tr>
-                <td align="center">
-
-                  <table cellspacing="2" cellpadding="0" width="100%">
-                    <tr>
-                      <td id="tab_direct" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('direct'); this.bgColor='cornflowerblue'" bgColor="cornflowerblue" onMouseOver="if(_z('div_direct').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_direct').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
-                        <%= t('btn.direct_input') %>
-                      </td>
-                      <td id="tab_addrbook_private" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('addrbook_private'); this.bgColor='cornflowerblue';" bgColor="cornflowerblue" onMouseOver="if(_z('div_addrbook_private').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_addrbook_private').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
-                        <%= t('btn.address_book') %><%= t('paren.round.left') %><%= t('scope.private') %><%= t('paren.round.right') %>
-                      </td>
-                      <td id="tab_addrbook_common" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('addrbook_common'); this.bgColor='cornflowerblue';" bgColor="cornflowerblue" onMouseOver="if(_z('div_addrbook_common').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_addrbook_common').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
-                        <%= t('btn.address_book') %><%= t('paren.round.left') %><%= t('scope.common') %><%= t('paren.round.right') %>
-                      </td>
-                      <td>&nbsp;</td>
-                    </tr>
-                  </table>
-
-                </td>
-              </tr>
-              <tr>
-                <td align="center">
-
-                  <div id="div_direct" style="width:100%;" align="center">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
-                      <tr>
-                        <td align="center" style="padding:20px 0px;">
-
-                          <input type="text" id="addr_direct" name="addr_direct" value="" style="width:95%" />
-
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <%
-                  [
-                    ['div_addrbook_private', 'addr_private_candidates', Address::BOOK_PRIVATE],
-                    ['div_addrbook_common', 'addr_common_candidates', Address::BOOK_COMMON]
-                  ].each do |addrbook_param|
-                  %>
-
-                  <div id="<%= addrbook_param[0] %>" style="display:none; width:100%;" align="center">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
-                      <tr>
-                        <td align="center" style="padding:20px 0px;">
-
-                          <select id="<%= addrbook_param[1] %>" class="select_candidates" size="5" multiple style="width:95%">
-                          <%
-                          addrs_available = PseudoHash.new
-
-                          addresses = Address.get_for(login_user, addrbook_param[2])
-
-                          addresses.each do |address|
-                            address_id = address.id.to_s
-
-                            mail_addrs = address.get_emails
-                            next if mail_addrs.empty?
-
-                            addrs_available[address_id, true] = []
-
-                            mail_addrs.each do |mail_addr|
-                              screenname = address.screenname || address.name || ''
-                              if screenname.empty?
-                                disp = ''
-                              else
-                                disp = "#{screenname} "
-                              end
-                              disp << "<#{mail_addr}>"
-                              addrs_available[address_id] << disp
-                            end
-                          end
-
-                          addrs_available.each do |address_id, disp_ary|
-                            disp_ary.each do |disp|
-                          %>
-                            <option value="<%=h disp %>"><%=h disp %></option>
-                          <%
-                            end
-                          end
-                          %>
-                          </select>
-
-                        </td>
-                      </tr>
-                    </table>
-                  </div>
-
-                  <% end %>
-
-                </td>
-              </tr>
-            </table>
-
-          </td>
-        </tr>
-        <tr height="5"><td></td></tr>
-        <tr>
-          <td>
-            <table width="100%" cellspacing="0" cellpadding="0">
-              <tr>
-                <td align="center" nowrap>
-                  <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.to') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_TO %>', '<%= t('btn.to') %> ');" style="width:80px;" />
-                  <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.cc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_CC %>', '<%= t('btn.cc') %> ');" style="width:80px;" />
-                  <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.bcc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_BCC %>', '<%= t('btn.bcc') %> ');" style="width:80px;" />
-                  <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeAddress();" style="width:80px;" />
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr height="5"><td></td></tr>
-        <tr>
-          <td>
-            <select id="addresses_selected" name="addresses[]" class="select_multi" size="5" multiple="multiple" style="border:solid 3px blueviolet;">
+          <td align="center" nowrap>
+            <select id="addresses_selected" name="addresses[]" class="select_multi" size="5" multiple="multiple">
             <%
             unless @email.nil?
             %>
@@ -169,7 +44,7 @@
               unless @email.to_addresses.nil?
                 @email.to_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
               %>
-              <option value="<%= Email::ADDR_PREFIX_TO %><%=h addr %>"><%= t('btn.to') %> <%=h addr %></option>
+              <option value="<%= Email::ADDR_PREFIX_TO %><%= addr %>"><%= t('cap.to') %> <%= addr %></option>
               <%
                 end
               end
@@ -178,7 +53,7 @@
               unless @email.cc_addresses.nil?
                 @email.cc_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
               %>
-              <option value="<%= Email::ADDR_PREFIX_CC %><%=h addr %>"><%= t('btn.cc') %> <%=h addr %></option>
+              <option value="<%= Email::ADDR_PREFIX_CC %><%= addr %>"><%= t('cap.cc') %> <%= addr %></option>
               <%
                 end
               end
@@ -187,7 +62,7 @@
               unless @email.bcc_addresses.nil?
                 @email.bcc_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
               %>
-              <option value="<%= Email::ADDR_PREFIX_BCC %><%=h addr %>"><%= t('btn.bcc') %> <%=h addr %></option>
+              <option value="<%= Email::ADDR_PREFIX_BCC %><%= addr %>"><%= t('cap.bcc') %> <%= addr %></option>
               <%
                 end
               end
@@ -195,39 +70,151 @@
             <% end %>
             </select>
           </td>
+          <td width="30" align="center" style="vertical-align:middle; line-height:17px;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onShowPanelSendToClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeAddress()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropup.gif" title="<%= t('btn.upper') %>" onclick="onAddrUpperClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" title="<%= t('btn.lower') %>" onclick="onAddrLowerClicked()" style="cursor:pointer;" /><br/>
+          </td>
         </tr>
-        <tr height="10"><td></td></tr>
       </table>
 
     </td>
   </tr>
-  <tr height="30"><td></td></tr>
+  <tr height="10"><td></td></tr>
   <tr>
-    <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
-      <b><%= t('cap.mail_content') %></b>
+    <td style="text-align:center; font-weight:bold;">
+      <%= t('cap.subject') %>
+    </td>
+    <td align="left">
+      <%= text_field('email', 'subject', :size => '43', :style => 'width:80%;') %>
     </td>
   </tr>
-  <tr height="15"><td></td></tr>
+  <tr height="10"><td></td></tr>
   <tr>
-    <td align="center">
-      <table align="center" width="90%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="left">
-            <%= t('cap.subject') %>&nbsp;
-            <%= text_field('email', 'subject', :size => '43', :style => 'width:80%;') %>
-          </td>
-        </tr>
-        <tr height="20"><td></td></tr>
-        <tr>
-          <td align="left" valign="top" id="td_view">
-            <%= t('cap.mail_body') %><br/>
-            <%= text_area('email', 'message', :rows => '15', :style => 'width:100%;') %>
-          </td>
-        </tr>
-      </table>
+    <td valign="top" style="text-align:center; font-weight:bold;">
+      <%= t('cap.mail_body') %><br/>
+    </td>
+    <td align="left">
+      <%= text_area('email', 'message', :rows => '10', :style => 'width:95%;') %>
     </td>
   </tr>
 </table>
 
 <%= render(:partial => 'common/flash_notice') %>
 
+
+<script type="text/javascript">
+
+var thetisBoxSendTo = null;
+
+onShowPanelSendToClicked = function()
+{
+  if (thetisBoxSendTo != null) {
+    thetisBoxSendTo.remove();
+    thetisBoxSendTo = null;
+  }
+  thetisBoxSendTo = new ThetisBox;
+  thetisBoxSendTo.bgcolor_title = "#8DB7EB";
+  thetisBoxSendTo.bgcolor_body = "aliceblue";
+  thetisBoxSendTo.bgcolor_content = "aliceblue";
+  thetisBoxSendTo.border_content = "";
+
+  var addParams = new Array();
+<% unless @mail_account.nil? %>
+  addParams.push("mail_account_xtype=<%= @mail_account.xtype %>");
+<% end %>
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Request(
+        "<%= url_for(:controller => 'send_mails', :action => 'edit_send_to') %>",
+        {
+          method:"get",
+          asynchronous:true,
+          evalScripts:true,
+          parameters:addParams.join("&"),
+          onComplete:function(request){
+            thetisBoxProgress.remove();
+
+            thetisBoxSendTo.title = "<%= t('cap.send_to') %>";
+            if (thetisBoxMailForm) {
+              thetisBoxMailForm.addChildBox(thetisBoxSendTo);
+            }
+            thetisBoxSendTo.show(
+                      "TOP-LEFT",
+                      "550,+340",
+                      "TRAY",
+                      "",
+                      "",
+                      request.responseText.stripScripts()
+                    );
+            request.responseText.evalScripts();
+          }
+        }
+      );
+}
+
+_prepareMoveListItems = function(list)
+{
+  var selOptions = new Array();
+  var firstIdx = -1;
+
+  for (var i=0; i < list.options.length; i++) {
+
+    var option = list.options[i];
+
+    if (option.selected == true) {
+      selOptions.push(option);
+
+      if (firstIdx < 0) {
+        firstIdx = i;
+      }
+    }
+  }
+  deleteList(list);
+
+  return new Array(firstIdx, selOptions);
+}
+
+onAddrUpperClicked = function()
+{
+  var list = _z("addresses_selected");
+  var moveParams = _prepareMoveListItems(list);
+
+  var firstIdx = moveParams[0];
+  var selOptions = moveParams[1];
+
+  if (firstIdx < 0) {
+    return;
+  }
+
+  var insertIdx = firstIdx;
+  if (insertIdx > 0) {
+    insertIdx--;
+  }
+
+  for (var i=0; i < selOptions.length; i++) {
+    list.options.add(selOptions[i], insertIdx++);
+  }
+}
+
+onAddrLowerClicked = function()
+{
+  var list = _z("addresses_selected");
+  var moveParams = _prepareMoveListItems(list);
+
+  var firstIdx = moveParams[0];
+  var selOptions = moveParams[1];
+
+  if (firstIdx < 0) {
+    return;
+  }
+
+  var insertIdx = firstIdx + 1;
+
+  for (var i=0; i < selOptions.length; i++) {
+    list.options.add(selOptions[i], insertIdx++);
+  }
+}
+
+</script>

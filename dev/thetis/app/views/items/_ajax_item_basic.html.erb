@@ -7,7 +7,9 @@
   <tr height="15"><td></td></tr>
 <% unless @item.nil? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_xtype"><%= Item.human_attribute_name('xtype') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF">
+      <label for="item_xtype"><%= Item.human_attribute_name('xtype') %></label>
+    </td>
     <td class="item_value_td">
   <%
   case @item.xtype
@@ -15,9 +17,9 @@
   %>
       <%= t('item.profile_sheet') %>
   <% when Item::XTYPE_WORKFLOW %>
-      <%= Workflow.human_name %>
+      <%= Workflow.model_name.human %>
   <% when Item::XTYPE_RESEARCH %>
-      <%= Research.human_name %>
+      <%= Research.model_name.human %>
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
       <%= radio_button('item', 'xtype', Item::XTYPE_INFO, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
       <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
@@ -68,14 +70,18 @@ dispZeptCmdEdit = function(sw)
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_title"><%= Item.human_attribute_name('title') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF">
+      <label for="item_title"><%= Item.human_attribute_name('title') %></label>
+    </td>
     <td class="item_value_td">
       <%= text_field('item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++') %>
     </td>
   </tr>
 <% if !@item.nil? and @item.is_a_copy? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><%= t('cap.original') %></td>
+    <td class="item_cap_td" style="background-color:#97DCFF">
+      <%= t('cap.original') %>
+    </td>
     <td class="item_value_td">
     <%
     source_item = Item.find(@item.source_id)
@@ -93,7 +99,9 @@ dispZeptCmdEdit = function(sw)
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_folder_id"><%= Folder.human_name %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF">
+      <label for="item_folder_id"><%= Folder.model_name.human %></label>
+    </td>
     <td class="item_value_td">
 <% if !@item.nil? and Folder.get_path(@item.folder_id).include?('/$') %>
   ---
@@ -106,7 +114,7 @@ dispZeptCmdEdit = function(sw)
         <tr>
           <td align="left" nowrap width="20%">
             <span id="div_folderPath" style="color:red">
-              <%=h (@item.nil?)?'/(root)':@item.get_folder_path %>
+              <%= (@item.nil?)?'/(root)':@item.get_folder_path %>
               <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
             </span>
           </td>
@@ -128,7 +136,9 @@ dispZeptCmdEdit = function(sw)
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_summary"><%= Item.human_attribute_name('summary') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF;">
+      <label for="item_summary"><%= Item.human_attribute_name('summary') %></label>
+    </td>
     <td class="item_value_td">
       <%= text_area('item', 'summary', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++') %>
     </td>
@@ -150,7 +160,9 @@ dispZeptCmdEdit = function(sw)
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;"><label for="item_update_message"><%= t('item.update_message') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF;">
+      <label for="item_update_message"><%= t('item.update_message') %></label>
+    </td>
     <td class="item_value_td">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH or @item.xtype == Item::XTYPE_PROFILE)  %>
       ---
@@ -162,7 +174,9 @@ dispZeptCmdEdit = function(sw)
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF"><label for="item_layout"><%= Item.human_attribute_name('layout') %></label></td>
+    <td class="item_cap_td" style="background-color:#97DCFF">
+      <label for="item_layout"><%= Item.human_attribute_name('layout') %></label>
+    </td>
     <td class="item_value_td">
       <table cellspacing="0" cellpadding="0">
         <tr>
@@ -175,11 +189,11 @@ dispZeptCmdEdit = function(sw)
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
                       <td nowrap valign="top">
-                        <%= h truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
-                        <%= h truncate(Item.human_attribute_name('description'), :length => 8) %><br/>
+                        <%= truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
+                        <%= truncate(Item.human_attribute_name('description'), :length => 8) %><br/>
                       </td>
                       <td nowrap valign="top" width="30%">
-                        <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                        <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
                   </table>
@@ -187,7 +201,7 @@ dispZeptCmdEdit = function(sw)
               </tr>
               <tr>
                 <td align="center">
-                  <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                  <%= truncate(t('image.plural'), :length => 8) %><br/>
                 </td>
               </tr>
             </table>
@@ -201,18 +215,18 @@ dispZeptCmdEdit = function(sw)
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
                       <td nowrap valign="top">
-                         <%= h truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
+                         <%= truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
                       </td>
                       <td nowrap valign="top" width="30%">
-                         <%= h truncate(t('attachment.plural'), :length => 8) %><br/>
+                         <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
                     <tr>
                       <td nowrap valign="top">
-                         <%= h truncate(Item.human_attribute_name('description'), :length => 8) %><br/>&nbsp;
+                         <%= truncate(Item.human_attribute_name('description'), :length => 8) %><br/>&nbsp;
                       </td>
                       <td nowrap valign="top" width="30%">
-                         <%= h truncate(t('image.plural'), :length => 8) %><br/>
+                         <%= truncate(t('image.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
                   </table>
@@ -229,8 +243,8 @@ dispZeptCmdEdit = function(sw)
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
                       <td nowrap valign="top">
-                         &nbsp;&nbsp;<%= h truncate(Item.human_attribute_name('summary'), :length => 8) %>&nbsp;&nbsp;<br/>
-                         &nbsp;&nbsp;<%= h truncate(Item.human_attribute_name('description'), :length => 8) %>&nbsp;&nbsp;<br/>
+                         &nbsp;&nbsp;<%= truncate(Item.human_attribute_name('summary'), :length => 8) %>&nbsp;&nbsp;<br/>
+                         &nbsp;&nbsp;<%= truncate(Item.human_attribute_name('description'), :length => 8) %>&nbsp;&nbsp;<br/>
                       </td>
                     </tr>
                   </table>

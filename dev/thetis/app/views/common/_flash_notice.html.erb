@@ -3,11 +3,14 @@
 <script type="text/javascript">
 <%
 if flash[:notice].index('ERROR:')
-  msg = flash[:notice]['ERROR:'.length .. -1]
+  msg = flash[:notice]['ERROR:'.length .. -1].gsub("\n", '<br/>')
 %>
   setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);
-<% else  %>
-  setTimeout("try{ tips(\"<%= raw(flash[:notice]) %>\"); }catch(e){}", 100);
+<%
+else
+  msg = flash[:notice].gsub("\n", '<br/>')
+%>
+  setTimeout("try{ tips(\"<%= raw(msg) %>\"); }catch(e){}", 100);
 <% end  %>
 </script>
 

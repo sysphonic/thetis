@@ -8,100 +8,175 @@
 </form>
 
 <%= form_tag({:controller => 'send_mails', :action => 'add_attachment'}, :method => 'post', :name => 'form_sendmail_attach'+form_idx, :enctype => 'multipart/form-data') %>
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
-  <tr>
-    <td align="center">
-      <div id="div_sendmail_attach" width="100%" style="text-align:left;">
-        <%= render(:partial => 'ajax_mail_attachments', :object => @email) %>
-      </div>
-    </td>
-  </tr>
-  <tr height="30"><td></td></tr>
-</table>
+<div id="div_sendmail_attach" style="padding:10px 0px 20px;">
+  <%= render(:partial => 'ajax_mail_attachments', :object => @email) %>
+</div>
 </form>
 
 
 <script type="text/javascript">
 
-showAddressTab = function(name)
+_findInsertIdx = function(dst, valPrefix, val)
 {
-  var nameArray = new Array("direct", "addrbook_private", "addrbook_common");
+  var valOrder = parseInt(val.split("<%= Email::ADDR_ORDER_SEPARATOR %>")[1], 10);
+  var valPrefixRaw = valPrefix.replace("<%= Email::ADDR_PREFIX_SEPARATOR %>", "");
 
-  var tab = null;
-  for (i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.style.cursor = "pointer";
-      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
+  <%
+  order_prefixes = []
+  [Email::ADDR_PREFIX_TO, Email::ADDR_PREFIX_CC, Email::ADDR_PREFIX_BCC].each_with_index do |prefix, idx|
+    order_prefixes << "#{prefix.gsub(Email::ADDR_PREFIX_SEPARATOR, '')}: #{idx}"
+  end
+  %>
+  var orderPrefixes = {
+      <%= raw(order_prefixes.join(',')) %>
+  };
+
+  var insertIdx = dst.length;
+
+  for (var i=0; i < dst.options.length; i++) {
+    var dstOption = dst.options[i];
+
+    var dstOptParts = dstOption.value.split("<%= Email::ADDR_PREFIX_SEPARATOR %>");
+    var dstOptPrefix = dstOptParts[0];
+    var dstOptValue = dstOptParts[1];
+
+    var dstOptValParts = dstOptValue.split("<%= Email::ADDR_ORDER_SEPARATOR %>");
+    var dstOptValOrder = parseInt(dstOptValParts[1], 10);
+
+    if (orderPrefixes[valPrefixRaw] < orderPrefixes[dstOptPrefix]) {
+      insertIdx = i;
+      break;
+    } else if (orderPrefixes[valPrefixRaw] > orderPrefixes[dstOptPrefix]) {
+      ;
+    } else {
+      if (valOrder < dstOptValOrder) {
+        insertIdx = i;
+        break;
+      }
     }
   }
-  var target_tab = _z("tab_"+name);
-  target_tab.style.cursor = "default";
-  var bg = target_tab.bgColor;
-
-  for (i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.bgColor = "silver";
-    }
-  }
-
-  target_tab.bgColor = bg;
-
-  for (i=0; i<nameArray.length; i++) {
-    div = _z("div_"+nameArray[i]);
-    if (div != null) {
-      div.style.display = "none";
-    }
-  }
-
-  div = _z("div_"+name);
-  div.style.visibility = "visible";
-  div.style.display = "inline";
-
-  if (name == "direct") {
-    _z("addr_direct").focus();
-  }
+  return insertIdx;
 }
 
-showAddressTab("direct");
+moveListAddresses = function(src, dst, valPrefix, textPrefix)
+{
+  var ret_ary = new Array();
+  for (var i=0; i < src.length; i++) {
+    var option = src.options[i];
+    if (option.selected == true) {
+      var duplex = false;
+      for (var k=0; k < dst.length; k++) {
+        if (dst.options[k].value == valPrefix+option.value) {
+          dst.options[k].text = textPrefix+option.text;
+          duplex = true;
+          break;
+        }
+      }
+      if (!duplex) {
+        var insertIdx = _findInsertIdx(dst, valPrefix, option.value);
+        dst.options.add(new Option(textPrefix+option.text, valPrefix+option.value), insertIdx);
+        ret_ary[ret_ary.length] = valPrefix+option.value;
+      }
+      src.options[i] = null;
+      i--;
+    }
+  }
+  src.selectedIndex = -1;
+  return ret_ary;
+}
 
 
 addAddress = function(valPrefix, textPrefix)
 {
-  if (_z("div_direct").style.display != "none") {
+  var tab_div_direct = _z("tab_div_direct");
+  var tab_div_addrbook = _z("tab_div_addrbook");
+  var tab_div_users = _z("tab_div_users");
+
+  if (tab_div_direct && tab_div_direct.style.display != "none") {
 
     var dst = _z("addresses_selected");
-    var addr_direct = _z("addr_direct").value;
+    var addr_direct = _z("addr_direct");
+    var direct_val = trim(addr_direct.value, true);
+
+    if (direct_val == "") {
+      return;
+    }
+    if (!checkMailAddrExp(direct_val)) {
+      msg("<%= t('activerecord.errors.messages.invalid', :attribute => t('email.address')) %>");
+      return;
+    }
 
     var duplex = false;
-    for (var k=0; k<dst.length; k++) {
-      if (dst.options[k].value == valPrefix+addr_direct) {
-        dst.options[k].text = textPrefix+addr_direct;
+    for (var k=0; k < dst.length; k++) {
+      if (dst.options[k].value == valPrefix+direct_val) {
+        dst.options[k].text = textPrefix+direct_val;
         duplex = true;
         break;
       }
     }
     if (!duplex) {
-      dst.options[dst.length++] = new Option(textPrefix+addr_direct, valPrefix+addr_direct);
+      dst.options[dst.length++] = new Option(textPrefix+direct_val, valPrefix+direct_val);
     }
-    _z("addr_direct").value = "";
+    addr_direct.value = "";
 
-  } else if (_z("div_addrbook_private").style.display != "none") {
-    moveListWithPrefix(_z("addr_private_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
+  } else if (tab_div_addrbook && tab_div_addrbook.style.display != "none") {
 
-  } else if (_z("div_addrbook_common").style.display != "none") {
-    moveListWithPrefix(_z("addr_common_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
+    if (_z("addr_private_candidates").style.display != "none") {
+      moveListAddresses(_z("addr_private_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
+    } else {
+      moveListAddresses(_z("addr_common_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
+    }
+
+  } else if (tab_div_users && tab_div_users.style.display != "none") {
+
+    moveListAddresses(_z("user_candidates"), _z("addresses_selected"), valPrefix, textPrefix)
   }
+}
+
+trimAddressPrefix = function(val)
+{
+  return val.replace(/^[a-zA-Z]+[<%= Email::ADDR_PREFIX_SEPARATOR %>]/, "")
+}
+
+trimAddressOrder = function(val)
+{
+  return val.replace(/[<%= Email::ADDR_ORDER_SEPARATOR %>][0-9]+$/, "")
 }
 
 removeAddress = function()
 {
-  if (_z("div_addrbook_common").style.display != "none") {
-    moveListTrimPrefix(_z("addresses_selected"), _z("addr_common_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+  var list = _z("addresses_selected");
+
+  var tab_div_direct = _z("tab_div_direct");
+  var tab_div_addrbook = _z("tab_div_addrbook");
+  var tab_div_users = _z("tab_div_users");
+  var tab_div_students = _z("tab_div_students");
+
+  if (tab_div_direct && tab_div_direct.style.display != "none") {
+    var addr_direct = _z("addr_direct");
+    var selOptions = getListSelected(list);
+    if (addr_direct.value == "" && selOptions.length > 0) {
+      addr_direct.value = selOptions[0];
+      addr_direct.value = trimAddressPrefix(addr_direct.value);
+      addr_direct.value = trimAddressOrder(addr_direct.value);
+    }
+    deleteList(list);
+
+  } else if (tab_div_addrbook && tab_div_addrbook.style.display != "none") {
+
+    if (_z("addr_private_candidates").style.display != "none") {
+      moveListTrimPrefix(list, _z("addr_private_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+    } else {
+      moveListTrimPrefix(list, _z("addr_common_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+    }
+
+  } else if (tab_div_users && tab_div_users.style.display != "none") {
+    moveListTrimPrefix(list, _z("user_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+
+  } else if (tab_div_students && tab_div_students.style.display != "none") {
+    moveListTrimPrefix(list, _z("student_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
   } else {
-    moveListTrimPrefix(_z("addresses_selected"), _z("addr_private_candidates"), "<%= Email::ADDR_PREFIX_SEPARATOR %>", ": ");
+    deleteList(list);
   }
 }
 
@@ -141,7 +216,13 @@ doSave = function(do_smtp)
   // Basic
   saveFuncs.push(
         function() {
-          selectListAll(_z("addresses_selected"));
+          // Trim order suffix
+          var addresList = _z("addresses_selected");
+          for (var i=0; i < addresList.options.length; i++) {
+            var opt = addresList.options[i];
+            opt.value = trimAddressOrder(opt.value);
+          }
+          selectListAll(addresList);
 
           var frm = document.form_send_mail<%= form_idx %>;
           var target_id = "div_sendmail_content";
@@ -150,6 +231,8 @@ doSave = function(do_smtp)
                     target_id,
                     frm.action + "?id="+_z("email_id").value,
                     {
+                      method:"post",
+                      parameters:Form.serialize(frm),
                       asynchronous:true,
                       evalScripts:true,
                       onComplete:function(request){
@@ -158,9 +241,7 @@ doSave = function(do_smtp)
                                     } else {
                                       setTimeout("onSaveComplete('basic')", 10);
                                     }
-                                    showAddressTab("direct");
-                                  },
-                      parameters:Form.serialize(frm)
+                                  }
                     }
                   );
         }
@@ -190,13 +271,14 @@ doSave = function(do_smtp)
             new Ajax.Request(
                         "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_z("email_id").value,
                         {
+                          method:"post",
+                          parameters:"authenticity_token=<%= form_authenticity_token %>",
                           asynchronous:true,
                           evalScripts:true,
                           onComplete:function(request){
                             request.responseText.evalScripts();
                             onSaveComplete("send")
-                          },
-                          parameters:"authenticity_token=<%= form_authenticity_token %>"
+                          }
                         }
                       );
           }
@@ -245,6 +327,11 @@ attachFile = function()
   thetisBoxAttachFile = new ThetisBox;
   thetisBoxAttachFile.title = "<%= t('item.attach_file') %>";
   thetisBoxAttachFile.overflow = "hide";
+
+  if (thetisBoxMailForm) {
+    thetisBoxMailForm.addChildBox(thetisBoxAttachFile);
+  }
+
   thetisBoxAttachFile.show("CENTER", "400,200", "TRAY", "", "", content);
 }
 
@@ -254,9 +341,15 @@ onFileSelectOK = function()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = new Array();
+  addParams.push("id="+_z("email_id").value);
+<% unless @mail_account.nil? %>
+  addParams.push("mail_account_id=<%= @mail_account.id %>");
+<% end %>
+
   ajaxUploadFile(
           document.form_file,
-          "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?id="+_z("email_id").value,
+          "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?"+addParams.join("&"),
           "div_sendmail_attach",
           function(){
             thetisBoxProgress.remove();
@@ -295,6 +388,7 @@ _doDeleteAttachment = function(div_id, attach_id)
         "div_sendmail_attach",
         "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment', :id => (@email)?(@email.id):nil) %>",
         {
+          method:"post",
           parameters:"attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
           evalScripts:true,

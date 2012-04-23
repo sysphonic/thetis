@@ -8,8 +8,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 <%= form_tag({:controller => 'addressbook', :action => 'update', :id => @address.id}, :method => 'post', :name => 'form_address'+form_idx) %>
 <% end %>
 
-<table width="90%" align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table width="90%" align="center" cellspacing="0" cellpadding="0" style="padding:5px;">
   <tr>
     <td valign="top">
       <%= render(:partial => 'address_form') %>
@@ -19,28 +18,33 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 </form>
 
-<table align="center" width="80%" cellspacing="0" cellpadding="0">
+<table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
   <tr>
-    <td align="center">
-      <table cellspacing="0" cellpadding="0">
-        <tr>
-          <td class="img_button_td" onclick="doRegister();">
-          <% if (@address.nil? or @address.id == 0) %>
-            <%= t('btn.register')%>
-          <% else %>
-            <%= t('btn.update')%>
-          <% end %>
-          </td>
-        </tr>
-      </table>
+    <td class="img_button_td" onclick="doRegister();">
+    <% if (@address.nil? or @address.id == 0) %>
+      <%= t('btn.register')%>
+    <% else %>
+      <%= t('btn.update')%>
+    <% end %>
     </td>
   </tr>
-  <tr height="40"><td></td></tr>
 </table>
 
 <script type="text/javascript">
 doRegister = function()
 {
+  var address_name = _z("address_name");
+  if (address_name.value == "") {
+    var thetisBox = msg("<%= t('addressbook.specify_name') %>");
+    thetisBox.setOnClose(
+        function() {
+          showTab("basic", tabs);
+          _z("address_name").focus();
+        }
+      );
+    return false;
+  }
+
   if (_z("scope_common")) {
     if (_z("scope_common").checked) {
       selectListAll(_z("groups_selected"));
@@ -53,5 +57,6 @@ doRegister = function()
 
   prog("TOP-RIGHT");
   document.form_address<%= form_idx %>.submit();
+  return true;
 }
 </script>

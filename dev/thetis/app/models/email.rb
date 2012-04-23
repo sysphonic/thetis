@@ -30,6 +30,8 @@ class Email < ActiveRecord::Base
 
   public::ADDRESS_SEPARATOR = "\n"
 
+  public::ADDR_ORDER_SEPARATOR = '#'
+
   public::ADDR_PREFIX_SEPARATOR = ':'
   public::ADDR_PREFIX_TO = 'To'+ADDR_PREFIX_SEPARATOR
   public::ADDR_PREFIX_CC = 'Cc'+ADDR_PREFIX_SEPARATOR
@@ -37,6 +39,28 @@ class Email < ActiveRecord::Base
 
   public::EXT_RAW = '.eml'
 
+
+  before_save do |email|
+    email.recalc_size
+  end
+
+  #=== recalc_size
+  #
+  #Recalcurates E-mail size.
+  #
+  def recalc_size
+    if @mail.nil? or @mail.raw_source.nil?
+      new_size = self.get_raw.length
+      if new_size == 0
+        new_size += self.subject.length unless self.subject.nil?
+        new_size += self.message.length unless self.message.nil?
+        new_size += self.get_attach_size
+      end
+      self.size = new_size
+    else
+      self.size = @mail.raw_source.length
+    end
+  end
 
   #=== do_smtp
   #
@@ -206,12 +230,9 @@ EOT
       email = Email.parse_mail(Mail.new(svr_mail.pop))
       email.user_id = mail_account.user_id
       email.mail_account_id = mail_account.id
-      con = ['user_id=? and xtype=?']
-      con << email.user_id
-      con << MailFolder::XTYPE_INBOX
-      inbox = MailFolder.find(:all, :conditions => con)
+      inbox = MailFolder.get_for(mail_account.user_id, mail_account.id, MailFolder::XTYPE_INBOX)
       unless inbox.nil?
-        email.mail_folder_id = inbox
+        email.mail_folder_id = inbox.id
       end
       email.uid = svr_mail.unique_id
       email.status = Email::STATUS_UNREAD
@@ -233,7 +254,7 @@ EOT
     mail_account.update_attribute(:uidl, new_uidl.join(MailAccount::UIDL_SEPARATOR))
 
     if THETIS_MAIL_LIMIT_NUM_PER_USER > 0
-      Email.trim(mail_account.user_id, THETIS_MAIL_LIMIT_NUM_PER_USER)
+      Email.trim(mail_account.user_id, mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_USER)
     end
 
     return cnt
@@ -269,7 +290,9 @@ EOT
 
     unless mail.from.nil?
       begin
-        self.from_address = mail[:from].to_s
+        addrs = mail[:from].to_s
+        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        self.from_address = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.from_address = mail.from.join(Email::ADDRESS_SEPARATOR)
       end
@@ -277,7 +300,9 @@ EOT
 
     unless mail.to.nil?
       begin
-        self.to_addresses = mail[:to].to_s
+        addrs = mail[:to].to_s
+        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        self.to_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.to_addresses = mail.to.join(Email::ADDRESS_SEPARATOR)
       end
@@ -285,7 +310,9 @@ EOT
 
     unless mail.cc.nil?
       begin
-        self.cc_addresses = mail[:cc].to_s
+        addrs = mail[:cc].to_s
+        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        self.cc_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.cc_addresses = mail.cc.join(Email::ADDRESS_SEPARATOR)
       end
@@ -293,7 +320,9 @@ EOT
 
     unless mail.bcc.nil?
       begin
-        self.bcc_addresses = mail[:bcc].to_s
+        addrs = mail[:bcc].to_s
+        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        self.bcc_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.bcc_addresses = mail.bcc.join(Email::ADDRESS_SEPARATOR)
       end
@@ -301,7 +330,9 @@ EOT
 
     unless mail.reply_to.nil?
       begin
-        self.reply_to = mail[:reply_to].to_s
+        addrs = mail[:reply_to].to_s
+        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        self.reply_to = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.reply_to = mail.reply_to.join(Email::ADDRESS_SEPARATOR)
       end
@@ -322,7 +353,7 @@ EOT
 
     message = message_part.body.decoded
     unless charset.nil? or charset.empty?
-      message = Iconv.conv('utf-8', charset, message)
+      message = Iconv.conv('utf-8//IGNORE', charset, message)
     end
 
     self.message = message
@@ -438,18 +469,19 @@ EOT
   #Trims records within specified number.
   #
   #_user_id_:: Target User-ID.
+  #_mail_account_id_:: Target MailAccount-ID.
   #_max_:: Max number.
   #
-  def self.trim(user_id, max)
+  def self.trim(user_id, mail_account_id, max)
     begin
-      count = Email.count(:id, :conditions => ['user_id = ?', user_id])
+      count = Email.count(:id, :conditions => "mail_account_id=#{mail_account_id}")
       if count > max
         over_num = count - max
         emails = []
 
         # First, empty Trashbox
         user = User.find(user_id)
-        trashbox = MailFolder.get_for(user, MailFolder::XTYPE_TRASH)
+        trashbox = MailFolder.get_for(user, mail_account_id, MailFolder::XTYPE_TRASH)
         trash_nodes = [trashbox.id.to_s]
         trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
         con = "mail_folder_id in (#{trash_nodes.join(',')})"
@@ -458,7 +490,7 @@ EOT
         # Now, remove others
         if emails.length < over_num
           over_num -= emails.length
-          emails += Email.find(:all, {:conditions => ['user_id=?', user_id], :limit => over_num, :order => 'updated_at ASC'})
+          emails += Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :limit => over_num, :order => 'updated_at ASC'})
         end
 
         emails.each do |email|
@@ -507,7 +539,7 @@ EOT
     if self.sent_at.nil?
       return '---'
     else
-      return self.sent_at.strftime('%Y-%m-%d %H:%M')
+      return self.sent_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
     end
   end
 

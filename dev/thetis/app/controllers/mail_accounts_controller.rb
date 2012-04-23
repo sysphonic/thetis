@@ -124,7 +124,10 @@ class MailAccountsController < ApplicationController
       if request.xhr?
         render(:partial => 'common/flash_notice', :layout => false)
       else
-        redirect_to(:controller => 'mail_accounts', :action => 'list')
+        prms = ApplicationHelper.get_fwd_params(params)
+        prms[:controller] = 'mail_accounts'
+        prms[:action] = 'list'
+        redirect_to(prms)
       end
     else
       if request.xhr?

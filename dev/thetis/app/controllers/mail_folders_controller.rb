@@ -23,16 +23,35 @@ class MailFoldersController < ApplicationController
   #Shows MailFolder tree.
   #
   def show_tree
-    Log.add_info(request, params.inspect)
-    login_user = session[:login_user]
-
-    if MailFolder.count(:id, :conditions => ['user_id = ?', login_user.id]) <= 0
-      login_user.create_default_mail_folders
+    if params[:action] == 'show_tree'
+      Log.add_info(request, params.inspect)
     end
 
-    Email.destroy_by_user(login_user.id, "status='#{Email::STATUS_TEMPORARY}'")
+    login_user = session[:login_user]
 
-    @folder_tree = MailFolder.get_tree_for(login_user)
+    con = []
+    con << "(user_id=#{login_user.id})"
+
+    account_xtype = params[:mail_account_xtype]
+
+    unless account_xtype.nil? or account_xtype.empty?
+      con << "(xtype='#{account_xtype}')"
+    end
+    @mail_accounts = MailAccount.find_all(con.join(' and '))
+
+    mail_account_ids = []
+    @mail_accounts.each do |mail_account|
+
+      mail_account_ids << mail_account.id
+
+      if MailFolder.count(:id, :conditions => "mail_account_id=#{mail_account.id}") <= 0
+        login_user.create_default_mail_folders(mail_account.id)
+      end
+
+      Email.destroy_by_user(login_user.id, "status='#{Email::STATUS_TEMPORARY}'")
+    end
+
+    @folder_tree = MailFolder.get_tree_for(login_user, mail_account_ids)
   end
 
   #=== ajax_get_tree
@@ -45,7 +64,7 @@ class MailFoldersController < ApplicationController
 
     login_user = session[:login_user]
 
-    @folder_tree = MailFolder.get_tree_for(login_user)
+    show_tree
 
     render(:partial => 'ajax_get_tree', :layout => false)
   end
@@ -102,17 +121,24 @@ class MailFoldersController < ApplicationController
 
     login_user = session[:login_user]
 
-    mail_folder = MailFolder.find(params[:id])
-    trash_folder = MailFolder.get_for(login_user, MailFolder::XTYPE_TRASH)
+    mail_account_id = params[:mail_account_id]
 
-    if mail_folder.get_parents(false).include?(trash_folder.id.to_s)
+    mail_folder = MailFolder.find(params[:id])
+    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
+
+    if trash_folder.nil?
       mail_folder.force_destroy
       render(:text => '')
     else
-      mail_folder.update_attribute(:parent_id, trash_folder.id)
-      flash[:notice] = t('msg.moved_to_trash')
-      @redirect_url = ApplicationHelper.url_for(:controller => params[:controller], :action => 'show_tree')
-      render(:partial => 'common/redirect_to', :layout => false)
+      if mail_folder.get_parents(false).include?(trash_folder.id.to_s)
+        mail_folder.force_destroy
+        render(:text => '')
+      else
+        mail_folder.update_attribute(:parent_id, trash_folder.id)
+        flash[:notice] = t('msg.moved_to_trash')
+        @redirect_url = ApplicationHelper.url_for(:controller => params[:controller], :action => 'show_tree')
+        render(:partial => 'common/redirect_to', :layout => false)
+      end
     end
   end
 
@@ -128,25 +154,36 @@ class MailFoldersController < ApplicationController
     @mail_folder = MailFolder.find(params[:id])
 
     if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
-      redirect_to(:action => 'show_tree')
+      prms = ApplicationHelper.get_fwd_params(params)
+      prms[:action] = 'show_tree'
+      redirect_to(prms)
       return
     end
 
     parent_id = params[:thetisBoxSelKeeper].split(':').last
 
-    check = true
+    if parent_id == '0'   # '0' for ROOT
+      flash[:notice] = 'ERROR:' + t('mail_folder.root_cannot_have_folders')
+    else
+      # Check if specified parent is not one of subfolders.
+      childs = MailFolder.get_childs(@mail_folder.id, true, false)
+      if childs.include?(parent_id) or @mail_folder.id.to_s == parent_id
+        flash[:notice] = 'ERROR:' + t('folder.cannot_be_parent')
+        prms = ApplicationHelper.get_fwd_params(params)
+        prms[:action] = 'show_tree'
+        redirect_to(prms)
+        return
+      end
 
-    # Check if specified parent is not one of subfolders.
-    childs = MailFolder.get_childs(@mail_folder.id, true, false)
-    if childs.include?(parent_id) or @mail_folder.id.to_s == parent_id
-      flash[:notice] = 'ERROR:' + t('folder.cannot_be_parent')
-      redirect_to(:action => 'show_tree')
-      return
+      @mail_folder.parent_id = parent_id
+      @mail_folder.save
+
+      flash[:notice] = t('msg.move_success')
     end
 
-    @mail_folder.parent_id = parent_id
-    @mail_folder.save
-    redirect_to(:action => 'show_tree')
+    prms = ApplicationHelper.get_fwd_params(params)
+    prms[:action] = 'show_tree'
+    redirect_to(prms)
   end
 
   #=== get_mails
@@ -161,10 +198,18 @@ class MailFoldersController < ApplicationController
 
     if !params[:pop].nil? and params[:pop] == 'true'
       new_arrivals = 0
-      mail_accounts = MailAccount.find_all("user_id=#{login_user.id}") || []
-      mail_accounts.each do |mail_account|
+
+      mail_account_id = params[:mail_account_id]
+      if mail_account_id.nil? or mail_account_id.empty?
+        mail_accounts = MailAccount.find_all("user_id=#{login_user.id}")
+        mail_accounts.each do |mail_account|
+          new_arrivals += Email.do_pop(mail_account)
+        end
+      else
+        mail_account = MailAccount.find(mail_account_id)
         new_arrivals += Email.do_pop(mail_account)
       end
+
       if new_arrivals > 0
         flash[:notice] = t('mail.received', :count => new_arrivals)
       end
@@ -277,14 +322,18 @@ class MailFoldersController < ApplicationController
 
     if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
       flash[:notice] = 'ERROR:' + t('msg.system_error')
-      redirect_to(:action => 'show_tree')
+      prms = ApplicationHelper.get_fwd_params(params)
+      prms[:action] = 'show_tree'
+      redirect_to(prms)
       return
     end
 
     parent_id = params[:thetisBoxSelKeeper].split(':').last
     if parent_id == '0' or MailFolder.find(parent_id).user_id != login_user.id
       flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
-      redirect_to(:action => 'show_tree')
+      prms = ApplicationHelper.get_fwd_params(params)
+      prms[:action] = 'show_tree'
+      redirect_to(prms)
       return
     end
 
@@ -294,7 +343,10 @@ class MailFoldersController < ApplicationController
     session[:mailfolder_id] = parent_id
 
     flash[:notice] = t('msg.move_success')
-    redirect_to(:action => 'show_tree')
+
+    prms = ApplicationHelper.get_fwd_params(params)
+    prms[:action] = 'show_tree'
+    redirect_to(prms)
   end
 
   #=== get_mail_raw
@@ -332,7 +384,9 @@ class MailFoldersController < ApplicationController
 
     login_user = session[:login_user]
 
-    trash_folder = MailFolder.get_for(login_user, MailFolder::XTYPE_TRASH)
+    mail_account_id = params[:mail_account_id]
+
+    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     email = Email.find(params[:id])
     if email.mail_folder_id == trash_folder.id \
@@ -360,7 +414,9 @@ class MailFoldersController < ApplicationController
 
     login_user = session[:login_user]
 
-    trash_folder = MailFolder.get_for(login_user, MailFolder::XTYPE_TRASH)
+    mail_account_id = params[:mail_account_id]
+
+    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     mail_folder = MailFolder.find(params[:id])
     emails = MailFolder.get_mails(mail_folder.id, login_user) || []

@@ -14,6 +14,7 @@
 #* 
 #
 class User < ActiveRecord::Base
+  has_many(:user_titles, :dependent => :destroy)
   has_one :paintmail, :dependent => :destroy
 
   require 'csv'
@@ -51,6 +52,105 @@ class User < ActiveRecord::Base
   public::ZEPTID_PLACE_HOLDER = '#'
 
 
+  #=== get_emails_by_type
+  #
+  #Gets email addresses of the specified email type.
+  #
+  #_email_type_:: Target type of email.
+  #return:: Array of email addresses of the specified email type.
+  #
+  def get_emails_by_type(email_type=nil)
+
+    if email_type.nil?
+      return [self.email]
+    else
+      ret = []
+      [
+        [self.email_sub1, self.email_sub1_type],
+        [self.email_sub2, self.email_sub2_type]
+      ].each do |sub_entry|
+        sub_addr, sub_type = sub_entry
+        if sub_type == email_type
+          unless sub_addr.nil? or sub_addr.empty?
+            ret << sub_addr
+          end
+        end
+      end
+      return ret
+    end
+  end
+
+  #=== self.get_email_type_name
+  #
+  #Gets String which represents specified email type.
+  #
+  #_email_type_:: Target type of email.
+  #return:: String which represents specified email type.
+  #
+  def self.get_email_type_name(email_type)
+
+    return '' if email_type.nil? or email_type.empty?
+
+    return I18n.t('email.type.' + email_type.to_s)
+  end
+
+  #=== get_xorder
+  #
+  #Gets order of the User.
+  #
+  #_group_id_:: Target Group-ID.
+  #return:: Order of the User.
+  #
+  def get_xorder(group_id=nil)
+
+    prime_official_title = self.get_prime_official_title(group_id)
+    if prime_official_title.nil?
+      return OfficialTitle::XORDER_MAX
+    else
+      return prime_official_title.xorder
+    end
+  end
+
+  #=== get_prime_official_title
+  #
+  #Gets prime OfficialTitle of the User.
+  #
+  #_group_id_:: Target Group-ID.
+  #return:: Prime OfficialTitle of the User.
+  #
+  def get_prime_official_title(group_id=nil)
+
+    if group_id.nil?
+      group_ids = nil
+    else
+      group_ids = ['0']
+
+      if group_id.to_s != '0'
+        group_obj_cache = {}
+        group = Group.find_with_cache(group_id, group_obj_cache)
+        unless group.nil?
+          group_ids |= group.get_parents(false, group_obj_cache)
+          group_ids << group.id.to_s
+        end
+      end
+    end
+
+    ret = nil
+
+    self.user_titles.each do |user_title|
+      official_title = OfficialTitle.find(user_title.official_title_id)
+      next if official_title.nil?
+
+      if group_ids.nil? or group_ids.include?(official_title.group_id.to_s)
+        if ret.nil? or ret.xorder > official_title.xorder
+          ret = official_title
+        end
+      end
+    end
+
+    return ret
+  end
+
   #=== get_figure
   #
   #Gets User's figure.
@@ -75,10 +175,11 @@ class User < ActiveRecord::Base
     return !(self.zeptair_id.nil? or self.zeptair_id.empty?)
   end
 
-  #=== self.get_config_titles
+  #=== self.get_tel_type_name
   #
   #Gets String which represents specified telephone type.
   #
+  #_tel_type_:: Target type of telephone.
   #return:: String which represents specified telephone type.
   #
   def self.get_tel_type_name(tel_type)
@@ -125,22 +226,22 @@ class User < ActiveRecord::Base
   def self.get_auth_names
     auth_names = {
       AUTH_ALL => I18n.t('user.auth_all'),
-      AUTH_DESKTOP => Desktop.human_name,
-      AUTH_ITEM => Item.human_name,
-      AUTH_FOLDER => Folder.human_name,
-      AUTH_USER => User.human_name,
-      AUTH_GROUP => Group.human_name,
-      AUTH_TEAM => Team.human_name,
-      AUTH_SCHEDULE => Schedule.human_name,
-      AUTH_EQUIPMENT => Equipment.human_name,
-      AUTH_LOG => Log.human_name,
-      AUTH_RESEARCH => Research.human_name,
+      AUTH_DESKTOP => Desktop.model_name.human,
+      AUTH_ITEM => Item.model_name.human,
+      AUTH_FOLDER => Folder.model_name.human,
+      AUTH_USER => User.model_name.human,
+      AUTH_GROUP => Group.model_name.human,
+      AUTH_TEAM => Team.model_name.human,
+      AUTH_SCHEDULE => Schedule.model_name.human,
+      AUTH_EQUIPMENT => Equipment.model_name.human,
+      AUTH_LOG => Log.model_name.human,
+      AUTH_RESEARCH => Research.model_name.human,
       AUTH_TEMPLATE => I18n.t('template.name'),
-      AUTH_TIMECARD => Timecard.human_name,
-      AUTH_MAIL => Email.human_name,
+      AUTH_TIMECARD => Timecard.model_name.human,
+      AUTH_MAIL => Email.model_name.human,
       AUTH_ADDRESSBOOK => I18n.t('address.book'),
       AUTH_ZEPTAIR => I18n.t('zeptair.vpn'),
-      AUTH_LOCATION => Location.human_name,
+      AUTH_LOCATION => Location.model_name.human,
     }
 
     return auth_names
@@ -672,13 +773,24 @@ class User < ActiveRecord::Base
   #
   #Creates default MailFolders for User.
   #
+  #_mail_account_id_:: Target MailAccount-ID.
   #return:: true if succeeded, false otherwise.
   #
-  def create_default_mail_folders
+  def create_default_mail_folders(mail_account_id)
+
+    folder_account_root = MailFolder.new
+    folder_account_root.name = ''
+    folder_account_root.mail_account_id = mail_account_id
+    folder_account_root.parent_id = 0
+    folder_account_root.user_id = self.id
+    folder_account_root.xtype = MailFolder::XTYPE_ACCOUNT_ROOT
+    folder_account_root.created_at = Time.now
+    folder_account_root.save!
 
     folder_inbox = MailFolder.new
     folder_inbox.name = I18n.t('mail.inbox')
-    folder_inbox.parent_id = 0
+    folder_inbox.mail_account_id = mail_account_id
+    folder_inbox.parent_id = folder_account_root.id
     folder_inbox.user_id = self.id
     folder_inbox.xtype = MailFolder::XTYPE_INBOX
     folder_inbox.created_at = Time.now
@@ -686,7 +798,8 @@ class User < ActiveRecord::Base
 
     folder_drafts = MailFolder.new
     folder_drafts.name = I18n.t('mail.drafts')
-    folder_drafts.parent_id = 0
+    folder_drafts.mail_account_id = mail_account_id
+    folder_drafts.parent_id = folder_account_root.id
     folder_drafts.user_id = self.id
     folder_drafts.xtype = MailFolder::XTYPE_DRAFTS
     folder_drafts.created_at = Time.now
@@ -694,7 +807,8 @@ class User < ActiveRecord::Base
 
     folder_sent = MailFolder.new
     folder_sent.name = I18n.t('mail.sent')
-    folder_sent.parent_id = 0
+    folder_sent.mail_account_id = mail_account_id
+    folder_sent.parent_id = folder_account_root.id
     folder_sent.user_id = self.id
     folder_sent.xtype = MailFolder::XTYPE_SENT
     folder_sent.created_at = Time.now
@@ -702,7 +816,8 @@ class User < ActiveRecord::Base
 
     folder_trash = MailFolder.new
     folder_trash.name = I18n.t('mail.trash')
-    folder_trash.parent_id = 0
+    folder_trash.mail_account_id = mail_account_id
+    folder_trash.parent_id = folder_account_root.id
     folder_trash.user_id = self.id
     folder_trash.xtype = MailFolder::XTYPE_TRASH
     folder_trash.created_at = Time.now

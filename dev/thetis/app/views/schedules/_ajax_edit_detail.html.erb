@@ -13,6 +13,9 @@
 <%
 else
   is_repeat = @schedule.repeat?
+
+  date_s = @date.strftime(Schedule::SYS_DATE_FORM)
+  disp_date_s = @date.strftime(THETIS_DATE_FORMAT_YMD)
 %>
 
   <div class="info_area" style="width:90%; padding:20px 0px;" align="center">
@@ -41,14 +44,14 @@ else
           <div id="div_once" style="display:<%= (is_repeat)?'none':'block' %>">
             <%
             if is_repeat
-              start_val = @date.strftime(Schedule::SYS_DATE_FORM)
-              end_val = @date.strftime(Schedule::SYS_DATE_FORM)
+              start_val = disp_date_s
+              end_val = disp_date_s
             elsif @schedule.allday
-              start_val = @schedule.start.utc.strftime(Schedule::SYS_DATE_FORM)
-              end_val = @schedule.end.utc.strftime(Schedule::SYS_DATE_FORM)
+              start_val = @schedule.start.utc.strftime(THETIS_DATE_FORMAT_YMD)
+              end_val = @schedule.end.utc.strftime(THETIS_DATE_FORMAT_YMD)
             else
-              start_val = @schedule.start.strftime(Schedule::SYS_DATE_FORM)
-              end_val = @schedule.end.strftime(Schedule::SYS_DATE_FORM)
+              start_val = @schedule.start.strftime(THETIS_DATE_FORMAT_YMD)
+              end_val = @schedule.end.strftime(THETIS_DATE_FORMAT_YMD)
             end
             %>
             <input id="start_date" name="start_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= start_val %>" onClick="showCalStart();" />
@@ -234,13 +237,13 @@ else
             </table>
 
             <%= t('schedule.cap_term') %><br/>
-            <input type="text" id="schedule_repeat_start" name="schedule[repeat_start]" readonly value="<%= @schedule.repeat_start.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_start.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermStart();" />
+            <input type="text" id="schedule_repeat_start" name="schedule[repeat_start]" readonly value="<%= @schedule.repeat_start.strftime(THETIS_DATE_FORMAT_YMD) unless @schedule.repeat_start.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermStart();" />
             <span id="div_cal_repStart"></span>
             <img class="img_btn" onclick="_z('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
             &nbsp;<span style="color:firebrick">-</span>&nbsp;
 
-            <input type="text" id="schedule_repeat_end" name="schedule[repeat_end]" readonly value="<%= @schedule.repeat_end.strftime(Schedule::SYS_DATE_FORM) unless @schedule.repeat_end.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermEnd();" />
+            <input type="text" id="schedule_repeat_end" name="schedule[repeat_end]" readonly value="<%= @schedule.repeat_end.strftime(THETIS_DATE_FORMAT_YMD) unless @schedule.repeat_end.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermEnd();" />
             <span id="div_cal_repEnd"></span>
             <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
@@ -517,7 +520,7 @@ editItems = function()
         <td class="item_value_td">
           <div id="update_target">
             <input type="radio" id="repeat_update_target_all" name="repeat_update_target" value="all" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=true; is_repeat.disabled=false; forceRepeat(true);" /><label for="repeat_update_target_all"><%= t('schedule.all_repeated') %></label>
-            <input type="radio" id="repeat_update_target_each" name="repeat_update_target" value="each" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=false; is_repeat.disabled=true; forceRepeat(false); " /><label for="repeat_update_target_each"><%=h @date.strftime(Schedule::SYS_DATE_FORM)+t('msg.only') %></label>
+            <input type="radio" id="repeat_update_target_each" name="repeat_update_target" value="each" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=false; is_repeat.disabled=true; forceRepeat(false); " /><label for="repeat_update_target_each"><%= disp_date_s+t('msg.only') %></label>
           </div>
           <div id="update_target_hide" style="text-indent:20px; display:none;">---</div>
         </td>
@@ -529,7 +532,7 @@ editItems = function()
 
   <table align="center" cellspacing="0" cellpadding="0">
     <tr height="20"><td></td></tr>
-      <td class="img_button_td" onclick="doRegisterDetail('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
+      <td class="img_button_td" onclick="doRegisterSchedule('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
         <%= t('btn.register')%>
       </td>
     </tr>

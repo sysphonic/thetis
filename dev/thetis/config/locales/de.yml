@@ -242,6 +242,7 @@ de:
       confirm_to_delete: "Dieser Zettel wird gelöscht. Sind Sie sicher?"
       create: "Neuer Zettel"
       post: "Einen Zettel posten"
+      to: "To"
       sel_users_to_post: "Bitte geben Sie Benutzern wem den Zettel zu posten an."
       confirm_to_post1: "Diese Mitteilung wird zu den "
       confirm_to_post2: " Benutzern gesandt. Sind Sie sicher?"
@@ -260,6 +261,13 @@ de:
     show_backgound_image: "Hintergrund Bild zeigen"
   email:
     name: "E-Mail"
+    address: "E-mail address"
+    sub_address: "Supplementary addresses"
+    type:
+      caption: "Type"
+      official: "Official"
+      private: "Private"
+      mobile: "Mobile"
     address_not_found: "Die angegebene E-Mail-Adresse konnte nicht lokalisiert werden."
     sent: "E-Mail wurde abgesandt."
     greeting1: "Herr/Frau"
@@ -317,6 +325,8 @@ de:
       folders_order: "Reihe der Ordner"
       authorities: "Befugnisse"
       display_control: "Displaykontrolle"
+  mail_folder:
+    root_cannot_have_folders: "Root cannot have folders."
   group:
     plural: "Gruppen"
     cannot_be_parent: "Eine Gruppe und deren Untergruppe können nicht deren Obergruppe sein."
@@ -443,7 +453,7 @@ de:
     secure_connection: "Secure Connection"
     secure_auth: "Secure Auth."
     enable_auth: "Enable authentication"
-    title_info: "Please give a recognizable name for you to this setting for when multiple Accounts per user would be supported, "
+    title_info: "Please give a recognizable name for you to this setting."
     specify_title: "Please specify Account title."
   menu:
     desktop: "Desktop"
@@ -494,6 +504,8 @@ de:
     enable_map: "Enable this Map"
     drop_to_remove: "Drop here when leaving"
     confirm_to_leave: "You are leaving. Are you sure?"
+  addressbook:
+    specify_name: "Please specify name."
   paren:
     round:
       left: "("
@@ -830,6 +842,10 @@ de:
     received_list_info: "Kopien von beschlossenen Arbeitsabläufe werden automatisch im folgenden Ordner in My Folder speichern."
     select_to_create: "Bitte wählen Sie Arbeitsablauf zu erstellen aus."
   msg:
+    select_account: "Please select an account."
+    session_reset: "Login info. has been changed. Updating the view .."
+    others: "Others"
+    main: "Main"
     hyphen: "-"
     specify_birthday: "Bitte geben Sie Ihre Geburtstag an."
     ex_birthday: "z.B. 1971-09-28"
@@ -951,6 +967,8 @@ de:
     myself: "Über mich"
     already_deleted: "Dieser/Diese/Das %{name} wurde schon gelöscht."
   btn:
+    upper: "Upper"
+    lower: "Lower"
     ok: "OK"
     cancel: "Abbrechen"
     close: "Schließen"
@@ -1023,9 +1041,9 @@ de:
     address_book: "Adresse book"
     account_setting: "Account setting"
     direct_input: "Direct input"
-    to: "To:"
-    cc: "Cc:"
-    bcc: "Bcc:"
+    to: "To hinzufügen"
+    cc: "Cc hinzufügen"
+    bcc: "Bcc hinzufügen"
     empty: "Leer"
     restore: "Restore"
     duplicate: "Duplicate"
@@ -1083,6 +1101,7 @@ de:
     restore_from_log: "Restore from Log"
     original: "Original"
   scope:
+    caption: "Scope"
     private: "Privat"
     common: "Common"
   zeptair:

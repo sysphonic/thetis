@@ -18,6 +18,23 @@ module ApplicationHelper
   require 'uri'     # for URI.extract()
 
 
+  #=== self.split_preserving_quot
+  #
+  #Splits string preserving quotations.
+  #
+  #_quot_:: Quotation character.
+  #_delim_:: Delimiter.
+  #return:: Array of the parts.
+  #
+  def self.split_preserving_quot(str, quot, delim)
+
+    return nil if str.nil?
+    return str if quot.nil? or delim.nil?
+
+    regexp = Regexp.new("([#{quot}](\\#{quot}|[^#{quot}])*[#{quot}])*#{delim}")
+    return str.split(regexp)
+  end
+
   #=== self.get_timestamp
   #
   #Gets timestamp string for the specified ActiveRecord object.

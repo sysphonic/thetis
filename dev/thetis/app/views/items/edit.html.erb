@@ -35,7 +35,7 @@ var users_cache = new Array();
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
         <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if(_z('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
-            <%= Workflow.human_name %>
+            <%= Workflow.model_name.human %>
         </td>
       <% end %>
         <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">

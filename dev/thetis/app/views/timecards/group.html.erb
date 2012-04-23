@@ -48,7 +48,7 @@ next_week = @date + 7
 </div>
 <table class='timecard' width="100%">
   <tr>
-    <td align="center" width="10%" rowspan="2" nowrap><%= User.human_name %></th>
+    <td align="center" width="10%" rowspan="2" nowrap><%= User.model_name.human %></th>
     <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= t('cap.class') %></td>
     <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
     <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= t('cap.option') %></td>

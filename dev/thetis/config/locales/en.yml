@@ -242,6 +242,7 @@ en:
       confirm_to_delete: "This label will be deleted. Are you sure?"
       create: "New Label"
       post: "Post a Label"
+      to: "To"
       sel_users_to_post: "Select users to post a label to."
       confirm_to_post1: "This message will be posted to "
       confirm_to_post2: " specified users. Are you sure?"
@@ -260,6 +261,13 @@ en:
     show_backgound_image: "Show Backgound Image"
   email:
     name: "E-mail"
+    address: "E-mail address"
+    sub_address: "Supplementary addresses"
+    type:
+      caption: "Type"
+      official: "Official"
+      private: "Private"
+      mobile: "Mobile"
     address_not_found: "Specified E-mail address is not found."
     sent: "E-mail has been sent."
     greeting1: "Dear"
@@ -317,6 +325,8 @@ en:
       folders_order: "Folders Order"
       authorities: "Authorities"
       display_control: "Display Control"
+  mail_folder:
+    root_cannot_have_folders: "Root cannot have folders."
   group:
     plural: "Groups"
     cannot_be_parent: "The group itself or a child group cannot be its parent."
@@ -443,7 +453,7 @@ en:
     secure_connection: "Secure Connection"
     secure_auth: "Secure Auth."
     enable_auth: "Enable authentication"
-    title_info: "Please give a recognizable name for you to this setting for when multiple Accounts per user would be supported, "
+    title_info: "Please give a recognizable name for you to this setting."
     specify_title: "Please specify Account title."
   menu:
     desktop: "Desktop"
@@ -494,6 +504,8 @@ en:
     enable_map: "Enable this Map"
     drop_to_remove: "Drop here when leaving"
     confirm_to_leave: "You are leaving. Are you sure?"
+  addressbook:
+    specify_name: "Please specify name."
   paren:
     round:
       left: "("
@@ -830,6 +842,10 @@ en:
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
   msg:
+    select_account: "Please select an account."
+    session_reset: "Login info. has been changed. Updating the view .."
+    others: "Others"
+    main: "Main"
     hyphen: "-"
     specify_birthday: "Please specify your birthday."
     ex_birthday: "ex. 1971-09-28"
@@ -951,6 +967,8 @@ en:
     myself: "Myself"
     already_deleted: "This %{name} has already been deleted."
   btn:
+    upper: "Upper"
+    lower: "Lower"
     ok: "OK"
     cancel: "Cancel"
     close: "Close"
@@ -1023,9 +1041,9 @@ en:
     address_book: "Address book"
     account_setting: "Account setting"
     direct_input: "Direct input"
-    to: "To:"
-    cc: "Cc:"
-    bcc: "Bcc:"
+    to: "Add To"
+    cc: "Add Cc"
+    bcc: "Add Bcc"
     empty: "Empty"
     restore: "Restore"
     duplicate: "Duplicate"
@@ -1083,6 +1101,7 @@ en:
     restore_from_log: "Restore from Log"
     original: "Original"
   scope:
+    caption: "Scope"
     private: "Private"
     common: "Common"
   zeptair:

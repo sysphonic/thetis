@@ -9,13 +9,15 @@
 <meta http-equiv="Content-Script-Type" content="text/JavaScript">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%= csrf_meta_tag %>
-<%= stylesheet_link_tag 'thetis104', 'thetisbox', :media => 'all' %>
+<%= stylesheet_link_tag 'thetis110', 'thetisbox', :media => 'all' %>
 <%= javascript_include_tag 'prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar' %>
-<%= javascript_include_tag 'thetis/common110beta6', 'thetis/thetis110beta4', 'thetis/thetisbox110beta2' %>
 <%= javascript_include_tag 'dojo/dojo' %>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110beta7.js?timestamp=20120422" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110beta4.js" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110beta3.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-<!--
+
 ThetisBox.setTitle("<%=h $thetis_config[:general]['app_title'] %>");
 ThetisBox.setOK("<%= t('btn.ok') %>");
 ThetisBox.setCancel("<%= t('btn.cancel') %>");
@@ -149,7 +151,7 @@ function doResize()
 
   } else if (div = _z("div_list")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    div.style.height = (mainHeight - 110) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_items"));
@@ -169,18 +171,21 @@ function doResize()
       h -= div.offsetHeight - h;
       div.style.height = h + "px";
     }
-    div.style.width = (mainWidth-100)/2 + "px";
+
+    var tree_main = _z("tree_main");
+    var treeMainWidth = tree_main.offsetWidth - (3+5+3);
+    div.style.width = treeMainWidth/100*37 + "px";
 
     var view = _z("div_view");
     view.style.height = div.offsetHeight + "px";
-    view.style.width = div.offsetWidth + "px";
+    view.style.width = (treeMainWidth/100*63) + "px";
 
-    _z("td_tree").style.width = div.offsetWidth + "px";
-    _z("td_view").style.width = div.offsetWidth + "px";
+    _z("td_tree").style.width = div.style.width;
+    _z("td_view").style.width = view.style.width;
 
   } else if (div = _z("mailTree")) {
 
-    var h = mainHeight - 110;
+    var h = mainHeight - 100;
 
     var td_tree = _z("td_tree");
     var td_view = _z("td_view");
@@ -188,20 +193,21 @@ function doResize()
     var div_mails = _z("div_mails");
     var div_mail_content = _z("div_mail_content");
 
-    div.style.width = (mainWidth-118) / 4 + "px";
-    div.style.height = (h - 40 - 20) + "px";
+    var tree_main = _z("tree_main");
+    var treeMainWidth = tree_main.offsetWidth - (3+5+3);
 
-    td_tree.style.width = div.offsetWidth + "px";
-    td_view.style.width   = (mainWidth-118) / 4 * 3 + "px";
+    div.style.width = treeMainWidth / 4 + "px";
+    div.style.height = (h - 40) + "px";
+
+    td_tree.style.width = div.style.width;
+    td_view.style.width   = treeMainWidth / 4 * 3 + "px";
     td_tree.style.height = h + "px" ;
     td_view.style.height  = td_tree.style.height;
 
-    var treeMainWidth = _z("tree_main").clientWidth;
     var mailTreePos = getPos(div);
     var borderPos = getPos(_z("drag_v_border"));
-    var leftWidth = borderPos.x - mailTreePos.x - 24;
-    div_mails.style.width  = (treeMainWidth - leftWidth - 38) + "px";
-//  div_mails.style.width  = td_view.style.width;
+    var leftWidth = borderPos.x - mailTreePos.x;
+    div_mails.style.width  = (treeMainWidth - leftWidth - 3) + "px";
     div_mails.style.height = ((h-5) / 2) + "px";
 
     div_mail_content.style.width  = div_mails.style.width;
@@ -209,7 +215,7 @@ function doResize()
 
   } else if (div = _z("div_users")) {
 
-    div.style.height = (mainHeight - 130) + "px";
+    div.style.height = (mainHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_users"));
@@ -217,7 +223,7 @@ function doResize()
 
   } else if (div = _z("div_addresses")) {
 
-    div.style.height = (mainHeight - 130) + "px";
+    div.style.height = (mainHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_addresses"));
@@ -225,7 +231,7 @@ function doResize()
 
   } else if (div = _z("div_logs")) {
 
-    div.style.height = (mainHeight - 130) + "px";
+    div.style.height = (mainHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_logs"));
@@ -295,7 +301,7 @@ function doResize()
 }
 
 window.onresize = doResize;
-//-->
+
 </script>
 
 </head>

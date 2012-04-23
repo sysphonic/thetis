@@ -15,11 +15,20 @@ unless @mail_folder.nil?
     folder_close = icons[2]
     %>
     <img id="<%= div_id %>_open" src="<%= folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= folder_close %>" border="0" style="display:none;">
-    <span id="<%= div_id %>_name"><%=h @mail_folder.name %></span>
+    <span id="<%= div_id %>_name"><%= @mail_folder.name %></span>
   </a><br/>
   <div id="<%= div_id %>" class="thetisBoxTreeBlock" style="padding-left:30px; border-left:1px dotted navy;"></div>
 </div>
-<span id="path_<%= @mail_folder.id %>" style="display:none;"><%=h @mail_folder.get_path %></span>
+<span id="path_<%= @mail_folder.id %>" style="display:none;"><%= @mail_folder.get_path %></span>
 <span id="xtype_<%= @mail_folder.id %>" style="display:none;"><%= @mail_folder.xtype %></span>
 
 <% end %>
+
+
+<script type="text/javascript">
+
+<% unless params[:mail_account_id].blank? %>
+folderAccountsHash["<%= @mail_folder.id %>"] = <%= params[:mail_account_id] %>;
+<% end %>
+
+</script>

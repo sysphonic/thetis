@@ -51,6 +51,27 @@ class ApplicationController < ActionController::Base
     # logger.fatal "* Locale set to '#{I18n.locale}'"
   end
 
+  #=== render
+  #
+  #Overrides ActionController::Base#render() to force layout XHR response.
+  #
+  #_action_:: Same as the corresponding argument of the super method.
+  #_options_:: Same as the corresponding argument of the super method.
+  #_&blk_:: Same as the corresponding argument of the super method.
+  #
+  def render(action=nil, options={}, &blk)
+    opts = options
+    if opts.empty? and !action.nil? and action.kind_of?(Hash)
+      opts = action
+    end
+    unless opts.nil?
+      if opts[:layout] == false
+        opts[:layout] = 'layouts/xhr'
+      end
+    end
+    super(action, options, &blk)
+  end
+
  public
   #=== paginate_by_sql
   #

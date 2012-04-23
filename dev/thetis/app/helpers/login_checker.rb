@@ -45,11 +45,28 @@ module LoginChecker
 
     allow_midair_login
 
+    unless session[:timestamp].nil?
+
+      dt = DateTime.parse(session[:timestamp])
+
+      if Time.utc(dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec) < Time.now.utc - THETIS_SESSION_EXPIRE_AFTER_MIN * 60
+        session[:login_user] = nil
+        reset_session
+      end
+    end
+
     if session[:login_user].nil?
       Log.add_check(request, '[check_login]'+request.to_s)
 
-      flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
-      redirect_to(:controller => 'login', :action => 'index', :fwd_controller => params[:controller], :fwd_action => params[:action], :fwd_params => ApplicationHelper.get_fwd_params(params))
+      if request.xhr?
+        @redirect_url = url_for(:controller => 'login', :action => 'index')
+        render(:partial => 'common/redirect_top_to')
+      else
+        flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
+        redirect_to(:controller => 'login', :action => 'index', :fwd_controller => params[:controller], :fwd_action => params[:action], :fwd_params => ApplicationHelper.get_fwd_params(params))
+      end
+    else
+      session[:timestamp] = Time.now.utc.strftime(Schedule::SYS_DATE_FORM + ' %H:%M:%S')
     end
   end
 

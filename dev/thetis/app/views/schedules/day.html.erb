@@ -199,7 +199,7 @@ function showNewDetail()
             );
 }
 
-function doRegisterDetail(schedule_id)
+function doRegisterSchedule(schedule_id, addParams)
 {
   // Check
   if (_z("schedule_title").value.length <= 0) {
@@ -258,8 +258,12 @@ function doRegisterDetail(schedule_id)
     }
 
     // Term
-    var startDate = _z("schedule_repeat_start").value.split("-");
-    var endDate = _z("schedule_repeat_end").value.split("-");
+    var repeatStart = toSysDateForm(_z("schedule_repeat_start").value);
+    var repeatEnd = toSysDateForm(_z("schedule_repeat_end").value);
+    _z("schedule_repeat_start").value = repeatStart;
+    _z("schedule_repeat_end").value = repeatEnd;
+    var startDate = repeatStart.split("-");
+    var endDate = repeatEnd.split("-");
 
     var startMonth = parseInt(startDate[1], 10) - 1;
     var endMonth = parseInt(endDate[1], 10) - 1;
@@ -288,15 +292,15 @@ function doRegisterDetail(schedule_id)
   } else {
 
     // for Once
-    var startDate = _z("start_date").value.split("-");
-    var endDate = _z("end_date").value.split("-");
-
     if (is_allday) {
       _z("once_start_hour").value = 0;
       _z("once_start_min").value = 0;
       _z("once_end_hour").value = 0;
       _z("once_end_min").value = 0;
     }
+
+    var startDate = toSysDateForm(_z("start_date").value).split("-");
+    var endDate = toSysDateForm(_z("end_date").value).split("-");
 
     var startMonth = parseInt(startDate[1], 10) - 1;
     var endMonth = parseInt(endDate[1], 10) - 1;
@@ -308,8 +312,8 @@ function doRegisterDetail(schedule_id)
       return;
     }
 
-    _z("schedule_start").value = _z("start_date").value+" "+_z("once_start_hour").value+":"+_z("once_start_min").value
-    _z("schedule_end").value = _z("end_date").value+" "+_z("once_end_hour").value+":"+_z("once_end_min").value
+    _z("schedule_start").value = toSysDateForm(_z("start_date").value)+" "+_z("once_start_hour").value+":"+_z("once_start_min").value
+    _z("schedule_end").value = toSysDateForm(_z("end_date").value)+" "+_z("once_end_hour").value+":"+_z("once_end_min").value
 
     if (is_allday) {
       _z("schedule_start").value += " GMT";
@@ -326,7 +330,13 @@ function doRegisterDetail(schedule_id)
   selectListAll(_z("items_selected"));
 
   var thetisBox = prog("TOP-RIGHT");
-  document.form_detail.action = "<%= url_for(:controller => 'schedules', :action => 'save') %>?id=" + schedule_id;
+
+  if (!addParams) {
+    addParams = new Array();
+  }
+  addParams.push("id=" + schedule_id);
+
+  document.form_detail.action = "<%= url_for(:controller => 'schedules', :action => 'save') %>" + "?" + addParams.join("&");
   document.form_detail.submit();
 
 /* No Ajax because of the case in which a different day is specified.

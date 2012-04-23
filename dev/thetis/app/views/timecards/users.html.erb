@@ -75,11 +75,11 @@ groups_cache = {}
   <tr height="10"><td></td></tr>
 </table>
 
-<div id="div_users" style="overflow:scroll; background-color:white;">
+<div class="base_list" id="div_users">
 <table id="list_users" width="100%" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="5%"  nowrap onClick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onClick="sortList('name')"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="20%" nowrap onClick="sortList('name')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="25%" nowrap onClick="sortList('xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="30%" nowrap onClick="sortList('groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
     <td width="10%" align="center" nowrap style="background-color:#FFDFAD;"><%= t('timecard.applied') %></td>

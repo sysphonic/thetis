@@ -57,12 +57,12 @@
   <tr height="10"><td></td></tr>
 </table>
 
-<div id="div_logs" style="overflow:scroll; background-color:white;">
+<div class="base_list" id="div_logs">
 <table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="15%" nowrap onClick="sortList('fin_at')"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="15%" nowrap onClick="sortList('req_at')"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onClick="sortList('user_id')"><%= User.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="15%" nowrap onClick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="20%" nowrap onClick="sortList('s_addr')"><%= ZeptairXlog.human_attribute_name('s_addr') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('s_addr', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="10%"  nowrap onClick="sortList('cs_protocol')"><%= ZeptairXlog.human_attribute_name('cs_protocol') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_protocol', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="25%" nowrap onClick="sortList('cs_uri')"><%= ZeptairXlog.human_attribute_name('cs_uri') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_uri', @sort_col, @sort_type)) %></span></th>

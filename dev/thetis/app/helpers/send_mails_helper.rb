@@ -20,10 +20,11 @@ module SendMailsHelper
   #Gets Email instance to send.
   #
   #_user_:: Current User.
+  #_mail_account_:: Current MailAccount.
   #_params_:: Parameters of request.
   #return:: Email instance to send.
   #
-  def self.get_mail_to_send(user, params=nil)
+  def self.get_mail_to_send(user, mail_account, params)
 
     params ||= {}
 
@@ -54,22 +55,18 @@ module SendMailsHelper
     email.cc_addresses = cc_addresses.join(Email::ADDRESS_SEPARATOR)
     email.bcc_addresses = bcc_addresses.join(Email::ADDRESS_SEPARATOR)
 
-    if params[:mail_account].nil? or params[:mail_account].empty?
-      mail_account = MailAccount.get_default_for(user.id)
+    unless mail_account.nil?
       email.mail_account_id = mail_account.id
-    else
-      email.mail_account_id = params[:mail_account]
-      mail_account = MailAccount.find(email.mail_account_id)
+      email.from_address = mail_account.get_from_exp
     end
-    email.from_address = mail_account.get_from_exp
 
     unless params[:email].nil?
       email.subject = params[:email][:subject]
       email.message = params[:email][:message]
     end
 
-    drafts_folder = MailFolder.get_for(user, MailFolder::XTYPE_DRAFTS)
-    email.mail_folder_id = drafts_folder.id
+    drafts_folder = MailFolder.get_for(user, email.mail_account_id, MailFolder::XTYPE_DRAFTS)
+    email.mail_folder_id = drafts_folder.id unless drafts_folder.nil?
 
     email.xtype = Email::XTYPE_SEND
     email.status = Email::STATUS_DRAFT

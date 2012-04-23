@@ -77,14 +77,14 @@ groups_cache = {}
         <tr>
           <td id="td_tree" align="left" valign="top" style="border:inset 2px silver; padding:0px;">
             <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
-              <div id="folderTree" align="left" style="padding:10px; overflow:auto;"></div>
+              <div id="folderTree" style="overflow:auto;"><div id="div_tree" style="text-align:left; margin:10px;"></div></div>
               <input type='hidden' name='selKeeper' id='selKeeper' value='' />
             </form>
           </td>
           <td id="drag_border" width="5" valign="middle" style="background-color:#F9BF8B; cursor:w-resize;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
           </td>
-          <td id="td_view" align="center" valign="top" style="width:50%; border:inset 2px silver;">
+          <td id="td_view" align="center" valign="top" style="width:63%; border:inset 2px silver;">
             <div id="div_view" width="100%" style="overflow:auto;">&nbsp;</div>
           </td>
         </tr>
@@ -153,11 +153,18 @@ BorderDragObserver.prototype = {
       var orgWidthFolderTree = folderTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
-      draggable.options.snap = function(x, y){
-          folderTree.style.width = (orgWidthFolderTree + x - 10) + "px";
-          td_tree.style.width = (orgWidthFolderTree + x) + "px";
-          view.style.width = (orgWidthView - x - 10) + "px";
-          td_view.style.width = (orgWidthView - x) + "px";
+      draggable.options.snap = function(x, y) {
+          var leftWidth = orgWidthFolderTree + x;
+          var rightWidth = orgWidthView - x;
+          if (leftWidth < 100 && x < 0) {
+            return [100-orgWidthFolderTree, y];
+          } else if (rightWidth < 100 && x > 0) {
+            return [orgWidthView-100, y];
+          }
+          folderTree.style.width = leftWidth + "px";
+          td_tree.style.width = leftWidth + "px";
+          view.style.width = rightWidth + "px";
+          td_view.style.width = rightWidth + "px";
           return [x, y];
         };
     }
@@ -167,23 +174,27 @@ BorderDragObserver.prototype = {
       return;
     }
     if (is_MS || is_Opera) {
-      var treeMainWidth = _z("tree_main").clientWidth;
       var folderTree = _z("folderTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
+      var orgWidthFolderTree = folderTree.offsetWidth;
+      var orgWidthView = view.offsetWidth;
 
-      var folderTreePos = getPos(folderTree);
-      var borderPos = getPos(draggable.element);
-
-//    alert("borderPos.x="+borderPos.x+", folderTreePos.x="+folderTreePos.x);
-
-      var leftWidth = borderPos.x - folderTreePos.x - 24;
-      folderTree.style.width = leftWidth + "px";
-      td_tree.style.width = leftWidth + "px";
-
-      view.style.width = (treeMainWidth - leftWidth - 38) + "px";
-      td_view.style.width = (treeMainWidth - leftWidth - 38) + "px";
+      draggable.options.snap = function(x, y) {
+          var leftWidth = orgWidthFolderTree + x;
+          var rightWidth = orgWidthView - x;
+          if (leftWidth < 100 && x < 0) {
+            return [100-orgWidthFolderTree, y];
+          } else if (rightWidth < 100 && x > 0) {
+            return [orgWidthView-100, y];
+          }
+          folderTree.style.width = leftWidth + "px";
+          td_tree.style.width = leftWidth + "px";
+          view.style.width = rightWidth + "px";
+          td_view.style.width = rightWidth + "px";
+          return [x, y];
+        };
     }
   },
   onEnd: function(eventName, draggable, event) {
@@ -219,7 +230,7 @@ function onLoadSub()
                       <% icons = Folder.get_icons(nil, true, true) %>
                         new Array("<%=h icons[1] %>", "<%=h icons[2] %>")
                       );
-  var firstMenuId = ThetisBox.buildTree("", array, null, "folderTree", "selKeeper", folderImgs);
+  var firstMenuId = ThetisBox.buildTree("", array, null, "div_tree", "selKeeper", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
   array = new Array(
     <%
@@ -269,7 +280,7 @@ function onLoadSub()
     end
     %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "folderTree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "div_tree", "selKeeper", folderImgs, false);
   <% end %>
 
 <% unless session[:folder_id].nil? or session[:folder_id].empty? %>

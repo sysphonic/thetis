@@ -86,6 +86,9 @@ class Group < ActiveRecord::Base
     Location.destroy_all("(group_id=#{self.id})")
     OfficeMap.destroy_all("(group_id=#{self.id})")
 
+    # Settings
+    Setting.destroy_all("(group_id=#{self.id})")
+
     super()
   end
 

@@ -25,6 +25,61 @@ class MailAccount < ActiveRecord::Base
   public::SMTP_SECURE_CONN_STARTTLS = 'starttls'
   public::SMTP_SECURE_CONN_SSL_TLS = 'ssl_tls'
 
+  public::XTYPE_INTERNET = 'internet'
+  public::XTYPE_INTRANET = 'intranet'
+
+  #=== self.get_xtype_name
+  #
+  #Gets String which represents xtype of the class.
+  #
+  #_xtype_:: String which represents xtype of the class.
+  #return:: String which represents xtype of the class.
+  #
+  def self.get_xtype_name(xtype)
+    case xtype
+      when XTYPE_INTERNET
+        return I18n.t('mail_account.xtype.internet')
+      when XTYPE_INTRANET
+        return I18n.t('mail_account.xtype.intranet')
+    end
+  end
+
+  #=== self.get_title
+  #
+  #Gets MailAccount title.
+  #
+  #_mail_account_id_:: Target MailAccount-ID.
+  #return:: MailAccount title.
+  #
+  def self.get_title(mail_account_id)
+
+    begin
+      mail_account = MailAccount.find(mail_account_id)
+    rescue
+    end
+    if mail_account.nil?
+      return mail_account_id.to_s + ' '+ I18n.t('paren.deleted')
+    else
+      return mail_account.get_title
+    end
+  end
+
+  #=== get_title
+  #
+  #Gets MailAccount title.
+  #
+  #return:: MailAccount title.
+  #
+  def get_title
+
+    ret = self.title
+
+    if ret.nil? or ret.empty?
+      ret = MailAccount.get_xtype_name(self.xtype)
+    end
+
+    return ret
+  end
 
   #=== get_from_exp
   #
@@ -161,13 +216,15 @@ class MailAccount < ActiveRecord::Base
   #Get User-specific default MailAccount, or nil if not found.
   #
   #_user_id_:: Target User-ID.
+  #_xtype_:: Target xtype.
   #return:: Default MailAccount.
   #
-  def self.get_default_for(user_id)
+  def self.get_default_for(user_id, xtype=nil)
 
     con = []
-    con << "(user_id = #{user_id})"
-    con << '(is_default = 1)'
+    con << "(user_id=#{user_id})"
+    con << '(is_default=1)'
+    con << "(xtype='#{xtype}')" unless xtype.nil? or xtype.empty?
 
     where = ''
     unless con.nil? or con.empty?

@@ -66,7 +66,7 @@ login_user = session[:login_user]
   <tr height="10"><td></td></tr>
 </table>
 
-<div id="div_addresses" style="overflow:scroll; background-color:white;">
+<div class="base_list" id="div_addresses">
 <table id="list_addresses" width="100%" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="35%" nowrap onClick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
@@ -152,6 +152,7 @@ function doDelete()
 
 function _doDelete()
 {
+  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.action = "<%= url_for(:controller => 'addressbook', :action => 'destroy') %>";
   document.form_list.method = "post";
   document.form_list.submit();

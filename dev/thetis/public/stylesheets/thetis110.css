@@ -1,4 +1,6 @@
 
+.base_list {overflow:scroll; overflow-x:visible; background-color:white;}
+
 .postlabel_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 .label_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 

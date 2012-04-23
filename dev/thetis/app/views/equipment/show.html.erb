@@ -1,12 +1,10 @@
 
-<div style="width:100%; padding-top:20px; padding-bottom:0px;" align="center">
-
 <% if @equipment.nil? %>
   <div style="padding-top:20px;">
     <table width="95%" cellspacing="0" cellpadding="0" style="border:green 1px solid; border-collapse:collapse;">
       <tr height="50">
         <td align="center" style="color:darkgreen;">
-          <%= t('msg.already_deleted', :name => Equipment.human_name) %>
+          <%= t('msg.already_deleted', :name => Equipment.model_name.human) %>
         </td>
       </tr>
     </table>
@@ -22,44 +20,38 @@
     </table>
   </div>
 <% else %>
-  <div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px;" align="center">
-    <table align="center" width="85%" cellpadding="0" cellspacing="2">
-      <tr>
-        <td class="prim_cap_td" nowrap><%= Equipment.human_attribute_name('name') %></td>
-        <td class="item_value_td">
-          <%=h @equipment.name %>
-        </td>
-      </tr>
-      <tr>
-        <td class="item_cap_td" nowrap><%= Equipment.human_attribute_name('note') %></td>
-        <td class="item_value_td">
-          <pre><%=h @equipment.note %></pre>
-        </td>
-      </tr>
-      <tr>
-        <td class="item_cap_td" nowrap><%= t('equipment.belongs_to') %></td>
-        <td class="item_value_td">
-          <%= render(:partial => 'common/show_scope', :locals => {:obj => @equipment, :empty_msg => t('msg.all')}) %>
-        </td>
-      </tr>
-    </table>
-  </div>
-
+  <table align="center" width="85%" cellpadding="0" cellspacing="2">
+    <tr>
+      <td class="prim_cap_td" nowrap>
+        <%= Equipment.human_attribute_name('name') %>
+      </td>
+      <td class="item_value_td">
+        <%= @equipment.name %>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><%= Equipment.human_attribute_name('note') %></td>
+      <td class="item_value_td">
+        <pre><%= @equipment.note %></pre>
+      </td>
+    </tr>
+    <tr>
+      <td class="item_cap_td" nowrap><%= t('equipment.belongs_to') %></td>
+      <td class="item_value_td">
+        <%= render(:partial => 'common/show_scope', :locals => {:obj => @equipment, :empty_msg => t('msg.all')}) %>
+      </td>
+    </tr>
+  </table>
 <% end %>
 
-</div>
-
 <% if params[:popup] != 'true' %>
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table align="center" cellspacing="0" cellpadding="0" style="padding:10px 0px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); history.back();">
       <%= t('btn.back') %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <% end %>
-<br/>
 
 <%= render(:partial => 'common/flash_notice') %>

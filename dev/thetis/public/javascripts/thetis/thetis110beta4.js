@@ -314,10 +314,13 @@ msg = function(m)
   return thetisBox;
 }
 
-tips = function(m)
+tips = function(m, position)
 {
+  if (!position) {
+    position = "TOP-RIGHT";
+  }
   var thetisBox = new ThetisBox;
-  thetisBox.show("TOP-RIGHT", "", "TIPS", "", m, "");
+  thetisBox.show(position, "", "TIPS", "", m, "");
 
   return thetisBox;
 }

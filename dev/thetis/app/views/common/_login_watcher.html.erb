@@ -1,0 +1,24 @@
+
+<script type="text/javascript">
+
+alertSessionRenewed = function()
+{
+  var targetFrame = top;
+  if (top.main) {
+    targetFrame = top.main;
+  }
+  var metas = targetFrame.document.getElementsByTagName ("meta");
+  for (var i=0; i < metas.length; i++) {
+    var meta = metas[i];
+    if (meta.name == "csrf-token") {
+      if (meta.content != "<%= form_authenticity_token %>") {
+        tips("<%= t('msg.session_reset') %>", "CENTER");
+        top.document.location.href = "<%= THETIS_RELATIVE_URL_ROOT %>";
+      }
+      break;
+    }
+  }
+}
+alertSessionRenewed();
+
+</script>

@@ -63,7 +63,7 @@ class TemplatesController < ApplicationController
       rescue
       end
       if group.nil?
-        render(:text => 'ERROR:' + t('msg.already_deleted', :name => Group.human_name))
+        render(:text => 'ERROR:' + t('msg.already_deleted', :name => Group.model_name.human))
         return
       end
     end

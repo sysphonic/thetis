@@ -17,10 +17,18 @@ class MailAttachment < ActiveRecord::Base
   require 'tempfile'
   require 'fileutils'
 
-  validates_presence_of :name
+  validates_presence_of(:name)
 
 #See SendMailsController#add_attachment
 # validates_length_of :content, :maximum => THETIS_MAIL_SEND_ATTACHMENT_MAX_KB*1024, :allow_nil => true
+
+  before_destroy do |mail_attach|
+
+    path = mail_attach.get_path
+    unless path.nil? or path.empty?
+      FileUtils.rm(path, {:force => true})
+    end
+  end
 
   #=== file
   #

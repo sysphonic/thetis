@@ -115,7 +115,7 @@ folders_cache = {}
   <tr height="10"><td></td></tr>
 </table>
 
-<div id="div_list" style="overflow:scroll; background-color:white;">
+<div class="base_list" id="div_list" style="background-color:white;">
 
 <% if @items.empty? and @folder_id.nil? %>
 
@@ -131,7 +131,7 @@ folders_cache = {}
   <tr>
     <th class="list_sort" width="5%"  nowrap onClick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="35%" nowrap onClick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="22%"  nowrap onClick="sortList('folder_id')"><%= Folder.human_name %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('folder_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="22%"  nowrap onClick="sortList('folder_id')"><%= Folder.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('folder_id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="15%" nowrap onClick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="7%"  nowrap onClick="sortList('public')"><%= Item.human_attribute_name('public') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('public', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="13%"  nowrap onClick="sortList('Item.user_id')"><%= t('item.registered_by') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.user_id', @sort_col, @sort_type)) %></span></th>

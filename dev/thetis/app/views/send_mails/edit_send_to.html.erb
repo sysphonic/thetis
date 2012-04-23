@@ -1,0 +1,175 @@
+<%
+login_user = session[:login_user]
+
+mail_account_xtype = params[:mail_account_xtype]
+
+enable_users_tab = ($thetis_config[:menu]['disp_user_list'] == '1')
+%>
+
+<script type="text/javascript">
+
+tabs_send_mail_address = new Array("direct", "addrbook");
+<% if enable_users_tab %>
+tabs_send_mail_address.push("users");
+<% end %>
+
+</script>
+
+
+<table id="panel_send_to" cellspacing="0" cellpadding="0" style="width:100%; height:100%; background-color:aliceblue; padding:5px 0px 0px 5px;">
+  <tr>
+    <td align="center" valign="top" style="min-width:380px; width:380px;">
+
+      <table cellspacing="2" cellpadding="0" width="100%">
+        <tr>
+          <td id="tab_direct" class="td_item_tab" nowrap align="left" width="120" onclick="showTab('direct', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_direct').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_direct').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+            <%= t('btn.direct_input') %>
+          </td>
+          <td id="tab_addrbook" class="td_item_tab" nowrap width="120" onclick="showTab('addrbook', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_addrbook').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_addrbook').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+            <%= t('btn.address_book') %>
+          </td>
+<% if enable_users_tab %>
+          <td id="tab_users" class="td_item_tab" nowrap width="120" onclick="showTab('users', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_users').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+            <%= User.model_name.human %>
+          </td>
+<% end %>
+          <td><!-- SPACER --></td>
+        </tr>
+      </table>
+
+      <div id="tab_div_direct" style="width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+          <tr>
+            <td align="center" style="padding:20px 0px;">
+
+              <input type="text" id="addr_direct" name="addr_direct" value="" style="width:95%" />
+
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="tab_div_addrbook" style="display:none; width:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+          <tr>
+            <td align="center" style="padding:5px;">
+              <div style="text-align:left">
+                <%
+                opts = []
+                opts << [t('scope.private'), Address::BOOK_PRIVATE]
+                opts << [t('scope.common'), Address::BOOK_COMMON]
+                %>
+                <%= t('scope.caption') %><%= t('cap.suffix') %>
+                <%= select_tag('addrbook_scope', options_for_select(opts, Address::BOOK_PRIVATE), :style => 'width:100px;', :onchange => 'onAddressbookScopeChanged(this);') %>
+              </div>
+            <%
+            [
+              ['addr_private_candidates', Address::BOOK_PRIVATE],
+              ['addr_common_candidates', Address::BOOK_COMMON]
+            ].each do |addrbook_param|
+            %>
+              <select id="<%= addrbook_param[0] %>" class="select_candidates" size="10" multiple style="width:100%">
+              <%
+              addrs_available = {}
+
+              addresses = Address.get_for(login_user, addrbook_param[1])
+
+              addresses.each do |address|
+                address_id = address.id.to_s
+
+                mail_addrs = address.get_emails
+                next if mail_addrs.empty?
+
+                addrs_available[address_id] = []
+
+                mail_addrs.each do |mail_addr|
+                  screenname = address.screenname || address.name || ''
+                  if screenname.empty?
+                    disp = ''
+                  else
+                    disp = "#{screenname} "
+                  end
+                  disp << "<#{mail_addr}>"
+
+                  user = User.find(:first, :conditions => "email='#{mail_addr}'")
+                  if user.nil?
+                    entry_val = disp
+                  else
+                    entry_val = "#{disp}#{Email::ADDR_ORDER_SEPARATOR}#{user.get_xorder(nil)}"
+                  end
+
+                  addrs_available[address_id] << {:disp => disp, :value => entry_val}
+                end
+              end
+
+              addrs_available.each do |address_id, entries|
+                entries.each do |entry_h|
+              %>
+                <option value="<%= entry_h[:value] %>"><%= entry_h[:disp] %></option>
+              <%
+                end
+              end
+              %>
+              </select>
+
+            <% end %>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div id="tab_div_users" style="width:100%;" align="center">
+<% if enable_users_tab %>
+        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+          <tr>
+            <td id="div_selectUsers" align="center" style="padding:5px;">
+
+              <%
+              submit_url = url_for(:controller => 'send_mails', :action => 'get_group_users')
+              %>
+              <%= render(:partial => 'common/select_users', :locals => {:target_attr => :email, :submit_url => submit_url}) %>
+
+            </td>
+          </tr>
+        </table>
+<% end %>
+      </div>
+
+    </td>
+    <td width="100" align="center" valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="center" valign="top">
+            <input type="button" value="<%= t('btn.to') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_TO %>', '<%= t('cap.to') %> ');" style="width:90px; margin-bottom:5px;" />
+            <input type="button" value="<%= t('btn.cc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_CC %>', '<%= t('cap.cc') %> ');" style="width:90px; margin-bottom:5px;" />
+            <input type="button" value="<%= t('btn.bcc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_BCC %>', '<%= t('cap.bcc') %> ');" style="width:90px;" />
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+showTab(tabs_send_mail_address[0], tabs_send_mail_address);
+
+onAddressbookScopeChanged = function(elem)
+{
+  switch (elem.value) {
+    case "<%= Address::BOOK_PRIVATE %>":
+    case "<%= Address::BOOK_PRIVATE %>":
+      _z("addr_private_candidates").style.display = "block";
+      _z("addr_common_candidates").style.display = "none";
+      break;
+    case "<%= Address::BOOK_COMMON %>":
+      _z("addr_private_candidates").style.display = "none";
+      _z("addr_common_candidates").style.display = "block";
+      break;
+  }
+}
+
+onAddressbookScopeChanged(_z("addrbook_scope"));
+
+</script>
+

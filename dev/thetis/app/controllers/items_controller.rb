@@ -1302,7 +1302,7 @@ class ItemsController < ApplicationController
         @team = nil
       ensure
         if @team.nil?
-          flash[:notice] = t('msg.already_deleted', :name => Team.human_name)
+          flash[:notice] = t('msg.already_deleted', :name => Team.model_name.human)
           return
         end
       end

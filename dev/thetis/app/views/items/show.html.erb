@@ -15,6 +15,8 @@ login_user = session[:login_user]
 @group_obj_cache = {}
 %>
 
+<%= render(:partial => 'common/dojo_init') %>
+
 <table cellspacing="0" cellpadding="0" width="100%">
   <tr>
     <td align="left" valign="bottom" style="padding-left:20px; vertical-align:top;" >
@@ -230,7 +232,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
           <table cellspacing="0" cellpadding="0" width="100%"">
             <tr>
               <td align="left" style="color:white; font-size:11pt; line-height:14pt; text-indent:10px;">
-                <b><%= Workflow.human_name %></b>
+                <b><%= Workflow.model_name.human %></b>
               </td>
               <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
                 <span style="background-color:palegreen;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
@@ -369,7 +371,7 @@ function _doWfIssue()
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
           <td align="left" style="color:white; font-size:11pt; line-height:14pt; text-indent:10px;">
-            <b><%= Team.human_name %></b>
+            <b><%= Team.model_name.human %></b>
           </td>
           <td align="right" style="font-size:11pt; padding-right:10px; line-height:14pt;">
             <span style="background-color:#FFE0D1;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
@@ -753,27 +755,23 @@ function showZeptairDistUsers()
 </script>
 
     </div>
-<%
+  <%
     end
   end
-end
-%>
-
+  %>
     </td>
   </tr>
-  <tr height="20"><td></td></tr>
 </table>
-
+<% end %>
 
 <!-- Message -->
 <% unless @item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH %>
 <a name="message"></a>
 <table cellspacing="0" cellpadding="0" width="100%">
   <tr>
-    <td>
+    <td style="padding-top:20px;">
 
     <table width="95%" cellpadding="5" align="center"> 
-      <tr height="20"><td></td></tr>
       <tr> 
         <td style="background-color:peru; padding:1px;">
           <table cellspacing="0" cellpadding="0" width="100%">
@@ -826,7 +824,7 @@ end
     <div style="height:15px"></div>
 
   <% unless login_user.nil? %>
-    <%= form_tag( {:controller => 'items', :action => 'add_comment'}, :onsubmit => "doRegisterComment(this); return false;", :method => 'post', :enctype => 'multipart/form-data') %>
+    <%= form_tag( {:controller => 'items', :action => 'add_comment'}, :name => 'form_comment', :method => 'post', :enctype => 'multipart/form-data') %>
       <%= hidden_field('comment', 'item_id', :value => @item.id) %>
       <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
       <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_MSG) %>
@@ -848,7 +846,7 @@ end
                       <%= t('item.file') %> :
                     </td>
                     <td valign="middle">
-                      <%= file_field :comment, :file, :size => '60', :style => 'width:100%' %>
+                      <%= file_field(:comment, :file, :size => '60', :style => 'width:100%') %>
                     </td>
                   </tr>
                 </table>
@@ -857,7 +855,7 @@ end
             <tr height="15"><td></td></tr>
             <tr>
               <td align="center">
-                <%= submit_tag h(t('item.register_message')) %>
+                <input type="button" value="<%= t('item.register_message') %>" onclick="doRegisterComment(document.form_comment); return false;"/>
               </td>
             </tr>
           </table>

@@ -1,0 +1,14 @@
+<%
+=begin
+----------------------------------------------
+NOTE: The following files should be same.
+  xhr.html.erb
+  _xhr.html.erb
+Rails 3.0.7 requires two patterns of file name:
+  render(:layout => false) --> xhr
+  render(:partial => 'xxx', :layout => false) --> _xhr
+----------------------------------------------
+=end
+%>
+<%= yield %>
+<%= render(:partial => 'common/login_watcher') %>

@@ -1,0 +1,263 @@
+<%
+login_user = session[:login_user]
+
+target_attr ||= :id
+
+if target_attr.to_s == 'email'
+  if $thetis_config[:menu]['disp_user_list'] != '1'
+    raise('*** ACCESS NOT PERMITTED!! ***')
+  end
+  rows = 10
+else
+  rows = 5
+end
+
+@groups_cache ||= {}
+@teams_cache ||= {}
+
+@users = Group.get_users(@group_id)
+%>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="130">
+      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelectUsers('<%= (@group_id.nil?)?'':@group_id %>');">
+        <%= t('btn.select_group') %>
+      </div>
+    </td>
+    <td align="left" style="color:blue;">
+      <% unless @group_id.nil? %>
+        <%= Group.get_path(@group_id, @groups_cache) %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectUsers();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<%
+if target_attr.to_s == 'email'
+  email_type = params[:email_type]
+  email_sub_type = (email_type == 'main') ? nil : email_type
+%>
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td align="left">
+      <%
+      options = [[t('msg.main'), 'main']]
+      type_none = nil
+      THETIS_EMAIL_TYPES.each do |type|
+        val = User.get_email_type_name(type)
+
+        if type.empty?
+          type_none = [t('msg.others'), type]
+        else
+          options << [val, type]
+        end
+      end
+      options << type_none unless type_none.nil?
+      %>
+      <%= t('email.type.caption') %><%= t('cap.suffix') %>
+      <%= select_tag('email_type', options_for_select(options, email_type), :style => 'width:100px;', :onchange => "doUpdateUserEmails(#{@group_id})") %>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<% if @group_id.nil? %>
+
+  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple>
+  <%
+  users_available = Hash.new
+
+  login_groups = login_user.get_groups_a
+  login_groups.each do |group_id|
+    group_name = Group.get_path(group_id, @groups_cache)
+    group_users = Group.get_users(group_id)
+    group_users.each do |user|
+      user_id = user.id.to_s
+      if users_available.keys.include?(user_id)
+        users_available[user_id] << group_name
+      else
+        users_available[user_id] = [group_name]
+      end
+    end
+  end
+
+  login_teams = login_user.get_teams_a
+  login_teams.each do |team_id|
+    team_name = Team.get_name(team_id, @teams_cache)
+    begin
+      team = Team.find(team_id)
+      team_users = team.get_users_a
+    rescue
+      team_users = []
+    end
+    team_users.each do |user_id|
+      if users_available.keys.include?(user_id)
+        users_available[user_id] << team_name
+      else
+        users_available[user_id] = [team_name]
+      end
+    end
+  end
+
+  if login_groups.empty? and login_teams.empty?
+    users_available[login_user.id.to_s] = []
+  end
+
+  users_available.each do |user_id, org_names|
+    if !@users_selected.nil? and @users_selected.include?(user_id)
+      next
+    end
+
+    entries = []
+
+    case target_attr.to_s
+      when 'email'
+        user = User.find_with_cache(user_id, @user_obj_cache)
+        user_emails = user.get_emails_by_type(email_sub_type)
+        user_emails.each do |user_email|
+          disp = EmailsHelper.format_address_exp(user.get_name, user_email, false)
+          unless email_sub_type.nil? or email_sub_type.empty?
+            disp << t('paren.round.enclose', :name => User.get_email_type_name(email_sub_type))
+          end
+          entry_val = "#{disp}#{Email::ADDR_ORDER_SEPARATOR}#{user.get_xorder(@group_id)}"
+
+          entries << [disp, entry_val]
+        end
+      else
+        entry_val = user_id
+
+        disp = User.get_name(user_id, @users_cache)
+        disp += ' @ ' + truncate(org_names.join(', '), :length => 50) unless org_names.nil? or org_names.empty?
+
+        entries << [disp, entry_val]
+    end
+
+    entries.each do |entry|
+      disp, entry_val = entry
+  %>
+    <option value="<%= entry_val %>"><%= disp %></option>
+  <%
+    end
+  end
+  %>
+  </select>
+
+<% else %>
+
+  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple>
+    <%
+    users_available = Hash.new
+
+    unless @users.nil?
+      @users.each do |user|
+        user_id = user.id.to_s
+        users_available[user_id] = user.get_name
+      end
+    end
+
+    users_available.each do |user_id, name|
+      next if !@users_selected.nil? and @users_selected.include?(user_id)
+
+      entries = []
+
+      case target_attr.to_s
+        when 'email'
+          user = User.find_with_cache(user_id, @user_obj_cache)
+          user_emails = user.get_emails_by_type(email_sub_type)
+          user_emails.each do |user_email|
+            disp = EmailsHelper.format_address_exp(user.get_name, user_email, false)
+            unless email_sub_type.nil? or email_sub_type.empty?
+              disp << t('paren.round.enclose', :name => User.get_email_type_name(email_sub_type))
+            end
+            entry_val = "#{disp}#{Email::ADDR_ORDER_SEPARATOR}#{user.get_xorder(@group_id)}"
+            entries << [disp, entry_val]
+          end
+        else
+          entry_val = user_id
+          disp = name
+          entries << [disp, entry_val]
+      end
+
+      entries.each do |entry|
+        disp, entry_val = entry
+    %>
+      <option value="<%= entry_val %>"><%= disp %></option>
+    <%
+      end
+    end
+    %>
+  </select>
+
+<% end %>
+
+<script type="text/javascript">
+
+<% if target_attr.to_s == 'email' %>
+
+doUpdateUserEmails = function(group_id)
+{
+  var addParams = new Array();
+  if (group_id) {
+    addParams.push("group_id="+group_id);
+  }
+
+  var email_type = _z("email_type");
+  if (email_type) {
+    addParams.push("email_type="+email_type.value);
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_selectUsers",
+              "<%= submit_url %>",
+              {
+                method:"get",
+                parameters:addParams.join("&"),
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBoxProgress.remove();
+                }
+              }
+            );
+}
+
+onGradeHrSelectChanged = function(elem)
+{
+  doUpdateSchoolStudents(<%= @group_id %>);
+}
+
+<% end %>
+
+showGroupTreeToSelectUsers = function(group_id)
+{
+  var thetisBox = new ThetisBox;
+
+  thetisBox.progress = true;
+  thetisBox.setFormTag("<form action=\"<%= submit_url %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+doClearGroupToSelectUsers = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_selectUsers",
+              "<%= submit_url %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+}
+
+</script>
