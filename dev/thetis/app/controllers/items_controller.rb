@@ -45,14 +45,12 @@ class ItemsController < ApplicationController
   def list_my_folder
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    if login_user.nil?
+    if @login_user.nil?
       check_login
       return
     end
 
-    my_folder = login_user.get_my_folder
+    my_folder = @login_user.get_my_folder
 
     if my_folder.nil?
       render(:text => '')
@@ -74,8 +72,6 @@ class ItemsController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    login_user = session[:login_user]
-
     @folder_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @folder_id = params[:thetisBoxSelKeeper].split(':').last
@@ -91,7 +87,7 @@ class ItemsController < ApplicationController
     unless @folder_id.nil?
       session[:folder_id] = @folder_id
 
-      unless Folder.check_user_auth(@folder_id, login_user, 'r', true)
+      unless Folder.check_user_auth(@folder_id, @login_user, 'r', true)
         flash[:notice] = 'ERROR:' + t('folder.need_auth_to_read')
       end
     end
@@ -123,7 +119,7 @@ class ItemsController < ApplicationController
       unless folder_ids.nil?
         delete_ary = []
         folder_ids.each do |folder_id|
-          unless Folder.check_user_auth(folder_id, login_user, 'r', true)
+          unless Folder.check_user_auth(folder_id, @login_user, 'r', true)
             delete_ary << folder_id
           end
         end
@@ -131,7 +127,7 @@ class ItemsController < ApplicationController
       end
     end
 
-    sql = ItemsHelper.get_list_sql(login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, false, add_con)
+    sql = ItemsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, false, add_con)
     @item_pages, @items, @total_num = paginate_by_sql(Item, sql, 10)
   end
 
@@ -187,13 +183,11 @@ class ItemsController < ApplicationController
 
     @item = Item.find(params[:id])
 
-    login_user = session[:login_user]
-
-    unless @item.check_user_auth(login_user, 'r', true)
+    unless @item.check_user_auth(@login_user, 'r', true)
 
       Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
 
-      if login_user.nil?
+      if @login_user.nil?
         check_login
       else
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -221,11 +215,9 @@ class ItemsController < ApplicationController
   #
   def new
 
-    login_user = session[:login_user]
-
     @item = Item.new
     if params[:folder_id].nil? or params[:folder_id].empty?
-      my_folder = login_user.get_my_folder
+      my_folder = @login_user.get_my_folder
       if my_folder.nil?
         @item.folder_id = 0
       else
@@ -262,15 +254,13 @@ class ItemsController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @item = Item.find(params[:id])
 
     unless params[:thetisBoxSelKeeper].nil?
 
       folder_id = params[:thetisBoxSelKeeper].split(':').last
 
-      if Folder.check_user_auth(folder_id, login_user, 'w', true)
+      if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
         @item.update_attribute(:folder_id, folder_id)
         flash[:notice] = t('msg.move_success')
@@ -301,12 +291,11 @@ class ItemsController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-    is_admin = login_user.admin?(User::AUTH_ITEM)
+    is_admin = @login_user.admin?(User::AUTH_ITEM)
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
 
-    unless Folder.check_user_auth(folder_id, login_user, 'w', true)
+    unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
 
       list
@@ -320,7 +309,7 @@ class ItemsController < ApplicationController
 
         begin
           item = Item.find(item_id)
-          next if !is_admin and item.user_id != login_user.id
+          next if !is_admin and item.user_id != @login_user.id
 
           item.update_attribute(:folder_id, folder_id)
 
@@ -375,8 +364,7 @@ class ItemsController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-    is_admin = login_user.admin?(User::AUTH_ITEM)
+    is_admin = @login_user.admin?(User::AUTH_ITEM)
 
     count = 0
     params[:check_item].each do |item_id, value|
@@ -384,7 +372,7 @@ class ItemsController < ApplicationController
 
         begin
           item = Item.find(item_id)
-          next if !is_admin and item.user_id != login_user.id
+          next if !is_admin and item.user_id != @login_user.id
 
           item.destroy
 
@@ -410,9 +398,7 @@ class ItemsController < ApplicationController
   def duplicate
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    copies_folder = ItemsHelper.get_copies_folder(login_user.id)
+    copies_folder = ItemsHelper.get_copies_folder(@login_user.id)
 
     item = Item.find(params[:id])
     if item.is_a_copy?
@@ -420,8 +406,8 @@ class ItemsController < ApplicationController
     else
       item.xtype = Item::XTYPE_INFO
       item.public = false
-      item.title += ItemsHelper.get_next_revision(login_user.id, item.id)
-      copied_item = item.copy(login_user.id, copies_folder.id, [:image, :attachment])
+      item.title += ItemsHelper.get_next_revision(@login_user.id, item.id)
+      copied_item = item.copy(@login_user.id, copies_folder.id, [:image, :attachment])
 
       flash[:notice] = "#{t('msg.save_success')}#{t('cap.suffix')}<br/>#{copied_item.title}"
     end
@@ -440,8 +426,6 @@ class ItemsController < ApplicationController
   #
   def set_workflow
     Log.add_info(request, params.inspect)
-
-    login_user = session[:login_user]
 
     @item = Item.find(params[:id])
 
@@ -480,17 +464,15 @@ class ItemsController < ApplicationController
   def set_basic
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
-        and !login_user.admin?(User::AUTH_ZEPTAIR)
+        and !@login_user.admin?(User::AUTH_ZEPTAIR)
       render(:text => t('msg.need_to_be_admin'))
       return
     end
 
     folder_id = params[:item][:folder_id]
 
-    unless Folder.check_user_auth(folder_id, login_user, 'w', true)
+    unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
       @item = Item.new(params[:item])
       @item.errors.add_to_base t('folder.need_auth_to_write_in')
       render(:partial => 'ajax_item_basic', :layout => false)
@@ -515,7 +497,7 @@ class ItemsController < ApplicationController
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(folder_id)
       @item.attributes = params[:item]
-      @item.user_id = login_user.id
+      @item.user_id = @login_user.id
       @item.save
     else
       @item = Item.find(params[:id])
@@ -599,7 +581,7 @@ class ItemsController < ApplicationController
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(0)
       @item.attributes = params[:item]
-      @item.user_id = session[:login_user].id
+      @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
       @item.save
     else
@@ -622,9 +604,7 @@ class ItemsController < ApplicationController
   def recent_descriptions
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    sql = "select distinct * from logs where user_id=#{login_user.id} and (access_path like '%/items/set_description%') and (detail like '%\"id\"=>\"#{params[:id]}\"%') order by updated_at DESC limit 0,10"
+    sql = "select distinct * from logs where user_id=#{@login_user.id} and (access_path like '%/items/set_description%') and (detail like '%\"id\"=>\"#{params[:id]}\"%') order by updated_at DESC limit 0,10"
     @logs = Log.find_by_sql(sql)
 
     render(:partial => 'ajax_recent_descriptions', :layout => false)
@@ -647,7 +627,7 @@ class ItemsController < ApplicationController
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(0)
       @item.attributes = params[:item]
-      @item.user_id = session[:login_user].id
+      @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
 
       [:image0, :image1].each do |img|
@@ -706,10 +686,8 @@ class ItemsController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-
     parent_item = img.item
-    if parent_item.nil? or !parent_item.check_user_auth(login_user, 'r', true)
+    if parent_item.nil? or !parent_item.check_user_auth(@login_user, 'r', true)
       Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
       return
@@ -728,14 +706,12 @@ class ItemsController < ApplicationController
   def delete_image
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     begin
       image = Image.find(params[:image_id])
 
       @item = Item.find(image.item_id)
 
-      unless @item.check_user_auth(login_user, 'w', true)
+      unless @item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
 
@@ -758,14 +734,12 @@ class ItemsController < ApplicationController
   def edit_image_info
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     begin
       @image = Image.find(params[:image_id])
 
       item = Item.find(@image.item_id)
 
-      unless item.check_user_auth(login_user, 'w', true)
+      unless item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
     rescue StandardError => err
@@ -782,14 +756,12 @@ class ItemsController < ApplicationController
   def update_image_info
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     image = Image.find(params[:image_id])
 
     # Getting Item at first for the case of resetting the db connection by an error.
     @item = Item.find(image.item_id)
 
-    unless @item.check_user_auth(login_user, 'w', true)
+    unless @item.check_user_auth(@login_user, 'w', true)
       raise t('msg.need_to_be_owner')
     end
 
@@ -864,7 +836,7 @@ class ItemsController < ApplicationController
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(0)
       @item.attributes = params[:item]
-      @item.user_id = session[:login_user].id
+      @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
 
       [:attachment0, :attachment1].each do |attach|
@@ -919,10 +891,8 @@ class ItemsController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-
     parent_item = attach.item || ((attach.comment.nil?) ? nil : attach.comment.item)
-    if parent_item.nil? or !parent_item.check_user_auth(login_user, 'r', true)
+    if parent_item.nil? or !parent_item.check_user_auth(@login_user, 'r', true)
       Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
       return
@@ -963,14 +933,12 @@ class ItemsController < ApplicationController
   def delete_attachment
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     begin
       attach = Attachment.find(params[:attachment_id])
 
       @item = Item.find(attach.item_id)
 
-      unless @item.check_user_auth(login_user, 'w', true)
+      unless @item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
 
@@ -993,14 +961,12 @@ class ItemsController < ApplicationController
   def edit_attachment_info
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     begin
       @attachment = Attachment.find(params[:attachment_id])
 
       item = Item.find(@attachment.item_id)
 
-      unless item.check_user_auth(login_user, 'w', true)
+      unless item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
     rescue StandardError => err
@@ -1017,14 +983,12 @@ class ItemsController < ApplicationController
   def update_attachment_info
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     attachment = Attachment.find(params[:attachment_id])
 
     # Getting Item at first for the case of resetting the db connection by an error.
     @item = Item.find(attachment.item_id)
 
-    unless @item.check_user_auth(login_user, 'w', true)
+    unless @item.check_user_auth(@login_user, 'w', true)
       raise t('msg.need_to_be_owner')
     end
 
@@ -1111,8 +1075,6 @@ class ItemsController < ApplicationController
     # user = User.find(@item.user_id)
     # NoticeMailer.deliver_comment(user, ApplicationHelper.root_url(request)) unless user.nil?
 
-    login_user = session[:login_user]
-
     case @item.xtype
       when Item::XTYPE_WORKFLOW
         @workflow = @item.workflow
@@ -1167,14 +1129,12 @@ class ItemsController < ApplicationController
   def destroy_comment
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     comment = Comment.find(params[:comment_id])
     @item = comment.item
 
-    unless login_user.admin?(User::AUTH_ITEM) or \
-              comment.user_id == login_user.id or \
-              @item.user_id == login_user.id
+    unless @login_user.admin?(User::AUTH_ITEM) or \
+              comment.user_id == @login_user.id or \
+              @item.user_id == @login_user.id
       render(:text => 'ERROR:' + t('msg.need_to_be_admin'))
       return
     end
@@ -1419,15 +1379,14 @@ class ItemsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Item.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Item.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_ITEM) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')
@@ -1440,15 +1399,14 @@ class ItemsController < ApplicationController
   #Filter method to check if the current User is registrant of the specified Comment.
   #
   def check_comment_registrant
-    return if session[:login_user].nil?
+    return if @login_user.nil?
 
     begin
       owner_id = Comment.find(params[:comment_id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_ITEM) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
       Log.add_check(request, '[check_comment_registrant]'+request.to_s)
 
       flash[:notice] = t('msg.need_auth_to_access')

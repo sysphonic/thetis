@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <%= form_tag( {:controller => 'workflows', :action => 'create' }, :name => 'form_workflow', :method => 'post') %>
 
 <table id="div_workflow_list" width="100%" cellspacing="0" cellpadding="0" style="background-color:wheat; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
@@ -20,7 +18,7 @@
               <%
               unless @tmpl_workflows_folder.nil?
                 @group_obj_cache ||= {}
-                group_ids = login_user.get_groups_a(true, @group_obj_cache)
+                group_ids = @login_user.get_groups_a(true, @group_obj_cache)
                 unless group_ids.include?('0')
                   group_ids << '0'
                 end
@@ -82,11 +80,11 @@
               </div>
             </td>
           </tr>
-        <% if WorkflowsHelper.exists_decided_inbox?(login_user.id) %>
+        <% if WorkflowsHelper.exists_decided_inbox?(@login_user.id) %>
           <tr height="5"><td></td></tr>
           <tr>
             <td align="center">
-              <table cellspacing="0" cellpadding="0" width="300" align="center" onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(login_user.id).id %>);" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
+              <table cellspacing="0" cellpadding="0" width="300" align="center" onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
                 <tr height="35">
                   <td width="15"></td>
                   <td width="20" align="center">

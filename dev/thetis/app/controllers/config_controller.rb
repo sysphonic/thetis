@@ -41,15 +41,13 @@ class ConfigController < ApplicationController
 
     cat_h = {:desktop => User::AUTH_DESKTOP, :user => User::AUTH_USER, :log => User::AUTH_LOG}
 
-    login_user = session[:login_user]
-
     yaml = ApplicationHelper.get_config_yaml
 
     cat_h.keys.each do |cat|
 
       next if params[cat].nil? or params[cat].empty?
 
-      unless login_user.admin?(cat_h[cat])
+      unless @login_user.admin?(cat_h[cat])
         render(:text => t('msg.need_to_be_admin'))
         return
       end

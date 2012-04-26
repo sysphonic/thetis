@@ -1,7 +1,5 @@
 
 <%
-login_user = session[:login_user]
-
 groups_cache = {}
 %>
 
@@ -12,7 +10,7 @@ groups_cache = {}
     <td>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-        <% if login_user.admin?(User::AUTH_TIMECARD) %>
+        <% if @login_user.admin?(User::AUTH_TIMECARD) %>
           <td align="left" nowrap width="1%">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
           </td>
@@ -42,7 +40,7 @@ groups_cache = {}
   <% end %>
           </td>
           <td align="right">
-  <% if login_user.admin?(User::AUTH_TIMECARD) %>
+  <% if @login_user.admin?(User::AUTH_TIMECARD) %>
             <input type="button" value="<%= t('btn.multi_update')%>" onclick="showUpdateMulti();">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.multi_update_paid_holidays_info') %>');">
             &nbsp;&nbsp;
@@ -119,9 +117,9 @@ year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_fr
       given_num = (paid_hld.nil?)?0:paid_hld.num
       carried_over = PaidHoliday.get_carried_over(user.id, fiscal_year)
       %>
-      <%= given_num + carried_over - applied_paid_hlds %>
+      <%= (given_num + carried_over - applied_paid_hlds) %>
     </td>
-  <% if login_user.admin?(User::AUTH_TIMECARD) %>
+  <% if @login_user.admin?(User::AUTH_TIMECARD) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= user.id %>, '<%=ApplicationHelper.h_s_quote user.get_name_for_timecard(yaml) %>');" />
     </td>
@@ -208,7 +206,7 @@ function showUpdateMulti()
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('timecard.paid_holiday') %>";
-  thetisBox.overflow = "hide";
+  thetisBox.overflow = "hidden";
   thetisBox.show("CENTER", "350,280", "TRAY", "", "", content);
 }
 
@@ -369,7 +367,7 @@ function showUpdateGivenDays(user_id, defYear, defNum)
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('timecard.paid_holiday') %>";
-  thetisBox.overflow = "hide";
+  thetisBox.overflow = "hidden";
   thetisBox.show("CENTER", "300,240", "TRAY", "", "", content);
 }
 

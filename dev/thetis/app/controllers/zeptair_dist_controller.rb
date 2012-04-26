@@ -126,8 +126,6 @@ class ZeptairDistController < ApplicationController
   def reply
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
     unless params[:attach_id].nil? or params[:attach_id].empty?
       target = Attachment.find(params[:attach_id])
     end
@@ -141,7 +139,7 @@ class ZeptairDistController < ApplicationController
     end
     item = target.item
 
-    comment = ZeptairDistHelper.get_comment_of(item.id, login_user.id)
+    comment = ZeptairDistHelper.get_comment_of(item.id, @login_user.id)
 
     case params[:status]
       when ZeptairDistHelper::ENTRY_STATUS_SAVED, ZeptairDistHelper::ENTRY_STATUS_EXECUTED, ZeptairDistHelper::ENTRY_STATUS_ERROR
@@ -149,7 +147,7 @@ class ZeptairDistController < ApplicationController
 
         if comment.nil?
           comment = Comment.new
-          comment.user_id = login_user.id
+          comment.user_id = @login_user.id
           comment.item_id = item.id
           comment.xtype = Comment::XTYPE_DIST_ACK
           comment.message = new_entry + "\n"

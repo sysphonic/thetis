@@ -1,13 +1,11 @@
 
-<% login_user = session[:login_user] %>
-
 <%
-@paintmail = login_user.paintmail
-path = THETIS_RELATIVE_URL_ROOT + "/paintmail/save_conf?user[name]=#{login_user.name}&user[password]=#{login_user.password}&"
+@paintmail = @login_user.paintmail
+path = THETIS_RELATIVE_URL_ROOT + "/paintmail/save_conf?user[name]=#{@login_user.name}&user[password]=#{@login_user.password}&"
 paintMailUrl = request.protocol+request.host_with_port+path
 
 confDir = ''
-smtpSenderAddress = login_user.email
+smtpSenderAddress = @login_user.email
 smtpServerAddress = ActionMailer::Base.smtp_settings[:address]
 smtpServerPort = ActionMailer::Base.smtp_settings[:port]
 smtpAuth = !ActionMailer::Base.smtp_settings[:authentication].nil?

@@ -32,9 +32,7 @@ class ZeptairPostController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-
-    post_item = ZeptairPostHelper.get_item_for(login_user)
+    post_item = ZeptairPostHelper.get_item_for(@login_user)
 
     Attachment.create(params, post_item, 0)
 
@@ -52,9 +50,7 @@ class ZeptairPostController < ApplicationController
 
     attach = Attachment.find(params[:id])
 
-    login_user = session[:login_user]
-
-    post_item = ZeptairPostHelper.get_item_for(login_user)
+    post_item = ZeptairPostHelper.get_item_for(@login_user)
 
     if post_item.id != attach.item_id
       render(:text => 'ERROR:' + t('msg.system_error'))
@@ -78,9 +74,7 @@ class ZeptairPostController < ApplicationController
   def query
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
-    unless login_user.admin?(User::AUTH_ZEPTAIR)
+    unless @login_user.admin?(User::AUTH_ZEPTAIR)
       render(:text => 'ERROR:' + t('msg.need_to_be_admin'))
       return
     end
@@ -135,12 +129,10 @@ class ZeptairPostController < ApplicationController
   def delete_attachment
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
     target_user = nil
 
     unless params[:user_id].nil? or params[:user_id].empty?
-      if login_user.admin?(User::AUTH_ZEPTAIR) or login_user.id.to_s == params[:user_id].to_s
+      if @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id.to_s == params[:user_id].to_s
         target_user = User.find(params[:user_id])
       end
     end
@@ -149,7 +141,7 @@ class ZeptairPostController < ApplicationController
 
       target_user = User.find(:first, :conditions => ['zeptair_id=?', params[:zeptair_id]])
 
-      unless login_user.admin?(User::AUTH_ZEPTAIR) or login_user.id == target_user.id
+      unless @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id == target_user.id
         target_user = nil
       end
     end
@@ -172,7 +164,7 @@ class ZeptairPostController < ApplicationController
 
         item = Item.find(attach.item_id)
 
-        if !login_user.admin?(User::AUTH_ZEPTAIR) and item.user_id != login_user.id
+        if !@login_user.admin?(User::AUTH_ZEPTAIR) and item.user_id != @login_user.id
           raise t('msg.need_to_be_owner')
         end
 

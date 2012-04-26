@@ -26,7 +26,7 @@ module LoginChecker
   #
   def allow_midair_login
 
-    if session[:login_user].nil?
+    if @login_user.nil?
       unless params[:user].nil?
         user = User.authenticate(params[:user])
         unless user.nil?
@@ -51,11 +51,12 @@ module LoginChecker
 
       if Time.utc(dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec) < Time.now.utc - THETIS_SESSION_EXPIRE_AFTER_MIN * 60
         session[:login_user] = nil
+        @login_user = nil
         reset_session
       end
     end
 
-    if session[:login_user].nil?
+    if @login_user.nil?
       Log.add_check(request, '[check_login]'+request.to_s)
 
       if request.xhr?
@@ -78,10 +79,10 @@ module LoginChecker
   #
   def check_auth(required_auth)
 
-    return if session[:login_user].nil? and self.performed?
+    return if @login_user.nil? and self.performed?
 
-    if session[:login_user].nil? \
-        or !session[:login_user].admin?(required_auth)
+    if @login_user.nil? \
+        or !@login_user.admin?(required_auth)
       Log.add_check(request, '[check_auth]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_admin')

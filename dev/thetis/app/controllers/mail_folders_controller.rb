@@ -27,10 +27,8 @@ class MailFoldersController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    login_user = session[:login_user]
-
     con = []
-    con << "(user_id=#{login_user.id})"
+    con << "(user_id=#{@login_user.id})"
 
     account_xtype = params[:mail_account_xtype]
 
@@ -45,13 +43,13 @@ class MailFoldersController < ApplicationController
       mail_account_ids << mail_account.id
 
       if MailFolder.count(:id, :conditions => "mail_account_id=#{mail_account.id}") <= 0
-        login_user.create_default_mail_folders(mail_account.id)
+        @login_user.create_default_mail_folders(mail_account.id)
       end
 
-      Email.destroy_by_user(login_user.id, "status='#{Email::STATUS_TEMPORARY}'")
+      Email.destroy_by_user(@login_user.id, "status='#{Email::STATUS_TEMPORARY}'")
     end
 
-    @folder_tree = MailFolder.get_tree_for(login_user, mail_account_ids)
+    @folder_tree = MailFolder.get_tree_for(@login_user, mail_account_ids)
   end
 
   #=== ajax_get_tree
@@ -61,8 +59,6 @@ class MailFoldersController < ApplicationController
   #
   def ajax_get_tree
     Log.add_info(request, params.inspect)
-
-    login_user = session[:login_user]
 
     show_tree
 
@@ -86,7 +82,7 @@ class MailFoldersController < ApplicationController
       @mail_folder = MailFolder.new
       @mail_folder.name = params[:thetisBoxEdit]
       @mail_folder.parent_id = parent_id
-      @mail_folder.user_id = session[:login_user].id
+      @mail_folder.user_id = @login_user.id
       @mail_folder.xtype = nil
       @mail_folder.save!
     end
@@ -119,12 +115,10 @@ class MailFoldersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     mail_account_id = params[:mail_account_id]
 
     mail_folder = MailFolder.find(params[:id])
-    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
+    trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     if trash_folder.nil?
       mail_folder.force_destroy
@@ -194,14 +188,12 @@ class MailFoldersController < ApplicationController
   def get_mails
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if !params[:pop].nil? and params[:pop] == 'true'
       new_arrivals = 0
 
       mail_account_id = params[:mail_account_id]
       if mail_account_id.nil? or mail_account_id.empty?
-        mail_accounts = MailAccount.find_all("user_id=#{login_user.id}")
+        mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
         mail_accounts.each do |mail_account|
           new_arrivals += Email.do_pop(mail_account)
         end
@@ -219,7 +211,7 @@ class MailFoldersController < ApplicationController
     if folder_id == '0'   # '0' for ROOT
       @emails = nil
     else
-      @emails = MailFolder.get_mails_to_show(folder_id, login_user)
+      @emails = MailFolder.get_mails_to_show(folder_id, @login_user)
     end
 
     session[:mailfolder_id] = folder_id
@@ -277,8 +269,6 @@ class MailFoldersController < ApplicationController
   def get_mail_attachment
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     attached_id = params[:id].to_i
     mail_attach = MailAttachment.find(attached_id)
 
@@ -288,7 +278,7 @@ class MailFoldersController < ApplicationController
     end
 
     email = Email.find(mail_attach.email_id)
-    if email.nil? or email.user_id != login_user.id
+    if email.nil? or email.user_id != @login_user.id
       render(:text => '')
       return
     end
@@ -318,8 +308,6 @@ class MailFoldersController < ApplicationController
   def move_mail
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
       flash[:notice] = 'ERROR:' + t('msg.system_error')
       prms = ApplicationHelper.get_fwd_params(params)
@@ -329,7 +317,7 @@ class MailFoldersController < ApplicationController
     end
 
     parent_id = params[:thetisBoxSelKeeper].split(':').last
-    if parent_id == '0' or MailFolder.find(parent_id).user_id != login_user.id
+    if parent_id == '0' or MailFolder.find(parent_id).user_id != @login_user.id
       flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
       prms = ApplicationHelper.get_fwd_params(params)
       prms[:action] = 'show_tree'
@@ -356,8 +344,6 @@ class MailFoldersController < ApplicationController
   def get_mail_raw
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     email = Email.find(params[:id])
     email_name = email.subject + Email::EXT_RAW
 
@@ -382,11 +368,9 @@ class MailFoldersController < ApplicationController
   def ajax_delete_mail
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     mail_account_id = params[:mail_account_id]
 
-    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
+    trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     email = Email.find(params[:id])
     if email.mail_folder_id == trash_folder.id \
@@ -399,7 +383,7 @@ class MailFoldersController < ApplicationController
     end
 
     folder_id = params[:folder_id]
-    @emails = MailFolder.get_mails_to_show(folder_id, login_user)
+    @emails = MailFolder.get_mails_to_show(folder_id, @login_user)
 
     render(:partial => 'ajax_folder_mails', :layout => false)
   end
@@ -412,14 +396,12 @@ class MailFoldersController < ApplicationController
   def empty
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     mail_account_id = params[:mail_account_id]
 
-    trash_folder = MailFolder.get_for(login_user, mail_account_id, MailFolder::XTYPE_TRASH)
+    trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     mail_folder = MailFolder.find(params[:id])
-    emails = MailFolder.get_mails(mail_folder.id, login_user) || []
+    emails = MailFolder.get_mails(mail_folder.id, @login_user) || []
 
     if mail_folder.id == trash_folder.id \
         or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
@@ -434,7 +416,7 @@ class MailFoldersController < ApplicationController
       flash[:notice] = t('msg.moved_to_trash')
     end
 
-    @emails = MailFolder.get_mails_to_show(mail_folder.id, login_user)
+    @emails = MailFolder.get_mails_to_show(mail_folder.id, @login_user)
 
     render(:partial => 'ajax_folder_mails', :layout => false)
   end
@@ -449,15 +431,14 @@ class MailFoldersController < ApplicationController
     return if params[:id].nil? \
              or params[:id].empty? \
              or params[:id]=='0' \
-             or session[:login_user].nil?
+             or @login_user.nil?
 
     begin
       owner_id = MailFolder.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_MAIL) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_MAIL) and owner_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')
@@ -470,15 +451,14 @@ class MailFoldersController < ApplicationController
   #Filter method to check if current User is owner of the specified Email.
   #
   def check_mail_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Email.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_MAIL) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_MAIL) and owner_id != @login_user.id
       Log.add_check(request, '[check_mail_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

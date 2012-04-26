@@ -1,7 +1,5 @@
 
-<% login_user = session[:login_user] %>
-
-<% if Folder.check_user_auth(@folder_id, login_user, 'w', true) %>
+<% if Folder.check_user_auth(@folder_id, @login_user, 'w', true) %>
 
   <% if @items.nil? or @items.empty? %>
 

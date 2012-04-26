@@ -1,6 +1,4 @@
 <%
-login_user = session[:login_user]
-
 groups_cache = {}
 %>
 
@@ -30,7 +28,7 @@ groups_cache = {}
       <%
       users_available = PseudoHash.new
 
-      login_groups = login_user.get_groups_a
+      login_groups = @login_user.get_groups_a
       login_groups.each do |group_id|
         group_name = Group.get_path(group_id, groups_cache)
         group_users = Group.get_users(group_id)
@@ -44,7 +42,7 @@ groups_cache = {}
         end
       end
 
-      login_teams = login_user.get_teams_a
+      login_teams = @login_user.get_teams_a
       login_teams.each do |team_id|
         team_name = Team.get_name(team_id)
         begin
@@ -63,7 +61,7 @@ groups_cache = {}
       end
 
       if login_groups.empty? and login_teams.empty?
-        users_available[login_user.id.to_s, true] = []
+        users_available[@login_user.id.to_s, true] = []
       end
 
       users_available.each do |user_id, org_names|

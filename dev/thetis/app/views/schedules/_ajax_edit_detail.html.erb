@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <% if @schedule.nil? %>
 
@@ -365,7 +364,7 @@ editEquipment = function()
                   <%
                   equipment_available = {}
 
-                  Equipment.get_for(login_user).each do |equipment|
+                  Equipment.get_for(@login_user).each do |equipment|
                     equipment_id = equipment.id.to_s
                     equipment_available[equipment_id] = equipment.name
                   end

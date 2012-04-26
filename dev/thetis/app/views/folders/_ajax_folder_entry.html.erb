@@ -16,11 +16,11 @@ unless @folder.nil?
     folder_close = icons[2]
     %>
     <img id="<%= div_id %>_open" src="<%= folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= folder_close %>" border="0" style="display:none;">
-    <span id="<%= div_id %>_name"><%=h @folder.name %></span>
+    <span id="<%= div_id %>_name"><%= @folder.name %></span>
   </a><br/>
   <div id="<%= div_id %>" class="thetisBoxTreeBlock" style="padding-left:30px; border-left:1px dotted navy;"></div>
 </div>
-<span id="path_<%= @folder.id %>" style="display:none;"><%=h @folder.get_path %></span>
+<span id="path_<%= @folder.id %>" style="display:none;"><%= @folder.get_path %></span>
 <span id="xtype_<%= @folder.id %>" style="display:none;"><%= @folder.xtype %></span>
 
 <% end %>

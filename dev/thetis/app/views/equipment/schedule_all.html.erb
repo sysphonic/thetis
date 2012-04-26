@@ -9,12 +9,11 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 
 </script>
 
-<% login_user = session[:login_user] %>
 <%
-  if login_user.nil?
+  if @login_user.nil?
     login_id = ''
   else
-    login_id = login_user.id.to_s
+    login_id = @login_user.id.to_s
   end
 %>
 
@@ -25,13 +24,13 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 <table align="center" width="98%" cellspacing="0" cellpadding="0">
   <tr>
     <td align="left" width="30%">
-    <% unless login_user.nil? %>
+    <% unless @login_user.nil? %>
       <table align="left" cellspacing="0" cellpadding="0" width="65">
         <tr>
           <td align="left" nowrap width="30">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_string, :showNew => 'true') %>';">
           </td>
-          <% if login_user.admin? User::AUTH_EQUIPMENT %>
+          <% if @login_user.admin? User::AUTH_EQUIPMENT %>
           <td width="5"></td>
           <td align="left" nowrap width="30">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
@@ -44,9 +43,9 @@ calDisp.setStyle( "frame_color", "#3333CC" );
     <td align="right" nowrap width="30%">
   <%
   display = [[h(t('equipment.all')), 'all']]
-  unless login_user.nil?
+  unless @login_user.nil?
     group_obj_cache = {}
-    groups_a = login_user.get_groups_a(true, group_obj_cache)
+    groups_a = @login_user.get_groups_a(true, group_obj_cache)
     groups_a.each do |group_id|
       if group_obj_cache[group_id].nil?
         group_name = Group.get_name(group_id)
@@ -55,7 +54,7 @@ calDisp.setStyle( "frame_color", "#3333CC" );
       end
       display << [h(group_name), 'group_'+group_id]
     end
-    teams_a = login_user.get_teams_a
+    teams_a = @login_user.get_teams_a
     teams_a.each do |team_id|
       display << [h(Team.get_name(team_id)), 'team_'+team_id]
     end

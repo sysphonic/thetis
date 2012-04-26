@@ -9,7 +9,7 @@
     <td width="10" rowspan="3">&nbsp;</td>
     <td align="right" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-<% unless session[:login_user].nil? %>
+<% unless @login_user.nil? %>
   <%= t('cap.targets') %> <%= select_tag 'filter',
                            options_for_select([[h(t('team.all')), 'all'],
                                               [h(Team.status_name(Team::STATUS_STANDBY)), Team::STATUS_STANDBY],

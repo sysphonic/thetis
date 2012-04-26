@@ -1,10 +1,9 @@
 
 <%
-login_user = session[:login_user]
 date_s = @day.strftime(Schedule::SYS_DATE_FORM)
 
-auth_read = @schedule.check_user_auth(login_user, 'r', true)
-auth_write = @schedule.check_user_auth(login_user, 'w', true)
+auth_read = @schedule.check_user_auth(@login_user, 'r', true)
+auth_write = @schedule.check_user_auth(@login_user, 'w', true)
 
 if @schedule.holiday?
   bg_color = 'white'

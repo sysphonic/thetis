@@ -1,4 +1,4 @@
-<% login_user = session[:login_user] %>
+
 <table cellspacing="0" cellpadding="0" width="100%">
   <tr>
     <td align="center" valign="top">
@@ -13,7 +13,6 @@
       <%
       @schedules_hash.each do |day, schedules|
         @day = day
-        date_string = @day.strftime(Schedule::SYS_DATE_FORM)
       %>
           <td valign="top" style="border:steelblue 1px solid;">
 

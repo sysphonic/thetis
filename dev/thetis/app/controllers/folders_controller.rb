@@ -31,9 +31,7 @@ class FoldersController < ApplicationController
   def show_tree
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER)
+    if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
 
       @group_id = nil
       if !params[:thetisBoxSelKeeper].nil?
@@ -44,7 +42,7 @@ class FoldersController < ApplicationController
 
       @folder_tree = Folder.get_tree_by_group_for_admin(@group_id || '0')
     else
-      @folder_tree = Folder.get_tree_for(login_user)
+      @folder_tree = Folder.get_tree_for(@login_user)
     end
   end
 
@@ -56,11 +54,9 @@ class FoldersController < ApplicationController
   def ajax_get_tree
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     admin = false
 
-    @folder_tree = Folder.get_tree_for(login_user, admin)
+    @folder_tree = Folder.get_tree_for(@login_user, admin)
 
     render(:partial => 'ajax_get_tree', :layout => false)
   end
@@ -76,7 +72,7 @@ class FoldersController < ApplicationController
 
     parent_id = params[:selectedFolderId]
 
-    unless Folder.check_user_auth(parent_id, session[:login_user], 'w', true)
+    unless Folder.check_user_auth(parent_id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_modify')
       render(:partial => 'ajax_folder_entry', :layout => false)
       return
@@ -106,7 +102,7 @@ class FoldersController < ApplicationController
 
     @folder = Folder.find(params[:id])
 
-    unless Folder.check_user_auth(@folder.id, session[:login_user], 'w', true)
+    unless Folder.check_user_auth(@folder.id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_modify')
       render(:partial => 'ajax_folder_name', :layout => false)
       return
@@ -129,7 +125,7 @@ class FoldersController < ApplicationController
 
     @folder = Folder.find(params[:id])
 
-    unless Folder.check_user_auth(@folder.id, session[:login_user], 'w', true)
+    unless Folder.check_user_auth(@folder.id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_modify')
       render(:partial => 'common/flash_notice', :layout => false)
       return
@@ -166,11 +162,11 @@ class FoldersController < ApplicationController
 
     check = true
 
-    unless Folder.check_user_auth(parent_id, session[:login_user], 'w', true)
+    unless Folder.check_user_auth(parent_id, @login_user, 'w', true)
       check = false
     end
 
-    unless Folder.check_user_auth(@folder.id, session[:login_user], 'w', true)
+    unless Folder.check_user_auth(@folder.id, @login_user, 'w', true)
       check = false
     end
 
@@ -223,15 +219,14 @@ class FoldersController < ApplicationController
   def get_items
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     folder_id = params[:id]
 
-    if Folder.check_user_auth(folder_id, login_user, 'r', true)
+    if Folder.check_user_auth(folder_id, @login_user, 'r', true)
 
-      if !login_user.nil? and login_user.admin?(User::AUTH_ITEM)
+      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
         @items = Folder.get_items_admin(folder_id)
       else
-        @items = Folder.get_items(login_user, folder_id)
+        @items = Folder.get_items(@login_user, folder_id)
       end
 
     else
@@ -253,7 +248,6 @@ class FoldersController < ApplicationController
   def get_items_order
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @folder_id = params[:id]
 
     if @folder_id != '0'
@@ -264,11 +258,11 @@ class FoldersController < ApplicationController
       end
     end
 
-    if Folder.check_user_auth(@folder_id, login_user, 'r', true)
-      if !login_user.nil? and login_user.admin?(User::AUTH_ITEM)
+    if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
+      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
         @items = Folder.get_items_admin(@folder_id, 'xorder ASC')
       else
-        @items = Folder.get_items(login_user, @folder_id, 'xorder ASC')
+        @items = Folder.get_items(@login_user, @folder_id, 'xorder ASC')
       end
     end
 
@@ -285,18 +279,16 @@ class FoldersController < ApplicationController
   def update_items_order
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     folder_id = params[:id]
 
-    if Folder.check_user_auth(folder_id, login_user, 'w', true)
+    if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
       order_ary = params[:items_order]
 
-      if !login_user.nil? and login_user.admin?(User::AUTH_ITEM)
+      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
         items = Folder.get_items_admin(folder_id)
       else
-        items = Folder.get_items(login_user, folder_id)
+        items = Folder.get_items(@login_user, folder_id)
       end
       items.each do |item|
         item.update_attribute(:xorder, order_ary.index(item.id.to_s) + 1)
@@ -316,7 +308,6 @@ class FoldersController < ApplicationController
   def get_folders_order
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @folder_id = params[:id]
     @group_id = params[:group_id]
 
@@ -324,7 +315,7 @@ class FoldersController < ApplicationController
       @folder = Folder.find(@folder_id)
     end
 
-    @folders = Folder.get_childs_for(login_user, @folder_id, false, nil, true)
+    @folders = Folder.get_childs_for(@login_user, @folder_id, false, nil, true)
 
     if @folder_id == '0'
       delete_ary = FoldersHelper.get_except_top_for_admin(@folders, @group_id)
@@ -349,8 +340,6 @@ class FoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     order_ary = params[:folders_order]
-
-    login_user = session[:login_user]
 
     folders = Folder.get_childs(params[:id], nil, false, true, false)
     # folders must be ordered by xorder ASC.
@@ -411,10 +400,9 @@ class FoldersController < ApplicationController
   def set_disp_ctrl
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     folder_id = params[:id]
 
-    if Folder.check_user_auth(folder_id, login_user, 'w', true)
+    if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
       @folder = Folder.find(folder_id)
 
@@ -461,9 +449,7 @@ class FoldersController < ApplicationController
 
     session[:folder_id] = params[:id]
 
-    login_user = session[:login_user]
-
-    if !login_user.nil? and (login_user.admin?(User::AUTH_FOLDER) or (!@folder.nil? and @folder.in_my_folder_of?(login_user.id)))
+    if !@login_user.nil? and (@login_user.admin?(User::AUTH_FOLDER) or (!@folder.nil? and @folder.in_my_folder_of?(@login_user.id)))
       render(:partial => 'ajax_auth_users', :layout => false)
     else
       render(:partial => 'ajax_auth_disp', :layout => false)
@@ -504,10 +490,9 @@ class FoldersController < ApplicationController
   def set_auth_users
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @folder = Folder.find(params[:id])
 
-    if Folder.check_user_auth(@folder.id, login_user, 'w', true)
+    if Folder.check_user_auth(@folder.id, @login_user, 'w', true)
 
       read_users = []
       write_users = []
@@ -582,10 +567,9 @@ class FoldersController < ApplicationController
   def set_auth_groups
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @folder = Folder.find(params[:id])
 
-    if Folder.check_user_auth(@folder.id, login_user, 'w', true)
+    if Folder.check_user_auth(@folder.id, @login_user, 'w', true)
       read_groups = []
       write_groups = []
       groups_auth = params[:groups_auth]
@@ -634,8 +618,7 @@ class FoldersController < ApplicationController
       @folder = nil
     end
 
-    login_user = session[:login_user]
-    target_user_id = (login_user.admin?(User::AUTH_TEAM))?(nil):(login_user.id)
+    target_user_id = (@login_user.admin?(User::AUTH_TEAM))?(nil):(@login_user.id)
     @teams = Team.get_for(target_user_id, true)
 
     session[:folder_id] = params[:id]
@@ -651,10 +634,9 @@ class FoldersController < ApplicationController
   def set_auth_teams
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @folder = Folder.find(params[:id])
 
-    if Folder.check_user_auth(@folder.id, login_user, 'w', true)
+    if Folder.check_user_auth(@folder.id, @login_user, 'w', true)
       read_teams = []
       write_teams = []
       teams_auth = params[:teams_auth]
@@ -681,7 +663,7 @@ class FoldersController < ApplicationController
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_modify')
     end
 
-    target_user_id = (login_user.admin?(User::AUTH_TEAM))?(nil):(login_user.id)
+    target_user_id = (@login_user.admin?(User::AUTH_TEAM))?(nil):(@login_user.id)
     @teams = Team.get_for(target_user_id, true)
     render(:partial => 'ajax_auth_teams', :layout => false)
 
@@ -700,15 +682,13 @@ class FoldersController < ApplicationController
 
     Item.destroy(params[:id])
 
-    login_user = session[:login_user]
-
     folder_id = params[:folder_id]
 
-    if Folder.check_user_auth(folder_id, login_user, 'r', true)
-      if !login_user.nil? and login_user.admin?(User::AUTH_ITEM)
+    if Folder.check_user_auth(folder_id, @login_user, 'r', true)
+      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
         @items = Folder.get_items_admin(folder_id)
       else
-        @items = Folder.get_items(login_user, folder_id)
+        @items = Folder.get_items(@login_user, folder_id)
       end
     end
 
@@ -721,15 +701,14 @@ class FoldersController < ApplicationController
   #Filter method to check if current User is owner of the specified Item.
   #
   def check_item_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Item.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_ITEM) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
       Log.add_check(request, '[check_item_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

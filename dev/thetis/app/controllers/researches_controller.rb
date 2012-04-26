@@ -419,7 +419,7 @@ class ResearchesController < ApplicationController
 
     # Saved contents of Login User
     begin
-      @research = Research.find(:first, :conditions => ['user_id=?', session[:login_user].id])
+      @research = Research.find(:first, :conditions => ['user_id=?', @login_user.id])
     rescue
     end
     if @research.nil?
@@ -469,7 +469,7 @@ class ResearchesController < ApplicationController
     if params[:research_id].nil? or params[:research_id].empty?
       @research = Research.new(params[:research])
       @research.status = Research::U_STATUS_IN_ACTON
-      @research.update_attribute(:user_id, session[:login_user].id)
+      @research.update_attribute(:user_id, @login_user.id)
     else
       @research = Research.find(params[:research_id])
       @research.update_attributes(params[:research])

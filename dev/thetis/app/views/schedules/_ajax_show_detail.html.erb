@@ -29,10 +29,9 @@ href = url_for(:controller => 'schedules', :action => 'show_in_day', :id => @sch
 <% else %>
         <%= @schedule.title %>
 <%
-login_user = session[:login_user]
 toy_xtype = Toy::XTYPE_SCHEDULE
 toy_target_id = @schedule.id
-if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(login_user.id.to_s))
+if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s))
 %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
@@ -282,13 +281,13 @@ end
           disp = Item.get_title(item_id)
 
           auth_read = false
-          auth_read = item.check_user_auth(login_user, 'r', true) unless item.nil?
+          auth_read = item.check_user_auth(@login_user, 'r', true) unless item.nil?
         %>
         <li style="list-style:square;">
           <% if auth_read %><a class="a_underline" href="#" onclick="showItem(<%= item.id %>, '<%=ApplicationHelper.h_s_quote disp %>'); return false;"><% end %>
             <%= disp %>
           <% if auth_read %></a><% end %>
-          <% if !login_user.nil? and !item.nil? and item.editable?(login_user.id) %>
+          <% if !@login_user.nil? and !item.nil? and item.editable?(@login_user.id) %>
           &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
           <% end %>
         </li>

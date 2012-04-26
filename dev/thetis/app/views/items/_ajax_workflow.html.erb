@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <table align="center" width="95%" cellpadding="0" cellspacing="2">
   <tr>
@@ -73,10 +72,10 @@
               end
             end
             %>
-            <% if !login_user.nil? and user_id == login_user.id and !expected_mark.empty? %>
+            <% if !@login_user.nil? and user_id == @login_user.id and !expected_mark.empty? %>
             <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'doWfRespond(); return false;') %>
               <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-              <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
+              <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
               <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#A9CDF9">
                 <tr>
                   <td>

@@ -1,6 +1,4 @@
 <%
-login_user = session[:login_user]
-
 mail_account_xtype = params[:mail_account_xtype]
 
 enable_users_tab = ($thetis_config[:menu]['disp_user_list'] == '1')
@@ -72,7 +70,7 @@ tabs_send_mail_address.push("users");
               <%
               addrs_available = {}
 
-              addresses = Address.get_for(login_user, addrbook_param[1])
+              addresses = Address.get_for(@login_user, addrbook_param[1])
 
               addresses.each do |address|
                 address_id = address.id.to_s

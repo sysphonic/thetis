@@ -5,13 +5,11 @@ var modified_teams = 0;
 </script>
 
 <%
-login_user = session[:login_user]
-
 groups_cache = {}
 %>
 
 <table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
-<% if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
+<% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
   <tr>
     <td align="right" style="padding:5px 5px;">
       <table width="100%" cellspacing="0" cellpadding="0">
@@ -41,9 +39,9 @@ groups_cache = {}
     <td>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-        <% if !login_user.nil? %>
+        <% if !@login_user.nil? %>
           <td align="left" nowrap style="padding:5px 20px;">
-            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onClick="onCreateClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;" />
@@ -54,7 +52,7 @@ groups_cache = {}
           </td>
         <% end %>
           <td align="right" style="padding:5px 20px;">
-        <% unless login_user.nil? %>
+        <% unless @login_user.nil? %>
             <%
             options = []
             options << [h(t('folder.opt.items_list')), 'items']
@@ -77,7 +75,7 @@ groups_cache = {}
         <tr>
           <td id="td_tree" align="left" valign="top" style="border:inset 2px silver; padding:0px;">
             <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
-              <div id="folderTree" style="overflow:auto;"><div id="div_tree" style="text-align:left; margin:10px;"></div></div>
+              <div id="divFolderTree" style="overflow:auto;"><div id="folderTree" style="text-align:left; margin:10px;"></div></div>
               <input type='hidden' name='selKeeper' id='selKeeper' value='' />
             </form>
           </td>
@@ -146,11 +144,11 @@ BorderDragObserver.prototype = {
       return;
     }
     if (!is_MS && !is_Opera) {
-      var folderTree = _z("folderTree");
+      var divFolderTree = _z("divFolderTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
-      var orgWidthFolderTree = folderTree.offsetWidth;
+      var orgWidthFolderTree = divFolderTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
@@ -161,7 +159,7 @@ BorderDragObserver.prototype = {
           } else if (rightWidth < 100 && x > 0) {
             return [orgWidthView-100, y];
           }
-          folderTree.style.width = leftWidth + "px";
+          divFolderTree.style.width = leftWidth + "px";
           td_tree.style.width = leftWidth + "px";
           view.style.width = rightWidth + "px";
           td_view.style.width = rightWidth + "px";
@@ -174,11 +172,11 @@ BorderDragObserver.prototype = {
       return;
     }
     if (is_MS || is_Opera) {
-      var folderTree = _z("folderTree");
+      var divFolderTree = _z("divFolderTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
-      var orgWidthFolderTree = folderTree.offsetWidth;
+      var orgWidthFolderTree = divFolderTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
@@ -189,7 +187,7 @@ BorderDragObserver.prototype = {
           } else if (rightWidth < 100 && x > 0) {
             return [orgWidthView-100, y];
           }
-          folderTree.style.width = leftWidth + "px";
+          divFolderTree.style.width = leftWidth + "px";
           td_tree.style.width = leftWidth + "px";
           view.style.width = rightWidth + "px";
           td_view.style.width = rightWidth + "px";
@@ -230,7 +228,7 @@ function onLoadSub()
                       <% icons = Folder.get_icons(nil, true, true) %>
                         new Array("<%=h icons[1] %>", "<%=h icons[2] %>")
                       );
-  var firstMenuId = ThetisBox.buildTree("", array, null, "div_tree", "selKeeper", folderImgs);
+  var firstMenuId = ThetisBox.buildTree("", array, null, "folderTree", "selKeeper", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
   array = new Array(
     <%
@@ -262,7 +260,7 @@ function onLoadSub()
       end
 
       folder_name = folder.name
-      if !login_user.nil? and login_user.admin?(User::AUTH_FOLDER)
+      if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
         if folder.xtype == Folder::XTYPE_USER
           folder_name = folder.name + ' : ' + User.get_name(folder.owner_id)
         elsif folder.xtype == Folder::XTYPE_GROUP
@@ -280,7 +278,7 @@ function onLoadSub()
     end
     %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "div_tree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "folderTree", "selKeeper", folderImgs, false);
   <% end %>
 
 <% unless session[:folder_id].nil? or session[:folder_id].empty? %>
@@ -351,7 +349,7 @@ function checkTeamFolder(folder_id)
   return true;
 }
 
-function doCreate(pos)
+function onCreateClicked(pos)
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select_parent') %>");
@@ -367,9 +365,31 @@ function doCreate(pos)
 
   var thetisBox = new ThetisBox;
   thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'create') %>\" method=\"post\" onsubmit=\"if(!checkName(this.thetisBoxEdit.value)){return false;} new Ajax.Updater('folderTree:"+folder_id+"', this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'create') %>\" method=\"post\" onsubmit=\"doCreate(this, '"+folder_id+"'); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
+}
+
+function doCreate(frm, folder_id)
+{
+  if (!checkName(frm.thetisBoxEdit.value)) {
+    return false;
+  }
+  new Ajax.Updater(
+      "folderTree:"+folder_id,
+      frm.action,
+      {
+        method:"post",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        insertion:Insertion.Bottom,
+        onComplete:function(request){
+          ThetisBox.clear();
+          //__thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 function doRename(pos)

@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <%
 team = @item.team
@@ -15,8 +14,8 @@ if team.nil?
         <%=h team.get_status_name %>
       </td>
     <%
-    if !login_user.nil? \
-        and (login_user.admin?(User::AUTH_TEAM) or login_user.id == @item.user_id)
+    if !@login_user.nil? \
+        and (@login_user.admin?(User::AUTH_TEAM) or @login_user.id == @item.user_id)
     %>
       <td align="left">
         <table cellpadding="0" cellspacing="0">

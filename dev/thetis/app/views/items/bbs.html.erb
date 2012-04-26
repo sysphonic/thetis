@@ -1,8 +1,6 @@
 <%= form_tag( {:controller => 'items', :action => 'bbs' }, :method => 'get', :name => 'form_list') %>
 
 <%
-login_user = session[:login_user]
-
 folders_cache = {}
 
 @users_cache = {}
@@ -62,8 +60,8 @@ folders_cache = {}
             end
             %>
             <%
-            unless login_user.nil?
-              my_folder = login_user.get_my_folder
+            unless @login_user.nil?
+              my_folder = @login_user.get_my_folder
               unless my_folder.nil?
             %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
@@ -77,7 +75,7 @@ folders_cache = {}
           <%
           toy_xtype = Toy::XTYPE_FOLDER
           toy_target_id = @folder_id
-          if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id)
+          if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
           %>
             <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%=ApplicationHelper.h_s_quote truncate(Folder.get_name(@folder_id), :length => 20) %>');">
           <% end %>
@@ -160,11 +158,11 @@ folders_cache = {}
               </a>
               <% end %>
             <% end %>
-            <% if !login_user.nil? and item.editable?(login_user.id) %>
+            <% if !@login_user.nil? and item.editable?(@login_user.id) %>
             &nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
             <% end %>
-            <% if !login_user.nil? and item.deletable?(login_user.id) %>
+            <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
               <%
               del_type = 'null'
               del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
@@ -195,10 +193,10 @@ folders_cache = {}
             <% if item.xtype == Item::XTYPE_PROJECT %>
               &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
               <%
-              unless item.team.nil? or login_user.nil?
+              unless item.team.nil? or @login_user.nil?
                 team_folder = item.team.get_team_folder
                 unless team_folder.nil?
-                  if Folder.check_user_auth(team_folder.id, login_user, 'r', true)
+                  if Folder.check_user_auth(team_folder.id, @login_user, 'r', true)
                     path = team_folder.get_path(folders_cache)
               %>
                 <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
@@ -466,7 +464,7 @@ function _addToDesktop(xtype, target_id)
         );
 }
 
-<% if login_user.nil? and params[:tips]=='true' %>
+<% if @login_user.nil? and params[:tips]=='true' %>
 function showTips()
 {
   tips("<%= t('item.no_login_info1') %><br/><span style='font-size:14pt;color:firebrick;font-weight:800'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");

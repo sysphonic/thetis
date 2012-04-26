@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <%= render(:partial => 'common/error', :locals => {:obj => @address}) %>
 
 <script type="text/javascript">
@@ -185,7 +183,7 @@ tabs = new Array("basic", "address", "memo", "scope");
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td align="left" style="padding:20px 10px;">
-            <% if (login_user.nil? or !login_user.admin?(User::AUTH_ADDRESSBOOK)) %>
+            <% if (@login_user.nil? or !@login_user.admin?(User::AUTH_ADDRESSBOOK)) %>
               <ul>
                 <li><%= t('scope.private') %></li>
               </ul>

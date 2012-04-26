@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <!-- Authorities -->
 <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
   <table width="90%" cellpadding="0" cellspacing="2">
@@ -82,7 +80,7 @@
           @user.get_teams_a.each do |team_id|
             begin
               team = Team.find(team_id)
-              access_auth = team.item.check_user_auth(login_user, 'r', true)
+              access_auth = team.item.check_user_auth(@login_user, 'r', true)
           %>
             <li type="square">
             <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item.id) %>'; return false;"><% end %>

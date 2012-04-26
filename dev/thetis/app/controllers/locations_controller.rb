@@ -31,8 +31,6 @@ class LocationsController < ApplicationController
   def open_map
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @group_id = nil
 
     if !params[:thetisBoxSelKeeper].nil?
@@ -67,7 +65,7 @@ class LocationsController < ApplicationController
       end
     end
 
-    @location = Location.get_for(login_user)
+    @location = Location.get_for(@login_user)
     unless @location.nil?
       @group_id ||= @location.group_id
     end
@@ -75,7 +73,7 @@ class LocationsController < ApplicationController
     group_ids = []
     group_obj_cache = {}
     if @location.nil? and @group_id.nil?
-      group_ids = login_user.get_groups_a(true, group_obj_cache)
+      group_ids = @login_user.get_groups_a(true, group_obj_cache)
       group_ids << '0'  # '0' for ROOT
     elsif !@group_id.nil?
       group_ids << @group_id
@@ -111,8 +109,6 @@ class LocationsController < ApplicationController
   #
   def get_image
 
-    login_user = session[:login_user]
-
     begin
       office_map = OfficeMap.find(params[:id])
     rescue
@@ -127,7 +123,7 @@ class LocationsController < ApplicationController
 =begin
 # Too much restriction
     if !office_map.group_id.nil? and (office_map.group_id != 0)
-      unless User.belongs_to_group?(login_user, office_map.group_id, true)
+      unless User.belongs_to_group?(@login_user, office_map.group_id, true)
         render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
         return
       end
@@ -190,9 +186,7 @@ class LocationsController < ApplicationController
   def drop_on_exit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    unless login_user.nil?
+    unless @login_user.nil?
       Location.destroy(params[:id])
     end
 
@@ -207,14 +201,13 @@ class LocationsController < ApplicationController
   def on_moved
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     location_id = params[:id]
 
     if location_id.nil? or location_id.empty?
-      location = Location.get_for(login_user)
+      location = Location.get_for(@login_user)
       if location.nil?
         location = Location.new
-        location.user_id = login_user.id
+        location.user_id = @login_user.id
       end
     else
       begin
@@ -238,15 +231,14 @@ class LocationsController < ApplicationController
   #Filter method to check if current User is owner of the specified Location.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Location.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_LOCATION) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_LOCATION) and owner_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

@@ -1,7 +1,6 @@
 <%
 unless @user.nil? or @user.groups.nil?
 
-  login_user = session[:login_user]
   groups_cache = {}
 %>
 
@@ -11,7 +10,7 @@ unless @user.nil? or @user.groups.nil?
       <td nowrap width="20%">
         <%= Group.get_path(group_id, groups_cache) %><br/>
       </td>
-    <% if login_user.admin?(User::AUTH_USER) %>
+    <% if @login_user.admin?(User::AUTH_USER) %>
       <td width="20"></td>
       <td>
         <table cellspacing="0" cellpadding="0" align="left">

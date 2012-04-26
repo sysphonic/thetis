@@ -1,5 +1,4 @@
 <%
-login_user = session[:login_user]
 date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 read_only = false if read_only.nil?
 %>
@@ -37,7 +36,7 @@ read_only = false if read_only.nil?
 <%
 if @schedules.length > 0
   @schedules.each do |schedule|
-    auth_write = schedule.check_user_auth(login_user, 'w', true)
+    auth_write = schedule.check_user_auth(@login_user, 'w', true)
     case schedule.scope
       when Schedule::SCOPE_ALL
         scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"

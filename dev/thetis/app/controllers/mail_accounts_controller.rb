@@ -34,15 +34,13 @@ class MailAccountsController < ApplicationController
   def create
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
       params[:mail_account].delete :smtp_username
       params[:mail_account].delete :smtp_password
     end
 
     @mail_account = MailAccount.new(params[:mail_account])
-    @mail_account.user_id = login_user.id
+    @mail_account.user_id = @login_user.id
 
     @mail_account.is_default = true
 
@@ -72,8 +70,6 @@ class MailAccountsController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     mail_account_id = params[:id]
 
     begin
@@ -94,8 +90,7 @@ class MailAccountsController < ApplicationController
   def edit_default
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-    mail_account = MailAccount.get_default_for(login_user.id)
+    mail_account = MailAccount.get_default_for(@login_user.id)
 
     if mail_account.nil?
       redirect_to(:action => 'new')
@@ -145,13 +140,11 @@ class MailAccountsController < ApplicationController
   #
   def check_owner
 
-    login_user = session[:login_user]
-
-    return if params[:id].nil? or params[:id].empty? or login_user.nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     mail_account = MailAccount.find(params[:id])
 
-    if !login_user.admin?(User::AUTH_MAIL) and mail_account.user_id != login_user.id
+    if !@login_user.admin?(User::AUTH_MAIL) and mail_account.user_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

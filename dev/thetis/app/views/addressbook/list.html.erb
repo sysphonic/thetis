@@ -1,8 +1,4 @@
 
-<%
-login_user = session[:login_user]
-%>
-
 <%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
 <table width="100%" cellspacing="3" cellpadding="0">
@@ -97,7 +93,7 @@ login_user = session[:login_user]
     <td class="<%=td_class %>">
       <%= truncate(address.organization, :length => 40) %>
     </td>
-  <% if address.editable?(login_user) %>
+  <% if address.editable?(@login_user) %>
     <td class="<%=td_class %>" width="20" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>');" />
     </td>

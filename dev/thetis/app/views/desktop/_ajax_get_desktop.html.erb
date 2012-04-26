@@ -1,13 +1,11 @@
 
 <%
-login_user = session[:login_user]
-
 is_def_desktop = false
 
-if !login_user.nil? and login_user.admin?(User::AUTH_DESKTOP)
+if !@login_user.nil? and @login_user.admin?(User::AUTH_DESKTOP)
   yaml = ApplicationHelper.get_config_yaml
   unless yaml[:desktop].nil?
-    is_def_desktop = (yaml[:desktop]['user_before_login'] == login_user.id.to_s)
+    is_def_desktop = (yaml[:desktop]['user_before_login'] == @login_user.id.to_s)
   end
 end
 
@@ -59,7 +57,7 @@ end
   </tr>
 </table>
 
-<% unless login_user.nil? %>
+<% unless @login_user.nil? %>
 <table id="menubox" cellpadding="0" cellspacing="0" style="height:85px; position:absolute; display:none;">
   <tr height="50">
     <td align="center" valign="middle">
@@ -97,7 +95,7 @@ end
     <td align="center" valign="middle">
       <table id="tools" width="100%">
         <tr>
-        <% if $thetis_config[:menu]['req_login_schedules'] == '1' and login_user.nil? %>
+        <% if $thetis_config[:menu]['req_login_schedules'] == '1' and @login_user.nil? %>
         <% else %>
           <td width="25%" style="cursor:pointer;;" align="center" valign="middle">
             <div id="tool_calendar" style="vertical-align:middle;" title="<%= t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
@@ -114,7 +112,7 @@ end
             <%
             unless params[:biorhythm] == 'false'
               req_birth = "false"
-              if !login_user.nil? and login_user.birthday.nil?
+              if !@login_user.nil? and @login_user.birthday.nil?
                 req_birth = "true"
               end
             %>
@@ -124,7 +122,7 @@ end
             </div>
             <% end %>
           </td>
-        <% unless login_user.nil? %>
+        <% unless @login_user.nil? %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
             <div id="tool_postlabel" style="vertical-align:middle;" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" alt="<%= t('desktop.label.post') %>" />
@@ -277,7 +275,7 @@ Droppables.add(
 var desktop = _z("div_desktop");
 desktop.style.display = "block";
 
-<% unless login_user.nil? %>
+<% unless @login_user.nil? %>
 _z("menubox").style.display = "inline";
 <% end %>
 
@@ -382,7 +380,7 @@ showCalendar = function()
 
 <%
 user_param = '&user_id='
-user_param += login_user.id.to_s unless login_user.nil?
+user_param += @login_user.id.to_s unless @login_user.nil?
 %>
 
   thetisBox.show(
@@ -581,7 +579,7 @@ addPostTo = function()
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "<%= t('desktop.label.sel_users_to_post') %>";
-                thetisBox.overflow = "hide";
+                thetisBox.overflow = "hidden";
                 thetisBox.show(
                           "CENTER",
                           "460,280",
@@ -704,7 +702,7 @@ doShowLocations = function()
 
 </SCRIPT>
 
-<% if login_user.nil? %>
+<% if @login_user.nil? %>
   <%= render(:partial => 'warning_login') %>
 <% end %>
 <% if !@ie_ver.nil? and @ie_ver < 8.0 %>

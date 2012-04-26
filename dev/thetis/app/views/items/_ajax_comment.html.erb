@@ -1,5 +1,4 @@
 <%
-login_user = session[:login_user]
 @user_obj_cache ||= {}
 
 @group_obj_cache ||= {}
@@ -35,14 +34,14 @@ login_user = session[:login_user]
             </td>
             <td align="left" style="padding-left:15px;">
             <%
-            unless login_user.nil? or params[:action] == 'bbs'
-              if login_user.id == @comment.user_id \
-                  or login_user.id == @item.user_id \
-                  or login_user.admin?(User::AUTH_ITEM)
+            unless @login_user.nil? or params[:action] == 'bbs'
+              if @login_user.id == @comment.user_id \
+                  or @login_user.id == @item.user_id \
+                  or @login_user.admin?(User::AUTH_ITEM)
             %>
               <table cellspacing="0" cellpadding="0" align="left" width="75">
                 <tr>
-                <% if login_user.id == @comment.user_id %>
+                <% if @login_user.id == @comment.user_id %>
                   <td>
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
                   </td>
@@ -77,7 +76,7 @@ login_user = session[:login_user]
                 <a href="<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
                 </a>
-              <% if params[:action] != 'bbs' and !login_user.nil? and @comment.user_id == login_user.id %>
+              <% if params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id %>
                 &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteCommentAttachment('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
               <% end %>
               </div>
@@ -102,7 +101,7 @@ login_user = session[:login_user]
           end
 
           @item ||= @comment.item
-          if !login_user.nil? and login_user.id == @item.user_id \
+          if !@login_user.nil? and @login_user.id == @item.user_id \
               and !profile_sheet.nil? and profile_sheet.public
         %>
           <tr>

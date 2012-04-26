@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px; background-color:#FFEBCB;" align="center">
   <%= form_tag( {:controller => 'items', :action => 'destroy_comment', :id => '', :comment_id => @comment.id }, :name => 'form_team_cancel', :method => 'post') %>

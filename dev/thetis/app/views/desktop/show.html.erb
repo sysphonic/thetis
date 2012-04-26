@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <table id="div_desktop" width="100%" cellpadding="0" cellspacing="0">
   <tr>
     <td>
@@ -38,8 +36,8 @@ date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
                   setTimeout("showSchedule()", 100);
             <% end %>
             <%
-            if !login_user.nil? and @desktop.popup_timecard
-              timecard = Timecard.get_for(login_user.id, date_s)
+            if !@login_user.nil? and @desktop.popup_timecard
+              timecard = Timecard.get_for(@login_user.id, date_s)
               if timecard.nil? or timecard.start.nil?
             %>
                   setTimeout("showTimecard()", 150);
@@ -223,13 +221,13 @@ function requestBirthday()
           );
 }
 
-<% unless login_user.nil? %>
+<% unless @login_user.nil? %>
 function saveBirthday(birthday)
 {
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'users', :action => 'update', :id => login_user.id) %>&user[birthday]="+birthday,
+          "<%= url_for(:controller => 'users', :action => 'update', :id => @login_user.id) %>&user[birthday]="+birthday,
           {
             parameters:"authenticity_token=<%= form_authenticity_token %>",
             asynchronous:true,

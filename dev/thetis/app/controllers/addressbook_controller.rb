@@ -42,9 +42,7 @@ class AddressbookController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    unless AddressbookHelper.arrange_per_scope(params, login_user)
+    unless AddressbookHelper.arrange_per_scope(params, @login_user)
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
       return
@@ -72,8 +70,6 @@ class AddressbookController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     address_id = params[:id]
 
     begin
@@ -98,8 +94,7 @@ class AddressbookController < ApplicationController
       render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.model_name.human))
       return
     else
-      login_user = session[:login_user]
-      unless @address.visible?(login_user)
+      unless @address.visible?(@login_user)
         render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
         return
       end
@@ -116,9 +111,7 @@ class AddressbookController < ApplicationController
 
     @address = Address.find(params[:id])
 
-    login_user = session[:login_user]
-
-    unless AddressbookHelper.arrange_per_scope(params, login_user)
+    unless AddressbookHelper.arrange_per_scope(params, @login_user)
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
       return
@@ -142,19 +135,17 @@ class AddressbookController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    login_user = session[:login_user]
-
     if params[:filter_book].nil? or params[:filter_book].empty?
       params[:filter_book] = Address::BOOK_BOTH
     end
 
     con = []
-    if !login_user.nil? \
-        and login_user.admin?(User::AUTH_ADDRESSBOOK) \
+    if !@login_user.nil? \
+        and @login_user.admin?(User::AUTH_ADDRESSBOOK) \
         and params[:admin] == 'true'
       con = ['(owner_id=0)']
     else
-      con << AddressbookHelper.get_scope_condition_for(login_user, params[:filter_book])
+      con << AddressbookHelper.get_scope_condition_for(@login_user, params[:filter_book])
     end
 
     unless params[:keyword].nil? or params[:keyword].empty?
@@ -212,8 +203,6 @@ class AddressbookController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if params[:check_address].nil?
       list
       render(:action => 'list')
@@ -226,7 +215,7 @@ class AddressbookController < ApplicationController
 
         begin
           address = Address.find(address_id)
-          address.destroy if address.editable?(login_user)
+          address.destroy if address.editable?(@login_user)
         rescue StandardError => err
           Log.add_error(request, err)
         end
@@ -247,9 +236,7 @@ class AddressbookController < ApplicationController
   def export_csv
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    csv = Address.export_csv(login_user.id)
+    csv = Address.export_csv(@login_user.id)
 
     begin
       case params[:enc]
@@ -280,9 +267,7 @@ class AddressbookController < ApplicationController
     mode = params[:mode]
     enc = params[:enc]
 
-    login_user = session[:login_user]
-
-    all_addresses = Address.find(:all, :conditions => ['owner_id=?', login_user.id]) || []
+    all_addresses = Address.find(:all, :conditions => ['owner_id=?', @login_user.id]) || []
 
     address_names = []
 #   address_emails = []
@@ -418,13 +403,11 @@ class AddressbookController < ApplicationController
   #
   def check_owner
 
-    login_user = session[:login_user]
-
-    return if (params[:id].nil? or params[:id].empty? or login_user.nil?)
+    return if (params[:id].nil? or params[:id].empty? or @login_user.nil?)
 
     address = Address.find(params[:id])
 
-    if !login_user.admin?(User::AUTH_ADDRESSBOOK) and address.owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_ADDRESSBOOK) and address.owner_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

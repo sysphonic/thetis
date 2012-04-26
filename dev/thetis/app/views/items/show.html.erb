@@ -3,8 +3,6 @@ if params[:action] == 'show'
   HistoryHelper.set_back(request)
 end
 
-login_user = session[:login_user]
-
 @for_print = (params[:action] == 'show_for_print')
 
 @users_cache = {}
@@ -30,7 +28,7 @@ unless @for_print
     toy_xtype = Toy::XTYPE_ITEM
     toy_target_id = @item.id
   end
-  if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id)
+  if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
 %>
       <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
   <% end %>
@@ -103,7 +101,7 @@ unless @for_print
                   if source_item.nil?
                   %>
                     <%= t('paren.deleted') %>
-                  <% elsif source_item.check_user_auth(login_user, 'r', true) %>
+                  <% elsif source_item.check_user_auth(@login_user, 'r', true) %>
                     <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => source_item.id) %>'; return false;">
                       <u><%= source_item.title %></u>
                     </a>
@@ -167,19 +165,19 @@ end
   <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for(:controller => 'items', :action => 'show_for_print', :id => @item.id) %>').focus(); thetisBox.remove();">
     <%= t('btn.for_print') %>
   </td>
-<% unless login_user.nil? or @item.is_a_copy? %>
+<% unless @login_user.nil? or @item.is_a_copy? %>
   <td width="10"></td>
   <td class="img_button_td" onclick="doDuplicate();">
     <%= t('btn.duplicate') %>
   </td>
 <% end %>
-<% if !login_user.nil? and @item.editable?(login_user) %>
+<% if !@login_user.nil? and @item.editable?(@login_user) %>
   <td width="10"></td>
   <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
   </td>
 <% end %>
-<% if !login_user.nil? and @item.movable?(login_user) %>
+<% if !@login_user.nil? and @item.movable?(@login_user) %>
   <td width="10"></td>
   <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%=ApplicationHelper.h_s_quote @item.title %>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
@@ -205,7 +203,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 //-->
 </script>
 <% end %>
-<% if !login_user.nil? and @item.deletable?(login_user) %>
+<% if !@login_user.nil? and @item.deletable?(@login_user) %>
   <td width="10"></td>
   <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
@@ -256,14 +254,14 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
               <td id="div_wf_ajax">
 
                 <% @orders = @workflow.get_orders %>
-                <%= render(:partial => "ajax_workflow", :locals=>{:login_user=>login_user}) %>
+                <%= render(:partial => "ajax_workflow", :locals=>{:login_user=>@login_user}) %>
 
               </td>
             </tr>
           </table>
         </td>
       </tr>
-    <% if @workflow.status == Workflow::STATUS_NOT_ISSUED and !login_user.nil? and login_user.id == @item.user_id%>
+    <% if @workflow.status == Workflow::STATUS_NOT_ISSUED and !@login_user.nil? and @login_user.id == @item.user_id%>
       <% if @orders.empty? %>
       <tr height="20">
         <td>
@@ -402,7 +400,7 @@ function _doWfIssue()
 
   </div>
 
-<% if !login_user.nil? and login_user.id == @item.user_id %>
+<% if !@login_user.nil? and @login_user.id == @item.user_id %>
 
   <a name="team_organize"></a>
 
@@ -445,7 +443,7 @@ function _doWfIssue()
 
                   added_array = []
                   applicants = @item.get_applicants
-                  applicants.insert 0, login_user.id.to_s
+                  applicants.insert 0, @login_user.id.to_s
                   applicants.each do |user_id|
                     next if added_array.include?(user_id)
                     if team_members.include?(user_id)
@@ -507,7 +505,7 @@ function _doWfIssue()
 
 <%
 else
-  @comment = login_user.get_project_application(@item.id) if !login_user.nil?
+  @comment = @login_user.get_project_application(@item.id) if !@login_user.nil?
 
   if @team.nil? or (!@team.nil? and @team.status != Team::STATUS_DEACTIVATED) or !@comment.nil?
 %>
@@ -523,7 +521,7 @@ else
 
   <div id="div_team_apply" style="padding-bottom:5px;">
 
-    <% if login_user.nil? %>
+    <% if @login_user.nil? %>
 
     <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
       <tr><td align="center"><%= t('team.application_info') %></td></tr>
@@ -532,7 +530,7 @@ else
     <%
     else
       if @comment.nil?
-        if !@team.nil? and @team.get_users_a.include?(login_user.id.to_s)
+        if !@team.nil? and @team.get_users_a.include?(@login_user.id.to_s)
     %>
         <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
           <tr>
@@ -596,7 +594,7 @@ end
     </table>
 
     <div id="div_zeptair_dist_res">
-  <% if login_user.nil? %>
+  <% if @login_user.nil? %>
       <table align="center" width="50%" cellspacing="0" cellpadding="0">
         <tr height="15"><td></td></tr>
         <tr>
@@ -610,7 +608,7 @@ end
   else
     @attachments ||= @item.attachments_without_content
     zept_cmd = @item.zeptair_command
-    comment = ZeptairDistHelper.get_comment_of(@item.id, login_user.id)
+    comment = ZeptairDistHelper.get_comment_of(@item.id, @login_user.id)
     entries = ZeptairDistHelper.get_ack_array_of(comment)
   %>
       <table width="95%" cellpadding="5" align="center"> 
@@ -640,7 +638,7 @@ end
               </tr>
               <tr height="33">
                 <td nowrap>
-                  <%= truncate(login_user.get_name, :length => 20) %>
+                  <%= truncate(@login_user.get_name, :length => 20) %>
                 </td>
                 <td nowrap>
                 <% unless comment.nil? or comment.updated_at.nil? %>
@@ -684,7 +682,7 @@ end
         <tr height="15"><td></td></tr>
       </table>
 
-    <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
+    <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
       <table width="95%" cellpadding="5" align="center"> 
         <tr> 
           <td align="left" style="font-size:14pt; line-height:1.0;">
@@ -816,17 +814,17 @@ function showZeptairDistUsers()
         </td>
       </tr>
       <tr height="20"><td></td></tr>
-    <% if login_user.nil? %>
+    <% if @login_user.nil? %>
       <tr><td align="center"><%= t('item.login_to_register_messages') %></td></tr>
       <tr height="20"><td></td></tr>
     <% end %>
     </table>
     <div style="height:15px"></div>
 
-  <% unless login_user.nil? %>
+  <% unless @login_user.nil? %>
     <%= form_tag( {:controller => 'items', :action => 'add_comment'}, :name => 'form_comment', :method => 'post', :enctype => 'multipart/form-data') %>
       <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-      <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
+      <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
       <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_MSG) %>
     <table cellspacing="0" cellpadding="0" align="center" width="90%">
       <tr>

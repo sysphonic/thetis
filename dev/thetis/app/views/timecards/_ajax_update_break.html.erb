@@ -1,9 +1,8 @@
 <% unless @timecard.nil? %>
 
 <%
-login_user = session[:login_user]
 editable = false
-if login_user.admin?(User::AUTH_TIMECARD) or login_user.id == @selected_user.id
+if @login_user.admin?(User::AUTH_TIMECARD) or @login_user.id == @selected_user.id
   editable = true
 end
 %>

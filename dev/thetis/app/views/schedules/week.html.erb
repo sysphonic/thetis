@@ -2,7 +2,7 @@
 <%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
-<!--
+
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
           function() {
@@ -12,13 +12,11 @@ calDisp.setFunc(
           }
         );
 calDisp.setStyle( "frame_color", "#3333CC" );
-//-->
+
 </script>
 
 <%
-login_user = session[:login_user]
-
-date_string = @date.strftime(Schedule::SYS_DATE_FORM)
+date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 @groups_cache ||= {}
 @teams_cache ||= {}
@@ -29,7 +27,7 @@ date_string = @date.strftime(Schedule::SYS_DATE_FORM)
 <table align="center" width="98%" cellspacing="0" cellpadding="0">
   <tr>
     <td align="left" width="30%">
-    <% if !login_user.nil? and login_user.admin? User::AUTH_SCHEDULE %>
+    <% if !@login_user.nil? and @login_user.admin? User::AUTH_SCHEDULE %>
       <table align="left" cellspacing="0" cellpadding="0" width="65">
         <tr>
           <td align="left" nowrap width="30">
@@ -40,19 +38,19 @@ date_string = @date.strftime(Schedule::SYS_DATE_FORM)
     <% end %>
     </td>
     <td align="center" nowrap width="40%">
-      <% if login_user.nil? %>
+      <% if @login_user.nil? %>
         &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
       <% end %>
     </td>
     <td align="right" nowrap width="30%">
       <%
       display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
-      unless login_user.nil?
-        groups_a = login_user.get_groups_a
+      unless @login_user.nil?
+        groups_a = @login_user.get_groups_a
         groups_a.each do |group_id|
           display << [h(Group.get_name(group_id)), 'group_'+group_id] unless group_id == 0
         end
-        teams_a = login_user.get_teams_a
+        teams_a = @login_user.get_teams_a
         teams_a.each do |team_id|
           display << [h(Team.get_name(team_id, @teams_cache)), 'team_'+team_id] unless team_id == 0
         end
@@ -78,7 +76,7 @@ next_week = @date + 7
 %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_string %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>
@@ -91,8 +89,8 @@ next_week = @date + 7
 holidays = Schedule.get_holidays
 
 7.times do |day_idx|
-  @schedules = Schedule.get_user_day login_user, @date, holidays
-  date_string = @date.strftime(Schedule::SYS_DATE_FORM)
+  @schedules = Schedule.get_user_day(@login_user, @date, holidays)
+  date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 %>
 
 <div id="div_timetable_<%= day_idx %>">
@@ -101,8 +99,8 @@ holidays = Schedule.get_holidays
     <td>
     </td>
     <td align="left" style="padding-left:8px;">
-    <% unless login_user.nil? %>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => date_string, :showNew => 'true') %>';">
+    <% unless @login_user.nil? %>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => date_s, :showNew => 'true') %>';">
     <% end %>
     </td>
   </tr>

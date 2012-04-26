@@ -115,7 +115,6 @@ class SchedulesController < ApplicationController
   def save
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     date = Date.parse(params[:date])
 
     unless params[:id].nil? or params[:id].empty?
@@ -128,11 +127,11 @@ class SchedulesController < ApplicationController
         return
       end
 
-      unless schedule.check_user_auth(login_user, 'w', true)
+      unless schedule.check_user_auth(@login_user, 'w', true)
 
         Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
-        if login_user.nil?
+        if @login_user.nil?
           check_login
         else
           redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -173,7 +172,7 @@ class SchedulesController < ApplicationController
       else
         params[:equipment].each do |equipment_id|
           equipment = Equipment.find(equipment_id)
-          if equipment.nil? or !equipment.is_accessible_by(login_user)
+          if equipment.nil? or !equipment.is_accessible_by(@login_user)
             flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
             redirect_to(:action => 'day', :date => params[:date])
             return
@@ -228,14 +227,14 @@ class SchedulesController < ApplicationController
       created = false
       if schedule.nil? or params[:repeat_update_target] == 'each'
         # Create
-        params[:schedule][:created_by] = login_user.id
+        params[:schedule][:created_by] = @login_user.id
         params[:schedule][:created_at] = Time.now
         schedule = Schedule.new(params[:schedule])
         schedule.save!
         created = true
       else
         # Update
-        params[:schedule][:updated_by] = login_user.id
+        params[:schedule][:updated_by] = @login_user.id
         params[:schedule][:updated_at] = Time.now
         schedule.update_attributes(params[:schedule])
       end
@@ -244,7 +243,7 @@ class SchedulesController < ApplicationController
         # Update original repeated schedule
         org_schedule = Schedule.find(params[:id])
         attrs = {}
-        attrs[:updated_by] = login_user.id
+        attrs[:updated_by] = @login_user.id
         attrs[:updated_at] = Time.now
         excepts = org_schedule.get_excepts_a
         excepts << params[:date]
@@ -283,7 +282,6 @@ class SchedulesController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @date = Date.parse(params[:date])
     @schedule = Schedule.find(params[:id])
 
@@ -296,11 +294,11 @@ class SchedulesController < ApplicationController
       return
     end
 
-    unless schedule.check_user_auth(login_user, 'w', true)
+    unless schedule.check_user_auth(@login_user, 'w', true)
 
       Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
-      if login_user.nil?
+      if @login_user.nil?
         check_login
       else
         flash[:notice] = 'ERROR:' + t('schedule.need_auth_to_edit')
@@ -325,27 +323,26 @@ class SchedulesController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     @date = Date.parse(params[:date])
 
     begin
       schedule = Schedule.find(params[:id])
     rescue StandardError => err
       Log.add_error(request, err)
-      @schedules = Schedule.get_user_day(login_user, @date)
+      @schedules = Schedule.get_user_day(@login_user, @date)
       render(:partial => 'timetable', :layout => false)
       return
     end
 
-    unless schedule.check_user_auth(login_user, 'w', true)
+    unless schedule.check_user_auth(@login_user, 'w', true)
 
       Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
-      if login_user.nil?
+      if @login_user.nil?
         check_login
       else
         flash[:notice] = 'ERROR:' + t('schedule.need_auth_to_edit_destroy')
-        @schedules = Schedule.get_user_day(login_user, @date)
+        @schedules = Schedule.get_user_day(@login_user, @date)
         render(:partial => 'timetable', :layout => false)
       end
       return
@@ -353,14 +350,14 @@ class SchedulesController < ApplicationController
 
     schedule.destroy
 
-    @schedules = Schedule.get_user_day(login_user, @date)
+    @schedules = Schedule.get_user_day(@login_user, @date)
 
     render(:partial => 'timetable', :layout => false)
 
   rescue StandardError => err
     Log.add_error(request, err)
 
-    @schedules = Schedule.get_user_day(login_user, @date)
+    @schedules = Schedule.get_user_day(@login_user, @date)
     render(:partial => 'timetable', :layout => false)
   end
 
@@ -372,11 +369,9 @@ class SchedulesController < ApplicationController
   def show
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @schedule = Schedule.find(params[:id])
 
-    unless @schedule.check_user_auth(login_user, 'r', true)
+    unless @schedule.check_user_auth(@login_user, 'r', true)
 
       Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
@@ -467,23 +462,21 @@ class SchedulesController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    login_user = session[:login_user]
-
-    if params[:user_id].nil? and !login_user.nil? and !session[:settings].nil?
+    if params[:user_id].nil? and !@login_user.nil? and !session[:settings].nil?
       timecard_icons = params[:timecard_icons]
 
       if timecard_icons.nil?
         params[:timecard_icons] = session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS]
       else
         if timecard_icons != session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS]
-          Setting.save_value(login_user.id, Setting::CATEGORY_SCHEDULE, Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS, timecard_icons)
+          Setting.save_value(@login_user.id, Setting::CATEGORY_SCHEDULE, Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS, timecard_icons)
           session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS] = timecard_icons
         end
       end
 
       if params[:timecard_icons] == 'true'
         start_date, end_date = TimecardsHelper.get_month_span(@date, 1)
-        @timecards = Timecard.find_term(login_user.id, start_date, end_date)
+        @timecards = Timecard.find_term(@login_user.id, start_date, end_date)
       end
     end
 
@@ -522,14 +515,12 @@ class SchedulesController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    login_user = session[:login_user]
-
     if params[:user_id].nil? or params[:user_id].empty?
-      user_id = login_user.id unless login_user.nil?
-      @schedules = Schedule.get_user_day(login_user, @date)
+      user_id = @login_user.id unless @login_user.nil?
+      @schedules = Schedule.get_user_day(@login_user, @date)
     else
       user_id = params[:user_id].to_i
-      @schedules = Schedule.get_somebody_day(login_user, user_id, @date)
+      @schedules = Schedule.get_somebody_day(@login_user, user_id, @date)
     end
 
     schedule_id = nil
@@ -539,11 +530,11 @@ class SchedulesController < ApplicationController
       begin
         @schedule = Schedule.find(schedule_id)
 
-        unless @schedule.check_user_auth(login_user, 'r', true)
+        unless @schedule.check_user_auth(@login_user, 'r', true)
 
           Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
-          if login_user.nil?
+          if @login_user.nil?
             check_login
           else
             redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -554,7 +545,7 @@ class SchedulesController < ApplicationController
       end
     end
 
-    if !login_user.nil? and user_id == login_user.id and !@schedules.nil?
+    if !@login_user.nil? and user_id == @login_user.id and !@schedules.nil?
       equip_ary = []
       @schedules.each do |schedule|
         equip_ary = equip_ary | schedule.get_equipment_a
@@ -591,8 +582,6 @@ class SchedulesController < ApplicationController
   def group
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     date_s = params[:date]
     if date_s.nil? or date_s.empty?
       @date = Date.today
@@ -607,7 +596,7 @@ class SchedulesController < ApplicationController
     unless group_users.nil?
       holidays = Schedule.get_holidays
       group_users.each do |user|
-        @user_schedule_hash[user.id.to_s, true] = Schedule.get_somebody_week(login_user, user.id, @date, holidays)
+        @user_schedule_hash[user.id.to_s, true] = Schedule.get_somebody_week(@login_user, user.id, @date, holidays)
       end
     end
 
@@ -620,8 +609,6 @@ class SchedulesController < ApplicationController
   #
   def team
     Log.add_info(request, params.inspect)
-
-    login_user = session[:login_user]
 
     date_s = params[:date]
     if date_s.nil? or date_s.empty?
@@ -641,7 +628,7 @@ class SchedulesController < ApplicationController
     unless team_users.nil?
       holidays = Schedule.get_holidays
       team_users.each do |user_id|
-        @user_schedule_hash[user_id, true] = Schedule.get_somebody_week(login_user, user_id, @date, holidays)
+        @user_schedule_hash[user_id, true] = Schedule.get_somebody_week(@login_user, user_id, @date, holidays)
       end
     end
 
@@ -656,15 +643,13 @@ class SchedulesController < ApplicationController
   def get_folder_items
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     unless params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
       @folder_id = params[:thetisBoxSelKeeper].split(':').last
     end
 
     begin
-      if Folder.check_user_auth(@folder_id, login_user, 'r', true)
-        @items = Folder.get_items(login_user, @folder_id)
+      if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
+        @items = Folder.get_items(@login_user, @folder_id)
       end
 
       unless params[:schedule_id].nil? or params[:schedule_id].empty?

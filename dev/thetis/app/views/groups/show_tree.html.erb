@@ -5,7 +5,7 @@
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" nowrap style="padding:5px 20px;">
-          <% if session[:login_user].admin?(User::AUTH_GROUP) %>
+          <% if @login_user.admin?(User::AUTH_GROUP) %>
             <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
@@ -34,7 +34,7 @@
         <tr>
           <td id="td_tree" align="left" valign="top" style='border:inset 2px silver; padding:0px;'>
             <%= form_tag( {:controller => 'groups', :action => 'show_tree'}, :method => 'post', :name => 'form_group_tree') %>
-              <div id="groupTree" style="overflow:auto;"><div id="div_tree" style="text-align:left; margin:10px;"></div></div>
+              <div id="divGroupTree" style="overflow:auto;"><div id="groupTree" style="text-align:left; margin:10px;"></div></div>
               <input type='hidden' name='selKeeper' id='selKeeper' value='' />
             </form>
           </td>
@@ -64,11 +64,11 @@ BorderDragObserver.prototype = {
       return;
     }
     if (!is_MS && !is_Opera) {
-      var groupTree = _z("groupTree");
+      var divGroupTree = _z("divGroupTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
-      var orgWidthFolderTree = groupTree.offsetWidth;
+      var orgWidthFolderTree = divGroupTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
@@ -79,7 +79,7 @@ BorderDragObserver.prototype = {
           } else if (rightWidth < 100 && x > 0) {
             return [orgWidthView-100, y];
           }
-          groupTree.style.width = leftWidth + "px";
+          divGroupTree.style.width = leftWidth + "px";
           td_tree.style.width = leftWidth + "px";
           view.style.width = rightWidth + "px";
           td_view.style.width = rightWidth + "px";
@@ -92,11 +92,11 @@ BorderDragObserver.prototype = {
       return;
     }
     if (is_MS || is_Opera) {
-      var groupTree = _z("groupTree");
+      var divGroupTree = _z("divGroupTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
-      var orgWidthGroupTree = groupTree.offsetWidth;
+      var orgWidthGroupTree = divGroupTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
@@ -107,7 +107,7 @@ BorderDragObserver.prototype = {
           } else if (rightWidth < 100 && x > 0) {
             return [orgWidthView-100, y];
           }
-          groupTree.style.width = leftWidth + "px";
+          divGroupTree.style.width = leftWidth + "px";
           td_tree.style.width = leftWidth + "px";
           view.style.width = rightWidth + "px";
           td_view.style.width = rightWidth + "px";
@@ -137,7 +137,7 @@ function onLoadSub()
                         new Array("<%=h group_folder_open %>", "<%=h group_folder_close %>")
                       );
   var array = new Array(new Array("0", "/(root)", "", "selectGroup('0');", 0));
-  var firstMenuId = ThetisBox.buildTree("", array, null, "div_tree", "selKeeper", folderImgs);
+  var firstMenuId = ThetisBox.buildTree("", array, null, "groupTree", "selKeeper", folderImgs);
   <% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
     <% child_groups.each_with_index do |group, idx| %>
@@ -149,7 +149,7 @@ function onLoadSub()
     end
     %>
       );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "div_tree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "groupTree", "selKeeper", folderImgs, false);
   <% end %>
 
 <% unless session[:group_id].nil? or session[:group_id].empty? %>

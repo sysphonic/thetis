@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td width="100%" align="center">
@@ -16,8 +14,8 @@
         <param name='X_Intelligence' value="200">
         <%
         birthday = ''
-        unless login_user.nil? or login_user.birthday.nil?
-          birthday = login_user.birthday.strftime(Schedule::SYS_DATE_FORM)
+        unless @login_user.nil? or @login_user.birthday.nil?
+          birthday = @login_user.birthday.strftime(Schedule::SYS_DATE_FORM)
         end
         %>
         <param name='Def_Birthday' value="<%= birthday %>">

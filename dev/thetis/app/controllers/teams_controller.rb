@@ -117,9 +117,9 @@ class TeamsController < ApplicationController
   #
   def check_member
 
-    return if params[:id].nil? or params[:id].empty? or !session[:login_user]
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
-    if Item.find(params[:id]).user_id != session[:login_user].id
+    if Item.find(params[:id]).user_id != @login_user.id
       Log.add_check(request, '[check_member]'+request.to_s)
 
       flash[:notice] = t('team.need_to_be_member')

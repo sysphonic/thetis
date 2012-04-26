@@ -1,6 +1,5 @@
 <%
-login_user = session[:login_user]
-login_admin = (!login_user.nil? and login_user.admin?)
+login_admin = (!@login_user.nil? and @login_user.admin?)
 %>
 
 <!-- Dynamic creation of [img src=""/] makes IE6/7 request the server with senseless URL.  -->

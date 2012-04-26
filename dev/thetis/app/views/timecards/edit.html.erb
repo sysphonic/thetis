@@ -1,7 +1,6 @@
 <% HistoryHelper.set_back(request) %>
 
 <%
-login_user = session[:login_user]
 date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
 %>
 
@@ -87,7 +86,7 @@ next_week = @date + 7
 
 <%
 editable = false
-if login_user.admin?(User::AUTH_TIMECARD) or login_user.id == @selected_user.id
+if @login_user.admin?(User::AUTH_TIMECARD) or @login_user.id == @selected_user.id
   editable = true
 end
 %>
@@ -156,7 +155,7 @@ end
         <% end %>
         </select>
         <% if @timecard.nil? or @timecard.start.nil? %>
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/laquo.gif" alt="<%= User.human_attribute_name('login_at') %>" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= login_user.login_at.hour %>', '<%= login_user.login_at.min %>');">
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/laquo.gif" alt="<%= User.human_attribute_name('login_at') %>" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= @login_user.login_at.hour %>', '<%= @login_user.login_at.min %>');">
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" alt="<%= t('msg.current_time') %>" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
         <% end %>
         ~
@@ -390,7 +389,7 @@ function inputBreak(org_start, org_end)
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('timecard.input_break') %>";
-  thetisBox.overflow = "hide";
+  thetisBox.overflow = "hidden";
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
 

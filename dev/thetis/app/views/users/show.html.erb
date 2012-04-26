@@ -1,7 +1,5 @@
 <% HistoryHelper.set_back(request) %>
 
-<% login_user = session[:login_user] %>
-
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
 <table width="100%" cellspacing="0" cellpadding="0">
@@ -15,28 +13,28 @@
           <tr>
             <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
             <td class="item_value_td">
-              <%=h @user.name %>
+              <%= @user.name %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_email"><%= User.human_attribute_name('email') %></label></td>
             <td class="item_value_td">
-              <%=h @user.email %>
+              <%= @user.email %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_fullname"><%= User.human_attribute_name('fullname') %></label></td>
             <td class="item_value_td">
-              <%=h @user.fullname %>
+              <%= @user.fullname %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_address"><%= User.human_attribute_name('address') %></label></td>
             <td class="item_value_td">
               <% unless @user.postalcode.nil? or @user.postalcode.empty? %>
-                <%= t('cap.postalcode') %> <%=h @user.postalcode %><br/>
+                <%= t('cap.postalcode') %> <%= @user.postalcode %><br/>
               <% end %>
-              <pre><%=h @user.address %></pre>
+              <pre><%= @user.address %></pre>
             </td>
           </tr>
           <tr>
@@ -53,38 +51,38 @@
             <td class="item_cap_td" nowrap><label for="user_tel"><%= t('cap.tel') %></label></td>
             <td class="item_value_td">
               <% unless @user.tel1.nil? or @user.tel1.empty? %>
-                <%=h @user.tel1_note %>: <%=h @user.tel1 %><br/>
+                <%= @user.tel1_note %>: <%= @user.tel1 %><br/>
               <% end %>
               <% unless @user.tel2.nil? or @user.tel2.empty? %>
-                <%=h @user.tel2_note %>: <%=h @user.tel2 %><br/>
+                <%= @user.tel2_note %>: <%= @user.tel2 %><br/>
               <% end %>
               <% unless @user.tel3.nil? or @user.tel3.empty? %>
-                <%=h @user.tel3_note %>: <%=h @user.tel3 %><br/>
+                <%= @user.tel3_note %>: <%= @user.tel3 %><br/>
               <% end %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_fax"><%= User.human_attribute_name('fax') %></label></td>
             <td class="item_value_td">
-              <%=h @user.fax %>
+              <%= @user.fax %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
             <td class="item_value_td">
-              <%=h @user.organization %>
+              <%= @user.organization %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_url"><%= User.human_attribute_name('url') %></label></td>
             <td class="item_value_td">
-              <%=h @user.url %>
+              <%= @user.url %>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_title"><%= t('user.title') %></label></td>
             <td class="item_value_td">
-              <%=h @user.title %>
+              <%= @user.title %>
             </td>
           </tr>
           <tr>
@@ -103,14 +101,14 @@
               if !item.nil? and item.public
               %>
               <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
-                <%=h truncate(item.title, :length => 20) %>
+                <%= truncate(item.title, :length => 20) %>
               </a>
               <% else %>
               <%= t('item.not_created_or_not_public') %>
               <% end %>
             </td>
           </tr>
-        <% if login_user.admin?(User::AUTH_USER) %>
+        <% if @login_user.admin?(User::AUTH_USER) %>
           <tr height="15"><td></td></tr>
           <tr>
             <td class="item_cap_td" nowrap><label for="user_created_at"><%= User.human_attribute_name('created_at') %></label></td>
@@ -119,7 +117,7 @@
               created_at = ''
               created_at = @user.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') unless @user.created_at.nil?
               %>
-              <span style="font-size:10.5pt;"><%=h created_at %></span>
+              <span style="font-size:10.5pt;"><%= created_at %></span>
             </td>
           </tr>
           <tr>
@@ -129,7 +127,7 @@
               login_at = ''
               login_at = @user.login_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') unless @user.login_at.nil?
               %>
-              <span style="font-size:10.5pt;"><%=h login_at %></span>
+              <span style="font-size:10.5pt;"><%= login_at %></span>
             </td>
           </tr>
         <% end %>

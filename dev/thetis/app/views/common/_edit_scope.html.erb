@@ -3,8 +3,6 @@
 scope_tabs = new Array("groups", "teams");
 </script>
 
-<% login_user = session[:login_user] %>
-
 <table cellspacing="0" cellpadding="0" width="100%">
   <tr>
     <td style="vertical-align:top;">
@@ -77,7 +75,7 @@ scope_tabs = new Array("groups", "teams");
           <tr>
             <td>
               <%
-              target_user_id = (login_user.admin?(User::AUTH_TEAM))?(nil):(login_user.id)
+              target_user_id = (@login_user.admin?(User::AUTH_TEAM))?(nil):(@login_user.id)
               teams = Team.get_for(target_user_id, true)
               teams_selected = (obj.nil?)?([]):(obj.get_teams_a)
               @teams_cache ||= {}

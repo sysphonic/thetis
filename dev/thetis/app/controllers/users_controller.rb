@@ -89,10 +89,8 @@ class UsersController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     user_id = params[:id]
-    user_id = login_user.id if user_id.nil? or user_id.empty?
+    user_id = @login_user.id if user_id.nil? or user_id.empty?
 
     begin
       @user = User.find(user_id)
@@ -824,11 +822,9 @@ class UsersController < ApplicationController
   #
   def check_owner
 
-    login_user = session[:login_user]
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
-    return if params[:id].nil? or params[:id].empty? or login_user.nil?
-
-    if !login_user.admin?(User::AUTH_USER) and params[:id] != login_user.id.to_s
+    if !@login_user.admin?(User::AUTH_USER) and params[:id] != @login_user.id.to_s
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

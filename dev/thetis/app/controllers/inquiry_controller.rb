@@ -27,9 +27,7 @@ class InquiryController < ApplicationController
   def auth
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
-    render(:text => login_user.auth)
+    render(:text => @login_user.auth)
   end
 
   #=== groups
@@ -38,8 +36,6 @@ class InquiryController < ApplicationController
   #
   def groups
     Log.add_info(request, '')   # Not to show passwords.
-
-    login_user = session[:login_user]
 
     groups_cache = {}
     ary = []
@@ -59,8 +55,6 @@ class InquiryController < ApplicationController
   #
   def users
     Log.add_info(request, '')   # Not to show passwords.
-
-    login_user = session[:login_user]
 
     if params[:group_id].nil?
       group_id = '0'
@@ -100,10 +94,8 @@ class InquiryController < ApplicationController
   def recent_items
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
     add_con = "((Item.xtype in ('#{Item::XTYPE_INFO}','#{Item::XTYPE_PROJECT}')) or ((Item.xtype = '#{Item::XTYPE_WORKFLOW}') and (Item.original_by is not null)))"
-    sql = ItemsHelper.get_list_sql(login_user, nil, nil, nil, nil, 10, false, add_con)
+    sql = ItemsHelper.get_list_sql(@login_user, nil, nil, nil, nil, 10, false, add_con)
     @items = Item.find_by_sql(sql)
   end
 end

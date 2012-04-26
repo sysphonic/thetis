@@ -24,7 +24,7 @@ class FeedsController < ApplicationController
   def index
 #   Log.add_info(request, params.inspect)
 
-    user = session[:login_user]
+    user = @login_user
     root_url = ApplicationHelper.root_url(request)
 
     _build_site_info(root_url)
@@ -78,7 +78,7 @@ class FeedsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     root_url = ApplicationHelper.root_url(request)
-    user = session[:login_user]
+    user = @login_user
 
     _build_site_info(root_url)
     @site_title = t('zeptair.dist.title')
@@ -129,7 +129,7 @@ class FeedsController < ApplicationController
 
       unless user.nil?
         if user.password == password
-          session[:login_user] = user
+          @login_user = user
           check = true
         end
       end

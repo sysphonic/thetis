@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
 <table align="center" width="90%" cellpadding="0" cellspacing="2">
@@ -23,7 +21,7 @@
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
       <%= radio_button('item', 'xtype', Item::XTYPE_INFO, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
       <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'dispZeptCmdOpt(false); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
-    <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
+    <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
       <%= radio_button('item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'dispZeptCmdOpt(this.checked); modifiedBasic++') %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('item.zeptair_dist_info') %>');">
 
@@ -88,7 +86,7 @@ dispZeptCmdEdit = function(sw)
     if source_item.nil?
     %>
       <%= t('paren.deleted') %><br/>
-    <% elsif source_item.check_user_auth(login_user, 'r', true) %>
+    <% elsif source_item.check_user_auth(@login_user, 'r', true) %>
       <%= source_item.title %><br/>
     <% else %>
       <%= t('paren.round.left') + t('msg.need_auth_to_access') + t('paren.round.right') %><br/>

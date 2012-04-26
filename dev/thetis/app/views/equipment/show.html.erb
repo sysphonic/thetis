@@ -9,7 +9,7 @@
       </tr>
     </table>
   </div>
-<% elsif !@equipment.is_accessible_by(session[:login_user]) %>
+<% elsif !@equipment.is_accessible_by(@login_user) %>
   <div style="padding-top:20px;">
     <table width="95%" cellspacing="0" cellpadding="0" style="border:green 1px solid; border-collapse:collapse;">
       <tr height="50">

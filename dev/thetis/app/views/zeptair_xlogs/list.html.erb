@@ -9,7 +9,7 @@
     <td align="right">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
       &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-<% unless session[:login_user].nil? %>
+<% unless @login_user.nil? %>
   <%= t('cap.targets') %> <%= select_tag 'filter',
                            options_for_select([
                                                 [t('log.all'),'all'],
@@ -99,7 +99,7 @@ exist_cache = {}
     %>
       <td class="<%=td_class %>" style="color:crimson"><%= user_name %></td>
     <% else %>
-      <% if session[:login_user].admin?(User::AUTH_USER) %>
+      <% if @login_user.admin?(User::AUTH_USER) %>
         <td class="<%=td_class %>">
           <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => xlog.user_id) %>'; return false;">
             <%= truncate(user_name, :length => 20) %>

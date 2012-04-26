@@ -33,16 +33,14 @@ class PaintmailController < ApplicationController
   def save_conf
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
+    unless @login_user.nil?
 
-    unless login_user.nil?
-
-      if login_user.paintmail.nil?
+      if @login_user.paintmail.nil?
         paintmail = Paintmail.new(params[:paintmail])
-        paintmail.user_id = login_user.id
+        paintmail.user_id = @login_user.id
         paintmail.save
       else
-        login_user.paintmail.update_attributes(params[:paintmail])
+        @login_user.paintmail.update_attributes(params[:paintmail])
       end
     end
 

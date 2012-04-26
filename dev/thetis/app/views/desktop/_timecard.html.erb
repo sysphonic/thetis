@@ -1,5 +1,4 @@
 <%
-login_user = session[:login_user]
 date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 %>
 
@@ -9,8 +8,8 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
       <%
       sel_val = nil
-      unless login_user.login_at.nil?
-        time_val = login_user.login_at.strftime('%H%M').to_i
+      unless @login_user.login_at.nil?
+        time_val = @login_user.login_at.strftime('%H%M').to_i
         THETIS_HOURS.each do |hour|
           THETIS_MINUTES.each do |min|
             ref_val = hour * 100 + min
@@ -51,7 +50,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         </select>
 
         <input type="hidden" name="id" value="<%= (@timecard.nil?)?'':(@timecard.id) %>" />
-        <input type="hidden" name="timecard[user_id]" value="<%= login_user.id %>" />
+        <input type="hidden" name="timecard[user_id]" value="<%= @login_user.id %>" />
         <input type="hidden" name="timecard[workcode]" value="<%= Timecard::WKCODE_WK_NORMAL %>" />
         <input type="hidden" name="timecard[date]" value="<%= date_s %>" />
         <input type="hidden" id="timecard_start" name="timecard[start]" />

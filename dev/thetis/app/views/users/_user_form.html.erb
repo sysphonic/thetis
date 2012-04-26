@@ -1,8 +1,6 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
-<% login_user = session[:login_user] %>
-
 <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
   <%= hidden_field('user', 'id') %>
   <table align="center" width="85%" cellpadding="0" cellspacing="2">
@@ -60,7 +58,7 @@
       <td class="item_value_td">
 <%
 if THETIS_USER_TIMEZONE_SELECTABLE \
-    or (!login_user.nil? and login_user.admin?(User::AUTH_USER))
+    or (!@login_user.nil? and @login_user.admin?(User::AUTH_USER))
 %>
         <%= time_zone_select('user', 'time_zone', nil, :default => THETIS_USER_TIMEZONE_DEFAULT) %>
 <%
@@ -135,7 +133,7 @@ end
         <%= radio_button('user', 'figure', 'girl_pink') %><label for="item_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" alt="Girl pink" /></label>
       </td>
     </tr>
-  <% if params[:action] == 'edit' and login_user.id == @user.id %>
+  <% if params[:action] == 'edit' and @login_user.id == @user.id %>
     <tr>
       <%
       def_birth_y = ''

@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <%= form_tag({:controller => 'send_mails', :action => 'save'}, :method => 'post', :name => 'form_send_mail'+form_idx) %>
 <div id="div_sendmail_content">
   <%= render(:partial => 'ajax_mail_content', :object => @email) %>

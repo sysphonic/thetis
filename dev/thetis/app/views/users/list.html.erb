@@ -1,7 +1,5 @@
 
 <%
-login_user = session[:login_user]
-
 groups_cache = {}
 %>
 
@@ -12,7 +10,7 @@ groups_cache = {}
     <td>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
-        <% if login_user.admin?(User::AUTH_USER) %>
+        <% if @login_user.admin?(User::AUTH_USER) %>
           <td align="left" nowrap width="1%">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new', :from => 'users_list') %>';">
           </td>
@@ -54,7 +52,7 @@ groups_cache = {}
   <% end %>
           </td>
           <td align="right">
-  <% if login_user.admin?(User::AUTH_USER) %>
+  <% if @login_user.admin?(User::AUTH_USER) %>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
             <input type="button" value="<%= t('btn.send_notification')%>" onclick="doNotify();">
@@ -113,7 +111,7 @@ groups_cache = {}
         <%=h Group.get_path(group_id, groups_cache) %><br/>
       <% end %>
     </td>
-  <% if login_user.admin?(User::AUTH_USER) %>
+  <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user.id, :from => 'users_list') %>';" />
     </td>
@@ -243,7 +241,7 @@ function doDelete()
   for (var i=0; elems!=null && i<elems.length; i++) {
     if (elems[i].checked) {
       var user_id = elems[i].id.split("_")[2];
-      if (user_id == "<%= login_user.id %>") {
+      if (user_id == "<%= @login_user.id %>") {
         msg("<%= t('user.cannot_remove_yourself') %>");
         return;
       }

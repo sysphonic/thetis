@@ -12,7 +12,7 @@
 <%= stylesheet_link_tag 'thetis110', 'thetisbox', :media => 'all' %>
 <%= javascript_include_tag 'prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar' %>
 <%= javascript_include_tag 'dojo/dojo' %>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110beta7.js?timestamp=20120422" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110beta7.js?timestamp=20120426" type="text/javascript"></script>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110beta4.js" type="text/javascript"></script>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110beta3.js" type="text/javascript"></script>
 
@@ -24,9 +24,8 @@ ThetisBox.setCancel("<%= t('btn.cancel') %>");
 ThetisBox.setClose("<%= t('btn.close') %>");
 ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/close.png");
 <%
-login_user = session[:login_user]
-login_name = (login_user.nil?)?'':login_user.name
-login_admin = (!login_user.nil? and login_user.admin?)?'true':'false'
+login_name = (@login_user.nil?)?'':@login_user.name
+login_admin = (!@login_user.nil? and @login_user.admin?)?'true':'false'
 %>
 setHeaderLogin();
 setLeftLogin();
@@ -157,9 +156,9 @@ function doResize()
       _forBugfullIE(div, _z("list_items"));
     }
 
-  } else if ((div = _z("folderTree")) || (div = _z("groupTree"))) {
+  } else if ((div = _z("divFolderTree")) || (div = _z("divGroupTree"))) {
 
-  <% if params[:controller] == 'folders' and !login_user.nil? and login_user.admin?(User::AUTH_FOLDER) %>
+  <% if params[:controller] == 'folders' and !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
     var h = mainHeight - 120;
   <% else %>
     var h = mainHeight - 80;
@@ -183,7 +182,7 @@ function doResize()
     _z("td_tree").style.width = div.style.width;
     _z("td_view").style.width = view.style.width;
 
-  } else if (div = _z("mailTree")) {
+  } else if (div = _z("divMailTree")) {
 
     var h = mainHeight - 100;
 

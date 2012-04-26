@@ -1,12 +1,11 @@
 <%
-login_user = session[:login_user]
-if login_user.nil? or login_user.auth.nil? or login_user.auth.empty?
+if @login_user.nil? or @login_user.auth.nil? or @login_user.auth.empty?
 %>
 
 <script type="text/javascript">
-<!--
+
 setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1);
-//-->
+
 </script>
 
 <% else %>
@@ -26,33 +25,33 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
         <tr height="90%">
           <td align="left" style="vertical-align:top;">
             <ul style="padding-left:200px;">
-            <% if login_user.admin?(User::AUTH_ALL) %>
+            <% if @login_user.admin?(User::AUTH_ALL) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'config', :action => 'edit') %>'; return false;"><%= t('menu.general_conf') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_USER) %>
+            <% if @login_user.admin?(User::AUTH_USER) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; return false;"><%= t('menu.users_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_GROUP) or login_user.admin?(User::AUTH_WORKFLOW) or login_user.admin?(User::AUTH_LOCATION) %>
+            <% if @login_user.admin?(User::AUTH_GROUP) or @login_user.admin?(User::AUTH_WORKFLOW) or @login_user.admin?(User::AUTH_LOCATION) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'groups', :action => 'show_tree') %>'; return false;"><%= t('menu.groups_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_TEAM) %>
+            <% if @login_user.admin?(User::AUTH_TEAM) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>'; return false;"><%= t('menu.teams_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_SCHEDULE) %>
+            <% if @login_user.admin?(User::AUTH_SCHEDULE) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>'; return false;"><%= t('menu.schedules_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_EQUIPMENT) %>
+            <% if @login_user.admin?(User::AUTH_EQUIPMENT) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>'; return false;"><%= t('menu.equipment_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_ADDRESSBOOK) %>
+            <% if @login_user.admin?(User::AUTH_ADDRESSBOOK) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'addressbook', :action => 'list', :admin => 'true') %>'; return false;"><%= t('menu.addressbook_manage') %></a></li>
             <% end %>
-            <% if login_user.admin?(User::AUTH_ITEM) %>
+            <% if @login_user.admin?(User::AUTH_ITEM) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'templates', :action => 'list') %>'; return false;"><%= t('menu.templates') %></a></li>
             <% end %>
             </ul>
 
-          <% if login_user.admin?(User::AUTH_RESEARCH) %>
+          <% if @login_user.admin?(User::AUTH_RESEARCH) %>
             <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
               <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
                 <tr height="30">
@@ -71,7 +70,7 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
               </ul>
             </div>
           <% end %>
-          <% if login_user.admin?(User::AUTH_TIMECARD) %>
+          <% if @login_user.admin?(User::AUTH_TIMECARD) %>
             <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
               <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
                 <tr height="30">
@@ -89,7 +88,7 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
               </ul>
             </div>
           <% end %>
-          <% if login_user.admin?(User::AUTH_ZEPTAIR) %>
+          <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
             <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
               <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
                 <tr height="30">

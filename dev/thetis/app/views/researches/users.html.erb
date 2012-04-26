@@ -87,7 +87,7 @@ groups_cache = {}
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
     <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
-   <% if session[:login_user].admin?(User::AUTH_USER) %>
+   <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%=td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%=h truncate(user.name, :length => 20) %>

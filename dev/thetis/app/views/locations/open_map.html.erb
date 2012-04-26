@@ -1,6 +1,5 @@
 
 <%
-login_user = session[:login_user]
 @users_cache = {}
 @user_obj_cache = {}
 
@@ -44,8 +43,8 @@ end
       location_id = "location_xx"
     %>
       <div class="location_tray" id="<%= location_id %>" align="left" style="width:200px; z-index:1000; cursor:move;">
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= login_user.get_figure %>.png" />
-        <%= login_user.get_name %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @login_user.get_figure %>.png" />
+        <%= @login_user.get_name %>
       </div>
       <%= draggable_element(location_id, :revert => false) %>
     <% end %>

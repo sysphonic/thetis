@@ -41,9 +41,7 @@ class DesktopController < ApplicationController
       return
     end
 
-    login_user = session[:login_user]
-
-    my_folder = login_user.get_my_folder
+    my_folder = @login_user.get_my_folder
     if my_folder.nil?
       render(:text => 'ERROR:' + t('folder.cannot_find_my_folder'))
       return
@@ -54,17 +52,17 @@ class DesktopController < ApplicationController
 
     item = Item.new_info(my_folder.id)
     item.title = title
-    item.user_id = login_user.id
+    item.user_id = @login_user.id
     item.save!
 
     params[:title] ||= title
     attachment = Attachment.create(params, item, 0)
 
     toy = Toy.new
-    toy.user_id = login_user.id
+    toy.user_id = @login_user.id
     toy.xtype = Toy::XTYPE_ITEM
     toy.target_id = item.id
-    toy.x, toy.y = DesktopsHelper.find_empty_block(login_user)
+    toy.x, toy.y = DesktopsHelper.find_empty_block(@login_user)
     toy.save!
 
     render(:text => t('file.uploaded'))
@@ -77,11 +75,9 @@ class DesktopController < ApplicationController
   def get_schedule
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @date = Date.parse(params[:date])
 
-    @schedules = Schedule.get_user_day(login_user, @date)
+    @schedules = Schedule.get_user_day(@login_user, @date)
 
     render(:partial => 'schedule', :layout => false)
   end
@@ -93,8 +89,6 @@ class DesktopController < ApplicationController
   def edit_timecard
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
@@ -104,7 +98,7 @@ class DesktopController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    @timecard = Timecard.get_for(login_user.id, date_s)
+    @timecard = Timecard.get_for(@login_user.id, date_s)
 
     render(:partial => 'timecard', :layout => false)
   end
@@ -116,13 +110,11 @@ class DesktopController < ApplicationController
   def edit_config
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    if login_user.admin?(User::AUTH_DESKTOP)
+    if @login_user.admin?(User::AUTH_DESKTOP)
       @yaml = ApplicationHelper.get_config_yaml
     end
 
-    @desktop = Desktop.get_for(login_user)
+    @desktop = Desktop.get_for(@login_user)
 
     render(:layout => (!request.xhr?))
   end
@@ -134,9 +126,7 @@ class DesktopController < ApplicationController
   def update_pref
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    desktop = Desktop.get_for(login_user, true)
+    desktop = Desktop.get_for(@login_user, true)
 
     params[:desktop].delete(:user_id)
 
@@ -175,7 +165,7 @@ class DesktopController < ApplicationController
   #Shows empty desktop.
   #
   def show
-    user = session[:login_user]
+    user = @login_user
 
     if user.nil?
       user = DesktopsHelper.get_user_before_login
@@ -192,7 +182,7 @@ class DesktopController < ApplicationController
   def open_desktop
     Log.add_info(request, params.inspect)
 
-    user = session[:login_user]
+    user = @login_user
 
     is_config_desktop = false
     if user.nil?
@@ -236,7 +226,7 @@ class DesktopController < ApplicationController
   #
   def get_image
 
-    user = session[:login_user]
+    user = @login_user
 
     if user.nil?
       user = DesktopsHelper.get_user_before_login
@@ -262,30 +252,28 @@ class DesktopController < ApplicationController
   def get_news_tray
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @toys = []
-    desktop_toys = Toy.get_for_user(login_user)
+    desktop_toys = Toy.get_for_user(@login_user)
 
     deleted_ary = []
 
     # Item
-    latests = Item.get_toys(login_user)
+    latests = Item.get_toys(@login_user)
     deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Comment
-    latests = Comment.get_toys(login_user)
+    latests = Comment.get_toys(@login_user)
     deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Workflow
-    latests = Workflow.get_toys(login_user)
+    latests = Workflow.get_toys(@login_user)
     deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
     # Schedule
-    latests = Schedule.get_toys(login_user)
+    latests = Schedule.get_toys(@login_user)
     deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
     @toys.concat(latests)
 
@@ -306,9 +294,7 @@ class DesktopController < ApplicationController
   def drop_on_desktop
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    if login_user.nil?
+    if @login_user.nil?
       t = Time.now
       render(:text => (t.hour.to_s + t.min.to_s + t.sec.to_s))
       return
@@ -316,7 +302,7 @@ class DesktopController < ApplicationController
 
     toy = Toy.new
 
-    toy.user_id = login_user.id
+    toy.user_id = @login_user.id
     toy.x = params[:x].to_i
     toy.y = params[:y].to_i
     toy.xtype, toy.target_id = params[:id].split(':')
@@ -333,19 +319,17 @@ class DesktopController < ApplicationController
   def add_toy
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    if login_user.nil?
+    if @login_user.nil?
       render(:text => '0')
       return
     end
 
     toy = Toy.new
 
-    toy.user_id = login_user.id
+    toy.user_id = @login_user.id
     toy.xtype = params[:xtype]
     toy.target_id = params[:target_id].to_i
-    toy.x, toy.y = DesktopsHelper.find_empty_block(login_user)
+    toy.x, toy.y = DesktopsHelper.find_empty_block(@login_user)
     toy.save!
 
     render(:text => toy.id.to_s)
@@ -359,9 +343,7 @@ class DesktopController < ApplicationController
   def drop_on_recyclebox
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    unless login_user.nil?
+    unless @login_user.nil?
       Toy.destroy(params[:id])
     end
 
@@ -376,9 +358,7 @@ class DesktopController < ApplicationController
   def on_toys_moved
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    unless login_user.nil?
+    unless @login_user.nil?
       begin
         toy = Toy.find(params[:id])
       rescue
@@ -400,8 +380,6 @@ class DesktopController < ApplicationController
   def create_label
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if params[:thetisBoxEdit].empty?
       render(:partial => 'ajax_label', :layout => false)
       return
@@ -411,13 +389,13 @@ class DesktopController < ApplicationController
 
     @toy.xtype = Toy::XTYPE_LABEL
     @toy.message = params[:thetisBoxEdit]
-    if login_user.nil?
+    if @login_user.nil?
       t = Time.now
       @toy.id = (t.hour.to_s + t.min.to_s + t.sec.to_s).to_i
-      @toy.x, @toy.y = DesktopsHelper.find_empty_block(login_user)
+      @toy.x, @toy.y = DesktopsHelper.find_empty_block(@login_user)
     else
-      @toy.user_id = login_user.id
-      @toy.x, @toy.y = DesktopsHelper.find_empty_block(login_user)
+      @toy.user_id = @login_user.id
+      @toy.x, @toy.y = DesktopsHelper.find_empty_block(@login_user)
       @toy.save!
     end
 
@@ -432,7 +410,6 @@ class DesktopController < ApplicationController
   def update_label
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
     msg = params[:thetisBoxEdit]
 
     if params[:thetisBoxEdit].empty?
@@ -440,7 +417,7 @@ class DesktopController < ApplicationController
       return
     end
 
-    if login_user.nil?
+    if @login_user.nil?
       @toy = Toy.new
       @toy.id = params[:id]
       @toy.xtype = Toy::XTYPE_LABEL
@@ -477,8 +454,6 @@ class DesktopController < ApplicationController
   def post_label
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     if params[:txaPostLabel].empty? or params[:post_to].empty?
       render(:text => '')
       return
@@ -491,7 +466,7 @@ class DesktopController < ApplicationController
       toy.xtype = Toy::XTYPE_POSTLABEL
       toy.message = params[:txaPostLabel]
       toy.user_id = user.id
-      toy.posted_by = login_user.id
+      toy.posted_by = @login_user.id
       toy.x, toy.y = DesktopsHelper.find_empty_block(user)
       toy.save!
     end
@@ -526,15 +501,14 @@ class DesktopController < ApplicationController
   #Filter method to check if current User is owner of the specified Toy.
   #
   def check_toy_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Toy.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_DESKTOP) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_DESKTOP) and owner_id != @login_user.id
       Log.add_check(request, '[check_toy_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

@@ -36,6 +36,20 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
+function avoidSubmit(evt)
+{
+  evt = evt || window.event;
+
+  if (evt.keyCode == 13) {
+    if (evt.cancelBubble != null) {
+      evt.cancelBubble = true;
+    }
+    return false;
+  } else {
+    return true;
+  }
+}
+
 function getVerIE()
 {
   var m = navigator.appVersion.match(/.*MSIE[ ]*[0]*([0-9]+)/);
@@ -616,33 +630,42 @@ function isFunc(func)
   return (targetType && targetType == "function");
 }
 
-function isArray(x) { 
+function isArray(x)
+{
   var targetType = typeof(x);
   return (targetType && (targetType == "object") && (x.constructor == Array));
 }
 
-function restoreHTML(html) { 
-
+function escapeHTML(html)
+{
   if (html == null || html.length <= 0) {
     return html;
   }
-  return html.gsub("&lt;", "<").gsub("&gt;", ">").gsub("&amp;", "&").gsub("&quot;", "\"");
+  return html.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
-function esc_quotes(str) { 
+function restoreHTML(html)
+{
+  if (html == null || html.length <= 0) {
+    return html;
+  }
+  return html.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+}
 
+function esc_quotes(str)
+{
   if (str == null || str.length <= 0) {
     return str;
   }
-  return str.gsub("'", "\\'").gsub("\"", "&quot;");
+  return str.replace(/[']/g, "\\'").replace(/["]/g, "&quot;");
 }
 
-function esc_w_quotes(str) { 
-
+function esc_w_quotes(str)
+{
   if (str == null || str.length <= 0) {
     return str;
   }
-  return str.gsub("\"", "&quot;");
+  return str.replace(/["]/g, "&quot;");
 }
 
 function set_tr_bgcolor(tr, color)

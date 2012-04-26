@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <table align="center" width="85%" cellpadding="0" cellspacing="2">
   <tr>
@@ -28,11 +27,11 @@
     <td class="item_value_td">
       <%
       disabled = ''
-      if user_before_login == login_user.id.to_s
+      if user_before_login == @login_user.id.to_s
         disabled = 'disabled'
       end
       %>
-      <input type="button" style="width:100px;" value="<%= t('btn.apply') %>" onclick="doUpdateConfig('<%= login_user.id %>');" <%= disabled %>>
+      <input type="button" style="width:100px;" value="<%= t('btn.apply') %>" onclick="doUpdateConfig('<%= @login_user.id %>');" <%= disabled %>>
     </td>
   </tr>
   <tr>

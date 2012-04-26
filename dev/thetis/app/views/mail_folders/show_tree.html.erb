@@ -1,8 +1,4 @@
 
-<%
-login_user = session[:login_user]
-%>
-
 <table id="tree_main" width="100%" cellspacing="0" cellpadding="0" style="background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
     <td style="padding:5px 0px;">
@@ -40,7 +36,7 @@ login_user = session[:login_user]
               <tr>
                 <td valign="top" style="border:inset 2px silver; padding:0px;">
                   <%= form_tag( {:controller => 'mail_folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
-                    <div id="mailTree" style="overflow:auto;"><div id="div_tree" style="text-align:left; margin:10px;"></div></div>
+                    <div id="divMailTree" style="overflow:auto;"><div id="mailTree" style="text-align:left; margin:10px;"></div></div>
                     <input type='hidden' name='selKeeper' id='selKeeper' value='' /> 
                   </form>
                 </td>
@@ -56,7 +52,7 @@ login_user = session[:login_user]
 %>
 #                  <%
 #                  exist_xtypes = []
-#                  MailAccount.find_all("user_id=#{login_user.id}").each do |mail_account|
+#                  MailAccount.find_all("user_id=#{@login_user.id}").each do |mail_account|
 #                    exist_xtypes << mail_account.xtype
 #                  end
 #
@@ -151,13 +147,13 @@ BorderDragObserver.prototype = {
   onStart: function(eventName, draggable, event) {
     if (!is_MS && !is_Opera) {
       if (draggable.element.id == "drag_v_border") {
-        var mailTree = _z("mailTree");
+        var divMailTree = _z("divMailTree");
         var td_tree = _z("td_tree");
         var td_view = _z("td_view");
         var div_mails = _z("div_mails");
         var div_mail_content = _z("div_mail_content");
 
-        var orgWidthMailTree = mailTree.offsetWidth;
+        var orgWidthMailTree = divMailTree.offsetWidth;
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
@@ -168,7 +164,7 @@ BorderDragObserver.prototype = {
             } else if (rightWidth < 100 && x > 0) {
               return [orgWidthMails-100, y];
             }
-            mailTree.style.width = leftWidth + "px";
+            divMailTree.style.width = leftWidth + "px";
             td_tree.style.width = leftWidth + "px";
 
             div_mails.style.width = rightWidth + "px";
@@ -205,13 +201,13 @@ BorderDragObserver.prototype = {
   onDrag: function(eventName, draggable, event) {
     if (is_MS || is_Opera) {
       if (draggable.element.id == "drag_v_border") {
-        var mailTree = _z("mailTree");
+        var divMailTree = _z("divMailTree");
         var td_tree = _z("td_tree");
         var td_view = _z("td_view");
         var div_mails = _z("div_mails");
         var div_mail_content = _z("div_mail_content");
 
-        var orgWidthMailTree = mailTree.offsetWidth;
+        var orgWidthMailTree = divMailTree.offsetWidth;
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
@@ -222,7 +218,7 @@ BorderDragObserver.prototype = {
             } else if (rightWidth < 100 && x > 0) {
               return [orgWidthMails-100, y];
             }
-            mailTree.style.width = leftWidth + "px";
+            divMailTree.style.width = leftWidth + "px";
             td_tree.style.width = leftWidth + "px";
 
             div_mails.style.width = rightWidth + "px";
@@ -289,7 +285,7 @@ function getCurrentFolderId()
 function onLoadSub()
 {
   <%
-  figure = login_user.get_figure
+  figure = @login_user.get_figure
   mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
   mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
   %>
@@ -308,8 +304,8 @@ function onLoadSub()
                         new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                         new Array("<%= mail_user_open %>", "<%= mail_user_close %>")
                       );
-  var array = new Array(new Array("0", " <%= login_user.get_name %>", "", "selectFolder('0');", 6 /* img_idx */));
-  var firstMenuId = ThetisBox.buildTree("", array, null, "div_tree", "selKeeper", folderImgs);
+  var array = new Array(new Array("0", " <%= @login_user.get_name %>", "", "selectFolder('0');", 6 /* img_idx */));
+  var firstMenuId = ThetisBox.buildTree("", array, null, "mailTree", "selKeeper", folderImgs);
   <%
   folder_accounts_h = {}
   unless @folder_tree.nil?
@@ -358,7 +354,7 @@ function onLoadSub()
     end
     %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "div_tree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, null, "mailTree", "selKeeper", folderImgs, false);
   <%
     end
   end
@@ -397,7 +393,7 @@ function getMails()
 %>
 #  if (document.form_folder_tree.selKeeper.value == "") {
 #    <%
-#    inbox = MailFolder.get_for(login_user, @mail_account.id, MailFolder::XTYPE_INBOX)
+#    inbox = MailFolder.get_for(@login_user, @mail_account.id, MailFolder::XTYPE_INBOX)
 #    %>
 #    var menuId = "a_mailTree:<%= inbox.id %>";
 #    ThetisBox.selectTree("selKeeper", menuId, null, true);
@@ -894,7 +890,7 @@ function showAddressBook()
             "IFRAME",
             "",
             "",
-            "<%= url_for(:controller => 'addressbook', :action => 'list', :user_id => (login_user.nil?)?(nil):(login_user.id)) %>"
+            "<%= url_for(:controller => 'addressbook', :action => 'list', :user_id => (@login_user.nil?)?(nil):(@login_user.id)) %>"
           );
 }
 

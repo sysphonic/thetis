@@ -33,19 +33,17 @@ class TimecardsController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    login_user = session[:login_user]
-
     if !params[:display].nil? and params[:display].split('_').first == 'group'
       @group_id = params[:display].split('_').last
     end
 
     if params[:user_id].nil?
-      @selected_user = login_user
+      @selected_user = @login_user
     else
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
-        if (@selected_user.get_groups_a & login_user.get_groups_a).empty?
+      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+        if (@selected_user.get_groups_a & @login_user.get_groups_a).empty?
           Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
           redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
           return
@@ -102,10 +100,8 @@ class TimecardsController < ApplicationController
   def export
     Log.add_info(request, '')   # Not to show passwords.
 
-    login_user = session[:login_user]
-
     unless params[:user_id].nil?
-      if params[:user_id] != login_user.id.to_s and !login_user.admin?(User::AUTH_TIMECARD)
+      if params[:user_id] != @login_user.id.to_s and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
         return
@@ -122,8 +118,6 @@ class TimecardsController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     date_s = params[:date]
 
     if date_s.nil? or date_s.empty?
@@ -134,15 +128,15 @@ class TimecardsController < ApplicationController
     end
 
     if params[:user_id].nil?
-      @selected_user = login_user
+      @selected_user = @login_user
     else
       @selected_user = User.find(params[:user_id])
     end
 
     @timecard = Timecard.get_for(@selected_user.id, date_s)
 
-    if @selected_user == login_user
-      @schedules = Schedule.get_user_day(login_user, @date)
+    if @selected_user == @login_user
+      @schedules = Schedule.get_user_day(@login_user, @date)
     end
 
     if !params[:display].nil? and params[:display].split('_').first == 'group'
@@ -171,14 +165,12 @@ class TimecardsController < ApplicationController
       params[:timecard]['options'] = '|' + options.join('|') + '|'
     end
 
-    login_user = session[:login_user]
-
     if params[:user_id].nil? or params[:user_id].empty?
-      @selected_user = login_user
-    elsif login_user.id.to_s == params[:user_id]
-      @selected_user = login_user
+      @selected_user = @login_user
+    elsif @login_user.id.to_s == params[:user_id]
+      @selected_user = @login_user
     else
-      unless login_user.admin?(User::AUTH_TIMECARD)
+      unless @login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -215,7 +207,7 @@ class TimecardsController < ApplicationController
       end
     end
 
-    if (login_user.id.to_s != params[:timecard][:user_id] and !login_user.admin?(User::AUTH_TIMECARD)) \
+    if (@login_user.id.to_s != params[:timecard][:user_id] and !@login_user.admin?(User::AUTH_TIMECARD)) \
         or (!@timecard.user_id.nil? and @timecard.user_id.to_s != params[:timecard][:user_id])
       Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -248,8 +240,7 @@ class TimecardsController < ApplicationController
     begin
       timecard = Timecard.find(params[:id])
 
-      login_user = session[:login_user]
-      if timecard.user_id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
+      if timecard.user_id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -278,9 +269,7 @@ class TimecardsController < ApplicationController
   def recent_descriptions
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
-    sql = "select distinct comment from timecards where user_id=#{login_user.id} order by updated_at DESC limit 0,10"
+    sql = "select distinct comment from timecards where user_id=#{@login_user.id} order by updated_at DESC limit 0,10"
     @timecards = Timecard.find_by_sql(sql)
 
     render(:partial => 'ajax_recent_descriptions', :layout => false)
@@ -297,8 +286,7 @@ class TimecardsController < ApplicationController
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
 
-      login_user = session[:login_user]
-      if @selected_user.id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
+      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -373,8 +361,7 @@ class TimecardsController < ApplicationController
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
 
-      login_user = session[:login_user]
-      if @selected_user.id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
+      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -409,8 +396,7 @@ class TimecardsController < ApplicationController
       @selected_users = Group.get_users(display_id)
       @group_id = display_id
 
-      login_user = session[:login_user]
-      if !login_user.get_groups_a.include?(@group_id.to_s) and !login_user.admin?(User::AUTH_TIMECARD)
+      if !@login_user.get_groups_a.include?(@group_id.to_s) and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User.get_groups_a.include?]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -491,16 +477,14 @@ class TimecardsController < ApplicationController
   def paidhld_list
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @year_begins_from, @month_begins_at = TimecardsHelper.get_fiscal_params
 
     if params[:user_id].nil?
-      @selected_user = login_user
+      @selected_user = @login_user
     else
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != login_user.id and !login_user.admin?(User::AUTH_TIMECARD)
+      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
         Log.add_check(request, '[User::AUTH_TIMECARD]'+request.to_s)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -549,8 +533,6 @@ class TimecardsController < ApplicationController
   #
   def paidhld_update_multi
     Log.add_info(request, params.inspect)
-
-    login_user = session[:login_user]
 
     year = params[:year].to_i
     num = params[:num].to_f

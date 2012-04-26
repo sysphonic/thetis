@@ -29,13 +29,12 @@ class WorkflowsController < ApplicationController
 
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
-    login_user = session[:login_user]
-    my_wf_folder = WorkflowsHelper.get_my_wf_folder(login_user.id)
+    my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
-    sql = WorkflowsHelper.get_list_sql(login_user.id, my_wf_folder.id)
+    sql = WorkflowsHelper.get_list_sql(@login_user.id, my_wf_folder.id)
     @workflows = Workflow.find_by_sql(sql)
 
-    @received_wfs = Workflow.get_received_list(login_user.id, 'id DESC')
+    @received_wfs = Workflow.get_received_list(@login_user.id, 'id DESC')
 
   rescue StandardError => err
     Log.add_error(request, err)
@@ -49,18 +48,17 @@ class WorkflowsController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-    my_wf_folder = WorkflowsHelper.get_my_wf_folder(login_user.id)
+    my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
     tmpl_item = Item.find(params[:select_workflow])
 
-    item = tmpl_item.copy(login_user.id, my_wf_folder.id)
+    item = tmpl_item.copy(@login_user.id, my_wf_folder.id)
 
-    item.update_attributes({:title => tmpl_item.title + t('msg.colon') + User.get_name(login_user.id), :public => false})
+    item.update_attributes({:title => tmpl_item.title + t('msg.colon') + User.get_name(@login_user.id), :public => false})
 
     item.workflow.update_attribute(:status, Workflow::STATUS_NOT_ISSUED)
 
-    sql = WorkflowsHelper.get_list_sql(login_user.id, my_wf_folder.id)
+    sql = WorkflowsHelper.get_list_sql(@login_user.id, my_wf_folder.id)
     @workflows = Workflow.find_by_sql(sql)
 
     render(:partial => 'ajax_workflow', :layout => false)
@@ -86,10 +84,9 @@ class WorkflowsController < ApplicationController
       Log.add_error(nil, err)
     end
 
-    login_user = session[:login_user]
-    my_wf_folder = WorkflowsHelper.get_my_wf_folder(login_user.id)
+    my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
-    sql = WorkflowsHelper.get_list_sql(login_user.id, my_wf_folder.id)
+    sql = WorkflowsHelper.get_list_sql(@login_user.id, my_wf_folder.id)
     @workflows = Workflow.find_by_sql(sql)
 
     render(:partial => 'ajax_workflow', :layout => false)
@@ -113,10 +110,9 @@ class WorkflowsController < ApplicationController
       flash[:notice] = t('msg.move_success')
     end
 
-    login_user = session[:login_user]
-    my_wf_folder = WorkflowsHelper.get_my_wf_folder(login_user.id)
+    my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
-    sql = WorkflowsHelper.get_list_sql(login_user.id, my_wf_folder.id)
+    sql = WorkflowsHelper.get_list_sql(@login_user.id, my_wf_folder.id)
     @workflows = Workflow.find_by_sql(sql)
 
     render(:partial => 'ajax_workflow', :layout => false)
@@ -134,15 +130,14 @@ class WorkflowsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Workflow.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or session[:login_user].nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     begin
       owner_id = Workflow.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    login_user = session[:login_user]
-    if !login_user.admin?(User::AUTH_WORKFLOW) and owner_id != login_user.id
+    if !@login_user.admin?(User::AUTH_WORKFLOW) and owner_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

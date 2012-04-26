@@ -1,6 +1,4 @@
 <%
-login_user = session[:login_user]
-
 @groups_cache ||= {}
 @teams_cache ||= {}
 %>
@@ -11,13 +9,13 @@ login_user = session[:login_user]
   <table align="center" width="95%" cellspacing="0" cellpadding="0">
     <tr>
       <td align="left" width="30%">
-      <% unless login_user.nil? %>
+      <% unless @login_user.nil? %>
         <table align="left" cellspacing="0" cellpadding="0" width="65">
           <tr>
             <td align="left" nowrap width="30">
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
             </td>
-            <% if login_user.admin? User::AUTH_SCHEDULE %>
+            <% if @login_user.admin? User::AUTH_SCHEDULE %>
             <td width="5"></td>
             <td align="left" nowrap width="30">
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
@@ -28,19 +26,19 @@ login_user = session[:login_user]
       <% end %>
       </td>
       <td align="center" nowrap width="40%">
-        <% if login_user.nil? %>
+        <% if @login_user.nil? %>
           &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
         <% end %>
       </td>
       <td align="right" nowrap width="30%">
         <%
         display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
-        unless login_user.nil?
-          groups_a = login_user.get_groups_a
+        unless @login_user.nil?
+          groups_a = @login_user.get_groups_a
           groups_a.each do |group_id|
             display << [h(Group.get_name(group_id)), 'group_'+group_id] unless group_id == 0
           end
-          teams_a = login_user.get_teams_a
+          teams_a = @login_user.get_teams_a
           teams_a.each do |team_id|
             display << [h(Team.get_name(team_id, @teams_cache)), 'team_'+team_id] unless team_id == 0
           end
@@ -70,7 +68,7 @@ login_user = session[:login_user]
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
     </td>
     <td align="right" width="25%">
-    <% if params[:user_id].nil? and !login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
+    <% if params[:user_id].nil? and !@login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
       <input type="hidden" name="timecard_icons" value="false" />
       <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
     <% end %>
@@ -117,9 +115,9 @@ for wd in 0..6 do
 
   if day >= 1 and day <= days
     if params[:user_id].nil? or params[:user_id].empty?
-      schedules = Schedule.get_user_day(login_user, first_day+(day-1))
+      schedules = Schedule.get_user_day(@login_user, first_day+(day-1))
     else
-      schedules = Schedule.get_somebody_day(login_user, params[:user_id], first_day+(day-1))
+      schedules = Schedule.get_somebody_day(@login_user, params[:user_id], first_day+(day-1))
     end
 %>
     <%
@@ -165,7 +163,7 @@ for wd in 0..6 do
       unless timecard.nil?
     %>
         <% alt = h(timecard.workcode_name) %>
-        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => login_user.id) %>'; return false;">
+        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => @login_user.id) %>'; return false;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
           <%
           options = ''
@@ -240,7 +238,7 @@ function selectMonth()
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('msg.select_month') %>";
-  thetisBox.overflow = "hide";
+  thetisBox.overflow = "hidden";
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
 

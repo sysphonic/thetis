@@ -100,16 +100,16 @@ class ApplicationController < ActionController::Base
 
     HistoryHelper.keep_last(request)
 
-    login_user = session[:login_user]
+    @login_user = session[:login_user]
 
     begin
-      if login_user.nil? \
-           or login_user.time_zone.nil? or login_user.time_zone.empty?
+      if @login_user.nil? \
+           or @login_user.time_zone.nil? or @login_user.time_zone.empty?
         unless THETIS_USER_TIMEZONE_DEFAULT.nil? or THETIS_USER_TIMEZONE_DEFAULT.empty?
           Time.zone = THETIS_USER_TIMEZONE_DEFAULT
         end
       else
-        Time.zone = login_user.time_zone
+        Time.zone = @login_user.time_zone
       end
     rescue => evar
       logger.fatal(evar.to_s)

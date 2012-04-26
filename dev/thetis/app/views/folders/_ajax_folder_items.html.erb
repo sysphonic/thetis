@@ -1,6 +1,4 @@
 
-<% login_user = session[:login_user] %>
-
 <% unless @items.nil? %>
 
 <table align="center" width="100%" cellpadding="0" cellspacing="1">
@@ -48,14 +46,14 @@ users_cache = {}
     <td class="<%= td_class %>" nowrap><%=h truncate(user_name, :length => 10) %></td>
   <%
   if params[:read_only] != 'true'
-    if !login_user.nil? and item.editable?(login_user.id)
+    if !@login_user.nil? and item.editable?(@login_user.id)
   %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
     </td>
   <%
     end
-    if !login_user.nil? and item.deletable?(login_user.id)
+    if !@login_user.nil? and item.deletable?(@login_user.id)
   %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <%

@@ -1,8 +1,6 @@
 <%= form_tag( {:controller => 'items', :action => 'search' }, :method => 'get', :name => 'form_list') %>
 
 <%
-login_user = session[:login_user]
-
 folders_cache = {}
 
 @users_cache = {}
@@ -62,8 +60,8 @@ folders_cache = {}
             end
             %>
             <%
-            unless login_user.nil?
-              my_folder = login_user.get_my_folder
+            unless @login_user.nil?
+              my_folder = @login_user.get_my_folder
               unless my_folder.nil?
             %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :folder_id => my_folder.id) %>';">
@@ -77,7 +75,7 @@ folders_cache = {}
           <%
           toy_xtype = Toy::XTYPE_FOLDER
           toy_target_id = @folder_id
-          if !login_user.nil? and !Toy.on_desktop?(login_user, toy_xtype, toy_target_id)
+          if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
           %>
             <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%=ApplicationHelper.h_s_quote truncate(Folder.get_name(@folder_id), :length => 20) %>');">
           <% end %>
@@ -210,12 +208,12 @@ folders_cache = {}
       <% end %>
     </td>
 
-  <% if !login_user.nil? and item.editable?(login_user.id) %>
+  <% if !@login_user.nil? and item.editable?(@login_user.id) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
     </td>
   <% end %>
-  <% if !login_user.nil? and item.deletable?(login_user.id) %>
+  <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
       <%= check_box(:check_item, item.id, :class => 'check_item') %>
     </td>
@@ -406,7 +404,7 @@ function sortList(col)
   prog("TOP-RIGHT");
 }
 
-<% if login_user.nil? and params[:tips]=='true' %>
+<% if @login_user.nil? and params[:tips]=='true' %>
 function showTips()
 {
   tips("<%= t('item.no_login_info1') %><br/><span style='font-size:14pt;color:firebrick;font-weight:800'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");

@@ -27,16 +27,14 @@ class SendMailsController < ApplicationController
   def new
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     mail_account_id = params[:mail_account_id]
 
     if mail_account_id.nil? or mail_account_id.empty?
       account_xtype = params[:mail_account_xtype]
-      @mail_account = MailAccount.get_default_for(login_user.id, account_xtype)
+      @mail_account = MailAccount.get_default_for(@login_user.id, account_xtype)
     else
       @mail_account = MailAccount.find(mail_account_id)
-      if @mail_account.user_id != login_user.id
+      if @mail_account.user_id != @login_user.id
         raise t('msg.need_to_be_owner')
       end
     end
@@ -51,8 +49,6 @@ class SendMailsController < ApplicationController
   def edit
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     email_id = params[:id]
 
     begin
@@ -64,14 +60,14 @@ class SendMailsController < ApplicationController
     end
 
     @mail_account = MailAccount.find(org_email.mail_account_id)
-    if @mail_account.user_id != login_user.id
+    if @mail_account.user_id != @login_user.id
       raise t('msg.need_to_be_owner')
     end
 
     case params[:mode]
       when 'reply'
         @email = Email.new
-        @email.user_id = login_user.id
+        @email.user_id = @login_user.id
         @email.subject = 'Re: ' + org_email.subject
         @email.message = EmailsHelper.quote_message(org_email)
         @email.mail_account_id = @mail_account.id
@@ -80,7 +76,7 @@ class SendMailsController < ApplicationController
 
       when 'reply_to_all'
         @email = Email.new
-        @email.user_id = login_user.id
+        @email.user_id = @login_user.id
         @email.subject = 'Re: ' + org_email.subject
         @email.message = EmailsHelper.quote_message(org_email)
         @email.mail_account_id = @mail_account.id
@@ -108,7 +104,7 @@ class SendMailsController < ApplicationController
         @email.bcc_addresses = org_email.bcc_addresses
 
       when 'forward'
-        @email = SendMailsHelper.get_mail_to_send(login_user, @mail_account, nil)
+        @email = SendMailsHelper.get_mail_to_send(@login_user, @mail_account, nil)
         @email.subject = 'FW: ' + org_email.subject
         @email.message = EmailsHelper.quote_message(org_email)
 
@@ -149,8 +145,6 @@ class SendMailsController < ApplicationController
   def do_send
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     begin
       email = Email.find(params[:id])
 
@@ -160,11 +154,11 @@ class SendMailsController < ApplicationController
       end
 
       mail_account = MailAccount.find(email.mail_account_id)
-      if mail_account.user_id != login_user.id
+      if mail_account.user_id != @login_user.id
         raise('ERROR:' + t('msg.need_to_be_owner'))
       end
 
-      sent_folder = MailFolder.get_for(login_user, mail_account.id, MailFolder::XTYPE_SENT)
+      sent_folder = MailFolder.get_for(@login_user, mail_account.id, MailFolder::XTYPE_SENT)
 
       email.do_smtp(mail_account)
       email.update_attributes({:status => Email::STATUS_TRANSMITTED, :mail_folder_id => sent_folder.id, :sent_at => Time.now})
@@ -185,19 +179,17 @@ class SendMailsController < ApplicationController
   def save
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     unless params[:attach_file].nil?
       attach_attrs = { :file => params[:attach_file] }
       params.delete(:attach_file)
     end
 
     @mail_account = MailAccount.find(params[:mail_account_id])
-    if @mail_account.user_id != login_user.id
+    if @mail_account.user_id != @login_user.id
       raise t('msg.need_to_be_owner')
     end
 
-    @email = SendMailsHelper.get_mail_to_send(login_user, @mail_account, params)
+    @email = SendMailsHelper.get_mail_to_send(@login_user, @mail_account, params)
 
     begin
       @email.save!
@@ -210,7 +202,7 @@ class SendMailsController < ApplicationController
       end
 
       if THETIS_MAIL_LIMIT_NUM_PER_USER > 0
-        Email.trim(login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_USER)
+        Email.trim(@login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_USER)
       end
       # flash[:notice] = t('msg.save_success')
     rescue => evar
@@ -229,8 +221,6 @@ class SendMailsController < ApplicationController
   def add_attachment
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     unless params[:attach_file].nil?
       attach_attrs = { :file => params[:attach_file] }
       params.delete(:attach_file)
@@ -239,7 +229,7 @@ class SendMailsController < ApplicationController
     if params[:id].nil? or params[:id].empty?
       mail_account = MailAccount.find(params[:mail_account_id])
 
-      @email = SendMailsHelper.get_mail_to_send(login_user, mail_account, nil)
+      @email = SendMailsHelper.get_mail_to_send(@login_user, mail_account, nil)
       @email.status = Email::STATUS_TEMPORARY
       @email.save!
     else
@@ -323,13 +313,11 @@ class SendMailsController < ApplicationController
   #
   def check_owner
 
-    login_user = session[:login_user]
-
-    return if params[:id].nil? or params[:id].empty? or login_user.nil?
+    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
 
     email = Email.find(params[:id])
 
-    if !login_user.admin?(User::AUTH_MAIL) and email.user_id != login_user.id
+    if !@login_user.admin?(User::AUTH_MAIL) and email.user_id != @login_user.id
       Log.add_check(request, '[check_owner]'+request.to_s)
 
       flash[:notice] = t('msg.need_to_be_owner')

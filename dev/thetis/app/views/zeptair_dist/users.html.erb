@@ -78,7 +78,7 @@ zept_cmd = @item.zeptair_command
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
     <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
-   <% if session[:login_user].admin?(User::AUTH_USER) %>
+   <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%=td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.get_name, :length => 20) %>

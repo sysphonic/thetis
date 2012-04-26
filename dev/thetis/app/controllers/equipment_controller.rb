@@ -87,8 +87,6 @@ class EquipmentController < ApplicationController
   def show
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     @equipment = Equipment.find(params[:id])
   end
 
@@ -206,22 +204,20 @@ class EquipmentController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    login_user = session[:login_user]
-
-    if login_user.nil? or params[:display].nil? or params[:display] == 'all'
+    if @login_user.nil? or params[:display].nil? or params[:display] == 'all'
       params[:display] = 'all'
-      con = EquipmentHelper.get_scope_condition_for(login_user)
+      con = EquipmentHelper.get_scope_condition_for(@login_user)
     else
       display_type = params[:display].split('_').first
       display_id = params[:display].split('_').last
 
       case display_type
        when 'group'
-        if login_user.get_groups_a(true).include?(display_id)
+        if @login_user.get_groups_a(true).include?(display_id)
           con = "(groups like '%|#{display_id}|%')"
         end
        when 'team'
-        if login_user.get_teams_a.include?(display_id)
+        if @login_user.get_teams_a.include?(display_id)
           con = "(teams like '%|#{display_id}|%')"
         end
       end

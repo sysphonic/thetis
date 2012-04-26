@@ -1,9 +1,7 @@
 <script type="text/javascript">
 
 <%
-login_user = session[:login_user]
-
-figure = login_user.get_figure
+figure = @login_user.get_figure
 mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
 mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
 %>
@@ -24,7 +22,7 @@ var folderImgs = new Array(
                     );
 
 var array = new Array();
-array.push(new Array("0", " <%= login_user.get_name %>", "", "", 6 /* img_idx */));
+array.push(new Array("0", " <%= @login_user.get_name %>", "", "", 6 /* img_idx */));
 
 var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
 <% @folder_tree.each do |parent_id, child_folders| %>

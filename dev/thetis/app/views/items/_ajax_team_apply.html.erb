@@ -1,4 +1,3 @@
-<% login_user = session[:login_user] %>
 
 <div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px; background-color:#FFEBCB;" align="center">
 <% if !@item.team.nil? and @item.team.status == Team::STATUS_DEACTIVATED %>
@@ -6,7 +5,7 @@
 <% else %>
   <%= form_tag( {:controller => 'items', :action => 'add_comment', :id => @item.id }, :name => 'form_team_apply', :method => 'post') %>
     <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-    <%= hidden_field('comment', 'user_id', :value => login_user.id) %>
+    <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
     <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_APPLY) %>
     <div style="padding-bottom:10px;">
       <%= t('team.apply_info') %><br/>

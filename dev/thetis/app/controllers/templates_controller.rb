@@ -160,12 +160,10 @@ class TemplatesController < ApplicationController
   def copy
     Log.add_info(request, params.inspect)
 
-    login_user = session[:login_user]
-
     tmpl_id = params[:thetisBoxSelKeeper].split(':').last
     tmpl_item = Item.find(tmpl_id)
 
-    item = tmpl_item.copy(login_user.id, login_user.get_my_folder.id)
+    item = tmpl_item.copy(@login_user.id, @login_user.get_my_folder.id)
     if item.public != false
       item.update_attribute(:public, false)
     end
