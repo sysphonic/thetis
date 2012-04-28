@@ -21,15 +21,18 @@ module LoginHelper
   #
   #_user_:: Login User.
   #_session_:: Session.
+  #return:: Login User.
   #
   def self.on_login(user, session)
 
-    return if user.nil?
+    return nil if user.nil?
 
     user.update_attribute(:login_at, Time.now)
     Team.check_req_to_del_for(user.id)
 
-    session[:login_user] = user
+    session[:login_user_id] = user.id
     session[:settings] = Setting.get_for(user.id) || {}
+
+    return user
   end
 end

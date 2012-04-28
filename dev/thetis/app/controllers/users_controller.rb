@@ -151,8 +151,9 @@ class UsersController < ApplicationController
     if @user.update_attributes(params[:user])
 
       flash[:notice] = t('msg.update_success')
-      if session[:login_user].id == @user.id
-        session[:login_user] = @user
+
+      if @user.id == @login_user.id
+        @login_user = @user
       end
       if params[:from] == 'users_list'
         redirect_to(:controller => 'users', :action => 'list')
@@ -344,9 +345,8 @@ class UsersController < ApplicationController
 
       user.update_attribute(:auth, auth)
 
-      login_user = session[:login_user]
-      if login_user.id == user.id
-        session[:login_user] = user
+      if user.id == @login_user.id
+        @login_user = user
       end
 
       render(:text => '')
@@ -405,9 +405,8 @@ class UsersController < ApplicationController
 #        @user.update_attribute(:groups, @user.groups)
         @user.save!
 
-        login_user = session[:login_user]
-        if @user.id == login_user.id
-          session[:login_user] = @user
+        if @user.id == @login_user.id
+          @login_user = @user
         end
       end
     end
@@ -433,12 +432,11 @@ class UsersController < ApplicationController
     begin
       @user = User.find(params[:id])
       unless @user.nil?
-        if @user.exclude_from group_id
-          @user.save 
+        if @user.exclude_from(group_id)
+          @user.save
 
-          login_user = session[:login_user]
-          if @user.id == login_user.id
-            session[:login_user] = @user
+          if @user.id == @login_user.id
+            @login_user = @user
           end
         end
       end

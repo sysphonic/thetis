@@ -100,7 +100,7 @@ class ApplicationController < ActionController::Base
 
     HistoryHelper.keep_last(request)
 
-    @login_user = session[:login_user]
+    @login_user = User.find_by_id(session[:login_user_id])
 
     begin
       if @login_user.nil? \

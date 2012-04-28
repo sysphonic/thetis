@@ -30,7 +30,7 @@ module LoginChecker
       unless params[:user].nil?
         user = User.authenticate(params[:user])
         unless user.nil?
-          LoginHelper.on_login(user, session)
+          @login_user = LoginHelper.on_login(user, session)
           return
         end
       end
@@ -50,7 +50,7 @@ module LoginChecker
       dt = DateTime.parse(session[:timestamp])
 
       if Time.utc(dt.year, dt.month, dt.day, dt.hour, dt.min, dt.sec) < Time.now.utc - THETIS_SESSION_EXPIRE_AFTER_MIN * 60
-        session[:login_user] = nil
+        session[:login_user_id] = nil
         @login_user = nil
         reset_session
       end

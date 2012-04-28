@@ -55,7 +55,7 @@ class LoginController < ApplicationController
 
     else
 
-      LoginHelper.on_login(user, session)
+      @login_user = LoginHelper.on_login(user, session)
 
       if params[:fwd_controller].nil? or params[:fwd_controller].empty?
         prms = ApplicationHelper.get_fwd_params(params)
@@ -78,7 +78,7 @@ class LoginController < ApplicationController
   def logout
     Log.add_info(request, params.inspect)
 
-    session[:login_user] = nil
+    session[:login_user_id] = nil
     session[:settings] = nil
     session[:folder_id] = nil
     reset_session

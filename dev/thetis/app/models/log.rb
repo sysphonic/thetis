@@ -157,8 +157,8 @@ class Log < ActiveRecord::Base
     self.updated_at = Time.now
 
     unless request.nil?
-      unless request.session[:login_user].nil?
-        self.user_id = request.session[:login_user].id
+      unless request.session[:login_user_id].nil?
+        self.user_id = request.session[:login_user_id]
       end
       self.remote_ip = request.remote_ip
       self.access_path = request.path
