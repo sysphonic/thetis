@@ -254,7 +254,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
               <td id="div_wf_ajax">
 
                 <% @orders = @workflow.get_orders %>
-                <%= render(:partial => "ajax_workflow", :locals=>{:login_user=>@login_user}) %>
+                <%= render(:partial => 'ajax_workflow') %>
 
               </td>
             </tr>

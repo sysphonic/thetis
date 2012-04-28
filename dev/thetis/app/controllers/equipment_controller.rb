@@ -229,9 +229,9 @@ class EquipmentController < ApplicationController
 
     @equip_schedule_hash = PseudoHash.new
     unless equipment.nil?
-      holidays = Schedule.get_holidays
+      @holidays = Schedule.get_holidays
       equipment.each do |equip|
-        @equip_schedule_hash[equip.id.to_s, true] = Schedule.get_equipment_week(equip.id, @date, holidays)
+        @equip_schedule_hash[equip.id.to_s, true] = Schedule.get_equipment_week(equip.id, @date, @holidays)
       end
     end
   end

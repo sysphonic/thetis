@@ -20,7 +20,7 @@ records = []
 day = @start_date.dup
 days = (@end_date - @start_date).to_i + 1
 
-holidays = Schedule.get_holidays
+@holidays ||= Schedule.get_holidays
 
 workcodes = Timecard.workcodes
 
@@ -41,7 +41,7 @@ usual_overtime_sum = 0
 midnight_overtime_sum = 0
 
 days.times do
-  if Schedule.check_holiday(day, holidays)
+  if Schedule.check_holiday(day, @holidays)
     bgcolor = Timecard::BGCOLOR_XLS_HOLIDAY
   else
     case day.wday

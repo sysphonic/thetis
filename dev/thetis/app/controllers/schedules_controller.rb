@@ -594,9 +594,9 @@ class SchedulesController < ApplicationController
 
     @user_schedule_hash = PseudoHash.new
     unless group_users.nil?
-      holidays = Schedule.get_holidays
+      @holidays = Schedule.get_holidays
       group_users.each do |user|
-        @user_schedule_hash[user.id.to_s, true] = Schedule.get_somebody_week(@login_user, user.id, @date, holidays)
+        @user_schedule_hash[user.id.to_s, true] = Schedule.get_somebody_week(@login_user, user.id, @date, @holidays)
       end
     end
 
@@ -626,9 +626,9 @@ class SchedulesController < ApplicationController
 
     @user_schedule_hash = PseudoHash.new
     unless team_users.nil?
-      holidays = Schedule.get_holidays
+      @holidays = Schedule.get_holidays
       team_users.each do |user_id|
-        @user_schedule_hash[user_id, true] = Schedule.get_somebody_week(@login_user, user_id, @date, holidays)
+        @user_schedule_hash[user_id, true] = Schedule.get_somebody_week(@login_user, user_id, @date, @holidays)
       end
     end
 

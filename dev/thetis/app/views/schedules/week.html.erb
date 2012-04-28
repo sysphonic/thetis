@@ -86,10 +86,10 @@ next_week = @date + 7
 </form>
 
 <%
-holidays = Schedule.get_holidays
+@holidays ||= Schedule.get_holidays
 
 7.times do |day_idx|
-  @schedules = Schedule.get_user_day(@login_user, @date, holidays)
+  @schedules = Schedule.get_user_day(@login_user, @date, @holidays)
   date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 %>
 
