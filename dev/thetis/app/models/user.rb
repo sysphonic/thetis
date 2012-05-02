@@ -15,18 +15,18 @@
 #
 class User < ActiveRecord::Base
   has_many(:user_titles, :dependent => :destroy)
-  has_one :paintmail, :dependent => :destroy
+  has_one(:paintmail, :dependent => :destroy)
 
   require 'csv'
 
   extend CachedRecord
 
-  validates_uniqueness_of :name
+  validates_uniqueness_of(:name)
 # Comment out considering about administrative users.
-#  validates_uniqueness_of :email
-  validates_format_of :name, :with => /^[01-9a-zA-Z]+$/
-  validates_presence_of :name, :password, :email
-  validates_confirmation_of :password
+#  validates_uniqueness_of(:email)
+  validates_format_of(:name, :with => /^[01-9a-zA-Z]+$/)
+  validates_presence_of(:name, :password, :email)
+  validates_confirmation_of(:password)
 
   public::AUTH_ALL = 'all'
   public::AUTH_DESKTOP = 'desktop'

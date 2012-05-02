@@ -11,7 +11,7 @@ groups_cache = {}
 <table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
 <% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
   <tr>
-    <td align="right" style="padding:5px 5px;">
+    <td align="right" style="padding:5px 5px 2px;">
       <table width="100%" cellspacing="0" cellpadding="0">
          <tr>
             <td align="left" style="background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
@@ -530,65 +530,68 @@ function changeOption(val)
   }
 }
 
-function doDeleteItem(item_id, folder_id, title, del_type)
-{
-  if (del_type == "<%= Item::XTYPE_PROJECT %>") {
-    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
-  } else {
-    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteItem("+item_id+", "+folder_id+")");
-  }
-}
-
-function _doDeleteItem(item_id, folder_id)
-{
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'ajax_delete_item') %>?id="+item_id+"&folder_id="+folder_id);
-}
-
 function doGetItems(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_items') %>?id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
 }
 
 function doGetItemsOrder(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_items_order') %>?id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items_order') %>", addParams);
 }
 
 function doGetFoldersOrder(folder_id)
 {
-  var param = "";
-  <% unless @group_id.nil? %>
-  param = "&group_id=<%= @group_id %>";
-  <% end %>
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_folders_order') %>?id="+folder_id+param);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+<% unless @group_id.nil? %>
+  addParams.push("group_id=<%= @group_id %>");
+<% end %>
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_folders_order') %>", addParams);
 }
 
 function doGetAuth(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>?id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>", addParams);
 }
 
 function doGetDispCtrl(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_disp_ctrl') %>?id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_disp_ctrl') %>", addParams);
 }
 
-function doUpdateView(action)
+function doUpdateView(method, action, addParams)
 {
-  var params = "authenticity_token=<%= form_authenticity_token %>";
-  if (arguments.length >= 2) {
-    params += "&" + arguments[1];
+  if (!addParams) {
+    addParams = new Array();
   }
+  if (method == "post") {
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  }
+
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
                 "div_view",
                 action,
                 {
-                  method:"get",
+                  method: method,
+                  parameters: addParams.join("&"),
                   asynchronous: true,
                   evalScripts: true,
-                  onComplete: function(request){ thetisBox.remove(); },
-                  parameters: params
+                  onComplete: function(request){ thetisBox.remove(); }
                 }
               );
 }
@@ -621,13 +624,21 @@ function selectTabUsers(folder_id)
 
 function _selectTabUsers(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>?id=" + folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>", addParams);
 }
 
 function doApplyAuthUsers(folder_id)
 {
   selectListAll(_z("users_auth"));
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_users') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+  addParams.push(Form.serialize(document.form_folder_auth));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_users') %>", addParams);
 }
 
 function selectTabGroups(folder_id)
@@ -642,13 +653,21 @@ function selectTabGroups(folder_id)
 
 function _selectTabGroups(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_groups') %>?id=" + folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_groups') %>", addParams);
 }
 
 function doApplyAuthGroups(folder_id)
 {
   selectListAll(_z("groups_auth"));
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_groups') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+  addParams.push(Form.serialize(document.form_folder_auth));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_groups') %>", addParams);
 }
 
 function selectTabTeams(folder_id)
@@ -663,13 +682,21 @@ function selectTabTeams(folder_id)
 
 function _selectTabTeams(folder_id)
 {
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'get_auth_teams') %>?id=" + folder_id);
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_teams') %>", addParams);
 }
 
 function doApplyAuthTeams(folder_id)
 {
   selectListAll(_z("teams_auth"));
-  doUpdateView("<%= url_for(:controller => 'folders', :action => 'set_auth_teams') %>?id=" + folder_id, Form.serialize(document.form_folder_auth));
+
+  var addParams = new Array();
+  addParams.push("id=" + folder_id);
+  addParams.push(Form.serialize(document.form_folder_auth));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_teams') %>", addParams);
 }
 
 function showGroupTreeToSelect(group_id)

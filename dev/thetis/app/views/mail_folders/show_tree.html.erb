@@ -13,14 +13,17 @@
             <input type="button" value="<%= t('btn.reply') %>" onClick="doReplyMail(false);" style="width:80px;" />
             <input type="button" value="<%= t('btn.reply_to_all') %>" onClick="doReplyMail(true);" style="width:80px;" />
             <input type="button" value="<%= t('btn.forward') %>" onClick="doForwardMail();" style="width:80px;" /> 
+            <input type="button" value="<%= t('btn.edit_new') %>" onClick="doEditMail('duplicate');" style="width:80px;" />
             <input type="button" value="<%= t('btn.save') %>" onClick="doDownloadMail();" style="width:80px;" />
           </td>
           <td id="btnbox_draft" align="left" width="10%" nowrap style="display:none; padding:0px 10px; border-right:solid 1px gray;">
             <input type="button" value="<%= t('btn.edit') %>" onClick="doEditMail('send');" style="width:80px;" />
           </td>
           <td align="left" nowrap style="padding:0px 10px;">
+<!--
             <input type="button" value="<%= t('btn.move') %>" onClick="doMoveMail();" style="width:80px;" /> 
             <input type="button" value="<%= t('btn.delete') %>" onClick="doDeleteMail();" style="width:80px;" />
+-->
           </td>
         </tr>
       </table>
@@ -584,43 +587,42 @@ function selectFolder(folder_id)
 
 function doUpdateMails(folder_id, do_pop)
 {
-  var params = new Array();
-  params.push("id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id="+folder_id);
 
   var mail_account_id = getMailAccountId(folder_id);
   if (mail_account_id) {
-    params.push("mail_account_id="+mail_account_id);
+    addParams.push("mail_account_id="+mail_account_id);
   }
   if (do_pop) {
-    params.push("pop=true");
+    addParams.push("pop=true");
   }
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", params);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams);
 }
 
 function showMail(email_id)
 {
-  var params = new Array();
-  params.push("id="+email_id);
+  var addParams = new Array();
+  addParams.push("id="+email_id);
 
-  doUpdateViewMailContent("<%= url_for(:controller => 'mail_folders', :action => 'get_mail_content') %>", params);
+  doUpdateViewMailContent("<%= url_for(:controller => 'mail_folders', :action => 'get_mail_content') %>", addParams);
 }
 
 function doUpdateViewMailContent(action, addParams)
 {
-  var params = new Array();
-  params.push("authenticity_token=<%= form_authenticity_token %>");
-  if (addParams) {
-    params = params.concat(addParams);
+  if (!addParams) {
+    addParams = new Array();
   }
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
                 "div_mail_content",
                 action,
                 {
+                  method: "get",
                   asynchronous: true,
                   evalScripts: true,
                   onComplete: function(request){ thetisBox.remove(); },
-                  parameters: params.join("&")
+                  parameters: addParams.join("&")
                 }
               );
 }
@@ -646,14 +648,16 @@ function clearMailContent()
   }
 }
 
-function doUpdateViewMails(action, addParams)
+function doUpdateViewMails(method, action, addParams)
 {
   removeHeaderInfo();
   clearMailContent();
 
-  var params = new Array();
-  if (addParams) {
-    params = params.concat(addParams);
+  if (!addParams) {
+    addParams = new Array();
+  }
+  if (method == "post") {
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
   }
 
   var thetisBox = prog("TOP-RIGHT");
@@ -661,8 +665,8 @@ function doUpdateViewMails(action, addParams)
                 "div_mails",
                 action,
                 {
-                  method:"get",
-                  parameters: params.join("&"),
+                  method: method,
+                  parameters: addParams.join("&"),
                   asynchronous: true,
                   evalScripts: true,
                   onComplete: function(request){ thetisBox.remove(); },
@@ -770,46 +774,74 @@ function getSelectedRow()
   return _z("selected_row").value;
 }
 
-function doDeleteMail()
-{
-  var folder_id = getCurrentFolderId();
-
-  var sel_tr = getSelectedRow();
-  if (!sel_tr)
-    return;
-
-  var email_id = sel_tr.split("_")[1];
-
-  var title = "";
-
-  var cnt = _z(sel_tr).childNodes.length;
-
-  for (var i=0; i < cnt; i++) {
-    if (_z(sel_tr).childNodes[i].title != null) {
-      title = _z(sel_tr).childNodes[i].title;
-      if (title.length <= 0) {
-        title = "<%= t('cap.subject') %><%= t('paren.not_specified') %>";
-      }
-      break;
-    }
-  }
-
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteMail("+email_id+", "+folder_id+")");
-}
-
-function _doDeleteMail(email_id, folder_id)
-{
-  var params = new Array();
-  params.push("id="+email_id);
-  params.push("folder_id="+folder_id);
-
-  var mail_account_id = getMailAccountId(folder_id);
-  if (mail_account_id) {
-    params.push("mail_account_id="+mail_account_id);
-  }
-
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", params);
-}
+<%
+=begin
+%>
+# function doDeleteMail()
+# {
+#   var folder_id = getCurrentFolderId();
+# 
+#   var sel_tr = getSelectedRow();
+#   if (!sel_tr)
+#     return;
+# 
+#   var email_id = sel_tr.split("_")[1];
+# 
+#   var title = "";
+# 
+#   var cnt = _z(sel_tr).childNodes.length;
+# 
+#   for (var i=0; i < cnt; i++) {
+#     if (_z(sel_tr).childNodes[i].title != null) {
+#       title = _z(sel_tr).childNodes[i].title;
+#       if (title.length <= 0) {
+#         title = "<%= t('cap.subject') %><%= t('paren.not_specified') %>";
+#       }
+#       break;
+#     }
+#   }
+# 
+#   confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteMail("+email_id+", "+folder_id+")");
+# }
+# 
+# function _doDeleteMail(email_id, folder_id)
+# {
+#   var addParams = new Array();
+#   addParams.push("id="+email_id);
+#   addParams.push("folder_id="+folder_id);
+# 
+#   var mail_account_id = getMailAccountId(folder_id);
+#   if (mail_account_id) {
+#     addParams.push("mail_account_id="+mail_account_id);
+#   }
+# 
+#   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", addParams);
+# }
+# 
+# function doMoveMail()
+# {
+#   var sel_tr = getSelectedRow();
+#   if (!sel_tr)
+#     return;
+# 
+#   var email_id = sel_tr.split("_")[1];
+#   var folder_id = getCurrentFolderId();
+# 
+#   var thetisBox = new ThetisBox;
+#   thetisBox.progress = true;
+#   var addParams = new Array();
+# <% unless params[:mail_account_xtype].nil? %>
+#   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+# <% end %>
+#   addParams.push("id="+email_id);
+#   addParams.push("authenticity_token=<%= form_authenticity_token %>");
+#   thetisBox.setAdditionalParams(addParams);
+#   thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>", "<%= t('folder.select_dest')%>", "");
+#   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
+# }
+<%
+=end
+%>
 
 function doEmpty()
 {
@@ -834,15 +866,15 @@ function doEmpty()
 
 function _doEmpty(folder_id)
 {
-  var params = new Array();
-  params.push("id="+folder_id);
+  var addParams = new Array();
+  addParams.push("id="+folder_id);
 
   var mail_account_id = getMailAccountId(folder_id);
   if (mail_account_id) {
-    params.push("mail_account_id="+mail_account_id);
+    addParams.push("mail_account_id="+mail_account_id);
   }
 
-  doUpdateViewMails("<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", params);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams);
 }
 
 function doDownloadMail()
@@ -853,28 +885,6 @@ function doDownloadMail()
 
   var email_id = sel_tr.split("_")[1];
   location.href = "<%= url_for(:controller => 'mail_folders', :action => 'get_mail_raw') %>?id="+email_id;
-}
-
-function doMoveMail()
-{
-  var sel_tr = getSelectedRow();
-  if (!sel_tr)
-    return;
-
-  var email_id = sel_tr.split("_")[1];
-  var folder_id = getCurrentFolderId();
-
-  var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  var addParams = new Array();
-<% unless params[:mail_account_xtype].nil? %>
-  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
-<% end %>
-  addParams.push("id="+email_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>", "<%= t('folder.select_dest')%>", "");
-  thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
 function showAddressBook()

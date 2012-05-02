@@ -14,9 +14,10 @@
 class MailFoldersController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty]
-  before_filter :check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :ajax_delete_mail, :get_mail_raw, :move_mail]
+  before_filter(:check_login)
+  before_filter(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
+  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :ajax_delete_mail, :get_mail_raw, :move_mail])
+
 
   #=== show_tree
   #
@@ -186,35 +187,55 @@ class MailFoldersController < ApplicationController
   #Gets Mails in specified MailFolder.
   #
   def get_mails
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'get_mails'
+      Log.add_info(request, params.inspect)
+    end
 
     if !params[:pop].nil? and params[:pop] == 'true'
-      new_arrivals = 0
+      begin
+        new_arrivals = 0
 
-      mail_account_id = params[:mail_account_id]
-      if mail_account_id.nil? or mail_account_id.empty?
-        mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
-        mail_accounts.each do |mail_account|
+        mail_account_id = params[:mail_account_id]
+        if mail_account_id.nil? or mail_account_id.empty?
+          mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
+          mail_accounts.each do |mail_account|
+            new_arrivals += Email.do_pop(mail_account)
+          end
+        else
+          mail_account = MailAccount.find(mail_account_id)
           new_arrivals += Email.do_pop(mail_account)
         end
-      else
-        mail_account = MailAccount.find(mail_account_id)
-        new_arrivals += Email.do_pop(mail_account)
-      end
 
-      if new_arrivals > 0
-        flash[:notice] = t('mail.received', :count => new_arrivals)
+        if new_arrivals > 0
+          flash[:notice] = t('mail.received', :count => new_arrivals)
+        end
+      rescue => evar
+        flash[:notice] = 'ERROR:' + t('mail.receive_error') + '<br/>' + evar.to_s
       end
     end
 
-    folder_id = params[:id]
-    if folder_id == '0'   # '0' for ROOT
+    @folder_id = params[:id]
+    if @folder_id == '0'   # '0' for ROOT
       @emails = nil
     else
-      @emails = MailFolder.get_mails_to_show(folder_id, @login_user)
+=begin
+#      @emails = MailFolder.get_mails_to_show(@folder_id, @login_user)
+=end
+# FEATURE_PAGING_IN_TREE >>>
+      @sort_col = params[:sort_col]
+      @sort_type = params[:sort_type]
+
+      folder_ids = nil
+      add_con = nil
+
+      folder_ids = [@folder_id]
+
+      sql = EmailsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, add_con)
+      @email_pages, @emails, @total_num = paginate_by_sql(Email, sql, 10)
+# FEATURE_PAGING_IN_TREE <<<
     end
 
-    session[:mailfolder_id] = folder_id
+    session[:mailfolder_id] = @folder_id
 
     render(:partial => 'ajax_folder_mails', :layout => false)
   end
@@ -298,45 +319,6 @@ class MailFoldersController < ApplicationController
     send_file(filepath, :filename => mail_attach_name, :stream => true, :disposition => 'attachment')
   end
 
-  #=== move_mail
-  #
-  #<Ajax>
-  #Moves Email to the specified MailFolder.
-  #Receives target Email-ID from access-path and destination MailFolder-ID from ThetisBox.
-  #params[:thetisBoxSelKeeper] keeps selected ID of <a>-tag like "thetisBoxSelKeeper-1:<selected-id>". 
-  #
-  def move_mail
-    Log.add_info(request, params.inspect)
-
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
-      flash[:notice] = 'ERROR:' + t('msg.system_error')
-      prms = ApplicationHelper.get_fwd_params(params)
-      prms[:action] = 'show_tree'
-      redirect_to(prms)
-      return
-    end
-
-    parent_id = params[:thetisBoxSelKeeper].split(':').last
-    if parent_id == '0' or MailFolder.find(parent_id).user_id != @login_user.id
-      flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
-      prms = ApplicationHelper.get_fwd_params(params)
-      prms[:action] = 'show_tree'
-      redirect_to(prms)
-      return
-    end
-
-    email = Email.find(params[:id])
-    email.update_attribute(:mail_folder_id, parent_id)
-
-    session[:mailfolder_id] = parent_id
-
-    flash[:notice] = t('msg.move_success')
-
-    prms = ApplicationHelper.get_fwd_params(params)
-    prms[:action] = 'show_tree'
-    redirect_to(prms)
-  end
-
   #=== get_mail_raw
   #
   #Gets raw data of the Email.
@@ -360,34 +342,6 @@ class MailFoldersController < ApplicationController
     send_file(filepath, :filename => email_name, :stream => true, :disposition => 'attachment')
   end
 
-  #=== ajax_delete_mail
-  #
-  #<Ajax>
-  #Deletes specified Email.
-  #
-  def ajax_delete_mail
-    Log.add_info(request, params.inspect)
-
-    mail_account_id = params[:mail_account_id]
-
-    trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
-
-    email = Email.find(params[:id])
-    if email.mail_folder_id == trash_folder.id \
-        or MailFolder.find(email.mail_folder_id).get_parents(false).include?(trash_folder.id.to_s)
-      email.destroy
-      flash[:notice] = t('msg.delete_success')
-    else
-      email.update_attribute(:mail_folder_id, trash_folder.id)
-      flash[:notice] = t('msg.moved_to_trash')
-    end
-
-    folder_id = params[:folder_id]
-    @emails = MailFolder.get_mails_to_show(folder_id, @login_user)
-
-    render(:partial => 'ajax_folder_mails', :layout => false)
-  end
-
   #=== empty
   #
   #<Ajax>
@@ -396,11 +350,12 @@ class MailFoldersController < ApplicationController
   def empty
     Log.add_info(request, params.inspect)
 
+    @folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
 
     trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
-    mail_folder = MailFolder.find(params[:id])
+    mail_folder = MailFolder.find(@folder_id)
     emails = MailFolder.get_mails(mail_folder.id, @login_user) || []
 
     if mail_folder.id == trash_folder.id \
@@ -416,9 +371,93 @@ class MailFoldersController < ApplicationController
       flash[:notice] = t('msg.moved_to_trash')
     end
 
-    @emails = MailFolder.get_mails_to_show(mail_folder.id, @login_user)
+    get_mails
+  end
 
-    render(:partial => 'ajax_folder_mails', :layout => false)
+  #=== ajax_delete_mails
+  #
+  #<Ajax>
+  #Deletes specified Emails.
+  #
+  def ajax_delete_mails
+    Log.add_info(request, params.inspect)
+
+    folder_id = params[:id]
+    mail_account_id = params[:mail_account_id]
+
+    unless params[:check_mail].blank?
+      mail_folder = MailFolder.find(folder_id)
+      trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
+
+      count = 0
+      params[:check_mail].each do |email_id, value|
+        if value == '1'
+
+          begin
+            email = Email.find(email_id)
+            next if email.user_id != @login_user.id
+
+            if trash_folder.nil? \
+                or folder_id == trash_folder.id.to_s \
+                or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
+              email.destroy
+              flash[:notice] ||= t('msg.delete_success')
+            else
+              email.update_attribute(:mail_folder_id, trash_folder.id)
+              flash[:notice] ||= t('msg.moved_to_trash')
+            end
+          rescue => evar
+            Log.add_error(request, evar)
+          end
+
+          count += 1
+        end
+      end
+    end
+
+    get_mails
+  end
+
+  #=== ajax_move_mails
+  #
+  #<Ajax>
+  #Moves specified Emails.
+  #
+  def ajax_move_mails
+    Log.add_info(request, params.inspect)
+
+    folder_id = params[:thetisBoxSelKeeper].split(':').last
+    mail_folder = MailFolder.find(folder_id)
+
+    folder_id = params[:thetisBoxSelKeeper].split(':').last
+    if folder_id == '0' or mail_folder.user_id != @login_user.id
+      flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
+      get_mails
+      return
+    end
+
+    unless params[:check_mail].blank?
+      count = 0
+      params[:check_mail].each do |email_id, value|
+        if value == '1'
+
+          begin
+            email = Email.find(email_id)
+            next if email.user_id != @login_user.id
+
+            email.update_attribute(:mail_folder_id, folder_id)
+
+          rescue => evar
+            Log.add_error(request, evar)
+          end
+
+          count += 1
+        end
+      end
+      flash[:notice] = t('mail.moved', :count => count)
+    end
+
+    get_mails
   end
 
  private

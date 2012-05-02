@@ -95,7 +95,7 @@ module TreeElement
 
     else
 
-      nodes = klass.find(:all, :conditions => ['parent_id=?', node_id])
+      nodes = klass.find(:all, :conditions => ['parent_id=?', node_id], :order => 'xorder ASC, id ASC')
       if ret_obj
         array = nodes
       else

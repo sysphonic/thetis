@@ -174,26 +174,29 @@ class UsersController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    con = ['User.id > 0']
-    if params[:keyword]
-      key_array = params[:keyword].split(nil)
-      key_array.each do |key| 
-        key = '%' + key + '%'
-        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
-      end
-    end
-
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
     elsif !params[:group_id].nil? and !params[:group_id].empty?
       @group_id = params[:group_id]
     end
+
+# Copy to FEATURE_PAGING_IN_TREE >>>
+    con = ['User.id > 0']
+
     unless @group_id.nil?
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
         con << "(groups like '%|#{@group_id}|%')"
+      end
+    end
+
+    if params[:keyword]
+      key_array = params[:keyword].split(nil)
+      key_array.each do |key| 
+        key = '%' + key + '%'
+        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
       end
     end
 
@@ -224,6 +227,7 @@ class UsersController < ApplicationController
     sql << where + order_by
 
     @user_pages, @users, @total_num = paginate_by_sql(User, sql, 50)
+# Copy to FEATURE_PAGING_IN_TREE <<<
   end
 
   #=== search

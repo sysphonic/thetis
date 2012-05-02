@@ -343,6 +343,8 @@ en:
     select_to_change_to: "Please select group to change to."
     select_to_add: "Please select group to add."
     other_group: "Other Group"
+    opt:
+      subgroups_order: "Order of sub-groups"
   image:
     plural: "Images"
   item:
@@ -444,10 +446,15 @@ en:
     sum_of_attach_size_over: "Sum of attachment sizes per E-mail will exceed the limit."
     confirm_to_empty: "All E-mails in this folder will be deleted. Are you sure?"
     confirm_to_send: "This E-mail will be sent. Are you sure?"
+    confirm_to_delete: " mail(s) will be deleted. Are you sure?"
+    moved: "%{count} mail(s) has/have been moved."
     info_to_update: "Click [Get Mails] to confirm new-arrival E-mails."
+    receive_error: "An error occured while receiving E-mails."
     received:
       one: "You have got a mail."
       other: "You have got %{count} mails."
+    one: "1 mail"
+    other: "%{count} mails"
   mail_account:
     default: "Default account"
     secure_connection: "Secure Connection"
@@ -532,6 +539,7 @@ en:
     no_autorities: "(No Autorities)"
     no_folders: "(No folders)"
     no_items: "(No items)"
+    no_groups: "(No groups)"
     not_organized: "(Not organized)"
     confirm: "(Confirm.)"
     no_valid_values: "(No valid values.)"
@@ -793,6 +801,7 @@ en:
     official_titles_info: "Official Titles decises the default order of Users."
     specify_title_name: "Please specify the title name."
     select_group_to_add_to: "Please select group to add user to."
+    select_group_to_move_to: "Please select group to move users to."
     confirm_to_excluded_from1: "User will be excluded from ["
     confirm_to_excluded_from2: "]. Are you sure?"
     title_export: "User Export"
@@ -802,6 +811,7 @@ en:
     specify_csv: "Please specify CSV-file."
     cannot_remove_yourself: "You cannot remove yourself."
     confirm_to_delete: " user(s) will be deleted. Are you sure?"
+    confirm_to_exclude_from_group: " user(s) will be excluded from the group. Are you sure?"
     imported: " users have been imported."
     err_list_cap: ". user : "
     required_for_registration: " are required for registration."
@@ -967,6 +977,7 @@ en:
     myself: "Myself"
     already_deleted: "This %{name} has already been deleted."
   btn:
+    exclude_from_group: "Excl. from Group"
     upper: "Upper"
     lower: "Lower"
     ok: "OK"
@@ -983,9 +994,10 @@ en:
     create: "Create"
     search: "Search"
     reset: "Reset"
-    select_deselect_all: "Select/Deselect All"
+    select_deselect_all: "Select All"
     select_all: "Select All"
     delete: "Delete"
+    edit_new: "Edit new"
     edit: "Edit"
     register: "Register"
     back: "Back"

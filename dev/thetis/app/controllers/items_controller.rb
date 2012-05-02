@@ -92,6 +92,7 @@ class ItemsController < ApplicationController
       end
     end
 
+# Copy to FEATURE_PAGING_IN_TREE >>>
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
@@ -129,6 +130,7 @@ class ItemsController < ApplicationController
 
     sql = ItemsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, false, add_con)
     @item_pages, @items, @total_num = paginate_by_sql(Item, sql, 10)
+# Copy to FEATURE_PAGING_IN_TREE <<<
   end
 
   #=== search

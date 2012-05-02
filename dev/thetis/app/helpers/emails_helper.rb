@@ -130,4 +130,72 @@ module EmailsHelper
 
     return EmailsHelper.format_address_exp(disp_name, mail_addr)
   end
+
+  #=== self.get_list_sql
+  #
+  #Gets SQL for list of Emails.
+  #
+  #_user_:: User Instance for whom list will be made. If not required, specify nil.
+  #_keyword_:: Search keyword. If not required, specify nil.
+  #_folder_ids_:: Array of MailFolder-IDs. If not required, specify nil.
+  #_sort_col_:: Column to be used to sort list. If specified nil, uses default('updated_at').
+  #_sort_type_:: Sort type. Specify 'ASC' , 'DESC'. If specified nil, uses default('DESC').
+  #_limit_num_:: Limit count to get. If without limit, specify 0.
+  #_admin_:: Optional flag to apply Administrative Authority. Default = false.
+  #_add_con_:: Additional condition. This parameter is added to 'where' clause with 'and'. Default = nil.
+  #return:: SQL for list of Emails.
+  #
+  def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil)
+
+    where = ' where'
+    where << " (Email.user_id=#{user.id})"
+
+    where << " and ((status is null) or not(status='#{Email::STATUS_TEMPORARY}'))"
+
+    unless keyword.nil? or keyword.empty?
+      key_array = keyword.split(nil)
+      key_array.each do |key| 
+        key = "\'%" + key + "%\'"
+        where << ' and (subject like '+key+' or from_address like '+key+' or to_addresses like '+key+' or cc_addresses like '+key+' or bcc_addresses like '+key+' or reply_to like '+key+' or message like '+key+')'
+      end
+    end
+
+    unless folder_ids.nil?
+      folder_cons = []
+
+      if !folder_ids.instance_of?(Array)
+        folder_ids = [folder_ids]
+      end
+
+      folder_ids.each do |folder_id|
+        folder_cons << '(Email.mail_folder_id = '+folder_id.to_s+')'
+      end
+
+      where << ' and (' + folder_cons.join(' or ') + ')'
+    end
+
+    unless add_con.nil? or add_con.empty?
+      where << ' and (' + add_con + ')'
+    end
+
+    sort_col = 'sent_at' if sort_col.nil? or sort_col.empty?
+    sort_type = 'DESC' if sort_type.nil? or sort_type.empty?
+
+    if sort_col == 'has_attach'
+      sql = "select distinct Email.*, count(MailAttachment.id) as AttachmentsNum from (emails Email left join mail_attachments MailAttachment on (Email.id=MailAttachment.email_id)), mail_folders MailFolder"
+      order_by = ' group by Email.id order by AttachmentsNum ' + sort_type
+    else
+      sql = 'select distinct Email.* from emails Email, mail_folders MailFolder'
+      order_by = ' order by ' + sort_col + ' ' + sort_type
+    end
+
+    limit = ''
+    unless limit_num.nil? or limit_num <= 0
+      limit = ' limit 0,' + limit_num.to_s
+    end
+
+    sql << where + order_by + limit
+
+    return sql
+  end
 end

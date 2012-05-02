@@ -615,7 +615,7 @@ module ApplicationHelper
 
   #=== self.custom_pagination
   #
-  #Replace data in specified file.
+  #Customizes appearance of pagination links.
   #
   #_pagination_:: Pagination links.
   #return:: Customized pagination links.
@@ -627,6 +627,25 @@ module ApplicationHelper
       pagination = pagination.gsub('Next ', I18n.t('btn.next_page'))
       pagination = pagination.gsub('<a ', '<a class="a_pagination" ')
       pagination = pagination.gsub(/href="([^"]+)"/, 'href="#" onclick="prog(\'TOP-RIGHT\'); location.href=\'\1\'; return false;"')
+    end
+    return pagination
+  end
+
+  #=== self.ajax_pagination
+  #
+  #Ajaxifies pagination links.
+  #
+  #_pagination_:: Pagination links.
+  #_func_name_:: onClick expression.
+  #return:: Ajaxified pagination links.
+  #
+  def self.ajax_pagination(pagination, func_name)
+    unless pagination.nil?
+      pagination = pagination.gsub('<div class="pagination">', '<div class="pagination" style="display:inline;">')
+      pagination = pagination.gsub(' Previous', I18n.t('btn.prev_page'))
+      pagination = pagination.gsub('Next ', I18n.t('btn.next_page'))
+      pagination = pagination.gsub('<a ', '<a class="a_pagination" ')
+      pagination = pagination.gsub(/href="([^"]+)"/, 'href="#" onclick="'+func_name+'(\'\1\'); return false;"')
     end
     return pagination
   end

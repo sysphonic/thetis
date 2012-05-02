@@ -67,11 +67,14 @@
             <% end %>
             </select>
           </td>
-          <td width="30" align="center" style="vertical-align:middle; line-height:17px;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onShowPanelSendToClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeAddress()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+          <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropup.gif" title="<%= t('btn.upper') %>" onclick="onAddrUpperClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" title="<%= t('btn.lower') %>" onclick="onAddrLowerClicked()" style="cursor:pointer;" /><br/>
+          </td>
+          <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.add') %>" onclick="onShowPanelSendToClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onEditToAddressClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeAddress()" style="cursor:pointer; margin-bottom:3px;" /><br/>
           </td>
         </tr>
       </table>
@@ -104,6 +107,133 @@
 <script type="text/javascript">
 
 var thetisBoxSendTo = null;
+
+onEditToAddressClicked = function()
+{
+  if (thetisBoxSendTo != null) {
+    thetisBoxSendTo.remove();
+    thetisBoxSendTo = null;
+  }
+  thetisBoxSendTo = new ThetisBox;
+  thetisBoxSendTo.bgcolor_title = "#8DB7EB";
+  thetisBoxSendTo.bgcolor_body = "aliceblue";
+  thetisBoxSendTo.bgcolor_content = "aliceblue";
+  thetisBoxSendTo.border_content = "";
+
+  var content = getToAddrEditor("onEditToAddrOK()", "onEditToAddrCancel()");
+
+  if (thetisBoxMailForm) {
+    thetisBoxMailForm.addChildBox(thetisBoxSendTo);
+  }
+  thetisBoxSendTo.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif' /> <%= t('cap.send_to') %>";
+  thetisBoxSendTo.overflow = "hidden";
+  thetisBoxSendTo.show("CENTER", "420,200", "TRAY", "", "", content);
+}
+
+getToAddrEditor = function(onOk, onCancel)
+{
+  var found = false;
+  var targetAddrText = "";
+  var targetAddrVal = "";
+  var list = _z("addresses_selected");
+  for (var i=0; i < list.options.length; i++) {
+    var option = list.options[i];
+    if (!found && option.selected == true) {
+      targetAddrText = option.text;
+      targetAddrVal = option.value;
+      found = true;
+    } else {
+      option.selected = false;
+    }
+  }
+  var addrPrefix = targetAddrVal.split("<%= Email::ADDR_PREFIX_SEPARATOR %>")[0];
+  addrPrefix += "<%= Email::ADDR_PREFIX_SEPARATOR %>";
+
+  var addrBare = replaceAll(targetAddrVal, addrPrefix, "");
+
+  content = "<form name='form_to_addr'>";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' valign='middle' nowrap>";
+
+  content += "      <select id='to_addr_prefix'>";
+  var selected = "";
+  <%
+  opts = []
+  opts << [t('cap.to'), Email::ADDR_PREFIX_TO]
+  opts << [t('cap.cc'), Email::ADDR_PREFIX_CC]
+  opts << [t('cap.bcc'), Email::ADDR_PREFIX_BCC]
+  opts.each do |opt|
+  %>
+  selected = "";
+  if (addrPrefix == "<%= opt.last %>") {
+    selected = "selected";
+  }
+  content += "        <option value='<%= opt.last %>' "+selected+"><%= opt.first %></option>";
+  <% end %>
+  content += "      </select>";
+
+  content += "      <input type='text' id='to_addr_bare' value='"+esc_quotes(addrBare)+"' style='width:300px' />";
+  content += "      <input type='hidden' id='org_to_addr_val' value='"+esc_quotes(targetAddrVal)+"' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  content += "</form>";
+  return content;
+}
+
+onEditToAddrOK = function()
+{
+  var to_addr_prefix = _z("to_addr_prefix");
+  var to_addr_bare = _z("to_addr_bare");
+  var org_to_addr_val = _z("org_to_addr_val");
+
+  var found = false;
+  var list = _z("addresses_selected");
+  for (var i=0; i < list.options.length; i++) {
+    var option = list.options[i];
+    if (!found && option.value == org_to_addr_val.value) {
+      var dispPrefix = "";
+      switch (to_addr_prefix.value) {
+        case "<%= Email::ADDR_PREFIX_TO %>":
+          dispPrefix = "<%= t('cap.to') %>";
+          break;
+        case "<%= Email::ADDR_PREFIX_CC %>":
+          dispPrefix = "<%= t('cap.cc') %>";
+          break;
+        case "<%= Email::ADDR_PREFIX_BCC %>":
+          dispPrefix = "<%= t('cap.bcc') %>";
+          break;
+      }
+      option.text = dispPrefix + " " + to_addr_bare.value;
+      option.value = to_addr_prefix.value + to_addr_bare.value
+      option.selected = true;
+      found = true;
+    } else {
+      option.selected = false;
+    }
+  }
+
+  thetisBoxSendTo.remove();
+  thetisBoxSendTo = null;
+
+  doPageCalendar(date);
+}
+
+onEditToAddrCancel = function()
+{
+  thetisBoxSendTo.remove();
+  thetisBoxSendTo = null;
+}
 
 onShowPanelSendToClicked = function()
 {
@@ -138,8 +268,8 @@ onShowPanelSendToClicked = function()
               thetisBoxMailForm.addChildBox(thetisBoxSendTo);
             }
             thetisBoxSendTo.show(
-                      "TOP-LEFT",
-                      "550,+340",
+                      "TOP-RIGHT",
+                      "480,+340",
                       "TRAY",
                       "",
                       "",

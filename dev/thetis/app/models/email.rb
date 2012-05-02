@@ -62,6 +62,27 @@ class Email < ActiveRecord::Base
     end
   end
 
+  #=== copy_attachments_from
+  #
+  #Copies MailAttachements from the specified E-mail.
+  #
+  #_src_email_:: Source E-mail.
+  #
+  def copy_attachments_from(src_email)
+
+    return if src_email.mail_attachments.nil? or src_email.mail_attachments.empty?
+
+    self.status = Email::STATUS_TEMPORARY
+    self.save!
+
+    src_email.mail_attachments.each do |org_attach|
+      mail_attach = org_attach.clone
+      self.mail_attachments << mail_attach
+      mail_attach.copy_file_from(org_attach)
+    end
+    self.save!  # To recalcurate size
+  end
+
   #=== do_smtp
   #
   #Does send E-mails by SMTP.
@@ -533,13 +554,23 @@ EOT
   #
   #Gets expression of sent-at.
   #
+  #_req_full_:: Flag to require full expression.
   #return:: Expression of sent-at.
   #
-  def get_sent_at_exp
+  def get_sent_at_exp(req_full=true)
     if self.sent_at.nil?
       return '---'
     else
-      return self.sent_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+      if req_full
+        format = THETIS_DATE_FORMAT_YMD+' %H:%M'
+      else
+        if UtilDate.create(self.sent_at).get_date == Date.today
+          format = '%H:%M'
+        else
+          format = THETIS_DATE_FORMAT_YMD
+        end
+      end
+      return self.sent_at.strftime(format)
     end
   end
 

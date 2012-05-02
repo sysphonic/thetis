@@ -6,56 +6,51 @@
 folders_cache = {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
   <tr>
     <td align="right">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] -%>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
       <%= t('msg.search_in') %> <%= select_tag 'find_in',
                                  options_for_select([[h(t('folder.all')),Item::FOLDER_ALL],
                                                     [h(t('folder.current')),Item::FOLDER_CURRENT],
                                                     [h(t('folder.lower')), Item::FOLDER_LOWER]], 
                                                     params[:find_in])
               %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action]) %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action]) %>';"/>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+</table>
+
+<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
   <tr>
+    <td align="left" nowrap style="color:sienna">
+    <%
+    folder_id = params[:folder_id]
+    if folder_id.nil? or folder_id.empty?
+    %>
+
+    <% else %>
+      <%= t('cap.folder') %> <%= Folder.get_path(folder_id, folders_cache) %>
+    <% end %>
+    </td>
     <td align="right">
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="left" nowrap style="color:sienna">
-          <%
-          folder_id = params[:folder_id]
-          if folder_id.nil? or folder_id.empty?
-          %>
+      <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_search.submit();">
+      <%
+      excepts = nil
+      excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
+      Item.sort_opts(excepts).each do |text_val|
+        selected = ''
+        selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
+      %>
+        <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
+      <% end %>
+      </select>
+      &nbsp;&nbsp;
 
-          <% else %>
-            <%= t('cap.folder') %> <%=h Folder.get_path(folder_id, folders_cache) %>
-          <% end %>
-          </td>
-          <td align="right">
-            <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_search.submit();">
-            <%
-            excepts = nil
-            excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
-            Item.sort_opts(excepts).each do |text_val|
-              selected = ''
-              selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
-            %>
-              <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
-            <% end %>
-            </select>
-            &nbsp;&nbsp;
-
-            <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%= t('btn.arrow_back') %></a>
-          </td>
-        </tr>
-      </table>
+      <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%= t('btn.arrow_back') %></a>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
 </table>
 
 <%= hidden_field_tag('sort_col', params[:sort_col]) %>
@@ -66,7 +61,7 @@ folders_cache = {}
 
 </form>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
   <tr>
     <td class="pagination_td" align="center">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
@@ -80,7 +75,6 @@ folders_cache = {}
       <%= pagination %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <%
@@ -102,15 +96,15 @@ folders_cache = {}
           <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp;
             <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
-              <%=h truncate(item.title, :length => 20) %>
+              <%= truncate(item.title, :length => 20) %>
             </a>
             <% if !item.workflow.nil? and item.workflow.decided? %>
-              <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%=h item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
+              <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
             <% end %>
             &nbsp;&nbsp;
           <% unless item.folder_id.nil? %>
             <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
-              <span style="color:red;"><%=h item.get_folder_path(folders_cache) %></span>
+              <span style="color:red;"><%= item.get_folder_path(folders_cache) %></span>
             </a>
           <% end %>
           &nbsp;&nbsp;
@@ -134,12 +128,12 @@ folders_cache = {}
             %>
             <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
             <% end %>
-              <span style="color:green;">by <%=h item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
+              <span style="color:green;">by <%= item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
             <% unless u_groups.empty? %>
             </a>
             <% end %>
             <% unless item.updated_at.nil? %>
-            &nbsp;<span style="text-align:left; font-size:9pt; vertical-align:middle;">(<%=h item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+            &nbsp;<span style="text-align:left; font-size:9pt; vertical-align:middle;">(<%= item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
             <% end %>
           </td>
         </tr>
@@ -155,7 +149,7 @@ folders_cache = {}
 <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
 <br/>
 <% unless item.description.nil? or item.description.empty? %>
-<%=h truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>
+<%= truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>
 <% end %>
                 </td>
               </tr>

@@ -11,99 +11,89 @@ folders_cache = {}
 @group_obj_cache = {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
   <tr>
-    <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
-          </td>
-          <td width="10"></td>
-          <td align="left" nowrap width="1%">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= t('item.show_url') %>" title="<%= t('item.show_url') %>" onclick="showURL();">
-          </td>
-          <td align="right" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-            <%= t('msg.search_in') %> <%= select_tag 'find_in',
-                                     options_for_select([[h(t('folder.current')),Item::FOLDER_CURRENT],
-                                                        [h(t('folder.all')),Item::FOLDER_ALL],
-                                                        [h(t('folder.lower')), Item::FOLDER_LOWER]], 
-                                                        params[:find_in])
-                      %>
-            <input type="submit" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); form_list.action='<%= url_for(:controller => 'items', :action => 'search') %>'; form_list.submit(); return false;"/>
-            <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs') %>';"/>
-          </td>
-        </tr>
-      </table>
+    <td align="left" nowrap width="1%">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
     </td>
-  </tr>
-  <tr height="5"><td></td></tr>
-  <tr>
-    <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr>
-          <td align="left" nowrap style="padding-bottom:5px;">
-        <% if @folder_id.nil? or @folder_id.empty? %>
-            <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect('');">
-              <%= t('btn.select_folder') %>
-            </div>
-            &nbsp;
-            <%
-            session_folder = session[:folder_id]
-            if !session_folder.nil? and Folder.exists?(session_folder)
-              if session_folder != '0'
-            %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= Folder.get_path(session_folder, folders_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
-            <%
-              end
-            end
-            %>
-            <%
-            unless @login_user.nil?
-              my_folder = @login_user.get_my_folder
-              unless my_folder.nil?
-            %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
-            <%
-              end
-            end
-            %>
-        <% else %>
-            <%= t('cap.folder') %> <a class="a_underline" href="#" onclick="showFolderTreeToSelect('<%= @folder_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red; background-color:white;"><%=h Folder.get_path(@folder_id, folders_cache) %></a>
-            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearFolder()" />
-          <%
-          toy_xtype = Toy::XTYPE_FOLDER
-          toy_target_id = @folder_id
-          if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
-          %>
-            <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%=ApplicationHelper.h_s_quote truncate(Folder.get_name(@folder_id), :length => 20) %>');">
-          <% end %>
-        <% end %>
-          </td>
-          <td align="right">
-            <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_list.submit();">
-            <%
-            excepts = nil
-            excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
-            Item.sort_opts(excepts).each do |text_val|
-              selected = ''
-              selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
-            %>
-              <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
-            <% end %>
-            </select>
-            &nbsp;
-            <input type="hidden" name="thumbnails" value="false" />
-            <input type="checkbox" id="thumbnails" name="thumbnails" value="true" <%= (params[:thumbnails]!='false')?'checked':'' %> onclick="form_list.submit(); prog('TOP-RIGHT');"><label for="thumbnails"><%= t('item.show_thumbnails') %></label>
-          </td>
-        </tr>
-      </table>
+    <td width="10"></td>
+    <td align="left" nowrap width="1%">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= t('item.show_url') %>" title="<%= t('item.show_url') %>" onclick="showURL();">
+    </td>
+    <td align="right" nowrap>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+      <%= t('msg.search_in') %> <%= select_tag 'find_in',
+                               options_for_select([[h(t('folder.current')),Item::FOLDER_CURRENT],
+                                                  [h(t('folder.all')),Item::FOLDER_ALL],
+                                                  [h(t('folder.lower')), Item::FOLDER_LOWER]], 
+                                                  params[:find_in])
+                %>
+      <input type="submit" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); form_list.action='<%= url_for(:controller => 'items', :action => 'search') %>'; form_list.submit(); return false;"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs') %>';"/>
     </td>
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+  <tr>
+    <td align="left" nowrap>
+  <% if @folder_id.nil? or @folder_id.empty? %>
+      <div class="button_gray" style="float:left;" onclick="showFolderTreeToSelect('');">
+        <%= t('btn.select_folder') %>
+      </div>
+      &nbsp;
+      <%
+      session_folder = session[:folder_id]
+      if !session_folder.nil? and Folder.exists?(session_folder)
+        if session_folder != '0'
+      %>
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= Folder.get_path(session_folder, folders_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
+      <%
+        end
+      end
+      %>
+      <%
+      unless @login_user.nil?
+        my_folder = @login_user.get_my_folder
+        unless my_folder.nil?
+      %>
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" alt="<%= t('folder.my_folder') %>" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
+      <%
+        end
+      end
+      %>
+  <% else %>
+      <%= t('cap.folder') %> <a class="a_underline" href="#" onclick="showFolderTreeToSelect('<%= @folder_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red; background-color:white;"><%= Folder.get_path(@folder_id, folders_cache) %></a>
+      &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearFolder()" />
+    <%
+    toy_xtype = Toy::XTYPE_FOLDER
+    toy_target_id = @folder_id
+    if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
+    %>
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%=ApplicationHelper.h_s_quote truncate(Folder.get_name(@folder_id), :length => 20) %>');">
+    <% end %>
+  <% end %>
+    </td>
+    <td align="right">
+      <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_list.submit();">
+      <%
+      excepts = nil
+      excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
+      Item.sort_opts(excepts).each do |text_val|
+        selected = ''
+        selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
+      %>
+        <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
+      <% end %>
+      </select>
+      &nbsp;
+      <input type="hidden" name="thumbnails" value="false" />
+      <input type="checkbox" id="thumbnails" name="thumbnails" value="true" <%= (params[:thumbnails]!='false')?'checked':'' %> onclick="form_list.submit(); prog('TOP-RIGHT');"><label for="thumbnails"><%= t('item.show_thumbnails') %></label>
+    </td>
+  </tr>
+</table>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
   <tr>
     <td class="pagination_td" align="center">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
@@ -117,7 +107,6 @@ folders_cache = {}
       <%= pagination %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_list">
@@ -139,10 +128,10 @@ folders_cache = {}
       <TABLE width="100%" cellpadding="0" cellspacing="0">
         <TR>
           <TD align="left" style="font-size:11pt; line-height:14pt; text-indent:5px;">
-            <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%=item.id %>); return false;"><%=h truncate(item.title, :length => 60) %></a>
+            <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%=item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
 
             <% if !item.workflow.nil? and item.workflow.decided? %>
-              <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%=h item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
+              <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
             <% end %>
 
             &nbsp;&nbsp;
@@ -153,7 +142,7 @@ folders_cache = {}
               <% if enable_link %>
               <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
               <% end %>
-              <span style="color:red;"><%=h item.get_folder_path(folders_cache) %></span>
+              <span style="color:red;"><%= item.get_folder_path(folders_cache) %></span>
               <% if enable_link %>
               </a>
               <% end %>
@@ -179,7 +168,7 @@ folders_cache = {}
             %>
             <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
             <% end %>
-              <span style="color:green;">by <%=h item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
+              <span style="color:green;">by <%= item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
             <% unless u_groups.empty? %>
             </a>
             <% end %>
@@ -200,7 +189,7 @@ folders_cache = {}
                     path = team_folder.get_path(folders_cache)
               %>
                 <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
-                  <%=h path %>
+                  <%= path %>
                 </a>
                 <% else %>
                   <span style="color:green"><%= t('item.project') %></span>
@@ -306,23 +295,23 @@ attachments_num = item_attachments.length
                    attach_cnt += 1
                    break if attach_cnt > max_bbs_attach
                   %>
-                         <table cellspacing="1" cellpadding="0" align="center" width="120" style="cursor:pointer; border:2px solid white;" onClick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+                         <table cellspacing="1" cellpadding="0" align="center" width="120" style="cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                            <tr>
                              <td class="td_attachment_name" align="center">
-                               <%=h attach.name %>
+                               <%= attach.name %>
                              </td>
                            </tr>
                     <% unless attach.title.nil? or attach.title.empty? %>
                            <tr>
                              <td class="td_attachment_title" align="center">
-                               <%=h attach.title %>
+                               <%= attach.title %>
                              </td>
                            </tr>
                     <% end %>
                     <% unless attach.memo.nil? or attach.memo.empty? %>
                        <tr>
                          <td class="td_attachment_memo">
-                            <%=h attach.memo %>
+                            <%= attach.memo %>
                          </td>
                        </tr>
                     <% end %>

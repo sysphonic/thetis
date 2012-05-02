@@ -262,7 +262,7 @@ class Group < ActiveRecord::Base
   #
   def self.get_tree(group_tree, conditions, tree_id)
 
-    return TreeElement.get_tree(self, group_tree, conditions, tree_id, nil)
+    return TreeElement.get_tree(self, group_tree, conditions, tree_id, 'xorder ASC, id ASC')
   end
 
   #=== self.get_childs

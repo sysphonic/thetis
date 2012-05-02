@@ -142,7 +142,7 @@ class MailFolder < ActiveRecord::Base
   #
   def self.get_for(user, mail_account_id, xtype)
 
-    return nil if user.nil? or mail_account_id.nil?
+    return nil if user.nil? or mail_account_id.blank?
 
     if user.kind_of?(User)
       user_id = user.id

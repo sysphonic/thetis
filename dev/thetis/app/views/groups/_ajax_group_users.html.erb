@@ -1,30 +1,213 @@
 <% unless @users.nil? %>
+
+<%= form_tag( {:controller => 'groups', :action => 'get_users' }, :method => 'get', :name => 'form_list') %>
+<table width="100%" cellspacing="0" cellpadding="0" style="padding:2px 5px 5px;">
+  <tr>
+    <td align="left" nowrap>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+
+      <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
+    </td>
+    <td align="right" nowrap>
+      <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+      <span style="color:silver;">|</span>
+      <input type="button" value="<%= t('btn.exclude_from_group')%>" onclick="doExcludeMulti();">
+      <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
+    </td>
+  </tr>
+</table>
+
+<input type="hidden" id="group_id" name="id" value="<%= @group_id %>" />
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+</form>
+
+<script type="text/javascript">
+
+onSearchClicked = function()
+{
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
+}
+
+onResetClicked = function()
+{
+  document.form_list.keyword.value = "";
+
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
+}
+
+doExcludeMulti = function()
+{
+  var elems = document.getElementsByClassName("check_user");
+  var count = 0;
+  var teams = new Array();
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  var msg = count + "<%= t('user.confirm_to_exclude_from_group') %>";
+  confm(msg, "_doExcludeMulti()");
+}
+
+_doExcludeMulti = function()
+{
+  var addParams = getCheckedUsersParam();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_exclude_users') %>", addParams);
+}
+
+doMoveMulti = function()
+{
+  var elems = document.getElementsByClassName("check_user");
+  var count = 0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  showGroupTreeToMove(<%= @group_id %>);
+}
+
+doMoveUsers = function(frmTree)
+{
+  var addParams = getCheckedUsersParam();
+  addParams.push(Form.serialize(document.form_list));
+  addParams.push(Form.serialize(frmTree));
+
+  doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>", addParams);
+}
+
+getCheckedUsersParam = function()
+{
+  var params = new Array();
+
+  var elems = document.getElementsByClassName("check_user");
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      var user_id = elems[i].id.split("_")[2];
+      params[params.length] = "check_user["+user_id+"]=1";
+    }
+  }
+  return params;
+}
+
+showGroupTreeToMove = function(group_id)
+{
+  var addParams = getCheckedUsersParam();
+
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.setAdditionalParams(addParams);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>\" method=\"post\" onsubmit=\"doMoveUsers(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('user.select_group_to_move_to')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+sortList = function(col)
+{
+  var type = "<%= @sort_type %>";
+
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
+}
+
+selectAll = function()
+{
+  var elems = document.getElementsByClassName("check_user");
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+onPaginate = function(url)
+{
+//  var m = url.match(/page=(\d+)/);
+//  var page = m[1];
+  doUpdateView("get", url);
+}
+
+</script>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:5px;">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= t('cap.total') %><%= t('user', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_user')
+      prms['action'] = 'get_users'
+      pagination = will_paginate(@user_pages, :params => prms)
+      pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+</table>
+
 <table width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap><%= t('activerecord.attributes.id') %></th>
-    <th class="list_th" width="16%" nowrap><%= t('user.u_name') %></th>
-    <th class="list_th" width="20%" nowrap><%= User.human_attribute_name('fullname') %></th>
-    <th class="list_th" width="10%" nowrap><%= User.human_attribute_name('email') %></th>
-    <th class="list_th" width="26%" nowrap><%= t('user.title') %></th>
-    <th class="list_th" width="20%" nowrap><%= User.human_attribute_name('organization') %></th>
+    <th class="list_sort" width="5%" nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" width="16%" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" width="20%" nowrap onclick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" width="10%" nowrap onclick="sortList('email')"><%= User.human_attribute_name('email') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" width="26%" nowrap onclick="sortList('title')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" width="20%" nowrap onclick="sortList('organization')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></th>
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
     <td class="<%=td_class %>">
       <a class="a_underline" nowrap href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;" >
-        <%=h truncate(user.get_name, :length => 20) %>
+        <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.fullname, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.email, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.title, :length => 10) %></td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.organization, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.fullname, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.email, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.title, :length => 10) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.organization, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
+    </td>
+    <td class="<%=td_class %>" nowrap style="text-align:center;">
+      <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   </tr>
 <% end %>
 </table>
 <% end %>
+
+<%= render(:partial => 'common/flash_notice') %>

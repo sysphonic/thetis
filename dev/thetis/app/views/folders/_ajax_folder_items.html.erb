@@ -1,31 +1,232 @@
+<%
+@users_cache ||= {}
+@user_obj_cache ||= {}
+
+@user_groups ||= {}
+@groups_cache ||= {}
+@group_obj_cache ||= {}
+%>
 
 <% unless @items.nil? %>
 
+<%= form_tag( {:controller => 'folders', :action => 'get_items' }, :method => 'get', :name => 'form_list') %>
+<table width="100%" cellspacing="0" cellpadding="0" style="padding:2px 5px 5px;">
+  <tr>
+    <td align="left" nowrap>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+      <input type="hidden" id="find_in" name="find_in" value="<%= Item::FOLDER_CURRENT %>" />
+
+      <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
+    </td>
+    <td align="right" nowrap>
+      <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+      <span style="color:silver;">|</span>
+      <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteMulti();">
+      <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
+    </td>
+  </tr>
+</table>
+
+<input type="hidden" id="folder_id" name="id" value="<%= @folder_id %>" />
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+</form>
+
+<script type="text/javascript">
+
+onSearchClicked = function()
+{
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
+}
+
+onResetClicked = function()
+{
+  document.form_list.keyword.value = "";
+
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
+}
+
+doDeleteMulti = function()
+{
+  var elems = document.getElementsByClassName("check_item");
+  var count = 0;
+  var teams = new Array();
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      var item_id = elems[i].id.split("_")[2];
+      var div_project = _z("div_project_" + item_id);
+      if (div_project) {
+        teams.push(div_project.innerHTML);
+      }
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  var msg = count + "<%= t('item.confirm_to_delete') %>";
+  if (teams.length > 0) {
+    msg += "<br/>";
+    msg += "<%= t('item.confirm_to_delete_teams') %><br/>";
+    msg += "<%= t('folder.delete_team_folder_info2') %>";
+    msg += "<ul>";
+    for (var i=0; i < teams.length; i++) {
+      msg += "<li>" + teams[i] + "</li>";
+    }
+    msg += "</ul>";
+  }
+  confm(msg, "_doDeleteMulti()");
+}
+
+_doDeleteMulti = function()
+{
+  var addParams = getCheckedItemsParam();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'ajax_delete_items') %>", addParams);
+}
+
+doMoveMulti = function()
+{
+  var elems = document.getElementsByClassName("check_item");
+  var count = 0;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  showFolderTreeToMove(<%= @folder_id %>);
+}
+
+doMoveItems = function(frmTree)
+{
+  var addParams = getCheckedItemsParam();
+  addParams.push(Form.serialize(document.form_list));
+  addParams.push(Form.serialize(frmTree));
+
+  doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'ajax_move_items') %>", addParams);
+}
+
+getCheckedItemsParam = function()
+{
+  var params = new Array();
+
+  var elems = document.getElementsByClassName("check_item");
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      var item_id = elems[i].id.split("_")[2];
+      params[params.length] = "check_item["+item_id+"]=1";
+    }
+  }
+  return params;
+}
+
+showFolderTreeToMove = function(folder_id)
+{
+  var addParams = getCheckedItemsParam();
+
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBox = new ThetisBox;
+  thetisBox.setAdditionalParams(addParams);
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'ajax_move_items') %>\" method=\"post\" onsubmit=\"doMoveItems(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
+}
+
+sortList = function(col)
+{
+  var type = "<%= @sort_type %>";
+
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_list.sort_col.value = col;
+  document.form_list.sort_type.value = type;
+
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_list));
+
+  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
+}
+
+selectAll = function()
+{
+  var elems = document.getElementsByClassName("check_item");
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+onPaginate = function(url)
+{
+//  var m = url.match(/page=(\d+)/);
+//  var page = m[1];
+  doUpdateView("get", url);
+}
+
+</script>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:5px;">
+  <tr>
+    <td class="pagination_td" align="center">
+      <%= t('cap.total') %><%= t('item', :count => @total_num) %>
+      <%
+      prms = ApplicationHelper.dup_hash(params)
+      prms.delete('authenticity_token')
+      prms.delete('check_item')
+      prms['action'] = 'get_items'
+      pagination = will_paginate(@item_pages, :params => prms)
+      pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
+      %>
+      <%= pagination %>
+    </td>
+  </tr>
+</table>
+
 <table align="center" width="100%" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_th" width="5%"  nowrap><%= t('activerecord.attributes.id') %></th>
-    <th class="list_th" width="35%" nowrap><%= Item.human_attribute_name('title') %></th>
-    <th class="list_th" width="22%" nowrap><%= t('activerecord.attributes.updated_at') %></th>
-    <th class="list_th" width="7%"  nowrap><%= Item.human_attribute_name('public') %></th>
-    <th class="list_th" width="13%" nowrap><%= t('item.registered_by') %></th>
+    <th class="list_sort" width="5%" nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="35%" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="22%" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="7%" nowrap onclick="sortList('public')"><%= Item.human_attribute_name('public') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('public', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="13%" nowrap onclick="sortList('Item.user_id')"><%= t('item.registered_by') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.user_id', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
-users_cache = {}
 @items.each_with_index do |item, idx|
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
 %>
   <tr height="33">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h item.id %></td>
-    <td class="<%= td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= item.id %></td>
+    <td class="<%= td_class %>" nowrap title="<%= item.title %>">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item) %>'; return false;" >
-        <%=h truncate(item.title, :length => 20) %>
+        <%= truncate(item.title, :length => 20) %>
       </a>
       <% if !item.workflow.nil? and item.workflow.decided? %>
-        <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%=h item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
+        <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
       <% end %>
 
       <% if item.xtype == Item::XTYPE_PROJECT %>
         &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+        <div id="div_project_<%= item.id %>" style="display:none;"><%= item.title %></div>
       <% elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
         &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
       <% end %>
@@ -33,17 +234,33 @@ users_cache = {}
     <%
     updated_at = ''
     unless item.updated_at.nil?
-      updated_at = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+      if UtilDate.create(item.updated_at).get_date == Date.today
+        updated_at = item.updated_at.strftime('%H:%M')
+      else
+        updated_at = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD)
+      end
+      updated_at_prec = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
     end
     %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
-      <%=h updated_at %>
+    <td class="<%= td_class %>" nowrap title="<%= updated_at_prec %>" style="text-align:center;">
+      <%= updated_at %>
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%=h item.public ? 'check_ok.gif' : 'check_ng.gif' %>">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= item.public ? 'check_ok.gif' : 'check_ng.gif' %>">
     </td>
-    <% user_name = item.disp_registered_by(users_cache) %>
-    <td class="<%= td_class %>" nowrap><%=h truncate(user_name, :length => 10) %></td>
+    <% user_name = item.disp_registered_by(@users_cache) %>
+    <td class="<%= td_class %>" nowrap title="<%= user_name %>">
+      <%
+      user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
+      unless u_groups.empty?
+      %>
+      <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+      <% end %>
+      <%= truncate(user_name, :length => 10) %>
+      <% unless u_groups.empty? %>
+      </a>
+      <% end %>
+    </td>
   <%
   if params[:read_only] != 'true'
     if !@login_user.nil? and item.editable?(@login_user.id)
@@ -56,11 +273,7 @@ users_cache = {}
     if !@login_user.nil? and item.deletable?(@login_user.id)
   %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <%
-      del_type = 'null'
-      del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
-      %>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteItem(<%= item.id %>, <%= item.folder_id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>);" />
+      <%= check_box(:check_item, item.id, :class => 'check_item') %>
     </td>
   <%
     end
@@ -71,4 +284,6 @@ users_cache = {}
 </table>
 <% end %>
 
+<%= render(:partial => 'common/user_groups') %>
 <%= render(:partial => 'common/flash_notice') %>
+

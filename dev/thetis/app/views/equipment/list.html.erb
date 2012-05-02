@@ -24,8 +24,9 @@
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup();" />
     <% end %>
           </td>
-          <td align="right">
+          <td align="right" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <span style="color:silver;">|</span>
             <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
           </td>
         </tr>

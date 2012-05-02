@@ -44,7 +44,7 @@ class GroupsController < ApplicationController
   #
   def get_tree
     Log.add_info(request, params.inspect)
-    
+
     # '0' for ROOT
     @group_tree = Group.get_tree(PseudoHash.new, nil, '0')
   end
@@ -98,8 +98,8 @@ class GroupsController < ApplicationController
     end
     render(:partial => 'ajax_group_name', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_group_name', :layout => false)
   end
 
@@ -113,8 +113,8 @@ class GroupsController < ApplicationController
 
     begin
       Group.destroy(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
     render(:text => '')
   end
@@ -140,14 +140,15 @@ class GroupsController < ApplicationController
         redirect_to(:action => 'show_tree')
         return
       end
-    
+
       @group.parent_id = parent_id
+      @group.xorder = nil
       @group.save
     end
     redirect_to(:action => 'show_tree')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     redirect_to(:action => 'show_tree')
   end
 
@@ -172,20 +173,207 @@ class GroupsController < ApplicationController
     render(:partial => 'ajax_group_path', :layout => false)
   end
 
+  #=== ajax_exclude_users
+  #
+  #<Ajax>
+  #Excludes specified Users.
+  #
+  def ajax_exclude_users
+    Log.add_info(request, params.inspect)
+
+    group_id = params[:id]
+
+    unless params[:check_user].blank?
+      count = 0
+      params[:check_user].each do |user_id, value|
+        if value == '1'
+
+          begin
+            user = User.find(user_id)
+            user.exclude_from(group_id)
+            user.save!
+          rescue => evar
+            Log.add_error(request, evar)
+          end
+
+          count += 1
+        end
+      end
+      flash[:notice] = t('msg.update_success')
+    end
+
+    get_users
+  end
+
+  #=== ajax_move_users
+  #
+  #<Ajax>
+  #Moves specified Users.
+  #
+  def ajax_move_users
+    Log.add_info(request, params.inspect)
+
+    org_group_id = params[:id]
+    group_id = params[:thetisBoxSelKeeper].split(':').last
+
+    unless params[:check_user].blank?
+
+      count = 0
+      params[:check_user].each do |user_id, value|
+        if value == '1'
+
+          begin
+            user = User.find(user_id)
+            user.exclude_from(org_group_id)
+            user.add_to(group_id)
+            user.save!
+          rescue => evar
+            Log.add_error(request, evar)
+          end
+
+          count += 1
+        end
+      end
+      flash[:notice] = t('msg.move_success')
+    end
+
+    get_users
+  end
+
   #=== get_users
   #
   #<Ajax>
   #Gets Users in the specified Group.
   #
   def get_users
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'get_users'
+      Log.add_info(request, params.inspect)
+    end
 
-    @users = Group.get_users(params[:id])
+    @group_id = params[:id]
 
-    session[:group_id] = params[:id]
+=begin
+#    @users = Group.get_users(params[:id])
+=end
+
+# FEATURE_PAGING_IN_TREE >>>
+    con = ['User.id > 0']
+
+    unless @group_id.nil?
+      if @group_id == '0'
+        con << "((groups like '%|0|%') or (groups is null))"
+      else
+        con << "(groups like '%|#{@group_id}|%')"
+      end
+    end
+
+    if params[:keyword]
+      key_array = params[:keyword].split(nil)
+      key_array.each do |key| 
+        key = '%' + key + '%'
+        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
+      end
+    end
+
+    where = ''
+    unless con.empty?
+      where = ' where ' + con.join(' and ')
+    end
+
+    order_by = nil
+    @sort_col = params[:sort_col]
+    @sort_type = params[:sort_type]
+
+    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+      @sort_col = 'xorder'
+      @sort_type = 'ASC'
+    end
+
+    order_by = ' order by ' + @sort_col + ' ' + @sort_type
+
+    if @sort_col != 'xorder'
+      order_by << ', xorder ASC'
+    end
+    if @sort_col != 'name'
+      order_by << ', name ASC'
+    end
+
+    sql = 'select distinct User.* from users User'
+    sql << where + order_by
+
+    @user_pages, @users, @total_num = paginate_by_sql(User, sql, 50)
+# FEATURE_PAGING_IN_TREE <<<
+
+    session[:group_id] = @group_id
     session[:group_option] = 'user'
 
     render(:partial => 'ajax_group_users', :layout => false)
+  end
+
+  #=== get_groups_order
+  #
+  #<Ajax>
+  #Gets child Groups' order in specified Group.
+  #
+  def get_groups_order
+    Log.add_info(request, params.inspect)
+
+    @group_id = params[:id]
+
+    if @group_id != '0'
+      @group = Group.find(@group_id)
+    end
+
+    @groups = Group.get_childs(@group_id, false, true)
+
+    session[:group_id] = @group_id
+    session[:group_option] = 'groups_order'
+
+    render(:partial => 'ajax_groups_order', :layout => false)
+
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:partial => 'ajax_groups_order', :layout => false)
+  end
+
+  #=== update_groups_order
+  #
+  #<Ajax>
+  #Updates groups' order by Ajax.
+  #
+  def update_groups_order
+    Log.add_info(request, params.inspect)
+
+    order_ary = params[:groups_order]
+
+    groups = Group.get_childs(params[:id], false, false)
+    # groups must be ordered by xorder ASC.
+
+    groups.sort! { |id_a, id_b|
+
+      idx_a = order_ary.index(id_a)
+      idx_b = order_ary.index(id_b)
+
+      if idx_a.nil? or idx_b.nil?
+        idx_a = groups.index(id_a)
+        idx_b = groups.index(id_b)
+      end
+
+      idx_a - idx_b
+    }
+
+    idx = 1
+    groups.each do |group_id|
+      begin
+        group = Group.find(group_id)
+        group.update_attribute(:xorder, idx)
+        idx += 1
+      rescue => evar
+        Log.add_error(request, evar)
+      end
+    end
+
+    render(:text => '')
   end
 
   #=== get_workflows

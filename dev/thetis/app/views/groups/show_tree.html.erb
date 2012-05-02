@@ -18,6 +18,7 @@
             <%
             options = []
             options << [h(User.model_name.human), 'user']
+            options << [t('group.opt.subgroups_order'), 'groups_order']
             options << [h(Workflow.model_name.human), 'workflow']
             options << [h(OfficeMap.model_name.human), 'office_map']
             %>
@@ -263,20 +264,61 @@ function doMove()
 
 function doGetUsers(group_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_users') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
+}
+
+function doGetGroupsOrder(group_id)
+{
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_groups_order') %>", addParams);
 }
 
 function doGetWorkflows(group_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_workflows') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_workflows') %>", addParams);
 }
 
 function doGetMaps(group_id)
 {
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_map') %>", addParams);
+}
+
+function doUpdateView(method, action, addParams)
+{
+  if (!addParams) {
+    addParams = new Array();
+  }
+  if (method == "post") {
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  }
+
   var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater("div_view", "<%= url_for(:controller => 'groups', :action => 'get_map') %>?id="+group_id, {method:"get", asynchronous:true, evalScripts:true, onComplete:function(request){ thetisBox.remove(); }, parameters:Form.serialize(document.form_group_tree)});
+  new Ajax.Updater(
+                "div_view",
+                action,
+                {
+                  method: method,
+                  parameters: addParams.join("&"),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){ thetisBox.remove(); }
+                }
+              );
 }
 
 function selectGroup(group_id)
@@ -289,6 +331,7 @@ function selectGroup(group_id)
     switch (_z('select_opt').value)
     {
       case 'user': doGetUsers(group_id); break;
+      case 'groups_order': doGetGroupsOrder(group_id); break;
       case 'workflow': doGetWorkflows(group_id); break;
       case 'office_map': doGetMaps(group_id); break;
     }
@@ -304,6 +347,7 @@ function changeOption(val)
 
   switch (val) {
     case 'user': doGetUsers(group_id); break;
+    case 'groups_order': doGetGroupsOrder(group_id); break;
     case 'workflow': doGetWorkflows(group_id); break;
     case 'office_map': doGetMaps(group_id); break;
   }

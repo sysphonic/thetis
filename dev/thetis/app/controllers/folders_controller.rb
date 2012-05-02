@@ -17,11 +17,10 @@ class FoldersController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_items'] == '1'
-    before_filter :check_login
+    before_filter(:check_login)
   else
-    before_filter :check_login, :except => [:show_tree, :show_url, :get_items, :get_tree, :ajax_get_tree]
+    before_filter(:check_login, :except => [:show_tree, :show_url, :get_items, :get_tree, :ajax_get_tree])
   end
-  before_filter :check_item_owner, :only => [:ajax_delete_item]
 
 
   #=== show_tree
@@ -217,17 +216,60 @@ class FoldersController < ApplicationController
   #Gets Items in specified Folder.
   #
   def get_items
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'get_items'
+      Log.add_info(request, params.inspect)
+    end
 
-    folder_id = params[:id]
+    @folder_id = params[:id]
 
-    if Folder.check_user_auth(folder_id, @login_user, 'r', true)
+    if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
+=begin
+#      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
+#        @items = Folder.get_items_admin(@folder_id)
+#      else
+#        @items = Folder.get_items(@login_user, @folder_id)
+#      end
+=end
 
-      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
-        @items = Folder.get_items_admin(folder_id)
-      else
-        @items = Folder.get_items(@login_user, folder_id)
+# FEATURE_PAGING_IN_TREE >>>
+      @sort_col = params[:sort_col]
+      @sort_type = params[:sort_type]
+
+      if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+        @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
       end
+
+      folder_ids = nil
+      add_con = nil
+
+      if @folder_id.nil? and params[:find_in] != Item::FOLDER_ALL
+        add_con = "(Item.folder_id != 0) and (Folder.disp_ctrl like '%|#{Folder::DISPCTRL_BBS_TOP}|%')"
+      else
+        case params[:find_in]
+          when Item::FOLDER_ALL
+            ;
+          when Item::FOLDER_CURRENT
+            folder_ids = [@folder_id]
+          when Item::FOLDER_LOWER
+            folder_ids = Folder.get_childs(@folder_id, nil, true, false, false)
+            folder_ids.unshift(@folder_id)
+          else
+            folder_ids = [@folder_id]
+        end
+        unless folder_ids.nil?
+          delete_ary = []
+          folder_ids.each do |folder_id|
+            unless Folder.check_user_auth(folder_id, @login_user, 'r', true)
+              delete_ary << folder_id
+            end
+          end
+          folder_ids -= delete_ary unless delete_ary.empty?
+        end
+      end
+
+      sql = ItemsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, false, add_con)
+      @item_pages, @items, @total_num = paginate_by_sql(Item, sql, 10)
+# FEATURE_PAGING_IN_TREE <<<
 
     else
       @items = []
@@ -235,7 +277,7 @@ class FoldersController < ApplicationController
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_read')
     end
 
-    session[:folder_id] = folder_id
+    session[:folder_id] = @folder_id
 
     render(:partial => 'ajax_folder_items', :layout => false)
   end
@@ -672,47 +714,81 @@ class FoldersController < ApplicationController
     render(:partial => 'ajax_auth_teams', :layout => false)
   end
 
-  #=== ajax_delete_item
+  #=== ajax_delete_items
   #
   #<Ajax>
-  #Deletes specified Item.
+  #Deletes specified Items.
   #
-  def ajax_delete_item
+  def ajax_delete_items
     Log.add_info(request, params.inspect)
 
-    Item.destroy(params[:id])
+    folder_id = params[:id]
 
-    folder_id = params[:folder_id]
+    unless params[:check_item].blank?
+      is_admin = @login_user.admin?(User::AUTH_ITEM)
 
-    if Folder.check_user_auth(folder_id, @login_user, 'r', true)
-      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
-        @items = Folder.get_items_admin(folder_id)
-      else
-        @items = Folder.get_items(@login_user, folder_id)
+      count = 0
+      params[:check_item].each do |item_id, value|
+        if value == '1'
+
+          begin
+            item = Item.find(item_id)
+            next if !is_admin and item.user_id != @login_user.id
+
+            item.destroy
+
+          rescue StandardError => err
+            Log.add_error(request, err)
+          end
+
+          count += 1
+        end
       end
+      flash[:notice] = t('item.deleted', :count => count)
     end
 
-    render(:partial => 'ajax_folder_items', :layout => false)
+    get_items
   end
 
- private
-  #=== check_item_owner
+  #=== ajax_move_items
   #
-  #Filter method to check if current User is owner of the specified Item.
+  #<Ajax>
+  #Moves specified Items.
   #
-  def check_item_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+  def ajax_move_items
+    Log.add_info(request, params.inspect)
 
-    begin
-      owner_id = Item.find(params[:id]).user_id
-    rescue
-      owner_id = -1
-    end
-    if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
-      Log.add_check(request, '[check_item_owner]'+request.to_s)
+    folder_id = params[:thetisBoxSelKeeper].split(':').last
 
-      flash[:notice] = t('msg.need_to_be_owner')
-      redirect_to(:controller => 'desktop', :action => 'show')
+    unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
+      flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
+      get_items
+      return
     end
+
+    unless params[:check_item].blank?
+      is_admin = @login_user.admin?(User::AUTH_ITEM)
+
+      count = 0
+      params[:check_item].each do |item_id, value|
+        if value == '1'
+
+          begin
+            item = Item.find(item_id)
+            next if !is_admin and item.user_id != @login_user.id
+
+            item.update_attribute(:folder_id, folder_id)
+
+          rescue StandardError => err
+            Log.add_error(request, err)
+          end
+
+          count += 1
+        end
+      end
+      flash[:notice] = t('item.moved', :count => count)
+    end
+
+    get_items
   end
 end

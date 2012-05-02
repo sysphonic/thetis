@@ -108,17 +108,20 @@ class SendMailsController < ApplicationController
         @email.subject = 'FW: ' + org_email.subject
         @email.message = EmailsHelper.quote_message(org_email)
 
-        unless org_email.mail_attachments.nil? or org_email.mail_attachments.empty?
-          @email.status = Email::STATUS_TEMPORARY
-          @email.save!
+        @email.copy_attachments_from(org_email)
 
-          org_email.mail_attachments.each do |org_attach|
-            mail_attach = org_attach.clone
-            @email.mail_attachments << mail_attach
-            mail_attach.copy_file_from(org_attach)
-          end
-          @email.save!  # To recalcurate size
-        end
+      when 'duplicate'
+        @email = SendMailsHelper.get_mail_to_send(@login_user, @mail_account, nil)
+
+        @email.user_id = @login_user.id
+        @email.subject = org_email.subject
+        @email.message = org_email.message
+        @email.mail_account_id = @mail_account.id
+        @email.to_addresses = org_email.to_addresses
+        @email.cc_addresses = org_email.cc_addresses
+        @email.bcc_addresses = org_email.bcc_addresses
+
+        @email.copy_attachments_from(org_email)
 
       else
         @email = org_email

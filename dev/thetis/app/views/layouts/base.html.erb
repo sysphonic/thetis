@@ -159,9 +159,9 @@ function doResize()
   } else if ((div = _z("divFolderTree")) || (div = _z("divGroupTree"))) {
 
   <% if params[:controller] == 'folders' and !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
-    var h = mainHeight - 120;
+    var h = mainHeight - 110;
   <% else %>
-    var h = mainHeight - 80;
+    var h = mainHeight - 65;
   <% end %>
 
     div.style.height = h + "px";
@@ -172,7 +172,7 @@ function doResize()
     }
 
     var tree_main = _z("tree_main");
-    var treeMainWidth = tree_main.offsetWidth - (3+5+3);
+    var treeMainWidth = tree_main.offsetWidth - (3+7+3);
     div.style.width = treeMainWidth/100*37 + "px";
 
     var view = _z("div_view");
@@ -184,7 +184,7 @@ function doResize()
 
   } else if (div = _z("divMailTree")) {
 
-    var h = mainHeight - 100;
+    var h = mainHeight - 95;
 
     var td_tree = _z("td_tree");
     var td_view = _z("td_view");
@@ -193,7 +193,7 @@ function doResize()
     var div_mail_content = _z("div_mail_content");
 
     var tree_main = _z("tree_main");
-    var treeMainWidth = tree_main.offsetWidth - (3+5+3);
+    var treeMainWidth = tree_main.offsetWidth - (3+7+3);
 
     div.style.width = treeMainWidth / 4 + "px";
     div.style.height = (h - 40) + "px";
@@ -309,10 +309,10 @@ window.onresize = doResize;
 
 <a name="top"></a>
 
-<div id="main_div" align="center">
-  <table width="95%" height="100%" cellpadding="0" cellspacing="0">
+<div id="main_div" style="text-align:center;">
+  <table align="center" width="96%" height="100%" cellpadding="0" cellspacing="0">
     <tr>
-      <td align="center" style="padding-top:10px; vertical-align:top;">
+      <td align="center" style="padding-top:7px; vertical-align:top;">
         <%= yield %>
       </td>
     </tr>
