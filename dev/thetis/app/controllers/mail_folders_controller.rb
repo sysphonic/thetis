@@ -474,7 +474,10 @@ class MailFoldersController < ApplicationController
     if @folder_id == '0'
       @folders = MailFolder.get_account_roots_for(@login_user)
     else
-      @folders = MailFolder.get_childs(@folder_id, false, true)
+      mail_folder = MailFolder.find(@folder_id)
+      if mail_folder.user_id == @login_user.id
+        @folders = MailFolder.get_childs(@folder_id, false, true)
+      end
     end
 
     render(:partial => 'ajax_folders_order', :layout => false)

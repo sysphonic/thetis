@@ -896,13 +896,16 @@ var thetisBoxFoldersOrder = null;
 
 function onOrderFoldersClicked()
 {
+  var folder_id = getCurrentFolderId();
+  if (!folder_id) {
+    return;
+  }
+
   if (thetisBoxFoldersOrder != null) {
     thetisBoxFoldersOrder.remove();
     thetisBoxFoldersOrder = null;
   }
   thetisBoxFoldersOrder = new ThetisBox;
-
-  var folder_id = getCurrentFolderId();
 
   var addParams = new Array();
   addParams.push("id="+folder_id);
