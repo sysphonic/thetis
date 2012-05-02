@@ -1,7 +1,7 @@
 
 <%= form_tag( {:controller => 'logs', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td align="left" nowrap width="1%">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'configure') %>';">

@@ -171,6 +171,7 @@ class MailFoldersController < ApplicationController
       end
 
       @mail_folder.parent_id = parent_id
+      @mail_folder.xorder = nil
       @mail_folder.save
 
       flash[:notice] = t('msg.move_success')
@@ -458,6 +459,71 @@ class MailFoldersController < ApplicationController
     end
 
     get_mails
+  end
+
+  #=== get_folders_order
+  #
+  #<Ajax>
+  #Gets child MailFolders' order in specified MailFolder.
+  #
+  def get_folders_order
+    Log.add_info(request, params.inspect)
+
+    @folder_id = params[:id]
+
+    if @folder_id == '0'
+      @folders = MailFolder.get_account_roots_for(@login_user)
+    else
+      @folders = MailFolder.get_childs(@folder_id, false, true)
+    end
+
+    render(:partial => 'ajax_folders_order', :layout => false)
+
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:partial => 'ajax_folders_order', :layout => false)
+  end
+
+  #=== update_folders_order
+  #
+  #<Ajax>
+  #Updates folders' order by Ajax.
+  #
+  def update_folders_order
+    Log.add_info(request, params.inspect)
+
+    order_ary = params[:folders_order]
+
+    folders = MailFolder.get_childs(params[:id], false, false)
+    # folders must be ordered by xorder ASC.
+
+    folders.sort! { |id_a, id_b|
+
+      idx_a = order_ary.index(id_a)
+      idx_b = order_ary.index(id_b)
+
+      if idx_a.nil? or idx_b.nil?
+        idx_a = folders.index(id_a)
+        idx_b = folders.index(id_b)
+      end
+
+      idx_a - idx_b
+    }
+
+    idx = 1
+    folders.each do |folder_id|
+      begin
+        folder = MailFolder.find(folder_id)
+        next if folder.user_id != @login_user.id
+
+        folder.update_attribute(:xorder, idx)
+        idx += 1
+      rescue => evar
+        Log.add_error(request, evar)
+      end
+    end
+
+    render(:text => '')
   end
 
  private

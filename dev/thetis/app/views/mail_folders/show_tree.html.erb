@@ -5,24 +5,24 @@
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" width="20%" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
-            <input type="button" value="<%= t('btn.get_mails') %>" onClick="getMails();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.create_mail') %>" onClick="doCreateMail();"  style="width:80px;" />
-            <input type="button" value="<%= t('btn.address_book') %>" onClick="showAddressBook();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.get_mails') %>" onclick="getMails();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.create_mail') %>" onclick="doCreateMail();"  style="width:80px;" />
+            <input type="button" value="<%= t('btn.address_book') %>" onclick="showAddressBook();" style="width:80px;" />
           </td>
           <td id="btnbox_handled" align="left" width="30%" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
-            <input type="button" value="<%= t('btn.reply') %>" onClick="doReplyMail(false);" style="width:80px;" />
-            <input type="button" value="<%= t('btn.reply_to_all') %>" onClick="doReplyMail(true);" style="width:80px;" />
-            <input type="button" value="<%= t('btn.forward') %>" onClick="doForwardMail();" style="width:80px;" /> 
-            <input type="button" value="<%= t('btn.edit_new') %>" onClick="doEditMail('duplicate');" style="width:80px;" />
-            <input type="button" value="<%= t('btn.save') %>" onClick="doDownloadMail();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.reply') %>" onclick="doReplyMail(false);" style="width:80px;" />
+            <input type="button" value="<%= t('btn.reply_to_all') %>" onclick="doReplyMail(true);" style="width:80px;" />
+            <input type="button" value="<%= t('btn.forward') %>" onclick="doForwardMail();" style="width:80px;" /> 
+            <input type="button" value="<%= t('btn.edit_new') %>" onclick="doEditMail('duplicate');" style="width:80px;" />
+            <input type="button" value="<%= t('btn.save') %>" onclick="doDownloadMail();" style="width:80px;" />
           </td>
           <td id="btnbox_draft" align="left" width="10%" nowrap style="display:none; padding:0px 10px; border-right:solid 1px gray;">
-            <input type="button" value="<%= t('btn.edit') %>" onClick="doEditMail('send');" style="width:80px;" />
+            <input type="button" value="<%= t('btn.edit') %>" onclick="doEditMail('send');" style="width:80px;" />
           </td>
           <td align="left" nowrap style="padding:0px 10px;">
 <!--
-            <input type="button" value="<%= t('btn.move') %>" onClick="doMoveMail();" style="width:80px;" /> 
-            <input type="button" value="<%= t('btn.delete') %>" onClick="doDeleteMail();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onclick="doMoveMail();" style="width:80px;" /> 
+            <input type="button" value="<%= t('btn.delete') %>" onclick="doDeleteMail();" style="width:80px;" />
 -->
           </td>
         </tr>
@@ -110,13 +110,16 @@
           <td width="40%" align="left" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.gif">
             &nbsp;
-            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onclick="doCreate();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onclick="doRename();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
           </td>
-          <td width="45%" align="left" nowrap style="padding:0px 10px;">
-            <input type="button" value="<%= t('btn.empty') %>" onClick="doEmpty();" style="width:80px;" />
+          <td width="5%" align="left" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
+            <input type="button" value="<%= t('btn.empty') %>" onclick="doEmpty();" style="width:80px;" />
+          </td>
+          <td width="40%" align="left" nowrap style="padding:0px 10px;">
+            <input type="button" value="<%= t('btn.order') %>" onclick="onOrderFoldersClicked();" style="width:80px;" />
           </td>
         </tr>
       </table>
@@ -384,6 +387,17 @@ function onLoadSub()
 <% if @mail_accounts.empty? %>
   showAccountSetting(true);
 <% end %>
+}
+
+function doUpdatePage()
+{
+  var addParams = new Array();
+<% unless params[:mail_account_xtype].nil? %>
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+<% end %>
+
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'mail_folders', :action => 'show_tree') %>?"+addParams.join("&");
 }
 
 function getMails()
@@ -875,6 +889,48 @@ function _doEmpty(folder_id)
   }
 
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams);
+}
+
+
+var thetisBoxFoldersOrder = null;
+
+function onOrderFoldersClicked()
+{
+  if (thetisBoxFoldersOrder != null) {
+    thetisBoxFoldersOrder.remove();
+    thetisBoxFoldersOrder = null;
+  }
+  thetisBoxFoldersOrder = new ThetisBox;
+
+  var folder_id = getCurrentFolderId();
+
+  var addParams = new Array();
+  addParams.push("id="+folder_id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for(:controller => 'mail_folders', :action => 'get_folders_order') %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                parameters:addParams.join("&"),
+                onComplete:function(request){
+                  thetisBoxProgress.remove();
+
+                  thetisBoxFoldersOrder.title = "<%= t('btn.order') %>";
+                  thetisBoxFoldersOrder.show(
+                            "CENTER",
+                            "480,+280",
+                            "TRAY",
+                            "",
+                            "",
+                            request.responseText.stripScripts()
+                          );
+                  request.responseText.evalScripts();
+                }
+              }
+            );
 }
 
 function doDownloadMail()

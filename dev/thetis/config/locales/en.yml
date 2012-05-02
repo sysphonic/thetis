@@ -1057,6 +1057,7 @@ en:
     cc: "Add Cc"
     bcc: "Add Bcc"
     empty: "Empty"
+    order: "Order"
     restore: "Restore"
     duplicate: "Duplicate"
   cap:

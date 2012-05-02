@@ -1058,6 +1058,7 @@ ja:
     cc: "Cc に追加"
     bcc: "Bcc に追加"
     empty: "空にする"
+    order: "並び順"
     restore: "復元"
     duplicate: "複製"
   cap:

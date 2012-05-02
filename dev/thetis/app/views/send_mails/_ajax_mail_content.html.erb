@@ -121,6 +121,9 @@ onEditToAddressClicked = function()
   thetisBoxSendTo.border_content = "";
 
   var content = getToAddrEditor("onEditToAddrOK()", "onEditToAddrCancel()");
+  if (!content) {
+    return;
+  }
 
   if (thetisBoxMailForm) {
     thetisBoxMailForm.addChildBox(thetisBoxSendTo);
@@ -145,6 +148,9 @@ getToAddrEditor = function(onOk, onCancel)
     } else {
       option.selected = false;
     }
+  }
+  if (!found) {
+    return null;
   }
   var addrPrefix = targetAddrVal.split("<%= Email::ADDR_PREFIX_SEPARATOR %>")[0];
   addrPrefix += "<%= Email::ADDR_PREFIX_SEPARATOR %>";
@@ -225,8 +231,6 @@ onEditToAddrOK = function()
 
   thetisBoxSendTo.remove();
   thetisBoxSendTo = null;
-
-  doPageCalendar(date);
 }
 
 onEditToAddrCancel = function()

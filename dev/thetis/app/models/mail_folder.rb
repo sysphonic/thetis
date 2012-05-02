@@ -12,7 +12,7 @@
 #* 
 #
 class MailFolder < ActiveRecord::Base
-  has_many :emails, :dependent => :destroy
+  has_many(:emails, :dependent => :destroy)
 
   include TreeElement
 
@@ -158,6 +158,32 @@ class MailFolder < ActiveRecord::Base
     return MailFolder.find(:first, :conditions => con.join(' and '))
   end
 
+  #=== self.get_account_roots_for
+  #
+  #Gets MailFolders of account root for specified User.
+  #
+  #_user_:: Target User.
+  #return:: MailFolders of account root.
+  #
+  def self.get_account_roots_for(user)
+
+    return nil if user.nil?
+
+    if user.kind_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_s
+    end
+
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(xtype='#{MailFolder::XTYPE_ACCOUNT_ROOT}')"
+
+    order_by = 'xorder ASC, id ASC'
+
+    return MailFolder.find(:all, :conditions => con.join(' and '), :order => order_by)
+  end
+
   #=== self.get_tree_for
   #
   #Gets MailFolder tree for specified User.
@@ -241,8 +267,8 @@ class MailFolder < ActiveRecord::Base
 
     begin
       folder = MailFolder.find(mail_folder_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
     if folder.nil?
       return mail_folder_id.to_s + ' '+ I18n.t('paren.deleted')

@@ -368,8 +368,8 @@ class FoldersController < ApplicationController
 
     render(:partial => 'ajax_folders_order', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_folders_order', :layout => false)
   end
 
@@ -405,8 +405,8 @@ class FoldersController < ApplicationController
         folder = Folder.find(folder_id)
         folder.update_attribute(:xorder, idx)
         idx += 1
-      rescue StandardError => err
-        Log.add_error(request, err)
+      rescue => evar
+        Log.add_error(request, evar)
       end
     end
 
