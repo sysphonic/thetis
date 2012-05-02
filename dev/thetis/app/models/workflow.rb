@@ -174,13 +174,13 @@ class Workflow < ActiveRecord::Base
 
     self.users.split(',').each do |order|
 
-      orders << PseudoHash.new
+      orders << {}
       users_a = order.split('|')
       users_a.compact!
       users_a.delete ''
 
       users_a.each do |user_id|
-        orders.last[user_id.to_i, true] = User.get_name user_id
+        orders.last[user_id.to_i] = User.get_name(user_id)
       end
     end
     return orders

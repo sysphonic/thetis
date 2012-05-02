@@ -270,6 +270,7 @@ onPaginate = function(url)
     </td>
   <%
     end
+  end
     if !@login_user.nil? and item.deletable?(@login_user.id)
   %>
     <td class="<%=td_class %>" nowrap style="text-align:center;">
@@ -277,7 +278,6 @@ onPaginate = function(url)
     </td>
   <%
     end
-  end
   %>
   </tr>
 <% end %>

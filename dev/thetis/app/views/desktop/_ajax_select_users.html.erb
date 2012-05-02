@@ -15,7 +15,7 @@ groups_cache = {}
           </td>
           <td align="left" style="color:blue;">
             <% unless @group_id.nil? %>
-              <%=h Group.get_path(@group_id, groups_cache) %>
+              <%= Group.get_path(@group_id, groups_cache) %>
               &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroup();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
             <% end %>
           </td>
@@ -26,7 +26,7 @@ groups_cache = {}
 
       <select id="user_candidates" class="select_candidates" size="5" multiple style="width:100%;">
       <%
-      users_available = PseudoHash.new
+      users_available = {}
 
       login_groups = @login_user.get_groups_a
       login_groups.each do |group_id|
@@ -37,7 +37,7 @@ groups_cache = {}
           if users_available.keys.include?(user_id)
             users_available[user_id] << group_name
           else
-            users_available[user_id, true] = [group_name]
+            users_available[user_id] = [group_name]
           end
         end
       end
@@ -55,13 +55,13 @@ groups_cache = {}
           if users_available.keys.include?(user_id)
             users_available[user_id] << team_name
           else
-            users_available[user_id, true] = [team_name]
+            users_available[user_id] = [team_name]
           end
         end
       end
 
       if login_groups.empty? and login_teams.empty?
-        users_available[@login_user.id.to_s, true] = []
+        users_available[@login_user.id.to_s] = []
       end
 
       users_available.each do |user_id, org_names|
@@ -71,7 +71,7 @@ groups_cache = {}
           next
         end
       %>
-        <option value="<%=h user_id %>"><%=h disp %></option>
+        <option value="<%= user_id %>"><%= disp %></option>
       <% end %>
       </select>
 
@@ -79,12 +79,12 @@ groups_cache = {}
 
       <select id="user_candidates" class="select_candidates" size="5" multiple style="width:100%;">
         <%
-        users_available = PseudoHash.new
+        users_available = {}
 
         unless @users.nil?
           @users.each do |user|
             user_id = user.id.to_s
-            users_available[user_id, true] = user.get_name
+            users_available[user_id] = user.get_name
           end
         end
 
@@ -92,7 +92,7 @@ groups_cache = {}
           next if !@users_selected.nil? and @users_selected.include?(user_id)
           disp = name
         %>
-          <option value="<%=h user_id %>"><%=h disp %></option>
+          <option value="<%= user_id %>"><%= disp %></option>
         <% end %>
       </select>
 

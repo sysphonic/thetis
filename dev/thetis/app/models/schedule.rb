@@ -46,16 +46,16 @@ class Schedule < ActiveRecord::Base
   #
   def self.rule_names
 
-    ret = PseudoHash.new
+    ret = {}
     7.times do |wday|
-      ret[WDAYS[wday], true] = Schedule::wday_name(wday)
+      ret[WDAYS[wday]] = Schedule::wday_name(wday)
     end
     for day in 1..31
-      ret[day.to_s, true] = I18n.t('schedule.day_of_month', :day => day.to_s)
+      ret[day.to_s] = I18n.t('schedule.day_of_month', :day => day.to_s)
     end
-    ret[LAST_DAY_OF_MONTH, true] = I18n.t('schedule.last_day_of_month')
-    ret[FIRST_WEEKDAY_OF_MONTH, true] = I18n.t('schedule.first_weekday_of_month')
-    ret[LAST_WEEKDAY_OF_MONTH, true] = I18n.t('schedule.last_weekday_of_month')
+    ret[LAST_DAY_OF_MONTH] = I18n.t('schedule.last_day_of_month')
+    ret[FIRST_WEEKDAY_OF_MONTH] = I18n.t('schedule.first_weekday_of_month')
+    ret[LAST_WEEKDAY_OF_MONTH] = I18n.t('schedule.last_weekday_of_month')
 
     return ret
   end
@@ -886,11 +886,11 @@ private
   #
   def self._get_by_week(conditions, date, holidays=nil)
 
-    schedules_h = PseudoHash.new
+    schedules_h = {}
 
     7.times do |day_idx|
       curday = date + day_idx
-      schedules_h[curday, true] = _get_by_day(conditions, curday, holidays)
+      schedules_h[curday] = _get_by_day(conditions, curday, holidays)
     end
 
     return schedules_h

@@ -278,7 +278,7 @@ class AddressbookController < ApplicationController
       end
     end
 
-    @imp_errs = PseudoHash.new
+    @imp_errs = {}
     count = -1  # 0 for Header-line
     addresses = [] 
 
@@ -316,7 +316,7 @@ class AddressbookController < ApplicationController
 
       check = address.check_import(mode, address_names)  #, address_emails
 
-      @imp_errs[count, true] = check unless check.empty?
+      @imp_errs[count] = check unless check.empty?
 
       addresses << address
 
@@ -333,14 +333,14 @@ class AddressbookController < ApplicationController
 
     if addresses.empty?
 
-      @imp_errs[0, true] = [t('address.nothing_to_import')]
+      @imp_errs[0] = [t('address.nothing_to_import')]
     else
 
       if mode == 'update'
 
         if found_update
         else
-          @imp_errs[0, true] = [t('address.nothing_to_update')]
+          @imp_errs[0] = [t('address.nothing_to_update')]
         end
       end
     end
@@ -363,7 +363,7 @@ class AddressbookController < ApplicationController
           @imp_cnt += 1
 
         rescue StandardError => err
-          @imp_errs[count, true] = [t('address.save_failed') + err.to_s]
+          @imp_errs[count] = [t('address.save_failed') + err.to_s]
         end
       end
     end

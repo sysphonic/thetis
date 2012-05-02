@@ -550,12 +550,12 @@ class SchedulesController < ApplicationController
       @schedules.each do |schedule|
         equip_ary = equip_ary | schedule.get_equipment_a
       end
-      overlap_h = PseudoHash.new
+      overlap_h = {}
       equip_ary.each do |equip_id|
         schedule_ary = Schedule.get_equipment_day(equip_id, @date)
         overlaps = Schedule.check_overlap_equipment(equip_id, schedule_ary, @date)
         unless overlaps.empty?
-          overlap_h[equip_id, true] = overlaps
+          overlap_h[equip_id] = overlaps
         end
       end
       unless overlap_h.empty?
@@ -592,11 +592,11 @@ class SchedulesController < ApplicationController
     @group_id = params[:id]
     group_users = Group.get_users(params[:id])
 
-    @user_schedule_hash = PseudoHash.new
+    @user_schedule_hash = {}
     unless group_users.nil?
       @holidays = Schedule.get_holidays
       group_users.each do |user|
-        @user_schedule_hash[user.id.to_s, true] = Schedule.get_somebody_week(@login_user, user.id, @date, @holidays)
+        @user_schedule_hash[user.id.to_s] = Schedule.get_somebody_week(@login_user, user.id, @date, @holidays)
       end
     end
 
@@ -624,11 +624,11 @@ class SchedulesController < ApplicationController
       Log.add_error(request, err)
     end
 
-    @user_schedule_hash = PseudoHash.new
+    @user_schedule_hash = {}
     unless team_users.nil?
       @holidays = Schedule.get_holidays
       team_users.each do |user_id|
-        @user_schedule_hash[user_id, true] = Schedule.get_somebody_week(@login_user, user_id, @date, @holidays)
+        @user_schedule_hash[user_id] = Schedule.get_somebody_week(@login_user, user_id, @date, @holidays)
       end
     end
 

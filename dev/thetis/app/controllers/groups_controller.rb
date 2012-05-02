@@ -46,7 +46,7 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     # '0' for ROOT
-    @group_tree = Group.get_tree(PseudoHash.new, nil, '0')
+    @group_tree = Group.get_tree(Hash.new, nil, '0')
   end
 
   #=== ajax_get_tree

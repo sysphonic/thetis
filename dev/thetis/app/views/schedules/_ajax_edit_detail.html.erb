@@ -185,10 +185,10 @@ else
                       <td>
                         <select id="rule_candidates" class="select_candidates" size="5" style="width:200px;" multiple>
                         <%
-                        rules_available = PseudoHash.new
+                        rules_available = {}
 
                         Schedule::rule_names.each do |key, value|
-                          rules_available[key, true] = value
+                          rules_available[key] = value
                         end
 
                         rules_selected = @schedule.get_rules_a

@@ -31,7 +31,7 @@
                     item = workflow.item
                     next if item.nil?
               %>
-                <option value="<%= item.id %>"><%=h item.title %></option>
+                <option value="<%= item.id %>"><%= item.title %></option>
               <%
                   end
                 end
@@ -91,7 +91,7 @@
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder.gif">
                   </td>
                   <td align="left" style="padding-left:10px">
-                    <span id="divWfStatus" style="color:black;" title="<%=h Workflow.decided_inbox %>"><%=h truncate(Workflow.decided_inbox, :length => 30) %></span><br/>
+                    <span id="divWfStatus" style="color:black;" title="<%= Workflow.decided_inbox %>"><%= truncate(Workflow.decided_inbox, :length => 30) %></span><br/>
                   </td>
                 </tr>
               </table>
@@ -99,11 +99,18 @@
           </tr>
 
 <script type="text/javascript">
+
+var thetisBoxDecidedInbox = null;
+
 function showDecidedInbox(folder_id)
 {
-  var thetisBoxProgress = prog("CENTER");
+  if (thetisBoxDecidedInbox) {
+    thetisBoxDecidedInbox.remove();
+    thetisBoxDecidedInbox = null;
+  }
+  thetisBoxDecidedInbox = new ThetisBox;
 
-  var thetisBox = new ThetisBox;
+  var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
           "<%= url_for(:controller => 'folders', :action => 'get_items') %>?id=" + folder_id + "&read_only=true",
@@ -112,15 +119,15 @@ function showDecidedInbox(folder_id)
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<%=h Workflow.decided_inbox %>";
-                thetisBox.overflow = "scroll";
-                thetisBox.show(
+                thetisBoxDecidedInbox.title = "<%= Workflow.decided_inbox %>";
+                thetisBoxDecidedInbox.overflow = "scroll";
+                thetisBoxDecidedInbox.show(
                           "CENTER",
                           mainWidth*80/100+"," + mainHeight*80/100,
                           "TRAY",
                           "",
                           "",
-                          request.responseText.stripScripts()
+                          "<div id='div_view'>" + request.responseText.stripScripts() + "</div>"
                         );
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
@@ -154,6 +161,7 @@ function doCreate()
           "div_ajax_workflow",
           document.form_workflow.action,
           {
+            method: "post",
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request){ thetisBox.remove(); },
@@ -175,6 +183,7 @@ function _doDelete(workflow_id)
         "div_ajax_workflow",
         "<%= url_for(:controller => 'workflows', :action => 'destroy') %>?id=" + workflow_id,
         {
+          method: "post",
           parameters:"authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
           evalScripts:true,

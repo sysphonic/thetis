@@ -23,7 +23,7 @@
 
   <select id="user_candidates" class="select_candidates" size="5" multiple>
   <%
-  users_available = PseudoHash.new
+  users_available = {}
 
   login_groups = @login_user.get_groups_a
   login_groups.each do |group_id|
@@ -34,7 +34,7 @@
       if users_available.keys.include?(user_id)
         users_available[user_id] << group_name
       else
-        users_available[user_id, true] = [group_name]
+        users_available[user_id] = [group_name]
       end
     end
   end
@@ -52,13 +52,13 @@
       if users_available.keys.include?(user_id)
         users_available[user_id] << team_name
       else
-        users_available[user_id, true] = [team_name]
+        users_available[user_id] = [team_name]
       end
     end
   end
 
   if login_groups.empty? and login_teams.empty?
-    users_available[@login_user.id.to_s, true] = []
+    users_available[@login_user.id.to_s] = []
   end
 
   users_available.each do |user_id, org_names|
@@ -76,12 +76,12 @@
 
   <select id="user_candidates" class="select_candidates" size="5" multiple>
     <%
-    users_available = PseudoHash.new
+    users_available = {}
 
     unless @users.nil?
       @users.each do |user|
         user_id = user.id.to_s
-        users_available[user_id, true] = user.get_name
+        users_available[user_id] = user.get_name
       end
     end
 

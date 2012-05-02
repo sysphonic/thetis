@@ -386,7 +386,7 @@ class Research < ActiveRecord::Base
   #
   def self.find_q_codes(html)
 
-    q_hash = PseudoHash.new   # |q_code, q_param|
+    q_hash = {}   # |q_code, q_param|
 
     return q_hash if html.nil?
 
@@ -405,9 +405,9 @@ class Research < ActiveRecord::Base
         if all.include?(q_code)
           
           if yaml[q_code].nil?
-            q_hash[q_code, true] = nil
+            q_hash[q_code] = nil
           else
-            q_hash[q_code, true] = Marshal.load(Marshal.dump(yaml[q_code]))
+            q_hash[q_code] = Marshal.load(Marshal.dump(yaml[q_code]))
           end
 
         end
@@ -426,7 +426,7 @@ class Research < ActiveRecord::Base
   #
   def self.select_q_caps(html)
 
-    q_caps_h = PseudoHash.new   # |q_code, q_cap|
+    q_caps_h = {}   # |q_code, q_cap|
 
     return q_caps_h if html.nil?
 
@@ -460,7 +460,7 @@ class Research < ActiveRecord::Base
             q_caps = founds.first
             q_cap = q_caps[0].strip
           end
-          q_caps_h[q_code, true] = q_cap
+          q_caps_h[q_code] = q_cap
         end
       end
     end

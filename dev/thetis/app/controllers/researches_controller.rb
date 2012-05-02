@@ -58,7 +58,7 @@ class ResearchesController < ApplicationController
 
     @group_ids = Research.get_statistics_groups
 
-    @q_hash = PseudoHash.new
+    @q_hash = {}
     unless @items.nil?
       @items.each do |item|
         hash = Research.find_q_codes(item.description)
@@ -77,12 +77,12 @@ class ResearchesController < ApplicationController
         end
 
         hash.each do |key, val|
-          @q_hash[key, true] = val
+          @q_hash[key] = val
         end
       end
     end
 
-    Research.trim_config_yaml @q_hash.keys
+    Research.trim_config_yaml(@q_hash.keys)
 
   rescue StandardError => err
     Log.add_error(request, err)
@@ -490,7 +490,7 @@ class ResearchesController < ApplicationController
 
       items = Folder.get_items_admin(tmpl_q_folder.id, 'xorder ASC')
 
-      @q_caps_h = PseudoHash.new
+      @q_caps_h = {}
       unless items.nil?
         items.each do |item|
 
@@ -499,7 +499,7 @@ class ResearchesController < ApplicationController
 
           hash = Research.select_q_caps(desc)
           hash.each do |key, val|
-            @q_caps_h[key, true] = val
+            @q_caps_h[key] = val
           end
         end
       end
@@ -664,10 +664,10 @@ class ResearchesController < ApplicationController
 
     unless researches.nil? or researches.empty?
 
-      @ans_hash = PseudoHash.new   # q_code => user_id => Answer
+      @ans_hash = {}   # q_code => user_id => Answer
 
       @q_codes.each do |q_code|
-        @ans_hash[q_code, true] = Hash.new
+        @ans_hash[q_code] = {}
       end
 
       researches.each do |research|

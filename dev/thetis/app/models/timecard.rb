@@ -53,15 +53,15 @@ class Timecard < ActiveRecord::Base
   public::WKCODE_PARAM_PAIDHLD = 1
 
   def self.workcodes
-    hash = PseudoHash.new
-    hash[WKCODE_WK_NORMAL, true] =     [1.0, 0.0]
-    hash[WKCODE_WK_ON_HOLIDAY, true] = [1.0, 0.0]
-    hash[WKCODE_HLD_PAID, true] =      [0.0, 1.0]
-    hash[WKCODE_HLD_AM, true] =        [0.5, 0.5]
-    hash[WKCODE_HLD_PM, true] =        [0.5, 0.5]
-    hash[WKCODE_HLD_SPECIAL, true] =   [0.0, 0.0]
-    hash[WKCODE_HLD_MAKEUP, true] =    [0.0, 0.0]
-    hash[WKCODE_ABSENCE, true] =       [0.0, 0.0]
+    hash = {}
+    hash[WKCODE_WK_NORMAL] =     [1.0, 0.0]
+    hash[WKCODE_WK_ON_HOLIDAY] = [1.0, 0.0]
+    hash[WKCODE_HLD_PAID] =      [0.0, 1.0]
+    hash[WKCODE_HLD_AM] =        [0.5, 0.5]
+    hash[WKCODE_HLD_PM] =        [0.5, 0.5]
+    hash[WKCODE_HLD_SPECIAL] =   [0.0, 0.0]
+    hash[WKCODE_HLD_MAKEUP] =    [0.0, 0.0]
+    hash[WKCODE_ABSENCE] =       [0.0, 0.0]
     return hash
   end
 

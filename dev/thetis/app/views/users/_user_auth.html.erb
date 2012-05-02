@@ -24,12 +24,12 @@
             <td width="45%">
               <select id="auth_candidates" <%= (check_all)?'disabled':'' %> class="select_multi" size="5" style="width:100%;" multiple>
               <%
-              auth_available = PseudoHash.new
+              auth_available = {}
               [ User::AUTH_DESKTOP, User::AUTH_ITEM, User::AUTH_FOLDER, User::AUTH_USER,
                 User::AUTH_GROUP, User::AUTH_TEAM, User::AUTH_SCHEDULE,
                 User::AUTH_EQUIPMENT, User::AUTH_LOG, User::AUTH_RESEARCH, User::AUTH_TIMECARD,
                 User::AUTH_MAIL, User::AUTH_ZEPTAIR, User::AUTH_LOCATION ].each do |auth|
-                auth_available[auth, true] = User.get_auth_name(auth)
+                auth_available[auth] = User.get_auth_name(auth)
               end
 
               auth_selected = @user.get_auth_a

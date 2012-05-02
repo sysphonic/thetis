@@ -218,7 +218,7 @@ class Folder < ActiveRecord::Base
     con = Folder.get_condtions_for(user, admin)
 
     # '0' for ROOT
-    folder_tree = Folder.get_tree(PseudoHash.new, con, '0', admin)
+    folder_tree = Folder.get_tree(Hash.new, con, '0', admin)
     return Folder.sort_tree(folder_tree)
   end
 
@@ -231,7 +231,7 @@ class Folder < ActiveRecord::Base
   #
   def self.get_tree_by_group_for_admin(group_id)
 
-    folder_tree = PseudoHash.new
+    folder_tree = {}
     tree_id = '0'
 
     if group_id.to_s == '0'
@@ -256,7 +256,7 @@ class Folder < ActiveRecord::Base
 
     sql << where + order_by
 
-    folder_tree[tree_id, true] = Folder.find_by_sql(sql)
+    folder_tree[tree_id] = Folder.find_by_sql(sql)
 
     folder_tree[tree_id].each do |folder|
       folder_tree = Folder.get_tree(folder_tree, nil, folder, true)
@@ -293,7 +293,7 @@ class Folder < ActiveRecord::Base
     end
 
     group_obj_cache = {}
-    folder_tree[tree_id, true] = []
+    folder_tree[tree_id] = []
     if !parent.nil? and (parent.xtype == Folder::XTYPE_GROUP)
       Group.get_childs(parent.owner_id, false, true).each do |group|
         group_obj_cache[group.id] = group
@@ -642,7 +642,7 @@ class Folder < ActiveRecord::Base
 
     if recursive
 
-      folder_tree = Folder.get_tree(PseudoHash.new, conditions, folder_id, admin)
+      folder_tree = Folder.get_tree(Hash.new, conditions, folder_id, admin)
       return [] if folder_tree.nil?
 
       folder_tree.each do |parent_id, childs|

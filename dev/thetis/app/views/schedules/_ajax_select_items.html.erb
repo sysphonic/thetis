@@ -15,7 +15,7 @@
 
 <select id="item_candidates" class="select_candidates" size="5" multiple>
   <%
-  items_available = PseudoHash.new
+  items_available = {}
 
   unless @items.nil?
     @items.each do |item|
@@ -23,7 +23,7 @@
         if items_available.keys.include?(item_id)
           items_available[item_id] << item.title
         else
-          items_available[item_id, true] = [item.title]
+          items_available[item_id] = [item.title]
       end
     end
   end
@@ -38,6 +38,6 @@
     next if items_selected.include?(item_id)
     disp = sprintf('[%2s] %s', item_id, title)
   %>
-    <option value="<%= item_id %>"><%=h disp %></option>
+    <option value="<%= item_id %>"><%= disp %></option>
   <% end %>
 </select>

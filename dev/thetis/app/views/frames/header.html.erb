@@ -7,8 +7,10 @@
 <META http-equiv="Content-Script-Type" content="text/JavaScript">
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<%= stylesheet_link_tag 'thetis110' %>
-<%= javascript_include_tag 'prototype', 'thetis/common110beta7', 'thetis/thetis110beta4' %>
+<%= stylesheet_link_tag('thetis110') %>
+<%= javascript_include_tag('prototype') %>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?timestamp=2012042601" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?timestamp=2012050201" type="text/javascript"></script>
 
 <style type=text/css>
 A:link {
@@ -98,15 +100,15 @@ function progMain()
             <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>
               <span style="color:lightblue;">/ </span>
             <%
-            headlines = PseudoHash.new
+            headlines = {}
             header_menus = $thetis_config[:general]['header_menus']
             unless header_menus.nil?
               header_menus.each do |link|
-                headlines[link[0], true] = [link[1], link[2]]
+                headlines[link[0]] = [link[1], link[2]]
               end
             end
             if $thetis_config[:menu]['open_user_reg'] == '1'
-              headlines[t('menu.user_reg'), true] = ['main', url_for(:controller => 'users', :action => 'new')]
+              headlines[t('menu.user_reg')] = ['main', url_for(:controller => 'users', :action => 'new')]
             end
 
             headlines.each do |caption, params|

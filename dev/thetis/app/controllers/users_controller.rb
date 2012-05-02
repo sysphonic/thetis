@@ -538,7 +538,7 @@ class UsersController < ApplicationController
       end
     end
 
-    @imp_errs = PseudoHash.new
+    @imp_errs = {}
     count = -1  # 0 for Header-line
     users = [] 
 
@@ -576,7 +576,7 @@ class UsersController < ApplicationController
 
       check = user.check_import mode, user_names  #, user_emails
 
-      @imp_errs[count, true] = check unless check.empty?
+      @imp_errs[count] = check unless check.empty?
 
       users << user
 
@@ -593,7 +593,7 @@ class UsersController < ApplicationController
 
     if users.empty?
 
-      @imp_errs[0, true] = [t('user.nothing_to_import')]
+      @imp_errs[0] = [t('user.nothing_to_import')]
     else
 
       if mode == 'update'
@@ -604,11 +604,11 @@ class UsersController < ApplicationController
             user.admin? User::AUTH_USER
           end
           if user_admin.nil?
-            @imp_errs[0, true] = [t('user.no_user_auth_import')]
+            @imp_errs[0] = [t('user.no_user_auth_import')]
           end
 
         else
-          @imp_errs[0, true] = [t('user.nothing_to_update')]
+          @imp_errs[0] = [t('user.nothing_to_update')]
         end
       end
     end
@@ -630,8 +630,8 @@ class UsersController < ApplicationController
 
           @imp_cnt += 1
 
-        rescue StandardError => err
-          @imp_errs[count, true] = [t('user.failed_to_save') + err.to_s]
+        rescue => evar
+          @imp_errs[count] = [t('user.failed_to_save') + evar.to_s]
         end
       end
     end

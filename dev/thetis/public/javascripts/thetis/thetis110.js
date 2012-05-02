@@ -37,6 +37,45 @@ toSysDateForm = function(date)
 //  return replaceAll(date, "/", "-");
 }
 
+getCsrfToken = function()
+{
+  var targetFrame = top;
+  if (top.main) {
+    targetFrame = top.main;
+  }
+  var metas = targetFrame.document.getElementsByTagName ("meta");
+  for (var i=0; i < metas.length; i++) {
+    var meta = metas[i];
+    if (meta.name == "csrf-token") {
+      return meta.content;
+    }
+  }
+  return null;
+}
+
+doUpdateView = function(method, action, addParams)
+{
+  if (!addParams) {
+    addParams = new Array();
+  }
+  if (method == "post") {
+    addParams.push("authenticity_token="+getCsrfToken());
+  }
+
+  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                "div_view",
+                action,
+                {
+                  method: method,
+                  parameters: addParams.join("&"),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){ thetisBox.remove(); }
+                }
+              );
+}
+
 bound = function(desktop, elem)
 {
   var elem = _z(elem);

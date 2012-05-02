@@ -298,29 +298,6 @@ function doGetMaps(group_id)
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_map') %>", addParams);
 }
 
-function doUpdateView(method, action, addParams)
-{
-  if (!addParams) {
-    addParams = new Array();
-  }
-  if (method == "post") {
-    addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  }
-
-  var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater(
-                "div_view",
-                action,
-                {
-                  method: method,
-                  parameters: addParams.join("&"),
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request){ thetisBox.remove(); }
-                }
-              );
-}
-
 function selectGroup(group_id)
 {
   var select_opt = _z('select_opt');

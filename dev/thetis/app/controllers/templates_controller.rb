@@ -188,11 +188,11 @@ class TemplatesController < ApplicationController
 
     tmpl_items = Folder.get_items_admin(@tmpl_local_folder.id, 'xorder ASC')
     
-    @tmpl_tree = PseudoHash.new
+    @tmpl_tree = {}
     
     unless tmpl_items.nil?
       tmpl_items.each do |item|
-        @tmpl_tree[item.id.to_s, true] = []
+        @tmpl_tree[item.id.to_s] = []
       end
     end
 

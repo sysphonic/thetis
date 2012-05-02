@@ -15,12 +15,12 @@
 
 <select id="user_candidates" class="select_candidates" size="5" multiple>
   <%
-  users_available = PseudoHash.new
+  users_available = {}
 
   unless @users.nil?
     @users.each do |user|
       user_id = user.id.to_s
-      users_available[user_id, true] = user.get_name
+      users_available[user_id] = user.get_name
     end
   end
 

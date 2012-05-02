@@ -227,11 +227,11 @@ class EquipmentController < ApplicationController
 
     equipment = Equipment.find(:all, :conditions => con)
 
-    @equip_schedule_hash = PseudoHash.new
+    @equip_schedule_hash = {}
     unless equipment.nil?
       @holidays = Schedule.get_holidays
       equipment.each do |equip|
-        @equip_schedule_hash[equip.id.to_s, true] = Schedule.get_equipment_week(equip.id, @date, @holidays)
+        @equip_schedule_hash[equip.id.to_s] = Schedule.get_equipment_week(equip.id, @date, @holidays)
       end
     end
   end
