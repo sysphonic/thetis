@@ -142,6 +142,7 @@ function showDetail(schedule_id, title)
   var thetisBoxProgress = prog("CENTER");
 
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= Schedule.model_name.human %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
@@ -187,6 +188,7 @@ function _doDelete(date, id)
 function showEquipment(equipment_id, name)
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= t('menu.equipment') %>";
   thetisBox.show(
             "CENTER",

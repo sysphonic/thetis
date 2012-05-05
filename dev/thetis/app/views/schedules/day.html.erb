@@ -155,7 +155,6 @@ end
 </table>
 
 <script type="text/javascript">
-<!--
 
 var reqTargetDay = 0;
 var forceTargetAll = 0;
@@ -427,18 +426,6 @@ function _doScheduleDelete(id)
           );
 }
 
-function showFolderTreeToSelect(folder_id, schedule_id)
-{
-  var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_folder_items') %>\" onsubmit=\"new Ajax.Updater('div_selectItems', '<%= url_for(:controller => 'schedules', :action => 'get_folder_items') %>', {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  if (schedule_id != null && schedule_id.length > 0) {
-    thetisBox.setAdditionalParams(new Array("schedule_id="+schedule_id));
-  }
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('msg.select_folder_to_show')%>", "");
-  thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
-}
-
 function showGroupTree()
 {
   var thetisBox = new ThetisBox;
@@ -448,6 +435,138 @@ function showGroupTree()
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }
 
-//-->
+// ----------------------------------------------------
+var thetisBoxGroupTree = null;
+
+showGroupTreeToSelect = function(group_id, elem)
+{
+  if (thetisBoxGroupTree) {
+    thetisBoxGroupTree.remove();
+    thetisBoxGroupTree = null;
+  }
+  thetisBoxGroupTree = new ThetisBox;
+  thetisBoxGroupTree.title = "<%= t('btn.select_group')%>";
+  var pos = getPos(elem);
+  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxGroupTree.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
+    function() {
+      var elems = thetisBoxGroupTree.getContainer().getElementsByTagName("A");
+      for (var i=0; i < elems.length; i++) {
+        addEvent(elems[i], "click", onGroupTreeSelected);
+      }
+    });
+}
+
+onGroupTreeSelected = function(evt)
+{
+  evt = evt || window.event;
+  var elem = evt.target || evt.srcElement;
+  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
+    if (elem.tagName.toUpperCase() == "BODY") {
+      return;
+    }
+  }
+
+  if (!thetisBoxGroupTree) {
+    return;
+  }
+  var addParams = new Array();
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTree.id);
+  addParams.push(selKeeper.name+"="+elem.id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_selectUsers"),
+      "<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+doClearGroup = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_selectUsers",
+              "<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+}
+
+// ----------------------------------------------------
+var thetisBoxFolderTree = null;
+
+function showFolderTreeToSelect(folder_id, schedule_id, elem)
+{
+  if (thetisBoxFolderTree) {
+    thetisBoxFolderTree.remove();
+    thetisBoxFolderTree = null;
+  }
+  thetisBoxFolderTree = new ThetisBox;
+  thetisBoxFolderTree.title = "<%= t('btn.select_folder')%>";
+  thetisBoxFolderTree.setAdditionalParams(new Array("schedule_id="+schedule_id));
+  var pos = getPos(elem);
+  thetisBoxFolderTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxFolderTree.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id,
+    function() {
+      var elems = thetisBoxFolderTree.getContainer().getElementsByTagName("A");
+      for (var i=0; i < elems.length; i++) {
+        addEvent(elems[i], "click", onFolderTreeSelected);
+      }
+    });
+}
+
+onFolderTreeSelected = function(evt)
+{
+  evt = evt || window.event;
+  var elem = evt.target || evt.srcElement;
+  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
+    if (elem.tagName.toUpperCase() == "BODY") {
+      return;
+    }
+  }
+
+  if (!thetisBoxFolderTree) {
+    return;
+  }
+  var addParams = new Array();
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxFolderTree.id);
+  addParams.push(selKeeper.name+"="+elem.id);
+  if (thetisBoxFolderTree.additionalParams) {
+    addParams = addParams.concat(thetisBoxFolderTree.additionalParams);
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_selectItems"),
+      "<%= url_for(:controller => 'schedules', :action => 'get_folder_items') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
 </script>
 

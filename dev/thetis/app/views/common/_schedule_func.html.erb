@@ -14,6 +14,7 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
   }
 
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";

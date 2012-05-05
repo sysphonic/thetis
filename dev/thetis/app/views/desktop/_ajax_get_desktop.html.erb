@@ -308,6 +308,7 @@ editConfig = function()
     return;
   }
   thetisBoxConfig = new ThetisBox;
+  thetisBoxConfig.resizable = true;
   thetisBoxConfig.bgcolor_title = "limegreen";
   thetisBoxConfig.bgcolor_body = "lightcyan";
   thetisBoxConfig.setOnClose(function(){ thetisBoxConfig = null; });
@@ -374,6 +375,7 @@ _doRemoveToy = function(element_id)
 showCalendar = function()
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= t('calendar.name') %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
@@ -565,11 +567,17 @@ removePostTo = function()
   var del_ary = deleteList(_z("post_to"));
 }
 
+thetisBoxAddPostTo = null;
+
 addPostTo = function()
 {
-  var thetisBoxProgress = prog("CENTER");
+  if (thetisBoxAddPostTo) {
+    thetisBoxAddPostTo.remove();
+    thetisBoxAddPostTo = null;
+  }
+  thetisBoxAddPostTo = new ThetisBox;
 
-  var thetisBox = new ThetisBox;
+  var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'get_group_users') %>",
@@ -578,9 +586,13 @@ addPostTo = function()
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "<%= t('desktop.label.sel_users_to_post') %>";
-                thetisBox.overflow = "hidden";
-                thetisBox.show(
+                thetisBoxAddPostTo.resizable = true;
+                thetisBoxAddPostTo.title = "<%= t('desktop.label.sel_users_to_post') %>";
+                thetisBoxAddPostTo.overflow = "hidden";
+                if (thetisBoxPostLabel){
+                  thetisBoxPostLabel.addChildBox(thetisBoxAddPostTo);
+                }
+                thetisBoxAddPostTo.show(
                           "CENTER",
                           "460,280",
                           "TRAY",
@@ -600,6 +612,7 @@ addPostTo = function()
 showAddressBook = function()
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= t('address.book') %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";

@@ -19,7 +19,7 @@ end
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td width="130">
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelectUsers('<%= (@group_id.nil?)?'':@group_id %>');">
+      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelectUsers('<%= (@group_id.nil?)?'':@group_id %>', this);">
         <%= t('btn.select_group') %>
       </div>
     </td>
@@ -223,21 +223,63 @@ doUpdateUserEmails = function(group_id)
             );
 }
 
-onGradeHrSelectChanged = function(elem)
-{
-  doUpdateSchoolStudents(<%= @group_id %>);
-}
-
 <% end %>
 
-showGroupTreeToSelectUsers = function(group_id)
-{
-  var thetisBox = new ThetisBox;
+var thetisBoxGroupTree = null;
 
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= submit_url %>\" onsubmit=\"new Ajax.Updater('div_selectUsers', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
-  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+showGroupTreeToSelectUsers = function(group_id, elem)
+{
+  var thetisBoxGroupTree = new ThetisBox;
+
+  if (thetisBoxGroupTree) {
+    thetisBoxGroupTree.remove();
+    thetisBoxGroupTree = null;
+  }
+  thetisBoxGroupTree = new ThetisBox;
+  thetisBoxGroupTree.title = "<%= t('btn.select_group')%>";
+  var pos = getPos(elem);
+  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxGroupTree.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
+    function() {
+      var elems = thetisBoxGroupTree.getContainer().getElementsByTagName("A");
+      for (var i=0; i < elems.length; i++) {
+        addEvent(elems[i], "click", onGroupTreeSelected);
+      }
+    });
+}
+
+onGroupTreeSelected = function(evt)
+{
+  evt = evt || window.event;
+  var elem = evt.target || evt.srcElement;
+  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
+    if (elem.tagName.toUpperCase() == "BODY") {
+      return;
+    }
+  }
+
+  if (!thetisBoxGroupTree) {
+    return;
+  }
+  var addParams = new Array();
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTree.id);
+  addParams.push(selKeeper.name+"="+elem.id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_selectUsers"),
+      "<%= submit_url %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 doClearGroupToSelectUsers = function()

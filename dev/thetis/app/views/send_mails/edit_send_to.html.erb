@@ -16,7 +16,7 @@ tabs_send_mail_address.push("users");
 
 <table id="panel_send_to" cellspacing="0" cellpadding="0" style="width:100%; height:100%; background-color:aliceblue; padding:5px 0px 0px 5px;">
   <tr>
-    <td align="center" valign="top" style="min-width:380px; width:380px;">
+    <td align="center" valign="top">
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
@@ -35,7 +35,7 @@ tabs_send_mail_address.push("users");
         </tr>
       </table>
 
-      <div id="tab_div_direct" style="width:100%;" align="center">
+      <div id="tab_div_direct" style="width:100%; height:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
           <tr>
             <td align="center" style="padding:20px 0px;">
@@ -47,8 +47,8 @@ tabs_send_mail_address.push("users");
         </table>
       </div>
 
-      <div id="tab_div_addrbook" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+      <div id="tab_div_addrbook" style="display:none; width:100%; height:100%;" align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="height:100%; border:outset 3px cornflowerblue;">
           <tr>
             <td align="center" style="padding:5px;">
               <div style="text-align:left">
@@ -66,7 +66,7 @@ tabs_send_mail_address.push("users");
               ['addr_common_candidates', Address::BOOK_COMMON]
             ].each do |addrbook_param|
             %>
-              <select id="<%= addrbook_param[0] %>" class="select_candidates" size="10" multiple style="width:100%">
+              <select id="<%= addrbook_param[0] %>" class="select_candidates" size="10" multiple style="width:100%; height:80%;">
               <%
               addrs_available = {}
 

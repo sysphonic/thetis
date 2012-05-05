@@ -330,6 +330,7 @@ end
 showItem = function(item_id, title)
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = title;
   thetisBox.show(
             "CENTER",
@@ -344,6 +345,7 @@ showItem = function(item_id, title)
 showEquipment = function(equipment_id, name)
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= t('menu.equipment') %>";
   thetisBox.show(
             "CENTER",

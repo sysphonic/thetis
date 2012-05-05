@@ -71,6 +71,26 @@ function _z(elemId)
   }
 }
 
+function addEvent(elem, eventName, func)
+{
+  // elem["on"+eventName] = func;
+
+  if (elem.attachEvent){
+    elem.attachEvent("on"+eventName, func);
+  } else {
+    elem.addEventListener(eventName, func, false);
+  }
+}
+
+function removeEvent(elem, eventName, func)
+{
+  if (elem.detachEvent) {
+    elem.detachEvent("on"+eventName, func);
+  } else {
+    elem.removeEventListener(eventName, func, false);
+  }
+}
+
 function posAbsolute(elem)
 {
   var pos = getPos(elem);

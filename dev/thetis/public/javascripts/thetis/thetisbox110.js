@@ -40,6 +40,103 @@ var __thetisbox_Close = 'Close';
 var __thetisbox_close_img = null;
 
 /**----------------**----------------**----------------**----------------**/
+// DRAG BY PROTOTYPE.JS >>>
+var ThetisBoxDragObserver = Class.create();
+ThetisBoxDragObserver.prototype = {
+  initialize: function() {
+  },
+  onStart: function(eventName, draggable, event) {
+    var elem = draggable.element;
+    if (elem.className.indexOf("thetisbox_resize_handle") < 0) {
+      return;
+    }
+    if (!is_MS && !is_Opera) {
+      var id = elem.id.split("-")[1];
+      var base =  _z("thetisBoxBase-"+id);
+      var content = _z("thetisBoxContent-"+id);
+      if (!content) {
+        content = _z("thetisBoxTree-"+id);
+      }
+      var deltaWidth = base.offsetWidth - content.offsetWidth;
+      if (deltaWidth < 0) {
+        deltaWidth = 0;
+      }
+      var deltaHeight = base.offsetHeight - content.offsetHeight;
+      if (deltaHeight < 0) {
+        deltaHeight = 0;
+      }
+
+      draggable.options.snap = function(x, y) {
+        if (x <= 0 && y <= 0) {
+          return [x, y];
+        }
+        var widthContent = x + elem.offsetWidth;
+        var heightContent = y + elem.offsetHeight;
+        if (widthContent < 30 && x < 0) {
+          return [30, y];
+        }
+        if (heightContent < 30 && y < 0) {
+          return [x, 30];
+        }
+        base.style.width = widthContent + "px";
+        content.style.width = (widthContent - deltaWidth) + "px";
+        base.style.height = heightContent + "px";
+        content.style.height = (heightContent - deltaHeight) + "px";
+        return [x, y];
+      };
+    }
+  },
+  onDrag: function(eventName, draggable, event) {
+    var elem = draggable.element;
+    if (elem.className.indexOf("thetisbox_resize_handle") < 0) {
+      return;
+    }
+    if (is_MS || is_Opera) {
+      var id = elem.id.split("-")[1];
+      var base =  _z("thetisBoxBase-"+id);
+      var content = _z("thetisBoxContent-"+id);
+      if (!content) {
+        content = _z("thetisBoxTree-"+id);
+      }
+      var deltaWidth = base.offsetWidth - content.offsetWidth;
+      if (deltaWidth < 0) {
+        deltaWidth = 0;
+      }
+      var deltaHeight = base.offsetHeight - content.offsetHeight;
+      if (deltaHeight < 0) {
+        deltaHeight = 0;
+      }
+
+      draggable.options.snap = function(x, y) {
+        if (x <= 0 && y <= 0) {
+          return [x, y];
+        }
+        var widthContent = x + elem.offsetWidth;
+        var heightContent = y + elem.offsetHeight;
+        if (widthContent < 30 && x < 0) {
+          return [30, y];
+        }
+        if (heightContent < 30 && y < 0) {
+          return [x, 30];
+        }
+        base.style.width = widthContent + "px";
+        content.style.width = (widthContent - deltaWidth) + "px";
+        base.style.height = heightContent + "px";
+        content.style.height = (heightContent - deltaHeight) + "px";
+        return [x, y];
+      };
+    }
+  },
+  onEnd: function(eventName, draggable, event) {
+    var elem = draggable.element;
+    if (!is_MS && !is_Opera) {
+      draggable.options.snap = false;
+    }
+  }
+}
+Draggables.addObserver( new ThetisBoxDragObserver() );
+// DRAG BY PROTOTYPE.JS <<<
+/**----------------**----------------**----------------**----------------**/
 
 var ThetisBox = Class.create();
 ThetisBox.Base = function() {};
@@ -95,10 +192,25 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     } else {
       content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
-    content += "<table class='thetisbox_input_dialog' width='100%' height='100%' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_input_dialog' id='thetisBoxBase-"+this.id+"' width='100%' height='100%' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
-      content += "    <td class='thetisbox_input_title' colspan='2' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      if (this.close_by_icon_button) {
+        content += "  <td colspan='2' style='background-color:"+this.bgcolor_title+";'>";
+        content += "    <table cellspacing='0' cellpadding='0' width='100%'>";
+        content += "      <tr>";
+        content += "        <td class='thetisbox_input_title' style='color:white; text-indent:5px;'>";
+        content += "          <b>"+this.title+"</b>";
+        content += "        </td>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
+        content += "        </td>";
+        content += "      </tr>";
+        content += "    </table>";
+        content += "  </td>";
+      } else {
+        content += "  <td class='thetisbox_input_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      }
       content += "  </tr>";
     }
     content += "  <tr>";
@@ -160,10 +272,25 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     } else {
       content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
-    content += "<table class='thetisbox_textarea_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_textarea_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
-      content += "    <td class='thetisbox_textarea_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      if (this.close_by_icon_button) {
+        content += "  <td style='background-color:"+this.bgcolor_title+";'>";
+        content += "    <table cellspacing='0' cellpadding='0' width='100%'>";
+        content += "      <tr>";
+        content += "        <td class='thetisbox_textarea_title' style='color:white; text-indent:5px;'>";
+        content += "          <b>"+this.title+"</b>";
+        content += "        </td>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
+        content += "        </td>";
+        content += "      </tr>";
+        content += "    </table>";
+        content += "  </td>";
+      } else {
+        content += "  <td class='thetisbox_textarea_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      }
       content += "  </tr>";
     }
     content += "  <tr>";
@@ -222,10 +349,25 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     } else {
       content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\"if (this.thetisBoxSelKeeper.value.length <= 0){return false;}"+prog+" ThetisBox.hide('"+this.id+"'); \">";
     }
-    content += "<table class='thetisbox_tree_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_tree_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
-      content += "    <td class='thetisbox_tree_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      if (this.close_by_icon_button) {
+        content += "  <td style='background-color:"+this.bgcolor_title+";'>";
+        content += "    <table cellspacing='0' cellpadding='0' width='100%'>";
+        content += "      <tr>";
+        content += "        <td class='thetisbox_tree_title' style='color:white; text-indent:5px;'>";
+        content += "          <b>"+this.title+"</b>";
+        content += "        </td>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
+        content += "        </td>";
+        content += "      </tr>";
+        content += "    </table>";
+        content += "  </td>";
+      } else {
+        content += "  <td class='thetisbox_tree_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      }
       content += "  </tr>";
     }
     content += "  <tr>";
@@ -262,6 +404,50 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       content += "<input type='hidden' name='"+param[0]+"' value='"+val+"'>";
     }
     content += "</form>";
+    if (this.resizable) {
+      content += "  <div class=\"thetisbox_resize_handle\" id=\"thetisBoxResizeHandle-"+this.id+"\" style=\"position:absolute; width:20px; height:20px; cursor:move;\"></div>";
+    }
+    content += "</div>";
+    var d = document.createElement("div");
+    d.innerHTML = content;
+    this.parent_elem.appendChild(d);
+  },
+  // MINI-TREE
+  drawMiniTree: function()
+  {
+    var content = "";
+    content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;'>";
+    content += "<table class='thetisbox_minitree_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "  <tr height='25'>";
+    content += "    <td style='background-color:"+this.bgcolor_title+";'>";
+    content += "      <table cellspacing='0' cellpadding='0' width='100%'>";
+    content += "        <tr>";
+    content += "          <td class='thetisbox_tree_title' style='color:white; text-indent:5px;'>";
+    content += "            <b>"+this.title+"</b>";
+    content += "          </td>";
+    content += "          <td align='right' valign='middle' style='padding-right:5px;'>";
+    content += "            <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
+    content += "          </td>";
+    content += "        </tr>";
+    content += "      </table>";
+    content += "    </td>";
+    content += "  </tr>";
+    content += "  <tr>";
+    content += "    <td align='center' valign='top'>";
+    content += "      <div id='thetisBoxTree-"+this.id+"' align='left' style='padding-left:10px; padding-top:5px; width:310px; height:210px; overflow:auto; background-color:floralwhite;'></div>";
+    content += "    </td>";
+    content += "  </tr>";
+    content += "</table>";
+    content += "<input type='hidden' id='thetisBoxSelKeeper-"+this.id+"' name='thetisBoxSelKeeper' value='' />";
+    for (i=0; this.additionalParams != null && i<this.additionalParams.length; i++) {
+      var param = this.additionalParams[i].split("=");
+      var eqidx = this.additionalParams[i].indexOf("=");
+      var val = this.additionalParams[i].substring(eqidx+1);
+      content += "<input type='hidden' name='"+param[0]+"' value='"+val+"'>";
+    }
+    if (this.resizable) {
+      content += "  <div class=\"thetisbox_resize_handle\" id=\"thetisBoxResizeHandle-"+this.id+"\" style=\"position:absolute; width:20px; height:20px; cursor:move;\"></div>";
+    }
     content += "</div>";
     var d = document.createElement("div");
     d.innerHTML = content;
@@ -272,10 +458,25 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    content += "<table class='thetisbox_confirm_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_confirm_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
-      content += "    <td class='thetisbox_confirm_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      if (this.close_by_icon_button) {
+        content += "  <td style='background-color:"+this.bgcolor_title+";'>";
+        content += "    <table cellspacing='0' cellpadding='0' width='100%'>";
+        content += "      <tr>";
+        content += "        <td class='thetisbox_confirm_title' style='color:white; text-indent:5px;'>";
+        content += "          <b>"+this.title+"</b>";
+        content += "        </td>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
+        content += "        </td>";
+        content += "      </tr>";
+        content += "    </table>";
+        content += "  </td>";
+      } else {
+        content += "  <td class='thetisbox_confirm_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      }
       content += "  </tr>";
     }
     content += "  <tr>";
@@ -308,7 +509,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    content += "<table class='thetisbox_message_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_message_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
       if (this.close_by_icon_button) {
@@ -358,7 +559,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    content += "<table class='thetisbox_progress_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_progress_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
       content += "    <td class='thetisbox_progress_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
@@ -397,7 +598,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    content += "<table class='thetisbox_tips_dialog' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_tips_dialog' id='thetisBoxBase-"+this.id+"' width='100%' style='height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
       content += "    <td class='thetisbox_tips_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
@@ -421,7 +622,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxClose-"+this.id+"')\">";
-    content += "<table class='thetisbox_iframe_dialog' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='10' cellpadding='0'>";
+    content += "<table class='thetisbox_iframe_dialog' id='thetisBoxBase-"+this.id+"' style='border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='10' cellpadding='0'>";
     if (hasTitlebar) {
       if (this.button_close_img == null) {
         content += "  <td class='thetisbox_iframe_title' colspan='2' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'>";
@@ -460,10 +661,13 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "  </tr>";
     content += "  <tr>";
     content += "    <td colspan='2' align='center'>";
-    content += "      <iframe id='iframe_thetisbox-"+this.id+"' src='"+src+"' width='100%' style='height:240px; border:2px solid lightgrey; border-right:2px solid midnightblue; border-bottom:2px solid midnightblue; background-color:white;'></iframe>";
+    content += "      <iframe id='thetisBoxContent-"+this.id+"' src='"+src+"' width='100%' style='height:240px; border:2px solid lightgrey; border-right:2px solid midnightblue; border-bottom:2px solid midnightblue; background-color:white;'></iframe>";
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
+    if (this.resizable) {
+      content += "  <div class=\"thetisbox_resize_handle\" id=\"thetisBoxResizeHandle-"+this.id+"\" style=\"position:absolute; width:20px; height:20px; cursor:move;\"></div>";
+    }
     content += "</div>";
     var d = document.createElement('div');
     d.innerHTML = content;
@@ -474,7 +678,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:10000; font-size:8pt; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxClose-"+this.id+"')\">";
-    content += "<table class='thetisbox_tray_dialog' style='width:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
+    content += "<table class='thetisbox_tray_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";' cellspacing='7' cellpadding='0'>";
     if (hasTitlebar) {
       content += "  <tr height='25'>";
       if (this.button_close_img == null) {
@@ -533,6 +737,9 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
+    if (this.resizable) {
+      content += "  <div class=\"thetisbox_resize_handle\" id=\"thetisBoxResizeHandle-"+this.id+"\" style=\"position:absolute; width:20px; height:20px; cursor:move;\"></div>";
+    }
     content += "</div>";
     var d = document.createElement('div');
     d.innerHTML = content;
@@ -560,10 +767,17 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       if (this.bgcolor_body == null) this.bgcolor_body = "skyblue";
       this.drawTextArea(p_action, true, false);
 
-    } else if (p_type == "TREE") {
+    } else if (p_type == "TREE" || p_type == "MINI-TREE") {
+      if (this.resizable == null) {
+        this.resizable = true;
+      }
       if (this.bgcolor_title == null) this.bgcolor_title = "darkgoldenrod";
       if (this.bgcolor_body == null) this.bgcolor_body = "moccasin";
-      this.drawTree(p_action, true);
+      if (p_type == "TREE") {
+        this.drawTree(p_action, true);
+      } else {
+        this.drawMiniTree();
+      }
 
     } else if (p_type == "CONFIRM") {
       if (this.bgcolor_title == null) this.bgcolor_title = "fuchsia";
@@ -615,20 +829,24 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     if (edit != null) {
        edit.value = p_def;
     }
-
     // Caption
     if (cap != null && p_caption != null) {
       cap.innerHTML = p_caption;
     }
-
     // Content
-    if (content != null && p_def != null) {
+    if (p_type == "TRAY" && content != null && p_def != null) {
       content.innerHTML = p_def;
-
     }
 
     // Size and Position
-    var x=0, y=0, width=350, height=0;
+    var x=0, y=0, width=0, height=0;
+
+    switch (p_type) {
+      case "MINI-TREE":
+        width = 310;  break;
+      default:
+        width = 350;  break;
+    }
 
     var size = p_size.split(",");
     if (size.length >= 2) {
@@ -646,12 +864,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     if (height > 0) {
       box.style.height = height + "px";
 
-      var chg_h = null;
-      switch (p_type) {
-        case "IFRAME":  chg_h = _z("iframe_thetisbox-"+this.id); break;
-        case "TRAY":    chg_h = content; break;
-        default:        break;
-      }
+      var chg_h = content;
       if (chg_h != null) {
         var cap_height = 0;
         if (cap != null) {
@@ -665,11 +878,13 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         chg_h.style.height = h + "px";
       }
     } else {
-      switch(p_type) {
+      switch (p_type) {
         case "TEXTAREA":
           height = 250;  break;
         case "TREE":
           height = 420;  break;
+        case "MINI-TREE":
+          height = 260;  break;
         case "PROGRESS":
           height = 100;  break;
         case "TIPS":
@@ -723,6 +938,16 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     box.style.visibility = "visible";
     box.style.display = "inline";
 
+    // DRAG BY PROTOTYPE.JS >>>
+    var resizeHandle = _z("thetisBoxResizeHandle-" + this.id);
+    if (resizeHandle) {
+      var base = this.getBase();
+      resizeHandle.style.left = (base.offsetWidth - resizeHandle.offsetWidth) + "px";
+      resizeHandle.style.top = (base.offsetHeight - resizeHandle.offsetHeight) + "px";
+      new Draggable(resizeHandle, {revert:false, starteffect:"", endeffect:"", zindex:10000});
+    }
+    // DRAG BY PROTOTYPE.JS <<<
+
     // Focus
     if (edit != null) {
       edit.focus();
@@ -738,6 +963,10 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   getContainer: function()
   {
     return _z("divThetisBox-"+this.id);
+  },
+  getBase: function()
+  {
+    return _z("thetisBoxBase-"+this.id);
   },
   getContent: function()
   {
@@ -776,7 +1005,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     return ThetisBox.getTreeSelect(this.id);
   },
-  setTree: function(url, selectId)
+  setTree: function(url, selectId, onComplete)
   {
     var d = document.createElement("div");
     d.innerHTML = "<form method='get' name='form_ajax_thetisBoxTree'>"
@@ -793,13 +1022,19 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
                             url,
                             {
                               method:"get",
+                              parameters: Form.serialize(document.form_ajax_thetisBoxTree),
                               asynchronous: true,
-                              evalScripts: true,
+                              evalScripts: false,
                               onComplete: function(request) {
                                 d.parentNode.removeChild(d);
                                 thetisBox.remove();
-                              },
-                              parameters: Form.serialize(document.form_ajax_thetisBoxTree)
+
+                                request.responseText.evalScripts();
+
+                                if (onComplete) {
+                                  onComplete();
+                                }
+                              }
                             }
                           );
   },
@@ -883,6 +1118,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   setOnClose: function(func) {
     ThetisBox.setOnClose(this.id, func);
   },
+  close_by_icon_button: true,
   defaultFired: false,
   offsetX: 0,
   offsetY: 0,
@@ -897,6 +1133,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   bgcolor_body: null,
   bgcolor_content: null,
   border_content: null,
+  resizable: null,
   progress: false,
   overflow: "auto",
   parent_elem: null,

@@ -74,7 +74,8 @@ function showSchedule()
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "<%= date_s %>";
-                thetisBox.overflow = "scroll";
+                thetisBox.resizable = true;
+//                thetisBox.overflow = "scroll";
                 thetisBox.show(
                           trayX+","+trayY,
                           trayWidth+","+trayHeight,
@@ -114,7 +115,8 @@ function showTimecard()
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "<%= date_s %>";
-                thetisBox.overflow = "scroll";
+                thetisBox.resizable = true;
+//                thetisBox.overflow = "scroll";
                 thetisBox.show(
                           trayX+","+trayY,
                           trayWidth+","+trayHeight,

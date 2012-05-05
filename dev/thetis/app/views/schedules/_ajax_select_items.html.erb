@@ -1,13 +1,13 @@
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
     <td width="130">
-      <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect('<%= (@folder_id.nil?)?'0':@folder_id %>', '<%= (@schedule.nil?)?'':(@schedule.id) %>');">
+      <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect('<%= (@folder_id.nil?)?'0':@folder_id %>', '<%= (@schedule.nil?)?'':(@schedule.id) %>', this);">
         <%= t('btn.select_folder') %>
       </div>
     </td>
     <td align="left" style="color:red;">
       <% unless @folder_id.nil? %>
-        <%=h Folder.get_path(@folder_id) %>
+        <%= Folder.get_path(@folder_id) %>
       <% end %>
     </td>
   </tr>
@@ -19,12 +19,8 @@
 
   unless @items.nil?
     @items.each do |item|
-        item_id = item.id.to_s
-        if items_available.keys.include?(item_id)
-          items_available[item_id] << item.title
-        else
-          items_available[item_id] = [item.title]
-      end
+      item_id = item.id.to_s
+      items_available[item_id] = item.title
     end
   end
 

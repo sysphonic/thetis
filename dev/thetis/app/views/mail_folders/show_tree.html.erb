@@ -731,6 +731,7 @@ function showMailForm(action, is_new)
   var thetisBoxProgress = prog("CENTER");
 
   thetisBoxMailForm = new ThetisBox;
+  thetisBoxMailForm.resizable = true;
   var on_close_func = function(){
                         thetisBoxMailForm = null;
                         if (_need_update) {
@@ -949,6 +950,7 @@ function doDownloadMail()
 function showAddressBook()
 {
   var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
   thetisBox.title = "<%= t('address.book') %>";
   thetisBox.bgcolor_title = "limegreen";
   thetisBox.bgcolor_body = "lightcyan";
