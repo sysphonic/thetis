@@ -134,7 +134,9 @@ ThetisBoxDragObserver.prototype = {
     }
   }
 }
-Draggables.addObserver( new ThetisBoxDragObserver() );
+if (typeof(Draggables) != "undefined") {
+  Draggables.addObserver( new ThetisBoxDragObserver() );
+}
 // DRAG BY PROTOTYPE.JS <<<
 /**----------------**----------------**----------------**----------------**/
 
@@ -434,7 +436,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "  </tr>";
     content += "  <tr>";
     content += "    <td align='center' valign='top'>";
-    content += "      <div id='thetisBoxTree-"+this.id+"' align='left' style='padding-left:10px; padding-top:5px; width:310px; height:210px; overflow:auto; background-color:floralwhite;'></div>";
+    content += "      <div id='thetisBoxTree-"+this.id+"' align='left' style='padding-left:10px; padding-top:5px; width:260px; height:210px; overflow:auto; background-color:floralwhite;'></div>";
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
@@ -535,7 +537,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "      <div id='thetisBoxCaption-"+this.id+"'></div>";
     content += "    </td>";
     content += "  </tr>";
-    if (!this.close_by_icon_button) {
+//    if (!this.close_by_icon_button) {
       content += "  <tr height='40'>";
       content += "    <td width='100%' align='center'>";
       content += "      <table width='100%' style='height:100%;' align='center'>";
@@ -547,7 +549,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       content += "      </table>";
       content += "    </td>";
       content += "  </tr>";
-    }
+//    }
     content += "</table>";
     content += "</div>";
     var d = document.createElement("div");
@@ -843,7 +845,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
 
     switch (p_type) {
       case "MINI-TREE":
-        width = 310;  break;
+        width = 260;  break;
       default:
         width = 350;  break;
     }
@@ -1146,8 +1148,8 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   child_boxes: null
 });
 
-ThetisBox.hide = function(id) {
-
+ThetisBox.hide = function(id)
+{
   var box = _z("divThetisBox-"+id);
   if (box == null) {
     return;
@@ -1156,8 +1158,29 @@ ThetisBox.hide = function(id) {
   box.style.display = "none";
 }
 
-ThetisBox.remove = function(id) {
+ThetisBox.getInstance = function(id)
+{
+  for (var i=0; i < ThetisBox.array.length; i++) {
+    var instance = ThetisBox.array[i];
+    if (instance.id == id) {
+      return instance;
+    }
+  }
+  return null;
+}
 
+ThetisBox.getInstanceForElem = function(elem)
+{
+  var container = ThetisBox.getContainer(elem);
+  if (container){
+    var id = container.id.split("-")[1];
+    return ThetisBox.getInstance(id);
+  }
+  return null;
+}
+
+ThetisBox.remove = function(id)
+{
   var box = _z("divThetisBox-"+id);
   if (box == null) {
     return;
@@ -1205,8 +1228,8 @@ ThetisBox.remove = function(id) {
   }
 }
 
-ThetisBox.isAlive = function() {
-
+ThetisBox.isAlive = function()
+{
   return (_z("divThetisBox-"+id) != null);
 }
 
@@ -1217,7 +1240,8 @@ ThetisBox.clear = function() {
   }
 }
 
-ThetisBox.setOnClose = function(id, func) {
+ThetisBox.setOnClose = function(id, func)
+{
   var ary = ThetisBoxEventHandlers;
   for (var i=0; i < ary.length; i++) {
     if (ary[i][0] == id) {
@@ -1228,8 +1252,8 @@ ThetisBox.setOnClose = function(id, func) {
 }
 
 // Default Buttons
-ThetisBox.fireDefaultButton = function(event, id, target) {
-
+ThetisBox.fireDefaultButton = function(event, id, target)
+{
   var box = _z("divThetisBox-"+id);
 
   if (event.keyCode == 13) {    // [Enter]
@@ -1320,7 +1344,8 @@ ThetisBoxProgressor.prototype = {
   }
 }
 
-ThetisBoxProgressor.progress = function(id) {
+ThetisBoxProgressor.progress = function(id)
+{
   var progressor = null;
   for (var i=0; i < ThetisBoxProgressors.length; i++) {
     if (ThetisBoxProgressors[i].id == id) {

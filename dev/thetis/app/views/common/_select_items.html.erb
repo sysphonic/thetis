@@ -1,0 +1,171 @@
+<%
+target_attr ||= :id
+
+rows = 5
+
+@folders_cache ||= {}
+
+if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
+  @items = Folder.get_items(@login_user, @folder_id)
+end
+%>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="130">
+      <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelectItems('<%= (@folder_id.nil?)?'':@folder_id %>', this);">
+        <%= t('btn.select_folder') %>
+      </div>
+    </td>
+    <td align="left" style="color:blue;">
+      <% unless @folder_id.nil? %>
+        <%= Folder.get_path(@folder_id, @folders_cache) %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearFolderToSelectItems();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<% if @folder_id.nil? %>
+
+  <select id="item_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
+  <%
+  items_available = Hash.new
+
+  items_available.each do |item_id, org_names|
+    if !@items_selected.nil? and @items_selected.include?(item_id)
+      next
+    end
+
+    entries = []
+
+    entry_val = item_id
+
+    disp = Item.get_title(item_id)
+
+    entries << [disp, entry_val]
+
+    entries.each do |entry|
+      disp, entry_val = entry
+  %>
+    <option value="<%= entry_val %>"><%= disp %></option>
+  <%
+    end
+  end
+  %>
+  </select>
+
+<% else %>
+
+  <select id="item_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
+    <%
+    items_available = Hash.new
+
+    unless @items.nil?
+      @items.each do |item|
+        item_id = item.id.to_s
+        items_available[item_id] = item.title
+      end
+    end
+
+    items_available.each do |item_id, title|
+      next if !@items_selected.nil? and @items_selected.include?(item_id)
+
+      entries = []
+
+      entry_val = item_id
+      disp = title
+      entries << [disp, entry_val]
+
+      entries.each do |entry|
+        disp, entry_val = entry
+    %>
+      <option value="<%= entry_val %>"><%= disp %></option>
+    <%
+      end
+    end
+    %>
+  </select>
+
+<% end %>
+
+<script type="text/javascript">
+
+var thetisBoxFolderTreeSelItems = null;
+
+showFolderTreeToSelectItems = function(folder_id, elem)
+{
+  if (thetisBoxFolderTreeSelItems) {
+    thetisBoxFolderTreeSelItems.remove();
+    thetisBoxFolderTreeSelItems = null;
+  }
+  thetisBoxFolderTreeSelItems = new ThetisBox;
+  thetisBoxFolderTreeSelItems.title = "<%= t('btn.select_folder')%>";
+  var parentBox = ThetisBox.getInstanceForElem(_z("div_selectItems"));
+  if (parentBox) {
+    parentBox.addChildBox(thetisBoxFolderTreeSelItems);
+  }
+  var pos = getPos(elem);
+  thetisBoxFolderTreeSelItems.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxFolderTreeSelItems.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id,
+    function() {
+      var elems = thetisBoxFolderTreeSelItems.getContainer().getElementsByTagName("A");
+      for (var i=0; i < elems.length; i++) {
+        addEvent(elems[i], "click", onFolderTreeSelected);
+      }
+    });
+}
+
+onFolderTreeSelected = function(evt)
+{
+  evt = evt || window.event;
+  var elem = evt.target || evt.srcElement;
+  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
+    if (elem.tagName.toUpperCase() == "BODY") {
+      return;
+    }
+  }
+
+  if (!thetisBoxFolderTreeSelItems) {
+    return;
+  }
+  var addParams = new Array();
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxFolderTreeSelItems.id);
+  addParams.push(selKeeper.name+"="+elem.id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_selectItems"),
+      "<%= submit_url %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+doClearFolderToSelectItems = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_selectItems",
+              "<%= submit_url %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+}
+
+</script>

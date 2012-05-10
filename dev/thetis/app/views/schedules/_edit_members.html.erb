@@ -28,7 +28,8 @@ tabs = new Array("users", "groups", "teams");
       <div id="tab_div_users">
         <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
           <tr>
-            <td id="div_selectUsers">
+            <td>
+              <select id="users_selected" name="users[]" class="select_multi" size="5" multiple="multiple">
               <%
               @users_selected = @schedule.get_users_a
               if params[:action] == 'new'
@@ -37,34 +38,14 @@ tabs = new Array("users", "groups", "teams");
 
               @users_cache ||= {}
               %>
-              <%= render(:partial => 'ajax_select_users') %>
-            </td>
-          </tr>
-          <tr height="5"><td></td></tr>
-          <tr>
-            <td>
-              <table cellspacing="0" cellpadding="0" width="100%">
-                <tr>
-                  <td align="left" valign="bottom" width="33%">
-                    <%= t('user.plural') %><%= t('cap.suffix') %>
-                  </td>
-                  <td align="center" width="34%" nowrap>
-                    <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('user');" style="width:80px;" />
-                    <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('user');" style="width:80px;" />
-                  </td>
-                  <td width="33%">&nbsp;</td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr height="5"><td></td></tr>
-          <tr>
-            <td>
-              <select id="users_selected" name="users[]" class="select_multi" size="5" multiple="multiple">
               <% @users_selected.each do |user_id| %>
                 <option value="<%= user_id %>"><%= User.get_name(user_id, @users_cache) %></option>
               <% end %>
               </select>
+            </td>
+            <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.add') %>" onclick="onSelectUsersClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleUsers();" style="cursor:pointer; margin-bottom:3px;" /><br/>
             </td>
           </tr>
         </table>
@@ -173,6 +154,48 @@ tabs = new Array("users", "groups", "teams");
 <script type="text/javascript">
 
 showTab("users", tabs);
+
+removeScheduleUsers = function()
+{
+  var del_ary = deleteList(_z("users_selected"));
+}
+
+var thetisBoxAddScheduleUsers = null;
+
+onSelectUsersClicked = function()
+{
+  if (thetisBoxAddScheduleUsers) {
+    thetisBoxAddScheduleUsers.remove();
+    thetisBoxAddScheduleUsers = null;
+  }
+  thetisBoxAddScheduleUsers = new ThetisBox;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'schedules', :action => 'select_users') %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxAddScheduleUsers.resizable = true;
+                thetisBoxAddScheduleUsers.title = "<%= User.model_name.human %>";
+                thetisBoxAddScheduleUsers.overflow = "hidden";
+                thetisBoxAddScheduleUsers.show(
+                          "CENTER",
+                          "460,280",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
 
 </script>
 

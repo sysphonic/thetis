@@ -1,0 +1,188 @@
+<%
+target_attr ||= :id
+
+rows = 5
+
+@groups_cache ||= {}
+
+@equipment = Group.get_equipment(@group_id)
+%>
+
+<table width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td width="130">
+      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelectEquipment('<%= (@group_id.nil?)?'':@group_id %>', this);">
+        <%= t('btn.select_group') %>
+      </div>
+    </td>
+    <td align="left" style="color:blue;">
+      <% unless @group_id.nil? %>
+        <%= Group.get_path(@group_id, @groups_cache) %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectEquipment();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+      <% end %>
+    </td>
+  </tr>
+</table>
+
+<% if @group_id.nil? %>
+
+  <select id="equipment_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
+  <%
+  equipment_available = Hash.new
+
+  login_groups = @login_user.get_groups_a
+  login_groups.each do |group_id|
+    group_name = Group.get_path(group_id, @groups_cache)
+    group_equipment = Group.get_equipment(group_id)
+    group_equipment.each do |equipment|
+      equipment_id = equipment.id.to_s
+      if equipment_available.keys.include?(equipment_id)
+        equipment_available[equipment_id] << group_name
+      else
+        equipment_available[equipment_id] = [group_name]
+      end
+    end
+  end
+
+  if login_groups.empty?
+    equipment_available[@login_equipment.id.to_s] = []
+  end
+
+  equipment_available.each do |equipment_id, org_names|
+    if !@equipment_selected.nil? and @equipment_selected.include?(equipment_id)
+      next
+    end
+
+    entries = []
+
+    entry_val = equipment_id
+
+    disp = Equipment.get_name(equipment_id)
+    disp += ' @ ' + truncate(org_names.join(', '), :length => 50) unless org_names.nil? or org_names.empty?
+
+    entries << [disp, entry_val]
+
+    entries.each do |entry|
+      disp, entry_val = entry
+  %>
+    <option value="<%= entry_val %>"><%= disp %></option>
+  <%
+    end
+  end
+  %>
+  </select>
+
+<% else %>
+
+  <select id="equipment_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
+    <%
+    equipment_available = Hash.new
+
+    unless @equipment.nil?
+      @equipment.each do |equipment|
+        equipment_id = equipment.id.to_s
+        equipment_available[equipment_id] = equipment.name
+      end
+    end
+
+    equipment_available.each do |equipment_id, name|
+      next if !@equipment_selected.nil? and @equipment_selected.include?(equipment_id)
+
+      entries = []
+
+      entry_val = equipment_id
+      disp = name
+      entries << [disp, entry_val]
+
+      entries.each do |entry|
+        disp, entry_val = entry
+    %>
+      <option value="<%= entry_val %>"><%= disp %></option>
+    <%
+      end
+    end
+    %>
+  </select>
+
+<% end %>
+
+<script type="text/javascript">
+
+var thetisBoxGroupTreeSelEquipment = null;
+
+showGroupTreeToSelectEquipment = function(group_id, elem)
+{
+  if (thetisBoxGroupTreeSelEquipment) {
+    thetisBoxGroupTreeSelEquipment.remove();
+    thetisBoxGroupTreeSelEquipment = null;
+  }
+  thetisBoxGroupTreeSelEquipment = new ThetisBox;
+  thetisBoxGroupTreeSelEquipment.title = "<%= t('btn.select_group')%>";
+  var parentBox = ThetisBox.getInstanceForElem(_z("div_selectEquipment"));
+  if (parentBox) {
+    parentBox.addChildBox(thetisBoxGroupTreeSelEquipment);
+  }
+  var pos = getPos(elem);
+  thetisBoxGroupTreeSelEquipment.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxGroupTreeSelEquipment.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
+    function() {
+      var elems = thetisBoxGroupTreeSelEquipment.getContainer().getElementsByTagName("A");
+      for (var i=0; i < elems.length; i++) {
+        addEvent(elems[i], "click", onGroupTreeSelected);
+      }
+    });
+}
+
+onGroupTreeSelected = function(evt)
+{
+  evt = evt || window.event;
+  var elem = evt.target || evt.srcElement;
+  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
+    if (elem.tagName.toUpperCase() == "BODY") {
+      return;
+    }
+  }
+
+  if (!thetisBoxGroupTreeSelEquipment) {
+    return;
+  }
+  var addParams = new Array();
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTreeSelEquipment.id);
+  addParams.push(selKeeper.name+"="+elem.id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_selectEquipment"),
+      "<%= submit_url %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+doClearGroupToSelectEquipment = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_selectEquipment",
+              "<%= submit_url %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+}
+
+</script>

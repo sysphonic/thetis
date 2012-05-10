@@ -243,6 +243,27 @@ class Group < ActiveRecord::Base
     return User.find_all(con)
   end
 
+  #=== self.get_equipment
+  #
+  #Gets Equipment in specified Group.
+  #
+  #return:: Equipment in specified Group.
+  #
+  def self.get_equipment(group_id)
+
+    return [] if group_id.nil?
+
+    group_id = group_id.to_s
+
+    if group_id == '0'
+      con = "((groups like '%|0|%') or (groups is null))"
+    else
+      con = "groups like '%|"+group_id+"|%'"
+    end
+
+    return Equipment.find(:all, :conditions => con)
+  end
+
   #=== get_path
   #
   #Gets path-string which represents the position of this Group in the organization.

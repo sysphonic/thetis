@@ -580,7 +580,7 @@ addPostTo = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'get_group_users') %>",
+          "<%= url_for(:controller => 'desktop', :action => 'select_users') %>",
           {
             method:"get",
             asynchronous:true,

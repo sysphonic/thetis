@@ -1,0 +1,52 @@
+
+<table width="95%" cellspacing="0" cellpadding="0" align="center" style="width:95%; height:100%; padding:10px 0px;">
+  <tr>
+    <td align="center" id="div_selectEquipment">
+
+      <%
+      submit_url = url_for(:controller => 'schedules', :action => 'get_group_equipment')
+      %>
+      <%= render(:partial => 'common/select_equipment', :locals => {:target_attr => :id, :submit_url => submit_url}) %>
+
+    </td>
+  </tr>
+  <tr style="height:35px;">
+    <td align="center" style="padding-top:10px;">
+
+      <table align="center" cellspacing="0" cellpadding="0">
+        <tr>
+          <td align="right">
+            <input type="button" value="<%= t('btn.add') %>" onclick="onScheduleEquipmentOk();" style="width:90px; height:25px">
+          </td>
+          <td width="10"></td>
+          <td align="left">
+            <input type="button" value="<%= t('btn.cancel') %>" onclick="onScheduleEquipmentCancel();" style="width:90px; height:25px">
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+onScheduleEquipmentOk = function()
+{
+  var ret_ary = moveList(_z("equipment_candidates"), _z("equipment_selected"));
+
+  var instance = ThetisBox.getInstanceForElem(_z("div_selectEquipment"));
+  if (instance) {
+    instance.remove();
+  }
+}
+
+onScheduleEquipmentCancel = function()
+{
+  var instance = ThetisBox.getInstanceForElem(_z("div_selectEquipment"));
+  if (instance) {
+    instance.remove();
+  }
+}
+
+</script>

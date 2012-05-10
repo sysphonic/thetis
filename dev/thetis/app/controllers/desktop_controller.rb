@@ -20,7 +20,7 @@ class DesktopController < ApplicationController
   if $thetis_config[:menu]['req_login_desktop'] == '1'
     before_filter :check_login
   else
-    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :get_group_users, :drop_file]
+    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file]
   end
   before_filter :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
 
@@ -475,6 +475,17 @@ class DesktopController < ApplicationController
     render(:partial => 'common/flash_notice', :layout => false)
   end
 
+  #=== select_users
+  #
+  #<Ajax>
+  #Shows popup-window to select Users on Groups-Tree.
+  #
+  def select_users
+    Log.add_info(request, params.inspect)
+
+    render(:partial => 'select_users', :layout => false)
+  end
+
   #=== get_group_users
   #
   #<Ajax>
@@ -490,9 +501,8 @@ class DesktopController < ApplicationController
       @group_id = params[:group_id]
     end
 
-    @users = Group.get_users(@group_id)
-
-    render(:partial => 'ajax_select_users', :layout => false)
+    submit_url = url_for(:controller => 'desktop', :action => 'get_group_users')
+    render(:partial => 'common/select_users', :layout => false, :locals => {:target_attr => :id, :submit_url => submit_url})
   end
 
  private

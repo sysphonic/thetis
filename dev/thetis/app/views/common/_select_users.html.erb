@@ -63,7 +63,7 @@ if target_attr.to_s == 'email'
 
 <% if @group_id.nil? %>
 
-  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple>
+  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
   <%
   users_available = Hash.new
 
@@ -144,7 +144,7 @@ if target_attr.to_s == 'email'
 
 <% else %>
 
-  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple>
+  <select id="user_candidates" class="select_candidates" size="<%= rows %>" multiple style="height:85%;">
     <%
     users_available = Hash.new
 
@@ -225,23 +225,25 @@ doUpdateUserEmails = function(group_id)
 
 <% end %>
 
-var thetisBoxGroupTree = null;
+var thetisBoxGroupTreeSelUsers = null;
 
 showGroupTreeToSelectUsers = function(group_id, elem)
 {
-  var thetisBoxGroupTree = new ThetisBox;
-
-  if (thetisBoxGroupTree) {
-    thetisBoxGroupTree.remove();
-    thetisBoxGroupTree = null;
+  if (thetisBoxGroupTreeSelUsers) {
+    thetisBoxGroupTreeSelUsers.remove();
+    thetisBoxGroupTreeSelUsers = null;
   }
-  thetisBoxGroupTree = new ThetisBox;
-  thetisBoxGroupTree.title = "<%= t('btn.select_group')%>";
+  thetisBoxGroupTreeSelUsers = new ThetisBox;
+  thetisBoxGroupTreeSelUsers.title = "<%= t('btn.select_group')%>";
+  var parentBox = ThetisBox.getInstanceForElem(_z("div_selectUsers"));
+  if (parentBox) {
+    parentBox.addChildBox(thetisBoxGroupTreeSelUsers);
+  }
   var pos = getPos(elem);
-  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
-  thetisBoxGroupTree.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
+  thetisBoxGroupTreeSelUsers.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxGroupTreeSelUsers.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
     function() {
-      var elems = thetisBoxGroupTree.getContainer().getElementsByTagName("A");
+      var elems = thetisBoxGroupTreeSelUsers.getContainer().getElementsByTagName("A");
       for (var i=0; i < elems.length; i++) {
         addEvent(elems[i], "click", onGroupTreeSelected);
       }
@@ -258,11 +260,11 @@ onGroupTreeSelected = function(evt)
     }
   }
 
-  if (!thetisBoxGroupTree) {
+  if (!thetisBoxGroupTreeSelUsers) {
     return;
   }
   var addParams = new Array();
-  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTree.id);
+  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTreeSelUsers.id);
   addParams.push(selKeeper.name+"="+elem.id);
 
   var thetisBoxProgress = prog("TOP-RIGHT");

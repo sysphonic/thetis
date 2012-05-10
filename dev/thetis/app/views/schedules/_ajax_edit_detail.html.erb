@@ -357,63 +357,21 @@ editEquipment = function()
 
         <% end %>
           <div id="div_equipment" style="display:<%= div_equipment_display %>">
-            <table cellspacing="0" cellpadding="0" width="100%">
-              <tr>
-                <td>
-                  <select id="equipment_candidates" class="select_candidates" size="5" multiple>
-                  <%
-                  equipment_available = {}
-
-                  Equipment.get_for(@login_user).each do |equipment|
-                    equipment_id = equipment.id.to_s
-                    equipment_available[equipment_id] = equipment.name
-                  end
-
-                  equipment_cache = {}
-                  equipment_available.each do |equipment_id, name|
-                    disp = name
-                    if equipment_selected.include?(equipment_id)
-                      equipment_cache[equipment_id] = disp
-                      next
-                    end
-                  %>
-                    <option value="<%= equipment_id %>"><%=h disp %></option>
-                  <% end %>
-                  </select>
-                </td>
-              </tr>
-              <tr height="5"><td></td></tr>
-              <tr>
-                <td>
-                  <table cellspacing="0" cellpadding="0" width="100%">
-                    <tr>
-                      <td align="left" width="33%" valign="bottom">
-                        <%= t('cap.selected') %>
-                      </td>
-                      <td align="center" width="34%" nowrap>
-                        <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addEquipment();" style="width:80px;">
-                        <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeEquipment();" style="width:80px;">
-                      </td>
-                      <td align="center" width="33%">&nbsp;</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr height="5"><td></td></tr>
+            <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
               <tr>
                 <td>
                   <select id="equipment_selected" name="equipment[]" class="select_multi" size="5" multiple="multiple">
                   <%
-                  equipment_selected.each do |equipment_id|
-                    if equipment_cache[equipment_id].nil?
-                      disp = Equipment.get_name(equipment_id)
-                    else
-                      disp = equipment_cache[equipment_id]
-                    end
+                  @equipment_selected = @schedule.get_equipment_a
                   %>
-                    <option value="<%= equipment_id %>"><%=h disp %></option>
+                  <% @equipment_selected.each do |equipment_id| %>
+                    <option value="<%= equipment_id %>"><%= Equipment.get_name(equipment_id) %></option>
                   <% end %>
                   </select>
+                </td>
+                <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" title="<%= t('btn.add') %>" onclick="onSelectEquipmentClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleEquipment();" style="cursor:pointer; margin-bottom:3px;" /><br/>
                 </td>
               </tr>
             </table>
@@ -448,47 +406,25 @@ editItems = function()
 
         <% end %>
           <div id="div_items" style="display:<%= div_items_display %>">
-            <table cellspacing="0" cellpadding="0" width="100%">
-              <tr>
-                <td>
-                  <span id="div_selectItems">
-                    <%= render(:partial => 'ajax_select_items') %>
-                  </span>
-                </td>
-              </tr>
-              <tr height="5"><td></td></tr>
-              <tr>
-                <td>
-                  <table cellspacing="0" cellpadding="0" width="100%">
-                    <tr>
-                      <td align="left" width="33%" valign="bottom">
-                        <%= t('cap.selected') %>
-                      </td>
-                      <td align="center" width="34%" nowrap>
-                        <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addItem();" style="width:80px;" />
-                        <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeItem();" style="width:80px;" />
-                      </td>
-                      <td align="center" width="33%">&nbsp;</td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr height="5"><td></td></tr>
+            <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
               <tr>
                 <td>
                   <select id="items_selected" name="items[]" class="select_multi" size="5" multiple="multiple">
                   <%
-                  items_selected.each do |item_id|
-                    title = Item.get_title item_id
-                    disp = sprintf('[%2s] %s', item_id, title)
+                  @items_selected = @schedule.get_items_a
                   %>
-                    <option value="<%= item_id %>"><%=h disp %></option>
+                  <% @items_selected.each do |item_id| %>
+                    <option value="<%= item_id %>"><%= Item.get_title(item_id) %></option>
                   <% end %>
                   </select>
                 </td>
+                <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.add') %>" onclick="onSelectItemsClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleItems();" style="cursor:pointer; margin-bottom:3px;" /><br/>
+                </td>
               </tr>
             </table>
-
+          </div>
         </td>
       </tr>
     <%

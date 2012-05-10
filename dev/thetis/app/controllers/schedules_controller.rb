@@ -19,7 +19,7 @@ class SchedulesController < ApplicationController
   if $thetis_config[:menu]['req_login_schedules'] == '1'
     before_filter :check_login
   else
-    before_filter :check_login, :only => [:new, :destroy, :save, :edit, :get_group_users]
+    before_filter :check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment]
   end
 
   before_filter :only => [:configure, :add_holidays, :delete_holidays] do |controller|
@@ -67,8 +67,8 @@ class SchedulesController < ApplicationController
     @holidays = Schedule.get_holidays
     render(:partial => 'config_holidays', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     flash[:notice] = 'ERROR:' + t('msg.format_invalid')
 
     @holidays = Schedule.get_holidays
@@ -120,8 +120,8 @@ class SchedulesController < ApplicationController
     unless params[:id].nil? or params[:id].empty?
       begin
         schedule = Schedule.find(params[:id])
-      rescue StandardError => err
-        Log.add_error(request, err)
+      rescue => evar
+        Log.add_error(request, evar)
         flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.model_name.human)
         redirect_to(:action => 'day', :date => date.strftime(Schedule::SYS_DATE_FORM))
         return
@@ -267,8 +267,8 @@ class SchedulesController < ApplicationController
     prms[:id] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
     redirect_to(prms)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     date = Date.parse(params[:date])
     redirect_to(:action => 'day', :date => date.strftime(Schedule::SYS_DATE_FORM))
@@ -287,8 +287,8 @@ class SchedulesController < ApplicationController
 
     begin
       schedule = Schedule.find(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.model_name.human)
       render(:text => '')
       return
@@ -309,8 +309,8 @@ class SchedulesController < ApplicationController
 
     render(:partial => 'ajax_edit_detail', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     render(:partial => 'ajax_edit_detail', :layout => false)
   end
@@ -327,8 +327,8 @@ class SchedulesController < ApplicationController
 
     begin
       schedule = Schedule.find(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       @schedules = Schedule.get_user_day(@login_user, @date)
       render(:partial => 'timetable', :layout => false)
       return
@@ -354,8 +354,8 @@ class SchedulesController < ApplicationController
 
     render(:partial => 'timetable', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     @schedules = Schedule.get_user_day(@login_user, @date)
     render(:partial => 'timetable', :layout => false)
@@ -385,8 +385,8 @@ class SchedulesController < ApplicationController
 
     render(:partial => 'ajax_show_detail', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     render(:partial => 'ajax_show_detail', :layout => false)
   end
@@ -409,8 +409,8 @@ class SchedulesController < ApplicationController
 
     redirect_to(:action => 'day', :date => date_s, :show_id => schedule.id)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     redirect_to(:action => 'day')
   end
@@ -620,8 +620,8 @@ class SchedulesController < ApplicationController
     begin
       team = Team.find(params[:id])
       team_users = team.get_users_a
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     @user_schedule_hash = {}
@@ -633,6 +633,77 @@ class SchedulesController < ApplicationController
     end
 
     params[:display] = params[:action] + '_' + params[:id]
+  end
+
+  #=== select_users
+  #
+  #<Ajax>
+  #Shows popup-window to select Users on Groups-Tree.
+  #
+  def select_users
+    Log.add_info(request, params.inspect)
+
+    render(:partial => 'select_users', :layout => false)
+  end
+
+  #=== get_group_users
+  #
+  #<Ajax>
+  #Gets Users in specified Group.
+  #
+  def get_group_users
+    Log.add_info(request, params.inspect)
+
+    @group_id = nil
+    if !params[:thetisBoxSelKeeper].nil?
+      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    elsif !params[:group_id].nil? and !params[:group_id].empty?
+      @group_id = params[:group_id]
+    end
+
+    submit_url = url_for(:controller => 'schedules', :action => 'get_group_users')
+    render(:partial => 'common/select_users', :layout => false, :locals => {:target_attr => :id, :submit_url => submit_url})
+  end
+
+  #=== select_equipment
+  #
+  #<Ajax>
+  #Shows popup-window to select Equipment on Groups-Tree.
+  #
+  def select_equipment
+    Log.add_info(request, params.inspect)
+
+    render(:partial => 'select_equipment', :layout => false)
+  end
+
+  #=== get_group_equipment
+  #
+  #<Ajax>
+  #Gets Equipment in specified Group.
+  #
+  def get_group_equipment
+    Log.add_info(request, params.inspect)
+
+    @group_id = nil
+    if !params[:thetisBoxSelKeeper].nil?
+      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    elsif !params[:group_id].nil? and !params[:group_id].empty?
+      @group_id = params[:group_id]
+    end
+
+    submit_url = url_for(:controller => 'schedules', :action => 'get_group_equipment')
+    render(:partial => 'common/select_equipment', :layout => false, :locals => {:target_attr => :id, :submit_url => submit_url})
+  end
+
+  #=== select_items
+  #
+  #<Ajax>
+  #Shows popup-window to select Items on Folders-Tree.
+  #
+  def select_items
+    Log.add_info(request, params.inspect)
+
+    render(:partial => 'select_items', :layout => false)
   end
 
   #=== get_folder_items
@@ -651,34 +722,11 @@ class SchedulesController < ApplicationController
       if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
         @items = Folder.get_items(@login_user, @folder_id)
       end
-
-      unless params[:schedule_id].nil? or params[:schedule_id].empty?
-        @schedule = Schedule.find(params[:schedule_id])
-      end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
-    render(:partial => 'ajax_select_items', :layout => false)
-  end
-
-  #=== get_group_users
-  #
-  #<Ajax>
-  #Gets Users in specified Group.
-  #
-  def get_group_users
-    Log.add_info(request, params.inspect)
-
-    @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
-      @group_id = params[:group_id]
-    end
-
-    @users = Group.get_users(@group_id)
-
-    render(:partial => 'ajax_select_users', :layout => false)
+    submit_url = url_for(:controller => 'schedules', :action => 'get_folder_items')
+    render(:partial => 'common/select_items', :layout => false, :locals => {:target_attr => :id, :submit_url => submit_url})
   end
 end

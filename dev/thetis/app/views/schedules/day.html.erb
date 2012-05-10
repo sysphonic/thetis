@@ -189,12 +189,22 @@ function showNewDetail()
               "<%= url_for(:controller => 'schedules', :action => 'new') %>",
               {
                 method:"get",
+                parameters:Form.serialize(document.form_schedule),
                 asynchronous:true,
                 evalScripts:true,
-                onComplete:function(request){ thetisBox.remove(); },
-                parameters:Form.serialize(document.form_schedule)
+                onComplete:function(request){
+                  thetisBox.remove();
+
+                  setTimeout("scrollToDetail()", 400);
+                }
               }
             );
+}
+
+function scrollToDetail()
+{
+  var pos = getPos(_z("div_schedule_detail"));
+  window.scroll(0, pos.y);
 }
 
 function doRegisterSchedule(schedule_id, addParams)
@@ -369,10 +379,14 @@ function showScheduleDetail(date, id, title)
               "<%= url_for(:controller => 'schedules', :action => 'show') %>?id="+id,
               {
                 method:"get",
+                parameters:Form.serialize(document.form_schedule),
                 asynchronous:true,
                 evalScripts:true,
-                onComplete:function(request){ thetisBox.remove(); },
-                parameters:Form.serialize(document.form_schedule)
+                onComplete:function(request){
+                  thetisBox.remove();
+
+                  setTimeout("scrollToDetail()", 400);
+                }
               }
             );
 }
@@ -389,14 +403,8 @@ function editScheduleDetail(date, id)
                 evalScripts:true,
                 onComplete:function(request){
                   thetisBox.remove();
-/* GREP WITH BUGFULL-IE!
-                  if (is_MS) {    // Bugfull IE6.x/7.0 has a lot of serious BUGS in arrignment.
-                    var div_schedule = _z("div_schedule");
-                    if (Number(div_schedule.style.height.replace(/px/, "")) != div_schedule.offsetHeight) {
-                      div_schedule.style.height = div_schedule.offsetHeight + "px";
-                    }
-                  }
-*/
+
+                  setTimeout("scrollToDetail()", 400);
                 },
                 parameters:Form.serialize(document.form_schedule)
               }
@@ -413,17 +421,23 @@ function doScheduleDelete(date, id, title)
 
 function _doScheduleDelete(id)
 {
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_schedule));
+  addParams.push("id="+id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-            "div_timetable",
-            "<%= url_for(:controller => 'schedules', :action => 'destroy') %>?id="+id,
-            {
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){ thetisBox.remove(); _z("div_schedule_detail").innerHTML=""; },
-              parameters:Form.serialize(document.form_schedule)
-            }
-          );
+      "div_timetable",
+      "<%= url_for(:controller => 'schedules', :action => 'destroy') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); _z("div_schedule_detail").innerHTML=""; }
+      }
+    );
 }
 
 function showGroupTree()
@@ -447,7 +461,7 @@ showGroupTreeToSelect = function(group_id, elem)
   thetisBoxGroupTree = new ThetisBox;
   thetisBoxGroupTree.title = "<%= t('btn.select_group')%>";
   var pos = getPos(elem);
-  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
   thetisBoxGroupTree.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
     function() {
       var elems = thetisBoxGroupTree.getContainer().getElementsByTagName("A");
@@ -522,7 +536,7 @@ function showFolderTreeToSelect(folder_id, schedule_id, elem)
   thetisBoxFolderTree.title = "<%= t('btn.select_folder')%>";
   thetisBoxFolderTree.setAdditionalParams(new Array("schedule_id="+schedule_id));
   var pos = getPos(elem);
-  thetisBoxFolderTree.show((pos.x+elem.offsetWidth+100)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
+  thetisBoxFolderTree.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
   thetisBoxFolderTree.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id,
     function() {
       var elems = thetisBoxFolderTree.getContainer().getElementsByTagName("A");
@@ -568,5 +582,94 @@ onFolderTreeSelected = function(evt)
       }
     );
 }
+
+// ----------------------------------------------------
+
+removeScheduleEquipment = function()
+{
+  var del_ary = deleteList(_z("equipment_selected"));
+}
+
+var thetisBoxAddScheduleEquipment = null;
+
+onSelectEquipmentClicked = function()
+{
+  if (thetisBoxAddScheduleEquipment) {
+    thetisBoxAddScheduleEquipment.remove();
+    thetisBoxAddScheduleEquipment = null;
+  }
+  thetisBoxAddScheduleEquipment = new ThetisBox;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'schedules', :action => 'select_equipment') %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxAddScheduleEquipment.resizable = true;
+                thetisBoxAddScheduleEquipment.title = "<%= Equipment.model_name.human %>";
+                thetisBoxAddScheduleEquipment.overflow = "hidden";
+                thetisBoxAddScheduleEquipment.show(
+                          "CENTER",
+                          "460,280",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+// ----------------------------------------------------
+
+removeScheduleItems = function()
+{
+  var del_ary = deleteList(_z("items_selected"));
+}
+
+var thetisBoxAddScheduleItems = null;
+
+onSelectItemsClicked = function()
+{
+  if (thetisBoxAddScheduleItems) {
+    thetisBoxAddScheduleItems.remove();
+    thetisBoxAddScheduleItems = null;
+  }
+  thetisBoxAddScheduleItems = new ThetisBox;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'schedules', :action => 'select_items') %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxAddScheduleItems.resizable = true;
+                thetisBoxAddScheduleItems.title = "<%= Item.model_name.human %>";
+                thetisBoxAddScheduleItems.overflow = "hidden";
+                thetisBoxAddScheduleItems.show(
+                          "CENTER",
+                          "460,280",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
 </script>
 
