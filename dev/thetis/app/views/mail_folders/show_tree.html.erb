@@ -141,6 +141,9 @@ end
 %>
   <span id="xtype_0" style="display:none;"></span>
 
+
+<%= render(:partial => 'common/addressbook_func', :locals => {:from => 'mail_folders'}) %>
+
 <%= draggable_element('drag_v_border', :revert => false, :constraint => '"horizontal"') %>
 <%= draggable_element('drag_h_border', :revert => false, :constraint => '"vertical"') %>
 
@@ -965,7 +968,7 @@ function showAddressBook()
           );
 }
 
-var thetisBoxAccount = null;
+thetisBoxAccount = null;
 
 function showAccountSetting(is_new)
 {
@@ -988,7 +991,6 @@ function showAccountSetting(is_new)
 
   thetisBoxAccount = new ThetisBox;
   thetisBoxAccount.title = "<%= t('btn.account_setting') %>";
-  thetisBoxAccount.setOnClose = "thetisBoxAccount=null;";
 
   var addParams = new Array();
 <% unless params[:mail_account_xtype].nil? %>
@@ -1047,6 +1049,12 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo.title = title;
   thetisBoxHeaderInfo.close_by_icon_button = true;
   thetisBoxHeaderInfo.show("TOP-RIGHT", "", "MESSAGE", "", _z("mail_header_"+email_id).innerHTML, "");
+}
+
+function doRegisterAddress(frm)
+{
+  prog("TOP-RIGHT");
+  frm.submit();
 }
 
 </script>

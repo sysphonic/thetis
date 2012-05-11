@@ -2,7 +2,7 @@
 form_idx = Time.now.to_f.to_s.gsub('.', '_')
 %>
 
-<% if (@address.nil? or @address.id == 0) %>
+<% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
 <%= form_tag({:controller => 'addressbook', :action => 'create'}, :method => 'post', :name => 'form_address'+form_idx) %>
 <% else %>
 <%= form_tag({:controller => 'addressbook', :action => 'update', :id => @address.id}, :method => 'post', :name => 'form_address'+form_idx) %>
@@ -20,8 +20,8 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 <table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
   <tr>
-    <td class="img_button_td" onclick="doRegister();">
-    <% if (@address.nil? or @address.id == 0) %>
+    <td class="img_button_td" onclick="onRegisterAddressClicked();">
+    <% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
       <%= t('btn.register')%>
     <% else %>
       <%= t('btn.update')%>
@@ -30,8 +30,10 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
   </tr>
 </table>
 
+
 <script type="text/javascript">
-doRegister = function()
+
+onRegisterAddressClicked = function()
 {
   var address_name = _z("address_name");
   if (address_name.value == "") {
@@ -55,8 +57,7 @@ doRegister = function()
     }
   }
 
-  prog("TOP-RIGHT");
-  document.form_address<%= form_idx %>.submit();
-  return true;
+  return doRegisterAddress(document.form_address<%= form_idx %>);
 }
+
 </script>

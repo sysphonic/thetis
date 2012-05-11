@@ -96,7 +96,7 @@
     </td>
   <% if address.editable?(@login_user) %>
     <td class="<%=td_class %>" width="20" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>');" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
     </td>
     <td class="<%=td_class %>" width="20" style="text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
@@ -113,9 +113,10 @@
 
 </form>
 
+
+<%= render(:partial => 'common/addressbook_func') %>
+
 <script type="text/javascript">
-<!--
-var thetisBox = null;
 
 function selectAll()
 {
@@ -172,104 +173,12 @@ function sortList(col)
   prog("TOP-RIGHT");
 }
 
-function showAddress(address_id, address_name)
+function doRegisterAddress(frm)
 {
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
-
-  new Ajax.Request(
-          "<%= url_for(:controller => 'addressbook', :action => 'show') %>?id="+address_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + address_name;
-                thetisBox.overflow = "scroll";
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+  prog("TOP-RIGHT");
+  frm.submit();
 }
 
-function showAddressNew()
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
-
-  new Ajax.Request(
-          "<%= url_for(:controller => 'addressbook', :action => 'new') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
-                thetisBox.overflow = "scroll";
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
-
-function showAddressEdit(address_id, address_name)
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
-
-  new Ajax.Request(
-          "<%= url_for(:controller => 'addressbook', :action => 'edit') %>?id="+address_id,
-          {
-            method:"get",
-            parameters:"admin=<%= params[:admin] %>",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
-                thetisBox.overflow = "scroll";
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
-
-//-->
 </script>
 
 <%
@@ -324,7 +233,7 @@ end
 </div>
 
 <script type="text/javascript">
-<!--
+
 function showImportError()
 {
   var thetisBox = new ThetisBox;
@@ -338,7 +247,7 @@ function onLoadSub()
 {
   setTimeout("showImportError()", 100);
 }
-//-->
+
 </script>
 
 <% end %>

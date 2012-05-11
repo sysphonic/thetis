@@ -285,6 +285,10 @@ doRegisterAccount = function()
                 onComplete:function(request){
                   thetisBox.remove();
                   request.responseText.evalScripts();
+
+                  if (thetisBoxAccount) {
+                    thetisBoxAccount.setOnClose("doUpdatePage()");
+                  }
                 }
               }
             );

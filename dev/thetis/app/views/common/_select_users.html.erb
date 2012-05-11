@@ -264,6 +264,10 @@ onGroupTreeSelected = function(evt)
     return;
   }
   var addParams = new Array();
+  var email_type = _z("email_type");
+  if (email_type) {
+    addParams.push("email_type="+email_type.value);
+  }
   var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTreeSelUsers.id);
   addParams.push(selKeeper.name+"="+elem.id);
 

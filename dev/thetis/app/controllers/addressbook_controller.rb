@@ -25,12 +25,47 @@ class AddressbookController < ApplicationController
   require 'csv'
 
 
+  #=== query
+  #
+  #Shows form to edit Address information.
+  #
+  def query
+    Log.add_info(request, params.inspect)
+
+    email = params[:email]
+    unless email.nil?
+      email = EmailsHelper.extract_addr(email)
+    end
+    disp_name = params[:disp_name]
+
+    email_con = []
+    email_con.push("(email1='#{email}')")
+    email_con.push("(email2='#{email}')")
+    email_con.push("(email3='#{email}')")
+    con = []
+    con.push('('+email_con.join(' or ')+')')
+    con.push(AddressbookHelper.get_scope_condition_for(@login_user, Address::BOOK_BOTH))
+
+    @address = Address.find(:first, :conditions => con.join(' and '))
+
+    if @address.nil?
+      @address = Address.new
+      @address.name = EmailsHelper.get_sender_exp(disp_name)
+      @address.email1 = email
+      new
+    else
+      show
+    end
+  end
+
   #=== new
   #
   #Does nothing about showing empty form to create User.
   #
   def new
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'new'
+      Log.add_info(request, params.inspect)
+    end
 
     render(:action => 'edit', :layout => (!request.xhr?))
   end
@@ -74,8 +109,8 @@ class AddressbookController < ApplicationController
 
     begin
       @address = Address.find(address_id)
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       redirect_to(:controller => 'login', :action => 'logout')
       return
     end
@@ -87,9 +122,11 @@ class AddressbookController < ApplicationController
   #Shows Address information.
   #
   def show
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'show'
+      Log.add_info(request, params.inspect)
+    end
 
-    @address = Address.find(params[:id])
+    @address ||= Address.find(params[:id])
     if @address.nil?
       render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.model_name.human))
       return
@@ -99,7 +136,7 @@ class AddressbookController < ApplicationController
         return
       end
     end
-    render(:layout => (!request.xhr?))
+    render(:action => 'show', :layout => (!request.xhr?))
   end
 
   #=== update
@@ -216,8 +253,8 @@ class AddressbookController < ApplicationController
         begin
           address = Address.find(address_id)
           address.destroy if address.editable?(@login_user)
-        rescue StandardError => err
-          Log.add_error(request, err)
+        rescue => evar
+          Log.add_error(request, evar)
         end
 
         count += 1
@@ -249,8 +286,8 @@ class AddressbookController < ApplicationController
         when 'ISO-8859-1'
           csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     send_data(csv, :type => 'application/octet-stream;charset=UTF-8', :disposition => 'attachment;filename="addressbook.csv"')
@@ -298,8 +335,8 @@ class AddressbookController < ApplicationController
         when 'ISO-8859-1'
           csv = Iconv.iconv('UTF-8', 'ISO-8859-1', csv)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     found_update = false
@@ -362,8 +399,8 @@ class AddressbookController < ApplicationController
 
           @imp_cnt += 1
 
-        rescue StandardError => err
-          @imp_errs[count] = [t('address.save_failed') + err.to_s]
+        rescue => evar
+          @imp_errs[count] = [t('address.save_failed') + evar.to_s]
         end
       end
     end

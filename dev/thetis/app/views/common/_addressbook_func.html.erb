@@ -1,0 +1,170 @@
+<%
+from ||= nil
+%>
+
+<script type="text/javascript">
+
+showAddress = function(address_id, address_name)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  var addParams = new Array();
+  addParams.push("id="+address_id);
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'show') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + address_name;
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+showAddressNew = function()
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  var addParams = new Array();
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'new') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+showAddressEdit = function(address_id, address_name, admin)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  var addParams = new Array();
+  addParams.push("id="+address_id);
+  if (admin != null) {
+    addParams.push("admin=" + admin);
+  }
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'edit') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+queryAddressEmail = function(email, dispName)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.bgcolor_title = "#FF9D11";
+  thetisBox.bgcolor_body = "#FFDA8B";
+
+  var addParams = new Array();
+  addParams.push("disp_name="+dispName);
+  addParams.push("email="+email);
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'addressbook', :action => 'query') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = dispName;
+                thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+</script>
