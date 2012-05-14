@@ -1053,8 +1053,30 @@ function showHeaderInfo(email_id, title)
 
 function doRegisterAddress(frm)
 {
-  prog("TOP-RIGHT");
-  frm.submit();
+  var addParams = new Array();
+  addParams.push(Form.serialize(frm));
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+          frm.action,
+          {
+            method:"post",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+
+                var instance = ThetisBox.getInstanceForElem(frm);
+                if (instance) {
+                  instance.remove();
+                }
+              }
+          }
+        );
+  return true;
 }
 
 </script>

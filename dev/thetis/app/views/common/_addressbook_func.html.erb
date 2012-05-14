@@ -28,10 +28,10 @@ showAddress = function(address_id, address_name)
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + address_name;
-                thetisBox.overflow = "scroll";
+                thetisBox.overflow = "auto";
                 thetisBox.show(
                           "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
                           "",
                           "",
@@ -67,10 +67,10 @@ showAddressNew = function()
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
-                thetisBox.overflow = "scroll";
+                thetisBox.overflow = "auto";
                 thetisBox.show(
                           "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
                           "",
                           "",
@@ -83,8 +83,14 @@ showAddressNew = function()
         );
 }
 
-showAddressEdit = function(address_id, address_name, admin)
+showAddressEdit = function(address_id, address_name, admin, elemOnShow)
 {
+  if (elemOnShow) {
+    var instance = ThetisBox.getInstanceForElem(elemOnShow);
+    if (instance) {
+      instance.remove();
+    }
+  }
   var thetisBox = new ThetisBox;
   thetisBox.resizable = true;
   thetisBox.bgcolor_title = "#FF9D11";
@@ -110,10 +116,10 @@ showAddressEdit = function(address_id, address_name, admin)
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
-                thetisBox.overflow = "scroll";
+                thetisBox.overflow = "auto";
                 thetisBox.show(
                           "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
                           "",
                           "",
@@ -151,10 +157,10 @@ queryAddressEmail = function(email, dispName)
             evalScripts:true,
             onComplete:function(request) {
                 thetisBox.title = dispName;
-                thetisBox.overflow = "scroll";
+                thetisBox.overflow = "auto";
                 thetisBox.show(
                           "CENTER",
-                          (mainWidth*9/10)+","+(mainHeight*9/10),
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
                           "",
                           "",
