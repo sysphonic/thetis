@@ -5,9 +5,11 @@
   <%= hidden_field('user', 'id') %>
   <table align="center" width="85%" cellpadding="0" cellspacing="2">
     <tr>
-      <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
+      <td class="prim_cap_td" nowrap>
+        <label for="user_name"><%= t('user.u_name') %></label><sup style="color:red">*</sup>
+      </td>
       <td class="item_value_td">
-        <%= text_field('user', 'name', :style => 'ime-mode:disabled') %><sup style="color:red">*</sup>
+        <%= text_field('user', 'name', :style => 'ime-mode:disabled') %>
       </td>
     </tr>
   <%
@@ -22,7 +24,9 @@
   if req_pass
   %>
      <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.name') %><sup style="color:red">*</sup></label></td>
+      <td class="prim_cap_td" nowrap>
+        <label for="user_password"><%= t('password.name') %></label><sup style="color:red">*</sup>
+      </td>
       <td class="item_value_td">
         <%
         passwd = ''
@@ -34,33 +38,43 @@
       </td>
     </tr>
     <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.confirm') %><sup style="color:red">*</sup></label></td>
+      <td class="prim_cap_td" nowrap>
+        <label for="user_password_confirmation"><%= t('password.confirm') %></label><sup style="color:red">*</sup>
+      </td>
       <td class="item_value_td">
         <input type="password" id="user_password_confirmation" size="30" value="<%= passwd %>" onfocus="this.select();" />
       </td>
     </tr>
   <% end %>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_email"><%= User.human_attribute_name('email') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_email"><%= User.human_attribute_name('email') %></label><sup style="color:red">*</sup>
+      </td>
       <td class="item_value_td">
-        <%= text_field('user', 'email', :style => 'ime-mode:disabled') %><sup style="color:red">*</sup>
+        <%= text_field('user', 'email', :style => 'ime-mode:disabled') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_fullname"><%= User.human_attribute_name('fullname') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_fullname"><%= User.human_attribute_name('fullname') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_field('user', 'fullname') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_address"><%= User.human_attribute_name('address') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_address"><%= User.human_attribute_name('address') %></label>
+      </td>
       <td class="item_value_td">
         <%= t('cap.postalcode') %> <%= text_field('user', 'postalcode', :style => 'width:100px; ime-mode:disabled;') %><br/>
         <%= text_area('user', 'address', :style => 'width:100%', :rows => '3') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label>
+      </td>
       <td class="item_value_td">
 <%
 if THETIS_USER_TIMEZONE_SELECTABLE \
@@ -81,7 +95,9 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_tel"><%= t('cap.tel') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_tel"><%= t('cap.tel') %></label>
+      </td>
       <td class="item_value_td">
         <%
         options = []
@@ -89,7 +105,7 @@ end
           val = User.get_tel_type_name(type)
           options << [val, val]
         end
-        
+
         tel1_note = ''
         tel2_note = ''
         tel3_note = ''
@@ -108,31 +124,41 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_fax"><%= User.human_attribute_name('fax') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_fax"><%= User.human_attribute_name('fax') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_field('user', 'fax', :style => 'ime-mode:disabled') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_organization"><%= User.human_attribute_name('organization') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_area('user', 'organization', :style => 'width:100%', :rows => '3') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_url"><%= User.human_attribute_name('url') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_url"><%= User.human_attribute_name('url') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_field('user', 'url', :style => 'width:100%; ime-mode:disabled;') %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_title"><%= t('user.title') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_title"><%= t('user.title') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_field('user', 'title', :style => 'width:80%; vertical-align:middle;') %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showTitleSelector();" style="cursor:pointer;" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="user_figure"><%= User.human_attribute_name('figure') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_figure"><%= User.human_attribute_name('figure') %></label>
+      </td>
       <td class="item_value_td">
         <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy_green.png" title="Boy green" alt="Boy green" /></label>
         &nbsp;&nbsp;

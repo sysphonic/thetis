@@ -30,7 +30,7 @@ class FeedsController < ApplicationController
   #Gets Feeds about specified categories.
   #
   def index
-    Log.add_info(request, params.inspect)
+    # Log.add_info(request, params.inspect)
 
     user = @login_user
     root_url = ApplicationHelper.root_url(request)
