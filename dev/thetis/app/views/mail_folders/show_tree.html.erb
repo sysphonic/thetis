@@ -166,20 +166,7 @@ BorderDragObserver.prototype = {
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
-            var leftWidth = orgWidthMailTree + x;
-            var rightWidth = orgWidthMails - x;
-            if (leftWidth < 100 && x < 0) {
-              return [100-orgWidthMailTree, y];
-            } else if (rightWidth < 100 && x > 0) {
-              return [orgWidthMails-100, y];
-            }
-            divMailTree.style.width = leftWidth + "px";
-            td_tree.style.width = leftWidth + "px";
-
-            div_mails.style.width = rightWidth + "px";
-            div_mail_content.style.width = div_mails.style.width;
-            td_view.style.width = rightWidth + "px";
-            return [x, y];
+          return onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
         };
       } else if (draggable.element.id == "drag_h_border") {
         var div_mails = _z("div_mails");
@@ -190,19 +177,7 @@ BorderDragObserver.prototype = {
         var orgHeightMailContent = div_mail_content.offsetHeight;
 
         draggable.options.snap = function(x, y) {
-          var upperHeight = orgHeightMails + y;
-          var lowerHeight = orgHeightMailContent - y;
-          if (upperHeight < 10 && y < 0) {
-            return [x, 10-orgHeightMails];
-          } else if (lowerHeight < 10 && y > 0) {
-            return [x, orgHeightMailContent-10];
-          }
-          div_mails.style.height = upperHeight + "px";
-          div_mail_content.style.height = lowerHeight + "px";
-          if (mail_body_view) {
-            mail_body_view.style.height = (mail_body_view.offsetHeight - y) + "px";
-          }
-          return [x, y];
+          return onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent);
         };
       }
     }
@@ -220,39 +195,18 @@ BorderDragObserver.prototype = {
         var orgWidthMails = div_mails.offsetWidth;
 
         draggable.options.snap = function(x, y) {
-            var leftWidth = orgWidthMailTree + x;
-            var rightWidth = orgWidthMails - x;
-            if (leftWidth < 100 && x < 0) {
-              return [100-orgWidthMailTree, y];
-            } else if (rightWidth < 100 && x > 0) {
-              return [orgWidthMails-100, y];
-            }
-            divMailTree.style.width = leftWidth + "px";
-            td_tree.style.width = leftWidth + "px";
-
-            div_mails.style.width = rightWidth + "px";
-            div_mail_content.style.width = div_mails.style.width;
-            td_view.style.width = rightWidth + "px";
-            return [x, y];
+          return onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
         };
       } else if (draggable.element.id == "drag_h_border") {
         var div_mails = _z("div_mails");
         var div_mail_content = _z("div_mail_content");
+        var mail_body_view = _z("mail_body_view");
 
         var orgHeightMails = div_mails.offsetHeight;
         var orgHeightMailContent = div_mail_content.offsetHeight;
 
         draggable.options.snap = function(x, y) {
-          var upperHeight = orgHeightMails + y;
-          var lowerHeight = orgHeightMailContent - y;
-          if (upperHeight < 10 && y < 0) {
-            return [x, 10-orgHeightMails];
-          } else if (lowerHeight < 10 && y > 0) {
-            return [x, orgHeightMailContent-10];
-          }
-          div_mails.style.height = upperHeight + "px";
-          div_mail_content.style.height = lowerHeight + "px";
-          return [x, y];
+          return onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent);
         };
       }
     }
@@ -269,6 +223,40 @@ BorderDragObserver.prototype = {
 }
 Draggables.addObserver( new BorderDragObserver() );
 
+function onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
+{
+  var leftWidth = orgWidthMailTree + x;
+  var rightWidth = orgWidthMails - x;
+  if (leftWidth < 100 && x < 0) {
+    return [100-orgWidthMailTree, y];
+  } else if (rightWidth < 100 && x > 0) {
+    return [orgWidthMails-100, y];
+  }
+  divMailTree.style.width = leftWidth + "px";
+  td_tree.style.width = leftWidth + "px";
+
+  div_mails.style.width = rightWidth + "px";
+  div_mail_content.style.width = div_mails.style.width;
+  td_view.style.width = rightWidth + "px";
+  return [x, y];
+}
+
+function onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent)
+{
+  var upperHeight = orgHeightMails + y;
+  var lowerHeight = orgHeightMailContent - y;
+  if (upperHeight < 10 && y < 0) {
+    return [x, 10-orgHeightMails];
+  } else if (lowerHeight < 10 && y > 0) {
+    return [x, orgHeightMailContent-10];
+  }
+  div_mails.style.height = upperHeight + "px";
+  div_mail_content.style.height = lowerHeight + "px";
+  if (mail_body_view) {
+//    mail_body_view.style.height = (mail_body_view.offsetHeight - y) + "px";
+  }
+  return [x, y];
+}
 
 <% if params[:tips]=='true' and !@mail_accounts.empty? %>
 function showTips()

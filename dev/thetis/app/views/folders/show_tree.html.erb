@@ -152,19 +152,8 @@ BorderDragObserver.prototype = {
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
-          var leftWidth = orgWidthFolderTree + x;
-          var rightWidth = orgWidthView - x;
-          if (leftWidth < 100 && x < 0) {
-            return [100-orgWidthFolderTree, y];
-          } else if (rightWidth < 100 && x > 0) {
-            return [orgWidthView-100, y];
-          }
-          divFolderTree.style.width = leftWidth + "px";
-          td_tree.style.width = leftWidth + "px";
-          view.style.width = rightWidth + "px";
-          td_view.style.width = rightWidth + "px";
-          return [x, y];
-        };
+        return onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView);
+      };
     }
   },
   onDrag: function(eventName, draggable, event) {
@@ -180,19 +169,8 @@ BorderDragObserver.prototype = {
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
-          var leftWidth = orgWidthFolderTree + x;
-          var rightWidth = orgWidthView - x;
-          if (leftWidth < 100 && x < 0) {
-            return [100-orgWidthFolderTree, y];
-          } else if (rightWidth < 100 && x > 0) {
-            return [orgWidthView-100, y];
-          }
-          divFolderTree.style.width = leftWidth + "px";
-          td_tree.style.width = leftWidth + "px";
-          view.style.width = rightWidth + "px";
-          td_view.style.width = rightWidth + "px";
-          return [x, y];
-        };
+        return onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView);
+      };
     }
   },
   onEnd: function(eventName, draggable, event) {
@@ -206,6 +184,21 @@ BorderDragObserver.prototype = {
 }
 Draggables.addObserver( new BorderDragObserver() );
 
+function onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView)
+{
+  var leftWidth = orgWidthFolderTree + x;
+  var rightWidth = orgWidthView - x;
+  if (leftWidth < 100 && x < 0) {
+    return [100-orgWidthFolderTree, y];
+  } else if (rightWidth < 100 && x > 0) {
+    return [orgWidthView-100, y];
+  }
+  divFolderTree.style.width = leftWidth + "px";
+  td_tree.style.width = leftWidth + "px";
+  view.style.width = rightWidth + "px";
+  td_view.style.width = rightWidth + "px";
+  return [x, y];
+}
 
 function onLoadSub()
 {

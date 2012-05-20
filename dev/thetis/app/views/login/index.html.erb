@@ -1,103 +1,95 @@
 <%= form_tag({:action => 'login'}, :name => 'form_login') %>
 
-<table id="div_login" cellspacing="0" cellpadding="0" width="100%">
-  <tr height="9%"><td></td></tr>
-  <tr height="80%">
-    <td valign="middle">
+<div id="div_login" style="vertical-align:middle; overflow:hidden;">
+  <table cellspacing="5" cellpadding="3" align="center" width="85%" style="height:100%; padding:3% 0;">
+    <tr style="height:20%;">
+      <td align="center" valign="bottom" style="line-height:1.0; font-family:Times New Roman;font-size:38pt;font-weight:bold;">
+        <%= $thetis_config[:general]['app_title'] %>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="height:40%;">
 
-      <table cellspacing="5" cellpadding="3" align="center" width="85%" style="height:100%;">
-        <tr height="17%">
-          <td align="center" valign="bottom" style="line-height:1.0; font-family:Times New Roman;font-size:38pt;font-weight:bold;">
-            <%= $thetis_config[:general]['app_title'] %>
-          </td>
-        </tr>
-        <tr height="35%">
-          <td align="center">
+        <table cellspacing="5" cellpadding="3" align="center" width="70%" style="height:100%; border:solid 1px blue; background-color:#A8F3F4;">
+          <tr style="height:90%;">
+            <td align="left">
+              <table cellspacing="5" align="center">
+                <tr>
+                  <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
+                    <label for="user_name"><%= t('user.u_name') %><%= t('msg.colon') %></label>
+                  </td>
+                  <td align="left">
+                    <%= text_field('user', 'name', :style => 'width:200px; ime-mode:disabled;') %>
+                  </td>
+                </tr>
+                <tr>
+                  <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
+                    <label for="user_password"><%= t('password.name') %><%= t('msg.colon') %></label>
+                  </td>
+                  <td align="left">
+                    <input type="password" id="user_password" name="user[password]" size="30" style="width:200px" />
+                  </td>
+                </tr>
+                <tr height="10"><td></td></tr>
+                <tr>
+                  <td colspan="2" align="center">
+                    <input type="submit" value="<%= t('btn.login') %>" style="width:100px; height:28px;">
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <tr style="height:10%;">
+            <td align="right">
+            <% if $thetis_config[:menu]['open_user_reg'] == '1' %>
+              <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new') %>'; return false;">
+                <%= t('login.to_user_reg') %>
+              </a>
+               &nbsp;
+            <% end %>
+              <a class="a_underline" href="#" onclick="showSendPassword(); return false;"><%= t('login.to_send_password')%></a>
+              &nbsp;
+            </td>
+          </tr>
+        </table>
 
-            <table cellspacing="5" cellpadding="3" align="center" width="70%" style="height:100%; border:solid 1pt blue;" bgcolor="#A8F3F4">
-              <tr style="height:100%;">
-                <td align="left">
-                  <table cellspacing="5" align="center">
-                    <tr>
-                      <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
-                        <label for="user_name"><%= t('user.u_name') %><%= t('msg.colon') %></label>
-                      </td>
-                      <td align="left">
-                        <%= text_field('user', 'name', :style => 'width:200px; ime-mode:disabled;') %>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
-                        <label for="user_password"><%= t('password.name') %><%= t('msg.colon') %></label>
-                      </td>
-                      <td align="left">
-                        <input type="password" id="user_password" name="user[password]" size="30" style="width:200px" />
-                      </td>
-                    </tr>
-                    <tr height="10"><td></td></tr>
-                    <tr>
-                      <td colspan="2" align="center">
-                        <input type="submit" value="<%= t('btn.login') %>" style="width:100px; height:28px;">
-                      </td>
-                    </tr>
-                  </table>
-                </td>
-              </tr>
-              <tr height="10">
-                <td align="right">
-                <% if $thetis_config[:menu]['open_user_reg'] == '1' %>
-                  <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new') %>'; return false;">
-                    <%= t('login.to_user_reg') %>
-                  </a>
-                   &nbsp;
-                <% end %>
-                  <a class="a_underline" href="#" onclick="showSendPassword(); return false;"><%= t('login.to_send_password')%></a>
-                  &nbsp;
-                </td>
-              </tr>
-            </table>
+        <%= hidden_field_tag('fwd_controller', params[:fwd_controller]) %>
+        <%= hidden_field_tag('fwd_action', params[:fwd_action]) %>
+        <%
+        unless params[:fwd_params].nil?
+          params[:fwd_params].each do |key, val|
+        %>
+          <%= hidden_field_tag("fwd_params[#{key}]", val) %>
+        <%
+          end
+        end
+        %>
 
-            <%= hidden_field_tag('fwd_controller', params[:fwd_controller]) %>
-            <%= hidden_field_tag('fwd_action', params[:fwd_action]) %>
-            <%
-            unless params[:fwd_params].nil?
-              params[:fwd_params].each do |key, val|
-            %>
-              <%= hidden_field_tag("fwd_params[#{key}]", val) %>
-            <%
-              end
-            end
-            %>
-
-          </td>
-        </tr>
-        <tr height="17%">
-          <td valign="top">
-            <table align="center">
-              <tr>
-                <td align="right" nowrap style="vertical-align:bottom; color:red;">
-                  Powered by <b>Ruby</b> on
-                </td>
-                <td width="1"></td>
-                <td width="90" align="left" style="vertical-align:middle;">
-                  <%= image_tag('rails.png') %>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr height="10"><td></td></tr>
-      </table>
-
-    </td>
-  </tr>
-  <tr height="11%"><td></td></tr>
-</table>
+      </td>
+    </tr>
+    <tr style="height:20%;">
+      <td valign="top">
+        <table align="center">
+          <tr>
+            <td align="right" nowrap style="vertical-align:bottom; color:red;">
+              Powered by <b>Ruby</b> on
+            </td>
+            <td width="1"></td>
+            <td width="90" align="left" style="vertical-align:middle;">
+              <%= image_tag('rails.png') %>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</div>
 
 </form>
 
+
 <script type="text/javascript">
-<!--
+
 function showSendPassword()
 {
   var thetisBox = new ThetisBox;
@@ -105,5 +97,5 @@ function showSendPassword()
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show("TOP-RIGHT", "", "INPUT", "<%= url_for(:controller => 'login', :action => 'send_password') %>", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
 }
-//-->
+
 </script>

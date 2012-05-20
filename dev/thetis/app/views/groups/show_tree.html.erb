@@ -69,23 +69,12 @@ BorderDragObserver.prototype = {
       var td_tree = _z("td_tree");
       var view = _z("div_view");
       var td_view = _z("td_view");
-      var orgWidthFolderTree = divGroupTree.offsetWidth;
+      var orgWidthGroupTree = divGroupTree.offsetWidth;
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
-          var leftWidth = orgWidthFolderTree + x;
-          var rightWidth = orgWidthView - x;
-          if (leftWidth < 100 && x < 0) {
-            return [100-orgWidthFolderTree, y];
-          } else if (rightWidth < 100 && x > 0) {
-            return [orgWidthView-100, y];
-          }
-          divGroupTree.style.width = leftWidth + "px";
-          td_tree.style.width = leftWidth + "px";
-          view.style.width = rightWidth + "px";
-          td_view.style.width = rightWidth + "px";
-          return [x, y];
-        };
+        return onBorderDragged(x, y, divGroupTree, td_tree, view, td_view, orgWidthGroupTree, orgWidthView);
+      };
     }
   },
   onDrag: function(eventName, draggable, event) {
@@ -101,19 +90,8 @@ BorderDragObserver.prototype = {
       var orgWidthView = view.offsetWidth;
 
       draggable.options.snap = function(x, y) {
-          var leftWidth = orgWidthGroupTree + x;
-          var rightWidth = orgWidthView - x;
-          if (leftWidth < 100 && x < 0) {
-            return [100-orgWidthGroupTree, y];
-          } else if (rightWidth < 100 && x > 0) {
-            return [orgWidthView-100, y];
-          }
-          divGroupTree.style.width = leftWidth + "px";
-          td_tree.style.width = leftWidth + "px";
-          view.style.width = rightWidth + "px";
-          td_view.style.width = rightWidth + "px";
-          return [x, y];
-        };
+        return onBorderDragged(x, y, divGroupTree, td_tree, view, td_view, orgWidthGroupTree, orgWidthView);
+      };
     }
   },
   onEnd: function(eventName, draggable, event) {
@@ -127,6 +105,21 @@ BorderDragObserver.prototype = {
 }
 Draggables.addObserver( new BorderDragObserver() );
 
+function onBorderDragged(x, y, divGroupTree, td_tree, view, td_view, orgWidthGroupTree, orgWidthView)
+{
+  var leftWidth = orgWidthGroupTree + x;
+  var rightWidth = orgWidthView - x;
+  if (leftWidth < 100 && x < 0) {
+    return [100-orgWidthGroupTree, y];
+  } else if (rightWidth < 100 && x > 0) {
+    return [orgWidthView-100, y];
+  }
+  divGroupTree.style.width = leftWidth + "px";
+  td_tree.style.width = leftWidth + "px";
+  view.style.width = rightWidth + "px";
+  td_view.style.width = rightWidth + "px";
+  return [x, y];
+}
 
 function onLoadSub()
 {
