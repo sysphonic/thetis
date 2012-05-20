@@ -16,8 +16,8 @@
 class UsersController < ApplicationController
   layout 'base'
 
-  before_filter :check_login, :except => [:new, :create]
-  before_filter :check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet]
+  before_filter(:check_login, :except => [:new, :create])
+  before_filter(:check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet])
 
   auth_array = [:destroy, :add_to_group, :exclude_from_group, :notify, :update_auth, :export_csv, :import_csv, :configure, :create_title, :destroy_title, :rename_title, :update_titles_order, :update_zept_allowed]
   auth_array.concat([:list, :show, :search]) if $thetis_config[:menu]['disp_user_list'] != '1'
@@ -25,7 +25,6 @@ class UsersController < ApplicationController
   before_filter :only => auth_array do |controller|
     controller.check_auth(User::AUTH_USER)
   end
-
 
   require 'digest/md5'
   require 'nkf'
@@ -48,17 +47,11 @@ class UsersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    if params[:user][:birthday].nil?
-      begin
-        params[:user][:birthday] = params[:user][:birthday_y] + '-' + params[:user][:birthday_m] + '-' + params[:user][:birthday_d]
-      rescue
-      end
-      params[:user].delete(:birthday_y)
-      params[:user].delete(:birthday_m)
-      params[:user].delete(:birthday_d)
-    end
+    attrs = _process_user_attrs(nil, params[:user])
+    password = attrs[:password]
+    attrs.delete(:password)
 
-    @user = UsersHelper.get_initialized_user(params[:user])
+    @user = UsersHelper.get_initialized_user(attrs)
     @user.auth = User::AUTH_ALL if User.count <= 0
 
     begin
@@ -75,8 +68,7 @@ class UsersController < ApplicationController
     if params[:from] == 'users_list'
       redirect_to(:controller => 'users', :action => 'list')
     else
-      # Send E-mail
-      NoticeMailer.deliver_welcome(@user, ApplicationHelper.root_url(request))
+      NoticeMailer.deliver_welcome(@user, password, ApplicationHelper.root_url(request))
       flash[:notice] << '<br/><span class=\'font_msg_bold\' style=\'color:firebrick;\'>'+t('user.initial_password')+'</span>'+t('msg.sent_by')+'<span class=\'font_msg_bold\'>'+t('email.name')+'</span>'+t('msg.check_it')
       redirect_to(:controller => 'login', :action => 'index')
     end
@@ -94,11 +86,10 @@ class UsersController < ApplicationController
 
     begin
       @user = User.find(user_id)
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       redirect_to(:controller => 'login', :action => 'logout')
     end
-    @user.password_confirmation = @user.password
   end
 
   #=== show
@@ -123,32 +114,21 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:id])
 
-    if params[:user][:birthday].nil?
-      begin
-        params[:user][:birthday] = params[:user][:birthday_y] + '-' + params[:user][:birthday_m] + '-' + params[:user][:birthday_d]
-      rescue
-      end
-      params[:user].delete :birthday_y
-      params[:user].delete :birthday_m
-      params[:user].delete :birthday_d
-    end
-
-    unless params[:user][:password].nil?
-      params[:user][:pass_md5] = Digest::MD5.hexdigest(params[:user][:password])
-    end
+    attrs = _process_user_attrs(@user, params[:user])
+    attrs.delete(:password)
 
     # Official title and order to display
-    title = params[:user][:title]
+    title = attrs[:title]
     unless title.nil?
-      @user.xorder = User::XORDER_MAX
+      attrs[:xorder] = User::XORDER_MAX
 
       titles = User.get_config_titles
       if !titles.nil? and titles.include?(title)
-        @user.xorder = titles.index(title)
+        attrs[:xorder] = titles.index(title)
       end
     end
 
-    if @user.update_attributes(params[:user])
+    if @user.update_attributes(attrs)
 
       flash[:notice] = t('msg.update_success')
 
@@ -260,8 +240,8 @@ class UsersController < ApplicationController
 
         begin
           User.destroy(user_id)
-        rescue StandardError => err
-          Log.add_error(request, err)
+        rescue => evar
+          Log.add_error(request, evar)
         end
 
         count += 1
@@ -338,8 +318,8 @@ class UsersController < ApplicationController
 
     begin
       user = User.find(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     if user.nil?
@@ -376,8 +356,8 @@ class UsersController < ApplicationController
     unless group_id == '0'  # '0' for ROOT
       begin
         group = Group.find(group_id)
-      rescue StandardError => err
-        Log.add_error(request, err)
+      rescue => evar
+        Log.add_error(request, evar)
       ensure
         if group.nil?
           render(:partial => 'ajax_groups', :layout => false)
@@ -388,8 +368,8 @@ class UsersController < ApplicationController
 
     begin
       @user = User.find(params[:user_id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     unless @user.nil?
@@ -444,8 +424,8 @@ class UsersController < ApplicationController
           end
         end
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     render(:partial => 'ajax_groups', :layout => false)
@@ -509,8 +489,8 @@ class UsersController < ApplicationController
         when 'ISO-8859-1'
           csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     send_data csv, :type => 'application/octet-stream;charset=UTF-8', :disposition => 'attachment;filename="users.csv"'
@@ -558,8 +538,8 @@ class UsersController < ApplicationController
         when 'ISO-8859-1'
           csv = Iconv.iconv('UTF-8', 'ISO-8859-1', csv)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     found_update = false
@@ -572,9 +552,9 @@ class UsersController < ApplicationController
       count += 1
       next if count == 0  # for Header Line
 
-      user = User.parse_csv_row row
+      user = User.parse_csv_row(row)
 
-      check = user.check_import mode, user_names  #, user_emails
+      check = user.check_import(mode, user_names)  #, user_emails
 
       @imp_errs[count] = check unless check.empty?
 
@@ -585,7 +565,7 @@ class UsersController < ApplicationController
           u.id == user.id
         end
         unless update_user.nil?
-          all_users.delete update_user
+          all_users.delete(update_user)
           found_update = true
         end
       end
@@ -601,7 +581,7 @@ class UsersController < ApplicationController
         if found_update
 
           user_admin = users.find do |user|
-            user.admin? User::AUTH_USER
+            user.admin?(User::AUTH_USER)
           end
           if user_admin.nil?
             @imp_errs[0] = [t('user.no_user_auth_import')]
@@ -818,6 +798,39 @@ class UsersController < ApplicationController
   end
 
  private
+  #=== _process_user_attrs
+  #
+  #Processes User attributes in the request parameters.
+  #
+  #_user_:: Target User.
+  #_attrs_:: Hash of the attributes.
+  #return:: Hash of the attributes.
+  #
+  def _process_user_attrs(user, attrs)
+
+    if attrs[:birthday].nil?
+      begin
+        attrs[:birthday] = attrs[:birthday_y] + '-' + attrs[:birthday_m] + '-' + attrs[:birthday_d]
+      rescue
+      end
+      attrs.delete(:birthday_y)
+      attrs.delete(:birthday_m)
+      attrs.delete(:birthday_d)
+    end
+
+    if !attrs[:name].nil? or !attrs[:password].nil?
+      user_name = attrs[:name]
+      user_name ||= user.name unless user.nil?
+      password = attrs[:password]
+      if password.nil? or password.empty?
+        password = UsersHelper.generate_password
+        attrs[:password] = password
+      end
+      attrs[:pass_md5] = UsersHelper.generate_digest_pass(user_name, password)
+    end
+    return attrs
+  end
+
   #=== check_owner
   #
   #Filter method to check if current User is owner of specified Item.

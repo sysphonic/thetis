@@ -1,10 +1,71 @@
-<% if obj and obj.errors.any? %>
+
+<script type="text/javascript">
+
+clearPrevModelErrors = function(elemClassName, elemId)
+{
+//  if (!elemClassName) {
+    elemClassName = "model_error";  // of All Classes
+//  }
+  var model_errors = document.getElementsByClassName(elemClassName);
+
+  for (var i=0; i < model_errors.length; i++) {
+    var model_error = model_errors[i];
+    if (model_error.parentNode.className == "errorExplanation") {
+      continue;
+    }
+    if (elemId && model_error.id == elemId) {
+      continue;
+    }
+    var box = ThetisBox.getContainer(model_error);
+    if (box) {
+      ThetisBox.remove(box.id.split("-")[1]);
+    }
+  }
+}
+
+</script>
+
+<% if obj.nil? %>
+
+<script type="text/javascript">
+
+clearPrevModelErrors();
+
+</script>
+
+<%
+else
+  model_error_class = 'model_error_' + obj.class.name
+  model_error_id = 'model_error' + (Time.now.instance_eval{'%s%03d' % [strftime('%Y%m%d%H%M%S'), (usec / 1000.0).round]})
+%>
+
+<script type="text/javascript">
+
+clearPrevModelErrors("<%= model_error_class %>", "<%= model_error_id %>");
+
+</script>
+
+
+<% if obj.errors.any? %>
 <div class="errorExplanation" style="display:none;">
-  <h2><%= t('msg.validation_error') %></h2>
-  <ul style="padding-left:20px;">
-  <% obj.errors.full_messages.each do |msg| %>
-    <li><%= msg %></li>
-  <% end %>
-  </ul>
+  <div class="model_error <%= model_error_class %>" id="<%= model_error_id %>">
+    <%= t('msg.validation_error') %>
+    <ul style="padding-left:20px;">
+    <%
+    obj.errors.full_messages.each do |msg|
+      msg_parts = msg.scan(/^([^ ]+)[ ](.+)/)
+      if msg_parts.nil? or msg_parts.empty? or msg_parts.first.nil?
+    %>
+      <li><%= msg %></li>
+      <% else %>
+      <li><%= msg_parts.first.last %></li>
+    <%
+      end
+    end
+    %>
+    </ul>
+  </div>
 </div>
+<% end %>
+
 <% end %>

@@ -22,15 +22,21 @@
   if req_pass
   %>
      <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%= User.human_attribute_name('password') %></label></td>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.name') %><sup style="color:red">*</sup></label></td>
       <td class="item_value_td">
-        <%= password_field 'user', 'password' %><sup style="color:red">*</sup>
+        <%
+        passwd = ''
+        unless @user.nil? or @user.pass_md5.nil? or @user.pass_md5.empty?
+          passwd = User::PASSWORD_DUMMY
+        end
+        %>
+        <input type="password" id="user_password" name="user[password]" size="30" value="<%= passwd %>" onfocus="this.select();" />
       </td>
     </tr>
     <tr>
-      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.confirm') %></label></td>
+      <td class="prim_cap_td" nowrap><label for="user_password"><%= t('password.confirm') %><sup style="color:red">*</sup></label></td>
       <td class="item_value_td">
-        <%= password_field 'user', 'password_confirmation' %><sup style="color:red">*</sup>
+        <input type="password" id="user_password_confirmation" size="30" value="<%= passwd %>" onfocus="this.select();" />
       </td>
     </tr>
   <% end %>
@@ -130,7 +136,7 @@ end
       <td class="item_value_td">
         <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy_green.png" title="Boy green" alt="Boy green" /></label>
         &nbsp;&nbsp;
-        <%= radio_button('user', 'figure', 'girl_pink') %><label for="item_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" alt="Girl pink" /></label>
+        <%= radio_button('user', 'figure', 'girl_pink') %><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" alt="Girl pink" /></label>
       </td>
     </tr>
   <% if params[:action] == 'edit' and @login_user.id == @user.id %>
@@ -172,6 +178,44 @@ end
 
 
 <script type="text/javascript">
+
+doRegisterUser = function(frm)
+{
+  var password = _z("user_password");
+  if (password) {
+    var password_confirmation = _z("user_password_confirmation");
+    if (password.value == "") {
+      var thetisBox = msg("<%= t('msg.specify', :name => t('password.name')) %>");
+      thetisBox.setOnClose(function(){password.focus();});
+      return false;
+    }
+    if (password.value != password_confirmation.value) {
+      msg("<%= t('activerecord.errors.messages.confirmation', :attribute => t('password.name')) %>");
+      return false;
+    }
+
+  <% unless @user.nil? %>
+    if (password.value == "<%= User::PASSWORD_DUMMY %>") {
+      var user_name = _z("user_name");
+      if (user_name.value != "<%= @user.name %>") {
+        password.value = "";
+        password_confirmation.value = "";
+        var thetisBox = msg("<%= t('msg.specify', :name => t('password.name')) %>");
+        thetisBox.setOnClose(function(){password.focus();});
+        return false;
+      }
+      user_name.disabled = true;
+      password.disabled = true;
+    }
+  <% end %>
+    password_confirmation.disabled = true;
+  }
+
+  prog("TOP-RIGHT");
+  frm.submit();
+
+  return true;
+}
 
 var selector = null;
 

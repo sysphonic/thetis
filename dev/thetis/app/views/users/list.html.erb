@@ -40,7 +40,7 @@ groups_cache = {}
         <%= t('btn.select_group') %>
       </div>
 <% else %>
-      <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+      <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, groups_cache) %></a>
       &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
 <% end %>
     </td>
@@ -87,18 +87,18 @@ groups_cache = {}
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
+    <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
     <td  class="<%=td_class %>"nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
-        <%=h truncate(user.name, :length => 20) %>
+        <%= truncate(user.name, :length => 20) %>
       </a>
     </td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.fullname, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.email, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.title, :length => 10) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.fullname, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.email, :length => 30) %></td>
+    <td class="<%=td_class %>" nowrap><%= truncate(user.title, :length => 10) %></td>
     <td class="<%=td_class %>" nowrap>
       <% user.get_groups_a.each do |group_id| %>
-        <%=h Group.get_path(group_id, groups_cache) %><br/>
+        <%= Group.get_path(group_id, groups_cache) %><br/>
       <% end %>
     </td>
   <% if @login_user.admin?(User::AUTH_USER) %>
@@ -121,7 +121,7 @@ groups_cache = {}
 </form>
 
 <script type="text/javascript">
-<!--
+
 var thetisBox = null;
 
 function selectAll()
@@ -248,6 +248,7 @@ function _doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'users', :action => 'destroy') %>";
   document.form_list.method = "post";
+  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.submit();
 
   prog("TOP-RIGHT");
@@ -312,7 +313,6 @@ function showGroupTreeToSelect(group_id)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-//-->
 </script>
 
 <%
@@ -323,7 +323,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
 <table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0">
   <tr style="height:20px;">
     <td align="right" style="color:blueviolet; padding-right:10px; padding-top:10px;">
-      <%=h @imp_cnt.to_s + t('user.imported') %><br/>
+      <%= @imp_cnt.to_s + t('user.imported') %><br/>
     </td>
   </tr>
   <tr>
@@ -337,7 +337,7 @@ err_cnt = 0
         <tr>
         <% if user_cnt > 0 %>
           <td align="right" valign="top" style="padding:0px 3px;">
-            <%=h user_cnt.to_s + t('user.err_list_cap') %>
+            <%= user_cnt.to_s + t('user.err_list_cap') %>
           </td>
           <td align="left" valign="top" style="padding:0px 3px;">
         <% else %>
@@ -345,7 +345,7 @@ err_cnt = 0
         <% end %>
             <ul>
         <% errs.each do |err| %>
-              <li><%=h err %></li>
+              <li><%= err %></li>
         <% end %>
             </ul>
           </td>

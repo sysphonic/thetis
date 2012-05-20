@@ -35,7 +35,7 @@ class LoginController < ApplicationController
 
     if user.nil?
 
-      flash[:notice] = '<span class=\'font_msg_bold\'>'+t('user.u_name')+'</span>'+t('msg.or')+'<span class=\'font_msg_bold\'>'+User.human_attribute_name('password')+'</span>'+t('msg.is_invalid')
+      flash[:notice] = '<span class=\'font_msg_bold\'>'+t('user.u_name')+'</span>'+t('msg.or')+'<span class=\'font_msg_bold\'>'+t('password.name')+'</span>'+t('msg.is_invalid')
 
       if params[:fwd_controller].nil? or params[:fwd_controller].empty?
 
@@ -98,19 +98,28 @@ class LoginController < ApplicationController
 
     begin
       users = User.find(:all, :conditions => "email='"+params[:thetisBoxEdit]+"'")
-    rescue StandardError => err
+    rescue => evar
     end
 
     if users.nil? or users.empty?
-      Log.add_error(request, err)
+      Log.add_error(request, evar)
       flash[:notice] = 'ERROR:' + t('email.address_not_found')
     else
-      # Sending E-mail
-      NoticeMailer.deliver_password(users, ApplicationHelper.root_url(request));
+      user_passwords_h = {}
+      users.each do |user|
+        newpass = UsersHelper.generate_password
+        attrs = {
+          :pass_md5 => UsersHelper.generate_digest_pass(user.name, newpass)
+        }
+        user.update_attributes(attrs)
+
+        user_passwords_h[user] = newpass
+      end
+
+      NoticeMailer.deliver_password(user_passwords_h, ApplicationHelper.root_url(request));
       flash[:notice] = t('email.sent')
     end
 
     render(:controller => 'login', :action => 'index')
   end
-
 end

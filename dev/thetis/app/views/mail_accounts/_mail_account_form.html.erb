@@ -198,9 +198,9 @@
                           </td>
                         </tr>
                         <tr>
-                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_password"><%= User.human_attribute_name('password') %></label></td>
+                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_password"><%= t('password.name') %></label></td>
                           <td class="item_value_td">
-                            <%= password_field 'mail_account', 'smtp_password' %>
+                            <%= password_field('mail_account', 'smtp_password') %>
                           </td>
                         </tr>
                       </table>

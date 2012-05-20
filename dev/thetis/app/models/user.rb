@@ -25,8 +25,9 @@ class User < ActiveRecord::Base
 # Comment out considering about administrative users.
 #  validates_uniqueness_of(:email)
   validates_format_of(:name, :with => /^[01-9a-zA-Z]+$/)
-  validates_presence_of(:name, :password, :email)
-  validates_confirmation_of(:password)
+  validates_presence_of(:name, :pass_md5, :email)
+
+  public::PASSWORD_DUMMY = '********'
 
   public::AUTH_ALL = 'all'
   public::AUTH_DESKTOP = 'desktop'
@@ -267,9 +268,14 @@ class User < ActiveRecord::Base
   #
   def self.authenticate(attrs)
 
-    return nil if attrs.nil?
+    return nil if attrs.nil? or attrs[:name].nil? or attrs[:password].nil?
 
-    find_by_name_and_password(attrs[:name], attrs[:password])
+    name = attrs[:name]
+    password = attrs[:password]
+
+    pass_md5 = UsersHelper.generate_digest_pass(name, password)
+
+    return User.find(:first, :conditions => "name='#{name}' and pass_md5='#{pass_md5}'")
   end
 
   #=== self.destroy
@@ -523,8 +529,8 @@ class User < ActiveRecord::Base
 
     begin
       user = User.find(:first, :conditions => ['name=?', user_name])
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     return user
@@ -679,8 +685,8 @@ class User < ActiveRecord::Base
     item = nil
     begin
       item = Item.find(self.item_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
     return item
   end
@@ -839,8 +845,8 @@ class User < ActiveRecord::Base
 
     begin
       user = User.find(user_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return false
     end
 
@@ -851,8 +857,8 @@ class User < ActiveRecord::Base
       groups.each do |gr_id|
         begin
           group = Group.find(gr_id)
-        rescue StandardError => err
-          Log.add_error(nil, err)
+        rescue => evar
+          Log.add_error(nil, evar)
           next
         end
         return true if group.get_parents(false).include?(group_id.to_s)
@@ -898,7 +904,7 @@ class User < ActiveRecord::Base
       ary = []
       ary << I18n.t('activerecord.attributes.id')
       ary << User.human_attribute_name('name')
-      ary << User.human_attribute_name('password')
+      ary << I18n.t('password.name')
       ary << User.human_attribute_name('fullname')
       ary << User.human_attribute_name('address')
       ary << User.human_attribute_name('organization')
@@ -926,7 +932,7 @@ class User < ActiveRecord::Base
         ary = []
         ary << user.id
         ary << user.name
-        ary << ''   # user.password
+        ary << ''   # Password
         ary << user.fullname
         ary << user.address
         ary << user.organization
@@ -979,7 +985,13 @@ class User < ActiveRecord::Base
 
     user.id =           imp_id
     user.name =         (row[1].nil?)?nil:(row[1].strip)
-    user.password =     (row[2].nil?)?nil:(row[2].strip)
+    password =          (row[2].nil?)?nil:(row[2].strip)
+    if user.name.nil? or user.name.empty? \
+            or password.nil? or password.empty?
+      user.pass_md5 = nil
+    else
+      user.pass_md5 = UsersHelper.generate_digest_pass(user.name, password)
+    end
     user.fullname =     (row[3].nil?)?nil:(row[3].strip)
     user.address =      (row[4].nil?)?nil:(row[4].strip)
     user.organization = (row[5].nil?)?nil:(row[5].strip)
@@ -1034,13 +1046,13 @@ class User < ActiveRecord::Base
     if self.name.nil? or self.name.empty?
       err_msgs <<  User.human_attribute_name('name') + I18n.t('msg.is_required')
     end
-    if self.password.nil? or self.password.empty?
+    if self.pass_md5.nil? or self.pass_md5.empty?
       if mode == 'update' and !org_user.nil?
-        self.password = org_user.password
+        self.pass_md5 = org_user.pass_md5
       end
     end
-    if self.password.nil? or self.password.empty?
-      err_msgs <<  User.human_attribute_name('password') + I18n.t('msg.is_required')
+    if self.pass_md5.nil? or self.pass_md5.empty?
+      err_msgs << I18n.t('password.name') + I18n.t('msg.is_required')
     end
     if self.email.nil? or self.email.empty?
       err_msgs <<  User.human_attribute_name('email') + I18n.t('msg.is_required')
@@ -1175,20 +1187,20 @@ class User < ActiveRecord::Base
       user.name = 'admin'
       user.fullname = 'Administrator'
       user.email = I18n.t('msg.specify_item')
-      user.password = 'admin'
+      user.pass_md5 = UsersHelper.generate_digest_pass(user.name, 'admin')
       user.created_at = Time.now
       user.auth = User::AUTH_ALL
       user.save!
-    rescue StandardError => err
-      Log.add_error(nil, err)
-#     puts err.to_s
+    rescue => evar
+      Log.add_error(nil, evar)
+#     puts evar.to_s
       return
     end
 
     user.setup
 
-  rescue StandardError => err
-    Log.add_error(nil, err)
+  rescue => evar
+    Log.add_error(nil, evar)
   end
 
   #=== setup
@@ -1211,7 +1223,7 @@ class User < ActiveRecord::Base
     # Profile Sheet
     self.create_profile_sheet
 
-  rescue StandardError => err
-    Log.add_error(nil, err)
+  rescue => evar
+    Log.add_error(nil, evar)
   end
 end

@@ -94,7 +94,7 @@ en:
         comment: "Description"
       user:
         name: "User name"
-        password: "Password"
+        pass_md5: "Password"
         fullname: "Fullname"
         address: "Address"
         organization: "Organization"
@@ -760,7 +760,7 @@ en:
     mail_address: "E-mail address"
     to_user_reg: "-> User Registration"
     to_send_password: "-> Forgot your password?"
-    send_password_info1: "User name and Password will be sent by E-mail."
+    send_password_info1: "Your password will be reset and sent with your Username per E-mail."
     send_password_info2: "Please specify your "
     send_password_info3: " registered in Thetis."
   user:
@@ -852,6 +852,7 @@ en:
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
   msg:
+    specify: "Please specify %{name}."
     select_account: "Please select an account."
     session_reset: "Login info. has been changed. Updating the view .."
     others: "Others"

@@ -28,16 +28,6 @@ module UsersHelper
 
     user = User.new(attrs)
 
-    #Initial Password
-    if attrs.nil? or !attrs.key?(:password)
-      chars = ('a'..'z').to_a + ('1'..'9').to_a 
-      newpass = Array.new(8, '').collect{chars[rand(chars.size)]}.join
-      user.password = newpass
-      user.password_confirmation = newpass
-    end
-    unless user.password.nil?
-      user.pass_md5 = Digest::MD5.hexdigest(user.password)
-    end
     user.created_at = Time.now
 
     # Official title and order to display
@@ -78,18 +68,31 @@ module UsersHelper
     return [user_name, u_groups, (user.nil?)?(nil):user.get_figure]
   end
 
-  #=== self.generate_htpasswd_pass
+  #=== self.generate_password
   #
-  #Generates password for the htpasswd file for Basic Authentication for RSS.
-  #<LEGACY CODE>
+  #Generates password.
+  #
+  #return:: Password.
+  #
+  def self.generate_password
+
+    chars = ('a'..'z').to_a + ('1'..'9').to_a
+    newpass = Array.new(8, '').collect{chars[rand(chars.size)]}.join
+
+    return newpass
+  end
+
+  #=== self.generate_digest_pass
+  #
+  #Generates digest of the password.
   #
   #_user_name_:: User name.
   #_password_:: Password.
-  #return:: Encrypted password.
+  #return:: Digest of the password.
   #
-  def self.generate_htpasswd_pass(user_name, password)
+  def self.generate_digest_pass(user_name, password)
 
-    return Digest::MD5::hexdigest([user_name, 'Thetis', password] * ":")
+    return Digest::MD5.hexdigest([user_name, THETIS_REALM, password].join(':'))
   end
 
   #=== self.send_notification

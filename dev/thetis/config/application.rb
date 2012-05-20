@@ -58,6 +58,8 @@ THETIS_USER_TIMEZONE_SELECTABLE = false
 
 THETIS_SESSION_EXPIRE_AFTER_MIN = 8 * 60
 
+THETIS_REALM = 'thetis'
+
 module Thetis
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.

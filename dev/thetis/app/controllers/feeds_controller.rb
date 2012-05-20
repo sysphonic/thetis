@@ -14,15 +14,23 @@
 #* 
 #
 class FeedsController < ApplicationController
-  before_filter :basic_auth
-  before_filter :check_enabled
+
+# FEATURE_DIGEST_AUTH_FEEDS >>>
+  require 'digest/md5'
+  before_filter(:digest_auth)
+
+#  before_filter(:basic_auth)
+# FEATURE_DIGEST_AUTH_FEEDS <<<
+
+  before_filter(:check_enabled)
+
 
   #=== index
   #
   #Gets Feeds about specified categories.
   #
   def index
-#   Log.add_info(request, params.inspect)
+    Log.add_info(request, params.inspect)
 
     user = @login_user
     root_url = ApplicationHelper.root_url(request)
@@ -117,27 +125,47 @@ class FeedsController < ApplicationController
     @author = 'Sysphonic Co., Ltd.'
   end
 
-  #=== basic_auth
+  #=== digest_auth
   #
-  #Filter method of Basic-Authentication.
+  #Filter method of Digest-Authentication.
   #
-  def basic_auth
-    authenticate_or_request_with_http_basic do |user_name, password|
-      check = false
+  def digest_auth
+    authenticate_or_request_with_http_digest(THETIS_REALM) do |user_name|
 
       user = User.get_from_name(user_name)
 
       unless user.nil?
-        if user.password == password
-          @login_user = user
-          check = true
-        end
+        @login_user = user
       end
-      check == true
+      user.pass_md5
     end
-  rescue StandardError => err
-    Log.add_error(request, err)
   end
+
+# FEATURE_DIGEST_AUTH_FEEDS <<<
+=begin
+#  #=== basic_auth
+#  #
+#  #Filter method of Basic-Authentication.
+#  #
+#  def basic_auth
+#    authenticate_or_request_with_http_basic do |user_name, password|
+#      check = false
+#
+#      user = User.get_from_name(user_name)
+#
+#      unless user.nil?
+#        if user.password == password
+#          @login_user = user
+#          check = true
+#        end
+#      end
+#      check == true
+#    end
+#  rescue => evar
+#    Log.add_error(request, evar)
+#  end
+=end
+# FEATURE_DIGEST_AUTH_FEEDS <<<
 
   #=== check_enabled
   #

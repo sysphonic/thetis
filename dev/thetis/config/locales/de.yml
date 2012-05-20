@@ -94,7 +94,7 @@ de:
         comment: "Beschreibung"
       user:
         name: "Benutzername"
-        password: "Passwort"
+        pass_md5: "Passwort"
         fullname: "Fullname"
         address: "Adresse"
         organization: "Organisation"
@@ -760,7 +760,7 @@ de:
     mail_address: "E-Mail Adresse"
     to_user_reg: "-> Anmelden"
     to_send_password: "-> Passwort vergessen?"
-    send_password_info1: "Benutzername und Passwort werden gesandt per E-Mail."
+    send_password_info1: "Ihre Passwort wird zurückgesetzt und gesandt mit Benutzername per E-Mail."
     send_password_info2: "Bitte geben Sie Ihre "
     send_password_info3: " registriert in Thetis."
   user:
@@ -852,6 +852,7 @@ de:
     received_list_info: "Kopien von beschlossenen Arbeitsabläufe werden automatisch im folgenden Ordner in My Folder speichern."
     select_to_create: "Bitte wählen Sie Arbeitsablauf zu erstellen aus."
   msg:
+    specify: "Please specify %{name}."
     select_account: "Please select an account."
     session_reset: "Login info. has been changed. Updating the view .."
     others: "Others"

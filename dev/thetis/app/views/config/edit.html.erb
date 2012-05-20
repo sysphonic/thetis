@@ -15,13 +15,13 @@
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.app_title') %></td>
             <td class="item_value_td" style="width:70%;">
-              <input type="text" name="general[app_title]" value="<%=h @yaml[:general]['app_title'] %>" style="width:95%" />
+              <input type="text" name="general[app_title]" value="<%= @yaml[:general]['app_title'] %>" style="width:95%" />
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.emblem_title') %></td>
             <td class="item_value_td">
-              <input type="text" name="general[symbol_title]" value="<%=h @yaml[:general]['symbol_title'] %>" style="width:95%" />
+              <input type="text" name="general[symbol_title]" value="<%= @yaml[:general]['symbol_title'] %>" style="width:95%" />
             </td>
           </tr>
           <tr>
@@ -162,25 +162,33 @@
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.from_address') %></td>
             <td class="item_value_td" style="width:70%;" nowrap>
-              <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%=h @yaml[:smtp]['from_address'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%= @yaml[:smtp]['from_address'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.server') %></td>
             <td class="item_value_td" nowrap>
-              <input type="text" id="smtp_server" name="smtp[server]" value="<%=h @yaml[:smtp]['server'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_server" name="smtp[server]" value="<%= @yaml[:smtp]['server'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.port') %></td>
             <td class="item_value_td" nowrap>
-              <input type="text" id="smtp_port" name="smtp[port]" value="<%=h @yaml[:smtp]['port'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_port" name="smtp[port]" value="<%= @yaml[:smtp]['port'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
             <td class="item_cap_td" nowrap><%= t('config.domain') %></td>
             <td class="item_value_td">
-              <input type="text" name="smtp[domain]" value="<%=h @yaml[:smtp]['domain'] %>" style="ime-mode:disabled; width:95%" />
+              <input type="text" name="smtp[domain]" value="<%= @yaml[:smtp]['domain'] %>" style="ime-mode:disabled; width:95%" />
+            </td>
+          </tr>
+          <tr>
+            <td class="item_cap_td" nowrap><%= t('mail_account.secure_connection') %></td>
+            <td class="item_value_td">
+              <% checked = (@yaml[:smtp]['starttls']=='1')?'checked':'' %>
+              <input name="smtp[starttls]" type="hidden" value="0" />
+              <input type="checkbox" id="smtp_starttls" name="smtp[starttls]" value="1" <%= checked %> /><label for="smtp_starttls">STARTTLS</label>
             </td>
           </tr>
           <tr>
@@ -213,13 +221,13 @@
             <tr>
               <td class="item_cap_td" nowrap><%= t('user.u_name') %></td>
               <td class="item_value_td" nowrap>
-                <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%=h @yaml[:smtp]['user_name'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+                <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%= @yaml[:smtp]['user_name'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
               </td>
             </tr>
             <tr>
-              <td class="item_cap_td" nowrap><%= User.human_attribute_name('password') %></td>
+              <td class="item_cap_td" nowrap><%= t('password.name') %></td>
               <td class="item_value_td">
-                <input type="password" id="smtp_password" name="smtp[password]" value="<%=h @yaml[:smtp]['password'] %>" style="width:95%" />
+                <input type="password" id="smtp_password" name="smtp[password]" value="<%= @yaml[:smtp]['password'] %>" style="width:95%" />
               </td>
             </tr>
           </table>
@@ -306,8 +314,8 @@ function onLoadSub()
 function forBugfulIE()
 {
   // Bugful IE decides width of an input-text control depending on the length of its content.
-  _z("general_default_page").value = restoreHTML("<%=h @yaml[:general]['default_page'] %>");
-  _z("topic_caption").value = restoreHTML("<%=h @yaml[:topic]['caption'] %>");
+  _z("general_default_page").value = restoreHTML("<%= @yaml[:general]['default_page'] %>");
+  _z("topic_caption").value = restoreHTML("<%= @yaml[:topic]['caption'] %>");
 }
 
 

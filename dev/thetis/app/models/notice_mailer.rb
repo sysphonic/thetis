@@ -20,12 +20,14 @@ class NoticeMailer < ActionMailer::Base
   #Sends notification of User Registration.
   #
   #_user_:: Target User.
+  #_password_:: Password.
   #_root_url_:: Root URL.
   #
-  def welcome(user, root_url)
+  def welcome(user, password, root_url)
     @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_regist')
-    @body["user"]  = user
-    @body["root_url"]  = root_url
+    @body['user']  = user
+    @body['password']  = password
+    @body['root_url']  = root_url
     @recipients = user.email
     @from        = $thetis_config[:smtp]['from_address']
   end
@@ -34,17 +36,17 @@ class NoticeMailer < ActionMailer::Base
   #
   #Sends notification of User Account.
   #
-  #_users_:: Target Users.
+  #_user_passwords_h_:: Hash of {User => new password}.
   #_root_url_:: Root URL.
   #
-  def password(users, root_url)
+  def password(user_passwords_h, root_url)
 
-    return if users.nil? or users.empty?
+    return if user_passwords_h.nil? or user_passwords_h.empty?
 
     @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_account')
-    @body["users"]  = users
-    @body["root_url"]  = root_url
-    @recipients = users.first.email
+    @body['user_passwords_h']  = user_passwords_h
+    @body['root_url']  = root_url
+    @recipients = user_passwords_h.keys.first.email
     @from       = $thetis_config[:smtp]['from_address']
   end
 
@@ -57,8 +59,8 @@ class NoticeMailer < ActionMailer::Base
   #
   def comment(user, root_url)
     @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.message_arrived')
-    @body["user"]  = user
-    @body["root_url"]  = root_url
+    @body['user']  = user
+    @body['root_url']  = root_url
     @recipients = user.email
     @from       = $thetis_config[:smtp]['from_address']
   end
@@ -77,9 +79,9 @@ class NoticeMailer < ActionMailer::Base
       subject = I18n.t('notification.name')
     end
     @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + subject
-    @body["user"]  = user
-    @body["message"]  = body
-    @body["root_url"]  = root_url
+    @body['user']  = user
+    @body['message']  = body
+    @body['root_url']  = root_url
     @recipients = user.email
     @from       = $thetis_config[:smtp]['from_address']
   end

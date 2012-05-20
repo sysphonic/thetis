@@ -35,8 +35,8 @@ class MailAccountsController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
-      params[:mail_account].delete :smtp_username
-      params[:mail_account].delete :smtp_password
+      params[:mail_account].delete(:smtp_username)
+      params[:mail_account].delete(:smtp_password)
     end
 
     @mail_account = MailAccount.new(params[:mail_account])

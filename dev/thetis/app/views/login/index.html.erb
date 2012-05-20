@@ -5,7 +5,7 @@
   <tr height="80%">
     <td valign="middle">
 
-      <table cellspacing="5" cellpadding="3" align="center" width="85%" style="height:100%; border:2px solid silver; border-right:2px solid midnightblue; border-bottom:2px solid midnightblue;">
+      <table cellspacing="5" cellpadding="3" align="center" width="85%" style="height:100%;">
         <tr height="17%">
           <td align="center" valign="bottom" style="line-height:1.0; font-family:Times New Roman;font-size:38pt;font-weight:bold;">
             <%= $thetis_config[:general]['app_title'] %>
@@ -28,10 +28,10 @@
                     </tr>
                     <tr>
                       <td align="right" style="font-size:12pt; padding:5px; line-height:17pt" nowrap>
-                        <label for="user_password"><%= User.human_attribute_name('password') %><%= t('msg.colon') %></label>
+                        <label for="user_password"><%= t('password.name') %><%= t('msg.colon') %></label>
                       </td>
                       <td align="left">
-                        <%= password_field('user', 'password', :style => 'width:200px') %>
+                        <input type="password" id="user_password" name="user[password]" size="30" style="width:200px" />
                       </td>
                     </tr>
                     <tr height="10"><td></td></tr>
