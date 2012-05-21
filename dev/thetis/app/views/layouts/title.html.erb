@@ -6,7 +6,8 @@
 <META http-equiv="Content-Script-Type" content="text/JavaScript">
 <META http-equiv="Content-Type" content="text/html; charset=utf-8">
 
-<%= stylesheet_link_tag('thetis110', 'thetisbox') %>
+<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetis110.css" media="all" rel="stylesheet" type="text/css" />
+<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetisbox.css" media="all" rel="stylesheet" type="text/css" />
 
 <%= javascript_include_tag('prototype') %>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?timestamp=2012042601" type="text/javascript"></script>
@@ -60,7 +61,7 @@ window.onresize = doResize;
 <body bgcolor="white" onLoad="doOnLoad();">
 
 
-<div id="main_div" width="100%" style="vertical-align:top; background:url(<%= THETIS_RELATIVE_URL_ROOT %>/images/stripeback.gif) repeat-y white; overflow:auto;">
+<div id="main_div" width="100%" style="vertical-align:top; background:url(<%= THETIS_RELATIVE_URL_ROOT %>/images/stripeback.png) repeat-y white; overflow:auto;">
   <%= yield %>
 </div>
 

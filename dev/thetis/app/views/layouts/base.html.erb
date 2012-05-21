@@ -9,12 +9,13 @@
 <meta http-equiv="Content-Script-Type" content="text/JavaScript">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%= csrf_meta_tag %>
-<%= stylesheet_link_tag('thetis110', 'thetisbox', :media => 'all') %>
+<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetis110.css?timestamp=2012052101" media="all" rel="stylesheet" type="text/css" />
+<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetisbox.css" media="all" rel="stylesheet" type="text/css" />
 <%= javascript_include_tag('prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar') %>
 <%= javascript_include_tag('dojo/dojo') %>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?timestamp=2012050501" type="text/javascript"></script>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?timestamp=2012050201" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110.js?timestamp=2012050404" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110.js?timestamp=2012052101" type="text/javascript"></script>
 
 <script type="text/javascript">
 

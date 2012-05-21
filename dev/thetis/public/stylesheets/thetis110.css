@@ -34,7 +34,8 @@ table.timecard td {border:solid black 1px; padding:2px 5px;}
 .td_attachment_title {color:white; font-size:9pt; padding:3px; padding-left:10px; padding-right:20px; line-height:10pt; background-color:gray;}
 .td_attachment_memo {color:black; font-size:9pt; padding:3px; padding-left:10px; padding-right:20px; line-height:10pt; background-color:gainsboro; text-align:left;}
 
-.td_show_cap_bar {background-color:dodgerblue; text-indent:10px; color:white; border-bottom:#9699A2; border-right:#9699A2; text-align:left;}
+/*.td_show_cap_bar {background-color:dodgerblue; text-indent:10px; color:white; border-bottom:#9699A2; border-right:#9699A2; text-align:left;}*/
+.td_show_cap_bar {background:url("../images/caption_bg.png") repeat-x center; text-indent:10px; color:dimgray; border:solid 1px silver; text-align:left; -webkit-box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); -moz-box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 
 .td_entry_info_cap {border:solid 1px #0066ff; font-size:10pt; padding:0px 3px; line-height:1.5; text-align:center; vertical-align:middle;}
 .td_entry_info_val {font-size:10pt; padding:0px 3px; line-height:1.5; text-align:center; vertical-align:middle;}
@@ -46,7 +47,7 @@ table.timecard td {border:solid black 1px; padding:2px 5px;}
 .img_btn {border-right:solid 1px darkgray; border-bottom:solid 1px darkgray; padding-right:2px; padding-bottom:2px; cursor:pointer;}
 
 .comment_body_td {border:solid 1px #965100; font-size:13px; padding:5px; line-height:1.7; background-color:#FFFBED;}
-.comment_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#DF8A1E;}
+.comment_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background:url("../images/comment_tab.png") top left repeat-x;}
 .comment_sys_body_td {border:solid 1pt #EA3C50; font-size:13px; padding:5px; line-height:1.7; background-color:#FFEDED;}
 .comment_sys_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#EA3C50;}
 
@@ -100,4 +101,6 @@ div.uploadStatus {margin:5px;}
 div.progressBar {margin:5px;}
 div.progressBar div.border {background-color:#fff; border:1px solid grey; width:100%;}
 div.progressBar div.background {background-color:#333; height:18px; width:0%;}
+
+div.hr {border-bottom:solid 1px gray; margin:5px 0px;}
 

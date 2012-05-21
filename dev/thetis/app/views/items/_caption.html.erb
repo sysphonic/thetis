@@ -1,0 +1,22 @@
+
+<%
+title ||= ''
+div_name ||= ''
+%>
+
+<table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
+  <tr height="25">
+    <td style="min-width:5px; width:5px; background-color:blue;"></td>
+    <td style="padding:2px 15px; text-align:left; vertical-align:top; line-height:1.0;"> 
+      <b style="color:dimgray; font-size:12pt;">
+        <%= title %>
+      </b>
+      <div style="display:inline-block; float:right; font-size:11pt; padding-right:10px; line-height:14pt;">
+        <span style="background-color:whitesmoke;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
+        &nbsp;
+        <span style="background-color:whitesmoke;">&nbsp;<a href="#" onclick="var targetDiv=_z('<%= div_name %>'); if (targetDiv.style.display=='none') {targetDiv.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {targetDiv.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+      </div>
+    </td>
+  </tr>
+</table>
+
