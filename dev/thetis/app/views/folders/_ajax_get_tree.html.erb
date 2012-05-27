@@ -4,22 +4,22 @@
   %>
   var folderImgs = new Array(
                       <% icons = Folder.get_icons(nil, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, true, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, false, true) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, true, true) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
-                        new Array("<%=h folder_shortcut %>", "<%=h folder_shortcut %>")
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+                        new Array("<%= folder_shortcut %>", "<%= folder_shortcut %>")
                       );
 
   var array = new Array();
@@ -28,7 +28,7 @@
   if !session_folder.nil? and Folder.exists?(session_folder)
     if session_folder != '0'
   %>
-  array.push(new Array("+<%= session_folder %>", "<%=h Folder.get_path(session_folder) %>", "", "", 8));
+  array.push(new Array("+<%= session_folder %>", "<%= Folder.get_path(session_folder) %>", "", "", 8));
   <%
     end
   else
@@ -70,7 +70,7 @@
         end
     end
   %>
-    new Array("<%= folder.id %>", " <%=h folder.name %>", "", "", <%= img_idx %>)
+    new Array("<%= folder.id %>", " <%= folder.name %>", "", "", <%= img_idx %>)
   <%
     count += 1
     if count < child_folders.length

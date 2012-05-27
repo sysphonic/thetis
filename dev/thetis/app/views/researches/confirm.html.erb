@@ -18,7 +18,7 @@
         <td width="1%" bgcolor="khaki"></td>
         <td width="1%"></td>
         <td>
-          <%=h q_cap %><br/>
+          <%= q_cap %><br/>
           <%
           vals = @research.get_by_q_code(q_code)
           unless vals.nil?
@@ -27,7 +27,7 @@
           <%
             ary.each do |val|
           %>
-            <b><%=h val %></b><br/>
+            <b><%= val %></b><br/>
           <%
             end
           end
@@ -49,7 +49,7 @@
         <%= raw(t('btn.page_back')) %>
       </td>
         <td width="20"></td>
-      <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%=h raw(t('research.error_commit')) %>'); }">
+      <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
         <%= t('btn.commit') %>
       </td>
       </tr>

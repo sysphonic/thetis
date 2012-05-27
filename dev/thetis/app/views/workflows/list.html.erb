@@ -49,7 +49,7 @@
           <tr>
             <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
               <%= t('workflow.issuing_list') %>&nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%=ApplicationHelper.h_s_quote t('workflow.issuing_list_info') %>');">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= ApplicationHelper.h_s_quote(t('workflow.issuing_list_info')) %>');">
             </td>
           </tr>
           <tr height="5"><td></td></tr>
@@ -69,7 +69,7 @@
           <tr>
             <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
               <%= t('workflow.received_list') %>&nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= t('arrow.right_full') %><%=ApplicationHelper.h_s_quote Workflow.decided_inbox %>');">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= t('arrow.right_full') %><%= ApplicationHelper.h_s_quote(Workflow.decided_inbox) %>');">
             </td>
           </tr>
           <tr height="5"><td></td></tr>

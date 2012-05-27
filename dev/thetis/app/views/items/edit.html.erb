@@ -257,7 +257,7 @@ var users_cache = new Array();
 <%= render(:partial => 'common/save_change_func') %>
 
 <script type="text/javascript">
-<!--
+
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
   showTab("workflow", tabs);
 <% else %>
@@ -690,5 +690,4 @@ function showGroupTreeToSelect(group_id)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-//-->
 </script>

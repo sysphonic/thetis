@@ -40,7 +40,7 @@ groups_cache = {}
               <%= t('btn.select_group') %>
             </div>
         <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></a>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, groups_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
         <% end %>
           </td>
@@ -87,23 +87,23 @@ groups_cache = {}
 <% @users.each_with_index do |user, idx| %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h user.id %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
-        <%=h truncate(user.name, :length => 20) %>
+        <%= truncate(user.name, :length => 20) %>
       </a>
     </td>
    <% else %>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.name, :length => 20) %></td>
+    <td class="<%= td_class %>" nowrap><%= truncate(user.name, :length => 20) %></td>
    <% end %>
-    <td class="<%=td_class %>" nowrap><%=h truncate(user.fullname, :length => 30) %></td>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap><%= truncate(user.fullname, :length => 30) %></td>
+    <td class="<%= td_class %>" nowrap>
       <%
       user.get_groups_a.each do |group_id|
         group_path = Group.get_path(group_id, groups_cache)
       %>
-        <%=h group_path %><br/>
+        <%= group_path %><br/>
       <% end %>
     </td>
     <%
@@ -124,13 +124,13 @@ groups_cache = {}
       end
     end
     %>
-    <td class="<%=td_class %>" nowrap style="text-align:center; color:<%= color %>;"><%=h status %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:center; color:<%= color %>;"><%= status %></td>
    <!--
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user) %>';">
     </td>
    -->
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   </tr>
@@ -145,7 +145,6 @@ groups_cache = {}
 </form>
 
 <script type="text/javascript">
-<!--
 
 function selectAll()
 {
@@ -270,6 +269,6 @@ function _doResetSatus()
   document.form_list.method = "post";
   document.form_list.submit();
 }
-//-->
+
 </script>
 

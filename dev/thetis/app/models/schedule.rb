@@ -17,7 +17,7 @@ class Schedule < ActiveRecord::Base
 
   require RAILS_ROOT+'/lib/util/util_date'
 
-  validates_presence_of  :title
+  validates_presence_of(:title)
 
   public::SYS_DATE_FORM = '%Y-%m-%d'
   public::SYS_DATETIME_FORM = SYS_DATE_FORM + ' %H:%M'
@@ -32,9 +32,44 @@ class Schedule < ActiveRecord::Base
 
   public::XTYPE_HOLIDAY = 'holiday'
 
+
+  #=== self.scope_colors
+  #
+  #Gets name of specified weekday.
+  #
+  #_scope_:: Target scope.
+  #return:: Array of text-color and background-color.
+  #
+  def self.scope_colors(scope)
+    case scope
+      when Schedule::SCOPE_ALL
+        return ['orangered', '#FFD5C5']
+      when Schedule::SCOPE_PRIVATE
+        return ['mediumblue', 'lightcyan']
+      when Schedule::SCOPE_PUBLIC
+        return ['darkgreen', '#DEF9A3']
+      else
+        return ['', '']
+    end
+  end
+
+  #=== scope_colors
+  #
+  #Gets name of specified weekday.
+  #
+  #return:: Array of text-color and background-color.
+  #
+  def scope_colors
+
+    return Schedule.scope_colors(self.scope)
+  end
+
   #=== self.wday_name
   #
   #Gets name of specified weekday.
+  #
+  #_wday_:: Target Weekday.
+  #return:: Weekday name.
   #
   def self.wday_name(wday)
     return [I18n.t('wday.sun'), I18n.t('wday.mon'), I18n.t('wday.tue'), I18n.t('wday.wed'), I18n.t('wday.thu'), I18n.t('wday.fri'), I18n.t('wday.sat')][wday]

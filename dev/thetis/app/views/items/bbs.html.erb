@@ -1,7 +1,8 @@
 <%= form_tag( {:controller => 'items', :action => 'bbs' }, :method => 'get', :name => 'form_list') %>
 
 <%
-folders_cache = {}
+@folders_cache = {}
+@folder_obj_cache = {}
 
 @users_cache = {}
 @user_obj_cache = {}
@@ -47,7 +48,7 @@ folders_cache = {}
       if !session_folder.nil? and Folder.exists?(session_folder)
         if session_folder != '0'
       %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= Folder.get_path(session_folder, folders_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" alt="<%= t('btn.back') %>" title="<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
       <%
         end
       end
@@ -63,14 +64,14 @@ folders_cache = {}
       end
       %>
   <% else %>
-      <%= t('cap.folder') %> <a class="a_underline" href="#" onclick="showFolderTreeToSelect('<%= @folder_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red; background-color:white;"><%= Folder.get_path(@folder_id, folders_cache) %></a>
+      <%= t('cap.folder') %> <a class="a_underline" href="#" onclick="showFolderTreeToSelect('<%= @folder_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red; background-color:white;"><%= Folder.get_path(@folder_id, @folders_cache, @folder_obj_cache) %></a>
       &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearFolder()" />
     <%
     toy_xtype = Toy::XTYPE_FOLDER
     toy_target_id = @folder_id
     if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
     %>
-      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%=ApplicationHelper.h_s_quote truncate(Folder.get_name(@folder_id), :length => 20) %>');">
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%= ApplicationHelper.h_s_quote(truncate(Folder.get_name(@folder_id), :length => 20)) %>');">
     <% end %>
   <% end %>
     </td>
@@ -128,7 +129,7 @@ folders_cache = {}
       <TABLE width="100%" cellpadding="0" cellspacing="0">
         <TR>
           <TD align="left" style="font-size:11pt; line-height:14pt; text-indent:5px;">
-            <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%=item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
+            <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%= item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
 
             <% if !item.workflow.nil? and item.workflow.decided? %>
               <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
@@ -142,7 +143,7 @@ folders_cache = {}
               <% if enable_link %>
               <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
               <% end %>
-              <span style="color:red;"><%= item.get_folder_path(folders_cache) %></span>
+              <span style="color:red;"><%= item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
               <% if enable_link %>
               </a>
               <% end %>
@@ -156,7 +157,7 @@ folders_cache = {}
               del_type = 'null'
               del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
               %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20)%>', <%= del_type %>); return false;" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
             <% end %>
           </TD>
         </TR>
@@ -186,7 +187,7 @@ folders_cache = {}
                 team_folder = item.team.get_team_folder
                 unless team_folder.nil?
                   if Folder.check_user_auth(team_folder.id, @login_user, 'r', true)
-                    path = team_folder.get_path(folders_cache)
+                    path = team_folder.get_path(@folders_cache, @folder_obj_cache)
               %>
                 <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
                   <%= path %>
@@ -207,7 +208,7 @@ folders_cache = {}
         <TR>
           <TD align="center">
           <div align="left" style="width:90%; padding-bottom:5px;">
-            <div style="width:60%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%=item.id %>);">
+            <div style="width:60%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
               <span style="padding:5px; font-size:10pt;"><%= ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200))) %></span>
             </div>
           </div>
@@ -240,7 +241,7 @@ attachments_num = item_attachments.length
                       <tr>
                         <td>
                         <script type="text/javascript">
-                          document.write('<div id="div_description_<%=item.id %>" style="padding:5px; width:'+(mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
+                          document.write('<div id="div_description_<%= item.id %>" style="padding:5px; width:'+(mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
                         </script>
                         <%= raw(item.description) %></div>
                         </td>
@@ -257,7 +258,7 @@ attachments_num = item_attachments.length
                   if show_num
                   %>
                     <div align="right" style="padding:5px;">
-                      <a href="#" onclick="doShowItem(<%=item.id %>); return false;">
+                      <a href="#" onclick="doShowItem(<%= item.id %>); return false;">
                         ( <%= t('image.plural') %>: <%= images_num %>, <%= t('attachment.plural_full') %>: <%= attachments_num %> )
                       </a>
                     </div>
@@ -278,7 +279,7 @@ attachments_num = item_attachments.length
                            <tr>
                              <td width="90" style="padding:5px">
                                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :ts => ApplicationHelper.get_timestamp(image)) %>
-                               <img style="cursor:pointer" src="<%= img_url %>" width="120" onclick="doShowItem(<%=item.id %>);" />
+                               <img style="cursor:pointer" src="<%= img_url %>" width="120" onclick="doShowItem(<%= item.id %>);" />
                              </td>
                            </tr>
                 <% end %>

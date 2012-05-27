@@ -13,12 +13,12 @@
       end
       %>
       <td style="background-color:<%= bgcolor %>; padding-left:5px;">
-        <%=h @comment.get_xtype_name %>&nbsp;&nbsp;<span style="font-size:10pt;">(<%=h @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+        <%= @comment.get_xtype_name %>&nbsp;&nbsp;<span style="font-size:10pt;">(<%= @comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
       </td>
     </tr>
     <tr>
       <td style="padding-left:5px; padding-right:5px;">
-        <pre><%=h @comment.message %></pre>
+        <pre><%= @comment.message %></pre>
       </td>
     </tr>
   </table>

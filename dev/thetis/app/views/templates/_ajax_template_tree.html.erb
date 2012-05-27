@@ -10,7 +10,7 @@
     <% unless is_first %>
     ,
     <% end %>
-                    new Array("<%= parent_id %>", " <%=h Item.get_title(parent_id) %>", "")
+                    new Array("<%= parent_id %>", " <%= Item.get_title(parent_id) %>", "")
   <%
     is_first = false
   end

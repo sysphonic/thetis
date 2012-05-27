@@ -25,12 +25,12 @@
               if status == Research::STATUS_STARTED
                 disp_button_start = 'none'
               %>
-                <%=h status_started %>
+                <%= status_started %>
               <%
               else
                 disp_button_stop = 'none'
               %>
-                <%=h status_stopped %>
+                <%= status_stopped %>
               <% end %>
             </td>
           </tr>
@@ -130,11 +130,11 @@
 function changeStatus(sw)
 {
   if (sw) {
-    _z("status").innerHTML = "<%=h status_started %>";
+    _z("status").innerHTML = "<%= status_started %>";
     _z("button_start").style.display = "none";
     _z("button_stop").style.display = "block";
   } else {
-    _z("status").innerHTML = "<%=h status_stopped %>";
+    _z("status").innerHTML = "<%= status_stopped %>";
     _z("button_start").style.display = "block";
     _z("button_stop").style.display = "none";
   }

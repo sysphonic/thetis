@@ -17,6 +17,7 @@
 #
 class Folder < ActiveRecord::Base
 
+  extend CachedRecord
   include TreeElement
 
   public::DISPCTRL_BBS_TOP = 'bbs_top'
@@ -386,8 +387,8 @@ class Folder < ActiveRecord::Base
 
     begin
       max_order = Folder.count_by_sql("SELECT MAX(xorder) FROM folders where parent_id=#{parent_id}")
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     max_order = 0 if max_order.nil?
@@ -408,8 +409,8 @@ class Folder < ActiveRecord::Base
 
     begin
       folder = Folder.find(folder_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
     if folder.nil?
       return folder_id.to_s + ' '+ I18n.t('paren.deleted')
@@ -424,9 +425,10 @@ class Folder < ActiveRecord::Base
   #
   #_folder_id_:: Folder-ID.
   #_folders_cache_:: Hash to accelerate response. {folder_id, path}
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: Folder path like "/parent_name1/parent_name2/this_name".
   #
-  def self.get_path(folder_id, folders_cache = nil)
+  def self.get_path(folder_id, folders_cache=nil, folder_obj_cache=nil)
 
     unless folders_cache.nil?
       path = folders_cache[folder_id.to_i]
@@ -457,11 +459,7 @@ class Folder < ActiveRecord::Base
         end
       end
 
-      begin
-        folder = Folder.find(folder_id)
-      rescue
-        folder = nil
-      end
+      folder = Folder.find_with_cache(folder_id, folder_obj_cache)
 
       id_ary.unshift(folder_id.to_i) unless folders_cache.nil?
 
@@ -517,8 +515,8 @@ class Folder < ActiveRecord::Base
 
     begin
       folder = Folder.find(folder_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return false
     end
 
@@ -564,11 +562,12 @@ class Folder < ActiveRecord::Base
   #Gets path-string which represents location of this folder.
   #
   #_folders_cache_:: Hash to accelerate response. {folder_id, path}
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: Folder path like "/parent_name1/parent_name2/this_name".
   #
-  def get_path(folders_cache = nil)
+  def get_path(folders_cache=nil, folder_obj_cache=nil)
 
-    return Folder.get_path(self.id, folders_cache)
+    return Folder.get_path(self.id, folders_cache, folder_obj_cache)
   end
 
   #=== inherit_parent_auth
@@ -590,8 +589,8 @@ class Folder < ActiveRecord::Base
       self.read_teams = parent.read_teams
       self.write_teams = parent.write_teams
 
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
   end
 
@@ -751,8 +750,8 @@ class Folder < ActiveRecord::Base
     childs.each do |folder|
       begin
         folder.destroy
-      rescue StandardError => err
-        Log.add_error(nil, err)
+      rescue => evar
+        Log.add_error(nil, evar)
       end
 
       items = Item.find(:all, :conditions => ['folder_id=?', folder.id])

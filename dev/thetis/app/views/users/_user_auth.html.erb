@@ -13,7 +13,7 @@
         <%
         check_all = (@user.auth == User::AUTH_ALL)
         %>
-        <input type="checkbox" id="check_auth_all" name="check_auth_all" value="1" <%= (check_all)?'checked':'' %> onclick="_z('btn_add').disabled = _z('btn_remove').disabled = _z('auth_candidates').disabled = _z('auth_selected').disabled = this.checked;" /><label for="check_auth_all"><%=h User.get_auth_name(User::AUTH_ALL) %></label>
+        <input type="checkbox" id="check_auth_all" name="check_auth_all" value="1" <%= (check_all)?'checked':'' %> onclick="_z('btn_add').disabled = _z('btn_remove').disabled = _z('auth_candidates').disabled = _z('auth_selected').disabled = this.checked;" /><label for="check_auth_all"><%= User.get_auth_name(User::AUTH_ALL) %></label>
       </td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@
                   next
                 end
               %>
-                <option value="<%=h auth %>"><%=h disp %></option>
+                <option value="<%= auth %>"><%= disp %></option>
               <% end %>
               </select>
             </td>
@@ -65,7 +65,7 @@
             <td width="45%">
               <select id="auth_selected" name="auth_selected[]" <%= (check_all)?'disabled':'' %> class="select_multi" size="5" multiple style="width:100%;">
               <% auth_cache.each do |auth, disp| %>
-                <option value="<%= auth %>"><%=h disp %></option>
+                <option value="<%= auth %>"><%= disp %></option>
               <% end %>
               </select>
             </td>

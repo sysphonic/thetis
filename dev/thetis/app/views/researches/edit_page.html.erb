@@ -18,7 +18,7 @@
       </td>
         <td width="20"></td>
     <% end %>
-      <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%=h raw(t('research.error_commit')) %>'); }">
+      <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
         <%= raw(t('btn.page_next')) %>
       </td>
       </tr>

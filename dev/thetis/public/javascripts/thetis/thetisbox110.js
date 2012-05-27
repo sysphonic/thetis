@@ -673,9 +673,19 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       content += "    </td>";
       content += "  </tr>";
     }
+    var border_style = null;
+    var frameborder = "";
+    if (this.border_content == null) {
+      border_style = "border:2px solid lightgrey; border-right:2px solid dimgray; border-bottom:2px solid dimgray;";
+    } else if (this.border_content == "") {
+      border_style = "border:none;";
+      frameborder = "frameborder='0'";
+    } else {
+      border_style = this.border_content;
+    }
     content += "  <tr>";
     content += "    <td colspan='2' align='center'>";
-    content += "      <iframe id='thetisBoxContent-"+this.id+"' src='"+src+"' width='100%' style='height:240px; border:2px solid lightgrey; border-right:2px solid midnightblue; border-bottom:2px solid midnightblue; background-color:white;'></iframe>";
+    content += "      <iframe id='thetisBoxContent-"+this.id+"' src='"+src+"' width='100%' "+frameborder+" style='height:240px; "+border_style+" background-color:white;'></iframe>";
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
@@ -880,9 +890,9 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         var cap_height = 0;
         if (cap != null) {
           box.style.display = "inline";   // to get cap_height
-          cap_height = cap.offsetHeight;
+          cap_height = cap.offsetHeight + 8;
         }
-        var h = height - cap_height - 80;
+        var h = height - cap_height - 56;
         if (h < 0) {
           h = 0;
         }

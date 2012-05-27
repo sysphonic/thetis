@@ -25,7 +25,7 @@ A:hover {
 </style>
 
 <script type="text/javascript">
-<!--
+
 function setLoginName(name)
 {
   if (name == null || name.length <= 0) {
@@ -42,7 +42,6 @@ function progMain()
   eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
 }
 
-//-->
 </script>
 
 </head>
@@ -113,7 +112,7 @@ function progMain()
 
             headlines.each do |caption, params|
             %>
-              <a href="<%= params[1] %>" target="<%= params[0] %>"><span style="color:white;"><%=h caption %></span></a>
+              <a href="<%= params[1] %>" target="<%= params[0] %>"><span style="color:white;"><%= caption %></span></a>
                 <span style="color:lightblue;">/ </span>
             <% end %>
           </td>

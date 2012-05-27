@@ -18,7 +18,7 @@
       %>
         <%= t('paren.not_selected') %><br/>
       <% else %>
-        <%=h User.get_name(user_before_login) %><br/>
+        <%= User.get_name(user_before_login) %><br/>
       <% end %>
     </td>
   </tr>

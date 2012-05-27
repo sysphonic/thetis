@@ -7,7 +7,7 @@
         <table align="left" cellspacing="0" cellpadding="0" width="65">
           <tr>
             <td align="left" nowrap width="30">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
             </td>
           </tr>
         </table>
@@ -52,7 +52,7 @@
 </form>
 
 <script type="text/javascript">
-<!--
+
 function showGroupTree()
 {
   var thetisBox = new ThetisBox;
@@ -61,6 +61,6 @@ function showGroupTree()
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }
-//-->
+
 </script>
 

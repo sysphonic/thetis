@@ -9,17 +9,17 @@
           item = workflow.item
       %>
         <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;" style="line-height:2.0;">
-          <%=h truncate(item.title, :length => 30) %>
+          <%= truncate(item.title, :length => 30) %>
         </a>
-        <span style="color:red;">&lt;<%=h workflow.get_status_name %>&gt;</span>
+        <span style="color:red;">&lt;<%= workflow.get_status_name %>&gt;</span>
       <% if !@login_user.nil? and item.editable?(@login_user)  %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
       <% end %>
       <% if !@login_user.nil? and item.movable?(@login_user) %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" title="<%= t('btn.move') %>" onclick="showFolderTreeToSelect(<%= item.folder_id %>, <%= workflow.id %>, '<%=ApplicationHelper.h_s_quote item.title %>');" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" title="<%= t('btn.move') %>" onclick="showFolderTreeToSelect(<%= item.folder_id %>, <%= workflow.id %>, '<%= ApplicationHelper.h_s_quote(item.title) %>');" />
       <% end %>
       <% if !@login_user.nil? and item.deletable?(@login_user, false)  %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= workflow.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20)%>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= workflow.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>'); return false;" />
       <% end %>
       <br/>
       <%

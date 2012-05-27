@@ -73,8 +73,8 @@
 <% @addresses.each_with_index do |address, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="showAddress(<%= address.id %>, '<%=ApplicationHelper.h_s_quote truncate(address.name, :length => 20) %>'); return false;">
+    <td class="<%= td_class %>" nowrap>
+      <a class="a_underline" href="#" onclick="showAddress(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>'); return false;">
         <%= truncate(address.name, :length => 30) %>
       </a>
     </td>
@@ -86,19 +86,19 @@
         truncate(addr, :length => 40)
       end
     %>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap>
     <% addrs.each do |addr| %>
       <%= addr %><br/>
     <% end %>
     </td>
-    <td class="<%=td_class %>">
+    <td class="<%= td_class %>">
       <%= truncate(address.organization, :length => 40) %>
     </td>
   <% if address.editable?(@login_user) %>
-    <td class="<%=td_class %>" width="20" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" width="20" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
     </td>
-    <td class="<%=td_class %>" width="20" style="text-align:center;">
+    <td class="<%= td_class %>" width="20" style="text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
     </td>
   <% end %>
@@ -210,7 +210,7 @@ err_cnt = 0
           <td align="left" valign="top" style="padding-left:3px; padding-right:3px;" colspan="2">
         <% end %>
         <% errs.each do |err| %>
-            <li><%=h err %><br/>
+            &bull; <%= err %><br/>
         <% end %>
           </td>
         </tr>

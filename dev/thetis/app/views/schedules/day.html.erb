@@ -37,7 +37,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
             <% if @login_user.admin? User::AUTH_SCHEDULE %>
             <td width="5"></td>
             <td align="left" nowrap width="30">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
             </td>
             <% end %>
           </tr>
@@ -85,43 +85,31 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   <%= hidden_field_tag('display', params[:display]) %>
 <% end %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td align="center">
+<div style="text-align:center;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-      <a class="calendar_paging" href="#" onclick="doPageDay('<%= last_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <a class="calendar_paging" href="#" onclick="doPageDay('<%= yesterday.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageDay('<%= tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&nbsp;</a>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageDay('<%= next_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&gt;&nbsp;</a>
-    </td>
-  </tr>
-</table>
+  <a class="calendar_paging" href="#" onclick="doPageDay('<%= last_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+  <a class="calendar_paging" href="#" onclick="doPageDay('<%= yesterday.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+  <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+  &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageDay('<%= tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&nbsp;</a>
+  &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageDay('<%= next_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&gt;&nbsp;</a>
+</div>
 
 <% unless params[:user_id].nil? %>
   <input type="hidden" name="user_id" value="<%= params[:user_id] %>" />
 <% end %>
 </form>
 
-<table id="div_schedule" cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td valign="top">
+<div id="div_schedule">
+  <div id="div_timetable" style="width:100%; padding:8px 0px;">
+    <%= render(:partial => 'timetable', :locals => {:read_only => !params[:user_id].nil?}) %>
+  </div>
 
-<div id="div_timetable" style="width:100%; padding:8px 0px;">
-  <%= render(:partial => 'timetable', :locals => {:read_only => !params[:user_id].nil?}) %>
-</div>
-
-<%= form_tag( {:controller => 'schedules', :action => 'save', :id => params[:id]}, :method => 'post', :name => 'form_detail', :id => 'form_detail') %>
-<table cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td align="center" valign="top">
-
-    <div id="div_schedule_detail">
+  <div id="div_schedule_detail">
 <%
 if session[:edit_schedule].nil?
   unless @schedule.nil?
@@ -141,18 +129,8 @@ else
   session[:edit_schedule] = nil
 end
 %>
-    </div>
-
-    <%= hidden_field_tag('date', date_s) %>
-
-    </td>
-  </tr>
-</table>
-</form>
-
-    </td>
-  </tr>
-</table>
+  </div>
+</div>
 
 <script type="text/javascript">
 
@@ -167,6 +145,12 @@ function onLoadSub()
 <% unless params[:doDelete].nil? %>
   _doScheduleDelete("<%= params[:doDelete] %>");
 <% end %>
+
+  var div_schedule_detail = _z("div_schedule_detail");
+  if (div_schedule_detail
+      && trim(div_schedule_detail.innerHTML) != "") {
+    setTimeout("scrollToDetail()", 400);
+  }
 }
 
 function doPageDay(date)
@@ -205,170 +189,6 @@ function scrollToDetail()
 {
   var pos = getPos(_z("div_schedule_detail"));
   window.scroll(0, pos.y);
-}
-
-function doRegisterSchedule(schedule_id, addParams)
-{
-  // Check
-  if (_z("schedule_title").value.length <= 0) {
-    msg("<%= t('schedule.specify_title') %>");
-    return;
-  }
-
-  if (!_z("schedule_scope_all").checked
-      && _z("users_selected").length <= 0
-      && _z("groups_selected").length <= 0
-      && _z("teams_selected").length <= 0) {
-    msg("<%= t('schedule.specify_members') %>");
-    return;
-  }
-
-  if (_z("equipment_selected").length > 0 && _z("schedule_scope_private").checked) {
-    msg("<%= t('schedule.private_cannot_reserve_equipment') %>");
-    return;
-  }
-
-  if (!_z("schedule_scope_all").checked && !_z("schedule_scope_public").checked && !_z("schedule_scope_private").checked) {
-    msg("<%= t('schedule.select_scope') %>");
-    return;
-  }
-
-  var selected_target = null;
-  var repeat_update_target = document.form_detail.repeat_update_target;
-  if (repeat_update_target != null) {
-    for (var i=0; i<repeat_update_target.length; i++) {
-      if (repeat_update_target[i].checked) {
-        selected_target = repeat_update_target[i].value;
-        break;
-      }
-    }
-    if (forceTargetAll <= 0 && reqTargetDay > 0 && document.form_detail.is_repeat.checked) {
-      if (selected_target == null) {
-        msg("<%= t('msg.select_update_target') %>");
-        return;
-      }
-    }
-  }
-
-  var is_allday = _z("schedule_allday").checked;
-
-  if (document.form_detail.is_repeat.checked) {
-
-    // for Repeat
-    // Time
-    if (!is_allday) {
-      var start = new Date(2000, 0, 1, _z("repeat_start_hour").value, _z("repeat_start_min").value, 0);
-      var end = new Date(2000, 0, 1, _z("repeat_end_hour").value, _z("repeat_end_min").value, 0);
-      if (start > end) {
-        msg("<%= t('msg.specify_valid_time_term') %>");
-        return;
-      }
-    }
-
-    // Term
-    var repeatStart = toSysDateForm(_z("schedule_repeat_start").value);
-    var repeatEnd = toSysDateForm(_z("schedule_repeat_end").value);
-    _z("schedule_repeat_start").value = repeatStart;
-    _z("schedule_repeat_end").value = repeatEnd;
-    var startDate = repeatStart.split("-");
-    var endDate = repeatEnd.split("-");
-
-    var startMonth = parseInt(startDate[1], 10) - 1;
-    var endMonth = parseInt(endDate[1], 10) - 1;
-
-    start = new Date(startDate[0], startMonth, startDate[2], 0, 0, 0);
-    end = new Date(endDate[0], endMonth, endDate[2], 0, 0, 0);
-    if (start > end) {
-      msg("<%= t('msg.specify_valid_time_term') %>");
-      return;
-    }
-
-    // Rule
-    if (_z("repeat_rules").length <= 0) {
-      msg("<%= t('schedule.specify_repeat_rule') %>");
-      return;
-    }
-
-    if (is_allday) {
-      _z("schedule_start").value = null;
-      _z("schedule_end").value = null;
-    } else {
-      _z("schedule_start").value = "2000-01-01 "+_z("repeat_start_hour").value+":"+_z("repeat_start_min").value;
-      _z("schedule_end").value = "2000-01-01 "+_z("repeat_end_hour").value+":"+_z("repeat_end_min").value;
-    }
-
-  } else {
-
-    // for Once
-    if (is_allday) {
-      _z("once_start_hour").value = 0;
-      _z("once_start_min").value = 0;
-      _z("once_end_hour").value = 0;
-      _z("once_end_min").value = 0;
-    }
-
-    var startDate = toSysDateForm(_z("start_date").value).split("-");
-    var endDate = toSysDateForm(_z("end_date").value).split("-");
-
-    var startMonth = parseInt(startDate[1], 10) - 1;
-    var endMonth = parseInt(endDate[1], 10) - 1;
-
-    var start = new Date(startDate[0], startMonth, startDate[2], _z("once_start_hour").value, _z("once_start_min").value, 0);
-    var end = new Date(endDate[0], endMonth, endDate[2], _z("once_end_hour").value, _z("once_end_min").value, 0);
-    if (start > end) {
-      msg("<%= t('msg.specify_valid_time_term') %>");
-      return;
-    }
-
-    _z("schedule_start").value = toSysDateForm(_z("start_date").value)+" "+_z("once_start_hour").value+":"+_z("once_start_min").value
-    _z("schedule_end").value = toSysDateForm(_z("end_date").value)+" "+_z("once_end_hour").value+":"+_z("once_end_min").value
-
-    if (is_allday) {
-      _z("schedule_start").value += " GMT";
-      _z("schedule_end").value += " GMT";
-    }
-  }
-
-  selectListAll(_z("repeat_rules"));
-  selectListAll(_z("users_selected"));
-  selectListAll(_z("groups_selected"));
-  selectListAll(_z("teams_selected"));
-  selectListAll(_z("equipment_selected"));
-  selectListAll(_z("excepts"));
-  selectListAll(_z("items_selected"));
-
-  var thetisBox = prog("TOP-RIGHT");
-
-  if (!addParams) {
-    addParams = new Array();
-  }
-  addParams.push("id=" + schedule_id);
-
-  document.form_detail.action = "<%= url_for(:controller => 'schedules', :action => 'save') %>" + "?" + addParams.join("&");
-  document.form_detail.submit();
-
-/* No Ajax because of the case in which a different day is specified.
-  new Ajax.Updater(
-            "div_timetable",
-            "<%= url_for(:controller => 'schedules', :action => 'save') %>?id="+schedule_id,
-            {
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){
-                thetisBox.remove();
-
-                _z("div_schedule_detail").innerHTML = "";
-
-                if (is_MS) {    // Bugfull IE6.x/7.0 has a lot of serious BUGs in arrignment.
-                  doResize();
-                  _z("main_div").style.overflow = "";
-                }
-                tips("<%= t('msg.register_success') %>");
-              },
-              parameters:Form.serialize(document.form_detail)
-            }
-          );
-*/
 }
 
 function showScheduleDetail(date, id, title)
@@ -447,228 +267,6 @@ function showGroupTree()
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>\" onsubmit=\"var display=_z('display'); display.options[display.selectedIndex].value='group_'+ThetisBox.getTreeSelect("+thetisBox.id+"); document.form_schedule.submit(); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
-}
-
-// ----------------------------------------------------
-var thetisBoxGroupTree = null;
-
-showGroupTreeToSelect = function(group_id, elem)
-{
-  if (thetisBoxGroupTree) {
-    thetisBoxGroupTree.remove();
-    thetisBoxGroupTree = null;
-  }
-  thetisBoxGroupTree = new ThetisBox;
-  thetisBoxGroupTree.title = "<%= t('btn.select_group')%>";
-  var pos = getPos(elem);
-  thetisBoxGroupTree.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
-  thetisBoxGroupTree.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id,
-    function() {
-      var elems = thetisBoxGroupTree.getContainer().getElementsByTagName("A");
-      for (var i=0; i < elems.length; i++) {
-        addEvent(elems[i], "click", onGroupTreeSelected);
-      }
-    });
-}
-
-onGroupTreeSelected = function(evt)
-{
-  evt = evt || window.event;
-  var elem = evt.target || evt.srcElement;
-  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
-    if (elem.tagName.toUpperCase() == "BODY") {
-      return;
-    }
-  }
-
-  if (!thetisBoxGroupTree) {
-    return;
-  }
-  var addParams = new Array();
-  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTree.id);
-  addParams.push(selKeeper.name+"="+elem.id);
-
-  var thetisBoxProgress = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-      _z("div_selectUsers"),
-      "<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>",
-      {
-        method:"get",
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
-          thetisBoxProgress.remove();
-        }
-      }
-    );
-}
-
-doClearGroup = function()
-{
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-              "div_selectUsers",
-              "<%= url_for(:controller => 'schedules', :action => 'get_group_users') %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                }
-              }
-            );
-}
-
-// ----------------------------------------------------
-var thetisBoxFolderTree = null;
-
-function showFolderTreeToSelect(folder_id, schedule_id, elem)
-{
-  if (thetisBoxFolderTree) {
-    thetisBoxFolderTree.remove();
-    thetisBoxFolderTree = null;
-  }
-  thetisBoxFolderTree = new ThetisBox;
-  thetisBoxFolderTree.title = "<%= t('btn.select_folder')%>";
-  thetisBoxFolderTree.setAdditionalParams(new Array("schedule_id="+schedule_id));
-  var pos = getPos(elem);
-  thetisBoxFolderTree.show((pos.x+elem.offsetWidth+50)+","+(pos.y-20), "", "MINI-TREE", "", "", "");
-  thetisBoxFolderTree.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id,
-    function() {
-      var elems = thetisBoxFolderTree.getContainer().getElementsByTagName("A");
-      for (var i=0; i < elems.length; i++) {
-        addEvent(elems[i], "click", onFolderTreeSelected);
-      }
-    });
-}
-
-onFolderTreeSelected = function(evt)
-{
-  evt = evt || window.event;
-  var elem = evt.target || evt.srcElement;
-  for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
-    if (elem.tagName.toUpperCase() == "BODY") {
-      return;
-    }
-  }
-
-  if (!thetisBoxFolderTree) {
-    return;
-  }
-  var addParams = new Array();
-  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxFolderTree.id);
-  addParams.push(selKeeper.name+"="+elem.id);
-  if (thetisBoxFolderTree.additionalParams) {
-    addParams = addParams.concat(thetisBoxFolderTree.additionalParams);
-  }
-
-  var thetisBoxProgress = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-      _z("div_selectItems"),
-      "<%= url_for(:controller => 'schedules', :action => 'get_folder_items') %>",
-      {
-        method:"get",
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
-          thetisBoxProgress.remove();
-        }
-      }
-    );
-}
-
-// ----------------------------------------------------
-
-removeScheduleEquipment = function()
-{
-  var del_ary = deleteList(_z("equipment_selected"));
-}
-
-var thetisBoxAddScheduleEquipment = null;
-
-onSelectEquipmentClicked = function()
-{
-  if (thetisBoxAddScheduleEquipment) {
-    thetisBoxAddScheduleEquipment.remove();
-    thetisBoxAddScheduleEquipment = null;
-  }
-  thetisBoxAddScheduleEquipment = new ThetisBox;
-
-  var thetisBoxProgress = prog("CENTER");
-
-  new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'select_equipment') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddScheduleEquipment.resizable = true;
-                thetisBoxAddScheduleEquipment.title = "<%= Equipment.model_name.human %>";
-                thetisBoxAddScheduleEquipment.overflow = "hidden";
-                thetisBoxAddScheduleEquipment.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
-
-// ----------------------------------------------------
-
-removeScheduleItems = function()
-{
-  var del_ary = deleteList(_z("items_selected"));
-}
-
-var thetisBoxAddScheduleItems = null;
-
-onSelectItemsClicked = function()
-{
-  if (thetisBoxAddScheduleItems) {
-    thetisBoxAddScheduleItems.remove();
-    thetisBoxAddScheduleItems = null;
-  }
-  thetisBoxAddScheduleItems = new ThetisBox;
-
-  var thetisBoxProgress = prog("CENTER");
-
-  new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'select_items') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddScheduleItems.resizable = true;
-                thetisBoxAddScheduleItems.title = "<%= Item.model_name.human %>";
-                thetisBoxAddScheduleItems.overflow = "hidden";
-                thetisBoxAddScheduleItems.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
 }
 
 </script>

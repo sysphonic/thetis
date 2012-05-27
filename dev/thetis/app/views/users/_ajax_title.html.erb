@@ -7,11 +7,11 @@
       unless titles.nil?
         titles.each do |title_name|
       %>
-        <div id="item_<%=h title_name %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+        <div id="item_<%= title_name %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-          <%=h truncate(title_name, :length => 20) %>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.rename') %>" title="<%= t('btn.rename') %>" onclick="doRenameTitle('<%=ApplicationHelper.h_s_quote title_name %>'); return false;" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteTitle('<%=ApplicationHelper.h_s_quote title_name %>'); return false;" />
+          <%= truncate(title_name, :length => 20) %>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.rename') %>" title="<%= t('btn.rename') %>" onclick="doRenameTitle('<%= ApplicationHelper.h_s_quote(title_name) %>'); return false;" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteTitle('<%= ApplicationHelper.h_s_quote(title_name) %>'); return false;" />
         </div>
       <%
         end

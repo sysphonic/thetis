@@ -8,7 +8,7 @@ unless @folder.nil?
   folder_close = icons[2]
   %>
   <img id="<%= div_id %>_open" src="<%= folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= folder_close %>" border="0" style="display:none;">
-  <span id="<%= div_id %>_name"><%=h @folder.name %></span>
+  <span id="<%= div_id %>_name"><%= @folder.name %></span>
 <% end %>
 
 <%= render(:partial => 'common/flash_notice') %>

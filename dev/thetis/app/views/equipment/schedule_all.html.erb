@@ -10,14 +10,14 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 </script>
 
 <%
-  if @login_user.nil?
-    login_id = ''
-  else
-    login_id = @login_user.id.to_s
-  end
+if @login_user.nil?
+  login_id = ''
+else
+  login_id = @login_user.id.to_s
+end
 %>
 
-<% date_string = @date.strftime(Schedule::SYS_DATE_FORM) %>
+<% date_s = @date.strftime(Schedule::SYS_DATE_FORM) %>
 
 <%= form_tag( {:controller => 'equipment', :action => 'schedule_all', :id => params[:id]}, :method => 'get', :name => 'form_equipment', :id => 'form_equipment') %>
 
@@ -28,12 +28,12 @@ calDisp.setStyle( "frame_color", "#3333CC" );
       <table align="left" cellspacing="0" cellpadding="0" width="65">
         <tr>
           <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_string, :showNew => 'true') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_s, :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin? User::AUTH_EQUIPMENT %>
           <td width="5"></td>
           <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
           </td>
           <% end %>
         </tr>
@@ -81,7 +81,7 @@ next_week = @date + 7
 %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_string %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>
@@ -111,7 +111,7 @@ next_week = @date + 7
   %>
 
   <div id="div_timetable_<%= @equipment_id %>">
-    <table width="100%" cellspacing="0" cellpadding="0">
+    <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:10px;">
       <tr>
         <td align="left">
           <% disp = Equipment.get_name(@equipment_id) %>
@@ -126,7 +126,6 @@ next_week = @date + 7
           <%= render(:partial => 'weektable') %>
         </td>
       </tr>
-      <tr height="10"><td></td></tr>
     </table>
   </div>
 
@@ -135,8 +134,11 @@ next_week = @date + 7
 <% end %>
 
 
+<%= render(:partial => 'common/schedule_func', :locals => {:from => 'equipment'}) %>
+
 <script type="text/javascript">
 
+/*
 function showDetail(schedule_id, title)
 {
   var thetisBoxProgress = prog("CENTER");
@@ -184,7 +186,7 @@ function _doDelete(date, id)
   prog("TOP-RIGHT");
   location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&doDelete="+id;
 }
-
+*/
 function showEquipment(equipment_id, name)
 {
   var thetisBox = new ThetisBox;

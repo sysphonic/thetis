@@ -7,10 +7,10 @@
     </tr>
     <tr>
       <td align="center">
-        <b><%=h @selected_user.get_name_for_timecard %></b>
+        <b><%= @selected_user.get_name_for_timecard %></b>
       </td>
       <td align="center">
-        <%=h @selected_user.title %>
+        <%= @selected_user.title %>
       </td>
       <td align="left" style="padding:0px 5px">
         <%
@@ -18,7 +18,7 @@
 
         @selected_user.get_groups_a.each do |group_id|
         %>
-          <%=h Group.get_path(group_id, groups_cache) %><br/>
+          <%= Group.get_path(group_id, groups_cache) %><br/>
         <% end %>
       </td>
     </tr>

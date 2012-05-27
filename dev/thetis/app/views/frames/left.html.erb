@@ -25,7 +25,7 @@
   </STYLE>
 
 <script type="text/javascript">
-<!--
+
 function doOnLoad()
 {
   doResize();
@@ -251,7 +251,7 @@ function toggleSymbol(sw)
 
 window.onresize = doResize;
 setTimeout("doUpdateTime()", 1000);
-//-->
+
 </script>
 
 </head>
@@ -259,7 +259,7 @@ setTimeout("doUpdateTime()", 1000);
 <body onLoad="doOnLoad();">
 
 <table id="left_table" cellspacing="0" cellpadding="0" width="100%">
-  <tr id="tr_top_space" height="15"><td></td></tr>
+  <tr id="tr_top_space" height="5"><td></td></tr>
 
   <tr>
     <td valign="top" align="center">
@@ -268,7 +268,7 @@ setTimeout("doUpdateTime()", 1000);
         <TR id="tr_symbol" height="90">
           <TD align="center" valign="bottom" onclick="toggleSymbol(false);" style="cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onMouseOver="this.style.backgroundColor='gainsboro'" onMouseOut="this.style.backgroundColor='white'">
             <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
-              <%=h $thetis_config[:general]['symbol_title'] %>
+              <%= $thetis_config[:general]['symbol_title'] %>
             </span>
           </TD>
         </TR>
@@ -277,7 +277,7 @@ setTimeout("doUpdateTime()", 1000);
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
           </TD>
         </TR>
-        <TR height="6"><TD></TD></TR>
+        <TR height="5"><TD></TD></TR>
         <TR height="31">
           <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); doLogin(); return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
             <A id="menu_login" href="#" onclick="return false;" style="color:black"><%= t('btn.login') %></A>

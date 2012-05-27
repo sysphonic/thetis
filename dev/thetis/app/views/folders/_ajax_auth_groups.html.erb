@@ -61,7 +61,7 @@ else
                        next if read_groups.include?(group.id.to_s)
                        next if write_groups.include?(group.id.to_s)
                     %>
-                      <option value="<%=h group.id %>"><%=h Group.get_path(group.id, groups_cache) %></option>
+                      <option value="<%= group.id %>"><%= Group.get_path(group.id, groups_cache) %></option>
                     <% end %>
                     </select>
                   </td>
@@ -91,13 +91,13 @@ else
                      writeOnly = write_groups - read_groups
                      readWrite.each do |group_id|
                     %>
-                      <option value="<%= group_id %>:r+w"><%=h Group.get_path(group_id, groups_cache) %> (Read/Write)</option>
+                      <option value="<%= group_id %>:r+w"><%= Group.get_path(group_id, groups_cache) %> (Read/Write)</option>
                     <% end %>
                     <% readOnly.each do |group_id| %>
-                      <option value="<%= group_id %>:r"><%=h Group.get_path(group_id, groups_cache) %> (Read)</option>
+                      <option value="<%= group_id %>:r"><%= Group.get_path(group_id, groups_cache) %> (Read)</option>
                     <% end %>
                     <% writeOnly.each do |group_id| %>
-                      <option value="<%= group_id %>:w"><%=h Group.get_path(group_id, groups_cache) %> (Write)</option>
+                      <option value="<%= group_id %>:w"><%= Group.get_path(group_id, groups_cache) %> (Write)</option>
                     <% end %>
                     </select>
                   </td>

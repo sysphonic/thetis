@@ -1,8 +1,8 @@
 
 $FISCAL_YEAR=<%= @year %>
 $FISCAL_MONTH=<%= @month %>
-$NAME=<%=h @selected_user.get_name_for_timecard %>
-$TITLE=<%=h @selected_user.title %>
+$NAME=<%= @selected_user.get_name_for_timecard %>
+$TITLE=<%= @selected_user.title %>
 
 <%
 groups = []
@@ -13,7 +13,7 @@ groups_cache = {}
 end
 %>
 $GROUPS
-<%=h groups.join("\n") %>
+<%= groups.join("\n") %>
 
 <%
 records = []
@@ -171,7 +171,7 @@ end
 %>
 $RECORDS
 $MONTH,$DAY,$WEEKDAY,$BGCOLOR,$CLASS,$STATUS,$OPTION,$START,$END,$HOURS,$DESC,$OVERTIME_USUAL,$OVERTIME_MIDNIGHT,$BREAK_SUM,$BREAK_DETAIL
-<%=h records.join("\n") %>
+<%= records.join("\n") %>
 
 $LABOR_DAYS=<%= labor_days %>
 $BUSINESS_TRIP_DAYS=<%= business_trip_days %>
@@ -186,7 +186,7 @@ $PAID_HOLIDAYS=<%= paid_holidays %>
 given_num = (@paid_holiday.nil?)?0:@paid_holiday.num
 carried_over = PaidHoliday.get_carried_over(@selected_user.id, @fiscal_year)
 %>
-$LEFT_PAID_HOLIDAYS=<%=h given_num + carried_over - @applied_paid_hlds - paid_holidays %>
+$LEFT_PAID_HOLIDAYS=<%= given_num + carried_over - @applied_paid_hlds - paid_holidays %>
 
 $HOURS_SUM=<%= ApplicationHelper.float_exp(wktime_sum / 60.0, 2) %>
 $OVERTIME_SUM=<%= ApplicationHelper.float_exp(overtime_sum / 60.0, 2) %>

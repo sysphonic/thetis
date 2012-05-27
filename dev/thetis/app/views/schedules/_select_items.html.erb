@@ -35,6 +35,10 @@ onScheduleItemsOk = function()
 {
   var ret_ary = moveList(_z("item_candidates"), _z("items_selected"));
 
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+
   var instance = ThetisBox.getInstanceForElem(_z("div_selectItems"));
   if (instance) {
     instance.remove();

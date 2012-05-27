@@ -1,4 +1,9 @@
-<%=h @item.get_folder_path %>
+<%
+@folders_cache ||= {}
+@folder_obj_cache ||= {}
+%>
+
+<%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %>
 
 <span id="folder_id_<%= @item.id %>" style="display:none;"><%= @item.folder_id %></span>
 

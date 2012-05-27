@@ -18,12 +18,12 @@
 #* 
 #
 class Item < ActiveRecord::Base
-  has_one :team, :dependent => :destroy
-  has_one :workflow, :dependent => :destroy
-  has_one :zeptair_command, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
-  has_many :images, :dependent => :destroy, :order=>'images.xorder'
-  has_many :attachments, :dependent => :destroy, :order=>'attachments.xorder'
+  has_one(:team, :dependent => :destroy)
+  has_one(:workflow, :dependent => :destroy)
+  has_one(:zeptair_command, :dependent => :destroy)
+  has_many(:comments, :dependent => :destroy)
+  has_many(:images, :dependent => :destroy, :order=>'images.xorder')
+  has_many(:attachments, :dependent => :destroy, :order=>'attachments.xorder')
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_PROJECT = 'project'
@@ -41,7 +41,7 @@ class Item < ActiveRecord::Base
   public::SORT_FIELD_DEFAULT = 'updated_at'
   public::SORT_DIRECTION_DEFAULT = 'DESC'
 
-  validates_presence_of	:title
+  validates_presence_of(:title)
 
 
   #=== self.copies_folder
@@ -58,10 +58,34 @@ class Item < ActiveRecord::Base
   #
   #Checks if the Item is a copy of the other Item.
   #
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: true if the Item is a copy, false otherwise.
   #
-  def is_a_copy?
-    return !self.source_id.nil?
+  def is_a_copy?(folder_obj_cache=nil)
+
+    return false if self.source_id.nil?
+
+    # Exclude those created from system templates.
+    src_item = Item.find_by_id(self.source_id)
+    if src_item.nil?
+      return true
+    else
+      return !src_item.in_system_folder?(folder_obj_cache)
+    end
+  end
+
+  #=== in_system_folder?
+  #
+  #Checks if the Item is in a system folder.
+  #
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
+  #return:: true if the Item is in a system folder, false otherwise.
+  #
+  def in_system_folder?(folder_obj_cache=nil)
+
+    folders = self.get_parent_folders(folder_obj_cache)
+    system_folder = folders.find{|folder| folder.xtype == Folder::XTYPE_SYSTEM}
+    return !system_folder.nil?
   end
 
   #=== self.profile_title_def
@@ -585,11 +609,34 @@ class Item < ActiveRecord::Base
   #Gets Folder path in which this Item located.
   #
   #_folders_cache_:: Hash to accelerate response. {folder_id, path}
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: Folder path like "/folder_name1/folder_name2".
   #
-  def get_folder_path(folders_cache = nil)
+  def get_folder_path(folders_cache=nil, folder_obj_cache=nil)
 
-    return Folder.get_path(self.folder_id, folders_cache)
+    return Folder.get_path(self.folder_id, folders_cache, folder_obj_cache)
+  end
+
+  #=== get_parent_folders
+  #
+  #Gets Folder path in which this Item located.
+  #
+  #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
+  #return:: Array of parent Folders.
+  #
+  def get_parent_folders(folder_obj_cache=nil)
+
+    folders = []
+
+    folder = Folder.find_with_cache(self.folder_id, folder_obj_cache)
+    unless folder.nil?
+      folders << folder
+
+      folders_cache ||= {}
+      folders |= folder.get_parents(true, folder_obj_cache)
+    end
+
+    return folders
   end
 
   #=== editable?

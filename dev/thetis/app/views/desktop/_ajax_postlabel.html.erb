@@ -12,12 +12,12 @@
       <td align="left" nowrap style="font-size:10pt;">
         <%= t('postlabel.from') %>
         <% user_name = User.get_name(@toy.posted_by, @users_cache) %>
-        <b><%=h user_name %></b>&nbsp;&nbsp;(<%= @toy.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
+        <b><%= user_name %></b>&nbsp;&nbsp;(<%= @toy.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
       </td>
     </tr>
     <tr>
-      <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editPostLabel('<%= toy_id %>', '<%= @toy.posted_by %>', '<%=ApplicationHelper.h_s_quote user_name %>')">
-        <pre id="<%= toy_id %>_msg"><%=h @toy.message %></pre>
+      <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editPostLabel('<%= toy_id %>', '<%= @toy.posted_by %>', '<%= ApplicationHelper.h_s_quote(user_name) %>')">
+        <pre id="<%= toy_id %>_msg"><%= @toy.message %></pre>
       </td>
     </tr>
   </table>

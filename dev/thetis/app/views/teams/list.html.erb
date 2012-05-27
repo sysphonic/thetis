@@ -63,17 +63,17 @@ users_cache = {}
 <% @teams.each_with_index do |team, idx| %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%=h team.id %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= team.id %></td>
     <td align="left" nowrap class="<%= td_class %>">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
     <% if team.need_req_to_del?(true) %>
         <span style="color:red;">
-          <%=h truncate(team.name, :length => 20) %>
+          <%= truncate(team.name, :length => 20) %>
         </span>
       </a>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="showRequestToDel();">
     <% else %>
-        <%=h truncate(team.name, :length => 20) %>
+        <%= truncate(team.name, :length => 20) %>
       </a>
     <% end %>
     </td>
@@ -82,22 +82,22 @@ users_cache = {}
       team_folder = team.get_team_folder
       unless team_folder.nil?
       %>
-      <%=h truncate(team_folder.get_path, :length => 20) %>
+      <%= truncate(team_folder.get_path, :length => 20) %>
       <% end %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;"><%=h team.get_status_name %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:center;"><%= team.get_status_name %></td>
     <td class="<%= td_class %>" nowrap>
     <% team.get_users_a.each do |user_id| %>
-      <%=h truncate(User.get_name(user_id, users_cache), :length => 20) %><br/>
+      <%= truncate(User.get_name(user_id, users_cache), :length => 20) %><br/>
     <% end %>
     </td>
 <!--
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'edit', :id => team.id) %>';" />
     </td>
 -->
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete('<%=ApplicationHelper.h_s_quote truncate(team.name, :length => 20)%>', <%= team.id %>); return false;" />
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete('<%= ApplicationHelper.h_s_quote(truncate(team.name, :length => 20)) %>', <%= team.id %>); return false;" />
     </td>
   </tr>
 <% end %>
@@ -111,7 +111,7 @@ users_cache = {}
 </form>
 
 <script type="text/javascript">
-<!--
+
 function sortList(col)
 {
   var type = "<%= @sort_type %>";
@@ -144,6 +144,5 @@ function showRequestToDel()
   msg("<%= raw(t('team.request_to_delete')).gsub("\n", '<br/>') %>");
 }
 
-//-->
 </script>
 

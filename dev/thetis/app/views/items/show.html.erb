@@ -11,6 +11,9 @@ end
 @user_groups = {}
 @groups_cache = {}
 @group_obj_cache = {}
+
+@folders_cache = {}
+@folder_obj_cache = {}
 %>
 
 <%= render(:partial => 'common/dojo_init') %>
@@ -81,7 +84,7 @@ unless @for_print
                 </td>
               <% end %>
                 <td class="td_entry_info_val" nowrap>
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%=h (@item.public) ? 'check_ok.gif' : 'check_ng.gif' %>">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= (@item.public) ? 'check_ok.gif' : 'check_ng.gif' %>">
                 </td>
               </tr>
             </table>
@@ -122,14 +125,17 @@ unless @for_print
       <table align="center" width="95%" cellpadding="0" cellspacing="2">
         <tr>
           <td nowrap style="color:navy; font-size:14pt; line-height:1.0;">
-            <%= raw(t('paren.aquo_b.right')) %> <%=h @item.title %>
+            <%= raw(t('paren.aquo_b.right')) %> <%= @item.title %>
           </td>
          <% unless @item.folder_id.nil? %>
           <td width="40">&nbsp;&nbsp;</td>
           <td id="folder_path" align="left" nowrap width="80%">
-            <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
-              <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path %></span>
-            </a>
+            <%
+            in_system_folder = @item.in_system_folder?(@folder_obj_cache)
+            %>
+            <% unless in_system_folder %><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';"><% end %>
+              <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
+            <% unless in_system_folder %></a><% end %>
           </td>
          <% end %>
         </tr>
@@ -179,7 +185,7 @@ end
 <% end %>
 <% if !@login_user.nil? and @item.movable?(@login_user) %>
   <td width="10"></td>
-  <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%=ApplicationHelper.h_s_quote @item.title %>');">
+  <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
   </td>
 
@@ -205,7 +211,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 <% end %>
 <% if !@login_user.nil? and @item.deletable?(@login_user) %>
   <td width="10"></td>
-  <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%=ApplicationHelper.h_s_quote truncate(@item.title, :length => 20)%>');">
+  <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
   </td>
 <% end %>
@@ -219,35 +225,27 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 <%
 if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
 <a name="workflow"></a>
-<table cellspacing="0" cellpadding="0" width="100%">
-  <tr>
-    <td style="padding-top:20px;">
-      <%= render(:partial => 'caption', :locals => {:title => Workflow.model_name.human, :div_name => 'div_workflow'}) %>
+<div style="padding:20px 0px;">
+  <%= render(:partial => 'caption', :locals => {:title => Workflow.model_name.human, :div_name => 'div_workflow'}) %>
 
   <div id="div_workflow" style="padding-top:15px;">
     <input type="hidden" name="item_id" value="<%= @item.id %>" />
-    <table cellspacing="0" cellpadding="0" align="center" width="90%" bgcolor="lightcyan">
-      <tr height="15"><td></td></tr>
+    <table cellspacing="0" cellpadding="0" align="center" width="90%" style="padding:15px 0px; background-color:#e0f7ff">
       <tr>
         <td style="padding-left:20px;">
-          <table cellspacing="0" cellpadding="0" width="100%">
-            <tr>
-              <td id="div_wf_ajax">
+          <div id="div_wf_ajax">
 
-                <% @orders = @workflow.get_orders %>
-                <%= render(:partial => 'ajax_workflow') %>
+            <% @orders = @workflow.get_orders %>
+            <%= render(:partial => 'ajax_workflow') %>
 
-              </td>
-            </tr>
-          </table>
+          </div>
         </td>
       </tr>
     <% if @workflow.status == Workflow::STATUS_NOT_ISSUED and !@login_user.nil? and @login_user.id == @item.user_id%>
       <% if @orders.empty? %>
       <tr height="20">
         <td>
-          <table id="issue_button" align="center" cellspacing="0" cellpadding="0">
-            <tr height="10"><td></td></tr>
+          <table id="issue_button" align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
             <tr>
               <td>
                 <%= t('workflow.issue_button_info') %>
@@ -259,8 +257,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
       <% else %>
       <tr height="20">
         <td>
-          <table id="issue_button" align="center" cellspacing="0" cellpadding="0">
-            <tr height="10"><td></td></tr>
+          <table id="issue_button" align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
             <tr>
               <td class="img_button_td" onclick="doWfIssue();">
                 <%= t('btn.issue') %>
@@ -271,15 +268,10 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
       </tr>
       <% end %>
     <% end %>
-      <tr height="15"><td></td></tr>
     </table>
     <br/>
   </div>
-
-    </td>
-  </tr>
-  <tr height="20"><td></td></tr>
-</table>
+</div>
 
 <script type="text/javascript">
 
@@ -300,12 +292,13 @@ function _doWfRespond()
               "div_wf_ajax",
               document.form_wf_respond.action,
               {
+                method:"post",
+                parameters:Form.serialize(document.form_wf_respond),
                 asynchronous:true,
                 evalScripts:true,
                 onComplete:function(request) {
                   thetisBox.remove();
-                },
-                parameters:Form.serialize(document.form_wf_respond)
+                }
               }
             );
 }
@@ -320,20 +313,21 @@ function _doWfIssue()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-                "div_wf_ajax",
-                "<%= url_for(:controller => 'items', :action => 'wf_issue', :id => @item.id) %>",
-                {
-                  parameters:"authenticity_token=<%= form_authenticity_token %>",
-                  asynchronous:true,
-                  evalScripts:true,
-                  onComplete:function(request) {
-                      removeElem(_z("issue_button"));
-                      removeElem(_z("edit_button"));
-                      removeElem(_z("delete_button"));
-                      thetisBox.remove();
-                  }
+              "div_wf_ajax",
+              "<%= url_for(:controller => 'items', :action => 'wf_issue', :id => @item.id) %>",
+              {
+                method:"post",
+                parameters:"authenticity_token=<%= form_authenticity_token %>",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                    removeElem(_z("issue_button"));
+                    removeElem(_z("edit_button"));
+                    removeElem(_z("delete_button"));
+                    thetisBox.remove();
                 }
-              );
+              }
+            );
 }
 
 </script>
@@ -420,7 +414,7 @@ function _doWfIssue()
                     end
                     added_array << user_id
                   %>
-                    <option value="<%=h user_id %>"><%=h User.get_name(user_id, @users_cache) %></option>
+                    <option value="<%= user_id %>"><%= User.get_name(user_id, @users_cache) %></option>
                   <% end %>
                   </select>
                 </td>
@@ -447,7 +441,7 @@ function _doWfIssue()
                 <td>
                   <select id="team_members" name="team_members[]" class="select_multi" size="5" multiple="multiple">
                   <% team_members.each do |user_id| %>
-                    <option value="<%= user_id %>"><%=h User.get_name(user_id, @users_cache) %></option>
+                    <option value="<%= user_id %>"><%= User.get_name(user_id, @users_cache) %></option>
                   <% end %>
                   </select>
                 </td>
@@ -744,13 +738,14 @@ function showZeptairDistUsers()
           </div>
         </td>
       </tr>
-      <tr height="20"><td></td></tr>
-    <% if @login_user.nil? %>
-      <tr><td align="center"><%= t('item.login_to_register_messages') %></td></tr>
-      <tr height="20"><td></td></tr>
-    <% end %>
     </table>
-    <div style="height:5px"></div>
+  <% if @login_user.nil? %>
+    <div style="padding:20px 0px; text-align:center; color:gray;">
+      <%= t('item.login_to_register_messages') %>
+    </div>
+  <% else %>
+    <div style="height:30px"></div>
+  <% end %>
 
   <% unless @login_user.nil? %>
     <%= form_tag( {:controller => 'items', :action => 'add_comment'}, :name => 'form_comment', :method => 'post', :enctype => 'multipart/form-data') %>

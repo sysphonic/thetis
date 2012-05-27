@@ -3,7 +3,8 @@
 <%= form_tag( {:action => 'search'}, :method => 'get', :name => 'form_search') %>
 
 <%
-folders_cache = {}
+@folders_cache = {}
+@folder_obj_cache = {}
 %>
 
 <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
@@ -31,7 +32,7 @@ folders_cache = {}
     %>
 
     <% else %>
-      <%= t('cap.folder') %> <%= Folder.get_path(folder_id, folders_cache) %>
+      <%= t('cap.folder') %> <%= Folder.get_path(folder_id, @folders_cache, @folder_obj_cache) %>
     <% end %>
     </td>
     <td align="right">
@@ -104,7 +105,7 @@ folders_cache = {}
             &nbsp;&nbsp;
           <% unless item.folder_id.nil? %>
             <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
-              <span style="color:red;"><%= item.get_folder_path(folders_cache) %></span>
+              <span style="color:red;"><%= item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
             </a>
           <% end %>
           &nbsp;&nbsp;
@@ -116,7 +117,7 @@ folders_cache = {}
             del_type = 'null'
             del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
           %>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%=ApplicationHelper.h_s_quote truncate(item.title, :length => 20) %>', <%= del_type %>); return false;" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
           <% end %>
           </td>
         </tr>
@@ -141,7 +142,7 @@ folders_cache = {}
           <td>
             <table align="center" width="90%">
               <tr>
-                <td align="left" bgcolor="#ccffff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
+                <td align="left" bgcolor="#e0f7ff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
 <div>
   <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
   <%= ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100))) %>

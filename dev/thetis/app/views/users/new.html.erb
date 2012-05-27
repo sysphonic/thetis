@@ -31,11 +31,11 @@
 
 <% if $thetis_config[:menu]['open_user_reg'] == '1' and params[:action] == 'new' %>
 <script type="text/javascript">
-<!--
+
 function showTips() {
   var thetisBox = new ThetisBox;
   thetisBox.show("TOP-RIGHT", "", "MESSAGE", "", "<span class='font_msg_bold'><%= t('user.u_name')%></span> <%= t('msg.and')%> <span class='font_msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.required_for_registration')%><br/><span class='font_msg_bold' style='color:firebrick;'><%= t('user.initial_password')%></span><%= t('user.will_be_sent_by1')%><span class='font_msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.will_be_sent_by2')%><br/><%= t('user.login_update_pwd_within1')%><span class='font_msg_bold'><%= t('user.within_3_days')%></span><%= t('user.login_update_pwd_within2')%>", "");
 }
-//-->
+
 </script>
 <% end %>

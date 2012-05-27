@@ -2,7 +2,7 @@
 <table align="center" width="85%" cellpadding="0" cellspacing="2">
   <tr>
     <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
-      <%=h @item.title %>
+      <%= @item.title %>
     </td>
   </tr>
   <tr>
@@ -38,8 +38,8 @@
         end
         belongs_to = user_name + ' @ <br/>&nbsp;&nbsp;' + group_names.join('<br/>&nbsp;&nbsp;')
     %>
-        <% unless @login_user.nil? %><a class="a_underline" href="#" onclick="msg('<%=ApplicationHelper.h_s_quote belongs_to %>'); return false;"><% end %>
-          <%=h user_name %>
+        <% unless @login_user.nil? %><a class="a_underline" href="#" onclick="msg('<%= ApplicationHelper.h_s_quote(belongs_to) %>'); return false;"><% end %>
+          <%= user_name %>
         <% unless @login_user.nil? %></a><% end %>
         <br/>
     <%
@@ -60,7 +60,7 @@
     %>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" alt="">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
-        <%=h path %>
+        <%= path %>
       </a>
       <% else %>
         <%= t('paren.round.left') %><%= t('msg.need_auth_to_access') %><%= t('paren.round.right') %>

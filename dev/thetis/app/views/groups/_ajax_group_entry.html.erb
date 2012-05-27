@@ -15,7 +15,7 @@ unless @group.nil?
     group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'
     %>
     <img id="<%= div_id %>_open" src="<%= group_folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= group_folder_close %>" border="0" style="display:none;">
-    /<span id="<%= div_id %>_name"><%=h @group.name %></span>
+    /<span id="<%= div_id %>_name"><%= @group.name %></span>
   </a><br/>
   <div id="<%= div_id %>" class="thetisBoxTreeBlock" style="padding-left:30px; border-left:1px dotted navy;"></div>
 </div>

@@ -9,7 +9,7 @@
       <table cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" nowrap>
-            <%= t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%=h Group.get_path(@group_id) %></a>
+            <%= t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%= Group.get_path(@group_id) %></a>
           </td>
         </tr>
       </table>
@@ -78,7 +78,7 @@ else
           <%
             ary.each do |val|
           %>
-            <%=h val %><br/>
+            <%= val %><br/>
           <%
             end
           end

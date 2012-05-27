@@ -87,9 +87,9 @@ end
             midnight_spans.each do |span|
         %>
           (
-          <%=h span.first.strftime('%H:%M') %>
+          <%= span.first.strftime('%H:%M') %>
           ~
-          <%=h span.last.strftime('%H:%M') %>
+          <%= span.last.strftime('%H:%M') %>
           )
         <%
             end
@@ -113,14 +113,14 @@ end
         <%= ApplicationHelper.float_exp(brk / 60.0, 2) %>
         <span style="color:orangered;">
           (
-          <%=h break_start.strftime('%H:%M') %>
+          <%= break_start.strftime('%H:%M') %>
           ~
-          <%=h break_end.strftime('%H:%M') %>
+          <%= break_end.strftime('%H:%M') %>
           )
         </span>
     <% if editable %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%=h break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
     <% end %>
         <br/>
         <% end %>

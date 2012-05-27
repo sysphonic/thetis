@@ -7,7 +7,7 @@
 </table>
 
 <script type="text/javascript">
-<!--
+
 document.body.style.background="url(<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/grad_<%= @desktop.background_color %>.png) right repeat-y";
 
 function onLoadSub()
@@ -103,7 +103,7 @@ function showTimecard()
   var thetisBox = new ThetisBox;
 <%= render(:partial => 'theitsbox_color') %>
   var trayWidth = 200;
-  var trayHeight = 180;
+  var trayHeight = 150;
   var trayX = deskPos.x + 2;
   var trayY = deskPos.y + deskHeight - trayHeight;
 
@@ -277,6 +277,5 @@ function showBiorhythm()
         );
 }
 
-//-->
 </script>
 

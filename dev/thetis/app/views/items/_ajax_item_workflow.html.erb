@@ -82,7 +82,7 @@
             users_selected.each do |user_id|
               disp = User.get_name user_id
             %>
-              <option value="<%= user_id %>"><%=h disp %></option>
+              <option value="<%= user_id %>"><%= disp %></option>
             <% end %>
             </select>
           </td>
@@ -113,7 +113,7 @@ document.getElementById("item_id").value = "<%= @item.id %>";
 orders.each do |order|
   order.each do |user_id, user_name|
 %>
-users_cache["<%= user_id %>"] = "<%=h user_name %>";
+users_cache["<%= user_id %>"] = "<%= user_name %>";
 <%
   end
 end

@@ -8,18 +8,17 @@ is_admin = @login_user.admin?(User::AUTH_DESKTOP)
 tabs = new Array("basic", "admin");
 </script>
 
-<table cellspacing="0" cellpadding="0" width="90%">
-  <tr height="10"><td></td></tr>
+<table cellspacing="0" cellpadding="0" width="90%" style="padding:10px 0px 20px;">
   <tr>
     <td align="center">
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onclick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_admin" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onclick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>
@@ -39,7 +38,7 @@ tabs = new Array("basic", "admin");
 
               <%= form_tag( {:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
 
-                <table align="center" width="85%" cellpadding="0" cellspacing="2">
+                <table align="center" width="90%" cellpadding="0" cellspacing="2">
                   <tr>
                     <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
@@ -112,8 +111,7 @@ tabs = new Array("basic", "admin");
 
               </form>
 
-              <table align="center" cellspacing="0" cellpadding="0">
-                <tr height="10"><td></td></tr>
+              <table align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
                 <tr>
                   <td class="img_button_td" onclick="doUpdatePref();">
                     <%= t('btn.update')%>
@@ -149,7 +147,6 @@ tabs = new Array("basic", "admin");
 
     </td>
   </tr>
-  <tr height="20"><td></td></tr>
 </table>
 
 <script type="text/javascript">

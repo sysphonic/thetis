@@ -85,9 +85,9 @@
               checked_1_year = (paidhld_carry_over == PaidHoliday::CARRY_OVER_1_YEAR)?'checked':''
               checked_no_expiration = (paidhld_carry_over == PaidHoliday::CARRY_OVER_NO_EXPIRATION)?'checked':''
               %>
-              <input type="radio" id="paidhld_carryover_none" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NONE %>" <%= checked_none %>><label for="paidhld_carryover_none"><%= t('msg.none') %></label><br/>
-              <input type="radio" id="paidhld_carryover_1_year" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_1_YEAR %>" <%= checked_1_year %>><label for="paidhld_carryover_1_year"><%= t('timecard.one_year') %></label><br/>
-              <input type="radio" id="paidhld_carryover_no_expiration" name="timecard[paidhld_carry_over]" value="<%=h PaidHoliday::CARRY_OVER_NO_EXPIRATION %>" <%= checked_no_expiration %>><label for="paidhld_carryover_no_expiration"><%= t('timecard.no_expiration') %></label><br/>
+              <input type="radio" id="paidhld_carryover_none" name="timecard[paidhld_carry_over]" value="<%= PaidHoliday::CARRY_OVER_NONE %>" <%= checked_none %>><label for="paidhld_carryover_none"><%= t('msg.none') %></label><br/>
+              <input type="radio" id="paidhld_carryover_1_year" name="timecard[paidhld_carry_over]" value="<%= PaidHoliday::CARRY_OVER_1_YEAR %>" <%= checked_1_year %>><label for="paidhld_carryover_1_year"><%= t('timecard.one_year') %></label><br/>
+              <input type="radio" id="paidhld_carryover_no_expiration" name="timecard[paidhld_carry_over]" value="<%= PaidHoliday::CARRY_OVER_NO_EXPIRATION %>" <%= checked_no_expiration %>><label for="paidhld_carryover_no_expiration"><%= t('timecard.no_expiration') %></label><br/>
             </td>
           </tr>
         </table>
@@ -690,12 +690,12 @@ function inputBreak(org_start, org_end)
 
   var hours = new Array(
   <% THETIS_HOURS.each do |hour| %>
-        <%=h hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
+        <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
   <% end %>
       );
   var mins = new Array(
   <% THETIS_MINUTES.each do |min| %>
-        <%=h min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
+        <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
   <% end %>
       );
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);

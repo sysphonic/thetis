@@ -23,7 +23,7 @@ groups_cache = {}
               <table width="100%" cellpadding="0" cellspacing="0">
                 <tr>
                   <td align="left" nowrap style="text-indent:10px;">
-                    <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%=h Group.get_path(@group_id, groups_cache) %></span></a>
+                    <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%= Group.get_path(@group_id, groups_cache) %></span></a>
                     &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                   </td>
                 </tr>
@@ -205,21 +205,21 @@ function onLoadSub()
   var array = new Array(new Array("0", " (root)", "", "selectFolder('0');", 0));
   var folderImgs = new Array(
                       <% icons = Folder.get_icons(nil, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, true, false) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, false, true) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>"),
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
                       <% icons = Folder.get_icons(nil, true, true) %>
-                        new Array("<%=h icons[1] %>", "<%=h icons[2] %>")
+                        new Array("<%= icons[1] %>", "<%= icons[2] %>")
                       );
   var firstMenuId = ThetisBox.buildTree("", array, null, "folderTree", "selKeeper", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
@@ -261,7 +261,7 @@ function onLoadSub()
         end
       end
     %>
-    new Array("<%= folder.id %>", " <%=h folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
+    new Array("<%= folder.id %>", " <%= folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
     <%
       if idx < (child_folders.length - 1)
     %>

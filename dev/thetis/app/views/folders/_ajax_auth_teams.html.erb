@@ -58,7 +58,7 @@
                        next if read_teams.include?(team.id.to_s)
                        next if write_teams.include?(team.id.to_s)
                     %>
-                      <option value="<%=h team.id %>"><%=h team.name %></option>
+                      <option value="<%= team.id %>"><%= team.name %></option>
                     <% end %>
                     </select>
                   </td>
@@ -88,13 +88,13 @@
                      writeOnly = write_teams - read_teams
                      readWrite.each do |team_id|
                     %>
-                      <option value="<%= team_id %>:r+w"><%=h Team.get_name(team_id) %> (Read/Write)</option>
+                      <option value="<%= team_id %>:r+w"><%= Team.get_name(team_id) %> (Read/Write)</option>
                     <% end %>
                     <% readOnly.each do |team_id| %>
-                      <option value="<%= team_id %>:r"><%=h Team.get_name(team_id) %> (Read)</option>
+                      <option value="<%= team_id %>:r"><%= Team.get_name(team_id) %> (Read)</option>
                     <% end %>
                     <% writeOnly.each do |team_id| %>
-                      <option value="<%= team_id %>:w"><%=h Team.get_name(team_id) %> (Write)</option>
+                      <option value="<%= team_id %>:w"><%= Team.get_name(team_id) %> (Write)</option>
                     <% end %>
                     </select>
                   </td>

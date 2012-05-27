@@ -3,7 +3,7 @@
   <tr>
     <td valign="top" style="padding:5px;">
       <div id="div_timetable" style="background-color:white;">
-        <%= render(:partial => 'schedules/timetable') %>
+        <%= render(:partial => 'schedules/timetable', :locals => {:brief_view => true}) %>
       </div>
     </td>
   </tr>

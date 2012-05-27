@@ -145,8 +145,8 @@ class SchedulesController < ApplicationController
         and (params[:teams].nil? or params[:teams].empty?) \
         and (params[:schedule][:scope] != Schedule::SCOPE_ALL)
 
-        nearest_day = schedule.get_nearest_day(date)
-        schedule.destroy unless schedule.nil?
+      nearest_day = schedule.get_nearest_day(date)
+      schedule.destroy unless schedule.nil?
     else
 
       if params[:users].nil? or params[:users].empty?
@@ -253,7 +253,7 @@ class SchedulesController < ApplicationController
         org_schedule.update_attributes(attrs)
       end
 
-      prms = {:show_id => schedule.id}
+      # prms = {:show_id => schedule.id}
     end
 
     if created
@@ -264,7 +264,7 @@ class SchedulesController < ApplicationController
 
     prms ||= {}
     prms[:action] = 'day'
-    prms[:id] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
+    prms[:date] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
     redirect_to(prms)
 
   rescue => evar

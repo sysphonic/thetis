@@ -15,9 +15,9 @@
       %>
         <span style="color:red; font-weight:bold;"><%= raw(expected_mark) %></span>
         <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
-          <%=h truncate(item.title, :length => 30) %>
+          <%= truncate(item.title, :length => 30) %>
         </a>
-        <span style="color:red; line-height:1.8;">&lt;<%=h workflow.get_status_name %>&gt;</span><br/>
+        <span style="color:red; line-height:1.8;">&lt;<%= workflow.get_status_name %>&gt;</span><br/>
       <%
         end
       end

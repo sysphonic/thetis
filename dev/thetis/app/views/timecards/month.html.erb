@@ -1,7 +1,7 @@
 
 <%= render(:partial => 'toolbar') %>
 
-<table align="center" width="95%" cellspacing="0" cellpadding="0">
+<table align="center" width="95%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
   <tr height="25">
     <td width="20%"></td>
     <td width="60%" align="center" valign="top">
@@ -10,7 +10,7 @@
       next_month = Date.new(@year, @month, 1) >> 1
       %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => last_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <span style="color:crimson; cursor:pointer;" onclick="selectMonth();"><u><%= sprintf('%4d - %02d', @year, @month) %></u></span>
+      <span style="color:crimson; cursor:pointer;" onclick="selectMonth(function(date){doUpdatePage(date);});"><u><%= sprintf('%4d - %02d', @year, @month) %></u></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => next_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
     </td>
     <td width="20%" align="right" style="padding-top:5px;">
@@ -21,8 +21,8 @@
     <% end %>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
 </table>
+
 
 <%= render(:partial => 'user_profile') %>
 
@@ -171,10 +171,10 @@ days.times do
       <%= options %>
     </td>
     <td align="center" nowrap>
-      <%=h (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %>
+      <%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %>
     </td>
     <td align="center" nowrap>
-      <%=h (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %>
+      <%= (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %>
     </td>
     <%
     actual_wktime = timecard.get_actual_wktime
@@ -185,10 +185,10 @@ days.times do
     end
     %>
     <td align="center" nowrap style="color:blue;">
-      <%=h (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
+      <%= (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
     </td>
     <td align="left" style="padding:0px 5px;">
-      <%=h timecard.comment %>
+      <%= timecard.comment %>
     </td>
 
     <td align="center" nowrap>
@@ -241,8 +241,7 @@ end
 %>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="15"></tr>
+<table width="100%" cellspacing="0" cellpadding="0" style="padding-top:15px;">
   <tr>
     <td align="left" valign="top" width="49%">
       <table class="timecard" width="100%">
@@ -312,7 +311,7 @@ end
             %>
             <%= (given_num + carried_over - @applied_paid_hlds - paid_holidays) %>
           <% if @login_user.id == @selected_user.id or @login_user.admin?(User::AUTH_TIMECARD) %>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= @selected_user.id %>, '<%=ApplicationHelper.h_s_quote @selected_user.get_name_for_timecard %>');" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= @selected_user.id %>, '<%= ApplicationHelper.h_s_quote(@selected_user.get_name_for_timecard) %>');" />
           <% end %>
           </td>
         </tr>
@@ -356,79 +355,15 @@ end
 <br/>
 <br/>
 
+
+<%= render(:partial => 'common/ym_selector', :locals => {:year => @year, :month => @month}) %>
+
 <script type="text/javascript">
-<!--
 
-var thetisBox = null;
-
-function selectMonth()
+function doUpdatePage(date)
 {
-  if (thetisBox != null){
-    thetisBox.remove();
-    thetisBox = null;
-  }
-
-  var content = getYmSelector("onYmSelectOK()", "onYmSelectCancel()");
-
-  thetisBox = new ThetisBox;
-  thetisBox.title = "<%= t('msg.select_month') %>";
-  thetisBox.overflow = "hidden";
-  thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
-}
-
-function getYmSelector(onOk, onCancel)
-{
-  var date = new Date();
-  var y = <%= @year %>;
-  var m = <%= @month %>;
-
-  content = "<form name='form_ym'>";
-  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
-  content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' valign='middle'>";
-  content += "      <select name='year'>";
-  for (var i=y-10; i <= y+10; i++) {
-    var selected = "";
-    if (i == y) selected = "selected";
-    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
-  }
-  content += "      </select>";
-  content += " - ";
-  content += "      <select name='month'>";
-  for (var i=1; i <= 12; i++) {
-    var selected = "";
-    if (i == m) selected = "selected";
-    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
-  }
-  content += "      </select>";
-  content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
-  content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
-  content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
-  content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr height='100%'>";
-  content += "    <td></td>";
-  content += "  </tr>";
-  content += "</table>";
-  content += "</form>";
-  return content;
-}
-
-function onYmSelectOK()
-{
-  var date = document.form_ym.year.value + "-" + fillLeft(document.form_ym.month.value, "0", 2);
-  thetisBox.remove();
   prog("TOP-RIGHT");
-  location.href = "<%= url_for(:controller => 'timecards', :action => 'month') %>?id=" + date + "&user_id=<%= @selected_user.id %>&display=<%= params[:display] %>";
-}
-
-function onYmSelectCancel()
-{
-  thetisBox.remove();
-  thetisBox = null;
+  location.href = "<%= url_for(:controller => 'timecards', :action => 'month') %>?date=" + date + "&user_id=<%= @selected_user.id %>&display=<%= params[:display] %>";
 }
 
 var thetisBoxPaidHldByUser = null;
@@ -464,6 +399,5 @@ function showPaidHldByUser(user_id, name)
   return true;
 }
 
-//-->
 </script>
 

@@ -1,0 +1,90 @@
+<%
+year ||= nil
+month ||= nil
+%>
+
+<script type="text/javascript">
+
+var thetisBoxYmSelector = null;
+
+function selectMonth(func)
+{
+  if (thetisBoxYmSelector) {
+    thetisBoxYmSelector.remove();
+    thetisBoxYmSelector = null;
+  }
+
+  var content = getYmSelector("onYmSelectOK()", "onYmSelectCancel()");
+
+  thetisBoxYmSelector = new ThetisBox;
+  thetisBoxYmSelector.title = "<%= t('msg.select_month') %>";
+  thetisBoxYmSelector.overflow = "hidden";
+  thetisBoxYmSelector.show("CENTER", "250,180", "TRAY", "", "", content);
+  thetisBoxYmSelector.ext_func = func;
+}
+
+function getYmSelector(onOk, onCancel)
+{
+<% if year.nil? or month.nil? %>
+  var date = new Date();
+<% end %>
+<% if year.nil? %>
+  var y = date.getFullYear();
+<% else %>
+  var y = <%= year %>;
+<% end %>
+<% if month.nil? %>
+  var m = date.getMonth()+1;
+<% else %>
+  var m = <%= month %>;
+<% end %>
+
+  var content = "";
+  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:70px;'>";
+  content += "    <td align='center' valign='middle'>";
+  content += "      <select id='ym_select_year'>";
+  for (var i=y-5; i <= y+5; i++) {
+    var selected = "";
+    if (i == y) selected = "selected";
+    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
+  }
+  content += "      </select>";
+  content += " - ";
+  content += "      <select id='ym_select_month'>";
+  for (var i=1; i <= 12; i++) {
+    var selected = "";
+    if (i == m) selected = "selected";
+    content += "      <option value='"+i+"' "+selected+">"+i+"</option>";
+  }
+  content += "      </select>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr>";
+  content += "    <td align='center' valign='top'>";
+  content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr height='100%'>";
+  content += "    <td></td>";
+  content += "  </tr>";
+  content += "</table>";
+  return content;
+}
+
+function onYmSelectOK()
+{
+  var date = _z("ym_select_year").value + "-" + fillLeft(_z("ym_select_month").value, "0", 2) + "-01";
+  thetisBoxYmSelector.remove();
+
+  thetisBoxYmSelector.ext_func(date);
+}
+
+function onYmSelectCancel()
+{
+  thetisBoxYmSelector.remove();
+  thetisBoxYmSelector = null;
+}
+
+</script>

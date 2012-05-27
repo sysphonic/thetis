@@ -78,13 +78,13 @@
                      writeOnly = @write_users - @read_users
                      readWrite.each do |user_id|
                     %>
-                      <option value="<%= user_id %>:r+w"><%=h User.get_name(user_id) %> (Read/Write)</option>
+                      <option value="<%= user_id %>:r+w"><%= User.get_name(user_id) %> (Read/Write)</option>
                     <% end %>
                     <% readOnly.each do |user_id| %>
-                      <option value="<%= user_id %>:r"><%=h User.get_name(user_id) %> (Read)</option>
+                      <option value="<%= user_id %>:r"><%= User.get_name(user_id) %> (Read)</option>
                     <% end %>
                     <% writeOnly.each do |user_id| %>
-                      <option value="<%= user_id %>:w"><%=h User.get_name(user_id) %> (Write)</option>
+                      <option value="<%= user_id %>:w"><%= User.get_name(user_id) %> (Write)</option>
                     <% end %>
                     </select>
                   </td>

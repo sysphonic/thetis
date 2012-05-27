@@ -17,7 +17,7 @@ unless @holidays.nil?
     next if year < cur_year-1 or year > cur_year+1
 %>
                     <% unless is_first %>,<% end %>
-                    new Array(new Date(<%= year %>, <%= month-1 %>, <%= day %>), "<%=h schedule.title %>")
+                    new Array(new Date(<%= year %>, <%= month-1 %>, <%= day %>), "<%= schedule.title %>")
 <%
     is_first = false
   end

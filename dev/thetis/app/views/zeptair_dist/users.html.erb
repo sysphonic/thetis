@@ -77,25 +77,25 @@ zept_cmd = @item.zeptair_command
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>
    <% else %>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap>
       <%= truncate(user.get_name, :length => 20) %>
     </td>
    <% end %>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap>
     <% unless comment.nil? or comment.updated_at.nil? %>
       <%= comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
     <% end %>
     </td>
 <% attachments.each do |attach| %>
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
     <% if entries.nil? %>
       <%= ZeptairDistHelper::MARK_NA %>
     <% else %>
@@ -110,7 +110,7 @@ zept_cmd = @item.zeptair_command
     </td>
 <% end %>
 <% unless zept_cmd.nil? %>
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
     <% if entries.nil? %>
       <%= ZeptairDistHelper::MARK_NA %>
     <% else %>
@@ -136,7 +136,6 @@ zept_cmd = @item.zeptair_command
 </form>
 
 <script type="text/javascript">
-<!--
 
 function clearGroup()
 {
@@ -170,6 +169,5 @@ function showGroupTreeToSelect(group_id)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-//-->
 </script>
 

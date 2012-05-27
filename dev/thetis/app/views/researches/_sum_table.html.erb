@@ -16,7 +16,7 @@
             group_name = Group.get_name group_id
           %>
           <td nowrap width="10%" align="right" bgcolor="" style="padding:3px;">
-            <%=h group_name %>
+            <%= group_name %>
           </td>
           <% end %>
         </tr>
@@ -33,13 +33,13 @@
         %>
         <tr>
           <td nowrap width="5%" bgcolor="<%= bg_color %>" align="center" style="padding:3px;">
-            <%=h (idx+1).to_s %>.
+            <%= (idx+1).to_s %>.
           </td>
           <td nowrap width="85%" bgcolor="<%= bg_color %>" align="left" style="padding:3px; padding-left:10px;">
-            <%=h vote %>
+            <%= vote %>
           </td>
           <td nowrap width="10%" align="right" bgcolor="<%= bg_color %>" style="padding:3px;">
-            <%=h total.to_s %>
+            <%= total.to_s %>
           </td>
           <td></td>
           <%
@@ -50,7 +50,7 @@
             <% if group_sum.nil? %>
               0
             <% else %>
-              <%=h group_sum.to_s %>
+              <%= group_sum.to_s %>
             <% end %>
             </td>
           <% end %>

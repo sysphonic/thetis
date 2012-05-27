@@ -6,7 +6,7 @@
       <table width="100%" cellspacing="0" cellpadding="0" style="border:steelblue 1px solid; border-collapse:collapse;">
         <tr>
       <% @schedules_hash.each do |day, schedules| %>
-          <td align="center" style="border:steelblue 1px solid; font-weight:400; font-size:11pt; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%=h Schedule::wday_name(day.wday) %>)</td>
+          <td align="center" style="width:14.28%; word-break:break-all; border:steelblue 1px solid; font-weight:400; font-size:11pt; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%= Schedule::wday_name(day.wday) %>)</td>
       <% end %>
         </tr>
         <tr>
@@ -24,7 +24,7 @@
               %>
               <tr>
                 <td align="center">
-                  <span class="span_holiday"><%=h sche_holiday.title %></span>
+                  <span class="span_holiday"><%= sche_holiday.title %></span>
                 </td>
               </tr>
               <% end %>

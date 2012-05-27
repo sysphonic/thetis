@@ -8,23 +8,21 @@ auth_write = @schedule.check_user_auth(@login_user, 'w', true)
 if @schedule.holiday?
   bg_color = 'white'
 else
+  text_color, bg_color = @schedule.scope_colors
   case @schedule.scope
     when Schedule::SCOPE_ALL
-      scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"
-      bg_color = '#FFD5C5'
+      scope = '<span style="color:'+text_color+';">' + t('schedule.disp_to_all') + "</span>"
     when Schedule::SCOPE_PRIVATE
-      scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
-      bg_color = 'lightcyan'
+      scope = '<span style="color:'+text_color+';">' + t('schedule.private') + "</span>"
     else
       scope = ''
-      bg_color = '#DEF9A3'
   end
 end
 %>
 
 <% if @schedule.holiday? %>
   <td align="center">
-    <span class="span_holiday"><%=h @schedule.title %></span>
+    <span class="span_holiday"><%= @schedule.title %></span>
   </td>
 <% else %>
 
@@ -33,13 +31,15 @@ end
     <% if @schedule.allday %>
       &bull;
       <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
-      <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
-        <%=h @schedule.title %>
+      <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
+        <%= @schedule.title %>
       <% if auth_read %></a><% end %>
-      <%= raw(scope) %>
+      <!-- <%= raw(scope) %> -->
       <% if auth_write %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" />
+      <!--
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" />
+      -->
       <% end %>
       <br/>
     <%
@@ -53,14 +53,16 @@ end
       end
       if auth_write
     %>
+      <!--
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote truncate(@schedule.title, :length => 20) %>'); return false;" /><br/>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" /><br/>
+      -->
       <% end %>
       <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
-      <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%=ApplicationHelper.h_s_quote @schedule.title %>'); return false;"><% end %>
-        <%=h @schedule.title %>
+      <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
+        <%= @schedule.title %>
       <% if auth_read %></a><% end %>
-      <%= raw(scope) %>
+      <!-- <%= raw(scope) %> -->
     <% end %>
 
   </td>

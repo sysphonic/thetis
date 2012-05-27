@@ -14,7 +14,7 @@
       @q_hash.each do |q_code, q_params_h|
         q_id = "#{q_params_h[:item_id]}:#{q_code}"
       %>
-        <option value="<%= q_id %>"><%=h truncate(q_params_h[:item_title], :length => 20) %> : $<%= q_code %></option>
+        <option value="<%= q_id %>"><%= truncate(q_params_h[:item_title], :length => 20) %> : $<%= q_code %></option>
       <% end %>
       </select>
       <%
@@ -25,8 +25,8 @@
         end
         cap = q_params_h[:caption]
       %>
-        <textarea id="<%= q_id %>" style="display:none;"><%=h (q_param.nil?)?'':q_param %></textarea>
-        <div id="<%= q_id %>_cap" style="display:none;"><%=h (cap.nil?)?'':cap %></div>
+        <textarea id="<%= q_id %>" style="display:none;"><%= (q_param.nil?)?'':q_param %></textarea>
+        <div id="<%= q_id %>_cap" style="display:none;"><%= (cap.nil?)?'':cap %></div>
       <% end %>
     </td>
   </tr>

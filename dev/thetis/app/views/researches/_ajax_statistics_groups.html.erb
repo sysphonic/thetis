@@ -11,7 +11,7 @@ unless @group_ids.nil?
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
         <%= Group.get_path(group_id, groups_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showGroupTreeToSelect('<%= group_id %>', true);" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%=ApplicationHelper.h_s_quote Group.get_path(group_id, groups_cache) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, groups_cache)) %>'); return false;" />
       </div>
 <%
   end

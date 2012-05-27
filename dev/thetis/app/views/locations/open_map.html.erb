@@ -15,7 +15,7 @@ else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
 end
 %>
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:snow; border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:ivory 2px solid;  border-bottom:ivory 2px solid; display:none;">
+<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:white; display:none;">
   <tr class="desktop_tr">
     <td class="desktop_td" align="center" valign="middle">
       <img id="img_map" src="<%= raw(img_url) %>" style="display:none;" />
@@ -28,7 +28,7 @@ end
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
 </span>
 
-<table class="toolbar" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 2px gray;">
+<table class="toolbar" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 1px gray; -webkit-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
   <tr>
     <td width="20" rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
       &nbsp;
@@ -63,7 +63,7 @@ end
             <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="left" nowrap>
-                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%=h Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+                  <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
                   &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
               </tr>
@@ -95,8 +95,12 @@ unless @locations.nil?
 
     width_limit = '';
     width_limit = 'width:200px;' if location.get_name.length >= 30;
+
+    unless location.updated_at.nil?
+      location_at = location.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+    end
 %>
-  <div class="location_on_map" id="<%= location_id %>" align="left" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
+  <div class="location_on_map" id="<%= location_id %>" align="left" title="<%= location_at %>" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
     user_name, u_groups, figure = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
     icon_img = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
@@ -109,7 +113,7 @@ unless @locations.nil?
     <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
     <% end %>
       <% if is_target %><b style="color:red;"><% end %>
-      <%=h truncate(user_name, :length => 30) %>
+      <%= truncate(user_name, :length => 30) %>
       <% if is_target %></b><% end %>
     <% unless u_groups.empty? %>
     </a>
@@ -153,7 +157,7 @@ TrayDragObserver.prototype = {
     if (loc.className != "location_tray") {
       return;
     }
-    _z("div_desktop").style.backgroundColor = "snow";
+    _z("div_desktop").style.backgroundColor = "white";
     draggable.options.snap = false;
   }
 }
@@ -178,6 +182,7 @@ Droppables.add(
             new Ajax.Request(
                     "<%= url_for(:controller => 'locations', :action => 'on_moved') %>",
                     {
+                      method:"post",
                       asynchronous:true,
                       evalScripts:true,
                       parameters:"x="+axis[0]+"&y="+axis[1]+"&group_id=<%= @map_group_id %>&authenticity_token=<%= form_authenticity_token %>",
@@ -218,6 +223,8 @@ desktop.style.display = "block";
 
 function onLoadSub()
 {
+  document.body.style.backgroundColor = "#eaeaea";
+
   var mainRegion = getClientRegion();
   var mainWidth = mainRegion.width;
   var mainHeight = mainRegion.height;

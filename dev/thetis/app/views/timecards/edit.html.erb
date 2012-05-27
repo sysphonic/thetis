@@ -7,7 +7,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
 <%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
-<!--
+
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
     function() {
@@ -32,12 +32,12 @@ calDisp.setFunc(
     }
   );
 calDisp.setStyle( "frame_color", "#3333CC" );
-//-->
+
 </script>
 
 <% unless @schedules.nil? %>
 <div style="padding-bottom:10px;">
-  <table align="center" cellspacing="0" cellpadding="0" width="98%" style="border:1px outset lightgrey; background-color:#eee;">
+  <table align="center" cellspacing="0" cellpadding="0" width="98%" style="border:1px outset lightgrey; background-color:#eee;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
     <tr>
       <td valign="top" style="padding:10px;">
         <div id="div_timetable" style="background-color:white;">
@@ -67,7 +67,7 @@ next_week = @date + 7
 %>
         <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
         <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+        <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
         &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
         &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
@@ -122,7 +122,7 @@ end
                      :onChange => 'changeWorkcode(this.value);'
                   %>
       <% elsif !@timecard.nil? %>
-        <%=h @timecard.workcode_name %>
+        <%= @timecard.workcode_name %>
       <% end %>
       </td>
     </tr>
@@ -219,7 +219,7 @@ end
           </tr>
         </table>
       <% elsif !@timecard.nil? %>
-        <%=h @timecard.comment %>
+        <%= @timecard.comment %>
       <% end %>
       </td>
     </tr>
@@ -281,7 +281,7 @@ end
 
 <br/>
 
-<%= render(:partial => 'common/schedule_func', :locals => {:from => 'desktop'}) %>
+<%= render(:partial => 'common/schedule_func', :locals => {:from => 'timecards'}) %>
 
 <script type="text/javascript">
 
@@ -377,12 +377,12 @@ function inputBreak(org_start, org_end)
 
   var hours = new Array(
   <% THETIS_HOURS.each do |hour| %>
-        <%=h hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
+        <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
   <% end %>
       );
   var mins = new Array(
   <% THETIS_MINUTES.each do |min| %>
-        <%=h min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
+        <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
   <% end %>
       );
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);

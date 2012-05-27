@@ -5,7 +5,7 @@
 <%= render(:partial => 'common/jkl_calendar_init') %>
 
 <script type="text/javascript">
-<!--
+
 var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
     function() {
@@ -15,15 +15,14 @@ calDisp.setFunc(
     }
   );
 calDisp.setStyle( "frame_color", "#3333CC" );
-//-->
+
 </script>
 
 <%= render :partial => 'toolbar'%>
 
 <%= form_tag( {:controller => 'timecards', :action => 'group', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
-  <input type="hidden" name="display" value="<%=h params[:display] %>" />
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <tr height="5"><td></td></tr>
+  <input type="hidden" name="display" value="<%= params[:display] %>" />
+  <table width="100%" cellspacing="0" cellpadding="0" style="padding:10px 0px;">
     <tr>
       <td align="center">
 <%
@@ -34,12 +33,11 @@ next_week = @date + 7
 %>
         <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
         <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+        <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
         &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
         &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
-    <tr height="5"><td></td></tr>
   </table>
 </form>
 
@@ -149,16 +147,16 @@ else
       %>
       <%= options %>
     </td>
-    <td align="center" nowrap><%=h (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %></td>
-    <td align="center" nowrap><%=h (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %></td>
+    <td align="center" nowrap><%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %></td>
+    <td align="center" nowrap><%= (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %></td>
     <%
     actual_wktime = timecard.get_actual_wktime
     %>
     <td align="center" nowrap style="color:blue;">
-      <%=h (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
+      <%= (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
     </td>
     <td align="left" style="padding:0px 5px;">
-      <%=h timecard.comment %>
+      <%= timecard.comment %>
     </td>
 
     <td align="center" nowrap>

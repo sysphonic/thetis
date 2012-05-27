@@ -13,11 +13,11 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
     thetisBoxScheduleDetail = null;
   }
 
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
+  thetisBoxScheduleDetail = new ThetisBox;
+  thetisBoxScheduleDetail.resizable = true;
+  thetisBoxScheduleDetail.title = "<%= Schedule.model_name.human %> <%= t('msg.hyphen') %> "+title;
+  thetisBoxScheduleDetail.bgcolor_title = "limegreen";
+  thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
 
   if (!addParams) {
     addParams = new Array();
@@ -39,9 +39,9 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
             onComplete:function(request) {
                 thetisBoxProgress.remove();
 
-                thetisBox.show(
+                thetisBoxScheduleDetail.show(
                           "CENTER",
-                          mainWidth*80/100+"," + mainHeight*80/100,
+                          "540," + mainHeight*80/100,
                           "TRAY",
                           "",
                           "",
@@ -53,12 +53,6 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
         );
 }
 
-editScheduleDetail = function(date, id)
-{
-  prog("TOP-RIGHT");
-  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?date="+date+"&edit_id="+id;
-}
-
 doScheduleDelete = function(date, id, title)
 {
   confm("<%= t('paren.square.left') %>"+title+"<%= t('schedule.confirm_to_delete') %>", "_doScheduleDelete('"+date+"', '"+id+"')");
@@ -68,6 +62,115 @@ _doScheduleDelete = function(date, id)
 {
   prog("TOP-RIGHT");
   location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?date="+date+"&doDelete="+id;
+}
+
+newScheduleDetail = function(date, addParams, title)
+{
+  if (thetisBoxScheduleDetail != null) {
+    thetisBoxScheduleDetail.remove();
+    thetisBoxScheduleDetail = null;
+  }
+  thetisBoxScheduleDetail = new ThetisBox;
+  thetisBoxScheduleDetail.resizable = true;
+  thetisBoxScheduleDetail.bgcolor_title = "limegreen";
+  thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
+
+  if (!addParams) {
+    addParams = new Array();
+  }
+  addParams.push("date=" + date);
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+  if (document.forms[0]) {
+    addParams.push(Form.serialize(document.forms[0]));
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for(:controller => 'schedules', :action => 'new') %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                parameters:addParams.join("&"),
+                onComplete:function(request){
+                  thetisBoxProgress.remove();
+
+                  thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> ";
+                  if (title) {
+                    thetisBoxScheduleDetail.title += title;
+                  } else {
+                    thetisBoxScheduleDetail.title += "<%= Schedule.model_name.human %>";
+                  }
+                  thetisBoxScheduleDetail.show(
+                          "CENTER",
+                          "540," + mainHeight*80/100,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                  request.responseText.evalScripts();
+                }
+              }
+            );
+}
+
+editScheduleDetail = function(date, id, title, addParams)
+{
+  if (thetisBoxScheduleDetail != null) {
+    thetisBoxScheduleDetail.remove();
+    thetisBoxScheduleDetail = null;
+  }
+  thetisBoxScheduleDetail = new ThetisBox;
+  thetisBoxScheduleDetail.resizable = true;
+  thetisBoxScheduleDetail.bgcolor_title = "limegreen";
+  thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
+
+  if (!addParams) {
+    addParams = new Array();
+  }
+  addParams.push("id="+id);
+  addParams.push("date="+date);
+<% unless from.nil? %>
+  addParams.push("from=<%= from %>");
+<% end %>
+  if (document.forms[0]) {
+    addParams.push(Form.serialize(document.forms[0]));
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+              "<%= url_for(:controller => 'schedules', :action => 'edit') %>",
+              {
+                method:"get",
+                parameters:addParams.join("&"),
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request){
+                  thetisBoxProgress.remove();
+
+                  thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> ";
+                  if (title) {
+                    thetisBoxScheduleDetail.title += title;
+                  } else {
+                    thetisBoxScheduleDetail.title += "<%= Schedule.model_name.human %>";
+                  }
+                  thetisBoxScheduleDetail.show(
+                          "CENTER",
+                          "540," + mainHeight*80/100,
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                  thetisBoxProgress.remove();
+                  request.responseText.evalScripts();
+                }
+              }
+            );
 }
 
 </script>

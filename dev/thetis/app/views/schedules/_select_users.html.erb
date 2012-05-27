@@ -35,6 +35,10 @@ onScheduleUsersOk = function()
 {
   var ret_ary = moveList(_z("user_candidates"), _z("users_selected"));
 
+  if (ret_ary != null && ret_ary.length > 0) {
+    reqTargetDay++;
+  }
+
   var instance = ThetisBox.getInstanceForElem(_z("div_selectUsers"));
   if (instance) {
     instance.remove();

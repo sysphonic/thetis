@@ -43,7 +43,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
           <% if @login_user.admin? User::AUTH_SCHEDULE %>
           <td width="5"></td>
           <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/config.gif" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
           </td>
           <% end %>
         </tr>
@@ -93,7 +93,7 @@ next_week = @date + 7
 %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'group', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'group', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input name="date" type="text" readonly style="text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%=h Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'group', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'group', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>
@@ -119,11 +119,11 @@ else
     user_name = User.get_name(user_id)
 %>
   <div id="div_timetable_<%= user_id %>">
-    <table align="center" width="100%" cellspacing="0" cellpadding="0">
+    <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:10px;">
       <tr>
         <td align="left"  style="color:navy;">
-          <%=h user_name %>&nbsp;
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/calendar.gif" alt="<%= t('schedule.calendar') %>" title="<%= t('schedule.calendar') %>" onclick="showCalendar('<%= user_id %>', '<%=ApplicationHelper.h_s_quote(user_name) %>');">
+          <%= user_name %>&nbsp;
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/calendar.gif" alt="<%= t('schedule.calendar') %>" title="<%= t('schedule.calendar') %>" onclick="showCalendar('<%= user_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>');">
         </td>
       </tr>
       <tr height="5"><td></td></tr>
@@ -132,7 +132,6 @@ else
           <%= render(:partial => 'weektable') %>
         </td>
       </tr>
-      <tr height="10"><td></td></tr>
     </table>
   </div>
 <%
@@ -141,7 +140,7 @@ end
 %>
 
 
-<%= render(:partial => 'common/schedule_func') %>
+<%= render(:partial => 'common/schedule_func', :locals => {:from => 'schedules'}) %>
 
 <script type="text/javascript">
 

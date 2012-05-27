@@ -1,7 +1,9 @@
 
 <table align="center" width="95%" cellpadding="0" cellspacing="2">
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:darkseagreen;"><%= Workflow.human_attribute_name('status') %></td>
+    <td class="item_cap_td" nowrap style="background-color:#ffde00;">
+      <%= Workflow.human_attribute_name('status') %>
+    </td>
     <td style="padding-left:5px;">
       <%
       back_style = ''
@@ -22,13 +24,13 @@
               img = "#{THETIS_RELATIVE_URL_ROOT}/images/check_ng.gif"
             end
             %>
-            <img src="<%= img %>">
+            <img src="<%= img %>" />
           </td>
         <% end %>
           <td align="left" style="padding-left:10px">
-            <span style="color:red; font-size:11pt; font-weight:bold;"><%=h @workflow.get_status_name %></span>
+            <span style="color:red; font-size:11pt; font-weight:bold;"><%= @workflow.get_status_name %></span>
           <% unless @workflow.decided_at.nil? %>
-            &nbsp;<span style="font-size:10pt;">(<%=h @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+            &nbsp;<span style="font-size:10pt;">(<%= @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
           <% end %>
           </td>
         </tr>
@@ -42,7 +44,9 @@
   @orders.each do |order|
   %>
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:lightgreen;"><%= t('workflow.order_prefix')+(order_idx+1).to_s %></td>
+    <td class="item_cap_td" nowrap style="background-color:#aaeaff;">
+      <%= t('workflow.order_prefix')+(order_idx+1).to_s %>
+    </td>
     <td class="item_value_td">
       <table cellspacing="0" cellpadding="0" width="100%">
         <tr>
@@ -55,7 +59,7 @@
               marked_users << user_id
             end
           %>
-            <div style="padding-bottom:5px;"><%= raw(expected_mark) %> <%=h user_name %></div>
+            <div style="padding-bottom:5px;"><%= raw(expected_mark) %> <%= user_name %></div>
             <% if !@item.comments.nil? %>
 
               <%
@@ -76,20 +80,20 @@
             <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'doWfRespond(); return false;') %>
               <%= hidden_field('comment', 'item_id', :value => @item.id) %>
               <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
-              <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#A9CDF9">
+              <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#b4d4fb;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
                 <tr>
                   <td>
                     <span id="comment_ack">
-                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%=h Comment::XTYPE_ACK %>" onclick="_z('comment_ack').style.backgroundColor='greenyellow'; _z('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%=h Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
+                      <input type="radio" id="xtype_ack" name="comment[xtype]" value="<%= Comment::XTYPE_ACK %>" onclick="_z('comment_ack').style.backgroundColor='greenyellow'; _z('comment_nak').style.backgroundColor='';" /><label for="xtype_ack"><%= Comment.get_xtype_name(Comment::XTYPE_ACK) %></label>
                     </span>
                     &nbsp;
                     <span id="comment_nak">
-                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%=h Comment::XTYPE_NAK %>" onclick="_z('comment_ack').style.backgroundColor=''; _z('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%=h Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
+                      <input type="radio" id="xtype_nak" name="comment[xtype]" value="<%= Comment::XTYPE_NAK %>" onclick="_z('comment_ack').style.backgroundColor=''; _z('comment_nak').style.backgroundColor='lightcoral';" /><label for="xtype_nak"><%= Comment.get_xtype_name(Comment::XTYPE_NAK) %></label>
                     </span>
                   </td>
                 </tr>
                 <tr>
-                  <td style="font-size:8pt; color:midnightblue; padding-left:10px; padding-right:10px;">
+                  <td style="color:midnightblue; padding:0px 10px;">
                       <%= t('cap.comment') %>
                       <%= text_area('comment', 'message', :rows => '4', :value => '', :style => 'width:100%;') %>
                   </td>

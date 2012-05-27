@@ -9,17 +9,17 @@
 <meta http-equiv="Content-Script-Type" content="text/JavaScript">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <%= csrf_meta_tag %>
-<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetis110.css?timestamp=2012052101" media="all" rel="stylesheet" type="text/css" />
+<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetis110.css?timestamp=2012052701" media="all" rel="stylesheet" type="text/css" />
 <link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetisbox.css" media="all" rel="stylesheet" type="text/css" />
 <%= javascript_include_tag('prototype', 'scriptaculous/effects', 'scriptaculous/dragdrop', 'ckeditor/ckeditor', 'jkl-calendar/jkl-calendar') %>
 <%= javascript_include_tag('dojo/dojo') %>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?timestamp=2012050501" type="text/javascript"></script>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?timestamp=2012050201" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110.js?timestamp=2012052101" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110.js?timestamp=2012052302" type="text/javascript"></script>
 
 <script type="text/javascript">
 
-ThetisBox.setTitle("<%=h $thetis_config[:general]['app_title'] %>");
+ThetisBox.setTitle("<%= $thetis_config[:general]['app_title'] %>");
 ThetisBox.setOK("<%= t('btn.ok') %>");
 ThetisBox.setCancel("<%= t('btn.cancel') %>");
 ThetisBox.setClose("<%= t('btn.close') %>");
@@ -34,7 +34,7 @@ setLeftLogin();
 function setHeaderLogin()
 {
   try {
-    top.header.setLoginName("<%=h truncate(login_name, :length => 10) %>");
+    top.header.setLoginName("<%= truncate(login_name, :length => 10) %>");
   } catch(e) {
     setTimeout("setHeaderLogin();", 100);
   }
@@ -43,7 +43,7 @@ function setHeaderLogin()
 function setLeftLogin()
 {
   try {
-    top.left.setLogin("<%=h login_name %>", <%= login_admin %>);
+    top.left.setLogin("<%= login_name %>", <%= login_admin %>);
   } catch(e) {
     setTimeout("setLeftLogin();", 100);
   }
@@ -86,7 +86,7 @@ function showTopicBox()
   var thetisBox = new ThetisBox;
   thetisBox.resizable = true;
   thetisBox.title = "<%= t('topicbox.title') %>";
-  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%=h $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
   _z("divThetisBox-" + thetisBox.id).style.zIndex += 1;
 }
 
@@ -146,8 +146,8 @@ function doResize()
 
     var menubox = _z("menubox");
     if (menubox != null) {
-      menubox.style.top = (toolbox_top - 85) + "px";
-      menubox.style.left = (toolbox_left + 26) + "px";
+      menubox.style.top = (toolbox_top - 35) + "px";
+      menubox.style.left = (toolbox_left + 30) + "px";
     }
 
   } else if (div = _z("div_list")) {

@@ -7,7 +7,7 @@
     </td>
     <td align="left" style="color:blue;">
       <% unless @group_id.nil? %>
-        <%=h Group.get_path(@group_id) %>
+        <%= Group.get_path(@group_id) %>
       <% end %>
     </td>
   </tr>
@@ -30,6 +30,6 @@
     next if users_selected.include?(user_id)
     disp = name
   %>
-    <option value="<%=h user_id %>"><%=h disp %></option>
+    <option value="<%= user_id %>"><%= disp %></option>
   <% end %>
 </select>

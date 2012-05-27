@@ -21,7 +21,7 @@ unless @user.nil? or @user.groups.nil?
             </td>
             <td width="10">&nbsp;</td>
             <td width="15">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%=ApplicationHelper.h_s_quote Group.get_path(group_id, groups_cache) %>', <%= @user.id %>); return false;" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, groups_cache)) %>', <%= @user.id %>); return false;" />
             </td>
           </tr>
         </table>

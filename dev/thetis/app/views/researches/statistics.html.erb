@@ -59,7 +59,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
                   q_cap = @q_hash[q_code][:caption]
                   unless q_cap.nil? or q_cap.empty?
                 %>
-                  <span style="color:blueviolet; font-weight:bold;"><%=h q_cap %></span>
+                  <span style="color:blueviolet; font-weight:bold;"><%= q_cap %></span>
                 <%
                   end
                 end
@@ -128,7 +128,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
                       unless ans.nil?
                         ans.split("\n").each do |val|
                 %>
-                  <li><%=h val %><br/>
+                  <li><%= val %><br/>
                 <%
                         end
                       end
@@ -192,7 +192,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
 </div>
 
 <script type="text/javascript">
-<!--
+
 function showResearchTab(tab_id, div_id)
 {
   _z("tab_statistics").style.cursor = "pointer";
@@ -226,5 +226,4 @@ function showGroupTreeToSelect(group_id)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-//-->
 </script>

@@ -19,36 +19,44 @@
       <td class="item_value_td">
 
 <%
-if params[:from] == 'desktop'
-href = url_for(:controller => 'schedules', :action => 'show_in_day', :id => @schedule.id, :date => Date.today.strftime(Schedule::SYS_DATE_FORM))
+unless params[:from].blank?
+  date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
+  href = url_for(:controller => 'schedules', :action => 'show_in_day', :id => @schedule.id, :date => date_s)
+  auth_write = @schedule.check_user_auth(@login_user, 'w', true)
 %>
         <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;">
           <%= @schedule.title %>
         </a>
         &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.move_to_schedule') %>" title="<%= t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
+      <% if auth_write %>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', <%= @schedule.id %>)" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>');" />
+      <% end %>
 <% else %>
         <%= @schedule.title %>
-<%
-toy_xtype = Toy::XTYPE_SCHEDULE
-toy_target_id = @schedule.id
-if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s))
-%>
+  <%
+  toy_xtype = Toy::XTYPE_SCHEDULE
+  toy_target_id = @schedule.id
+  if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s))
+  %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
 
 <script type="text/javascript">
+
 addToDesktop = function()
 {
-confm("<%= t('paren.square.left') + truncate(@schedule.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
+  confm("<%= t('paren.square.left') + truncate(@schedule.title, :length => 20) + t('msg.confirm_to_added_to_desktop') %>", "_addToDesktop()");
 }
 
 _addToDesktop = function()
 {
-var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
-new Ajax.Request(
+  new Ajax.Request(
         "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
         {
+          method:"post",
           parameters:"authenticity_token=<%= form_authenticity_token %>",
           asynchronous:true,
           evalScripts:false,
@@ -65,9 +73,10 @@ new Ajax.Request(
         }
       );
 }
+
 </script>
 <%
-end
+  end
 end
 %>
       </td>
@@ -177,15 +186,20 @@ end
       </td>
       <td class="item_value_td">
         <%
+        text_color, bg_color = @schedule.scope_colors
         case @schedule.scope
           when Schedule::SCOPE_ALL
-            scope = '<span style="color:orangered;">' + t('schedule.disp_to_all') + "</span>"
+            scope = '<span style="color:'+text_color+';">' + t('schedule.disp_to_all') + '</span>'
           when Schedule::SCOPE_PUBLIC
-            scope = '<span style="color:darkgreen;">' + t('schedule.public') + "</span>"
+            scope = '<span style="color:'+text_color+';">' + t('schedule.public') + '</span>'
           when Schedule::SCOPE_PRIVATE
-            scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"
+            scope = '<span style="color:'+text_color+';">' + t('schedule.private') + '</span>'
           else
             scope = ''
+        end
+        if scope.length > 0
+          color_square = '<span style="display:inline-block; min-width:20px; width:20px; background-color:'+bg_color+';">&nbsp;</span>'
+          scope = color_square + ' ' + scope + ' ' + color_square
         end
         %>
         <%= raw(scope) %>
@@ -259,7 +273,7 @@ end
           disp = Equipment.get_name(equipment_id)
           sep = (equipments.last == equipment_id)?'':', '
         %>
-          <% unless equip.nil? %><a class="a_underline" href="#" onclick="showEquipment(<%= equipment_id %>, '<%=ApplicationHelper.h_s_quote disp %>'); return false;"><% end %>
+          <% unless equip.nil? %><a class="a_underline" href="#" onclick="showEquipment(<%= equipment_id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;"><% end %>
             <%= disp %>
           <% unless equip.nil? %></a><% end %><%= sep %>
         <% end %>
@@ -284,7 +298,7 @@ end
           auth_read = item.check_user_auth(@login_user, 'r', true) unless item.nil?
         %>
         <li style="list-style:square;">
-          <% if auth_read %><a class="a_underline" href="#" onclick="showItem(<%= item.id %>, '<%=ApplicationHelper.h_s_quote disp %>'); return false;"><% end %>
+          <% if auth_read %><a class="a_underline" href="#" onclick="showItem(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;"><% end %>
             <%= disp %>
           <% if auth_read %></a><% end %>
           <% if !@login_user.nil? and !item.nil? and item.editable?(@login_user.id) %>

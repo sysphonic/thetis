@@ -58,21 +58,10 @@ end
 </table>
 
 <% unless @login_user.nil? %>
-<table id="menubox" cellpadding="0" cellspacing="0" style="height:85px; position:absolute; display:none;">
-  <tr height="50">
-    <td align="center" valign="middle">
-      <div onMouseOver="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png';" onMouseOut="if(document.images) document.blue_sphere.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png';">
-        <img name="blue_sphere" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere.png" onclick="doShowLocations();" title="<%= OfficeMap.model_name.human %>" style="cursor:pointer;" />
-      </div>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/blue_sphere_on.png" style="display:none;" alt="" />
-    </td>
-  </tr>
+<table id="menubox" cellpadding="0" cellspacing="0" style="height:35px; position:absolute; display:none;">
   <tr height="35">
     <td align="center" valign="middle">
-      <div onMouseOver="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png';" onMouseOut="if(document.images) document.mini_window_1.src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png';">
-        <img name="mini_window_1" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png" onclick="editConfig();" title="<%= Desktop.model_name.human %> <%= t('btn.config') %>" style="cursor:pointer;" />
-      </div>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window_open.png" style="display:none;" alt="" />
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/gear32x32.png" onclick="editConfig();" title="<%= Desktop.model_name.human %> <%= t('btn.config') %>" style="cursor:pointer;" />
     </td>
   </tr>
 </table>
@@ -95,16 +84,23 @@ end
     <td align="center" valign="middle">
       <table id="tools" width="100%">
         <tr>
+        <% unless @login_user.nil? %>
+          <td width="25%" style="cursor:pointer;;" align="center" valign="middle">
+            <div id="tool_map" class="desktop_toolbtn" title="<%= OfficeMap.model_name.human %>" onclick="doShowLocations();" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_map.png" alt="<%= OfficeMap.model_name.human %>" />
+            </div>
+          </td>
+        <% end %>
         <% if $thetis_config[:menu]['req_login_schedules'] == '1' and @login_user.nil? %>
         <% else %>
           <td width="25%" style="cursor:pointer;;" align="center" valign="middle">
-            <div id="tool_calendar" style="vertical-align:middle;" title="<%= t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_calendar" class="desktop_toolbtn" title="<%= t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_calendar.png" alt="<%= t('calendar.name') %>" />
             </div>
           </td>
         <% end %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_label" style="vertical-align:middle;" title="<%= t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_label" class="desktop_toolbtn" title="<%= t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_label.png" alt="<%= t('desktop.label.create') %>" />
             </div>
           </td>
@@ -117,25 +113,25 @@ end
               end
             %>
             <input id="biorhythm_req_birth" type="hidden" value="<%= req_birth %>" />
-            <div id="tool_biorhythm" style="vertical-align:middle;" title="<%= t('biorhythm.show') %>" onclick="if (_z('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_biorhythm" class="desktop_toolbtn" title="<%= t('biorhythm.show') %>" onclick="if (_z('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" alt="<%= t('biorhythm.show') %>">
             </div>
             <% end %>
           </td>
         <% unless @login_user.nil? %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_postlabel" style="vertical-align:middle;" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_postlabel" class="desktop_toolbtn" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" alt="<%= t('desktop.label.post') %>" />
             </div>
           </td>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_addressbook" style="vertical-align:middle;" title="<%= t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_addressbook" class="desktop_toolbtn" title="<%= t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_addressbook.png" alt="<%= t('address.book') %>" />
             </div>
           </td>
         <% end %>
           <td width="20%" style="cursor:pointer;" align="center" valign="middle">
-            <div id="tool_tray" style="vertical-align:middle;" onclick="showTray()" title="<%= t('desktop.news.tray') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_tray" class="desktop_toolbtn" onclick="showTray()" title="<%= t('desktop.news.tray') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_tray.png" alt="<%= t('desktop.news.tray') %>">
             </div>
           </td>
@@ -192,11 +188,11 @@ unless @toys.nil?
     <img src="<%= icon_img %>" style="cursor:move;" />
 
   <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
-    <a href="#" onclick="showScheduleDetail(null, '<%= toy.target_id %>', '<%=ApplicationHelper.h_s_quote(truncate(toy.name, :length => 20)) %>'); return false;">
+    <a href="#" onclick="showScheduleDetail(null, '<%= toy.target_id %>', '<%= ApplicationHelper.h_s_quote(truncate(toy.name, :length => 20)) %>'); return false;">
   <% else %>
     <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
   <% end %>
-      <%=h truncate(toy.name, :length => 30) %>
+      <%= truncate(toy.name, :length => 30) %>
     </a>
     <span id="<%= toy_id %>_type" style="display:none;"><%= toy.xtype %></span>
   </div>
@@ -322,10 +318,10 @@ editConfig = function()
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/mini_window.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
+                thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
                 thetisBoxConfig.show(
                           "CENTER",
-                          (mainWidth*80/100)+','+(mainHeight*85/100),
+                          "580,"+(mainHeight*85/100),
                           "TRAY",
                           "",
                           "",
@@ -387,7 +383,7 @@ user_param += @login_user.id.to_s unless @login_user.nil?
 
   thetisBox.show(
             "CENTER",
-            (mainWidth*90/100)+','+(mainHeight*92/100),
+            (mainWidth*90/100)+','+(mainHeight*90/100),
             "IFRAME",
             "",
             "",
@@ -609,17 +605,23 @@ addPostTo = function()
 
 //////////////////////////
 
+var thetisBoxAddressBook = null;
+
 showAddressBook = function()
 {
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.title = "<%= t('address.book') %>";
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
+  if (thetisBoxAddressBook) {
+    thetisBoxAddressBook.remove();
+    thetisBoxAddressBook = null;
+  }
+  thetisBoxAddressBook = new ThetisBox;
+  thetisBoxAddressBook.resizable = true;
+  thetisBoxAddressBook.title = "<%= t('address.book') %>";
+  thetisBoxAddressBook.bgcolor_title = "limegreen";
+  thetisBoxAddressBook.bgcolor_body = "lightcyan";
 
-  thetisBox.show(
+  thetisBoxAddressBook.show(
             "CENTER",
-            (mainWidth*80/100)+','+(mainHeight*92/100),
+            (mainWidth*80/100)+','+(mainHeight*90/100),
             "IFRAME",
             "",
             "",
@@ -640,6 +642,7 @@ save = function(toy_id)
   new Ajax.Request(
           "<%= url_for(:controller => 'desktop', :action => 'on_toys_moved') %>?id=" + encodeURIComponent(toy_id.split("_")[1]),
           {
+            method:"post",
             asynchronous:true,
             evalScripts:true,
             parameters:"x="+axis[0]+"&y="+axis[1]+"&authenticity_token=<%= form_authenticity_token %>"
@@ -707,10 +710,33 @@ tipsRecyclebox = function()
   thetisBox.show(x+","+y, "", "TIPS", "", "<%= t('desktop.drop_to_remove')%>", "");
 }
 
+var thetisBoxLocations = null;
+
 doShowLocations = function()
 {
+/*
   prog("TOP-RIGHT");
   location.href = "<%= url_for(:controller => 'locations', :action => 'open_map') %>";
+*/
+ if (thetisBoxLocations) {
+    thetisBoxLocations.remove();
+    thetisBoxLocations = null;
+  }
+  thetisBoxLocations = new ThetisBox;
+  thetisBoxLocations.resizable = true;
+  thetisBoxLocations.title = "<%= OfficeMap.model_name.human %>";
+  thetisBoxLocations.bgcolor_title = "limegreen";
+  thetisBoxLocations.bgcolor_body = "lightcyan";
+  thetisBoxLocations.border_content = "";
+
+  thetisBoxLocations.show(
+            "CENTER",
+            (mainWidth*80/100)+','+(mainHeight*92/100),
+            "IFRAME",
+            "",
+            "",
+            "<%= url_for(:controller => 'locations', :action => 'open_map') %>"
+          );
 }
 
 </SCRIPT>

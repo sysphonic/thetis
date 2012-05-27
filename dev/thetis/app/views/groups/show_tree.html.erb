@@ -128,14 +128,14 @@ function onLoadSub()
   group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'
   %>
   var folderImgs = new Array(
-                        new Array("<%=h group_folder_open %>", "<%=h group_folder_close %>")
+                        new Array("<%= group_folder_open %>", "<%= group_folder_close %>")
                       );
   var array = new Array(new Array("0", "/(root)", "", "selectGroup('0');", 0));
   var firstMenuId = ThetisBox.buildTree("", array, null, "groupTree", "selKeeper", folderImgs);
   <% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
     <% child_groups.each_with_index do |group, idx| %>
-        new Array("<%= group.id %>", "/<%=h group.name %>", "", "selectGroup('<%= group.id %>');", 0)
+        new Array("<%= group.id %>", "/<%= group.name %>", "", "selectGroup('<%= group.id %>');", 0)
       <% if idx < (child_groups.length - 1) %>
         ,
     <%

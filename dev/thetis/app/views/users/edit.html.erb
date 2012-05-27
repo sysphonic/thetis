@@ -72,7 +72,7 @@
                 %>
                 <li type="square">
                 <% if access_auth %><a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item.id) %>'; return false;"><% end %>
-                  <%=h team.name %>
+                  <%= team.name %>
                 <% if access_auth %></a><% end %><br/>
                 <%
                   rescue
@@ -151,7 +151,6 @@
 <br/>
 
 <script type="text/javascript">
-<!--
 
 function doDelete(user_id, title)
 {
@@ -256,5 +255,4 @@ doUpdateZeptAllowed = function()
             );
 }
 
-//-->
 </script>

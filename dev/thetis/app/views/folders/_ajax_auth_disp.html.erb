@@ -69,13 +69,13 @@
                    write_only = write_users - read_users
                    read_write.each do |user_id|
                   %>
-                    <%=h User.get_name(user_id) %> (Read/Write)<br/>
+                    <%= User.get_name(user_id) %> (Read/Write)<br/>
                   <% end %>
                   <% read_only.each do |user_id|  %>
-                    <%=h User.get_name(user_id) %> (Read)<br/>
+                    <%= User.get_name(user_id) %> (Read)<br/>
                   <% end %>
                   <% write_only.each do |user_id|  %>
-                    <%=h User.get_name(user_id) %> (Write)<br/>
+                    <%= User.get_name(user_id) %> (Write)<br/>
                   <% end %>
                 </td>
               </tr>
@@ -92,13 +92,13 @@
 
                   read_write.each do |group_id| 
                   %>
-                    <%=h Group.get_path(group_id, groups_cache) %> (Read/Write)<br/>
+                    <%= Group.get_path(group_id, groups_cache) %> (Read/Write)<br/>
                   <% end %>
                   <% read_only.each do |group_id|  %>
-                    <%=h Group.get_path(group_id, groups_cache) %> (Read)<br/>
+                    <%= Group.get_path(group_id, groups_cache) %> (Read)<br/>
                   <% end %>
                   <% write_only.each do |group_id|  %>
-                    <%=h Group.get_path(group_id, groups_cache) %> (Write)<br/>
+                    <%= Group.get_path(group_id, groups_cache) %> (Write)<br/>
                   <% end %>
                 </td>
               </tr>
@@ -113,13 +113,13 @@
                    write_only = write_teams - read_teams
                    read_write.each do |team_id| 
                   %>
-                    <%=h Team.get_name(team_id) %> (Read/Write)<br/>
+                    <%= Team.get_name(team_id) %> (Read/Write)<br/>
                   <% end %>
                   <% read_only.each do |team_id|  %>
-                    <%=h Team.get_name(team_id) %> (Read)<br/>
+                    <%= Team.get_name(team_id) %> (Read)<br/>
                   <% end %>
                   <% write_only.each do |team_id|  %>
-                    <%=h Team.get_name(team_id) %> (Write)<br/>
+                    <%= Team.get_name(team_id) %> (Write)<br/>
                   <% end %>
                 </td>
               </tr>

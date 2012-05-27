@@ -25,18 +25,21 @@ THETIS_TEL_TYPES = ['', 'External', 'Internal', 'Home', 'Mobile']
 
 THETIS_DATE_FORMAT_YMD = '%Y-%m-%d'
 THETIS_DATE_FORMAT_MD = '%m/%d'
-THETIS_CALENDAR_COLOR = ['lightcoral', 'gold', 'gold', 'gold', 'gold', 'gold', 'turquoise']
+THETIS_CALENDAR_COLOR = ['lightpink', '#FFE241', '#FFE241', '#FFE241', '#FFE241', '#FFE241', '#AAF2F1']
 THETIS_WDAY_COLOR = ['lightpink', '#FFF2AD', '#FFF2AD', '#FFF2AD', '#FFF2AD', '#FFF2AD', '#AAF2F1']
 THETIS_WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 THETIS_HOURS = 0..23
 THETIS_MINUTES = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55]
 THETIS_DIV_IN_HOUR = 2
-THETIS_DAWN = { :color => 'lightsteelblue', :range => 0..3 }
-THETIS_MORNING = { :color => 'lavender', :range => 4..7 }
-THETIS_DAYTIME = { :color => 'blanchedalmond', :range => 8..12 }
-THETIS_AFTERNOON = { :color => 'peachpuff', :range => 13..16 }
-THETIS_EVENING= { :color => 'palegoldenrod', :range => 17..20 }
-THETIS_NIGHT= { :color => 'lightsteelblue', :range => 21..23 }
+THETIS_SCHEDULE_TIMECOLORS = [
+  {:range =>  0.. 3, :color => 'lightsteelblue'},
+  {:range =>  4.. 7, :color => 'lavender'},
+  {:range =>  8..11, :color => 'blanchedalmond'},
+  {:range => 12..15, :color => 'peachpuff'},
+  {:range => 16..17, :color => 'blanchedalmond'},
+  {:range => 18..20, :color => 'lavender'},
+  {:range => 21..23, :color => 'lightsteelblue'},
+]
 
 THETIS_ATTACHMENT_LOCATION_DEFAULT = 'DIR'   # or 'DB'
 THETIS_ATTACHMENT_LOCATION_SELECTABLE = false

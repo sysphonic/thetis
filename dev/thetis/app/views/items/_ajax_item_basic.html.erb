@@ -1,3 +1,7 @@
+<%
+@folders_cache ||= {}
+@folder_obj_cache ||= {}
+%>
 
 <%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
@@ -101,18 +105,18 @@ dispZeptCmdEdit = function(sw)
       <label for="item_folder_id"><%= Folder.model_name.human %></label>
     </td>
     <td class="item_value_td">
-<% if !@item.nil? and Folder.get_path(@item.folder_id).include?('/$') %>
+<% if !@item.nil? and Folder.get_path(@item.folder_id, @folders_cache, @folder_obj_cache).include?('/$') %>
   ---
   <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
 <% elsif !@item.nil? and @item.xtype == Item::XTYPE_PROFILE %>
-  <%= @item.get_folder_path %>
+  <%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %>
   <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
 <% else %>
       <table width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td align="left" nowrap width="20%">
             <span id="div_folderPath" style="color:red">
-              <%= (@item.nil?)?'/(root)':@item.get_folder_path %>
+              <%= (@item.nil?)?'/(root)':@item.get_folder_path(@folders_cache, @folder_obj_cache) %>
               <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
             </span>
           </td>

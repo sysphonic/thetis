@@ -6,16 +6,16 @@ unless @yaml_timecard['default_breaks'].nil?
     brk = (UtilDateTime.create(org_end).to_time - UtilDateTime.create(org_start).to_time) / 60 / 60
 %>
 <div nowrap>
-<%=h (brk <= 0.0)?'':brk %>
+<%= (brk <= 0.0)?'':brk %>
 <span style="color:orangered;">
   (
-  <%=h org_start.strftime('%H:%M') %>
+  <%= org_start.strftime('%H:%M') %>
   ~
-  <%=h org_end.strftime('%H:%M') %>
+  <%= org_end.strftime('%H:%M') %>
   )
 </span>
-&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%=h org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%=h org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%=h org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
 </div>
 <%
   end

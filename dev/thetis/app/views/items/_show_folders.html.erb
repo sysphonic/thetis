@@ -29,7 +29,7 @@
               %>
               <tr height="30">
                 <td align="left" valign="top" style="padding-left:50px; color:navy;">
-                  <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder_id %>'; document.form_list.submit(); return false;">/ <%=h Folder.get_name(folder_id) %> </a><br/>
+                  <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder_id %>'; document.form_list.submit(); return false;">/ <%= Folder.get_name(folder_id) %> </a><br/>
                 </td>
               </tr>
               <% end %>

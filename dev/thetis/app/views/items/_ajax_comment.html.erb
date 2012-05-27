@@ -26,7 +26,7 @@
               %>
               <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
               <% end %>
-                <b style="color:white;"><%=h user_name %></b>
+                <b style="color:white;"><%= user_name %></b>
               <% unless u_groups.empty? %>
               </a>
               <% end %>

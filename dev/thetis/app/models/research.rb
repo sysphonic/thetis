@@ -504,7 +504,7 @@ class Research < ActiveRecord::Base
           ctrl += "  checked = 'checked'\n"
           ctrl += "end\n"
           ctrl += "%>\n"
-          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='<%= h('#{val}') %>' <%=checked%>> <%= h('#{val}') %><br/>\n"
+          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='<%= h('#{val}') %>' <%= checked %>> <%= h('#{val}') %><br/>\n"
           ctrl += "<input type='hidden' name='research[#{q_code}][]' value=''>\n"
         end
 

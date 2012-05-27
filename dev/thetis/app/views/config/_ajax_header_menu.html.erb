@@ -10,11 +10,11 @@
           menu_target = header_menu[1]
           menu_url = header_menu[2]
       %>
-        <div id="item_<%=h menu_name %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+        <div id="item_<%= menu_name %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-          <%=h truncate(menu_name, :length => 20) %>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="doEditHeaderMenu('<%=ApplicationHelper.h_s_quote menu_name %>'); return false;" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteHeaderMenu('<%=ApplicationHelper.h_s_quote menu_name %>'); return false;" />
+          <%= truncate(menu_name, :length => 20) %>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="doEditHeaderMenu('<%= ApplicationHelper.h_s_quote(menu_name) %>'); return false;" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteHeaderMenu('<%= ApplicationHelper.h_s_quote(menu_name) %>'); return false;" />
         </div>
       <%
         end

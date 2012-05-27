@@ -20,7 +20,7 @@
               <%= t('btn.select_group') %>
             </div>
     <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%=h Group.get_path(@group_id, groups_cache) %></a>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%= Group.get_path(@group_id, groups_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup();" />
     <% end %>
           </td>
@@ -67,14 +67,14 @@ users_cache = {}
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
-    <td class="<%=td_class %>" nowrap style="text-align:right;"><%=h equipment.id %></td>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= equipment.id %></td>
+    <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'show', :id => equipment.id) %>'; return false;">
-        <%=h truncate(equipment.name, :length => 20) %>
+        <%= truncate(equipment.name, :length => 20) %>
       </a>
     </td>
-    <td class="<%=td_class %>" nowrap><pre><%=h truncate(equipment.note, :length => 30) %></pre></td>
-    <td class="<%=td_class %>" nowrap>
+    <td class="<%= td_class %>" nowrap><pre><%= truncate(equipment.note, :length => 30) %></pre></td>
+    <td class="<%= td_class %>" nowrap>
   <!--
       <% equipment.get_users_a.each do |user_id| %>
         <%= User.get_name(user_id, users_cache) %><br/>
@@ -103,10 +103,10 @@ users_cache = {}
         </div>
       <% end %>
     </td>
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'edit', :id => equipment) %>';">
     </td>
-    <td class="<%=td_class %>" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
       <%= check_box(:check_equipment, equipment.id, :class => 'check_equipment') %>
     </td>
   </tr>
@@ -121,7 +121,7 @@ users_cache = {}
 </form>
 
 <script type="text/javascript">
-<!--
+
 function clearGroup()
 {
   document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'list') %>";
@@ -192,6 +192,5 @@ function _doDelete()
   prog("TOP-RIGHT");
 }
 
-//-->
 </script>
 

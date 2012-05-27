@@ -5,7 +5,7 @@
     @holidays.each do |schedule|
       disp = schedule.start.strftime(Schedule::SYS_DATE_FORM) + ', ' + schedule.title
   %>
-    <option value="<%= schedule.id %>"><%=h disp %></option>
+    <option value="<%= schedule.id %>"><%= disp %></option>
   <%
     end
   end
