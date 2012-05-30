@@ -26,7 +26,7 @@
 
   <%= draggable_element(toy_id, :revert => false) %>
 
-<SCRIPT language="javascript" type="text/javascript">
+<script type="text/javascript">
 
 var desktop = _z("div_desktop");
 
@@ -39,7 +39,7 @@ toy.style.left = (deskPos.x + deskWidth * <%= @toy.x %> / 10000) + "px";
 toy.style.top = (deskPos.y + deskHeight * <%= @toy.y %> / 10000) + "px";
 toy.style.display = "inline";
 
-</SCRIPT>
+</script>
 
 <% end %>
 

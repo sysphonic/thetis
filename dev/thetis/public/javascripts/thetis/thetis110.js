@@ -216,20 +216,20 @@ setScrolling = function(sw)
 
 setHeaderLogin = function(login_name)
 {
-  if (top.header == null) {
-    setTimeout("setHeaderLogin('"+login_name+"');", 100);
-  } else {
-    top.header.setLoginName(login_name);
-  }
+//  if (top.header == null) {
+//    setTimeout("setHeaderLogin('"+login_name+"');", 100);
+//  } else {
+    top.setLoginName(login_name);
+//  }
 }
 
 setLeftLogin = function(login_name, login_admin)
 {
-  if (top.left == null) {
-    setTimeout("setLeftLogin('"+login_name+"', "+login_admin+");", 100);
-  } else {
-    top.left.setLogin(login_name, login_admin);
-  }
+//  if (top.left == null) {
+//    setTimeout("setLeftLogin('"+login_name+"', "+login_admin+");", 100);
+//  } else {
+    top.setNavLogin(login_name, login_admin);
+//  }
 }
 
 var curPopup = null;

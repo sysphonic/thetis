@@ -1,17 +1,18 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" -->
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
 <meta http-equiv="Content-Script-Type" content="text/javascript">
 <meta http-equiv="Content-Style-Type" content="text/css">
+
 <title>Sysphonic Thetis</title>
+
 <%= stylesheet_link_tag('thetis110') %>
 </head>
 
 <body>
 
-<table width="100%" cellspacing="0" cellpadding="0" height="100%">
+<table width="100%" cellspacing="0" cellpadding="0" height="100%" style="padding-bottom:5px;">
   <tr style="height:95%;">
     <td width="200" style="padding:30px">
       <table width="100%" onclick="window.open('http://sysphonic.com/').focus();" style="cursor:pointer; border:3px inset silver;" cellspacing="0" cellpadding="0">
@@ -30,9 +31,8 @@
         </tr>
       </table>
     </td>
-    <td valign="top" style="padding:10px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
-        <tr height="10"><td></td></tr>
+    <td valign="top">
+      <table width="100%" cellspacing="0" cellpadding="0" style="padding:20px 10px 10px;">
         <tr>
           <td>
             <table width="60%" align="left" cellspacing="0" cellpadding="0">
@@ -41,17 +41,16 @@
                   Sysphonic <B>Thetis</B><sup>&reg;</sup>  <small align="right">ver.1.0.0+</small>&nbsp;
                 </td>
               </tr>
-              <tr>
-                <td></td>
-              </tr>
             </table>
           </td>
         </tr>
         <tr>
           <td>
-            <hr width="100%">
-            <li style="font-size:10pt;"><%= t('about.license') %><br/>
-            <li style="font-size:10pt;"><%= t('about.license_detail') %><br/>
+            <div class="hr"></div>
+            <ul style="padding-left:20px;">
+              <li style="font-size:10pt;"><%= t('about.license') %></li>
+              <li style="font-size:10pt;"><%= t('about.license_detail') %></li>
+            </ul>
           </td>
         </tr>
         <tr height="5"><td></td></tr>
@@ -94,14 +93,13 @@ http://script.aculo.us<br/>
     <td align="center" colspan="2">
       <table align="center" width="95%" cellspacing="0" cellpadding="0">
         <tr>
-          <td bgcolor="silver" align="center" style="padding:5px">
+          <td align="center" style="padding:5px; background-color:gainsboro;">
             <input type="button" onclick="window.close();" value="<%= t('btn.close') %>" />
           </td>
         </tr>
       </table>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 </body>
 </html>

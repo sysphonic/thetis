@@ -1,38 +1,105 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Frameset//EN">
-<HTML>
-<HEAD>
-  <TITLE><%= $thetis_config[:general]['app_title'] %></TITLE>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Script-Type" content="text/JavaScript">
 
-<META http-equiv="Content-Script-Type" content="text/JavaScript">
-<META http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title><%= $thetis_config[:general]['app_title'] %></title>
 
 <link rel="shortcut icon" href="images/thetis.ico">
 
-</HEAD>
+<%= stylesheet_link_tag('thetis110') %>
+<%= javascript_include_tag('prototype') %>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?ts=2012042601" type="text/javascript"></script>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?ts=2012050201" type="text/javascript"></script>
 
-<FRAMESET id="frameset_top" border="0" frameSpacing="0" cols="150,*" frameBorder="0">
-  <FRAME name="left" src="<%= url_for(:controller => 'frames', :action => 'left') %>" noResize scrolling="no">
-  <FRAMESET id="frameset_vertical" name="frameset_vertical" border="0" rows="28,*,14" frameSpacing="0" frameBorder="no">
-    <FRAME name="header" src="<%= url_for(:controller => 'frames', :action => 'header') %>" noResize scrolling="no">
-    <%
-    if params[:default].nil? or params[:default].empty?
-      main = ''
-      main << $thetis_config[:general]['default_page']
-      if $thetis_config[:general]['default_topicbox'] == '1'
-        if main.include?('?')
-          main << '&'
-        else
-          main << '?'
+<script type="text/javascript">
+
+function doOnLoad()
+{
+  doResize();
+}
+
+function doResize()
+{
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  _z("sect_nav").style.height = mainHeight + "px";
+  _z("sect_main").style.height = (mainHeight - 28 - 14) + "px";
+
+  var height = window.innerHeight;  // Firefox
+  if (isNaN(height))  {
+    height = mainHeight;
+  }
+  var left_table = _z("left_table");
+  left_table.style.height = height + "px";
+
+  if (height < left_table.scrollHeight) {
+    toggleSymbol(false);
+  }
+}
+
+function progMain()
+{
+  eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
+}
+
+addEvent(window, "resize", doResize);
+
+</script>
+
+</head>
+
+<body onload="doOnLoad()" style="overflow:hidden;">
+
+<table id="frameset_top" width="100%" cellspacing="0" cellpadding="0">
+  <tr>
+    <td rowspan="3" style="min-width:150px; width:150px;">
+      <div id="sect_nav" style="overflow:auto;">
+        <%= render(:partial => 'left', :layout => false) %>
+      </div>
+    </td>
+    <td style="min-height:28px; height:28px;">
+      <%= render(:partial => 'header', :layout => false) %>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <%
+      if params[:default].nil? or params[:default].empty?
+        main = ''
+        main << $thetis_config[:general]['default_page']
+        if $thetis_config[:general]['default_topicbox'] == '1'
+          if main.include?('?')
+            main << '&'
+          else
+            main << '?'
+          end
+          main << 'topicBox=true'
         end
-        main << 'topicBox=true'
+      else
+        main = params[:default]
       end
-    else
-      main = params[:default]
-    end
-    %>
-    <FRAME name="main" src="<%= main %>" noResize scrolling="auto">
-    <FRAME name="footer" src="<%= url_for(:controller => 'frames', :action => 'footer') %>" noResize scrolling="no">
-  </FRAMESET>
-  <NOFRAME>
-</FRAMESET>
-</HTML>
+      %>
+      <div id="sect_main" style="overflow:hidden;">
+        <iframe id="iframe_main" name="main" src="<%= main %>" frameborder="0" scrolling="auto" style="width:100%; height:100%; border:none; margin:0px;"></iframe>
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td style="min-height:14px; height:14px;">
+      <%= render(:partial => 'footer', :layout => false) %>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+doResize();
+
+</script>
+
+</body>
+</html>

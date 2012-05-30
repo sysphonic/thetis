@@ -1,65 +1,4 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<!-- DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd" -->
-<html>
-<head>
-<title>Thetis</title>
-
-<META http-equiv="Content-Script-Type" content="text/JavaScript">
-<META http-equiv="Content-Type" content="text/html; charset=utf-8">
-
-<%= stylesheet_link_tag('thetis110') %>
-<%= javascript_include_tag('prototype') %>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?timestamp=2012042601" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?timestamp=2012050201" type="text/javascript"></script>
-
-  <STYLE type=text/css>
-  A:link {
-    COLOR: white; TEXT-DECORATION: none
-  }
-  A:visited {
-    COLOR: white; TEXT-DECORATION: none
-  }
-  A:hover {
-    LEFT: 2px; COLOR: white; TEXT-DECORATION: none
-  }
-  </STYLE>
-
 <script type="text/javascript">
-
-function doOnLoad()
-{
-  doResize();
-}
-
-var mainRegion = getClientRegion();
-var mainWidth = mainRegion.width;
-var mainHeight = mainRegion.height;
-
-function doResize()
-{
-  mainRegion = getClientRegion();
-  mainWidth = mainRegion.width;
-  mainHeight = mainRegion.height;
-
-  var height = window.innerHeight;  // Firefox
-  if (isNaN(height))  {
-    height = mainHeight;
-  }
-  var left_table = _z("left_table");
-  left_table.style.height = height + "px";
-
-  if (height < left_table.scrollHeight) {
-    toggleSymbol(false);
-  }
-/*
-  var frameset_top = top.document.getElementById("frameset_top");
-  if (frameset_top) {
-    if (frameset_top.scrollHeight < left_table.scrollHeight) {
-      toggleSymbol(false);
-    }
-  }
-*/
-}
 
 var min = -1;
 function doUpdateTime()
@@ -111,7 +50,7 @@ function getDay(date)
   }
 }
 
-function setLogin(login_name, is_admin)
+function setNavLogin(login_name, is_admin)
 {
   if (is_admin) {
     _z("adminMenu").style.display = "block";
@@ -151,7 +90,7 @@ function activateMenu(menu, obj)
     }
   }
   try {
-    top.main.showPopupIcon(menu, obj, "<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/", parseInt(top.header.document.getElementById("offset_from_top").value, 10));
+    top.main.showPopupIcon(menu, obj, "<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/", parseInt(_z("offset_from_top").value, 10));
   } catch (e) {
   }
   hideAdminMenu();
@@ -203,7 +142,7 @@ function showAdminMenu(obj)
 
     var offsetFromTop = 0;
     try {
-      offsetFromTop = parseInt(top.header.document.getElementById("offset_from_top").value, 10);
+      offsetFromTop = parseInt(_z("offset_from_top").value, 10);
     } catch (e) {
     }
     var pos = getPos(obj);
@@ -227,11 +166,6 @@ function hideAdminMenu()
   }
 }
 
-function progMain()
-{
-  eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
-}
-
 function toggleSymbol(sw)
 {
   var tr_top_space = _z("tr_top_space");
@@ -249,14 +183,9 @@ function toggleSymbol(sw)
   }
 }
 
-window.onresize = doResize;
 setTimeout("doUpdateTime()", 1000);
 
 </script>
-
-</head>
-
-<body onLoad="doOnLoad();">
 
 <table id="left_table" cellspacing="0" cellpadding="0" width="100%">
   <tr id="tr_top_space" height="5"><td></td></tr>
@@ -385,7 +314,7 @@ setTimeout("doUpdateTime()", 1000);
     <td align="left" style="padding-left:15px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/left_down.png') center top no-repeat;">
       <table cellspacing="0" cellpadding="0" width="50%" style="cursor:pointer;" onclick="progMain(); top.main.location.href='<%= url_for(:controller => 'schedules', :action => 'month') %>?id='+getDateString()" onmouseover="this.style.border='1px dotted white'; hideAdminMenu();" onmouseout="this.style.border=''">
         <tr>
-          <td style="padding-left:5px; padding-right:5px; color:white; font-size:9pt; line-height:13px;" nowrap>
+          <td style="padding:0px 5px; color:white; font-size:9pt; line-height:13px;" nowrap>
             <div id="div_time" align="center"></div>
           </td>
         </tr>
@@ -397,5 +326,4 @@ setTimeout("doUpdateTime()", 1000);
 <span style="display:none;">
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/menu_on.png" />
 </span>
-</body>
-</html>
+

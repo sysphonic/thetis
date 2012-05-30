@@ -90,15 +90,11 @@ TrayDragObserver.prototype = {
     if (scrollParent != null) {
       draggable.options.snap = function(x, y){
           y = y - scrollParent.scrollTop + parseInt(toy.style.paddingTop, 10);
-          if (is_Netscape) {
-            if (scrollParent.scrollTop > 0) {
-              y -= toy.clientHeight;
-            }
-          } else {
-            if (scrollParent.scrollHeight == scrollParent.scrollTop + scrollParent.clientHeight) {
-              y -= toy.clientHeight;
-            }
+
+          if (scrollParent.scrollTop > 0) {
+            y -= toy.clientHeight;
           }
+
           return [x, y];
         };
     }

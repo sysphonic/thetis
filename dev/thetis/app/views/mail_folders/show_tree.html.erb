@@ -978,6 +978,7 @@ function showAccountSetting(is_new)
   }
 
   thetisBoxAccount = new ThetisBox;
+  thetisBoxAccount.resizable = true;
   thetisBoxAccount.title = "<%= t('btn.account_setting') %>";
 
   var addParams = new Array();
@@ -1004,7 +1005,7 @@ function showAccountSetting(is_new)
             onComplete:function(request) {
                 thetisBoxAccount.show(
                           "CENTER",
-                          mainWidth*70/100+"," + mainHeight*90/100,
+                          "540," + mainHeight*90/100,
                           "TRAY",
                           "",
                           "",
