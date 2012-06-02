@@ -4,14 +4,15 @@
     <td id="sortable_groups" nowrap width="20%">
 <%
 unless @group_ids.nil?
-  groups_cache = {}
+  @groups_cache ||= {}
+  @group_obj_cache ||= {}
   @group_ids.each do |group_id|
 %>
       <div id="item_<%= group_id %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-        <%= Group.get_path(group_id, groups_cache) %>
+        <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showGroupTreeToSelect('<%= group_id %>', true);" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, groups_cache)) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, @groups_cache, @group_obj_cache)) %>'); return false;" />
       </div>
 <%
   end

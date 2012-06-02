@@ -1,4 +1,7 @@
 <%
+@folders_cache ||= {}
+@folder_obj_cache ||= {}
+
 unless @mail_folder.nil?
   div_id = 'mailTree:' + @mail_folder.id.to_s
 %>
@@ -19,7 +22,7 @@ unless @mail_folder.nil?
   </a><br/>
   <div id="<%= div_id %>" class="thetisBoxTreeBlock" style="padding-left:30px; border-left:1px dotted navy;"></div>
 </div>
-<span id="path_<%= @mail_folder.id %>" style="display:none;"><%= @mail_folder.get_path %></span>
+<span id="path_<%= @mail_folder.id %>" style="display:none;"><%= @mail_folder.get_path(@folders_cache, @folder_obj_cache) %></span>
 <span id="xtype_<%= @mail_folder.id %>" style="display:none;"><%= @mail_folder.xtype %></span>
 
 <% end %>

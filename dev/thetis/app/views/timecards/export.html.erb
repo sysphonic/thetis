@@ -6,10 +6,11 @@ $TITLE=<%= @selected_user.title %>
 
 <%
 groups = []
-groups_cache = {}
+@groups_cache ||= {}
+@group_obj_cache ||= {}
 
 @selected_user.get_groups_a.each do |group_id|
-  groups << Group.get_path(group_id, groups_cache)
+  groups << Group.get_path(group_id, @groups_cache, @group_obj_cache)
 end
 %>
 $GROUPS

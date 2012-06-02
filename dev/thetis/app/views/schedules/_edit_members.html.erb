@@ -59,13 +59,14 @@ tabs = new Array("users", "groups", "teams");
               groups = Group.find(:all) || []
               groups_selected = @schedule.get_groups_a
               @groups_cache ||= {}
+              @group_obj_cache = Group.build_cache(groups)
               %>
               <select id="group_candidates" name="group_candidates" class="select_candidates" size="5" multiple="multiple">
               <%
                groups.each do |group|
                  next if groups_selected.include?(group.id.to_s)
               %>
-                <option value="<%= group.id %>"><%= Group.get_path(group.id, @groups_cache) %></option>
+                <option value="<%= group.id %>"><%= Group.get_path(group.id, @groups_cache, @group_obj_cache) %></option>
               <% end %>
               </select>
             </td>
@@ -92,7 +93,7 @@ tabs = new Array("users", "groups", "teams");
             <td>
               <select id="groups_selected" name="groups[]" class="select_multi" size="5" multiple="multiple">
               <% groups_selected.each do |group_id| %>
-                <option value="<%= group_id %>"><%= Group.get_path(group_id, @groups_cache) %></option>
+                <option value="<%= group_id %>"><%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %></option>
               <% end %>
               </select>
             </td>

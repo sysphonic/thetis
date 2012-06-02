@@ -4,7 +4,7 @@ read_only ||= false
 brief_view ||= false
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="border:blue 1px solid; border-collapse:collapse;">
+<table width="100%" cellspacing="0" cellpadding="0" style="border:dimgray 1px solid; border-collapse:collapse;">
   <tr>
 <% for time in (THETIS_HOURS.first)..(THETIS_HOURS.last) do %>
   <%
@@ -12,7 +12,7 @@ brief_view ||= false
   timecolor = THETIS_SCHEDULE_TIMECOLORS.find{|entry| entry[:range].include?(time)}
   bgcolor = timecolor[:color] unless timecolor.nil?
   %>
-    <td colspan="<%= THETIS_DIV_IN_HOUR %>" align="center" style="background-color:<%= bgcolor %>; border:blue 1px solid; font-weight:400; font-size:11pt;"><%= time%></td>
+    <td colspan="<%= THETIS_DIV_IN_HOUR %>" align="center" style="background-color:<%= bgcolor %>; border:dimgray 1px solid; font-weight:400; font-size:11pt;"><%= time%></td>
 <% end %>
   </tr>
   <tr height="10">
@@ -20,7 +20,7 @@ brief_view ||= false
  cell_num = THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR
  cell_num.times do |q|
 %>
-    <td style="line-height:10px; border:blue 1px solid; border-collapse:collapse;">&nbsp</td>
+    <td style="line-height:10px; border:dimgray 1px solid;">&nbsp</td>
 <% end %>
   </tr>
 <%

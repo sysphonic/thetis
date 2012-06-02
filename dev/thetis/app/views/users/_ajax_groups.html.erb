@@ -1,14 +1,15 @@
 <%
 unless @user.nil? or @user.groups.nil?
 
-  groups_cache = {}
+  @groups_cache ||= {}
+  @group_obj_cache ||= {}
 %>
 
   <table cellspacing="0" cellpadding="0" width="100%">
   <% @user.get_groups_a.each do |group_id| %>
     <tr>
       <td nowrap width="20%">
-        <%= Group.get_path(group_id, groups_cache) %><br/>
+        <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
       </td>
     <% if @login_user.admin?(User::AUTH_USER) %>
       <td width="20"></td>
@@ -21,7 +22,7 @@ unless @user.nil? or @user.groups.nil?
             </td>
             <td width="10">&nbsp;</td>
             <td width="15">
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, groups_cache)) %>', <%= @user.id %>); return false;" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doRemoveGroup(<%= group_id %>, '<%= ApplicationHelper.h_s_quote(Group.get_path(group_id, @groups_cache, @group_obj_cache)) %>', <%= @user.id %>); return false;" />
             </td>
           </tr>
         </table>

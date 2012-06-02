@@ -168,16 +168,19 @@ function hideAdminMenu()
 
 function toggleSymbol(sw)
 {
-  var tr_top_space = _z("tr_top_space");
+  var tr_top_space_upper = _z("tr_top_space_upper");
+  var tr_top_space_lower = _z("tr_top_space_lower");
   var tr_symbol = _z("tr_symbol");
   var tr_drop_down = _z("tr_drop_down");
 
   if (sw) {
-    tr_top_space.style.display = "table-row";
+    tr_top_space_upper.style.display = "table-row";
+    tr_top_space_lower.style.display = "table-row";
     tr_symbol.style.display = "table-row";
     tr_drop_down.style.display = "none";
   } else {
-    tr_top_space.style.display = "none";
+    tr_top_space_upper.style.display = "none";
+    tr_top_space_lower.style.display = "none";
     tr_symbol.style.display = "none";
     tr_drop_down.style.display = "table-row";
   }
@@ -188,12 +191,11 @@ setTimeout("doUpdateTime()", 1000);
 </script>
 
 <table id="left_table" cellspacing="0" cellpadding="0" width="100%">
-  <tr id="tr_top_space" height="5"><td></td></tr>
-
   <tr>
     <td valign="top" align="center">
       <!-------INDEX-Column START------->
       <TABLE cellspacing="1" cellpadding="0" width="100%">
+        <TR id="tr_top_space_upper" height="3"><TD></TD></TR>
         <TR id="tr_symbol" height="90">
           <TD align="center" valign="bottom" onclick="toggleSymbol(false);" style="cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onMouseOver="this.style.backgroundColor='gainsboro'" onMouseOut="this.style.backgroundColor='white'">
             <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
@@ -201,12 +203,12 @@ setTimeout("doUpdateTime()", 1000);
             </span>
           </TD>
         </TR>
+        <TR id="tr_top_space_lower" height="3"><TD></TD></TR>
         <TR id="tr_drop_down" height="15" style="display:none">
           <TD align="center" valign="middle">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
           </TD>
         </TR>
-        <TR height="5"><TD></TD></TR>
         <TR height="31">
           <TD class="menu_td" style="background:<%= style_bg_off %>" align="center" onClick="progMain(); doLogin(); return false;" onMouseOver="activateMenu('', this);" onMouseOut="deactivateMenu(this);">
             <A id="menu_login" href="#" onclick="return false;" style="color:black"><%= t('btn.login') %></A>

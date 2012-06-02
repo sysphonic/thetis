@@ -40,4 +40,22 @@ module CachedRecord
 
     return obj
   end
+
+  #=== build_cache
+  #
+  #Builds cache from the instances array.
+  #
+  #_objs_:: Array of Model instances.
+  #return:: Object cache.
+  #
+  def build_cache(objs)
+    return nil if objs.nil?
+
+    obj_cache = {}
+    objs.each do |obj|
+      obj_cache[obj.id] = obj
+    end
+    return obj_cache
+  end
+
 end

@@ -82,9 +82,9 @@ newScheduleDetail = function(date, addParams, title)
 <% unless from.nil? %>
   addParams.push("from=<%= from %>");
 <% end %>
-  if (document.forms[0]) {
-    addParams.push(Form.serialize(document.forms[0]));
-  }
+//  if (document.forms[0]) {
+//    addParams.push(Form.serialize(document.forms[0]));
+//  }
 
   var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Request(
@@ -136,9 +136,9 @@ editScheduleDetail = function(date, id, title, addParams)
 <% unless from.nil? %>
   addParams.push("from=<%= from %>");
 <% end %>
-  if (document.forms[0]) {
-    addParams.push(Form.serialize(document.forms[0]));
-  }
+//  if (document.forms[0]) {
+//    addParams.push(Form.serialize(document.forms[0]));
+//  }
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 

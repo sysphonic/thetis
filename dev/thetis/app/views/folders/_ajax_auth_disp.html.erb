@@ -88,17 +88,18 @@
                   read_write = read_groups & write_groups
                   read_only = read_groups - write_groups
                   write_only = write_groups - read_groups
-                  groups_cache = {}
+                  @groups_cache ||= {}
+                  @group_obj_cache ||= {}
 
                   read_write.each do |group_id| 
                   %>
-                    <%= Group.get_path(group_id, groups_cache) %> (Read/Write)<br/>
+                    <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %> (Read/Write)<br/>
                   <% end %>
                   <% read_only.each do |group_id|  %>
-                    <%= Group.get_path(group_id, groups_cache) %> (Read)<br/>
+                    <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %> (Read)<br/>
                   <% end %>
                   <% write_only.each do |group_id|  %>
-                    <%= Group.get_path(group_id, groups_cache) %> (Write)<br/>
+                    <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %> (Write)<br/>
                   <% end %>
                 </td>
               </tr>

@@ -11,6 +11,8 @@ else
 end
 
 @groups_cache ||= {}
+@group_obj_cache ||= {}
+
 @teams_cache ||= {}
 
 @users = Group.get_users(@group_id)
@@ -25,7 +27,7 @@ end
     </td>
     <td align="left" style="color:blue;">
       <% unless @group_id.nil? %>
-        <%= Group.get_path(@group_id, @groups_cache) %>
+        <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectUsers();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
       <% end %>
     </td>
@@ -69,7 +71,7 @@ if target_attr.to_s == 'email'
 
   login_groups = @login_user.get_groups_a
   login_groups.each do |group_id|
-    group_name = Group.get_path(group_id, @groups_cache)
+    group_name = Group.get_path(group_id, @groups_cache, @group_obj_cache)
     group_users = Group.get_users(group_id)
     group_users.each do |user|
       user_id = user.id.to_s

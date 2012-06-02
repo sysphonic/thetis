@@ -4,6 +4,7 @@ target_attr ||= :id
 rows = 5
 
 @folders_cache ||= {}
+@folder_obj_cache ||= {}
 
 if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
   @items = Folder.get_items(@login_user, @folder_id)
@@ -19,7 +20,7 @@ end
     </td>
     <td align="left" style="color:blue;">
       <% unless @folder_id.nil? %>
-        <%= Folder.get_path(@folder_id, @folders_cache) %>
+        <%= Folder.get_path(@folder_id, @folders_cache, @folder_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearFolderToSelectItems();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
       <% end %>
     </td>

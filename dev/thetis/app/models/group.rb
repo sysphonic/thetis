@@ -156,8 +156,8 @@ class Group < ActiveRecord::Base
   #Gets path-string which represents the position of this Group in the organization.
   #
   #_group_id_:: Target Group-ID.
-  #_groups_cache_:: Hash to accelerate response. {group_id, path}
-  #_group_obj_cache_:: Hash to accelerate response. {group_id, group}
+  #_groups_cache_:: Hash to accelerate response. {group.id, path}
+  #_group_obj_cache_:: Hash to accelerate response. {group.id, group}
   #return:: Group path like "/parent_name1/parent_name2/this_name".
   #
   def self.get_path(group_id, groups_cache=nil, group_obj_cache=nil)
@@ -268,12 +268,13 @@ class Group < ActiveRecord::Base
   #
   #Gets path-string which represents the position of this Group in the organization.
   #
-  #_groups_cache_:: Hash to accelerate response. {group_id, path}
+  #_groups_cache_:: Hash to accelerate response. {group.id, path}
+  #_group_obj_cache_:: Hash to accelerate response. {group.id, group}
   #return:: Group path like "/parent_name1/parent_name2/this_name".
   #
-  def get_path(groups_cache = nil)
+  def get_path(groups_cache=nil, group_obj_cache=nil)
 
-    return Group.get_path(self.id, groups_cache)
+    return Group.get_path(self.id, groups_cache, group_obj_cache)
   end
 
   #=== self.get_tree

@@ -445,8 +445,8 @@ class User < ActiveRecord::Base
   #Gets the name of specified User.
   #
   #_user_id_:: Target User-ID
-  #_users_cache_:: Hash to accelerate response. {user_id, user_name}
-  #_user_obj_cache_:: Hash to accelerate response. {user_id, user}
+  #_users_cache_:: Hash to accelerate response. {user.id, user_name}
+  #_user_obj_cache_:: Hash to accelerate response. {user.id, user}
   #return:: User name. If not found, prearranged string.
   #
   def self.get_name(user_id, users_cache=nil, user_obj_cache=nil)
@@ -555,18 +555,9 @@ class User < ActiveRecord::Base
     if incl_parents
       parent_ids = []
       array.each do |group_id|
-        group = nil
-        unless group_obj_cache.nil?
-          group = group_obj_cache[group_id]
-        end
-        if group.nil?
-          begin
-            group = Group.find(group_id)
-            group_obj_cache[group_id] = group unless group_obj_cache.nil?
-          rescue => evar
-            Log.add_error(nil, evar)
-          end
-        end
+
+        group = Group.find_with_cache(group_id, group_obj_cache)
+
         unless group.nil?
           parent_ids |= group.get_parents(false, group_obj_cache)
         end
@@ -887,8 +878,9 @@ class User < ActiveRecord::Base
     groups = Group.find(:all)
     unless groups.nil?
       groups_cache = {}
+      group_obj_cache = Group.build_cache(groups)
       groups.each do |group|
-        csv_line << '#   ' + group.id.to_s + ' = ' + Group.get_path(group.id, groups_cache) + "\n"
+        csv_line << '#   ' + group.id.to_s + ' = ' + Group.get_path(group.id, groups_cache, group_obj_cache) + "\n"
       end
     end
     csv_line << "\n"

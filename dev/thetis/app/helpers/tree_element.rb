@@ -15,12 +15,15 @@
 #
 module TreeElement
 
+  public::ROOT_ID = 0
+
+
   #=== get_parents
   #
   #Gets parents array of this object.
   #
   #_ret_obj_:: Flag to require node instances by return.
-  #_cache_:: Hash to accelerate response. {node_id.to_s, obj}
+  #_cache_:: Hash to accelerate response. {node.id, obj}
   #return:: Array of parent nodes or node-IDs.
   #
   def get_parents(ret_obj, cache=nil)
@@ -37,13 +40,13 @@ module TreeElement
         if ret_obj
           array.insert(0, node)
         else
-          array.insert(0, node_id)
+          array.insert(0, node_id.to_s)
         end
       end
 
-      node_id = node.parent_id.to_s
+      node_id = node.parent_id
 
-      break if node_id == '0'  # '0' for ROOT
+      break if node_id == TreeElement::ROOT_ID
 
       node = nil
       unless cache.nil?
@@ -53,8 +56,8 @@ module TreeElement
         begin
           node = self.class.find(node_id)
           cache[node_id] = node unless cache.nil?
-        rescue StandardError => err
-          Log.add_error(nil, err)
+        rescue => evar
+          Log.add_error(nil, evar)
         end
       end
       break if node.nil?
@@ -71,7 +74,7 @@ module TreeElement
   #_node_id_:: Target node-ID.
   #_recursive_:: Specify true if recursive search is required.
   #_ret_obj_:: Flag to require node instances by return.
-  #return:: Array of child node-IDs, or Groups if ret_obj is true.
+  #return:: Array of child node-IDs, or instances if ret_obj is true.
   #
   def self.get_childs(klass, node_id, recursive, ret_obj)
 

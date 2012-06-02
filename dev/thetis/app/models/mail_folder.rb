@@ -14,6 +14,7 @@
 class MailFolder < ActiveRecord::Base
   has_many(:emails, :dependent => :destroy)
 
+  extend CachedRecord
   include TreeElement
 
   public::XTYPE_INBOX = 'inbox'
@@ -282,10 +283,11 @@ class MailFolder < ActiveRecord::Base
   #Gets path-string which represents location of specified MailFolder.
   #
   #_mail_folder_id_:: MailFolder-ID.
-  #_folders_cache_:: Hash to accelerate response. {mail_folder_id, path}
+  #_folders_cache_:: Hash to accelerate response. {mail_folder.id, path}
+  #_folder_obj_cache_:: Hash to accelerate response. {mail_folder.id, mail_folder}
   #return:: MailFolder path like "/parent_name1/parent_name2/this_name".
   #
-  def self.get_path(mail_folder_id, folders_cache = nil)
+  def self.get_path(mail_folder_id, folders_cache=nil, folder_obj_cache=nil)
 
     unless folders_cache.nil?
       path = folders_cache[mail_folder_id.to_i]
@@ -316,11 +318,7 @@ class MailFolder < ActiveRecord::Base
         end
       end
 
-      begin
-        folder = MailFolder.find(mail_folder_id)
-      rescue
-        folder = nil
-      end
+      folder = MailFolder.find_with_cache(mail_folder_id, folder_obj_cache)
 
       id_ary.unshift(mail_folder_id.to_i) unless folders_cache.nil?
 
@@ -356,12 +354,13 @@ class MailFolder < ActiveRecord::Base
   #
   #Gets path-string which represents location of this folder.
   #
-  #_folders_cache_:: Hash to accelerate response. {mail_folder_id, path}
+  #_folders_cache_:: Hash to accelerate response. {mail_folder.id, path}
+  #_folder_obj_cache_:: Hash to accelerate response. {mail_folder.id, mail_folder}
   #return:: MailFolder path like "/parent_name1/parent_name2/this_name".
   #
-  def get_path(folders_cache = nil)
+  def get_path(folders_cache=nil, folder_obj_cache=nil)
 
-    return MailFolder.get_path(self.id, folders_cache)
+    return MailFolder.get_path(self.id, folders_cache, folder_obj_cache)
   end
 
 

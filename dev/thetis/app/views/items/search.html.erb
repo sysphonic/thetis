@@ -3,8 +3,8 @@
 <%= form_tag( {:action => 'search'}, :method => 'get', :name => 'form_search') %>
 
 <%
-@folders_cache = {}
-@folder_obj_cache = {}
+@folders_cache ||= {}
+@folder_obj_cache ||= {}
 %>
 
 <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">

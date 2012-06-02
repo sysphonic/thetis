@@ -1,3 +1,7 @@
+<%
+@groups_cache ||= {}
+@group_obj_cache ||= {}
+%>
 
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
@@ -8,7 +12,7 @@
     </td>
     <td align="left" style="color:blue; font-size:10pt;">
       <% unless @group_id.nil? or @group_id == '' %>
-        <%= Group.get_path(@group_id) %>
+        <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
       <% end %>
     </td>
   </tr>

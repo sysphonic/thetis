@@ -14,11 +14,12 @@
       </td>
       <td align="left" style="padding:0px 5px">
         <%
-        groups_cache = {}
+        @groups_cache ||= {}
+        @group_obj_cache ||= {}
 
         @selected_user.get_groups_a.each do |group_id|
         %>
-          <%= Group.get_path(group_id, groups_cache) %><br/>
+          <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
         <% end %>
       </td>
     </tr>

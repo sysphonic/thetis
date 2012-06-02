@@ -1,5 +1,7 @@
 <%
 @groups_cache ||= {}
+@group_obj_cache ||= {}
+
 @teams_cache ||= {}
 
 groups = obj.get_groups_a
@@ -9,7 +11,7 @@ teams = obj.get_teams_a
   <%= t('group.plural') %><%= t('cap.suffix') %>
   <div style="padding-left:20px;">
   <% groups.each do |group_id| %>
-    <%= Group.get_path(group_id, @groups_cache) %><br/>
+    <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
   <% end %>
   </div>
 <% end %>

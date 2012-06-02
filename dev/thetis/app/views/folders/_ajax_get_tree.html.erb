@@ -25,10 +25,13 @@
   var array = new Array();
   <%
   session_folder = session[:folder_id]
+  @folders_cache ||= {}
+  @folder_obj_cache ||= {}
+
   if !session_folder.nil? and Folder.exists?(session_folder)
     if session_folder != '0'
   %>
-  array.push(new Array("+<%= session_folder %>", "<%= Folder.get_path(session_folder) %>", "", "", 8));
+  array.push(new Array("+<%= session_folder %>", "<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>", "", "", 8));
   <%
     end
   else

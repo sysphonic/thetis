@@ -424,7 +424,7 @@ class Folder < ActiveRecord::Base
   #Gets path-string which represents location of specified Folder.
   #
   #_folder_id_:: Folder-ID.
-  #_folders_cache_:: Hash to accelerate response. {folder_id, path}
+  #_folders_cache_:: Hash to accelerate response. {folder.id, path}
   #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: Folder path like "/parent_name1/parent_name2/this_name".
   #
@@ -561,7 +561,7 @@ class Folder < ActiveRecord::Base
   #
   #Gets path-string which represents location of this folder.
   #
-  #_folders_cache_:: Hash to accelerate response. {folder_id, path}
+  #_folders_cache_:: Hash to accelerate response. {folder.id, path}
   #_folder_obj_cache_:: Hash to accelerate response. {folder.id, folder}
   #return:: Folder path like "/parent_name1/parent_name2/this_name".
   #

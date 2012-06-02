@@ -4,6 +4,7 @@ target_attr ||= :id
 rows = 5
 
 @groups_cache ||= {}
+@group_obj_cache ||= {}
 
 @equipment = Group.get_equipment(@group_id)
 %>
@@ -17,7 +18,7 @@ rows = 5
     </td>
     <td align="left" style="color:blue;">
       <% unless @group_id.nil? %>
-        <%= Group.get_path(@group_id, @groups_cache) %>
+        <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectEquipment();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
       <% end %>
     </td>
@@ -32,7 +33,7 @@ rows = 5
 
   login_groups = @login_user.get_groups_a
   login_groups.each do |group_id|
-    group_name = Group.get_path(group_id, @groups_cache)
+    group_name = Group.get_path(group_id, @groups_cache, @group_obj_cache)
     group_equipment = Group.get_equipment(group_id)
     group_equipment.each do |equipment|
       equipment_id = equipment.id.to_s

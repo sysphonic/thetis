@@ -9,7 +9,8 @@ research_cache = {}
   research_cache[user.id.to_s] = research
 end
 
-groups_cache = {}
+@groups_cache ||= {}
+@group_obj_cache ||= {}
 %>
 <div id="committed_users" style="display:none;"><%= '|'+committed.join('|')+'|' %></div>
 
@@ -40,7 +41,7 @@ groups_cache = {}
               <%= t('btn.select_group') %>
             </div>
         <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, groups_cache) %></a>
+            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
         <% end %>
           </td>
@@ -101,7 +102,7 @@ groups_cache = {}
     <td class="<%= td_class %>" nowrap>
       <%
       user.get_groups_a.each do |group_id|
-        group_path = Group.get_path(group_id, groups_cache)
+        group_path = Group.get_path(group_id, @groups_cache, @group_obj_cache)
       %>
         <%= group_path %><br/>
       <% end %>

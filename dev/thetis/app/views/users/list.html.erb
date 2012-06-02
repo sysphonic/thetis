@@ -1,6 +1,7 @@
 
 <%
-groups_cache = {}
+@groups_cache ||= {}
+@group_obj_cache ||= {}
 %>
 
 <%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'get', :name => 'form_list') %>
@@ -40,7 +41,7 @@ groups_cache = {}
         <%= t('btn.select_group') %>
       </div>
 <% else %>
-      <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, groups_cache) %></a>
+      <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
       &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
 <% end %>
     </td>
@@ -98,7 +99,7 @@ groups_cache = {}
     <td class="<%= td_class %>" nowrap><%= truncate(user.title, :length => 10) %></td>
     <td class="<%= td_class %>" nowrap>
       <% user.get_groups_a.each do |group_id| %>
-        <%= Group.get_path(group_id, groups_cache) %><br/>
+        <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
       <% end %>
     </td>
   <% if @login_user.admin?(User::AUTH_USER) %>

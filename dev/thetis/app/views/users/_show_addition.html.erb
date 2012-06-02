@@ -46,10 +46,11 @@
             <td nowrap>
               <%
               unless @user.nil?
-                groups_cache = {}
+                @groups_cache ||= {}
+                @group_obj_cache ||= {}
                 @user.get_groups_a.each do |group_id|
               %>
-                <%= Group.get_path(group_id, groups_cache) %><br/>
+                <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
               <%
                 end
               end
