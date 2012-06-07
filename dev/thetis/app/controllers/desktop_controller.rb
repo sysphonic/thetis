@@ -431,8 +431,8 @@ class DesktopController < ApplicationController
 
     render(:partial => 'ajax_label', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
  
     render(:partial => 'ajax_label', :layout => false)
   end

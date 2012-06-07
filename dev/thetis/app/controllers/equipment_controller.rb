@@ -58,8 +58,8 @@ class EquipmentController < ApplicationController
 
     begin
       @equipment.save!
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       render(:controller => 'equipment', :action => 'edit')
       return
     end

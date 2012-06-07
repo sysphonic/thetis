@@ -295,8 +295,8 @@ class FoldersController < ApplicationController
     if @folder_id != '0'
       begin
         @folder = Folder.find(@folder_id)
-      rescue StandardError => err
-        Log.add_error(request, err)
+      rescue => evar
+        Log.add_error(request, evar)
       end
     end
 
@@ -424,7 +424,7 @@ class FoldersController < ApplicationController
     if params[:id] != '0'
       begin
         @folder = Folder.find(params[:id])
-      rescue StandardError => err
+      rescue => evar
         @folder = nil
       end
     end
@@ -508,8 +508,8 @@ class FoldersController < ApplicationController
 
     begin
       @folder = Folder.find(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     @group_id = nil
@@ -575,8 +575,8 @@ class FoldersController < ApplicationController
     end
     render(:partial => 'ajax_auth_users', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_auth_users', :layout => false)
   end
 
@@ -641,8 +641,8 @@ class FoldersController < ApplicationController
     @groups = Group.find(:all)
     render(:partial => 'ajax_auth_groups', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_auth_groups', :layout => false)
   end
 
@@ -709,8 +709,8 @@ class FoldersController < ApplicationController
     @teams = Team.get_for(target_user_id, true)
     render(:partial => 'ajax_auth_teams', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_auth_teams', :layout => false)
   end
 
@@ -737,8 +737,8 @@ class FoldersController < ApplicationController
 
             item.destroy
 
-          rescue StandardError => err
-            Log.add_error(request, err)
+          rescue => evar
+            Log.add_error(request, evar)
           end
 
           count += 1
@@ -779,8 +779,8 @@ class FoldersController < ApplicationController
 
             item.update_attribute(:folder_id, folder_id)
 
-          rescue StandardError => err
-            Log.add_error(request, err)
+          rescue => evar
+            Log.add_error(request, evar)
           end
 
           count += 1

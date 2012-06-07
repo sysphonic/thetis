@@ -101,8 +101,8 @@ class TeamsController < ApplicationController
     begin
       team = Team.find(params[:id])
       Item.destroy(team.item_id)
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     list

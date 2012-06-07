@@ -117,8 +117,8 @@ class ZeptairPostController < ApplicationController
       @post_item = ZeptairPostHelper.get_item_for(target_user)
     end
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:text => 'ERROR:' + t('msg.system_error'))
   end
 
@@ -187,8 +187,8 @@ class ZeptairPostController < ApplicationController
 
     render(:text => t('msg.delete_success'))
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:text => 'ERROR:' + t('msg.system_error'))
   end
 end

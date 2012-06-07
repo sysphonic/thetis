@@ -258,8 +258,8 @@ class MailFoldersController < ApplicationController
     begin
       @email = Email.find(mail_id)
       render(:partial => 'ajax_mail_content', :layout => false)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       render(:text => '')
     end
   end
@@ -281,8 +281,8 @@ class MailFoldersController < ApplicationController
           return
         end
       end
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     render(:text => '')

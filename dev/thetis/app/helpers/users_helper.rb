@@ -129,8 +129,8 @@ module UsersHelper
 
           NoticeMailer.deliver_notice(user, subject, body, root_url)
           count += 1
-        rescue StandardError => err
-          Log.add_error(nil, err)
+        rescue => evar
+          Log.add_error(nil, evar)
         end
       end
     end

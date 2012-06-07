@@ -63,8 +63,8 @@ module ZeptairDistHelper
 
     begin
       comment = Comment.find(:first, :conditions => ['user_id=? and item_id=? and xtype=?', user_id, item_id, Comment::XTYPE_DIST_ACK])
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     return comment
@@ -106,8 +106,8 @@ module ZeptairDistHelper
     sql << " where item_id=#{item_id} order by id ASC"
     begin
       attachments = Attachment.find_by_sql(sql)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     unless attachments.nil?
@@ -120,8 +120,8 @@ module ZeptairDistHelper
     sql << " where item_id=#{item_id} order by id ASC"
     begin
       zept_cmds = ZeptairCommand.find_by_sql(sql)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     unless zept_cmds.nil?

@@ -186,8 +186,8 @@ class Item < ActiveRecord::Base
 
     begin
       item = Item.find(folder_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       retun false
     end
 
@@ -575,8 +575,8 @@ class Item < ActiveRecord::Base
 
     begin
       max_order = Item.count_by_sql("SELECT MAX(xorder) FROM items where folder_id=#{folder_id}")
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     max_order = 0 if max_order.nil?
@@ -662,8 +662,8 @@ class Item < ActiveRecord::Base
     elsif self.xtype == Item::XTYPE_RESEARCH
       begin
         user ||= User.find(user_id)
-      rescue StandardError => err
-        Log.add_error(nil, err)
+      rescue => evar
+        Log.add_error(nil, evar)
         return false
       end
       return true if user.admin?(User::AUTH_RESEARCH)
@@ -704,8 +704,8 @@ class Item < ActiveRecord::Base
 
     begin
       user ||= User.find(user_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return false
     end
 
@@ -731,8 +731,8 @@ class Item < ActiveRecord::Base
 
     begin
       user ||= User.find(user_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return false
     end
 
@@ -779,8 +779,8 @@ class Item < ActiveRecord::Base
     sql << ' order by xorder ASC'
     begin
       images = Image.find_by_sql(sql)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     return (images || [])
@@ -801,8 +801,8 @@ class Item < ActiveRecord::Base
     sql << ' order by xorder ASC'
     begin
       attachments = Attachment.find_by_sql(sql)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     return (attachments || [])

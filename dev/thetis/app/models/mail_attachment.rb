@@ -77,8 +77,8 @@ class MailAttachment < ActiveRecord::Base
 
       return mail_attach
 
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return nil
     end
   end
@@ -120,8 +120,8 @@ class MailAttachment < ActiveRecord::Base
 
       FileUtils.cp(src_path, dest_path)
 
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
   end
 end

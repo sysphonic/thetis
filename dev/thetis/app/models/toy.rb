@@ -217,8 +217,8 @@ class Toy < ActiveRecord::Base
 
     begin
       toy = Toy.find(:first, :conditions => con)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     return (!toy.nil?)

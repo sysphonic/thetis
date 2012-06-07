@@ -170,8 +170,8 @@ class TemplatesController < ApplicationController
 
     redirect_to(:controller => 'items', :action => 'edit', :id => item.id)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     redirect_to(:controller => 'items', :action => 'new')
   end

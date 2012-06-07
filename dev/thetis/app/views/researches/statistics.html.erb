@@ -79,8 +79,8 @@ users_cache = Hash.new    # user_id => Array of group_ids
                           unless (user_groups & groups_cache[group_id]).empty?
                             users_cache[user_id] << group_id
                           end
-                        rescue StandardError => err
-                          Log.add_error request, err
+                        rescue => evar
+                          Log.add_error(request, evar)
                         end
                       end
                     end

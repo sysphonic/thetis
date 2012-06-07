@@ -243,8 +243,8 @@ class ItemsController < ApplicationController
 
     begin
       @item = Item.find(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
   end
 
@@ -273,10 +273,10 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_move', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
-    flash[:notice] = 'ERROR:' + err.to_s[0, 64]
+    flash[:notice] = 'ERROR:' + evar.to_s[0, 64]
     render(:partial => 'ajax_move', :layout => false)
   end
 
@@ -315,8 +315,8 @@ class ItemsController < ApplicationController
 
           item.update_attribute(:folder_id, folder_id)
 
-        rescue StandardError => err
-          Log.add_error(request, err)
+        rescue => evar
+          Log.add_error(request, evar)
         end
 
         count += 1
@@ -337,8 +337,8 @@ class ItemsController < ApplicationController
 
     begin
       Item.destroy(params[:id])
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     if params[:from_action].nil?
@@ -378,8 +378,8 @@ class ItemsController < ApplicationController
 
           item.destroy
 
-        rescue StandardError => err
-          Log.add_error(request, err)
+        rescue => evar
+          Log.add_error(request, evar)
         end
 
         count += 1
@@ -448,8 +448,8 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_workflow', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     render(:partial => 'ajax_item_workflow', :layout => false)
   end
@@ -533,8 +533,8 @@ class ItemsController < ApplicationController
         if delete_team
           begin
             @item.team.destroy
-          rescue StandardError => err
-            Log.add_error(request, err)
+          rescue => evar
+            Log.add_error(request, evar)
           end
         end
       end
@@ -543,8 +543,8 @@ class ItemsController < ApplicationController
         if delete_zept_cmd
           begin
             @item.zeptair_command.destroy
-          rescue StandardError => err
-            Log.add_error(request, err)
+          rescue => evar
+            Log.add_error(request, evar)
           end
         end
       end
@@ -563,8 +563,8 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_basic', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_item_basic', :layout => false)
   end
 
@@ -593,8 +593,8 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_description', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_item_description', :layout => false)
   end
 
@@ -667,11 +667,11 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_image', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     @image = Image.new
-    @image.errors.add_to_base err.to_s[0, 256]
+    @image.errors.add_to_base(evar.to_s[0, 256])
 
     render(:partial => 'ajax_item_image', :layout => false)
   end
@@ -721,8 +721,8 @@ class ItemsController < ApplicationController
 
       @item.update_attribute(:updated_at, Time.now)
 
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     render(:partial => 'ajax_item_image', :layout => false)
@@ -744,8 +744,8 @@ class ItemsController < ApplicationController
       unless item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
     render(:partial => 'ajax_image_info', :layout => false)
   end
@@ -781,11 +781,11 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_image', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     @image = Image.new
-    @image.errors.add_to_base err.to_s[0, 256]
+    @image.errors.add_to_base(evar.to_s[0, 256])
 
     render(:partial => 'ajax_item_image', :layout => false)
   end
@@ -816,9 +816,9 @@ class ItemsController < ApplicationController
 
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   ####################
@@ -871,11 +871,11 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_attachment', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     @attachment = Attachment.new
-    @attachment.errors.add_to_base(err.to_s[0, 256])
+    @attachment.errors.add_to_base(evar.to_s[0, 256])
 
     render(:partial => 'ajax_item_attachment', :layout => false)
   end
@@ -948,8 +948,8 @@ class ItemsController < ApplicationController
 
       @item.update_attribute(:updated_at, Time.now)
 
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     render(:partial => 'ajax_item_attachment', :layout => false)
@@ -971,8 +971,8 @@ class ItemsController < ApplicationController
       unless item.check_user_auth(@login_user, 'w', true)
         raise t('msg.need_to_be_owner')
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
     render(:partial => 'ajax_attachment_info', :layout => false)
   end
@@ -1008,11 +1008,11 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_item_attachment', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     @attachment = Attachment.new
-    @attachment.errors.add_to_base(err.to_s[0, 256])
+    @attachment.errors.add_to_base(evar.to_s[0, 256])
 
     render(:partial => 'ajax_item_attachment', :layout => false)
   end
@@ -1043,9 +1043,9 @@ class ItemsController < ApplicationController
 
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   ################
@@ -1198,8 +1198,8 @@ class ItemsController < ApplicationController
         attachment.destroy
         @comment.update_attribute(:updated_at, Time.now)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     render(:partial => 'ajax_comment', :layout => false)
@@ -1236,8 +1236,8 @@ class ItemsController < ApplicationController
     begin
       @item = Item.find(params[:id])
       @workflow = @item.workflow
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
  
     attr = {:status => Workflow::STATUS_ACTIVE, :issued_at => Time.now}
@@ -1322,8 +1322,8 @@ class ItemsController < ApplicationController
     end
     render(:partial => 'ajax_team_info', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_team_info', :layout => false)
   end
 
@@ -1345,8 +1345,8 @@ class ItemsController < ApplicationController
 
     render(:partial => 'ajax_move_in_team_folder', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_move_in_team_folder', :layout => false)
   end
 
@@ -1367,9 +1367,9 @@ class ItemsController < ApplicationController
 
       flash[:notice] = t('msg.update_success')
 
-    rescue StandardError => err
-      Log.add_error(request, err)
-      flash[:notice] = err.to_s
+    rescue => evar
+      Log.add_error(request, evar)
+      flash[:notice] = evar.to_s
     end
 
     render(:partial => 'ajax_team_status', :layout => false)

@@ -32,8 +32,8 @@ module DesktopsHelper
       unless user_before_login.nil? or user_before_login.empty?
         begin
           user = User.find(user_before_login)
-        rescue StandardError => err
-          Log.add_error(nil, err)
+        rescue => evar
+          Log.add_error(nil, evar)
         end
       end
     end

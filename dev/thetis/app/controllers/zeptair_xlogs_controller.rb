@@ -153,8 +153,8 @@ class ZeptairXlogsController < ApplicationController
         when 'ISO-8859-1'
           csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     send_data(csv, :type => 'application/octet-stream;charset=UTF-8', :disposition => 'attachment;filename="zeptair_network_logs.csv"')

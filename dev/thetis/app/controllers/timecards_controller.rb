@@ -248,7 +248,7 @@ class TimecardsController < ApplicationController
 
       date = timecard.date
       timecard.destroy unless timecard.nil?
-    rescue StandardError => err
+    rescue => evar
     end
 
     flash[:notice] = t('msg.delete_success')
@@ -495,8 +495,8 @@ class TimecardsController < ApplicationController
 
     render(:partial => 'ajax_paidhld_list', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     render(:partial => 'ajax_paidhld_list', :layout => false)
   end
@@ -521,8 +521,8 @@ class TimecardsController < ApplicationController
 
     paidhld_list
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
     paidhld_list
   end
@@ -563,9 +563,9 @@ class TimecardsController < ApplicationController
     self.users
     render(:action => 'users')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    flash[:notice] = 'ERROR:' + err.to_s
+  rescue => evar
+    Log.add_error(request, evar)
+    flash[:notice] = 'ERROR:' + evar.to_s
 
     self.users
     render(:action => 'users')

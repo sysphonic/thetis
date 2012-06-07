@@ -52,7 +52,8 @@ ThetisBoxDragObserver.prototype = {
     }
     if (!is_MS && !is_Opera) {
       var id = elem.id.split("-")[1];
-      var base =  _z("thetisBoxBase-"+id);
+      var base = _z("thetisBoxBase-"+id);
+      var box = _z("divThetisBox-"+id);
       var content = _z("thetisBoxContent-"+id);
       if (!content) {
         content = _z("thetisBoxTree-"+id);
@@ -67,7 +68,7 @@ ThetisBoxDragObserver.prototype = {
       }
 
       draggable.options.snap = function(x, y) {
-        return ThetisBox.onResizeHandleDragged(x, y, elem, base, content, deltaWidth, deltaHeight);
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight);
       };
     }
   },
@@ -78,7 +79,8 @@ ThetisBoxDragObserver.prototype = {
     }
     if (is_MS || is_Opera) {
       var id = elem.id.split("-")[1];
-      var base =  _z("thetisBoxBase-"+id);
+      var base = _z("thetisBoxBase-"+id);
+      var box = _z("divThetisBox-"+id);
       var content = _z("thetisBoxContent-"+id);
       if (!content) {
         content = _z("thetisBoxTree-"+id);
@@ -93,7 +95,7 @@ ThetisBoxDragObserver.prototype = {
       }
 
       draggable.options.snap = function(x, y) {
-        return ThetisBox.onResizeHandleDragged(x, y, elem, base, content, deltaWidth, deltaHeight);
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight);
       };
     }
   },
@@ -124,7 +126,7 @@ ThetisBox.setClose = function(close) {__thetisbox_Close=close};
 ThetisBox.setCloseImg = function(image) {__thetisbox_close_img=image;};
 
 // DRAG BY PROTOTYPE.JS >>>
-ThetisBox.onResizeHandleDragged = function(x, y, elem, base, content, deltaWidth, deltaHeight)
+ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, deltaWidth, deltaHeight)
 {
   if (x <= 0 && y <= 0) {
     return [x, y];
@@ -138,8 +140,16 @@ ThetisBox.onResizeHandleDragged = function(x, y, elem, base, content, deltaWidth
     return [x, 30];
   }
   base.style.width = widthContent + "px";
+  box.style.width = widthContent + "px";
+  if (box.style.minWidth) {
+    box.style.minWidth = widthContent + "px";
+  }
   content.style.width = (widthContent - deltaWidth) + "px";
   base.style.height = heightContent + "px";
+  box.style.height = heightContent + "px";
+  if (box.style.minHeight) {
+    box.style.minHeight = heightContent + "px";
+  }
   content.style.height = (heightContent - deltaHeight) + "px";
   return [x, y];
 };
@@ -196,7 +206,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_input_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -276,7 +286,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_textarea_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -355,7 +365,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_tree_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -423,7 +433,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "          <td class='thetisbox_minitree_title' style='color:white; text-indent:5px;'>";
     content += "            <b>"+this.title+"</b>";
     content += "          </td>";
-    content += "          <td align='right' valign='middle' style='padding-right:5px;'>";
+    content += "          <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
     content += "            <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
     content += "          </td>";
     content += "        </tr>";
@@ -466,7 +476,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_confirm_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -519,7 +529,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_message_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -638,7 +648,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_iframe_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";
@@ -708,7 +718,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "        <td class='thetisbox_tray_title' style='color:white; text-indent:5px;'>";
         content += "          <b>"+this.title+"</b>";
         content += "        </td>";
-        content += "        <td align='right' valign='middle' style='padding-right:5px;'>";
+        content += "        <td align='right' valign='middle' style='padding-right:5px; width:20px;'>";
         content += "          <img src='"+this.button_close_img+"' style='cursor:pointer; vertical-align:middle;' onClick=\"ThetisBox.remove('"+this.id+"');\">";
         content += "        </td>";
         content += "      </tr>";

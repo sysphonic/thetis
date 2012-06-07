@@ -36,8 +36,8 @@ class WorkflowsController < ApplicationController
 
     @received_wfs = Workflow.get_received_list(@login_user.id, 'id DESC')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
   end
 
   #=== create
@@ -63,8 +63,8 @@ class WorkflowsController < ApplicationController
 
     render(:partial => 'ajax_workflow', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_workflow', :layout => false)
   end
 
@@ -80,8 +80,8 @@ class WorkflowsController < ApplicationController
 
     begin
       workflow.item.destroy
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
@@ -117,10 +117,10 @@ class WorkflowsController < ApplicationController
 
     render(:partial => 'ajax_workflow', :layout => false)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
 
-    flash[:notice] = 'ERROR:' + err.to_s[0, 64]
+    flash[:notice] = 'ERROR:' + evar.to_s[0, 64]
     render(:partial => 'ajax_workflow', :layout => false)
   end
 

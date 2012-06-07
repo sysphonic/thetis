@@ -74,8 +74,8 @@ class MailAccountsController < ApplicationController
 
     begin
       @mail_account = MailAccount.find(mail_account_id)
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       redirect_to(:controller => 'login', :action => 'logout')
       return
     end

@@ -431,8 +431,8 @@ class MailFolder < ActiveRecord::Base
 
       begin
         folder.destroy
-      rescue StandardError => err
-        Log.add_error(nil, err)
+      rescue => evar
+        Log.add_error(nil, evar)
       end
 
       mails = Email.find(:all, :conditions => ['mail_folder_id=?', folder.id])

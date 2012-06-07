@@ -39,8 +39,8 @@ module CommentsHelper
 #      begin
 #        team = Team.find team_id
 #        team_items << team.item_id
-#      rescue StandardError => err
-#        Log.add_error(nil, err)
+#      rescue => evar
+#        Log.add_error(nil, evar)
 #      end
 #    end
 #

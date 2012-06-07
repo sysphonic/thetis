@@ -99,8 +99,8 @@ class Comment < ActiveRecord::Base
     sql << ' order by xorder ASC'
     begin
       attachments = Attachment.find_by_sql(sql)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
     attachments = [] if attachments.nil?
     return attachments

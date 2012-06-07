@@ -53,8 +53,8 @@ class SendMailsController < ApplicationController
 
     begin
       org_email = Email.find(email_id)
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       redirect_to(:controller => 'login', :action => 'logout')
       return
     end
@@ -283,8 +283,8 @@ class SendMailsController < ApplicationController
         end
         @email.update_attributes(update_attrs)
       end
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
     end
 
     render(:partial => 'ajax_mail_attachments', :layout => false)

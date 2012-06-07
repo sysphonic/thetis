@@ -84,8 +84,8 @@ class ResearchesController < ApplicationController
 
     Research.trim_config_yaml(@q_hash.keys)
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
   end
 
   #=== create_q_page
@@ -167,9 +167,9 @@ class ResearchesController < ApplicationController
 
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   #=== reset_q_ctrl
@@ -186,8 +186,8 @@ class ResearchesController < ApplicationController
 
     render(:partial => 'ajax_q_ctrls')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_q_ctrls')
   end
 
@@ -203,8 +203,8 @@ class ResearchesController < ApplicationController
 
     render(:partial => 'ajax_q_ctrls')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:partial => 'ajax_q_ctrls')
   end
 
@@ -332,9 +332,9 @@ class ResearchesController < ApplicationController
 
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   #=== stop
@@ -348,9 +348,9 @@ class ResearchesController < ApplicationController
     ApplicationHelper.delete_file_safe(Research.get_pages)
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   #=== reset
@@ -365,9 +365,9 @@ class ResearchesController < ApplicationController
 
     render(:text => '')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   #=== reset_users
@@ -386,8 +386,8 @@ class ResearchesController < ApplicationController
           begin
             Research.destroy_all('user_id=' + user_id.to_s)
             count += 1
-          rescue StandardError => err
-            Log.add_error(request, err)
+          rescue => evar
+            Log.add_error(request, evar)
           end
         end
       end
@@ -399,9 +399,9 @@ class ResearchesController < ApplicationController
 
     redirect_to(:controller => 'researches', :action => 'users')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
-    render(:text => err.to_s)
+  rescue => evar
+    Log.add_error(request, evar)
+    render(:text => evar.to_s)
   end
 
   #=== show_receipt
@@ -507,8 +507,8 @@ class ResearchesController < ApplicationController
       render(:action => 'confirm')
     end
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     @page = '01'
     render(:action => 'edit_page')
   end
@@ -525,8 +525,8 @@ class ResearchesController < ApplicationController
 
     render(:action => 'show_receipt')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
     render(:action => 'edit_page')
   end
 
@@ -731,8 +731,8 @@ class ResearchesController < ApplicationController
 
     begin
       require 'gruff'
-    rescue StandardError => err
-      Log.add_error(request, err)
+    rescue => evar
+      Log.add_error(request, evar)
       return
     end
 
@@ -745,7 +745,7 @@ class ResearchesController < ApplicationController
     end
     send_data(g.to_blob, :type => 'image/png')
 
-  rescue StandardError => err
-    Log.add_error(request, err)
+  rescue => evar
+    Log.add_error(request, evar)
   end
 end

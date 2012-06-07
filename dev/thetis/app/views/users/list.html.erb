@@ -344,11 +344,9 @@ err_cnt = 0
         <% else %>
           <td align="left" valign="top" style="padding:0px 3px;" colspan="2">
         <% end %>
-            <ul>
         <% errs.each do |err| %>
-              <li><%= err %></li>
+            &bull; <%= err %><br/>
         <% end %>
-            </ul>
           </td>
         </tr>
 <% else %>

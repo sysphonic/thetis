@@ -327,8 +327,8 @@ class Team < ActiveRecord::Base
 
     begin
       team = Team.find(team_id)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     if team.nil?
@@ -363,8 +363,8 @@ class Team < ActiveRecord::Base
 
     begin
       return Folder.find(:first, :conditions => ['owner_id=? and xtype=?', team_id.to_i, Folder::XTYPE_TEAM])
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return nil
     end
   end

@@ -108,8 +108,8 @@ module TemplatesHelper
 
     return [tmpl_folder, tmpl_system_folder, tmpl_workflows_folder, tmpl_local_folder, tmpl_q_folder]
 
-  rescue StandardError => err
-    Log.add_error(nil, err)
+  rescue => evar
+    Log.add_error(nil, evar)
     return nil
   end
 
@@ -162,8 +162,8 @@ module TemplatesHelper
 
     return [tmpl_folder, tmpl_system_folder, tmpl_workflows_folder, tmpl_local_folder, tmpl_q_folder]
 
-  rescue StandardError => err
-    Log.add_error(nil, err)
+  rescue => evar
+    Log.add_error(nil, evar)
     return nil
   end
 
@@ -179,16 +179,16 @@ module TemplatesHelper
     begin
       condition = ["folders.name = ?", TMPL_ROOT]
       tmpl_folder = Folder.find(:first, :conditions => condition)
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
     end
 
     unless tmpl_folder.nil?
       condition = ['parent_id=? and name=?', tmpl_folder.id, name]
       begin
         child = Folder.find(:first, :conditions => condition)
-      rescue StandardError => err
-        Log.add_error(nil, err)
+      rescue => evar
+        Log.add_error(nil, evar)
       end
     end
 
