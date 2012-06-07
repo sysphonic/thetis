@@ -94,8 +94,12 @@ class AddressbookController < ApplicationController
 
     flash[:notice] = t('msg.register_success')
 
-    list
-    render(:action => 'list')
+    if request.xhr?
+      render(:partial => 'common/flash_notice', :layout => false)
+    else
+      list
+      render(:action => 'list')
+    end
   end
 
   #=== edit
@@ -156,8 +160,12 @@ class AddressbookController < ApplicationController
 
     if @address.update_attributes(params[:address])
       flash[:notice] = t('msg.update_success')
-      list
-      render(:action => 'list')
+      if request.xhr?
+        render(:partial => 'common/flash_notice', :layout => false)
+      else
+        list
+        render(:action => 'list')
+      end
     else
       render(:controller => 'addressbook', :action => 'edit', :layout => (!request.xhr?))
     end

@@ -47,8 +47,9 @@ onRegisterAddressClicked = function()
     return false;
   }
 
-  if (_z("scope_common")) {
-    if (_z("scope_common").checked) {
+  var scope_common = _z("scope_common");
+  if (scope_common) {
+    if (scope_common.checked) {
       selectListAll(_z("groups_selected"));
       selectListAll(_z("teams_selected"));
     } else {

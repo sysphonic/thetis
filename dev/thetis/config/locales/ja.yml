@@ -447,6 +447,7 @@ ja:
     sum_of_attach_size_over: "添付ファイルの合計サイズが制限値を超えます。"
     confirm_to_empty: "フォルダ内のすべてのメールを削除します。よろしいですか？"
     confirm_to_send: "メールを送信します。よろしいですか？"
+    confirm_to_send_without_subject: "件名が入力されていません。このままメールを送信してもよろしいですか？"
     confirm_to_delete: " 件のメールを削除します。よろしいですか？"
     moved: "%{count}件のメールを移動しました。"
     info_to_update: "最新の受信メールを確認するには「受信」ボタンを押してください。"

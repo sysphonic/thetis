@@ -446,6 +446,7 @@ de:
     sum_of_attach_size_over: "Sum of attachment sizes per E-mail will exceed the limit."
     confirm_to_empty: "All E-mails in this folder will be deleted. Are you sure?"
     confirm_to_send: "This E-mail will be sent. Are you sure?"
+    confirm_to_send_without_subject: "Subject has not been specified. Are you sure to send it now?"
     confirm_to_delete: " E-mail(s) will be deleted. Are you sure?"
     moved: "%{count} mail(s) has/have been moved."
     info_to_update: "Click [Get Mails] to confirm new-arrival E-mails."

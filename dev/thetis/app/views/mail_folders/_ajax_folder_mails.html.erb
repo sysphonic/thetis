@@ -24,7 +24,7 @@ mail_account_id = params[:mail_account_id]
 </table>
 
 <input type="hidden" id="folder_id" name="id" value="<%= @folder_id %>" />
-<input type="hidden" name="mail_account_id" value="<%= params[:mail_account_id] %>" />
+<input type="hidden" name="mail_account_id" value="<%= mail_account_id %>" />
 <%= hidden_field_tag('sort_col', params[:sort_col]) %>
 <%= hidden_field_tag('sort_type', params[:sort_type]) %>
 </form>

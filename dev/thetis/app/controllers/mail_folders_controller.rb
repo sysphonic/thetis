@@ -16,7 +16,7 @@ class MailFoldersController < ApplicationController
 
   before_filter(:check_login)
   before_filter(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
-  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :ajax_delete_mail, :get_mail_raw, :move_mail])
+  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :get_mail_raw])
 
 
   #=== show_tree
@@ -131,7 +131,11 @@ class MailFoldersController < ApplicationController
       else
         mail_folder.update_attribute(:parent_id, trash_folder.id)
         flash[:notice] = t('msg.moved_to_trash')
-        @redirect_url = ApplicationHelper.url_for(:controller => params[:controller], :action => 'show_tree')
+
+        prms = ApplicationHelper.get_fwd_params(params)
+        prms[:controller] = params[:controller]
+        prms[:action] = 'show_tree'
+        @redirect_url = ApplicationHelper.url_for(prms)
         render(:partial => 'common/redirect_to', :layout => false)
       end
     end

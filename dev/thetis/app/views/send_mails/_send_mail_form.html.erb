@@ -189,7 +189,12 @@ doSend = function()
     return;
   }
 
-  confm("<%= t('mail.confirm_to_send') %>", "_doSend()");
+  var email_subject = _z("email_subject");
+  if (email_subject && email_subject.value.length <= 0) {
+    confm("<%= t('mail.confirm_to_send_without_subject') %>", "_doSend()");
+  } else {
+    confm("<%= t('mail.confirm_to_send') %>", "_doSend()");
+  }
 }
 
 _doSend = function()

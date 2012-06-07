@@ -226,11 +226,20 @@ class Group < ActiveRecord::Base
   #
   #Gets Users in specified Group.
   #
+  #_recursive_:: Specify true if recursive search is required.
   #return:: Users in specified Group.
   #
-  def self.get_users(group_id)
+  def self.get_users(group_id, recursive=false)
 
     return [] if group_id.nil?
+
+    users = []
+
+    if recursive
+      Group.get_childs(group_id, recursive, false).each do |child_id|
+        users |= Group.get_users(child_id, false)
+      end
+    end
 
     group_id = group_id.to_s
 
@@ -240,7 +249,9 @@ class Group < ActiveRecord::Base
       con = "groups like '%|"+group_id+"|%'"
     end
 
-    return User.find_all(con)
+    users |= User.find_all(con)
+
+    return users
   end
 
   #=== self.get_equipment
@@ -363,8 +374,8 @@ class Group < ActiveRecord::Base
 
     begin
       return Folder.find(:first, :conditions => ['owner_id=? and xtype=?', group_id.to_i, Folder::XTYPE_GROUP])
-    rescue StandardError => err
-      Log.add_error(nil, err)
+    rescue => evar
+      Log.add_error(nil, evar)
       return nil
     end
   end

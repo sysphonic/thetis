@@ -67,22 +67,7 @@ ThetisBoxDragObserver.prototype = {
       }
 
       draggable.options.snap = function(x, y) {
-        if (x <= 0 && y <= 0) {
-          return [x, y];
-        }
-        var widthContent = x + elem.offsetWidth;
-        var heightContent = y + elem.offsetHeight;
-        if (widthContent < 30 && x < 0) {
-          return [30, y];
-        }
-        if (heightContent < 30 && y < 0) {
-          return [x, 30];
-        }
-        base.style.width = widthContent + "px";
-        content.style.width = (widthContent - deltaWidth) + "px";
-        base.style.height = heightContent + "px";
-        content.style.height = (heightContent - deltaHeight) + "px";
-        return [x, y];
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, content, deltaWidth, deltaHeight);
       };
     }
   },
@@ -108,22 +93,7 @@ ThetisBoxDragObserver.prototype = {
       }
 
       draggable.options.snap = function(x, y) {
-        if (x <= 0 && y <= 0) {
-          return [x, y];
-        }
-        var widthContent = x + elem.offsetWidth;
-        var heightContent = y + elem.offsetHeight;
-        if (widthContent < 30 && x < 0) {
-          return [30, y];
-        }
-        if (heightContent < 30 && y < 0) {
-          return [x, 30];
-        }
-        base.style.width = widthContent + "px";
-        content.style.width = (widthContent - deltaWidth) + "px";
-        base.style.height = heightContent + "px";
-        content.style.height = (heightContent - deltaHeight) + "px";
-        return [x, y];
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, content, deltaWidth, deltaHeight);
       };
     }
   },
@@ -152,6 +122,28 @@ ThetisBox.setOK = function(ok) {__thetisbox_OK=ok};
 ThetisBox.setCancel = function(cancel) {__thetisbox_Cancel=cancel};
 ThetisBox.setClose = function(close) {__thetisbox_Close=close};
 ThetisBox.setCloseImg = function(image) {__thetisbox_close_img=image;};
+
+// DRAG BY PROTOTYPE.JS >>>
+ThetisBox.onResizeHandleDragged = function(x, y, elem, base, content, deltaWidth, deltaHeight)
+{
+  if (x <= 0 && y <= 0) {
+    return [x, y];
+  }
+  var widthContent = x + elem.offsetWidth;
+  var heightContent = y + elem.offsetHeight;
+  if (widthContent < 30 && x < 0) {
+    return [30, y];
+  }
+  if (heightContent < 30 && y < 0) {
+    return [x, 30];
+  }
+  base.style.width = widthContent + "px";
+  content.style.width = (widthContent - deltaWidth) + "px";
+  base.style.height = heightContent + "px";
+  content.style.height = (heightContent - deltaHeight) + "px";
+  return [x, y];
+};
+// DRAG BY PROTOTYPE.JS <<<
 
 ThetisBox.getContainer = function(elem) {
   while (elem.parentNode.tagName.toLowerCase() != "html") {
@@ -211,7 +203,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         content += "    </table>";
         content += "  </td>";
       } else {
-        content += "  <td class='thetisbox_input_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+        content += "  <td class='thetisbox_input_title' colspan='2' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
       }
       content += "  </tr>";
     }
@@ -428,7 +420,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "    <td style='background-color:"+this.bgcolor_title+";'>";
     content += "      <table cellspacing='0' cellpadding='0' width='100%'>";
     content += "        <tr>";
-    content += "          <td class='thetisbox_tree_title' style='color:white; text-indent:5px;'>";
+    content += "          <td class='thetisbox_minitree_title' style='color:white; text-indent:5px;'>";
     content += "            <b>"+this.title+"</b>";
     content += "          </td>";
     content += "          <td align='right' valign='middle' style='padding-right:5px;'>";
@@ -1252,10 +1244,21 @@ ThetisBox.isAlive = function()
   return (_z("divThetisBox-"+id) != null);
 }
 
-ThetisBox.clear = function() {
-
+ThetisBox.clear = function()
+{
   for (var i=__thetisbox_id; i>=0; i--) {
      ThetisBox.remove(i);
+  }
+}
+
+ThetisBox.removeLastProgressBar = function()
+{
+  for (var i=__thetisbox_id; i >= 0; i--) {
+    var box = _z("divThetisBox-"+i);
+    if (box && box.className.indexOf("progress") >= 0) {
+      ThetisBox.remove(i);
+      return;
+    }
   }
 }
 

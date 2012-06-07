@@ -77,6 +77,27 @@ module ApplicationHelper
     return (sort_col==col_name)?((sort_type=='ASC')?I18n.t('sort.asc'):I18n.t('sort.desc')):''
   end
 
+  #=== self.sort_by
+  #
+  #Sorts array of model records by the specified attribute.
+  #
+  #_model_recs_:: The target array of model records.
+  #_attr_:: Target attribute.
+  #_direction_:: Sort direction (:asc or :desc).
+  #
+  def self.sort_by(model_recs, attr, direction=:asc)
+
+    return if model_recs.nil?
+
+    model_recs.sort! { |rec_a, rec_b|
+
+      val_a = rec_a.send(attr) || ''
+      val_b = rec_b.send(attr) || ''
+
+      (direction.to_s.downcase == 'asc')?(val_a <=> val_b):(val_b <=> val_a)
+    }
+  end
+
   #=== self.sort_updated_at
   #
   #Sorts an array by updated_at field.

@@ -568,6 +568,36 @@ class User < ActiveRecord::Base
     return array.uniq
   end
 
+  #=== get_group_branches
+  #
+  #Gets Array of Group branches to which the User belongs.
+  #
+  #_group_obj_cache_:: Hash to accelerate response. {group_id, group}
+  #return:: Array of Group branches.
+  #
+  def get_group_branches(group_obj_cache=nil)
+
+    group_branches = []
+
+    return group_branches if self.groups.nil? or self.groups.empty?
+
+    group_ids = self.groups.split('|')
+    group_ids.compact!
+    group_ids.delete('')
+
+    group_ids.each do |group_id|
+      group = Group.find_with_cache(group_id, group_obj_cache)
+
+      unless group.nil?
+        branch = group.get_parents(false, group_obj_cache)
+        branch << group_id
+        group_branches << branch
+      end
+    end
+
+    return group_branches
+  end
+
   #=== get_teams_a
   #
   #Gets Teams array to which this User belongs.
@@ -1034,7 +1064,7 @@ class User < ActiveRecord::Base
       end
     end
 
-    # Requierd
+    # Required
     if self.name.nil? or self.name.empty?
       err_msgs <<  User.human_attribute_name('name') + I18n.t('msg.is_required')
     end
