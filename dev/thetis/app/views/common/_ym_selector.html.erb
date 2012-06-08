@@ -7,7 +7,7 @@ month ||= nil
 
 var thetisBoxYmSelector = null;
 
-function selectMonth(func)
+selectMonth = function(func)
 {
   if (thetisBoxYmSelector) {
     thetisBoxYmSelector.remove();
@@ -23,7 +23,7 @@ function selectMonth(func)
   thetisBoxYmSelector.ext_func = func;
 }
 
-function getYmSelector(onOk, onCancel)
+getYmSelector = function(onOk, onCancel)
 {
 <% if year.nil? or month.nil? %>
   var date = new Date();
@@ -73,7 +73,7 @@ function getYmSelector(onOk, onCancel)
   return content;
 }
 
-function onYmSelectOK()
+onYmSelectOK = function()
 {
   var date = _z("ym_select_year").value + "-" + fillLeft(_z("ym_select_month").value, "0", 2) + "-01";
   thetisBoxYmSelector.remove();
@@ -81,7 +81,7 @@ function onYmSelectOK()
   thetisBoxYmSelector.ext_func(date);
 }
 
-function onYmSelectCancel()
+onYmSelectCancel = function()
 {
   thetisBoxYmSelector.remove();
   thetisBoxYmSelector = null;

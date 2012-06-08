@@ -1,3 +1,7 @@
+<%
+hide_root = (params[:hide_root] == 'true')
+%>
+
 <script type="text/javascript">
   <%
   group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.gif'
@@ -6,9 +10,14 @@
   var folderImgs = new Array(
                         new Array("<%= group_folder_open %>", "<%= group_folder_close %>")
                       );
-  var array = new Array(new Array("0", "/(root)", "", "", 0));
-  var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
-  <% @group_tree.each do |parent_id, child_groups| %>
+  var array = null;
+  var firstMenuId = null;
+  var retMenuId = null;
+<% unless hide_root %>
+  array = new Array(new Array("0", "/(root)", "", "", 0));
+  firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
+<% end %>
+<% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
     <% count = 0 %>
     <% child_groups.each do |group| %>
@@ -23,11 +32,19 @@
         %>
     <% end %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs, false);
-  <% end %>
-  <% if params[:selId].nil? or params[:selId].empty? %>
+  <%
+  if hide_root and (parent_id.to_s == '0')
+    parent_id = ''
+  end
+  %>
+  retMenuId = ThetisBox.buildTree("<%= parent_id %>", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs, false);
+  if (firstMenuId == null) {
+    firstMenuId = retMenuId;
+  }
+<% end %>
+<% if params[:selId].nil? or params[:selId].empty? %>
     ThetisBox.selectTree("<%= params[:selKeeper] %>", firstMenuId, null);
-  <% else %>
+<% else %>
     ThetisBox.selectTree("<%= params[:selKeeper] %>", "<%= params[:selId] %>", null, true);
-  <% end %>
+<% end %>
 </script>
