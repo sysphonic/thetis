@@ -375,7 +375,7 @@ class SchedulesController < ApplicationController
 
       Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
 
-      if login_user.nil?
+      if @login_user.nil?
         check_login
       else
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')

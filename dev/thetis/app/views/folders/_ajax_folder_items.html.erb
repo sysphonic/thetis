@@ -202,7 +202,7 @@ onPaginate = function(url)
   </tr>
 </table>
 
-<table align="center" width="100%" cellpadding="0" cellspacing="1">
+<table width="100%" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="5%" nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="35%" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
@@ -271,14 +271,12 @@ onPaginate = function(url)
   <%
     end
   end
-    if !@login_user.nil? and item.deletable?(@login_user.id)
   %>
+  <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
       <%= check_box(:check_item, item.id, :class => 'check_item') %>
     </td>
-  <%
-    end
-  %>
+  <% end %>
   </tr>
 <% end %>
 </table>

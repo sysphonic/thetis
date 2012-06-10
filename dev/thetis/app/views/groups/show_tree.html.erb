@@ -293,33 +293,33 @@ function doGetMaps(group_id)
 
 function selectGroup(group_id)
 {
-  var select_opt = _z('select_opt');
+  var select_opt = _z("select_opt");
 
   if (select_opt == null) {
     doGetUsers(group_id);
   } else {
-    switch (_z('select_opt').value)
+    switch (_z("select_opt").value)
     {
-      case 'user': doGetUsers(group_id); break;
-      case 'groups_order': doGetGroupsOrder(group_id); break;
-      case 'workflow': doGetWorkflows(group_id); break;
-      case 'office_map': doGetMaps(group_id); break;
+      case "user": doGetUsers(group_id); break;
+      case "groups_order": doGetGroupsOrder(group_id); break;
+      case "workflow": doGetWorkflows(group_id); break;
+      case "office_map": doGetMaps(group_id); break;
     }
   }
 }
 
 function changeOption(val)
 {
-  var group_id = document.form_group_tree.selKeeper.value.split(':')[1];
+  var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
   if (!group_id) {
     return false;
   }
 
   switch (val) {
-    case 'user': doGetUsers(group_id); break;
-    case 'groups_order': doGetGroupsOrder(group_id); break;
-    case 'workflow': doGetWorkflows(group_id); break;
-    case 'office_map': doGetMaps(group_id); break;
+    case "user": doGetUsers(group_id); break;
+    case "groups_order": doGetGroupsOrder(group_id); break;
+    case "workflow": doGetWorkflows(group_id); break;
+    case "office_map": doGetMaps(group_id); break;
   }
 }
 

@@ -16,7 +16,7 @@ tabs_send_mail_address.push("users");
 
 <table id="panel_send_to" cellspacing="0" cellpadding="0" style="width:100%; height:100%; background-color:aliceblue; padding:5px 0px 0px 5px;">
   <tr>
-    <td align="center" valign="top">
+    <td align="center" valign="top" style="height:76%;">
 
       <table cellspacing="2" cellpadding="0" width="100%">
         <tr>
@@ -35,7 +35,7 @@ tabs_send_mail_address.push("users");
         </tr>
       </table>
 
-      <div id="tab_div_direct" style="width:100%; height:100%;" align="center">
+      <div id="tab_div_direct" style="width:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
           <tr>
             <td align="center" style="padding:20px 0px;">
@@ -47,11 +47,11 @@ tabs_send_mail_address.push("users");
         </table>
       </div>
 
-      <div id="tab_div_addrbook" style="display:none; width:100%; height:100%;" align="center">
+      <div id="tab_div_addrbook" style="display:none; width:100%;" align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="height:100%; border:outset 3px cornflowerblue;">
           <tr>
-            <td align="center" style="padding:5px;">
-              <div style="text-align:left">
+            <td align="center" style="padding:5px; height:100%;">
+              <div style="text-align:left; padding-bottom:3px;">
                 <%
                 opts = []
                 opts << [t('scope.private'), Address::BOOK_PRIVATE]
@@ -118,9 +118,9 @@ tabs_send_mail_address.push("users");
 
       <div id="tab_div_users" style="width:100%;" align="center">
 <% if enable_users_tab %>
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="height:83%; border:outset 3px cornflowerblue;">
           <tr>
-            <td id="div_selectUsers" align="center" style="padding:5px;">
+            <td id="div_selectUsers" align="center" style="padding:5px; height:100%;">
 
               <%
               submit_url = url_for(:controller => 'send_mails', :action => 'get_group_users')
