@@ -57,7 +57,7 @@ if target_attr.to_s == 'email'
       options << type_none unless type_none.nil?
       %>
       <%= t('email.type.caption') %><%= t('cap.suffix') %>
-      <%= select_tag('email_type', options_for_select(options, email_type), :style => 'width:100px;', :onchange => "doUpdateUserEmails(#{@group_id})") %>
+      <%= select_tag('email_type', options_for_select(options, email_type), :style => 'width:100px;', :onchange => 'onUserEmailTypeChanged()') %>
     </td>
   </tr>
 </table>
@@ -196,6 +196,11 @@ if target_attr.to_s == 'email'
 
 <% if target_attr.to_s == 'email' %>
 
+onUserEmailTypeChanged = function()
+{
+  doUpdateUserEmails(<%= @group_id %>);
+}
+
 doUpdateUserEmails = function(group_id)
 {
   var addParams = new Array();
@@ -229,12 +234,22 @@ doUpdateUserEmails = function(group_id)
 
 var thetisBoxGroupTreeSelUsers = null;
 
-showGroupTreeToSelectUsers = function(group_id, elem)
+removeGroupTreeToSelectUsers = function()
 {
+  ThetisBox.clear("MINI-TREE");
+  thetisBoxGroupTreeSelUsers = null;
+/*
   if (thetisBoxGroupTreeSelUsers) {
     thetisBoxGroupTreeSelUsers.remove();
     thetisBoxGroupTreeSelUsers = null;
   }
+*/
+}
+
+showGroupTreeToSelectUsers = function(group_id, elem)
+{
+  removeGroupTreeToSelectUsers();
+
   thetisBoxGroupTreeSelUsers = new ThetisBox;
   thetisBoxGroupTreeSelUsers.title = "<%= t('btn.select_group')%>";
   var parentBox = ThetisBox.getInstanceForElem(_z("div_selectUsers"));

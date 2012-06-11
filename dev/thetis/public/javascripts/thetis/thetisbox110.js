@@ -155,8 +155,9 @@ ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, delta
 };
 // DRAG BY PROTOTYPE.JS <<<
 
-ThetisBox.getContainer = function(elem) {
-  while (elem.parentNode.tagName.toLowerCase() != "html") {
+ThetisBox.getContainer = function(elem)
+{
+  while (elem && elem.parentNode.tagName.toLowerCase() != "html") {
     elem = elem.parentNode;
     if (elem.id != null && elem.id.indexOf("divThetisBox-") >= 0) {
       return elem;
@@ -774,6 +775,8 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   // Show
   show: function(p_position, p_size, p_type, p_action, p_caption, p_def)
   {
+    this.box_type = p_type;
+
     this.button_ok = __thetisbox_OK;
     this.button_cancel = __thetisbox_Cancel;
     this.button_close = __thetisbox_Close;
@@ -1141,6 +1144,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   setOnClose: function(func) {
     ThetisBox.setOnClose(this.id, func);
   },
+  box_type: null,
   close_by_icon_button: true,
   defaultFired: false,
   offsetX: 0,
@@ -1254,10 +1258,16 @@ ThetisBox.isAlive = function()
   return (_z("divThetisBox-"+id) != null);
 }
 
-ThetisBox.clear = function()
+ThetisBox.clear = function(box_type)
 {
-  for (var i=__thetisbox_id; i>=0; i--) {
-     ThetisBox.remove(i);
+  for (var i=__thetisbox_id; i >= 0; i--) {
+    if (box_type) {
+      var instance = ThetisBox.getInstance(i);
+      if (!instance || instance.box_type != box_type) {
+        continue;
+      }
+    }
+    ThetisBox.remove(i);
   }
 }
 

@@ -156,6 +156,8 @@ getToAddrEditor = function(onOk, onCancel)
 
   var addrBare = replaceAll(targetAddrVal, addrPrefix, "");
 
+  addrBare = addrBare.replace(/<%= Email::ADDR_ORDER_SEPARATOR %>\d+$/, "");
+
   content = "<form name='form_to_addr'>";
   content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:70px;'>";
