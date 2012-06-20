@@ -432,10 +432,11 @@ class MailFoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
-    mail_folder = MailFolder.find(folder_id)
+    mail_folder = MailFolder.find_by_id(folder_id)
 
-    folder_id = params[:thetisBoxSelKeeper].split(':').last
-    if folder_id == '0' or mail_folder.user_id != @login_user.id
+    if folder_id == '0' \
+        or mail_folder.nil? \
+        or mail_folder.user_id != @login_user.id
       flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
       get_mails
       return

@@ -44,12 +44,14 @@ showAddress = function(address_id, address_name)
         );
 }
 
+var thetisBoxAddressEdit = null;
+
 showAddressNew = function()
 {
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
+  if (thetisBoxAddressEdit) {
+    thetisBoxAddressEdit.remove();
+    thetisBoxAddressEdit = null;
+  }
 
   var addParams = new Array();
 <% unless from.nil? %>
@@ -66,9 +68,13 @@ showAddressNew = function()
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
-                thetisBox.overflow = "auto";
-                thetisBox.show(
+                thetisBoxAddressEdit = new ThetisBox;
+                thetisBoxAddressEdit.resizable = true;
+                thetisBoxAddressEdit.bgcolor_title = "#FF9D11";
+                thetisBoxAddressEdit.bgcolor_body = "#FFDA8B";
+                thetisBoxAddressEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('address.new') %>";
+                thetisBoxAddressEdit.overflow = "auto";
+                thetisBoxAddressEdit.show(
                           "CENTER",
                           Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
@@ -91,10 +97,10 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
       instance.remove();
     }
   }
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
+  if (thetisBoxAddressEdit) {
+    thetisBoxAddressEdit.remove();
+    thetisBoxAddressEdit = null;
+  }
 
   var addParams = new Array();
   addParams.push("id="+address_id);
@@ -115,9 +121,13 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
-                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
-                thetisBox.overflow = "auto";
-                thetisBox.show(
+                thetisBoxAddressEdit = new ThetisBox;
+                thetisBoxAddressEdit.resizable = true;
+                thetisBoxAddressEdit.bgcolor_title = "#FF9D11";
+                thetisBoxAddressEdit.bgcolor_body = "#FFDA8B";
+                thetisBoxAddressEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + address_name;
+                thetisBoxAddressEdit.overflow = "auto";
+                thetisBoxAddressEdit.show(
                           "CENTER",
                           Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
                           "TRAY",
@@ -134,11 +144,6 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
 
 queryAddressEmail = function(email, dispName)
 {
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
-
   var addParams = new Array();
   addParams.push("disp_name="+dispName);
   addParams.push("email="+email);
@@ -156,6 +161,12 @@ queryAddressEmail = function(email, dispName)
             asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
+                var thetisBox = new ThetisBox;
+                thetisBox.resizable = true;
+                thetisBox.bgcolor_title = "#FF9D11";
+                thetisBox.bgcolor_body = "#FFDA8B";
+                var content = request.responseText.stripScripts();
+                var isEdit = (content.indexOf("$ADDRESSBOOK_QUERY:EDIT") >= 0);
                 thetisBox.title = dispName;
                 thetisBox.overflow = "auto";
                 thetisBox.show(
@@ -164,8 +175,14 @@ queryAddressEmail = function(email, dispName)
                           "TRAY",
                           "",
                           "",
-                          request.responseText.stripScripts()
+                          content
                         );
+                if (isEdit) {
+                  if (thetisBoxAddressEdit) {
+                    thetisBoxAddressEdit.remove();
+                  }
+                  thetisBoxAddressEdit = thetisBox;
+                }
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
               }

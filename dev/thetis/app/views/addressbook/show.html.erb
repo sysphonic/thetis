@@ -1,3 +1,6 @@
+<% if params[:action] == 'query' %>
+<!-- $ADDRESSBOOK_QUERY:SHOW -->
+<% end %>
 
 <div style="padding:5px 15px; text-align:left;">
   <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= @address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@address.name, :length => 20)) %>', '<%= params[:admin] %>', this);" />
