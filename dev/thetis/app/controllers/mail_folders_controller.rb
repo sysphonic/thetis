@@ -220,7 +220,7 @@ class MailFoldersController < ApplicationController
     end
 
     @folder_id = params[:id]
-    if @folder_id == '0'   # '0' for ROOT
+    if @folder_id == TreeElement::ROOT_ID.to_s
       @emails = nil
     else
 =begin
@@ -525,6 +525,14 @@ class MailFoldersController < ApplicationController
         next if folder.user_id != @login_user.id
 
         folder.update_attribute(:xorder, idx)
+
+        if folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT
+          mail_account = MailAccount.find_by_id(folder.mail_account_id)
+          unless mail_account.nil?
+            mail_account.update_attribute(:xorder, idx)
+          end
+        end
+
         idx += 1
       rescue => evar
         Log.add_error(request, evar)

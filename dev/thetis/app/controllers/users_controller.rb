@@ -50,6 +50,7 @@ class UsersController < ApplicationController
     attrs = _process_user_attrs(nil, params[:user])
     password = attrs[:password]
     attrs.delete(:password)
+    attrs.delete(:auth)
 
     @user = UsersHelper.get_initialized_user(attrs)
     @user.auth = User::AUTH_ALL if User.count <= 0
@@ -116,6 +117,7 @@ class UsersController < ApplicationController
 
     attrs = _process_user_attrs(@user, params[:user])
     attrs.delete(:password)
+    attrs.delete(:auth)
 
     # Official title and order to display
     title = attrs[:title]

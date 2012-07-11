@@ -130,11 +130,11 @@ function fillLeft(str, ch, len)
 
 function addInputHidden(frm, id, name, value)
 {
-  if (frm.childNodes != null) {
-    for (var i=0; i < frm.childNodes.length; i++) {
-      child = frm.childNodes[i];
-      if (child.name == name) {
-        frm.removeChild(child);
+  if (frm.elements != null) {
+    for (var i=0; i < frm.elements.length; i++) {
+      var entry = frm.elements[i];
+      if (entry.name == name) {
+        removeElem(entry);
       }
     }
   }

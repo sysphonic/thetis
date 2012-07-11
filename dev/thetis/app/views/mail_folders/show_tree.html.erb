@@ -238,6 +238,9 @@ function onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails,
   div_mails.style.width = rightWidth + "px";
   div_mail_content.style.width = div_mails.style.width;
   td_view.style.width = rightWidth + "px";
+
+  arrangeMailContentSection(div_mail_content);
+
   return [x, y];
 }
 
@@ -255,7 +258,30 @@ function onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_
   if (mail_body_view) {
 //    mail_body_view.style.height = (mail_body_view.offsetHeight - y) + "px";
   }
+
+  arrangeMailContentSection(div_mail_content);
+
   return [x, y];
+}
+
+function arrangeMailContentSection(div_mail_content)
+{
+  var div_mail_body = _z("div_mail_body");
+  if (!div_mail_body) {
+    return;
+  }
+  var div_mail_attach = _z("div_mail_attach");
+  var col_height = parseInt(div_mail_content.style.height, 10) - 10;
+  if (div_mail_attach) {
+    div_mail_body.style.height = (col_height / 4 * 3) + "px";
+    div_mail_body.style.width = (div_mail_content.clientWidth - 10) + "px";
+
+    div_mail_attach.style.height = (col_height / 4 * 1) + "px";
+    div_mail_attach.style.width = div_mail_body.style.width;
+  } else {
+    div_mail_body.style.height = col_height + "px";
+    div_mail_body.style.width = (div_mail_content.clientWidth - 10) + "px";
+  }
 }
 
 <% if params[:tips]=='true' and !@mail_accounts.empty? %>
@@ -274,7 +300,14 @@ function getMailAccountId(folder_id)
 
 function getCurrentFolderId()
 {
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
+  var selKeeper = document.form_folder_tree.selKeeper;
+  var folder_id = null;
+
+  if (selKeeper.value && selKeeper.value.indexOf(":") >= 0) {
+    folder_id = selKeeper.value.split(":")[1];
+  } else {
+    folder_id = "<%= TreeElement::ROOT_ID %>";
+  }
 
   return folder_id;
 }
