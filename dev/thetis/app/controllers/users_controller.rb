@@ -30,6 +30,7 @@ class UsersController < ApplicationController
   require 'nkf'
   require 'cgi'
   require 'csv'
+  require 'iconv'
 
 
   #=== new
@@ -50,7 +51,6 @@ class UsersController < ApplicationController
     attrs = _process_user_attrs(nil, params[:user])
     password = attrs[:password]
     attrs.delete(:password)
-    attrs.delete(:auth)
 
     @user = UsersHelper.get_initialized_user(attrs)
     @user.auth = User::AUTH_ALL if User.count <= 0
@@ -69,7 +69,7 @@ class UsersController < ApplicationController
     if params[:from] == 'users_list'
       redirect_to(:controller => 'users', :action => 'list')
     else
-      NoticeMailer.deliver_welcome(@user, password, ApplicationHelper.root_url(request))
+      NoticeMailer.welcome(@user, password, ApplicationHelper.root_url(request)).deliver
       flash[:notice] << '<br/><span class=\'font_msg_bold\' style=\'color:firebrick;\'>'+t('user.initial_password')+'</span>'+t('msg.sent_by')+'<span class=\'font_msg_bold\'>'+t('email.name')+'</span>'+t('msg.check_it')
       redirect_to(:controller => 'login', :action => 'index')
     end
@@ -117,7 +117,6 @@ class UsersController < ApplicationController
 
     attrs = _process_user_attrs(@user, params[:user])
     attrs.delete(:password)
-    attrs.delete(:auth)
 
     # Official title and order to display
     title = attrs[:title]
@@ -130,7 +129,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if @user.update_attributes(attrs)
+    if @user.update_attributes(attrs.except(:id))
 
       flash[:notice] = t('msg.update_success')
 

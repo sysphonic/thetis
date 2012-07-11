@@ -144,8 +144,12 @@ end
 
 <%= render(:partial => 'common/addressbook_func', :locals => {:from => 'mail_folders'}) %>
 
-<%= draggable_element('drag_v_border', :revert => false, :constraint => '"horizontal"') %>
-<%= draggable_element('drag_h_border', :revert => false, :constraint => '"vertical"') %>
+<script type="text/javascript">
+//<![CDATA[
+new Draggable("drag_v_border", {revert:false, constraint:"horizontal"})
+new Draggable("drag_h_border", {revert:false, constraint:"vertical"})
+//]]>
+</script>
 
 <script type="text/javascript">
 

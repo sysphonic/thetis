@@ -46,7 +46,11 @@ end
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @login_user.get_figure %>.png" />
         <%= @login_user.get_name %>
       </div>
-      <%= draggable_element(location_id, :revert => false) %>
+      <script type="text/javascript">
+      //<![CDATA[
+      new Draggable("<%= location_id %>", {revert:false})
+      //]]>
+      </script>
     <% end %>
     </td>
   </tr>
@@ -85,7 +89,11 @@ end
     </td>
   </tr>
 </table>
-<%= draggable_element('toolbar', :revert => false) %>
+<script type="text/javascript">
+//<![CDATA[
+new Draggable("toolbar", {revert:false})
+//]]>
+</script>
 
 <!-- Locations -->
 <%
@@ -120,7 +128,11 @@ unless @locations.nil?
     <% end %>
   </div>
 
-  <%= draggable_element(location_id, :revert => false) %>
+  <script type="text/javascript">
+  //<![CDATA[
+  new Draggable("<%= location_id %>", {revert:false})
+  //]]>
+  </script>
 <%
   end
 end

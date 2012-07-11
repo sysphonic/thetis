@@ -14,6 +14,7 @@
 #*
 #
 class Schedule < ActiveRecord::Base
+  attr_accessible(:title, :detail, :users, :equipment, :start, :end, :scope, :repeat_start, :repeat_end, :repeat_rule, :except, :allday, :items, :xtype, :groups, :teams)
 
   require RAILS_ROOT+'/lib/util/util_date'
 

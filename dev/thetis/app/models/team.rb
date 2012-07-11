@@ -14,7 +14,9 @@
 #*
 #
 class Team < ActiveRecord::Base
-  belongs_to :item
+  attr_accessible(:name, :item_id, :users, :status, :req_to_del_at)
+
+  belongs_to(:item)
 
   public::STATUS_STANDBY = 'standby'
   public::STATUS_ACTIVATED = 'activated'

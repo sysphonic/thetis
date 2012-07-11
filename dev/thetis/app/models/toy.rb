@@ -14,6 +14,7 @@
 #* 
 #
 class Toy < ActiveRecord::Base
+  attr_accessible(:name, :xtype, :target_id, :address, :x, :y, :memo, :message)
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_ITEM = 'item'

@@ -1,7 +1,7 @@
 # rake thetis:utc_time RAILS_ENV=production cur_offset='+0900'
 
 namespace :thetis do
-  task :utc_time, :needs => [:environment] do
+  task :utc_time do
 
     session = ActiveRecord::Base.connection
     cur_offset = ENV['cur_offset']

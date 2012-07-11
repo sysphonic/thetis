@@ -14,6 +14,7 @@
 #* 
 #
 class Research < ActiveRecord::Base
+  attr_protected(:user_id)
 
   public::U_STATUS_IN_ACTON = 0
   public::U_STATUS_COMMITTED = 1

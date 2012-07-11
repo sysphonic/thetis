@@ -1,7 +1,7 @@
 # rake thetis:email_ver110 RAILS_ENV=production
 
 namespace :thetis do
-  task :email_ver110, :needs => [:environment] do
+  task :email_ver110 do
     Email.find(:all).each do |email|
       attrs = {}
 

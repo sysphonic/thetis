@@ -1075,7 +1075,7 @@ class ItemsController < ApplicationController
 
     # Sends Mail to the owner of the item.
     # user = User.find(@item.user_id)
-    # NoticeMailer.deliver_comment(user, ApplicationHelper.root_url(request)) unless user.nil?
+    # NoticeMailer.comment(user, ApplicationHelper.root_url(request)).deliver unless user.nil?
 
     case @item.xtype
       when Item::XTYPE_WORKFLOW

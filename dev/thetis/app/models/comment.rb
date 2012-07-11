@@ -14,9 +14,11 @@
 #* 
 #
 class Comment < ActiveRecord::Base
-  belongs_to :item
+  attr_accessible(:user_id, :item_id, :message, :xtype)
 
-  has_many :attachments, :dependent => :destroy, :order=>'attachments.xorder'
+  belongs_to(:item)
+
+  has_many(:attachments, :dependent => :destroy, :order=>'attachments.xorder')
 
   public::XTYPE_MSG = 'msg'
   public::XTYPE_ACK = 'ack'

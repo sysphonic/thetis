@@ -50,7 +50,7 @@
       pagination = will_paginate(@equipment_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>
-      <%= pagination %>
+      <%= raw(pagination) %>
     </td>
   </tr>
   <tr height="10"><td></td></tr>

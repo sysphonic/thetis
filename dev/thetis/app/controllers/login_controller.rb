@@ -108,15 +108,12 @@ class LoginController < ApplicationController
       user_passwords_h = {}
       users.each do |user|
         newpass = UsersHelper.generate_password
-        attrs = {
-          :pass_md5 => UsersHelper.generate_digest_pass(user.name, newpass)
-        }
-        user.update_attributes(attrs)
+        user.update_attribute(:pass_md5, UsersHelper.generate_digest_pass(user.name, newpass))
 
         user_passwords_h[user] = newpass
       end
 
-      NoticeMailer.deliver_password(user_passwords_h, ApplicationHelper.root_url(request));
+      NoticeMailer.password(user_passwords_h, ApplicationHelper.root_url(request)).deliver;
       flash[:notice] = t('email.sent')
     end
 

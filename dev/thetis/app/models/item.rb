@@ -18,6 +18,8 @@
 #* 
 #
 class Item < ActiveRecord::Base
+  attr_accessible(:title, :summary, :folder_id, :description, :public, :layout, :update_message, :xtype, :xorder)
+
   has_one(:team, :dependent => :destroy)
   has_one(:workflow, :dependent => :destroy)
   has_one(:zeptair_command, :dependent => :destroy)

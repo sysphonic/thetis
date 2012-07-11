@@ -12,10 +12,11 @@
 #* 
 #
 class Address < ActiveRecord::Base
+  attr_accessible(:name, :name_ruby, :nickname, :screenname, :email1, :email2, :email3, :postalcode, :address, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :organization, :title, :memo)
 
   require 'csv'
 
-  validates_presence_of :name
+  validates_presence_of(:name)
 
   public::BOOK_PRIVATE = 'book_private'
   public::BOOK_COMMON = 'book_common'

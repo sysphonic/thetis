@@ -127,7 +127,7 @@ module UsersHelper
         begin
           user = User.find(user_id)
 
-          NoticeMailer.deliver_notice(user, subject, body, root_url)
+          NoticeMailer.notice(user, subject, body, root_url).deliver
           count += 1
         rescue => evar
           Log.add_error(nil, evar)

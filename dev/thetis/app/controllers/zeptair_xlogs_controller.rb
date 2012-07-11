@@ -16,6 +16,8 @@
 class ZeptairXlogsController < ApplicationController
   layout 'base'
 
+  require 'iconv'
+
   before_filter :check_login
   before_filter do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)

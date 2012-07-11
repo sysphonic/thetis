@@ -23,6 +23,7 @@ class AddressbookController < ApplicationController
   require 'nkf'
   require 'cgi'
   require 'csv'
+  require 'iconv'
 
 
   #=== query

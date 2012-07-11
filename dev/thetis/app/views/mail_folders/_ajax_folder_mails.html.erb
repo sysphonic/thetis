@@ -178,7 +178,7 @@ onPaginate = function(url)
       pagination = will_paginate(@email_pages, :params => prms)
       pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
       %>
-      <%= pagination %>
+      <%= raw(pagination) %>
     </td>
   </tr>
 </table>

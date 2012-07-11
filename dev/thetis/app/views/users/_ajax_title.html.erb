@@ -21,7 +21,34 @@
   </tr>
 </table>
 
-<%= sortable_element "sortable_titles", :url => {:controller => 'users', :action => 'update_titles_order' }, :with => "Sortable.serialize('sortable_titles', {name:'titles_order'})", :tag => "div" %>
+<script type="text/javascript">
+
+onTitlesOrderUpdated = function()
+{
+  var addParams = new Array();
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  new Ajax.Request(
+      "<%= url_for(:controller => 'users', :action => 'update_titles_order') %>",
+      {
+        method:"post",
+        parameters:Sortable.serialize("sortable_titles", { name: "titles_order" }) + "&" + addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true
+      }
+    );
+}
+
+//<![CDATA[
+Sortable.create(
+      "sortable_titles",
+      {
+        onUpdate: onTitlesOrderUpdated,
+        tag:"div"
+      }
+    );
+//]]>
+</script>
 
 <%= render(:partial => 'common/flash_notice') %>
 

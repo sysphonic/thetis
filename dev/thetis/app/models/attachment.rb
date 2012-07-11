@@ -14,15 +14,17 @@
 #* 
 #
 class Attachment < ActiveRecord::Base
-  belongs_to :item
-  belongs_to :comment
+  attr_accessible(:title, :memo, :item_id, :xorder, :location, :comment_id, :file)
+
+  belongs_to(:item)
+  belongs_to(:comment)
 
   require 'tempfile'
   require 'fileutils'
   require 'digest/md5'  # for Digest::MD5
 
-  validates_length_of :content, :maximum => THETIS_ATTACHMENT_DB_MAX_KB*1024, :allow_nil => true
-  validates_presence_of :name
+  validates_length_of(:content, :maximum => THETIS_ATTACHMENT_DB_MAX_KB*1024, :allow_nil => true)
+  validates_presence_of(:name)
 
   public::LOCATION_DB = 'DB'
   public::LOCATION_DIR = 'DIR'

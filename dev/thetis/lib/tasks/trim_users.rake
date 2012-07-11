@@ -1,7 +1,7 @@
 # rake thetis:trim_users RAILS_ENV=production
 
 namespace :thetis do
-  task :trim_users, :needs => [:environment] do
+  task :trim_users do
     cnt = 0
     users = User.find_all
     unless users.nil?

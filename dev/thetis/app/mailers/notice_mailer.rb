@@ -24,12 +24,14 @@ class NoticeMailer < ActionMailer::Base
   #_root_url_:: Root URL.
   #
   def welcome(user, password, root_url)
-    @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_regist')
-    @body['user']  = user
-    @body['password']  = password
-    @body['root_url']  = root_url
-    @recipients = user.email
-    @from        = $thetis_config[:smtp]['from_address']
+    @user = user
+    @password = password
+    @root_url = root_url
+    mail(
+      :from => $thetis_config[:smtp]['from_address'],
+      :to => user.email,
+      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_regist')
+    )
   end
 
   #=== password
@@ -43,11 +45,13 @@ class NoticeMailer < ActionMailer::Base
 
     return if user_passwords_h.nil? or user_passwords_h.empty?
 
-    @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_account')
-    @body['user_passwords_h']  = user_passwords_h
-    @body['root_url']  = root_url
-    @recipients = user_passwords_h.keys.first.email
-    @from       = $thetis_config[:smtp]['from_address']
+    @user_passwords_h = user_passwords_h
+    @root_url = root_url
+    mail(
+      :from => $thetis_config[:smtp]['from_address'],
+      :to => user_passwords_h.keys.first.email,
+      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_account')
+    )
   end
 
   #=== comment
@@ -58,11 +62,13 @@ class NoticeMailer < ActionMailer::Base
   #_root_url_:: Root URL.
   #
   def comment(user, root_url)
-    @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.message_arrived')
-    @body['user']  = user
-    @body['root_url']  = root_url
-    @recipients = user.email
-    @from       = $thetis_config[:smtp]['from_address']
+    @user = user
+    @root_url = root_url
+    mail(
+      :from => $thetis_config[:smtp]['from_address'],
+      :to => user.email,
+      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.message_arrived')
+    )
   end
 
   #=== notice
@@ -78,11 +84,13 @@ class NoticeMailer < ActionMailer::Base
     if subject.nil? or subject.empty?
       subject = I18n.t('notification.name')
     end
-    @subject    = '[' + $thetis_config[:general]['app_title'] + '] ' + subject
-    @body['user']  = user
-    @body['message']  = body
-    @body['root_url']  = root_url
-    @recipients = user.email
-    @from       = $thetis_config[:smtp]['from_address']
+    @user = user
+    @message = body
+    @root_url = root_url
+    mail(
+      :from => $thetis_config[:smtp]['from_address'],
+      :to => user.email,
+      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + subject
+    )
   end
 end

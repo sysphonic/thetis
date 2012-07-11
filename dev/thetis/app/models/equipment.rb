@@ -14,8 +14,9 @@
 #*
 #
 class Equipment < ActiveRecord::Base
+  attr_accessible(:name, :note, :users, :groups, :teams)
 
-  validates_presence_of :name
+  validates_presence_of(:name)
 
   #=== self.get_name
   #

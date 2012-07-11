@@ -1,7 +1,7 @@
 # rake thetis:distribute_workflows RAILS_ENV=production
 
 namespace :thetis do
-  task :distribute_workflows, :needs => [:environment] do
+  task :distribute_workflows do
 
     workflows = Workflow.find(:all)
 

@@ -14,11 +14,13 @@
 #* 
 #
 class Image < ActiveRecord::Base
-  validates_length_of :content, :within => 1..THETIS_IMAGE_MAX_KB*1024
-  validates_format_of :content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i
-  validates_presence_of :name, :size, :content_type, :content
+  attr_accessible(:title, :memo, :item_id, :xorder, :file)
 
-  belongs_to :item
+  validates_length_of(:content, :within => 1..THETIS_IMAGE_MAX_KB*1024)
+  validates_format_of(:content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i)
+  validates_presence_of(:name, :size, :content_type, :content)
+
+  belongs_to(:item)
 
   #=== file
   #

@@ -1,7 +1,7 @@
 # rake thetis:htpasswd RAILS_ENV=production
 
 namespace :thetis do
-  task :htpasswd, :needs => [:environment] do
+  task :htpasswd do
     begin
       File.unlink("#{RAILS_ROOT}/config/_htpasswd.conf")
     rescue

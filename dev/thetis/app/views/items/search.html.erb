@@ -73,7 +73,7 @@
       pagination = will_paginate(@item_pages, :params => prms)
       pagination = ApplicationHelper.custom_pagination(pagination)
       %>
-      <%= pagination %>
+      <%= raw(pagination) %>
     </td>
   </tr>
 </table>

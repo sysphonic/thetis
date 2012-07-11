@@ -172,7 +172,7 @@ onPaginate = function(url)
       pagination = will_paginate(@user_pages, :params => prms)
       pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
       %>
-      <%= pagination %>
+      <%= raw(pagination) %>
     </td>
   </tr>
 </table>

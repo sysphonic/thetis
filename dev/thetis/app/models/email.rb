@@ -12,11 +12,15 @@
 #* 
 #
 class Email < ActiveRecord::Base
-  has_many :mail_attachments, :dependent => :destroy, :order=>'mail_attachments.xorder'
+  attr_accessible(:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size)
+
+  has_many(:mail_attachments, :dependent => :destroy, :order=>'mail_attachments.xorder')
 
   require 'net/pop'
   require 'base64'
   require 'digest/sha1'
+  require 'iconv'
+
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_RECV = 'recv'

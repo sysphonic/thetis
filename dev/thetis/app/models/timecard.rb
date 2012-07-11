@@ -14,7 +14,9 @@
 #* 
 #
 class Timecard < ActiveRecord::Base
-  belongs_to :user
+  attr_accessible(:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options)
+
+  belongs_to(:user)
 
   require RAILS_ROOT+'/lib/util/util_datetime'
 

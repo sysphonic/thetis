@@ -15,7 +15,9 @@
 #* 
 #
 class Workflow < ActiveRecord::Base
-  belongs_to :item
+  attr_accessible(:status, :issued_at)
+
+  belongs_to(:item)
 
   public::STATUS_NOT_APPLIED = 'N/A'
   public::STATUS_NOT_ISSUED = 'not_issued'

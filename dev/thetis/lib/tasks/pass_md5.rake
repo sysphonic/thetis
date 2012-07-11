@@ -1,7 +1,7 @@
 # rake thetis:pass_md5 RAILS_ENV=production
 
 namespace :thetis do
-  task :pass_md5, :needs => [:environment] do
+  task :pass_md5 do
     cnt = 0
     users = User.find_all
     unless users.nil?

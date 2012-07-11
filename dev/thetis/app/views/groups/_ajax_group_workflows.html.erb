@@ -27,6 +27,34 @@
   </tr>
 </table>
 
-<%= sortable_element('sortable_items', :url => {:controller => 'folders', :action => 'update_items_order', :id => @tmpl_workflows_folder.id }, :with => "Sortable.serialize('sortable_items', {name:'items_order'})", :tag => 'div') %>
+<script type="text/javascript">
+
+onItemsOrderUpdated = function()
+{
+  var addParams = new Array();
+  addParams.push("id=<%= @tmpl_workflows_folder.id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  new Ajax.Request(
+      "<%= url_for(:controller => 'folders', :action => 'update_items_order') %>",
+      {
+        method:"post",
+        parameters:Sortable.serialize("sortable_items", { name: "items_order" }) + "&" + addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true
+      }
+    );
+}
+
+//<![CDATA[
+Sortable.create(
+      "sortable_items",
+      {
+        onUpdate: onItemsOrderUpdated,
+        tag:"div"
+      }
+    );
+//]]>
+</script>
 
 <% end %>

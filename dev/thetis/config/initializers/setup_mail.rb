@@ -28,5 +28,5 @@ end
 
 ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.raise_delivery_errors = false
-ActionMailer::Base.default_charset = "utf-8"
+ActionMailer::Base.default(:charset => 'utf-8')
 

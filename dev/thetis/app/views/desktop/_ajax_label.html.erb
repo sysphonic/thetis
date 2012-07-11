@@ -20,7 +20,11 @@
   <span id="<%= toy_id %>_type" style="display:none;"><%= @toy.xtype %></span>
   </div>
 
-  <%= draggable_element(toy_id, :revert => false) %>
+  <script type="text/javascript">
+  //<![CDATA[
+  new Draggable("<%= toy_id %>", {revert:false})
+  //]]>
+  </script>
 
 <SCRIPT language="javascript" type="text/javascript">
 

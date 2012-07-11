@@ -54,7 +54,11 @@
   </tr>
 </table>
 
-<%= draggable_element('drag_border', :revert => false, :constraint => '"horizontal"') %>
+<script type="text/javascript">
+//<![CDATA[
+new Draggable("drag_border", {revert:false, constraint:"horizontal"})
+//]]>
+</script>
 
 <script type="text/javascript">
 
