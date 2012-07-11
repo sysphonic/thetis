@@ -166,8 +166,10 @@
                           </a>
                         </p>
                         <div style="line-height:1.8;">
-                          You can clone the project with <a href="http://git-scm.com" target="_blank">Git</a> by running:
+                          プロジェクトは次のコマンドで <a href="http://git-scm.com" target="_blank">Git</a> により複製できます:
                           <pre style="font-weight:bold;">$ git clone git://github.com/sysphonic/thetis</pre>
+                          その後で ./thetis/dev/thetis を ./thetis に移動する（ずらす）には：
+                          <pre style="font-weight:bold;">$ cd thetis ; git filter-branch --subdirectory-filter dev/thetis HEAD</pre>
                           分岐したバージョンの周知には、Thetisデモ・サイト（<a href="http://sysphonic.com/thetis/" target="_blank">http://sysphonic.com/thetis/</a>）もご利用頂けます。
                         </div>
                       </td>
