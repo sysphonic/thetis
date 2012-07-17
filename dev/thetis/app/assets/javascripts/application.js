@@ -11,7 +11,6 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require prototype
-//= require ckeditor/ckeditor
 //= require jkl-calendar/jkl-calendar
 //= require scriptaculous/effects
 //= require scriptaculous/dragdrop
