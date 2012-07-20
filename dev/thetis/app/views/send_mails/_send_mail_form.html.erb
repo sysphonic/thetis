@@ -387,12 +387,17 @@ _doDeleteAttachment = function(div_id, attach_id)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = new Array();
+  addParams.push("id="+_z("email_id").value);
+  addParams.push("attachment_id="+attach_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Updater(
         "div_sendmail_attach",
         "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment', :id => (@email)?(@email.id):nil) %>",
         {
           method:"post",
-          parameters:"attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
+          parameters:addParams.join("&"),
           asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
