@@ -180,9 +180,9 @@ end
     <tr>
       <td class="item_cap_td" nowrap>
         <%= t('schedule.scope') %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<b style=\'color:orangered; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.disp_to_all')) %></b><br/><%= t('schedule.disp_to_all_info')%><br/>'
-                + '<b style=\'color:darkgreen; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.public')) %></b><br/><%= t('schedule.public_info') %><br/>'
-                + '<b style=\'color:mediumblue; font-size:11pt;\'><%= CGI.escapeHTML(t('schedule.private')) %></b><br/><%= t('schedule.private_info') %><br/>');">
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<b style=\'color:orangered; font-size:11pt;\'><%= raw(t('schedule.disp_to_all')) %></b><br/><%= t('schedule.disp_to_all_info')%><br/>'
+                + '<b style=\'color:darkgreen; font-size:11pt;\'><%= raw(t('schedule.public')) %></b><br/><%= t('schedule.public_info') %><br/>'
+                + '<b style=\'color:mediumblue; font-size:11pt;\'><%= raw(t('schedule.private')) %></b><br/><%= t('schedule.private_info') %><br/>');">
       </td>
       <td class="item_value_td">
         <%

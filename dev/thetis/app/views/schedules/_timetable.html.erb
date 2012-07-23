@@ -31,9 +31,9 @@ if @schedules.length > 0
     border_color = text_color
     case schedule.scope
       when Schedule::SCOPE_ALL
-        scope = '<span style="color:'+text_color+';">' + t('schedule.disp_to_all') + "</span>"
+        scope = '<span style="color:'+text_color+';">' + t('schedule.disp_to_all') + '</span>'
       when Schedule::SCOPE_PRIVATE
-        scope = '<span style="color:'+text_color+';">' + t('schedule.private') + "</span>"
+        scope = '<span style="color:'+text_color+';">' + t('schedule.private') + '</span>'
       else
         scope = ''
     end

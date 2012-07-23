@@ -178,7 +178,7 @@
             %>
             &nbsp;<span style="font-size:9pt;vertical-align:middle;"><%= updated_at %></span>
             <% unless item.public %>
-              <span style="color:blue"><%= t('schedule.private') %></span>
+              <span style="color:blue"><%= raw(t('schedule.private')) %></span>
             <% end %>
             <% if item.xtype == Item::XTYPE_PROJECT %>
               &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
