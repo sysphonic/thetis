@@ -68,9 +68,10 @@ ThetisBoxDragObserver.prototype = {
       }
       var clientRegion = ThetisBox.getClientRegion();
       var pos = getPos(box);
+      var bodyScroll = ThetisBox.getBodyScroll();
 
       draggable.options.snap = function(x, y) {
-        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos);
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos, bodyScroll);
       };
     }
   },
@@ -97,9 +98,10 @@ ThetisBoxDragObserver.prototype = {
       }
       var clientRegion = ThetisBox.getClientRegion();
       var pos = getPos(box);
+      var bodyScroll = ThetisBox.getBodyScroll();
 
       draggable.options.snap = function(x, y) {
-        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos);
+        return ThetisBox.onResizeHandleDragged(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos, bodyScroll);
       };
     }
   },
@@ -130,7 +132,7 @@ ThetisBox.setClose = function(close) {__thetisbox_Close=close};
 ThetisBox.setCloseImg = function(image) {__thetisbox_close_img=image;};
 
 // DRAG BY PROTOTYPE.JS >>>
-ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos)
+ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos, bodyScroll)
 {
   if (x <= 0 && y <= 0) {
     return [x, y];
@@ -139,17 +141,17 @@ ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, delta
   var widthContent = x + elem.offsetWidth;
   var heightContent = y + elem.offsetHeight;
   if (widthContent < 30 && x < 0) {
-    x = 30;
+    x = bodyScroll.left + 30;
     aborted = true;
-  } else if ((pos.x + widthContent) > clientRegion.width && x > 0) {
-    x = clientRegion.width - elem.offsetWidth - pos.x;
+  } else if ((pos.x + widthContent - bodyScroll.left) > clientRegion.width && x > 0) {
+    x = clientRegion.width - elem.offsetWidth - (pos.x - bodyScroll.left);
     aborted = true;
   }
   if (heightContent < 30 && y < 0) {
-    y = 30;
+    y = bodyScroll.top + 30;
     aborted = true;
-  } else if ((pos.y + heightContent) > clientRegion.height && y > 0) {
-    y = clientRegion.height - elem.offsetHeight - pos.y;
+  } else if ((pos.y + heightContent - bodyScroll.top) > clientRegion.height && y > 0) {
+    y = clientRegion.height - elem.offsetHeight - (pos.y - bodyScroll.top);
     aborted = true;
   }
   if (aborted) {

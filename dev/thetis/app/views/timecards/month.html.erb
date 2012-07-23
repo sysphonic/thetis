@@ -387,6 +387,7 @@ function showPaidHldByUser(user_id, name)
               thetisBoxProgress.remove();
 
               thetisBoxPaidHldByUser = new ThetisBox;
+              thetisBoxPaidHldByUser.resizable = true;
               thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
               thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
               thetisBoxPaidHldByUser.bgcolor_title = "limegreen";

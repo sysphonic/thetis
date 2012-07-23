@@ -81,7 +81,7 @@ TrayDragObserver.prototype = {
   },
   onStart: function(eventName, draggable, event) {
     var toy = draggable.element;
-    if (toy.className != 'toy_tray') {
+    if (toy.className != "toy_tray") {
       return;
     }
 
@@ -112,13 +112,13 @@ TrayDragObserver.prototype = {
   },
   onDrag: function(eventName, draggable, event) {
     var toy = draggable.element;
-    if (toy.className != 'toy_tray') {
+    if (toy.className != "toy_tray") {
       return;
     }
   },
   onEnd: function(eventName, draggable, event) {
     var toy = draggable.element;
-    if (toy.className != 'toy_tray') {
+    if (toy.className != "toy_tray") {
       return;
     }
     _z("div_desktop").style.backgroundColor = _z("desktop_bgcolor").value;
