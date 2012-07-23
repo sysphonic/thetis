@@ -163,7 +163,7 @@
         <tr>
           <td colspan="2">
             <div width="100%" style="background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
-              <span style="padding:5px; font-size:10pt;"><%= ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200))) %></span>
+              <span style="padding:5px; font-size:10pt;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
           </td>
         </tr>

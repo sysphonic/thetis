@@ -62,7 +62,7 @@
           </tr>
           <tr>
             <td class="<%= body_class %>" id="comment_<%= @comment.id %>" colspan="2" align="left">
-              <div id ="comment_body<%= @comment.id %>"><%= ApplicationHelper.format_text_block(h(@comment.message)) %></div>
+              <div id ="comment_body<%= @comment.id %>"><%= raw(ApplicationHelper.format_text_block(h(@comment.message))) %></div>
             </td>
           </tr>
         <%

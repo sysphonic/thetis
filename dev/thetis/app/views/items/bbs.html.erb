@@ -209,7 +209,7 @@
           <TD align="center">
           <div align="left" style="width:90%; padding-bottom:5px;">
             <div style="width:60%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
-              <span style="padding:5px; font-size:10pt;"><%= ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200))) %></span>
+              <span style="padding:5px; font-size:10pt;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
           </div>
           </TD>
@@ -230,7 +230,7 @@ attachments_num = item_attachments.length
 <% unless item.summary.nil? or item.summary.empty? %>
 <div>
   <span style="color:orangered; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
-  <%= ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100))) %>
+  <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
 </div>
 <div height="5">&nbsp;</div>
 <% end %>

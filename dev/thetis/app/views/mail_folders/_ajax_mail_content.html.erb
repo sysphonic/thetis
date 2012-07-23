@@ -3,7 +3,7 @@
   <tr>
     <td id="mail_body_view" valign="top" style="cursor:text;">
       <div id="div_mail_body" width="100%" align="left" style="padding:5px; overflow:auto; background-color:whitesmoke;">
-        <%= ApplicationHelper.format_text_block(h(@email.message)) %>
+        <%= raw(ApplicationHelper.format_text_block(h(@email.message))) %>
       </div>
     </td>
   </tr>

@@ -145,7 +145,7 @@
                 <td align="left" bgcolor="#e0f7ff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
 <div>
   <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
-  <%= ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100))) %>
+  <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
 </div>
 <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
 <br/>

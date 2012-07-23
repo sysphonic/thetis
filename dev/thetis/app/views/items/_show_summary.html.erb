@@ -9,7 +9,7 @@
     </tr>
     <tr>
       <td class="item_value_td">
-        <div><%= ApplicationHelper.format_text_block(h(@item.summary)) %></div>
+        <div><%= raw(ApplicationHelper.format_text_block(h(@item.summary))) %></div>
       </td>
     </tr>
   </table>
