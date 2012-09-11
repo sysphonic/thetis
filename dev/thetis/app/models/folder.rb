@@ -1191,7 +1191,7 @@ class Folder < ActiveRecord::Base
       write_updated = true
     end
 
-    members = group.get_users_a
+    members = Group.get_users(group.id).collect {|user| user.id.to_s}
 
     unless members.empty?
       self.set_read_users(self.get_read_users_a | members) if read_updated
