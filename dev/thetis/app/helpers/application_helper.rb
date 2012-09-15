@@ -54,7 +54,7 @@ module ApplicationHelper
 
   #=== self.extract_uri_a
   #
-  #Gets the URI expression from the specified string.
+  #Gets URI expression from the specified string.
   #
   #_str_:: Target string.
   #return:: Array of extracted URI.
@@ -62,6 +62,20 @@ module ApplicationHelper
   def self.extract_uri_a(str)
 
     return URI.extract(str)
+  end
+
+  #=== self.get_linked_s
+  #
+  #Encloses URL expressions in the specified string with anchor tags.
+  #
+  #_str_:: Target string.
+  #return:: Linked string.
+  #
+  def self.get_linked_s(str)
+
+    regexp_url = /((http|https):\/\/([\w-]+\.)+[\w-]+(:\d+)?(\/[\w\- .\/?%&=;]*)?)/
+
+    return str.gsub(regexp_url, '<a target="_blank" href="\1">\1</a>')
   end
 
   #=== self.get_sort_direction_exp

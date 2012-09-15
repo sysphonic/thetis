@@ -3,7 +3,13 @@
   <tr>
     <td id="mail_body_view" valign="top" style="cursor:text;">
       <div id="div_mail_body" width="100%" align="left" style="padding:5px; overflow:auto; background-color:whitesmoke;">
-        <%= raw(ApplicationHelper.format_text_block(h(@email.message))) %>
+        <%
+        linked_content = h(@email.message)
+        unless linked_content.nil?
+          linked_content = ApplicationHelper.get_linked_s(linked_content)
+        end
+        %>
+        <%= raw(ApplicationHelper.format_text_block(linked_content)) %>
       </div>
     </td>
   </tr>
