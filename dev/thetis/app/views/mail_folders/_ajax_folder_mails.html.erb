@@ -260,7 +260,7 @@ onSelChanged = function(cur_tr, email_id)
   showMail(email_id);
 
   var div_mail_subect = _z("mail_subect_"+email_id);
-  div_mail_subect.className = div_mail_subect.className.replace(/\s*email_subject_unread\s*/, "")
+  removeClassName(div_mail_subect, "email_subject_unread");
 
   if (_z("email_status_"+email_id).value == "<%= Email::STATUS_DRAFT %>") {
     _z("btnbox_handled").style.display = "none";

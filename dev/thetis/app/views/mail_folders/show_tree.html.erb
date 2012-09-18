@@ -1107,9 +1107,7 @@ function onEmailUnreadClicked(elem, email_id)
                 request.responseText.evalScripts();
 
                 var div_mail_subect = _z("mail_subect_"+email_id);
-                if (div_mail_subect.className.indexOf("email_subject_unread") < 0) {
-                  div_mail_subect.className += " email_subject_unread";
-                }
+                appendClassName(div_mail_subect, "email_subject_unread");
               }
           }
         );

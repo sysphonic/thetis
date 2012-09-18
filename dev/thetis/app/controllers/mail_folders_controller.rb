@@ -556,8 +556,10 @@ class MailFoldersController < ApplicationController
     begin
       email = Email.find(email_id)
       unless email.nil?
-        status = (unread)?(Email::STATUS_UNREAD):(Email::STATUS_NONE)
-        email.update_attribute(:status, status)
+        if email.xtype == Email::XTYPE_RECV
+          status = (unread)?(Email::STATUS_UNREAD):(Email::STATUS_NONE)
+          email.update_attribute(:status, status)
+        end
       end
     rescue => evar
       Log.add_error(nil, evar)

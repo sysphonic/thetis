@@ -4,10 +4,12 @@
     <td nowrap style="padding:0px 10px; text-align:left;">
       <%= email.get_sent_at_exp %>
     </td>
+  <% if email.xtype == Email::XTYPE_RECV %>
     <td nowrap style="padding:0px 10px; text-align:right;">
       <% checked = email.unread? %>
       <input type="checkbox" id="org_email<%= email.id %>_unread" <%= checked %> onclick="onEmailUnreadClicked(this, <%= email.id %>);" /><label for="org_email<%= email.id %>_unread" style="color:dimgray;"><%= t('msg.unread') %></label>
     </td>
+  <% end %>
   </tr>
 </table>
 

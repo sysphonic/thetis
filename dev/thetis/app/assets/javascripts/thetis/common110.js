@@ -36,6 +36,25 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
+function appendClassName(elem, className)
+{
+  var classNames = elem.className.split(/\s/);
+  if (classNames.indexOf(className) < 0) {
+    classNames.push(className);
+    elem.className = classNames.join(" ");
+  }
+}
+
+function removeClassName(elem, className)
+{
+  var classNames = elem.className.split(/\s/);
+  var idx = classNames.indexOf(className);
+  if (idx >= 0) {
+    classNames.splice(idx, 1);
+    elem.className = classNames.join(" ");
+  }
+}
+
 function avoidSubmit(evt)
 {
   evt = evt || window.event;
