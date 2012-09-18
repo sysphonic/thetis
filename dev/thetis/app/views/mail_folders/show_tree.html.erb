@@ -1077,7 +1077,43 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo.bgcolor_body = "aliceblue";
   thetisBoxHeaderInfo.title = title;
   thetisBoxHeaderInfo.close_by_icon_button = true;
-  thetisBoxHeaderInfo.show("TOP-RIGHT", "", "MESSAGE", "", _z("mail_header_"+email_id).innerHTML, "");
+  thetisBoxHeaderInfo.button_ok = "<%= t('btn.close') %>";
+  var content = _z("mail_header_"+email_id).innerHTML.replace(/org_email/g, "email");
+  thetisBoxHeaderInfo.show("TOP-RIGHT", "400,", "MESSAGE", "", content, "");
+}
+
+function onEmailUnreadClicked(elem, email_id)
+{
+  if (window.event) {
+    window.event.cancelBubble = true;
+  }
+
+  var addParams = new Array();
+  addParams.push("email_id="+email_id);
+  addParams.push("unread="+((elem.checked)?"1":"0"));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_folders', :action => 'update_mail_unread') %>",
+          {
+            method:"post",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+
+                var div_mail_subect = _z("mail_subect_"+email_id);
+                if (div_mail_subect.className.indexOf("email_subject_unread") < 0) {
+                  div_mail_subect.className += " email_subject_unread";
+                }
+              }
+          }
+        );
+  return true;
 }
 
 function doRegisterAddress(frm)

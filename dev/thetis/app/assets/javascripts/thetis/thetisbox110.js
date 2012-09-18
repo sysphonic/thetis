@@ -795,10 +795,18 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     this.box_type = p_type;
 
-    this.button_ok = __thetisbox_OK;
-    this.button_cancel = __thetisbox_Cancel;
-    this.button_close = __thetisbox_Close;
-    this.button_close_img = __thetisbox_close_img;
+    if (!this.button_ok) {
+      this.button_ok = __thetisbox_OK;
+    }
+    if (!this.button_cancel) {
+      this.button_cancel = __thetisbox_Cancel;
+    }
+    if (!this.button_close) {
+      this.button_close = __thetisbox_Close;
+    }
+    if (!this.button_close_img) {
+      this.button_close_img = __thetisbox_close_img;
+    }
 
     if (!this.parent_elem) {
       this.parent_elem = document.body;
@@ -961,7 +969,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
           break;
         case "TOP-RIGHT":
         default:
-          x = bodyScroll.left + clientRegion.width - width;
+          x = bodyScroll.left + clientRegion.width - width - 2; // 2 = Border Width maybe (for IE9)
           y = bodyScroll.top;
           break;
       }
@@ -1061,30 +1069,38 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
 
     var thetisBox = new ThetisBox;
     thetisBox.show("CENTER", "", "PROGRESS", "", "", "");
-    var updater = new Ajax.Updater(
-                            "thetisBoxTree-"+this.id,
-                            url,
-                            {
-                              method:"get",
-                              parameters: Form.serialize(document.form_ajax_thetisBoxTree),
-                              asynchronous: true,
-                              evalScripts: false,
-                              onComplete: function(request) {
-                                d.parentNode.removeChild(d);
-                                thetisBox.remove();
+    new Ajax.Updater(
+        "thetisBoxTree-"+this.id,
+        url,
+        {
+          method:"get",
+          parameters: Form.serialize(document.form_ajax_thetisBoxTree),
+          asynchronous: true,
+          evalScripts: false,
+          onComplete: function(request) {
+            d.parentNode.removeChild(d);
+            thetisBox.remove();
 
-                                request.responseText.evalScripts();
+            request.responseText.evalScripts();
 
-                                if (onComplete) {
-                                  onComplete();
-                                }
-                              }
-                            }
-                          );
+            if (onComplete) {
+              onComplete();
+            }
+          }
+        }
+      );
   },
   // Start Dragging
-  onMouseDown: function(e)
+  onMouseDown: function(evt)
   {
+    evt = evt || window.event;
+    var elem = evt.target || evt.srcElement;
+    for (var node=elem; node && node.className != "thetisbox"; node=node.parentNode) {
+      if (node.className.indexOf("nodrag") >= 0) {
+        return true;
+      }
+    }
+
     var id = this.id.split("-")[1];
 
     // Excluded Control Area
@@ -1105,13 +1121,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
         //alert(excludeArray[i] + "is null!!");
         continue;
       }
-      var isWithin = false;
-      if (document.all) {
-         isWithin = Position.within(excludeCtrl, bodyScroll.left+event.clientX, bodyScroll.top+event.clientY);
-      } else if (document.getElementById) {
-         isWithin = Position.within(excludeCtrl, bodyScroll.left+e.clientX, bodyScroll.top+e.clientY);
-      }
-        if (isWithin == true) {
+      if (Position.within(excludeCtrl, bodyScroll.left+evt.clientX, bodyScroll.top+evt.clientY)) {
         return true;
       }
     }
@@ -1119,11 +1129,11 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     // Starting to Drag
     this.selected = true;
     if (document.all) {
-      this.offsetX = event.clientX + bodyScroll.left - parseInt(this.style.left);
-      this.offsetY = event.clientY + bodyScroll.top - parseInt(this.style.top);
+      this.offsetX = evt.clientX + bodyScroll.left - parseInt(this.style.left);
+      this.offsetY = evt.clientY + bodyScroll.top - parseInt(this.style.top);
     } else if (document.getElementById) {
-      this.offsetX = e.pageX - parseInt(this.style.left);
-      this.offsetY = e.pageY - parseInt(this.style.top);
+      this.offsetX = evt.pageX - parseInt(this.style.left);
+      this.offsetY = evt.pageY - parseInt(this.style.top);
     }
     return false;
   },
@@ -1169,10 +1179,10 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   offsetY: 0,
   additionalParams: null,
   title: __thetisbox_title,
-  button_ok: __thetisbox_OK,
-  button_cancel: __thetisbox_Cancel,
-  button_close: __thetisbox_Close,
-  button_close_img: __thetisbox_close_img,
+  button_ok: null,
+  button_cancel: null,
+  button_close: null,
+  button_close_img: null,
   form_tag: "",
   bgcolor_title: null,
   bgcolor_body: null,
@@ -1787,6 +1797,10 @@ ThetisBox.getBodyScroll = function()
 ThetisBox.getClientRegion = function()
 {
   var obj = new Object();
+
+  obj.width = document.body.offsetWidth;
+  obj.height = document.body.offsetHeight;
+/*
   obj.width = window.innerWidth;
   obj.height = window.innerHeight;
 
@@ -1802,5 +1816,6 @@ ThetisBox.getClientRegion = function()
       obj.height = document.body.clientHeight;
     }
   }
+*/
   return obj;
 }

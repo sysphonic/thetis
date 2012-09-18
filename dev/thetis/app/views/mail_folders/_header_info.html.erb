@@ -1,10 +1,18 @@
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td colspan="2" align="right" nowrap style="padding:0px 10px;">
+    <td nowrap style="padding:0px 10px; text-align:left;">
       <%= email.get_sent_at_exp %>
     </td>
+    <td nowrap style="padding:0px 10px; text-align:right;">
+      <% checked = email.unread? %>
+      <input type="checkbox" id="org_email<%= email.id %>_unread" <%= checked %> onclick="onEmailUnreadClicked(this, <%= email.id %>);" /><label for="org_email<%= email.id %>_unread" style="color:dimgray;"><%= t('msg.unread') %></label>
+    </td>
   </tr>
+</table>
+
+<div class="nodrag" style="width:380px; height:100%; padding-bottom:10px; overflow-x:auto;">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
     <td align="left" valign="top" width="20%" nowrap style="padding:0px 10px;">
       <%= t('cap.sender') %>
@@ -61,3 +69,4 @@
   </tr>
 <% end %>
 </table>
+</div>

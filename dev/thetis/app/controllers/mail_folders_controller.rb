@@ -542,6 +542,30 @@ class MailFoldersController < ApplicationController
     render(:text => '')
   end
 
+  #=== update_mail_unread
+  #
+  #<Ajax>
+  #Updates unread flag of the E-mail by Ajax.
+  #
+  def update_mail_unread
+    Log.add_info(request, params.inspect)
+
+    email_id = params[:email_id]
+    unread = (params[:unread] == "1")
+
+    begin
+      email = Email.find(email_id)
+      unless email.nil?
+        status = (unread)?(Email::STATUS_UNREAD):(Email::STATUS_NONE)
+        email.update_attribute(:status, status)
+      end
+    rescue => evar
+      Log.add_error(nil, evar)
+    end
+
+    render(:text => '')
+  end
+
  private
   #=== check_owner
   #

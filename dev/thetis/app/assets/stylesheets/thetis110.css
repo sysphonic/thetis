@@ -20,6 +20,8 @@ table.timecard td {border:solid black 1px; padding:2px 5px;}
 .calendar_paging:active {color:white; background-color:salmon;}
 .calendar_paging:hover {color:white; background-color:salmon;}
 
+.email_subject_unread {font-weight:bold; color:sienna;}
+
 .td_calendar_wday {border-right:2px solid white; border-bottom:2px solid white;}
 .td_calendar {border-right:2px solid midnightblue; border-bottom:2px solid midnightblue; line-height:1.1; font-size:9pt; cursor:pointer; text-align:left;}
 .td_calendar_empty {border-right:1px solid midnightblue; border-bottom:1px solid midnightblue;}

@@ -48,6 +48,16 @@ class Email < ActiveRecord::Base
     email.recalc_size
   end
 
+  #=== unread?
+  #
+  #Gets whether this E-mail is unread or not.
+  #
+  #return:: true if this E-mail is unread, false otherwise.
+  #
+  def unread?
+    return (self.status == Email::STATUS_UNREAD)
+  end
+
   #=== recalc_size
   #
   #Recalcurates E-mail size.

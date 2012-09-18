@@ -197,11 +197,11 @@ onPaginate = function(url)
 <%
 @emails.each_with_index do |email, idx|
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
-  sbj_style = (email.status == Email::STATUS_UNREAD)?'font-weight:bold; color:sienna;':'font-weight:normal; color:black;'
+  sbj_style = (email.status == Email::STATUS_UNREAD)?'email_subject_unread':''
   show_header = (email.status != Email::STATUS_DRAFT)
 %>
   <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="30" onclick="onSelChanged(this, '<%= email.id %>');" style="cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
-    <td class="<%= td_class %>" id="mail_subect_<%= email.id %>" title="<%= email.subject %>" nowrap style="<%= sbj_style %> text-align:left;">
+    <td class="<%= td_class %> <%= sbj_style %>" id="mail_subect_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">
     <% if show_header %>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="_z('req_detail').value='true';">
     <% end %>
@@ -260,8 +260,7 @@ onSelChanged = function(cur_tr, email_id)
   showMail(email_id);
 
   var div_mail_subect = _z("mail_subect_"+email_id);
-  div_mail_subect.style.fontWeight = "normal";
-  div_mail_subect.style.color = "black";
+  div_mail_subect.className = div_mail_subect.className.replace(/\s*email_subject_unread\s*/, "")
 
   if (_z("email_status_"+email_id).value == "<%= Email::STATUS_DRAFT %>") {
     _z("btnbox_handled").style.display = "none";
