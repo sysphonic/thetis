@@ -17,24 +17,22 @@ function doUpdateTime()
   }
   min = curMin;
 
-  var locale = date.toLocaleString();
-  // ex. (jp) 2007nen12gatsu31nichi 12:00:00  (with Kanji characters)
-  // ex. (en) Friday, December 31, 2007 12:00:00  (Safari)
-  var sepIdx = locale.lastIndexOf(" ");
-  var day = locale.substring(0, sepIdx);
-  if (day.split(", ").length > 2) {
-    day = day.substring(day.indexOf(", ")+2, day.length);
+  var date_locale_s = date.toLocaleDateString();
+  // ex. (jp) 2007nen12gatsu31nichi  (with Kanji characters)
+  // ex. (en) Friday, December 31, 2007  (Safari)
+  // ex. (jp) Friday, December 31, 2007 (Chrome)
+  var day = date_locale_s;
+  if (date_locale_s.split(", ").length > 2) {
+    day = date_locale_s.split(", ")[1];
   }
-  if (day.match(/[A-Z]+ [0-9][0-9]?, [0-9]{4}/i)) {
-    var dayArray = day.split(" ");
-    if (dayArray[0].length > 4) {
-      dayArray[0] = dayArray[0].substring(0, 3) + ".";
-      day = dayArray.join(" ");
-    }
+  var h = date.getHours();
+  var m = date.getMinutes();
+  if (m < 10) {
+    m = "0" + m;
   }
-  var time = locale.substring(sepIdx+1, locale.lastIndexOf(":"));
+  var time = new Array(h, m).join(":");
   var date_disp = day + "<br/>("+getDay(date)+")<br/>"+time;
-  eval('try{ div_time.innerHTML = date_disp }catch(e){}');
+  eval("try{ div_time.innerHTML = date_disp }catch(e){}");
 }
 
 function getDay(date)
