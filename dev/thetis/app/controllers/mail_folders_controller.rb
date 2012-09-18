@@ -16,7 +16,7 @@ class MailFoldersController < ApplicationController
 
   before_filter(:check_login)
   before_filter(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
-  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_attachments, :get_mail_raw])
+  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_raw])
 
 
   #=== show_tree
@@ -262,30 +262,6 @@ class MailFoldersController < ApplicationController
       Log.add_error(nil, evar)
       render(:text => '')
     end
-  end
-
-  #=== get_mail_attachments
-  #
-  #<Ajax>
-  #Gets Email attachments.
-  #
-  def get_mail_attachments
-    email_id = params[:id]
-
-    begin
-      email = Email.find(email_id)
-      unless email.nil?
-        @mail_attachs = email.mail_attachments
-        unless @mail_attachs.nil? or @mail_attachs.empty?
-          render(:partial => 'ajax_get_attachment', :layout => false)
-          return
-        end
-      end
-    rescue => evar
-      Log.add_error(nil, evar)
-    end
-
-    render(:text => '')
   end
 
   #=== get_mail_attachment
