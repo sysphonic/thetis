@@ -318,8 +318,11 @@ EOT
 
     mail_account.update_attribute(:uidl, new_uidl.join(MailAccount::UIDL_SEPARATOR))
 
-    if THETIS_MAIL_LIMIT_NUM_PER_USER > 0
-      Email.trim(mail_account.user_id, mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_USER)
+    if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0
+      Email.trim(mail_account.user_id, mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
+    end
+    if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
+      Email.trim_by_capacity(mail_account.user_id, mail_account.id, THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT)
     end
 
     return cnt
@@ -563,6 +566,53 @@ EOT
         end
       end
     rescue
+    end
+  end
+
+  #=== self.trim_by_capacity
+  #
+  #Trims records within specified capacity.
+  #
+  #_user_id_:: Target User-ID.
+  #_mail_account_id_:: Target MailAccount-ID.
+  #_capacity_mb_:: Capacity by MB.
+  #
+  def self.trim_by_capacity(user_id, mail_account_id, capacity_mb)
+
+    max_size = capacity_mb * 1024 * 1024
+    cur_size = MailAccount.get_using_size(mail_account_id)
+
+    if cur_size > max_size
+      over_size = cur_size - max_size
+      emails = []
+
+      # First, empty Trashbox
+      user = User.find(user_id)
+      trashbox = MailFolder.get_for(user, mail_account_id, MailFolder::XTYPE_TRASH)
+      trash_nodes = [trashbox.id.to_s]
+      trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
+      con = "mail_folder_id in (#{trash_nodes.join(',')})"
+      emails = Email.find(:all, {:conditions => con, :order => 'updated_at ASC'})
+      emails.each do |email|
+        next if email.size.nil?
+
+        email.destroy
+        over_size -= email.size
+        break if over_size <= 0
+      end
+
+      # Now, remove others
+      if over_size > 0
+        over_num -= emails.length
+        emails = Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :order => 'updated_at ASC'})
+        emails.each do |email|
+          next if email.size.nil?
+
+          email.destroy
+          over_size -= email.size
+          break if over_size <= 0
+        end
+      end
     end
   end
 

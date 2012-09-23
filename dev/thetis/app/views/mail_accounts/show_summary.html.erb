@@ -1,0 +1,14 @@
+
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
+<% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
+  <tr>
+    <td class="item_value_td" style="color:gray;">
+      <%
+      cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
+      %>
+      <%= t('mail.using') %> <%= cur_mb %>MB (= <%= ((cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT) %>% / <%= t('mail.capacity_per_account') %> <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB)
+    </td>
+  </tr>
+<% end %>
+</table>
+

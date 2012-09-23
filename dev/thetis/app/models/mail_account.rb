@@ -45,6 +45,17 @@ class MailAccount < ActiveRecord::Base
     end
   end
 
+  #=== self.get_using_size
+  #
+  #Gets using size of specified MailAccount.
+  #
+  #_mail_account_id_:: Target MailAccount-ID.
+  #return:: Using size.
+  #
+  def self.get_using_size(mail_account_id)
+    return Email.count_by_sql("select SUM(size) from emails where mail_account_id=#{mail_account_id}") || 0
+  end
+
   #=== self.get_title
   #
   #Gets MailAccount title.

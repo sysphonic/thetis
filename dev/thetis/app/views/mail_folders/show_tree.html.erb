@@ -693,6 +693,30 @@ function clearMailContent()
   }
 }
 
+function showMailAccountSummary()
+{
+  var addParams = new Array();
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (!mail_account_id) {
+    return;
+  }
+  addParams.push("id="+mail_account_id);
+
+//  var thetisBox = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                "div_mail_content",
+                "<%= url_for(:controller => 'mail_accounts', :action => 'show_summary') %>",
+                {
+                  method: "get",
+                  parameters: addParams.join("&"),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){ /*thetisBox.remove();*/ },
+                }
+              );
+}
+
 function doUpdateViewMails(method, action, addParams)
 {
   removeHeaderInfo();
@@ -714,7 +738,10 @@ function doUpdateViewMails(method, action, addParams)
                   parameters: addParams.join("&"),
                   asynchronous: true,
                   evalScripts: true,
-                  onComplete: function(request){ thetisBox.remove(); },
+                  onComplete: function(request){
+                    thetisBox.remove();
+                    showMailAccountSummary();
+                  },
                 }
               );
 }

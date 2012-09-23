@@ -58,7 +58,8 @@ THETIS_IMAGE_MAX_KB = 5*1024            # Max 5MB each.
 # (See Thetis Users' Manual at http://sysphonic.com/)
 
 THETIS_MAIL_LOCATION_DIR = File.join(File.dirname(__FILE__), '../data/mails')
-THETIS_MAIL_LIMIT_NUM_PER_USER = 100
+THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT = 100
+THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT = 300
 THETIS_MAIL_SEND_ATTACHMENT_MAX_KB = 3*1024  # Max 3MB per Mail.
 
 THETIS_RESEARCH_PAGE_DIR = File.join(File.dirname(__FILE__), '../data/research')

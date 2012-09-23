@@ -15,7 +15,7 @@ class MailAccountsController < ApplicationController
   layout 'base'
 
   before_filter :check_login
-  before_filter :check_owner, :only => [:edit, :update]
+  before_filter :check_owner, :only => [:edit, :update, :show_summary]
 
 
   #=== new
@@ -132,6 +132,26 @@ class MailAccountsController < ApplicationController
       end
     end
   end
+
+  #=== show_summary
+  #
+  #Shows summary of the MailAccount.
+  #
+  def show_summary
+    Log.add_info(request, params.inspect)
+
+    mail_account_id = params[:id]
+
+    begin
+      @mail_account = MailAccount.find(mail_account_id)
+    rescue => evar
+      Log.add_error(request, evar)
+      redirect_to(:controller => 'login', :action => 'logout')
+      return
+    end
+    render(:layout => (!request.xhr?))
+  end
+
 
  private
   #=== check_owner

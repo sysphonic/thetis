@@ -204,8 +204,11 @@ class SendMailsController < ApplicationController
         @email.save!  # To recalcurate size
       end
 
-      if THETIS_MAIL_LIMIT_NUM_PER_USER > 0
-        Email.trim(@login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_USER)
+      if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0
+        Email.trim(@login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
+      end
+      if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
+        Email.trim_by_capacity(@login_user.id, @mail_account.id, THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT)
       end
       # flash[:notice] = t('msg.save_success')
     rescue => evar

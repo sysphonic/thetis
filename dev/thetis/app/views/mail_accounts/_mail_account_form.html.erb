@@ -72,11 +72,22 @@
                     <%= text_field('mail_account', 'organization') %>
                   </td>
                 </tr>
-              <% if THETIS_MAIL_LIMIT_NUM_PER_USER > 0 %>
+              <% if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0 %>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.limit_num_per_user') %></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.limit_num_per_account') %></td>
                   <td class="item_value_td">
-                    <%= THETIS_MAIL_LIMIT_NUM_PER_USER %>
+                    <%= THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT %>
+                  </td>
+                </tr>
+              <% end %>
+              <% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
+                <tr>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.capacity_per_account') %></td>
+                  <td class="item_value_td">
+                    <%
+                    cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
+                    %>
+                    <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB (<%= t('mail.using') %> <%= cur_mb %>MB =<%= ((cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT) %>%)
                   </td>
                 </tr>
               <% end %>
