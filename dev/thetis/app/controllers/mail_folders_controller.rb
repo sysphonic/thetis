@@ -264,6 +264,32 @@ class MailFoldersController < ApplicationController
     end
   end
 
+  #=== get_mail_attachments
+  #
+  #Gets all attachment-files of the Email.
+  #
+  def get_mail_attachments
+    Log.add_info(request, params.inspect)
+
+    email_id = params[:id]
+
+    email = Email.find(email_id)
+    if email.nil? or email.user_id != @login_user.id
+      render(:text => '')
+      return
+    end
+
+    zip_file = email.zip_attachments(params[:enc])
+
+    if zip_file.nil?
+      render(:text => '')
+    else
+      download_name = "mail_attachments#{email.id}.zip"
+      filepath = zip_file.path
+      send_file(filepath, :filename => download_name, :stream => true, :disposition => 'attachment')
+    end
+  end
+
   #=== get_mail_attachment
   #
   #Gets attachment-file of the Email.

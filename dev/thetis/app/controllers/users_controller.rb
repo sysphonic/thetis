@@ -27,10 +27,8 @@ class UsersController < ApplicationController
   end
 
   require 'digest/md5'
-  require 'nkf'
   require 'cgi'
   require 'csv'
-  require 'iconv'
 
 
   #=== new
@@ -480,21 +478,12 @@ class UsersController < ApplicationController
     csv = User.export_csv
 
     begin
-      case params[:enc]
-        when 'SJIS'
-          csv = NKF.nkf("-sW -m0", csv)
-        when 'EUC-JP'
-          csv = NKF.nkf("-eW -m0", csv)
-        when 'UTF8'
-
-        when 'ISO-8859-1'
-          csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
-      end
+      csv.encode!(params[:enc], Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end
 
-    send_data csv, :type => 'application/octet-stream;charset=UTF-8', :disposition => 'attachment;filename="users.csv"'
+    send_data(csv, :type => 'application/octet-stream;charset=UTF-8', :disposition => 'attachment;filename="users.csv"')
   end
 
   #=== import_csv
@@ -529,16 +518,7 @@ class UsersController < ApplicationController
 
     csv = file.read
     begin
-      case enc
-        when 'SJIS'
-          csv = NKF.nkf("-w -m0", csv)
-        when 'EUC-JP'
-          csv = NKF.nkf("-wE -m0", csv)
-        when 'UTF8'
-          
-        when 'ISO-8859-1'
-          csv = Iconv.iconv('UTF-8', 'ISO-8859-1', csv)
-      end
+      csv.encode!(enc, Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end

@@ -326,6 +326,8 @@ en:
       authorities: "Authorities"
       display_control: "Display Control"
   mail_folder:
+    select_attach_name_enc: "Please select encoding for file names."
+    download_mail_attachments: "Download E-mail attachments"
     root_cannot_have_folders: "Root cannot have folders."
   group:
     plural: "Groups"
@@ -853,6 +855,7 @@ en:
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
   msg:
+    wait_for_a_while: "Please wait for a while."
     specify: "Please specify %{name}."
     select_account: "Please select an account."
     session_reset: "Login info. has been changed. Updating the view .."

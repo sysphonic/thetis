@@ -19,8 +19,6 @@ class Email < ActiveRecord::Base
   require 'net/pop'
   require 'base64'
   require 'digest/sha1'
-  require 'iconv'
-
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_RECV = 'recv'
@@ -74,6 +72,38 @@ class Email < ActiveRecord::Base
     else
       self.size = @mail.raw_source.length
     end
+  end
+
+  #=== zip_attachments
+  #
+  #Creates a ZIP file of the attachments.
+  #
+  #_enc_:: Character encoding to apply to file names.
+  #return:: Created ZIP file.
+  #
+  def zip_attachments(enc)
+
+    return nil if self.mail_attachments.nil? or self.mail_attachments.empty?
+
+    require 'zipruby'
+
+    temp = Tempfile.new('thetis_mail_attachments')
+    temp.binmode
+    temp.close(false)
+
+    Zip::Archive.open(temp.path) do |arc|
+      self.mail_attachments.each do |mail_attach|
+        fname = mail_attach.name
+        begin
+          fname.encode!(enc, Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
+        rescue => evar
+          Log.add_error(nil, evar)
+        end
+        arc.add_file(fname, mail_attach.get_path)
+      end
+    end
+
+    return temp
   end
 
   #=== copy_attachments_from
@@ -388,7 +418,7 @@ EOT
 
     message = message_part.body.decoded
     unless charset.nil? or charset.empty?
-      message = Iconv.conv('utf-8//IGNORE', charset, message)
+      message.encode!(Encoding::UTF_8, charset, {:invalid => :replace, :undef => :replace, :replace => ' '})
     end
 
     self.message = message

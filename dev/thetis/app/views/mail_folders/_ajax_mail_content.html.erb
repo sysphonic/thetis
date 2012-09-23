@@ -1,8 +1,12 @@
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<%
+enable_attachments_all = ((!@email.mail_attachments.nil?) and (@email.mail_attachments.length > 1))
+%>
+
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td id="mail_body_view" valign="top" style="cursor:text;">
-      <div id="div_mail_body" width="100%" align="left" style="padding:5px; overflow:auto; background-color:whitesmoke;">
+    <td id="mail_body_view" style="vertical-align:top; cursor:text;">
+      <div id="div_mail_body" style="width:100%; text-align:left; padding:5px; overflow:auto; background-color:whitesmoke;">
         <%
         linked_content = h(@email.message)
         unless linked_content.nil?
@@ -16,7 +20,7 @@
 <% unless @email.mail_attachments.nil? or @email.mail_attachments.empty? %>
   <tr height="20">
     <td id="mail_attach_view" style="border-top:solid 1px gray;">
-      <div id="div_mail_attach" width="100%" style="overflow:auto; padding:5px; text-align:left;">
+      <div id="div_mail_attach" style="width:100%; overflow:auto; padding:5px; text-align:left;">
       <% @email.mail_attachments.each do |attach| %>
         <span id="div_mail_attach_<%= attach.id %>">
           <a href="<%= url_for(:controller => 'mail_folders', :action => :get_mail_attachment, :id => attach.id) %>">
@@ -24,6 +28,9 @@
           </a>
         </span>
       <% end %>
+  <% if enable_attachments_all %>
+      &nbsp;<a class="a_underline" href="javascript:this.onclick();" onclick="onGetAllAttachmentsClicked(this); return false;"><%= t('msg.all') %></a>
+  <% end %>
       </div>
     </td>
   </tr>
@@ -38,9 +45,48 @@ end
 %>
 
 <%= render(:partial => 'common/flash_notice') %>
+<% if enable_attachments_all %>
+<%= render(:partial => 'common/encoding_selector') %>
+<% end %>
 
 <script type="text/javascript">
 
 arrangeMailContentSection(_z("div_mail_content"));
+
+<% if enable_attachments_all %>
+
+var thetisBoxEnc = null;
+
+onGetAllAttachmentsClicked = function(elem)
+{
+  if (thetisBoxEnc != null){
+    thetisBoxEnc.remove();
+    thetisBoxEnc = null;
+  }
+
+  var content = getEncodingSelectorAll("doGetAllAttachments()", "download_zip");
+
+  thetisBoxEnc = new ThetisBox;
+  thetisBoxEnc.parent_elem = _z("div_mail_attach");
+  thetisBoxEnc.title = "<%= t('mail_folder.download_mail_attachments') %>";
+  thetisBoxEnc.show("CENTER", "380,190", "TRAY", "", "<%= t('mail_folder.select_attach_name_enc') %> ", content);
+}
+
+doGetAllAttachments = function()
+{
+  var addParams = new Array();
+  addParams.push("id=<%= @email.id %>");
+  addParams.push("enc=" + form_enc.enc.value);
+  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+
+  if (thetisBoxEnc != null){
+    thetisBoxEnc.remove();
+    thetisBoxEnc = null;
+  }
+
+  tips("<%= t('msg.wait_for_a_while') %>", "CENTER");
+  location.href = "<%= url_for(:controller => 'mail_folders', :action => 'get_mail_attachments') %>?"+addParams.join("&");
+}
+<% end %>
 
 </script>

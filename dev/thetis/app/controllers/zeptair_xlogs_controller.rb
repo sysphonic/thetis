@@ -16,8 +16,6 @@
 class ZeptairXlogsController < ApplicationController
   layout 'base'
 
-  require 'iconv'
-
   before_filter :check_login
   before_filter do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)
@@ -145,16 +143,7 @@ class ZeptairXlogsController < ApplicationController
     csv = ZeptairXlog.export_csv
 
     begin
-      case params[:enc]
-        when 'SJIS'
-          csv = NKF.nkf("-sW -m0", csv)
-        when 'EUC-JP'
-          csv = NKF.nkf("-eW -m0", csv)
-        when 'UTF8'
-
-        when 'ISO-8859-1'
-          csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
-      end
+      csv.encode!(params[:enc], Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end

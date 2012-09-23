@@ -1,23 +1,22 @@
 <script type="text/javascript">
 
-function getEncodingSelector(onOk, type)
+getEncodingSelector = function(onOk, type)
 {
-  var encArray = new Array();
-<% 
-acceptLangs = request.env['HTTP_ACCEPT_LANGUAGE']
-if !acceptLangs.nil? and acceptLangs.split(',').first.downcase.index('ja') == 0
+<%
+opts = []
+langs = request.env['HTTP_ACCEPT_LANGUAGE']
+if !langs.nil? and langs.split(',').first.downcase.index('ja') == 0
+  opts << [t('msg.enc_utf8'), 'UTF-8']
+  opts << [t('msg.enc_sjis'), 'Shift_JIS']
+else
+  opts << [t('msg.enc_utf8'), 'UTF-8']
+  opts << [t('msg.enc_iso8859_1'), 'ISO-8859-1']
+end
 %>
-  encArray.push(new Array("UTF8", "<%= t('msg.enc_utf8') %>"));
-  encArray.push(new Array("SJIS", "<%= t('msg.enc_sjis') %>"));
-  encArray.push(new Array("EUC-JP", "<%= t('msg.enc_eucjp') %>"));
-<% else %>
-  encArray.push(new Array("UTF8", "<%= t('msg.enc_utf8') %>"));
-  encArray.push(new Array("ISO-8859-1", "<%= t('msg.enc_iso8859_1') %>"));
-<% end %>
   content = "<form name='form_enc' enctype='multipart/form-data'>";
-  content += "<table align='center' width='80%' height='80%' cellspacing='0' cellpadding='0'>";
+  content += "<table align='center' style='width:80%; height:80%;' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:20px;'><td></td></tr>";
-  if (type == 'import') {
+  if (type == "import") {
     content += "  <tr style='height:40px;'>";
     content += "    <td>";
     content += "      <input type='file' name='imp_file' size='40' style='width:100%;' />";
@@ -25,17 +24,20 @@ if !acceptLangs.nil? and acceptLangs.split(',').first.downcase.index('ja') == 0
     content += "  </tr>";
     content += "  <tr style='height:5px;'><td></td></tr>";
   }
-  for (var i=0; i < encArray.length; i++) {
-    content += "  <tr style='height:30px;'>";
-    content += "    <td align='left'>";
-    content += "      <input type='radio' id='enc_"+encArray[i][0]+"' name='enc' value='"+encArray[i][0]+"' /> <label for='enc_"+encArray[i][0]+"'>"+encArray[i][1]+"</label><br/>";
-    content += "    </td>";
-    content += "  </tr>";
-  }
-  if (type == 'import') {
+<%
+opts.each do |opt|
+  disp, val = opt
+%>
+  content += "  <tr style='height:30px;'>";
+  content += "    <td style='text-align:left;'>";
+  content += "      <input type='radio' id='enc_<%= val %>' name='enc' value='<%= val %>' /> <label for='enc_<%= val %>'><%= disp %></label><br/>";
+  content += "    </td>";
+  content += "  </tr>";
+<% end %>
+  if (type == "import") {
     content += "  <tr style='height:15px;'><td></td></tr>";
     content += "  <tr>";
-    content += "    <td align='left' style='background-color:blue; color:white; padding-left:10px;'>";
+    content += "    <td style='text-align:left; background-color:blue; color:white; padding-left:10px;'>";
     content += "      <%= t('msg.import_mode') %>";
     content += "    </td>";
     content += "  </tr>";
@@ -48,12 +50,53 @@ if !acceptLangs.nil? and acceptLangs.split(',').first.downcase.index('ja') == 0
   }
   content += "  <tr style='height:15px;'><td></td></tr>";
   content += "  <tr>";
-  content += "    <td align='center'>";
+  content += "    <td style='text-align:center;'>";
   content += "      <input type='button' value='<%= t('btn.execute') %>' onclick='"+onOk+"' style='width:80px;' />";
   content += "    </td>";
   content += "  </tr>";
   content += "</table>";
   content += "<input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>' />";
+  content += "</form>";
+  return content;
+}
+
+getEncodingSelectorAll = function(onOk, type)
+{
+<%
+opts = []
+opts << [t('msg.enc_utf8'), 'UTF-8']
+opts << [t('msg.enc_sjis'), 'Shift_JIS']
+opts << [t('msg.enc_iso8859_1'), 'ISO-8859-1']
+%>
+  content = "<form name='form_enc'>";
+  content += "<table align='center' width='80%' cellspacing='0' cellpadding='0'>";
+  content += "  <tr style='height:10px;'><td></td></tr>";
+
+  content += "  <tr style='height:30px;'>";
+  content += "    <td style='text-align:center;'>";
+  content += "      <select name='enc'>";
+<%
+opts.each do |opt|
+  disp, val = opt
+  selected = ''
+  if !langs.nil? and langs.split(',').first.downcase.index('ja') == 0
+    selected = 'selected' if val == 'Shift_JIS'
+  else
+    selected = 'selected' if val == 'ISO-8859-1'
+  end
+%>
+  content += "        <option <%= selected %> value='<%= val %>'><%= disp %></option>";
+<% end %>
+  content += "      </select>";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "  <tr style='height:10px;'><td></td></tr>";
+  content += "  <tr>";
+  content += "    <td style='text-align:center;'>";
+  content += "      <input type='button' value='<%= t('btn.execute') %>' onclick='"+onOk+"' style='width:80px;' />";
+  content += "    </td>";
+  content += "  </tr>";
+  content += "</table>";
   content += "</form>";
   return content;
 }

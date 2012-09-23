@@ -20,10 +20,8 @@ class AddressbookController < ApplicationController
   before_filter :check_owner, :only => [:edit, :update]
 
   require 'digest/md5'
-  require 'nkf'
   require 'cgi'
   require 'csv'
-  require 'iconv'
 
 
   #=== query
@@ -285,16 +283,7 @@ class AddressbookController < ApplicationController
     csv = Address.export_csv(@login_user.id)
 
     begin
-      case params[:enc]
-        when 'SJIS'
-          csv = NKF.nkf("-sW -m0", csv)
-        when 'EUC-JP'
-          csv = NKF.nkf("-eW -m0", csv)
-        when 'UTF8'
-
-        when 'ISO-8859-1'
-          csv = Iconv.iconv('ISO-8859-1', 'UTF-8', csv)
-      end
+      csv.encode!(params[:enc], Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end
@@ -334,16 +323,7 @@ class AddressbookController < ApplicationController
 
     csv = file.read
     begin
-      case enc
-        when 'SJIS'
-          csv = NKF.nkf("-w -m0", csv)
-        when 'EUC-JP'
-          csv = NKF.nkf("-wE -m0", csv)
-        when 'UTF8'
-          
-        when 'ISO-8859-1'
-          csv = Iconv.iconv('UTF-8', 'ISO-8859-1', csv)
-      end
+      csv.encode!(enc, Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end

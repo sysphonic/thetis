@@ -327,6 +327,8 @@ ja:
       authorities: "権限設定"
       display_control: "表示設定"
   mail_folder:
+    select_attach_name_enc: "ファイル名に適用する文字コードを選択してください。"
+    download_mail_attachments: "添付ファイル・ダウンロード"
     root_cannot_have_folders: "フォルダはルートには作成・移動できません。"
   group:
     plural: "グループ"
@@ -854,6 +856,7 @@ ja:
     received_list_info: "確定されたワークフローのコピーは My Folder の中の次のフォルダに自動的に保存されます。"
     select_to_create: "作成するワークフローを選択してください。"
   msg:
+    wait_for_a_while: "しばらくお待ちください。"
     unread: "未読"
     specify: "%{name}を指定してください。"
     select_account: "アカウントを選択してください。"
