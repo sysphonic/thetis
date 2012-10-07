@@ -1126,17 +1126,12 @@ class User < ActiveRecord::Base
       if (/^|([0-9]+|)+$/ =~ self.groups) == 0
 
         self.get_groups_a.each do |group_id|
-          begin
-            group = Group.find(group_id)
-          rescue
-          end
-
+          group = Group.find_by_id(group_id)
           if group.nil?
             err_msgs << I18n.t('user.import.not_valid_groups') + ': '+group_id.to_s
             break
           end
         end
-
       else
         err_msgs << I18n.t('user.import.invalid_groups_format')
       end

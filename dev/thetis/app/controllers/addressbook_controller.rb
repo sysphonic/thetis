@@ -16,8 +16,8 @@
 class AddressbookController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :only => [:edit, :update]
+  before_filter(:check_login)
+  before_filter(:check_owner, :only => [:edit, :update])
 
   require 'digest/md5'
   require 'cgi'
@@ -280,7 +280,10 @@ class AddressbookController < ApplicationController
   def export_csv
     Log.add_info(request, params.inspect)
 
-    csv = Address.export_csv(@login_user.id)
+    book = params[:filter_book]
+    book = Address::BOOK_PRIVATE unless @login_user.admin?(User::AUTH_ADDRESSBOOK)
+
+    csv = Address.export_csv(@login_user, book)
 
     begin
       csv.encode!(params[:enc], Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
@@ -301,15 +304,15 @@ class AddressbookController < ApplicationController
     file = params[:imp_file]
     mode = params[:mode]
     enc = params[:enc]
+    book = params[:filter_book]
+    book = Address::BOOK_PRIVATE unless @login_user.admin?(User::AUTH_ADDRESSBOOK)
 
-    all_addresses = Address.find(:all, :conditions => ['owner_id=?', @login_user.id]) || []
+    all_addresses = Address.get_for(@login_user, book)
 
     address_names = []
-#   address_emails = []
     if (mode == 'add')
       all_addresses.each do |address|
         address_names << address.name
-#       address_emails << address.email
       end
     end
 
@@ -323,32 +326,49 @@ class AddressbookController < ApplicationController
 
     csv = file.read
     begin
-      csv.encode!(enc, Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
+      csv.encode!(Encoding::UTF_8, enc, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end
 
     found_update = false
+    err_col_names = nil
+    col_idxs = []
 
     CSV.parse(csv, opt) do |row|
       unless row.first.nil?
-        next if (row.first.lstrip.index('#') == 0)
+        next if row.first.lstrip.index('#') == 0
       end
+      next if row.compact.empty?
 
       count += 1
-      next if count == 0  # for Header Line
+      if count == 0  # for Header Line
+        err_col_names = Address.check_csv_header(row, book)
+        if err_col_names.nil? or err_col_names.empty?
+          header_cols = Address.csv_header_cols(book)
+          col_idxs = header_cols.collect{|col_name| row.index(col_name)}
+          next
+        else
+        logger.fatal('@@@ ' + err_col_names.inspect)
+          @imp_errs[0] = []
+          err_col_names.each do |err_col_name|
+            @imp_errs[0] << t('address.invalid_column_names') + err_col_name
+          end
+          break
+        end
+      end
 
-      address = Address.parse_csv_row(row)
+      address = Address.parse_csv_row(row, book, col_idxs, @login_user)
 
-      check = address.check_import(mode, address_names)  #, address_emails
+      check = address.check_import(mode, address_names)
 
       @imp_errs[count] = check unless check.empty?
 
       addresses << address
 
       if (mode == 'update')
-        update_address = all_addresses.find do |u|
-          u.id == address.id
+        update_address = all_addresses.find do |rec|
+          rec.id == address.id
         end
         unless update_address.nil?
           all_addresses.delete(update_address)
@@ -357,15 +377,11 @@ class AddressbookController < ApplicationController
       end
     end
 
-    if addresses.empty?
-
-      @imp_errs[0] = [t('address.nothing_to_import')]
-    else
-
-      if mode == 'update'
-
-        if found_update
-        else
+    if err_col_names.nil? or err_col_names.empty?
+      if addresses.empty?
+        @imp_errs[0] = [t('address.nothing_to_import')]
+      else
+        if (mode == 'update') and !found_update
           @imp_errs[0] = [t('address.nothing_to_update')]
         end
       end
@@ -381,10 +397,6 @@ class AddressbookController < ApplicationController
           address_id = address.id
 
           address.save!
-
-          if address_id.nil?
-            address.setup
-          end
 
           @imp_cnt += 1
 

@@ -1,14 +1,41 @@
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
+<div id="mail_account_summary<%= @mail_account.id %>" style="text-align:left; padding:10px 10px 0px;">
+
+<%= @mail_account.title %><br/>
+
+<table align="left" cellspacing="0" cellpadding="0" style="width:90%; padding:0px 10px 0px;">
 <% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
   <tr>
-    <td class="item_value_td" style="color:gray;">
+    <td nowrap style="width:80px; padding-right:5px; text-align:right; color:gray;">
       <%
       cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
       %>
-      <%= t('mail.using') %> <%= cur_mb %>MB (= <%= ((cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT) %>% / <%= t('mail.capacity_per_account') %> <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB)
+      <%= t('mail.using') %> <%= cur_mb %>MB
+    </td>
+    <td style="text-align:left;">
+      <%
+      cur_percent = (cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT
+      %>
+      <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse;collapse; border:solid 1px dimgray;">
+        <tr style="height:18px;">
+          <td style="width:<%= cur_percent %>%; vertical-align:middle; background-color:limegreen;">
+<% if cur_percent > 50 %>
+            <span style="font-size:9pt; color:white; margin-right:5px;"><%= cur_percent %>%</span>
+<% end %>
+          </td>
+          <td style="width:<%= 100 - cur_percent %>%; vertical-align:middle;">
+<% if cur_percent <= 50 %>
+            <span style="font-size:9pt; color:green; margin-left:3px;"><%= cur_percent %>%</span>
+<% end %>
+          </td>
+        </tr>
+      </table>
+    </td>
+    <td nowrap style="width:100px; text-align:left; padding-left:5px; color:gray;">
+       <%= t('mail.capacity_per_account') %> <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB
     </td>
   </tr>
 <% end %>
 </table>
+</div>
 

@@ -518,7 +518,7 @@ class UsersController < ApplicationController
 
     csv = file.read
     begin
-      csv.encode!(enc, Encoding::UTF_8, {:invalid => :replace, :undef => :replace, :replace => ' '})
+      csv.encode!(Encoding::UTF_8, enc, {:invalid => :replace, :undef => :replace, :replace => ' '})
     rescue => evar
       Log.add_error(request, evar)
     end
@@ -529,6 +529,7 @@ class UsersController < ApplicationController
       unless row.first.nil?
         next if row.first.lstrip.index('#') == 0
       end
+      next if row.compact.empty?
 
       count += 1
       next if count == 0  # for Header Line

@@ -695,6 +695,7 @@ function clearMailContent()
 
 function showMailAccountSummary()
 {
+<% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
   var addParams = new Array();
   var folder_id = getCurrentFolderId();
   var mail_account_id = getMailAccountId(folder_id);
@@ -715,6 +716,7 @@ function showMailAccountSummary()
                   onComplete: function(request){ /*thetisBox.remove();*/ },
                 }
               );
+<% end %>
 }
 
 function doUpdateViewMails(method, action, addParams)

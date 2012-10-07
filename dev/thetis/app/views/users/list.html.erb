@@ -6,38 +6,38 @@
 
 <%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
   <% if @login_user.admin?(User::AUTH_USER) %>
-    <td align="left" nowrap width="1%">
+    <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new', :from => 'users_list') %>';">
     </td>
-    <td width="10"></td>
-    <td align="left" nowrap width="1%">
+    <td style="width:10px;"></td>
+    <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
     </td>
-    <td width="10"></td>
-    <td align="left" nowrap width="1%">
+    <td style="width:10px;"></td>
+    <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" alt="<%= t('btn.import_csv') %>" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
     </td>
-    <td width="10"></td>
-    <td align="left" nowrap width="1%">
+    <td style="width:10px;"></td>
+    <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'configure') %>';">
     </td>
   <% end %>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'users', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; prog('TOP-RIGHT');"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'users', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; prog('TOP-RIGHT');"/>
     </td>
   </tr>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td align="left" nowrap>
+    <td style="text-align:left;" nowrap>
 <% if @group_id.nil? or @group_id.empty? %>
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
 <% else %>
@@ -45,7 +45,7 @@
       &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
 <% end %>
     </td>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
 <% if @login_user.admin?(User::AUTH_USER) %>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
@@ -58,9 +58,9 @@
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:7px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:7px;">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -76,7 +76,7 @@
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
     <th class="list_sort" width="5%"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" width="16%" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
@@ -87,9 +87,9 @@
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
-    <td  class="<%= td_class %>"nowrap>
+    <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.name, :length => 20) %>
       </a>
@@ -106,7 +106,7 @@
     <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user.id, :from => 'users_list') %>';" />
     </td>
-    <td class="<%= td_class %>" width="20" style="text-align:center;">
+    <td class="<%= td_class %>" style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   <% end %>
@@ -184,13 +184,13 @@ function importCsv()
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('user.title_import') %>";
-  thetisBox.show("CENTER", "380,455", "TRAY", "", "<%= t('user.specify_csv_encoding') %> ", content);
+  thetisBox.show("CENTER", "380,400", "TRAY", "", "<%= t('msg.specify_csv_encoding') %> ", content);
 }
 
 function doImportCsv()
 {
   if (document.form_enc.imp_file.value == "") {
-    msg("<%= t('user.specify_csv') %>");
+    msg("<%= t('msg.specify_csv') %>");
     return "";
   }
   var enc = null;
@@ -201,7 +201,7 @@ function doImportCsv()
     }
   }
   if (enc == null) {
-    msg("<%= t('user.select_encoding_of_csv') %>");
+    msg("<%= t('msg.select_encoding_of_csv') %>");
     return;
   }
   var mode = null;
@@ -321,9 +321,9 @@ unless @imp_errs.nil? or @imp_errs.empty?
 %>
 
 <div id="imp_errs" style="display:none;">
-<table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0">
+<table valign="top" width="100%" cellspacing="0" cellpadding="0">
   <tr style="height:20px;">
-    <td align="right" style="color:blueviolet; padding-right:10px; padding-top:10px;">
+    <td style="text-align:right;" style="color:blueviolet; padding-right:10px; padding-top:10px;">
       <%= @imp_cnt.to_s + t('user.imported') %><br/>
     </td>
   </tr>
@@ -337,12 +337,12 @@ err_cnt = 0
 %>
         <tr>
         <% if user_cnt > 0 %>
-          <td align="right" valign="top" style="padding:0px 3px;">
+          <td valign="top" style="text-align:right; padding:0px 3px;">
             <%= user_cnt.to_s + t('user.err_list_cap') %>
           </td>
-          <td align="left" valign="top" style="padding:0px 3px;">
+          <td valign="top" style="text-align:left; padding:0px 3px;">
         <% else %>
-          <td align="left" valign="top" style="padding:0px 3px;" colspan="2">
+          <td valign="top" style="text-align:left; padding:0px 3px;" colspan="2">
         <% end %>
         <% errs.each do |err| %>
             &bull; <%= err %><br/>
@@ -351,7 +351,7 @@ err_cnt = 0
         </tr>
 <% else %>
         <tr>
-          <td colspan="2" align="center" valign="top" nowrap style="padding-left:3px; padding-right:3px;">
+          <td colspan="2" nowrap style="text-align:center; padding-left:3px; padding-right:3px; vertical-align:top;">
             <b>...</b>
           </td>
         </tr>

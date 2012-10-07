@@ -1,15 +1,23 @@
 
 <%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%;" cellspacing="3" cellpadding="0">
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap width="1%">
+          <td style="text-align:left; width:1%;" nowrap>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="showAddressNew();">
           </td>
-          <td align="right" nowrap>
+          <td style="width:10px;"></td>
+          <td style="text-align:left; width:1%;" nowrap>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
+          </td>
+          <td style="width:10px;"></td>
+          <td style="text-align:left; width:1%;" nowrap>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" alt="<%= t('btn.import_csv') %>" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
+          </td>
+          <td style="text-align:right;" nowrap>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
           <% if params[:admin] == 'true' %>
             <%= t('address.book') %><%= t('cap.suffix') %><%= t('scope.common') %>
@@ -20,21 +28,21 @@
                                                         [t('scope.common'), Address::BOOK_COMMON]],
                                                         params[:filter_book])  %>
           <% end %>
-            <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'addressbook', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
-            <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for(:controller => 'addressbook', :action => 'list') %>'; prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'addressbook', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'addressbook', :action => 'list') %>'; prog('TOP-RIGHT');"/>
           </td>
         </tr>
       </table>
     </td>
   </tr>
-  <tr height="1"><td></td></tr>
+  <tr style="height:1px;"><td></td></tr>
   <tr>
-    <td align="right">
-      <table width="100%" cellspacing="0" cellpadding="0">
+    <td style="text-align:right;">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
          <tr>
-          <td align="left" width="120" style="padding-bottom:5px;">
+          <td style="text-align:left; padding-bottom:5px; width:120px;">
           </td>
-          <td align="right" nowrap>
+          <td style="text-align:right;" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <span style="color:silver;">|</span>
             <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
@@ -45,9 +53,9 @@
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('address', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -60,15 +68,15 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
+  <tr style="height:10px;"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_addresses">
-<table id="list_addresses" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_addresses" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="35%" nowrap onClick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="35%" nowrap onClick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="30%" nowrap onClick="sortList('organization')"><%= Address.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="35%" nowrap onclick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="35%" nowrap onclick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" width="30%" nowrap onclick="sortList('organization')"><%= Address.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
   </tr>
 <% @addresses.each_with_index do |address, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
@@ -95,10 +103,10 @@
       <%= truncate(address.organization, :length => 40) %>
     </td>
   <% if address.editable?(@login_user) %>
-    <td class="<%= td_class %>" width="20" nowrap style="text-align:center;">
+    <td class="<%= td_class %>" nowrap style="width:20px; text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
     </td>
-    <td class="<%= td_class %>" width="20" style="text-align:center;">
+    <td class="<%= td_class %>" style="width:20px; text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
     </td>
   <% end %>
@@ -114,6 +122,7 @@
 </form>
 
 
+<%= render(:partial => 'common/encoding_selector') %>
 <%= render(:partial => 'common/addressbook_func') %>
 
 <script type="text/javascript">
@@ -131,6 +140,141 @@ function selectAll()
   for (var i=0; elems != null && i < elems.length; i++) {
     elems[i].checked = !all_selected;
   }
+}
+
+function getBookName(book)
+{
+  switch (book) {
+    case "<%= Address::BOOK_PRIVATE %>":
+      return "<%= t('scope.private') %>";
+    case "<%= Address::BOOK_COMMON %>":
+      return "<%= t('scope.common') %>";
+  }
+  return null;
+}
+
+var thetisBoxExpImp = null;
+
+function exportCsv()
+{
+  if (thetisBoxExpImp != null){
+    thetisBoxExpImp.remove();
+    thetisBoxExpImp = null;
+  }
+
+<% if @login_user.admin?(User::AUTH_ADDRESSBOOK) %>
+  var book = form_list.filter_book.value;
+  if (book == "<%= Address::BOOK_BOTH %>") {
+    var msgBox = msg("<%= t('address.specify_book') %>");
+    msgBox.setOnClose(function(){form_list.filter_book.focus();});
+    return false;
+  }
+  var content = getEncodingSelector("doExportCsv('"+book+"')", "export");
+<% else %>
+  var book = "<%= Address::BOOK_PRIVATE %>";
+  var content = getEncodingSelector("doExportCsv()", "export");
+<% end %>
+
+  thetisBoxExpImp = new ThetisBox;
+  thetisBoxExpImp.title = "<%= t('address.title_export') %>";
+  thetisBoxExpImp.title += " <%= t('paren.round.left') %>"+getBookName(book)+"<%= t('paren.round.right') %>";
+  thetisBoxExpImp.show("CENTER", "380,280", "TRAY", "", "<%= t('msg.select_encoding_of_csv') %> ", content);
+
+  return true;
+}
+
+function doExportCsv(book)
+{
+  var enc = null;
+  for (var i=0; i<document.form_enc.enc.length; i++) {
+    if (document.form_enc.enc[i].checked) {
+      enc = document.form_enc.enc[i].value;
+      break;
+    }
+  }
+  if (enc == null) {
+    return;
+  }
+  thetisBoxExpImp.remove();
+  thetisBoxExpImp = null;
+
+  var addParams = new Array();
+  addParams.push("enc="+enc);
+  if (book) {
+    addParams.push("filter_book="+book);
+  }
+
+  // prog("TOP-RIGHT");
+  location="<%= url_for(:controller => 'addressbook', :action => 'export_csv') %>?"+addParams.join("&");
+}
+
+function importCsv()
+{
+  if (thetisBoxExpImp != null){
+    thetisBoxExpImp.remove();
+    thetisBoxExpImp = null;
+  }
+
+<% if @login_user.admin?(User::AUTH_ADDRESSBOOK) %>
+  var book = form_list.filter_book.value;
+  if (book == "<%= Address::BOOK_BOTH %>") {
+    var msgBox = msg("<%= t('address.specify_book') %>");
+    msgBox.setOnClose(function(){form_list.filter_book.focus();});
+    return false;
+  }
+  var content = getEncodingSelector("doImportCsv('"+book+"')", "import");
+<% else %>
+  var book = "<%= Address::BOOK_PRIVATE %>";
+  var content = getEncodingSelector("doImportCsv()", "import");
+<% end %>
+
+  thetisBoxExpImp = new ThetisBox;
+  thetisBoxExpImp.title = "<%= t('address.title_import') %>";
+  thetisBoxExpImp.title += " <%= t('paren.round.left') %>"+getBookName(book)+"<%= t('paren.round.right') %>";
+  thetisBoxExpImp.show("CENTER", "380,400", "TRAY", "", "<%= t('msg.specify_csv_encoding') %> ", content);
+
+  return true;
+}
+
+function doImportCsv(book)
+{
+  if (document.form_enc.imp_file.value == "") {
+    msg("<%= t('msg.specify_csv') %>");
+    return "";
+  }
+  var enc = null;
+  for (var i=0; i<document.form_enc.enc.length; i++) {
+    if (document.form_enc.enc[i].checked) {
+      enc = document.form_enc.enc[i].value;
+      break;
+    }
+  }
+  if (enc == null) {
+    msg("<%= t('msg.select_encoding_of_csv') %>");
+    return;
+  }
+  var mode = null;
+  for (var i=0; i<document.form_enc.mode.length; i++) {
+    if (document.form_enc.mode[i].checked) {
+      mode = document.form_enc.mode[i].value;
+      break;
+    }
+  }
+  if (mode == null) {
+    msg("<%= t('msg.select_import_mode') %>");
+    return;
+  }
+
+  if (book) {
+    addInputHidden(document.form_enc, null, "filter_book", book);
+  }
+  document.form_enc.method = "post";
+  document.form_enc.action = "<%= url_for(:controller => 'addressbook', :action => 'import_csv') %>";
+  document.form_enc.submit();
+
+  prog("TOP-RIGHT");
+
+  thetisBoxExpImp.hide();
 }
 
 function doDelete()
@@ -186,15 +330,15 @@ unless @imp_errs.nil? or @imp_errs.empty?
 %>
 
 <div id="imp_errs" style="display:none;">
-<table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0">
+<table style="text-align:center; width:100%; vertical-align:top;" cellspacing="0" cellpadding="0">
   <tr style="height:20px;">
-    <td align="right" style="color:blueviolet; padding-right:10px; padding-top:10px;">
+    <td style="text-align:right; color:blueviolet; padding-right:10px; padding-top:10px;">
       <%= t('address.imported', :count => @imp_cnt) %><br/>
     </td>
   </tr>
   <tr>
-    <td valign="top" style="padding:10px;">
-      <table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0" border="1">
+    <td style="padding:10px; vertical-align:top;">
+      <table style="text-align:center; width:100%; vertical-align:top;" cellspacing="0" cellpadding="0" border="1">
 <%
 err_cnt = 0
 @imp_errs.each do |address_cnt, errs|
@@ -202,12 +346,12 @@ err_cnt = 0
 %>
         <tr>
         <% if address_cnt > 0 %>
-          <td align="right" valign="top" style="padding-left:3px; padding-right:3px;">
+          <td style="text-align:right; padding-left:3px; padding-right:3px; vertical-align:top;">
             <%= t('address.cap_with_num', :num => address_cnt) %>
           </td>
-          <td align="left" valign="top" style="padding-left:3px; padding-right:3px;">
+          <td style="text-align:left; padding-left:3px; padding-right:3px; vertical-align:top;">
         <% else %>
-          <td align="left" valign="top" style="padding-left:3px; padding-right:3px;" colspan="2">
+          <td style="text-align:left; padding-left:3px; padding-right:3px; vertical-align:top;" colspan="2">
         <% end %>
         <% errs.each do |err| %>
             &bull; <%= err %><br/>
@@ -216,7 +360,7 @@ err_cnt = 0
         </tr>
 <% else %>
         <tr>
-          <td colspan="2" align="center" valign="top" nowrap style="padding-left:3px; padding-right:3px;">
+          <td colspan="2" nowrap style="text-align:center; padding-left:3px; padding-right:3px; vertical-align:top;">
             <b>...</b>
           </td>
         </tr>

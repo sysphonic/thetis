@@ -22,6 +22,8 @@ class Address < ActiveRecord::Base
   public::BOOK_COMMON = 'book_common'
   public::BOOK_BOTH = 'book_both'
 
+  public::EXP_IMP_FOR_ALL = 'all'
+
 
   #=== self.find_all
   #
@@ -41,15 +43,87 @@ class Address < ActiveRecord::Base
     Address.find_by_sql('select * from addresses ' + where + ' order by xorder ASC, name ASC')
   end
 
+  #=== self.csv_header_cols
+  #
+  #Gets an Array of CSV header columns.
+  #
+  #_book_:: Book type.
+  #return:: Array of CSV header columns.
+  #
+  def self.csv_header_cols(book)
+    ary = []
+    ary << I18n.t('activerecord.attributes.id')
+    ary << Address.human_attribute_name('name')
+    ary << Address.human_attribute_name('name_ruby')
+    ary << Address.human_attribute_name('nickname')
+    ary << Address.human_attribute_name('screenname')
+    ary << Address.human_attribute_name('email1')
+    ary << Address.human_attribute_name('email2')
+    ary << Address.human_attribute_name('email3')
+    ary << Address.human_attribute_name('postalcode')
+    ary << Address.human_attribute_name('address')
+    ary << Address.human_attribute_name('tel1_note')
+    ary << Address.human_attribute_name('tel1')
+    ary << Address.human_attribute_name('tel2_note')
+    ary << Address.human_attribute_name('tel2')
+    ary << Address.human_attribute_name('tel3_note')
+    ary << Address.human_attribute_name('tel3')
+    ary << Address.human_attribute_name('fax')
+    ary << Address.human_attribute_name('url')
+    ary << Address.human_attribute_name('organization')
+    ary << Address.human_attribute_name('title')
+    ary << Address.human_attribute_name('memo')
+    ary << Address.human_attribute_name('xorder')
+    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+      ary << I18n.t('schedule.scope') + I18n.t('cap.suffix') + User.human_attribute_name('groups')
+      ary << I18n.t('schedule.scope') + I18n.t('cap.suffix') + I18n.t('team.plural')
+    end
+    return ary
+  end
+
   #=== self.export_csv
   #
-  #Gets CSV description of all Users.
+  #Gets CSV description of all Addresses.
   #
-  def self.export_csv(owner_id)
+  #_user_:: Subjective User.
+  #_book_:: Book type.
+  #return:: CSV String.
+  #
+  def self.export_csv(user, book)
 
-    addresses = Address.find(:all, :conditions => ['owner_id=?', owner_id], :order => 'id ASC')
+    return nil if user.nil? or book.nil?
+
+    book = Address::BOOK_PRIVATE unless user.admin?(User::AUTH_ADDRESSBOOK)
+
+    con_or = []
+    if book == Address::BOOK_PRIVATE or book == Address::BOOK_BOTH
+      con_or << "owner_id=#{user.id}"
+    end
+    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+      con_or << "owner_id=0"
+    end
+
+    addresses = Address.find(:all, :conditions => con_or.join(' or '), :order => 'id ASC')
 
     csv_line = ''
+
+    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+      csv_line << I18n.t('address.export.rem1') + "\n"
+      csv_line << I18n.t('address.export.rem2') + "\n"
+      csv_line << I18n.t('address.export.rem3') + "\n"
+      csv_line << "\n"
+
+      csv_line << I18n.t('address.export.rem_groups') + "\n"
+      groups = Group.find(:all)
+      unless groups.nil?
+        groups_cache = {}
+        group_obj_cache = Group.build_cache(groups)
+        groups.each do |group|
+          csv_line << '#   ' + group.id.to_s + ' = ' + Group.get_path(group.id, groups_cache, group_obj_cache) + "\n"
+        end
+      end
+      csv_line << "\n"
+    end
 
     opt = {
       :force_quotes => true,
@@ -59,29 +133,7 @@ class Address < ActiveRecord::Base
     csv_line << CSV.generate(opt) do |csv|
 
       # Header
-      ary = []
-      ary << I18n.t('activerecord.attributes.id')
-      ary << Address.human_attribute_name('name')
-      ary << Address.human_attribute_name('name_ruby')
-      ary << Address.human_attribute_name('nickname')
-      ary << Address.human_attribute_name('screenname')
-      ary << Address.human_attribute_name('email1')
-      ary << Address.human_attribute_name('email2')
-      ary << Address.human_attribute_name('email3')
-      ary << Address.human_attribute_name('postalcode')
-      ary << Address.human_attribute_name('address')
-      ary << Address.human_attribute_name('tel1_note')
-      ary << Address.human_attribute_name('tel1')
-      ary << Address.human_attribute_name('tel2_note')
-      ary << Address.human_attribute_name('tel2')
-      ary << Address.human_attribute_name('tel3_note')
-      ary << Address.human_attribute_name('tel3')
-      ary << Address.human_attribute_name('fax')
-      ary << Address.human_attribute_name('url')
-      ary << Address.human_attribute_name('organization')
-      ary << Address.human_attribute_name('title')
-      ary << Address.human_attribute_name('memo')
-      ary << Address.human_attribute_name('xorder')
+      ary = Address.csv_header_cols(book)
 
       csv << ary
 
@@ -110,6 +162,14 @@ class Address < ActiveRecord::Base
         ary << address.title
         ary << address.memo
         ary << address.xorder
+        if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+          if address.for_all?
+            ary << Address::EXP_IMP_FOR_ALL
+          else
+            ary << address.groups
+          end
+          ary << address.teams
+        end
 
         csv << ary
       end
@@ -118,21 +178,34 @@ class Address < ActiveRecord::Base
     return csv_line
   end
 
+  #=== self.check_csv_header
+  #
+  #Parses fields array of a CSV header.
+  #
+  #_row_:: Fields array of a CSV header.
+  #_book_:: Book type.
+  #return:: Array of error header names.
+  #
+  def self.check_csv_header(row, book)
+
+    return (row - Address.csv_header_cols(book))
+  end
+
   #=== self.parse_csv_row
   #
   #Parses fields array of a CSV row.
   #
   #_row_:: Fields array of a CSV row.
+  #_book_:: Book type.
+  #_idxs_:: Array of header column indexes.
+  #_user_:: Subjective User.
   #return:: Address instance created from specified array.
   #
-  def self.parse_csv_row(row)
+  def self.parse_csv_row(row, book, idxs, user)
 
-    imp_id = (row[0].nil?)?nil:(row[0].strip)
+    imp_id = (row[idxs[0]].nil?)?nil:(row[idxs[0]].strip)
     unless imp_id.nil? or imp_id.empty?
-      begin
-        org_address = Address.find(imp_id)
-      rescue
-      end
+      org_address = Address.find_by_id(imp_id)
     end
 
     if org_address.nil?
@@ -142,27 +215,39 @@ class Address < ActiveRecord::Base
     end
 
     address.id =           imp_id
-    address.name =         (row[1].nil?)?nil:(row[1].strip)
-    address.name_ruby =    (row[2].nil?)?nil:(row[2].strip)
-    address.nickname =     (row[3].nil?)?nil:(row[3].strip)
-    address.screenname =   (row[4].nil?)?nil:(row[4].strip)
-    address.email1 =       (row[5].nil?)?nil:(row[5].strip)
-    address.email2 =       (row[6].nil?)?nil:(row[6].strip)
-    address.email3 =       (row[7].nil?)?nil:(row[7].strip)
-    address.postalcode =   (row[8].nil?)?nil:(row[8].strip)
-    address.address =      (row[9].nil?)?nil:(row[9].strip)
-    address.tel1_note =    (row[10].nil?)?nil:(row[10].strip)
-    address.tel1 =         (row[11].nil?)?nil:(row[11].strip)
-    address.tel2_note =    (row[12].nil?)?nil:(row[12].strip)
-    address.tel2 =         (row[13].nil?)?nil:(row[13].strip)
-    address.tel3_note =    (row[14].nil?)?nil:(row[14].strip)
-    address.tel3 =         (row[15].nil?)?nil:(row[15].strip)
-    address.fax =          (row[16].nil?)?nil:(row[16].strip)
-    address.url =          (row[17].nil?)?nil:(row[17].strip)
-    address.organization = (row[18].nil?)?nil:(row[18].strip)
-    address.title =        (row[19].nil?)?nil:(row[19].strip)
-    address.memo =         (row[20].nil?)?nil:(row[20].strip)
-    address.xorder =       (row[21].nil?)?nil:(row[21].strip)
+    address.name =         (row[idxs[1]].nil?)?nil:(row[idxs[1]].strip)
+    address.name_ruby =    (row[idxs[2]].nil?)?nil:(row[idxs[2]].strip)
+    address.nickname =     (row[idxs[3]].nil?)?nil:(row[idxs[3]].strip)
+    address.screenname =   (row[idxs[4]].nil?)?nil:(row[idxs[4]].strip)
+    address.email1 =       (row[idxs[5]].nil?)?nil:(row[idxs[5]].strip)
+    address.email2 =       (row[idxs[6]].nil?)?nil:(row[idxs[6]].strip)
+    address.email3 =       (row[idxs[7]].nil?)?nil:(row[idxs[7]].strip)
+    address.postalcode =   (row[idxs[8]].nil?)?nil:(row[idxs[8]].strip)
+    address.address =      (row[idxs[9]].nil?)?nil:(row[idxs[9]].strip)
+    address.tel1_note =    (row[idxs[10]].nil?)?nil:(row[idxs[10]].strip)
+    address.tel1 =         (row[idxs[11]].nil?)?nil:(row[idxs[11]].strip)
+    address.tel2_note =    (row[idxs[12]].nil?)?nil:(row[idxs[12]].strip)
+    address.tel2 =         (row[idxs[13]].nil?)?nil:(row[idxs[13]].strip)
+    address.tel3_note =    (row[idxs[14]].nil?)?nil:(row[idxs[14]].strip)
+    address.tel3 =         (row[idxs[15]].nil?)?nil:(row[idxs[15]].strip)
+    address.fax =          (row[idxs[16]].nil?)?nil:(row[idxs[16]].strip)
+    address.url =          (row[idxs[17]].nil?)?nil:(row[idxs[17]].strip)
+    address.organization = (row[idxs[18]].nil?)?nil:(row[idxs[18]].strip)
+    address.title =        (row[idxs[19]].nil?)?nil:(row[idxs[19]].strip)
+    address.memo =         (row[idxs[20]].nil?)?nil:(row[idxs[20]].strip)
+    address.xorder =       (row[idxs[21]].nil?)?nil:(row[idxs[21]].strip)
+    address.groups =       (row[idxs[22]].nil?)?nil:(row[idxs[22]].strip)
+    address.teams =        (row[idxs[23]].nil?)?nil:(row[idxs[23]].strip)
+    if (address.groups == Address::EXP_IMP_FOR_ALL) \
+        or (book == Address::BOOK_COMMON and address.groups.blank? and address.teams.blank?)
+      address.groups = nil
+      address.teams = nil
+      address.owner_id = 0
+    elsif !address.groups.blank? or !address.teams.blank?
+      address.owner_id = 0
+    else
+      address.owner_id = user.id
+    end
 
     return address
   end
@@ -197,6 +282,41 @@ class Address < ActiveRecord::Base
     # Requierd
     if self.name.nil? or self.name.empty?
       err_msgs <<  Address.human_attribute_name('name') + I18n.t('msg.is_required')
+    end
+
+    # Groups
+    unless self.groups.nil? or self.groups.empty?
+
+      if (/^|([0-9]+|)+$/ =~ self.groups) == 0
+
+        self.get_groups_a.each do |group_id|
+          group = Group.find_by_id(group_id)
+          if group.nil?
+            err_msgs << I18n.t('address.import.not_valid_groups') + ': '+group_id.to_s
+            break
+          end
+        end
+      else
+        err_msgs << I18n.t('address.import.invalid_groups_format')
+      end
+    end
+
+    # Teams
+    unless self.teams.nil? or self.teams.empty?
+
+      if (/^|([0-9]+|)+$/ =~ self.teams) == 0
+
+        self.get_teams_a.each do |team_id|
+          team = Team.find_by_id(team_id)
+          if team.nil?
+            err_msgs << I18n.t('address.import.not_valid_teams') + ': '+team_id.to_s
+            break
+          end
+        end
+
+      else
+        err_msgs << I18n.t('address.import.invalid_teams_format')
+      end
     end
 
     return err_msgs
