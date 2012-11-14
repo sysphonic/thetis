@@ -67,7 +67,7 @@
           <tr>
             <td align="right" valign="middle" style="cursor:move;">
             <% if item_images.size > 1 %>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
             <td class="img_td" align="center" style="padding-left:5px; padding-right:5px; cursor:move;">
@@ -169,7 +169,10 @@ onImageInfoOK = function()
           function() {
               setTimeout(setSortableImg, 100);
               thetisBoxProgress.remove();
-              thetisBoxImageInfo.remove();
+              var boxInstance = ThetisBox.getInstanceForElem(btnOk);
+              if (boxInstance) {
+                boxInstance.remove();
+              }
               tips("<%= t('msg.update_success')%>");
           },
           function() {
@@ -183,7 +186,10 @@ onImageInfoOK = function()
 
 onImageInfoCancel = function()
 {
-  thetisBoxImageInfo.remove();
+  var boxInstance = ThetisBox.getInstanceForElem(document.form_image_info);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
 }
 
 doDeleteImage = function(img_id, title)

@@ -1,0 +1,428 @@
+<%
+mail_account_id = params[:mail_account_id]
+%>
+
+<%= form_tag( {:controller => 'mail_filters', :action => 'list'}, :method => 'get', :name => 'form_filters') %>
+
+<table style="width:100%;" cellspacing="3" cellpadding="0">
+  <tr>
+    <td>
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="text-align:left; width:1%;" nowrap>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.create') %>" onclick="showFilterNew();">
+          </td>
+          <td style="width:10px;"></td>
+          <td style="text-align:right;" nowrap>
+            <%
+            opts = []
+            @mail_accounts.each do |mail_account|
+              opts << [mail_account.title, mail_account.id]
+            end
+            %>
+            <%= t('mail_filter.target_account') %><%= t('cap.suffix') %>
+            <%= select_tag('mail_account_id', options_for_select(opts, mail_account_id), :onchange => 'onOptionChangedFilters(this);', :style => 'min-width:150px;') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr style="height:1px;"><td></td></tr>
+  <tr>
+    <td style="text-align:right;">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
+         <tr>
+          <td nowrap style="width:80px; text-align:left; padding-right:10px;">
+            <input type="button" value="<%= t('btn.order') %>" onclick="onOrderFiltersClicked(this);" style="width:80px;" />
+          </td>
+          <td nowrap style="width:120px; text-align:left;">
+            <input type="button" value="<%= t('btn.execute_now')%>" onclick="onExecNowFiltersClicked(this);">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= raw(t('mail_filter.execute_now_info')) %>');">
+          </td>
+          <td style="text-align:center;" nowrap>
+          </td>
+          <td style="text-align:right;" nowrap>
+            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <span style="color:silver;">|</span>
+            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
+          </td>
+         </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%
+=begin
+%>
+# <table style="width:100%;" cellpadding="0" cellspacing="0">
+#   <tr>
+#     <td class="pagination_td" style="text-align:center;">
+#       <%= t('cap.total') %><%= t('mail_filter', :count => @total_num) %>
+#       <%
+#       prms = ApplicationHelper.dup_hash(params)
+#       prms.delete('authenticity_token')
+#       prms.delete('check_filter')
+#       prms['action'] = 'list'
+#       pagination = will_paginate(@filter_pages, :params => prms)
+#       pagination = ApplicationHelper.custom_pagination(pagination)
+#       %>
+#       <%= raw(pagination) %>
+#     </td>
+#   </tr>
+#   <tr style="height:10px;"><td></td></tr>
+# </table>
+<%
+=end
+%>
+
+<div class="base_list" id="div_filters">
+<table id="list_filters" style="width:100%;" cellpadding="0" cellspacing="1">
+  <tr>
+    <th style="width:5%; background-color:#d6ecfa;" nowrap><%= MailFilter.human_attribute_name('xorder') %><!-- <span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span> --></th>
+    <th style="width:80%; background-color:#d6ecfa;" nowrap><%= MailFilter.human_attribute_name('title') %><!-- <span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span> --></th>
+    <th style="width:15s%; background-color:#d6ecfa;" nowrap><%= MailFilter.human_attribute_name('enabled') %><!-- <span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('enabled', @sort_col, @sort_type)) %></span> --></th>
+  <!--
+    <th class="list_sort" style="width:80%;" nowrap onclick="sortList('title')"><%= MailFilter.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('enabled')"><%= MailFilter.human_attribute_name('enabled') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('enabled', @sort_col, @sort_type)) %></span></th>
+  -->
+  </tr>
+<% @filters.each_with_index do |filter, idx|  %>
+  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
+  <tr style="height:33px;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;">
+      <%= (idx+1) %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+      <a class="a_underline" href="this.onclick();" onclick="showFilterEdit(<%= filter.id %>, '<%= ApplicationHelper.h_s_quote(truncate(filter.title, :length => 20)) %>'); return false;">
+        <%= truncate(filter.title, :length => 30) %>
+      </a>
+    </td>
+    <td class="<%= td_class %>" style="text-align:center;">
+      <% if filter.enabled %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" />
+      <% else %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif" />
+      <% end %>
+    </td>
+    <td class="<%= td_class %>" nowrap style="width:20px; text-align:center;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="showFilterEdit(<%= filter.id %>, '<%= ApplicationHelper.h_s_quote(truncate(filter.title, :length => 20)) %>');" />
+    </td>
+    <td class="<%= td_class %>" style="width:20px; text-align:center;">
+      <%= check_box(:check_filter, filter.id, :class => 'check_filter') %>
+    </td>
+  </tr>
+<% end %>
+</table>
+</div>
+
+<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<%= hidden_field_tag('sort_type', params[:sort_type]) %>
+
+</form>
+
+
+<%= render(:partial => 'common/flash_notice') %>
+
+<script type="text/javascript">
+
+doUpdateFiltersList = function()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                document.form_filters.parentNode,
+                "<%= url_for(:controller => 'mail_filters', :action => 'list') %>",
+                {
+                  method: "get",
+                  parameters: Form.serialize(document.form_filters),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){
+                    thetisBoxProgress.remove();
+                  }
+                }
+              );
+}
+
+onOptionChangedFilters = function(elem)
+{
+  if (elem.id == "mail_account_id") {
+    doUpdateFiltersList();
+  }
+}
+
+thetisBoxFiltersOrder = null;
+
+onOrderFiltersClicked = function(elem)
+{
+  if (thetisBoxFiltersOrder != null) {
+    thetisBoxFiltersOrder.remove();
+    thetisBoxFiltersOrder = null;
+  }
+  thetisBoxFiltersOrder = new ThetisBox;
+
+  var addParams = new Array();
+  addParams.push("mail_account_id="+_z("mail_account_id").value);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for(:controller => 'mail_filters', :action => 'get_order') %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                parameters:addParams.join("&"),
+                onComplete:function(request){
+                  thetisBoxProgress.remove();
+
+                  thetisBoxFiltersOrder.title = "<%= t('btn.order') %>";
+                  thetisBoxFiltersOrder.show(
+                            "CENTER",
+                            "480,+280",
+                            "TRAY",
+                            "",
+                            "",
+                            request.responseText.stripScripts()
+                          );
+                  request.responseText.evalScripts();
+                }
+              }
+            );
+}
+
+onExecNowFiltersClicked = function(elem)
+{
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (!folder_id || mail_account_id != _z("mail_account_id").value) {
+    msg("<%= t('mail_filter.specify_folder_to_filter') %>");
+    return;
+  }
+
+  confm("<%= t('mail_filter.confirm_to_execute_now') %>", "doExecNowFilters("+mail_account_id+", "+folder_id+")");
+}
+
+doExecNowFilters = function(mail_account_id, folder_id)
+{
+  var addParams = new Array();
+  addParams.push("mail_account_id="+mail_account_id);
+  addParams.push("mail_folder_id="+folder_id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Request(
+              "<%= url_for(:controller => 'mail_filters', :action => 'do_execute') %>",
+              {
+                method:"get",
+                asynchronous:true,
+                evalScripts:true,
+                parameters:addParams.join("&"),
+                onComplete:function(request){
+                  thetisBoxProgress.remove();
+
+                  if (thetisBoxFilters){
+                    thetisBoxFilters.setOnClose("doUpdateMails(null, false)");
+                  }
+
+                  if (request.responseText == "") {
+                    tips("<%= t('msg.execute_success')%>");
+                  } else {
+                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
+                  }
+                }
+              }
+            );
+}
+
+selectAll = function()
+{
+  var elems = document.getElementsByClassName("check_filter", document.form_filters);
+  var all_selected = true;
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (!elems[i].checked) {
+      all_selected = false;
+      break;
+    }
+  }
+  for (var i=0; elems != null && i < elems.length; i++) {
+    elems[i].checked = !all_selected;
+  }
+}
+
+doDelete = function()
+{
+  var elems = document.getElementsByClassName("check_filter", document.form_filters);
+  var count=0;
+  for (var i=0; elems!=null && i<elems.length; i++) {
+    if (elems[i].checked) {
+      count++;
+    }
+  }
+  if (count <= 0) {
+    return;
+  }
+  confm(count+"<%= t('mail_filter.confirm_delete') %>", "_doDelete()");
+}
+
+_doDelete = function()
+{
+  addInputHidden(document.form_filters, null, "authenticity_token", "<%= form_authenticity_token %>");
+  document.form_filters.action = "<%= url_for(:controller => 'mail_filters', :action => 'destroy') %>";
+  document.form_filters.method = "post";
+  document.form_filters.submit();
+
+  prog("TOP-RIGHT");
+}
+
+
+sortList = function(col)
+{
+  var type = "<%= @sort_type %>";
+  
+  if (col == "<%= @sort_col %>") {
+    type = (type == "ASC") ? "DESC" : "ASC";
+  }
+
+  document.form_filters.sort_col.value = col;
+  document.form_filters.sort_type.value = type;
+  document.form_filters.submit();
+  prog("TOP-RIGHT");
+}
+
+doRegisterFilter = function(frm)
+{
+  prog("TOP-RIGHT");
+  frm.submit();
+}
+
+showFilter = function(mail_filter_id, mail_filter_title)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.bgcolor_title = "#8486e0";
+  thetisBox.bgcolor_body = "#a5baff";
+
+  var addParams = new Array();
+  addParams.push("id="+mail_filter_id);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'show') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + mail_filter_title;
+                thetisBox.overflow = "auto";
+                if (thetisBoxFilters) {
+                  thetisBoxFilters.addChildBox(thetisBox);
+                }
+                thetisBox.show(
+                          "CENTER",
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+thetisBoxFilterEdit = null;
+
+showFilterNew = function()
+{
+  if (thetisBoxFilterEdit) {
+    thetisBoxFilterEdit.remove();
+    thetisBoxFilterEdit = null;
+  }
+
+  var addParams = new Array();
+  addParams.push("mail_account_id="+_z("mail_account_id").value);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'new') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxFilterEdit = new ThetisBox;
+                thetisBoxFilterEdit.resizable = true;
+                thetisBoxFilterEdit.bgcolor_title = "#8486e0";
+                thetisBoxFilterEdit.bgcolor_body = "#a5baff";
+                thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('mail_filter.new') %>";
+                thetisBoxFilterEdit.overflow = "auto";
+                if (thetisBoxFilters) {
+                  thetisBoxFilters.addChildBox(thetisBoxFilterEdit);
+                }
+                thetisBoxFilterEdit.show(
+                          "CENTER",
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+showFilterEdit = function(mail_filter_id, mail_filter_title)
+{
+  if (thetisBoxFilterEdit) {
+    thetisBoxFilterEdit.remove();
+    thetisBoxFilterEdit = null;
+  }
+
+  var addParams = new Array();
+  addParams.push("id="+mail_filter_id);
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'edit') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxFilterEdit = new ThetisBox;
+                thetisBoxFilterEdit.resizable = true;
+                thetisBoxFilterEdit.bgcolor_title = "#8486e0";
+                thetisBoxFilterEdit.bgcolor_body = "#a5baff";
+                thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + mail_filter_title;
+                thetisBoxFilterEdit.overflow = "auto";
+                if (thetisBoxFilters) {
+                  thetisBoxFilters.addChildBox(thetisBoxFilterEdit);
+                }
+                thetisBoxFilterEdit.show(
+                          "CENTER",
+                          Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+</script>
+

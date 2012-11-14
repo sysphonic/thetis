@@ -1,0 +1,216 @@
+<%
+params[:mail_filter] ||= {}
+
+if params[:mail_account_id].blank?
+  mail_account_id = @mail_filter.mail_account_id unless @mail_filter.nil?
+else
+  mail_account_id = params[:mail_account_id]
+end
+mail_account = MailAccount.find_by_id(mail_account_id)
+%>
+
+<%= render(:partial => 'common/error', :locals => {:obj => @mail_filter}) %>
+
+<table style="width:100%; margin-top:5px;" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="info_section_header">
+      <%= t('cap.basic_info') %>
+    </td>
+  </tr>
+</table>
+
+<table align="center" style="width:90%; padding:10px 0px;" cellpadding="0" cellspacing="2">
+  <tr>
+    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+      <%= MailAccount.model_name.human %>
+    </td>
+    <td class="item_value_td">
+      <%= mail_account.title %>
+    </td>
+  </tr>
+  <tr>
+    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+      <label for="mail_filter_title"><%= MailFilter.human_attribute_name('title') %></label>
+    </td>
+    <td class="item_value_td">
+      <%= text_field('mail_filter', 'title', :style => 'width:90%') %><sup style="color:red">*</sup>
+    </td>
+  </tr>
+  <tr>
+    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+      <label for="mail_filter_triggers"><%= t('mail_filter.trigger.cap') %></label>
+    </td>
+    <td class="item_value_td">
+      <%
+      opts = []
+      opts << [t('mail_filter.trigger.checking_and_manual'), "|#{MailFilter::TRIGGER_CHECKING}|#{MailFilter::TRIGGER_MANUAL}|"]
+      opts << [t('mail_filter.trigger.checking'), "|#{MailFilter::TRIGGER_CHECKING}|"]
+      opts << [t('mail_filter.trigger.manual'), "|#{MailFilter::TRIGGER_MANUAL}|"]
+      %>
+      <%= select_tag('mail_filter[triggers]', options_for_select(opts, (@mail_filter.nil?)?(nil):(@mail_filter.triggers)), :style => 'min-width:150px;') %>
+    </td>
+  </tr>
+  <tr style="height:5px;"><td></td></tr>
+  <tr>
+    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+      <%= t('cap.enabled_disabled') %>
+    </td>
+    <td class="item_value_td">
+      <%
+      checked = (@mail_filter.nil? or @mail_filter.enabled)?'checked':''
+      %>
+      <input name="mail_filter[enabled]" type="hidden" value="0" />
+      <input type="checkbox" id="mail_filter_enabled" name="mail_filter[enabled]" value="1" <%= checked %>>
+      <label for="mail_filter_enabled"><%= MailFilter.human_attribute_name('enabled') %></label>
+    </td>
+  </tr>
+</table>
+
+<table style="width:100%; margin-top:5px;" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="info_section_header">
+      <%= t('mail_filter.condition.cap') %>
+    </td>
+  </tr>
+</table>
+
+<table align="center" style="width:90%; padding:10px 0px;" cellpadding="0" cellspacing="2">
+  <tr>
+    <td style="text-align:left;">
+      <%
+      opts = []
+      opts << [t('mail_filter.condition.combine.none'), :none]
+      opts << [t('mail_filter.condition.combine.and'), :and]
+      opts << [t('mail_filter.condition.combine.or'), :or]
+      %>
+      <%= select_tag('mail_filter[and_or]', options_for_select(opts, (@mail_filter.nil?)?(nil):(@mail_filter.and_or)), :id => 'mail_filter_and_or', :onchange => 'onOptionChangedFilter(this);', :style => 'min-width:150px;') %>
+    </td>
+  </tr>
+  <tr id="tr_filter_conditions" style="display:none;">
+    <td style="text-align:left;">
+      <div class="info_area" style="background-color:aliceblue; width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_value_td">
+              <div id="div_filter_conditions">
+                <%= render(:partial => 'ajax_conditions') %>
+              </div>
+
+              <div class="button_gray" style="float:right; margin-top:3px;" onclick="onFilterConditionAddClicked(this);">
+                <%= t('btn.add') %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<table style="width:100%; margin-top:5px;" cellspacing="0" cellpadding="0">
+  <tr>
+    <td class="info_section_header">
+      <%= t('mail_filter.action.cap') %>
+    </td>
+  </tr>
+</table>
+
+<table align="center" style="width:90%; padding:10px 0px;" cellpadding="0" cellspacing="2">
+  <tr>
+    <td style="text-align:left;">
+      <div class="info_area" style="background-color:aliceblue; width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_value_td">
+              <div id="div_filter_actions">
+                <%= render(:partial => 'ajax_actions') %>
+              </div>
+
+              <div class="button_gray" style="float:right; margin-top:3px;" onclick="onFilterActionAddClicked(this);">
+                <%= t('btn.add') %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<input type="hidden" name="mail_account_id" value="<%= mail_account_id %>" />
+<% unless @mail_filter.nil? %>
+<input type="hidden" name="id" value="<%= @mail_filter.id %>" />
+<% end %>
+
+
+<script type="text/javascript">
+
+onOptionChangedFilter = function(elem)
+{
+  if (elem.id == "mail_filter_and_or") {
+    var tr_filter_conditions = _z("tr_filter_conditions");
+    if (elem.value == "none") {
+      tr_filter_conditions.style.display = "none";
+    } else {
+      tr_filter_conditions.style.display = "";
+    }
+  }
+}
+onOptionChangedFilter(_z("mail_filter_and_or"));
+
+var conditionIdx = <%= (@mail_filter.nil?)?(0):(@mail_filter.get_conditions.length) %>;
+var actionIdx = <%= (@mail_filter.nil?)?(0):(@mail_filter.get_actions.length) %>;
+
+onFilterConditionAddClicked = function(elem)
+{
+  editFilterCondition(conditionIdx++, true);
+}
+
+onFilterActionAddClicked = function(elem)
+{
+  editFilterAction(actionIdx++, true);
+}
+
+onFilterConditionsOrderUpdated = function()
+{
+}
+
+onFilterActionsOrderUpdated = function()
+{
+}
+
+initSortableFilterCondition = function()
+{
+  Position.includeScrollOffsets = true;
+  Position.prepare();
+
+  //<![CDATA[
+  Sortable.create(
+        "div_filter_conditions",
+        {
+          onUpdate: onFilterConditionsOrderUpdated,
+          tag:"div"
+        }
+      );
+  //]]>
+}
+initSortableFilterCondition();
+
+initSortableFilterAction = function()
+{
+  Position.includeScrollOffsets = true;
+  Position.prepare();
+
+  //<![CDATA[
+  Sortable.create(
+        "div_filter_actions",
+        {
+          onUpdate: onFilterActionsOrderUpdated,
+          tag:"div"
+        }
+      );
+  //]]>
+}
+initSortableFilterAction();
+
+</script>

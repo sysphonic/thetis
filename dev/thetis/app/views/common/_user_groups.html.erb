@@ -7,17 +7,38 @@ unless @user_groups.nil?
 
   <% end %>
 
+<% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+  <%
+  mail_account = MailAccount.get_default_for(@login_user.id, nil)
+  %>
+  <%= render(:partial => 'send_mails/popup_func', :locals => {:mail_account_not_set => mail_account.nil?, :ctrl_mails_list_update => false}) %>
+<% end %>
+
 <script type="text/javascript">
 
-showUserGroups = function(user_name, groups, figure)
+showUserGroups = function(user_id, user_name, groups, figure)
 {
-  var info = "<%= t('group.plural') %><%= t('cap.suffix') %>";
-  info += "<div style='padding-left:20px;'>";
+  var content = "<%= t('group.plural') %><%= t('cap.suffix') %>";
+  content += "<div style=\"padding-left:20px;\">";
   var groupArray = groups.split(",");
   for (var i=0; i < groupArray.length; i++) {
-    info += _z("user_groups_"+groupArray[i]).innerHTML + "<br/>";
+    content += _z("user_groups_"+groupArray[i]).innerHTML + "<br/>";
   }
-  info += "</div>";
+  content += "</div>";
+
+<%
+if ($thetis_config[:menu]['disp_user_list'] == '1') \
+    and !@login_user.nil?
+%>
+  if (user_id != "<%= @login_user.id %>") {
+    content += "<div style=\"padding:10px 0px 5px;\">";
+    content += "  <a class=\"a_underline\" href=\"javascript:this.onclick()\" onclick=\"onSendMailUserGroupsClicked(this, '"+user_id+"'); return false;\">";
+    content += "    <img src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/mail.png\">";
+    content += "    <%= t('cap.send_mail') %>";
+    content += "  </a>";
+    content += "</div>";
+  }
+<% end %>
 
   if (figure == "") {
     figure = "user.gif";
@@ -26,11 +47,28 @@ showUserGroups = function(user_name, groups, figure)
   }
 
   var thetisBox = new ThetisBox;
+  thetisBox.button_ok = "<%= t('btn.close') %>";
   thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/"+figure+"'> " + user_name;
   thetisBox.bgcolor_title = "#22B9FE";
   thetisBox.bgcolor_body = "#C5EFFF";
-  thetisBox.show("CENTER", "", "MESSAGE", "", info, "");
+  thetisBox.show("CENTER", "", "MESSAGE", "", content, "");
 }
+
+<% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+onSendMailUserGroupsClicked = function(elem, user_id)
+{
+  var addParams = new Array();
+<% unless mail_account.nil? %>
+  addParams.push("mail_account_id=<%= mail_account.id %>");
+<% end %>
+  addParams.push("to_user_ids[]=" + user_id);
+
+  showMailForm(true, addParams);
+
+  var boxInstance = ThetisBox.getInstanceForElem(elem);
+  boxInstance.remove();
+}
+<% end %>
 
 </script>
 

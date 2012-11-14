@@ -1,16 +1,13 @@
-<% if params[:action] == 'query' %>
-<!-- $ADDRESSBOOK_QUERY:SHOW -->
-<% end %>
 
 <div style="padding:5px 15px; text-align:left;">
   <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= @address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@address.name, :length => 20)) %>', '<%= params[:admin] %>', this);" />
 </div>
 <div style="padding:0px 15px;">
 
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <td class="info_section_header">
-        <%= t('cap.basic_info') %>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= t('cap.basic_info') %></b>
       </td>
     </tr>
   </table>
@@ -107,10 +104,10 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
    or (!@address.organization.nil? and !@address.organization.empty?) \
    or (!@address.title.nil? and !@address.title.empty?)
 %>
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <td class="info_section_header">
-        <%= Address.human_attribute_name('address') %>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= Address.human_attribute_name('address') %></b>
       </td>
     </tr>
   </table>
@@ -181,10 +178,10 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
 <%
 if (!@address.memo.nil? and !@address.memo.empty?)
 %>
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <td class="info_section_header">
-        <%= Address.human_attribute_name('memo') %>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= Address.human_attribute_name('memo') %></b>
       </td>
     </tr>
   </table>
@@ -203,10 +200,10 @@ if (!@address.memo.nil? and !@address.memo.empty?)
   </table>
 <% end %>
 
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <td class="info_section_header">
-        <%= t('schedule.scope') %>
+      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+        <b><%= t('schedule.scope') %></b>
       </td>
     </tr>
   </table>

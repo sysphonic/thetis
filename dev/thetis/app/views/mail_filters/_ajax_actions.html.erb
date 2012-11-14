@@ -1,0 +1,129 @@
+
+<%
+unless @mail_filter.nil? or @mail_filter.actions.nil?
+
+  opts_verb = MailFiltersHelper.opts_action_verb(false)
+
+  actions = @mail_filter.get_actions
+  actions.each_with_index do |entry, idx|
+    verb, val = entry
+
+    opt_verb = opts_verb.find{|opt| opt.last == verb}
+    disp_verb = (opt_verb.nil?)?(nil):(opt_verb.first)
+
+    disp_val = val
+    disp_title = nil
+    if verb == 'move'
+      unless val.blank?
+        @folders_cache ||= {}
+        @folder_obj_cache ||= {}
+        path = MailFolder.get_path(val, @folders_cache, @folder_obj_cache)
+        disp_val = path.split('/').last
+        disp_title = path
+      end
+    end
+
+    disp = "#{disp_verb}"
+    unless disp_val.nil? or disp_val.empty?
+      disp << ": #{disp_val}"
+    end
+%>
+<div class="filter_action_entry" id="div_filter_action<%= idx %>" style="height:18px; padding:4px 0px;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+  <span title="<%= disp_title %>"><%= disp %></span>
+  &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editFilterAction('<%= idx %>', false);" />
+  &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="deleteFilterAction('<%= idx %>');" />
+  <input type="hidden" id="filter_action<%= idx %>" name="filter_action[<%= idx %>]" value="<%= [verb, val].join("\n") %>" />
+</div>
+<%
+  end
+end
+%>
+
+<script type="text/javascript">
+
+getFilterActionEntryHtml = function(disp, verb, val, action_id, reqDivTag)
+{
+  var content = "";
+  if (reqDivTag) {
+    content += "<div class=\"filter_action_entry\" id=\"div_filter_action"+action_id+"\" style=\"height:18px; padding:4px 0px;\">";
+  }
+  content += "  <img src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif\" title=\"<%= t('msg.drag_to_change_orger') %>\" style=\"cursor:move\" />";
+  content += "  " + disp;
+  content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif\" title=\"<%= t('btn.edit') %>\" onclick=\"editFilterAction('"+action_id+"', false);\" />";
+  content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif\" title=\"<%= t('btn.delete') %>\" onclick=\"deleteFilterAction('"+action_id+"'); return false;\" />";
+  content += "  <input type=\"hidden\" id=\"filter_action"+action_id+"\" name=\"filter_action["+action_id+"]\" value=\""+new Array(verb, val).join("\n")+"\" />";
+  if (reqDivTag) {
+    content += "</div>";
+  }
+
+  return content;
+}
+
+thetisBoxFilterAction = null;
+
+editFilterAction = function(action_id, isNew)
+{
+  if (thetisBoxFilterAction) {
+    thetisBoxFilterAction.remove();
+    thetisBoxFilterAction = null;
+  }
+
+  var addParams = new Array();
+  addParams.push("action_id="+action_id);
+
+  if (!isNew) {
+    var vals = _z("filter_action"+action_id).value.split("\n");
+    var verb = vals[0];
+    var val = vals[1];
+
+    addParams.push("verb="+verb);
+    addParams.push("val="+val);
+  }
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'edit_action') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxFilterAction = new ThetisBox;
+                thetisBoxFilterAction.bgcolor_title = "#8486e0";
+                thetisBoxFilterAction.bgcolor_body = "#a5baff";
+                thetisBoxFilterAction.title = "<%= t('mail_filter.action.cap') %>";
+                if (thetisBoxFilterEdit) {
+                  thetisBoxFilterEdit.addChildBox(thetisBoxFilterAction);
+                }
+                thetisBoxFilterAction.show(
+                          "CENTER",
+                          "620,180",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+deleteFilterAction = function(action_id)
+{
+  var div_filter_action = _z("div_filter_action"+action_id);
+  if (div_filter_action) {
+    removeElem(div_filter_action);
+  }
+}
+
+getFilterActionsOrderParams = function()
+{
+  return Sortable.serialize("div_filter_actions", { name: "filter_actions_order" });
+}
+
+</script>

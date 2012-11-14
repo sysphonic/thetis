@@ -118,7 +118,7 @@ unless @locations.nil?
     <%
     unless u_groups.empty?
     %>
-    <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+    <a href="#" onclick="showUserGroups('<%= location.user_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
     <% end %>
       <% if is_target %><b style="color:red;"><% end %>
       <%= truncate(user_name, :length => 30) %>

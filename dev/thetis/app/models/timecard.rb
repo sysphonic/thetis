@@ -18,7 +18,7 @@ class Timecard < ActiveRecord::Base
 
   belongs_to(:user)
 
-  require RAILS_ROOT+'/lib/util/util_datetime'
+  require ::Rails.root.to_s+'/lib/util/util_datetime'
 
   public::BGCOLOR_HOLIDAY = '#FFCCCB'
   public::BGCOLOR_SUN = '#FFCCCB'

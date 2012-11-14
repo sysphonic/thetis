@@ -88,7 +88,7 @@
           <tr>
             <td align="right" valign="middle" style="cursor:move;">
             <% if item_attachments.length > 1 %>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
             <td class="img_td" align="center" style="padding-left:5px; padding-right:5px; cursor:move;">
@@ -166,7 +166,7 @@ editAttachInfo = function(attach_id, attach_name)
             evalScripts:true,
             onComplete:function(request) {
                 thetisBoxAttachInfo.title = attach_name;
-                thetisBoxAttachInfo.show("CENTER", "520,400", "TRAY", "", "", request.responseText.stripScripts());
+                thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
               }
@@ -190,7 +190,10 @@ onAttachInfoOK = function()
           function(){
               setTimeout(setSortableAttach, 100);
               thetisBoxProgress.remove();
-              thetisBoxAttachInfo.remove();
+              var boxInstance = ThetisBox.getInstanceForElem(btnOk);
+              if (boxInstance) {
+                boxInstance.remove();
+              }
               tips("<%= t('msg.update_success')%>");
           },
           function(){
@@ -204,7 +207,10 @@ onAttachInfoOK = function()
 
 onAttachInfoCancel = function()
 {
-  thetisBoxAttachInfo.remove();
+  var boxInstance = ThetisBox.getInstanceForElem(document.form_attachment_info);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
 }
 
 doDeleteAttach = function(attach_id, title)

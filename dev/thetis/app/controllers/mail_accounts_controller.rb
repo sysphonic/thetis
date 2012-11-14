@@ -109,8 +109,8 @@ class MailAccountsController < ApplicationController
     @mail_account = MailAccount.find(params[:id])
 
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
-      params[:mail_account].delete :smtp_username
-      params[:mail_account].delete :smtp_password
+      params[:mail_account].delete(:smtp_username)
+      params[:mail_account].delete(:smtp_password)
     end
 
     if @mail_account.update_attributes(params[:mail_account])

@@ -16,25 +16,34 @@
 class Equipment < ActiveRecord::Base
   attr_accessible(:name, :note, :users, :groups, :teams)
 
+  extend CachedRecord
+
   validates_presence_of(:name)
 
   #=== self.get_name
   #
   #Gets Equipment name.
   #
+  #_equipment_id_:: Target Equipment-ID
+  #_name_cache_:: Hash to accelerate response. {equipment.id, equipment_name}
+  #_obj_cache_:: Hash to accelerate response. {equipment.id, equipment}
   #return:: Equipment name.
   #
-  def self.get_name(equipment_id)
+  def self.get_name(equipment_id, name_cache=nil, obj_cache=nil)
 
-    begin
-      equipment = Equipment.find(equipment_id)
-    rescue
-    end
+    equipment = Equipment.find_with_cache(equipment_id, obj_cache)
+
     if equipment.nil?
-      return equipment_id.to_s + ' '+ I18n.t('paren.deleted')
+      equip_name = equipment_id.to_s + ' '+ I18n.t('paren.deleted')
     else
-      return equipment.name
+      equip_name = equipment.name
     end
+
+    unless name_cache.nil?
+      name_cache[equipment_id.to_i] = equip_name
+    end
+
+    return equip_name
   end
 
   #=== get_users_a

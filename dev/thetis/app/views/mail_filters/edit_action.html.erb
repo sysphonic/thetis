@@ -1,0 +1,192 @@
+<%
+form_idx = Time.now.to_f.to_s.gsub('.', '_')
+
+verb = params[:verb]
+val = params[:val]
+%>
+
+<%= form_tag({:controller => 'mail_filters', :action => 'update_action', :id => (@mail_filter.nil?)?(nil):(@mail_filter.id)}, :method => 'post', :name => 'form_filter_action'+form_idx) %>
+
+<table align="center" style="width:90%; padding:15px 15px;" cellpadding="0" cellspacing="2">
+  <tr>
+    <td class="item_value_td" style="width:40%">
+      <%
+      opts = MailFiltersHelper.opts_action_verb(true)
+      %>
+      <%= select_tag('filter_action_verb', options_for_select(opts, verb), :style => 'min-width:150px;', :onchange => 'onFilterActionOptionChanged(this);') %>
+    </td>
+    <td class="item_value_td" style="width:60%">
+      <div id="filter_action_dest">
+        <div class="button_gray" style="display:inline-block;" onclick="showFolderTreeToSelect('');">
+          <%= t('btn.select_folder') %>
+        </div>
+        <%
+        unless val.blank?
+          @folders_cache ||= {}
+          @folder_obj_cache ||= {}
+          path = MailFolder.get_path(val, @folders_cache, @folder_obj_cache)
+        end
+        %>
+        <nobr id="filter_action_dest_path" style="display:inline-block;" nowrap><%= path %></nobr>
+        <input type="hidden" id="filter_action_dest_folder_id" name="filter_action_dest_folder_id" value="<%= val %>" />
+      </div>
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+  <tr>
+    <td style="text-align:center;">
+      <input type="button" id="btn_filter_action_ok" value="<%= t('btn.ok')%>" style="width:90px; height:25px;" onclick="onFilterActionOkClicked(this);" />
+    </td>
+    <td style="min-width:15px; width:15px;"></td>
+    <td style="text-align:center;">
+      <input type="button" id="btn_filter_action_cancel" value="<%= t('btn.cancel')%>" style="width:90px; height:25px;" onclick="onFilterActionCancelClicked(this);" />
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+onFilterActionOptionChanged = function(elem, keepVal)
+{
+  if (elem.style.display == "none") {
+    return;
+  }
+
+  if (elem.name == "filter_action_verb") {
+    var filter_action_dest = _z("filter_action_dest");
+    filter_action_dest.style.display = "none";
+
+    if (!keepVal) {
+      var filter_action_dest_folder_id = _z("filter_action_dest_folder_id");
+      var filter_action_dest_path = _z("filter_action_dest_path");
+      filter_action_dest_folder_id.value = "";
+      filter_action_dest_path.innerHTML = "";
+    }
+
+    switch (elem.value) {
+      case "move":
+        filter_action_dest.style.display = "";
+        break;
+    }
+  }
+
+  removeOptionNotSelected(elem);
+}
+onFilterActionOptionChanged(_z("filter_action_verb"), true);
+
+var thetisBoxFilterActionFolderTree = null
+
+showFolderTreeToSelect = function(folder_id)
+{
+  thetisBoxFilterActionFolderTree = new ThetisBox;
+  if (thetisBoxFilterAction) {
+    thetisBoxFilterAction.addChildBox(thetisBoxFilterActionFolderTree);
+  }
+
+  var addParams = new Array();
+
+  thetisBoxFilterActionFolderTree.setAdditionalParams(addParams);
+  thetisBoxFilterActionFolderTree.setFormTag("<form action=\"#\" method=\"get\" onsubmit=\"onFilterActionTreeDestSelected(this); return false;\">");
+  thetisBoxFilterActionFolderTree.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest') %>", "");
+  thetisBoxFilterActionFolderTree.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>", folder_id);
+}
+
+onFilterActionTreeDestSelected = function(frmTree)
+{
+  var folder_id = thetisBoxFilterActionFolderTree.getTreeSelect();
+  var fullPath = ThetisBox.getTreeFullPath("thetisBoxTree-"+ thetisBoxFilterActionFolderTree.id, folder_id);
+  var m = fullPath.match(/^[/]?[^/]+(.+)/);   // Omit User-name
+  fullPath = m[1];
+
+  var filter_action_dest_folder_id = _z("filter_action_dest_folder_id");
+  var filter_action_dest_path = _z("filter_action_dest_path");
+  filter_action_dest_path.innerHTML = fullPath;
+  filter_action_dest_folder_id.value = folder_id;
+}
+
+checkIndispensablesFilterAction = function()
+{
+  var filter_action_verb = _z("filter_action_verb");
+  var filter_action_dest_folder_id = _z("filter_action_dest_folder_id");
+
+  var verb = filter_action_verb.value;
+
+  if (verb == "move" && filter_action_dest_folder_id.value == "") {
+    var thetisBox = msg("<%= t('msg.specify_all_indispensable') %>");
+    //thetisBox.setOnClose(
+    //    function() {
+    //      elem.focus();
+    //    }
+    //  );
+    return false;
+  }
+  return true;
+}
+
+onFilterActionOkClicked = function(elem)
+{
+  var frm = document.form_filter_action<%= form_idx %>;
+  var btn_filter_action_ok = _z("btn_filter_action_ok");
+  var btn_filter_action_cancel = _z("btn_filter_action_cancel");
+  btn_filter_action_ok.disabled = true;
+  btn_filter_action_cancel.disabled = true;
+
+  if (!checkIndispensablesFilterAction()) {
+    btn_filter_action_ok.disabled = false;
+    btn_filter_action_cancel.disabled = false;
+    return false;
+  }
+
+  var filter_action_verb = _z("filter_action_verb");
+  var filter_action_dest = _z("filter_action_dest");
+  var filter_action_dest_folder_id = _z("filter_action_dest_folder_id");
+  var filter_action_dest_path = _z("filter_action_dest_path");
+
+  var verb = filter_action_verb.value;
+  var val = null;
+  var dispVal = null;
+
+  if (verb == "move") {
+    val = filter_action_dest_folder_id.value;
+    dispVal = filter_action_dest_path.innerHTML;
+    var m = dispVal.match(/[^/]+$/);   // Extract last folder name
+    dispVal = m[0];
+  }
+
+  var disp = getListSelected(filter_action_verb, true)[0];
+  if (dispVal != null) {
+    disp += ": " + dispVal;
+  }
+
+  var div_filter_actions = _z("div_filter_actions");
+  var action_id = "<%= params[:action_id] %>";
+
+  var div_filter_action = _z("div_filter_action"+action_id);
+  if (div_filter_action) {
+    div_filter_action.innerHTML = getFilterActionEntryHtml(disp, verb, val, action_id, false);
+  } else {
+    div_filter_actions.innerHTML += getFilterActionEntryHtml(disp, verb, val, action_id, true);
+  }
+
+  initSortableFilterAction();
+
+  var boxInstance = ThetisBox.getInstanceForElem(elem);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
+}
+
+onFilterActionCancelClicked = function(elem)
+{
+  var boxInstance = ThetisBox.getInstanceForElem(elem);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
+}
+
+</script>

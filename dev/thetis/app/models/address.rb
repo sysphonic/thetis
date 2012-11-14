@@ -25,6 +25,28 @@ class Address < ActiveRecord::Base
   public::EXP_IMP_FOR_ALL = 'all'
 
 
+  #=== self.get_by_email
+  #
+  #Get an Array of Addresses with specified email.
+  #
+  #_mail_addr_:: Target E-mail address.
+  #_user_:: Target User.
+  #_book_:: Book type.
+  #return:: Array of Addresses.
+  #
+  def self.get_by_email(mail_addr, user, book=Address::BOOK_BOTH)
+
+    email_con = []
+    email_con.push("(email1='#{mail_addr}')")
+    email_con.push("(email2='#{mail_addr}')")
+    email_con.push("(email3='#{mail_addr}')")
+    con = []
+    con.push('('+email_con.join(' or ')+')')
+    con.push(AddressbookHelper.get_scope_condition_for(user, book))
+
+    return Address.find(:all, :conditions => con.join(' and '))
+  end
+
   #=== self.find_all
   #
   #Finds all Addresses in order to display with specified condition.

@@ -140,7 +140,7 @@ class Email < ActiveRecord::Base
     if self.to_addresses.nil? or self.to_addresses.empty?
       email_to = nil
     else
-      email_to = self.to_addresses.split(Email::ADDRESS_SEPARATOR)
+      email_to = self.get_to_addresses
       recipients.concat(email_to)
       email_to.map! { |addr|
         EmailsHelper.encode_disp_name(addr)
@@ -149,7 +149,7 @@ class Email < ActiveRecord::Base
     if self.cc_addresses.nil? or self.cc_addresses.empty?
       email_cc = nil
     else
-      email_cc = self.cc_addresses.split(Email::ADDRESS_SEPARATOR)
+      email_cc = self.get_cc_addresses
       recipients.concat(email_cc)
       email_cc.map! { |addr|
         EmailsHelper.encode_disp_name(addr)
@@ -158,7 +158,7 @@ class Email < ActiveRecord::Base
     if self.bcc_addresses.nil? or self.bcc_addresses.empty?
       email_bcc = nil
     else
-      email_bcc = self.bcc_addresses.split(Email::ADDRESS_SEPARATOR)
+      email_bcc = self.get_bcc_addresses
       recipients.concat(email_bcc)
     end
 
@@ -270,11 +270,11 @@ EOT
   #Does pop E-mails from server.
   #
   #_mail_account_:: MailAccount to pop E-mails.
-  #return:: Count of handled E-mails.
+  #return:: Array of handled E-mails.
   #
   def self.do_pop(mail_account)
 
-    return -1 if mail_account.nil?
+    return nil if mail_account.nil?
 
     pop = Net::POP3.APOP(mail_account.pop_secure_auth).new(mail_account.pop_server, mail_account.pop_port)
     if mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_SSL_TLS
@@ -282,7 +282,7 @@ EOT
     end
     pop.start(mail_account.pop_username, mail_account.pop_password)
 
-    cnt = 0
+    emails = []
     new_uidl = []
 
     pop.mails.select { |svr_mail|
@@ -311,7 +311,7 @@ EOT
         svr_mail.delete
       end
 
-      cnt += 1
+      emails << email
     end
 
     pop.finish
@@ -325,7 +325,7 @@ EOT
       Email.trim_by_capacity(mail_account.user_id, mail_account.id, THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT)
     end
 
-    return cnt
+    return emails
   end
 
   #=== self.parse_mail
@@ -425,6 +425,36 @@ EOT
     end
 
     self.message = message
+  end
+
+  #=== get_to_addresses
+  #
+  #Gets an Array of To-addresses.
+  #
+  def get_to_addresses
+
+    return [] if self.to_addresses.nil?
+    return self.to_addresses.split(Email::ADDRESS_SEPARATOR)
+  end
+
+  #=== get_cc_addresses
+  #
+  #Gets an Array of Cc-addresses.
+  #
+  def get_cc_addresses
+
+    return [] if self.cc_addresses.nil?
+    return self.cc_addresses.split(Email::ADDRESS_SEPARATOR)
+  end
+
+  #=== get_bcc_addresses
+  #
+  #Gets an Array of Bcc-addresses.
+  #
+  def get_bcc_addresses
+
+    return [] if self.bcc_addresses.nil?
+    return self.bcc_addresses.split(Email::ADDRESS_SEPARATOR)
   end
 
   #=== save_files
@@ -652,20 +682,8 @@ EOT
   #return:: Expression of sent-at.
   #
   def get_sent_at_exp(req_full=true)
-    if self.sent_at.nil?
-      return '---'
-    else
-      if req_full
-        format = THETIS_DATE_FORMAT_YMD+' %H:%M'
-      else
-        if UtilDate.create(self.sent_at).get_date == Date.today
-          format = '%H:%M'
-        else
-          format = THETIS_DATE_FORMAT_YMD
-        end
-      end
-      return self.sent_at.strftime(format)
-    end
+
+    return self.get_timestamp_exp(req_full, :sent_at)
   end
 
   #=== self.destroy

@@ -24,7 +24,7 @@ module ConfigHelper
   #
   def self.save_img(file_name, file)
 
-    path = RAILS_ROOT + '/public/images/custom/' + file_name
+    path = ::Rails.root.to_s + '/public/images/custom/' + file_name
 
     mode = ApplicationHelper.f_chmod 0666, path
     File.open(path, 'wb') { |f| f.write(file.read) }
@@ -40,7 +40,7 @@ module ConfigHelper
   #
   def self.save_html(file_name, file)
 
-    path = RAILS_ROOT + '/public/custom/' + file_name
+    path = ::Rails.root.to_s + '/public/custom/' + file_name
 
     mode = ApplicationHelper.f_chmod 0666, path
     File.open(path, 'wb') { |f| f.write(file.read) }

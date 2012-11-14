@@ -16,7 +16,7 @@
 class Schedule < ActiveRecord::Base
   attr_accessible(:title, :detail, :users, :equipment, :start, :end, :scope, :repeat_start, :repeat_end, :repeat_rule, :except, :allday, :items, :xtype, :groups, :teams)
 
-  require RAILS_ROOT+'/lib/util/util_date'
+  require ::Rails.root.to_s+'/lib/util/util_date'
 
   validates_presence_of(:title)
 
@@ -63,6 +63,53 @@ class Schedule < ActiveRecord::Base
   def scope_colors
 
     return Schedule.scope_colors(self.scope)
+  end
+
+  #=== self._date_form
+  #
+  #Gets date expression in the specified date format.
+  #_obj_:: ActionRecord instance or Date.
+  #_attr_:: Attribute name of ActionRecord specified above.
+  #_format_:: Format to apply.
+  #return:: Date expression in the specified date format.
+  #
+  def self._date_form(obj, attr=nil, format=nil)
+
+    format ||= THETIS_DATE_FORMAT_YMD
+
+    if attr.nil?
+      return obj.strftime(format)
+    else
+      unless obj.nil?
+        date = obj.send(attr)
+        return date.strftime(format) unless date.nil?
+      end
+    end
+    return nil
+  end
+
+  #=== self.sys_date_form
+  #
+  #Gets date expression in system date format.
+  #_obj_:: ActionRecord instance or Date.
+  #_attr_:: Attribute name of ActionRecord specified above.
+  #return:: Date expression in system date format.
+  #
+  def self.sys_date_form(obj, attr=nil)
+
+    return Schedule._date_form(obj, attr, Schedule::SYS_DATE_FORM)
+  end
+
+  #=== self.disp_date_form
+  #
+  #Gets date expression in display date format.
+  #_obj_:: ActionRecord instance or Date.
+  #_attr_:: Attribute name of ActionRecord specified above.
+  #return:: Date expression in display date format.
+  #
+  def self.disp_date_form(obj, attr=nil)
+
+    return Schedule._date_form(obj, attr, THETIS_DATE_FORMAT_YMD)
   end
 
   #=== self.wday_name

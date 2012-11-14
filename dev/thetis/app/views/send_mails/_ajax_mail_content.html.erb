@@ -33,36 +33,16 @@
         <tr>
           <td align="center" nowrap>
             <select id="addresses_selected" name="addresses[]" class="select_multi" size="5" multiple="multiple">
-            <%
-            unless @email.nil?
-            %>
-              <%
-              unless @email.to_addresses.nil?
-                @email.to_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
-              %>
+            <% unless @email.nil? %>
+              <% @email.get_to_addresses.each do |addr| %>
               <option value="<%= Email::ADDR_PREFIX_TO %><%= addr %>"><%= t('cap.to') %> <%= addr %></option>
-              <%
-                end
-              end
-              %>
-              <%
-              unless @email.cc_addresses.nil?
-                @email.cc_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
-              %>
+              <% end %>
+              <% @email.get_cc_addresses.each do |addr| %>
               <option value="<%= Email::ADDR_PREFIX_CC %><%= addr %>"><%= t('cap.cc') %> <%= addr %></option>
-              <%
-                end
-              end
-              %>
-              <%
-              unless @email.bcc_addresses.nil?
-                @email.bcc_addresses.split(Email::ADDRESS_SEPARATOR).each do |addr|
-              %>
+              <% end %>
+              <% @email.get_bcc_addresses.each do |addr| %>
               <option value="<%= Email::ADDR_PREFIX_BCC %><%= addr %>"><%= t('cap.bcc') %> <%= addr %></option>
-              <%
-                end
-              end
-              %>
+              <% end %>
             <% end %>
             </select>
           </td>

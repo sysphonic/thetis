@@ -19,44 +19,47 @@ module AddressbookHelper
   #
   #Arranges parameters per scope specification.
   #
-  #_prms_:: Request parameters.
+  #_address_:: Target Address.
   #_user_:: Login User.
-  #return:: true if succeeded, false otherwise.
+  #_scope_:: Scope (common, all or private).
+  #_group_ids_:: Group-IDs to set to the Address.
+  #_team_ids_:: Team-IDs to set to the Address.
+  #return:: Target Address.
   #
-  def self.arrange_per_scope(prms, user)
+  def self.arrange_per_scope(address, user, scope, group_ids, team_ids)
 
-    case prms[:scope]
+    case scope
      when 'private'
-      prms[:address][:owner_id] = user.id
-      prms[:address][:groups] = nil
-      prms[:address][:teams] = nil
+      address.owner_id = user.id
+      address.groups = nil
+      address.teams = nil
 
      when 'all'
       return false unless user.admin?(User::AUTH_ADDRESSBOOK)
 
-      prms[:address][:owner_id] = 0
-      prms[:address][:groups] = nil
-      prms[:address][:teams] = nil
+      address.owner_id = 0
+      address.groups = nil
+      address.teams = nil
 
      when 'common'
-      return false unless user.admin?(User::AUTH_ADDRESSBOOK)
+      return nil unless user.admin?(User::AUTH_ADDRESSBOOK)
 
-      prms[:address][:owner_id] = 0
+      address.owner_id = 0
 
-      if (prms[:groups].nil? or prms[:groups].empty?)
-        prms[:address][:groups] = nil
+      if group_ids.nil? or group_ids.empty?
+        address.groups = nil
       else
-        prms[:address][:groups] = '|' + prms[:groups].join('|') + '|'
+        address.groups = '|' + group_ids.join('|') + '|'
       end
 
-      if (prms[:teams].nil? or prms[:teams].empty?)
-        prms[:address][:teams] = nil
+      if team_ids.nil? or team_ids.empty?
+        address.teams = nil
       else
-        prms[:address][:teams] = '|' + prms[:teams].join('|') + '|'
+        address.teams = '|' + team_ids.join('|') + '|'
       end
     end
 
-    return true
+    return address
   end
 
   #=== self.get_scope_condition_for

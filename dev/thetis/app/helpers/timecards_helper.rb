@@ -15,8 +15,8 @@
 #
 module TimecardsHelper
 
-  require RAILS_ROOT+'/lib/util/util_date'
-  require RAILS_ROOT+'/lib/util/util_datetime'
+  require ::Rails.root.to_s+'/lib/util/util_date'
+  require ::Rails.root.to_s+'/lib/util/util_datetime'
 
   #=== self.get_month_span
   #

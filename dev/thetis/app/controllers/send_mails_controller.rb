@@ -39,6 +39,25 @@ class SendMailsController < ApplicationController
       end
     end
 
+    if $thetis_config[:menu]['disp_user_list'] == '1'
+      unless params[:to_user_ids].blank?
+        @email = Email.new
+        to_addrs = []
+        @user_obj_cache ||= {}
+        params[:to_user_ids].each do |user_id|
+          user = User.find_with_cache(user_id, @user_obj_cache)
+          user_emails = user.get_emails_by_type(nil)
+          user_emails.each do |user_email|
+            disp = EmailsHelper.format_address_exp(user.get_name, user_email, false)
+            entry_val = "#{disp}"   # "#{disp}#{Email::ADDR_ORDER_SEPARATOR}#{user.get_xorder(@group_id)}"
+
+            to_addrs << entry_val
+          end
+        end
+        @email.to_addresses = to_addrs.join(Email::ADDRESS_SEPARATOR)
+      end
+    end
+
     render(:action => 'edit', :layout => (!request.xhr?))
   end
 
@@ -92,7 +111,7 @@ class SendMailsController < ApplicationController
             EmailsHelper.extract_addr(@mail_account.reply_to)
           ]
           self_addrs.compact!
-          org_to = org_email.to_addresses.split(Email::ADDRESS_SEPARATOR)
+          org_to = org_email.get_to_addresses
           org_to.reject! { |to_addr|
             self_addrs.include?(EmailsHelper.extract_addr(to_addr))
           }

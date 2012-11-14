@@ -198,21 +198,44 @@ class MailFoldersController < ApplicationController
 
     if !params[:pop].nil? and params[:pop] == 'true'
       begin
-        new_arrivals = 0
+        new_arrivals_h = {}
 
         mail_account_id = params[:mail_account_id]
         if mail_account_id.nil? or mail_account_id.empty?
           mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
           mail_accounts.each do |mail_account|
-            new_arrivals += Email.do_pop(mail_account)
+            emails = Email.do_pop(mail_account)
+            unless emails.empty?
+              new_arrivals_h[mail_account.id] ||= []
+              new_arrivals_h[mail_account.id] |= emails
+            end
           end
         else
           mail_account = MailAccount.find(mail_account_id)
-          new_arrivals += Email.do_pop(mail_account)
+          emails = Email.do_pop(mail_account)
+          unless emails.empty?
+            new_arrivals_h[mail_account.id] ||= []
+            new_arrivals_h[mail_account.id] |= emails
+          end
         end
 
-        if new_arrivals > 0
-          flash[:notice] = t('mail.received', :count => new_arrivals)
+        unless new_arrivals_h.empty?
+          flash[:notice] = t('mail.received', :count => new_arrivals_h.values.flatten.length)
+
+        # FEATURE_MAIL_FILTERS >>>
+          new_arrivals_h.each do |mail_account_id, emails|
+            mail_filters = MailFilter.get_for(mail_account_id, true, MailFilter::TRIGGER_CHECKING)
+            filter_next = true
+
+            emails.each do |email|
+              mail_filters.each do |filter|
+                filter_next = filter.execute(email)
+                break unless filter_next
+              end
+              break unless filter_next
+            end
+          end
+        # FEATURE_MAIL_FILTERS <<<
         end
       rescue => evar
         flash[:notice] = 'ERROR:' + t('mail.receive_error') + '<br/>' + evar.to_s

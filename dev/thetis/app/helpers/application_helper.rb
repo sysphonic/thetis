@@ -253,7 +253,7 @@ module ApplicationHelper
   #
   def self.config
 
-    return "#{RAILS_ROOT}/config/_config.yml"
+    return "#{::Rails.root.to_s}/config/_config.yml"
   end
 
   #=== self.get_config_yaml
@@ -310,7 +310,7 @@ module ApplicationHelper
   #
   def self.touch_to_restart
 
-    restart_txt = "#{RAILS_ROOT}/tmp/restart.txt"
+    restart_txt = "#{::Rails.root.to_s}/tmp/restart.txt"
 
     ApplicationHelper.f_ensure_exist(restart_txt)
     begin
@@ -453,7 +453,7 @@ module ApplicationHelper
   #return:: Path of the config directory.
   #
   def self.config_dir
-    "#{RAILS_ROOT}/config"
+    "#{::Rails.root.to_s}/config"
   end
 
   #=== self.trim_comment

@@ -1,7 +1,7 @@
 
 .base_list {overflow:scroll; overflow-x:visible; background-color:white;}
 
-.desktop_toolbtn {vertical-align:middle; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px;}
+.desktop_toolbtn {cursor:pointer; width:64px; vertical-align:middle; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px;}
 .postlabel_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 .label_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 
@@ -12,6 +12,7 @@ table.timecard th {border:solid black 1px; background-color:#eee; font-weight:no
 table.timecard td {border:solid black 1px; padding:2px 5px;}
 .span_holiday {background-color:red; color:white; padding:3px 10px;}
 .info_area {background-color:#FFF0FA;}
+.info_section_header {color:dimgray; padding:2px; line-height:1.7; text-align:center; background-color:#dfdfdf; font-weight:bold;}
 .treeBlock {padding-left:30px; border-left:1px dotted navy;}
 
 .date_label {text-decoration:underline; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;}

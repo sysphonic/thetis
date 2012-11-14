@@ -129,7 +129,7 @@ class Research < ActiveRecord::Base
   #
   def self.config
 
-    return "#{RAILS_ROOT}/config/_research.yml"
+    return "#{::Rails.root.to_s}/config/_research.yml"
   end
 
   #=== self.get_config_yaml

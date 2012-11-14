@@ -53,6 +53,40 @@ getCsrfToken = function()
   return null;
 }
 
+removeOptionNotSelected = function(elem)
+{
+  if (!elem || !elem.options) {
+    return;
+  }
+
+  var selected = false;
+  for (var i=0; i < elem.options.length; i++) {
+    if (elem.options[i].selected) {
+      selected = true;
+      break;
+    }
+  }
+  if (!selected) {
+    return;
+  }
+
+  for (var i=0; i < elem.options.length; i++) {
+    var option = elem.options[i];
+    if (option.value == "" && !option.selected) {
+      elem.options[i] = null;
+      break;
+    }
+  }
+}
+
+isModelErrorContained = function(resText)
+{
+  if (!resText) {
+    return false;
+  }
+  return (resText.indexOf("errorExplanation") >= 0);
+}
+
 doUpdateView = function(method, action, addParams)
 {
   if (!addParams) {

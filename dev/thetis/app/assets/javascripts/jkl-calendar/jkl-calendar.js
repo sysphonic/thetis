@@ -34,6 +34,12 @@
 //                ・FireFoxで<input type="hidden" ... >への入力時、画面の左上に表示されてしまうバグ修正。
 //                ・IE6以前用ダミーフレームのSSL対策での不具合修正（MOMさん指摘）。
 //  2007/11/24 - Shin 休日指定追加
+//  2011/11/16 - Shin コンストラクタ第２引数で $(fid).valname のIDを指定可能に
+//  2011/12/16 - Shin 入力欄クリアボタン追加
+//  2012/01/09 - Shin 入力欄からフォーカスが外れたら自動非表示
+//  2012/02/06 - Shin
+//                ・日のtitle属性が引用符で囲まれていなかった不具合修正
+//                ・z-index適用対策：コントロールを指定要素内ではなくbodyに追加するよう修正
 //  ========================================================
 
 /***********************************************************
@@ -62,16 +68,41 @@ if ( typeof(JKL) == 'undefined' ) JKL = function() {};
 
 // JKL.Calendar コンストラクタの定義
 
-JKL.Calendar = function ( eid, fid, valname ) {
+JKL.Calendar = function ( eid, fid ) {
     this.func = null;        // 日付選択時に実行されるファンクション 2007.02.25 Shin
     this.eid = eid;
-    this.formid = fid;
-    this.valname = valname;
-    this.__dispelem = null;  // カレンダー表示欄エレメント
+  // 2011.11.16 Shin 第２引数で $(fid).valname のIDを指定可能に
+    if (arguments.length >= 3) {
+      this.formid = fid;
+      this.valname = arguments[2];
+    } else {
+      this.textelem_id = fid;
+    }
     this.__textelem = null;  // テキスト入力欄エレメント
+    this.__dispelem = null;  // カレンダー表示欄エレメント
     this.__opaciobj = null;  // JKL.Opacity オブジェクト
     this.style = new JKL.Calendar.Style();
 
+    // 2012.01.09 Shin 入力欄からフォーカスが外れたら自動非表示
+    JKL.Calendar.cal_h[this.eid] = this;
+
+    var dispElem = this.getFormElement();
+    if (dispElem) {
+      this.addEvent(dispElem, "keydown",
+                      function(evt) {
+                        evt = evt || window.event;
+                        if (evt.keyCode == 13) {
+                          var elem = evt.target || evt.srcElement;
+                          if (elem.onclick) {
+                            elem.onclick();
+                          }
+                          evt.cancelBubble = true;
+                          evt.returnValue = false;
+                        }
+                        return false;
+                      }
+                      );
+    }
     return this;
 };
 
@@ -99,10 +130,17 @@ JKL.Calendar.setMonthNames = function(array) {
 }
 
 // 2007.02.25 Shin 【国際化対応】キャプション文言
-JKL.Calendar.captions = new Array('Prev.', 'Move to the current month', 'Next', 'Close');
+JKL.Calendar.captions = new Array('Prev.', 'Move to the current month', 'Next', 'Close', 'Clear');
 JKL.Calendar.setCaptions = function(array) {
   JKL.Calendar.captions = array;
 }
+
+// 2011.12.16 Shin 入力欄クリアボタン追加
+JKL.Calendar.buttons = {};
+JKL.Calendar.setButtons = function(hash) {
+  JKL.Calendar.buttons = hash;
+}
+
 
 // バージョン番号
 
@@ -126,7 +164,92 @@ JKL.Calendar.prototype.draw_border = true;
 JKL.Calendar.prototype.selectable_days = new Array(true,true,true,true,true,true,true);
 
 // 2006.11.30 MOM カレンダーのz-indexをプロパティに追加
-JKL.Calendar.prototype.zindex = 10;
+JKL.Calendar.prototype.zindex = 30000;
+
+// 2011.12.16 Shin 入力欄クリアボタン追加
+JKL.Calendar.prototype.show_clear = false;
+
+// 2012.01.09 Shin 入力欄からフォーカスが外れたら自動非表示
+JKL.Calendar.cal_h = new Array();
+JKL.Calendar.restoreFocus = function(eid)
+{
+  var cal_obj = JKL.Calendar.cal_h[eid];
+  if (cal_obj && cal_obj.is_set_blur) {
+    var form1 = cal_obj.getFormElement();
+    if (form1) {
+      try {
+        form1.focus();
+      } catch (e) {
+      }
+    }
+  }
+}
+JKL.Calendar.clear_blur_timer = function(eid)
+{
+  if (JKL.Calendar.cal_h[eid]) {
+    JKL.Calendar.cal_h[eid].clear_blur_timer(true);
+  }
+}
+JKL.Calendar.prototype.is_set_blur = false;
+JKL.Calendar.prototype.blur_timer_id = null;
+JKL.Calendar.prototype.set_blur_timer = function()
+{
+  if (this.blur_timer_id == "xxxx") { // Prohibitted
+    this.blur_timer_id = null;
+  } else {
+    this.blur_timer_id = setTimeout("JKL.Calendar.on_blur_timer(\""+this.eid+"\");", 200);
+  }
+}
+
+JKL.Calendar.on_blur_timer = function(eid)
+{
+  var cal_obj = JKL.Calendar.cal_h[eid];
+
+  if (cal_obj && !cal_obj.blur_timer_id) {
+    return;
+  }
+
+  if (cal_obj) {
+    cal_obj.hide();
+  }
+/*
+  var elem = document.getElementById(eid+"_clone");
+  if (elem) {
+    elem.style.display = "none";
+  }
+*/
+}
+
+JKL.Calendar.prototype.clear_blur_timer = function(delay_ctl)
+{
+/* // DEBUG >>>
+  var last = this.blur_timer_id;
+// DEBUG <<< */
+  if (this.blur_timer_id) {
+    clearTimeout(this.blur_timer_id);
+  }
+  this.blur_timer_id = null;
+
+  if (delay_ctl) {
+    this.blur_timer_id = "xxxx"; // Prohibit
+  }
+/* // DEBUG >>>
+  var cur = this.blur_timer_id;
+
+  var debug = _z("debug_clear_blur_timer");
+  if (!debug) {
+    var form1 = this.getFormElement();
+    if (form1) {
+      debug = document.createElement("span");
+      debug.id = "debug_clear_blur_timer";
+      form1.parentNode.appendChild(debug);
+    }
+  }
+  if (debug) {
+    debug.innerHTML = "LAST:" + last + " CURRENT:" + cur;
+  }
+// DEBUG <<< */
+}
 
 // JKL.Calendar.Style
 
@@ -194,7 +317,13 @@ JKL.Calendar.prototype.getOpacityObject = function () {
 
 JKL.Calendar.prototype.getCalendarElement = function () {
     if ( this.__dispelem ) return this.__dispelem;
-    this.__dispelem = document.getElementById( this.eid )
+
+    this.__dispelem = document.createElement('div');
+    this.__dispelem.id = this.eid + "_clone";
+    this.__dispelem.style.zIndex = this.zindex;
+    document.body.appendChild(this.__dispelem);
+//    this.__dispelem = document.getElementById( this.eid );
+
     return this.__dispelem;
 };
 
@@ -202,12 +331,17 @@ JKL.Calendar.prototype.getCalendarElement = function () {
 
 JKL.Calendar.prototype.getFormElement = function () {
     if ( this.__textelem ) return this.__textelem;
-    var frmelms = document.getElementById( this.formid );
-    if ( ! frmelms ) return;
-    for( var i=0; i < frmelms.elements.length; i++ ) {
+
+    if (this.textelem_id) {
+      this.__textelem = document.getElementById(this.textelem_id);
+    } else {
+      var frmelms = document.getElementById( this.formid );
+      if ( ! frmelms ) return;
+      for( var i=0; i < frmelms.elements.length; i++ ) {
         if ( frmelms.elements[i].name == this.valname ) {
-            this.__textelem = frmelms.elements[i];
+          this.__textelem = frmelms.elements[i];
         }
+      }
     }
     return this.__textelem;
 };
@@ -262,7 +396,7 @@ JKL.Calendar.prototype.getFormValue = function () {
 // フォーム入力欄に指定した値を書き込む
 
 JKL.Calendar.prototype.setFormValue = function (ymd) {
-    if ( ! ymd ) ymd = this.getDateYMD();   // 無指定時はオブジェクトから？
+    if ( ymd == null ) ymd = this.getDateYMD();   // 無指定時はオブジェクトから？
     var form1 = this.getFormElement();
     if ( form1 ) form1.value = ymd;
 };
@@ -271,12 +405,25 @@ JKL.Calendar.prototype.setFormValue = function (ymd) {
 
 JKL.Calendar.prototype.show = function () {
     this.getCalendarElement().style.display = "";
+
+    // 2012.01.09 Shin 入力欄からフォーカスが外れたら自動非表示
+    if (this.is_set_blur) {
+      var form1 = this.getFormElement();
+      if (form1) {
+        form1.focus();
+      }
+    }
 };
 
 //  カレンダー表示欄を即座に隠す
 
 JKL.Calendar.prototype.hide = function () {
-    this.getCalendarElement().style.display = "none";
+  var cal1 = this.getCalendarElement();
+  if (cal1) {
+    cal1.parentNode.removeChild(cal1);
+  }
+  this.__dispelem = null;
+//    this.getCalendarElement().style.display = "none";
 };
 
 //  カレンダー表示欄をフェードアウトする
@@ -428,7 +575,7 @@ JKL.Calendar.prototype.write = function (x, y) {
 
     src1 += '<table border="0" cellpadding="0" cellspacing="0" style="'+month_table_style+'">\n';
     src1 += '  <tr style="height:10px;">\n';
-    src1 += '    <td id="'+this.eid+'_handle" colspan="7" style="padding:0px; background-color:'+this.style.day_bgcolor+'; cursor:move;">\n';
+    src1 += '    <td id="'+this.eid+'_handle" colspan="7" style="padding:0px; background-color:'+this.style.day_bgcolor+'; cursor:move;" onmousedown="JKL.Calendar.clear_blur_timer(\''+this.eid+'\');" onmouseup="JKL.Calendar.restoreFocus(\''+this.eid+'\');">\n';
     src1 += '      <table width="100%" style="height:5px; border:ridge 5px '+this.style.frame_color+';"><tr><td></td></tr></table>\n\n';
     src1 += '    </td>\n';
     src1 += '  </tr>\n';
@@ -438,10 +585,14 @@ JKL.Calendar.prototype.write = function (x, y) {
     src1 += '        <tr>\n';
     src1 += '          <td id="__'+this.eid+'_btn_prev" title="'+JKL.Calendar.captions[0]+'" style="'+month_td_style+'">&nbsp;&laquo;</td>\n';
     src1 += '          <td style="'+month_td_style+'">&nbsp;</td>\n';
+// 2011.12.16 Shin 入力欄クリアボタン追加
+    if (this.show_clear) {
+      src1 += '          <td id="__'+this.eid+'_btn_clear" title="'+JKL.Calendar.captions[4]+'" style="'+month_td_style+'; padding:0px 5px;"><img src="'+JKL.Calendar.buttons['clear']+'" /></td>\n';
+    }
 // 2006.12.04 ksuzu 表示月をクリックすると現在の月に移動
-    src1 += '          <td id="__'+this.eid+'_btn_today" style="'+month_td_style+'">'+JKL.Calendar.monthNames[mon]+'&nbsp;&nbsp;'+(year)+'</td>\n';
+    src1 += '          <td id="__'+this.eid+'_btn_today" style="'+month_td_style+'"><nobr>'+JKL.Calendar.monthNames[mon]+'&nbsp;&nbsp;'+(year)+'</nobr></td>\n';
 //    src1 += '<td style="'+month_td_style+'">'+(year)+'年 '+(mon+1)+'月</td>';
-    src1 += '          <td id="__'+this.eid+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:10.5pt;">&times;&nbsp;</b></td>\n';
+    src1 += '          <td id="__'+this.eid+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:10.5pt; padding:0px 5px;">&times;</b></td>\n';
     src1 += '          <td id="__'+this.eid+'_btn_next" title="'+JKL.Calendar.captions[2]+'" style="'+month_td_style+'">&raquo;&nbsp;</td>\n';
     src1 += "        </tr>\n";
     src1 += "      </table>\n";
@@ -565,7 +716,7 @@ JKL.Calendar.prototype.write = function (x, y) {
         }
         var tt = dd.getDate();
 
-        src1 += '<td style="'+cc+'" title='+day_title+' id="__'+this.eid+'_td_'+ss+'">'+tt+'</td>';
+        src1 += '<td style="'+cc+'" title="'+day_title+'" id="__'+this.eid+'_td_'+ss+'">'+tt+'</td>';
 
         if ( ww == (this.start_day+6)%7 ) {
             src1 += "</tr>\n";                                  // 表示開始曜日の１つ手前で行末
@@ -663,6 +814,7 @@ JKL.Calendar.prototype.write = function (x, y) {
         tdprev.style.cursor = this.style.cursor;
         this.addEvent( tdprev, "mouseover", month_onmouseover );
         this.addEvent( tdprev, "mouseout", month_onmouseout );
+        this.addEvent( tdprev, "mousedown", function(){ __this.clear_blur_timer(true); });
         this.addEvent( tdprev, "click", function(){ __this.moveMonth( -1 ); });
     }
     //選択不可能
@@ -687,7 +839,25 @@ JKL.Calendar.prototype.write = function (x, y) {
         tdtoday.title = JKL.Calendar.captions[1];
         this.addEvent( tdtoday, "mouseover", month_onmouseover );
         this.addEvent( tdtoday, "mouseout", month_onmouseout );
+        this.addEvent( tdtoday, "mousedown", function(){ __this.clear_blur_timer(true); });
         this.addEvent( tdtoday, "click", function(){ __this.moveMonth( nMov ); });
+    }
+
+    // 入力欄クリアボタン
+    var tdclear = document.getElementById( "__"+this.eid+"_btn_clear" );
+    if (tdclear) {
+      tdclear.style.cursor = this.style.cursor;
+      this.addEvent( tdclear, "mouseover", month_onmouseover );
+      this.addEvent( tdclear, "mouseout", month_onmouseout );
+      this.addEvent( tdclear, "mousedown", function(){ __this.clear_blur_timer(true); });
+      this.addEvent( tdclear, "click", function(){
+                    __this.setFormValue("");
+                    if (__this.func) {
+                      __this.func();
+                    }
+                    __this.hide();
+                  }
+                );
     }
 
     // 閉じるボタン
@@ -716,6 +886,7 @@ JKL.Calendar.prototype.write = function (x, y) {
         tdnext.style.cursor = this.style.cursor;
         this.addEvent( tdnext, "mouseover", month_onmouseover );
         this.addEvent( tdnext, "mouseout", month_onmouseout );
+        this.addEvent( tdnext, "mousedown", function(){ __this.clear_blur_timer(true); });
         this.addEvent( tdnext, "click", function(){ __this.moveMonth( +1 ); });
     }
     //選択不可能
@@ -748,7 +919,16 @@ JKL.Calendar.prototype.write = function (x, y) {
         cc.style.cursor = this.style.cursor;
         this.addEvent( cc, "mouseover", day_onmouseover );
         this.addEvent( cc, "mouseout", day_onmouseout );
+        this.addEvent( cc, "mousedown", function(){ __this.clear_blur_timer(true); });
         this.addEvent( cc, "click", day_onclick );
+    }
+
+    // 2012.01.09 Shin 入力欄からフォーカスが外れたら自動非表示
+    if (!this.is_set_blur
+        && form1.type != "hidden"
+        && form1.style.display != "none") {
+      this.addEvent(form1, "blur", function(){ __this.set_blur_timer(); });
+      this.is_set_blur = true;
     }
 
 // 2007.10.09 Shin ドラッグ対応
@@ -757,16 +937,16 @@ JKL.Calendar.prototype.write = function (x, y) {
     cal1.onmouseup = this.onMouseUp;
 
     if (isNaN(x) || isNaN(y)) {
-      var pos = JKL.Calendar.prototype._getPos(form1);
-      
+      var pos = JKL.Calendar._getPos(form1, true);
+
       // for <input type="hidden" ... > on FireFox
       if (pos.x == 0 && pos.y == 0 && form1.clientWidth == 0) {
-        pos = JKL.Calendar.prototype._getPos(cal1);
+        pos = JKL.Calendar._getPos(document.getElementById(this.eid), true);
       }
 
       if (!is_Opera) {
         if (is_dtdStandard || !is_MS) {
-          var scroll = JKL.Calendar.prototype._getScroll(form1)
+          var scroll = JKL.Calendar._getScroll(form1)
           pos.x -= scroll.left;
           pos.y -= scroll.top;
         }
@@ -774,6 +954,9 @@ JKL.Calendar.prototype.write = function (x, y) {
 
       cal1.style.left = (pos.x + form1.clientWidth) + "px";
       cal1.style.top = pos.y + "px";
+
+      this.clear_blur_timer(false);
+
     } else {
       cal1.style.left = x + "px";
       cal1.style.top = y + "px";
@@ -781,7 +964,6 @@ JKL.Calendar.prototype.write = function (x, y) {
 
     // 表示する
     this.show();
-
 };
 
 // 2007.10.09 Shin ドラッグ対応（ThetisBoxから移植） ▽
@@ -792,15 +974,15 @@ var is_Opera = (_appName.toLowerCase().indexOf('opera') >= 0);       // Opera
 
 var is_dtdStandard = (document.compatMode == 'CSS1Compat');
 
-JKL.Calendar.prototype._within = function(elem, x, y) {
-  var elemPos = JKL.Calendar.prototype._getPos(elem);
+JKL.Calendar._within = function(elem, x, y) {
+  var elemPos = JKL.Calendar._getPos(elem);
   var eX = elemPos.x;
   var eY = elemPos.y;
   var eWidth = elem.offsetWidth;
   var eHeight = elem.offsetHeight;
 
   if (is_Opera || (is_MS && !is_dtdStandard)) {
-    var scroll = JKL.Calendar.prototype._getScroll(elem);
+    var scroll = JKL.Calendar._getScroll(elem);
     eX -= scroll.left;
     eY -= scroll.top;
   }
@@ -809,7 +991,7 @@ JKL.Calendar.prototype._within = function(elem, x, y) {
   return(x >= eX && x <= eX + eWidth && y >= eY && y <= eY + eHeight);
 }
 
-JKL.Calendar.prototype._getPos = function (elem) {
+JKL.Calendar._getPos = function (elem, flag) {
 
   var change_display = false;
   try {
@@ -824,7 +1006,7 @@ JKL.Calendar.prototype._getPos = function (elem) {
   obj.y = elem.offsetTop;
 
   var e = elem;
-  while (e.offsetParent) {
+  while (e.offsetParent && (flag || e.offsetParent.style.position != "absolute")) {
     e = e.offsetParent;
     obj.x += e.offsetLeft;
     obj.y += e.offsetTop;
@@ -836,7 +1018,7 @@ JKL.Calendar.prototype._getPos = function (elem) {
   return obj;
 }
 
-JKL.Calendar.prototype._getScroll = function (elem) {
+JKL.Calendar._getScroll = function (elem) {
   var obj = new Object();
   obj.left = 0;
   obj.top = 0;
@@ -853,7 +1035,7 @@ JKL.Calendar.prototype._getScroll = function (elem) {
   return obj;
 }
 
-JKL.Calendar.prototype._getBodyScroll = function()
+JKL.Calendar._getBodyScroll = function()
 {
   var obj = new Object();
   obj.left = 0;
@@ -879,7 +1061,7 @@ JKL.Calendar.prototype.onMouseDown = function ( e ) {
         this.id+"_handle"
     );
 
-  var bodyScroll = JKL.Calendar.prototype._getBodyScroll();
+  var bodyScroll = JKL.Calendar._getBodyScroll();
 
   for (var i=0; i < acceptArray.length; i++) {
     var acceptCtrl = document.getElementById(acceptArray[i]);
@@ -888,9 +1070,9 @@ JKL.Calendar.prototype.onMouseDown = function ( e ) {
     }
     var within = false;
     if (document.all) {
-      within = JKL.Calendar.prototype._within(acceptCtrl, bodyScroll.left+event.clientX, bodyScroll.top+event.clientY);
+      within = JKL.Calendar._within(acceptCtrl, bodyScroll.left+event.clientX, bodyScroll.top+event.clientY);
     } else if (document.getElementById) {
-      within = JKL.Calendar.prototype._within(acceptCtrl, bodyScroll.left+e.clientX, bodyScroll.top+e.clientY);
+      within = JKL.Calendar._within(acceptCtrl, bodyScroll.left+e.clientX, bodyScroll.top+e.clientY);
     }
     if (within != true) {
       return true;
@@ -915,7 +1097,7 @@ JKL.Calendar.prototype.onMouseMove = function(e) {
 
   var l, t;
   if (document.all) {
-    var bodyScroll = JKL.Calendar.prototype._getBodyScroll();
+    var bodyScroll = JKL.Calendar._getBodyScroll();
     l = event.clientX + bodyScroll.left - this.offsetX;
     t = event.clientY + bodyScroll.top - this.offsetY;
   } else if (document.getElementById) {

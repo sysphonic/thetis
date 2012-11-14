@@ -226,6 +226,7 @@ class EquipmentController < ApplicationController
     return if con.nil?
 
     equipment = Equipment.find(:all, :conditions => con)
+    @equip_obj_cache ||= Equipment.build_cache(equipment)
 
     @equip_schedule_hash = {}
     unless equipment.nil?

@@ -1,0 +1,91 @@
+<%
+form_idx = Time.now.to_f.to_s.gsub('.', '_')
+%>
+
+<% if (@mail_filter.nil? or @mail_filter.id.nil?) %>
+<%= form_tag({:controller => 'mail_filters', :action => 'update'}, :method => 'post', :name => 'form_mail_filter'+form_idx) %>
+<% else %>
+<%= form_tag({:controller => 'mail_filters', :action => 'update', :id => @mail_filter.id}, :method => 'post', :name => 'form_mail_filter'+form_idx) %>
+<% end %>
+
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 15px;">
+  <tr>
+    <td style="vertical-align:top;">
+      <%= render(:partial => 'mail_filter_form') %>
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+  <tr>
+    <td class="img_button_td nodrag" onclick="onRegisterFilterClicked();">
+    <% if @mail_filter.nil? or @mail_filter.id.nil? %>
+      <%= t('btn.register')%>
+    <% else %>
+      <%= t('btn.update')%>
+    <% end %>
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+onRegisterFilterClicked = function()
+{
+  var mail_filter_title = _z("mail_filter_title");
+  if (trim(mail_filter_title.value) == "") {
+    var msgBox = msg("<%= t('msg.specify', :name => MailFilter.human_attribute_name('title')) %>");
+    msgBox.setOnClose(
+        function() {
+          _z("mail_filter_title").focus();
+        }
+      );
+    return false;
+  }
+
+  var mail_filter_and_or = _z("mail_filter_and_or");
+  if (mail_filter_and_or.value != "none"
+      && document.getElementsByClassName("filter_condition_entry").length == 0) {
+    msg("<%= t('msg.specify', :name => t('mail_filter.condition.cap')) %>");
+    return false;
+  }
+
+  if (document.getElementsByClassName("filter_action_entry").length == 0) {
+    msg("<%= t('msg.specify', :name => t('mail_filter.action.cap')) %>");
+    return false;
+  }
+
+  var addParams = new Array();
+
+  var frm = form_mail_filter<%= form_idx %>;
+  addParams.push(Form.serialize(frm));
+
+  addParams.push(getFilterConditionsOrderParams());
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var boxInstance = ThetisBox.getInstanceForElem(frm);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                document.form_filters.parentNode,
+                "<%= url_for(:controller => 'mail_filters', :action => 'update') %>",
+                {
+                  method: "post",
+                  parameters: addParams.join("&"),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){
+                    thetisBoxProgress.remove();
+                  }
+                }
+              );
+  return true;
+}
+
+</script>

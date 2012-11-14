@@ -1,25 +1,33 @@
 
-<table id="tree_main" width="100%" cellspacing="0" cellpadding="0" style="background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
+<table id="tree_main" cellspacing="0" cellpadding="0" style="width:100%; background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
     <td style="padding:5px 0px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" width="20%" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
+          <td nowrap style="text-align:left; width:20%; padding:0px 10px; border-right:solid 1px gray;">
             <input type="button" value="<%= t('btn.get_mails') %>" onclick="getMails();" style="width:80px;" />
             <input type="button" value="<%= t('btn.create_mail') %>" onclick="doCreateMail();"  style="width:80px;" />
+          <!--
             <input type="button" value="<%= t('btn.address_book') %>" onclick="showAddressBook();" style="width:80px;" />
+          -->
           </td>
-          <td id="btnbox_handled" align="left" width="30%" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
+          <td nowrap style="text-align:left; width:60px; padding:0px 10px; border-right:solid 1px gray;">
+            <nobr>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/addressbook_mini.png" title="<%= t('btn.address_book') %>" onclick="showAddressBook(); return false;" style="cursor:pointer;" />
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/filter.png" title="<%= MailFilter.model_name.human %>" onclick="showFilters(); return false;" style="cursor:pointer;" />
+            </nobr>
+          </td>
+          <td id="btnbox_handled" nowrap style="text-align:left; width:30%; padding:0px 10px; border-right:solid 1px gray;">
             <input type="button" value="<%= t('btn.reply') %>" onclick="doReplyMail(false);" style="width:80px;" />
             <input type="button" value="<%= t('btn.reply_to_all') %>" onclick="doReplyMail(true);" style="width:80px;" />
             <input type="button" value="<%= t('btn.forward') %>" onclick="doForwardMail();" style="width:80px;" /> 
             <input type="button" value="<%= t('btn.edit_new') %>" onclick="doEditMail('duplicate');" style="width:80px;" />
             <input type="button" value="<%= t('btn.save') %>" onclick="doDownloadMail();" style="width:80px;" />
           </td>
-          <td id="btnbox_draft" align="left" width="10%" nowrap style="display:none; padding:0px 10px; border-right:solid 1px gray;">
+          <td id="btnbox_draft" nowrap style="display:none; text-align:left; width:10%; padding:0px 10px; border-right:solid 1px gray;">
             <input type="button" value="<%= t('btn.edit') %>" onclick="doEditMail('send');" style="width:80px;" />
           </td>
-          <td align="left" nowrap style="padding:0px 10px;">
+          <td nowrap style="text-align:left; padding:0px 10px;">
 <!--
             <input type="button" value="<%= t('btn.move') %>" onclick="doMoveMail();" style="width:80px;" /> 
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDeleteMail();" style="width:80px;" />
@@ -30,12 +38,12 @@
     </td>
   </tr> 
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <table width="100%" cellspacing="0" cellpadding="0" style="background-color:white;">
+      <table cellspacing="0" cellpadding="0" style="width:100%; background-color:white;">
         <tr>
-          <td id="td_tree" valign="top">
-            <table width="100%" height="100%" cellspacing="0" cellpadding="0">
+          <td id="td_tree" style="vertical-align:top;">
+            <table style="width:100%; height:100%;" cellspacing="0" cellpadding="0">
               <tr>
                 <td valign="top" style="border:inset 2px silver; padding:0px;">
                   <%= form_tag( {:controller => 'mail_folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
@@ -44,8 +52,8 @@
                   </form>
                 </td>
               </tr>
-              <tr height="40">
-                <td align="center" valign="middle" style="background-color:aliceblue;">
+              <tr style="height:40px">
+                <td style="text-align:center; vertical-align:middle; background-color:aliceblue;">
                   <a href="#" onclick="showAccountSetting(false); return false;">
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png">
                     <%= t('btn.account_setting') %>
@@ -75,24 +83,24 @@
             </table>
           </td>
 
-          <td id="drag_v_border" width="5" valign="middle" style="background-color:#8DB7EB; cursor:w-resize;">
+          <td id="drag_v_border" style="width:5px; vertical-align:middle; background-color:#8DB7EB; cursor:w-resize;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
           </td>
 
-          <td id="td_view" valign="top">
-            <table width="100%" cellspacing="0" cellpadding="0">
+          <td id="td_view" style="vertical-align:top;">
+            <table style="width:100%;" cellspacing="0" cellpadding="0">
               <tr>
-                <td align="center" valign="top" style="border:inset 2px silver;">
-                  <div id="div_mails" width="100%" style="overflow:auto;">&nbsp;</div>
+                <td style="text-align:center; vertical-align:top; border:inset 2px silver;">
+                  <div id="div_mails" style="width:100%; overflow:auto;">&nbsp;</div>
                 </td>
               </tr>
               <tr style="height:5px">
-                <td id="drag_h_border" align="center" valign="middle" style="background-color:#8DB7EB; cursor:s-resize; line-height:5px;">
+                <td id="drag_h_border" style="text-align:center; vertical-align:middle; background-color:#8DB7EB; cursor:s-resize; line-height:5px;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_horizontal.png" style="vertical-align:top; height:5px;">
                 </td>
               </tr>
               <tr>
-                <td align="center" style="border:inset 2px silver;">
+                <td style="text-align:center; border:inset 2px silver;">
                   <div id="div_mail_content"></div>
                 </td>
               </tr>
@@ -102,12 +110,12 @@
       </table>
     </td>
   </tr>
-  <tr height="20">
+  <tr style="height:20px;">
     <td style="padding:3px 0px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td width="15%" align="left" nowrap style="color:white; text-indent:20px;"><b><%= t('cap.mail_folders') %></b></td>
-          <td width="40%" align="left" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
+          <td nowrap style="width:15%; text-align:left; color:white; text-indent:20px;"><b><%= t('cap.mail_folders') %></b></td>
+          <td nowrap style="width:40%; text-align:left; padding:0px 10px; border-right:solid 1px gray;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.gif">
             &nbsp;
             <input type="button" value="<%= t('btn.new') %>" onclick="doCreate();" style="width:80px;" />
@@ -115,10 +123,10 @@
             <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
           </td>
-          <td width="5%" align="left" nowrap style="padding:0px 10px; border-right:solid 1px gray;">
+          <td nowrap style="width:5%; text-align:left; padding:0px 10px; border-right:solid 1px gray;">
             <input type="button" value="<%= t('btn.empty') %>" onclick="doEmpty();" style="width:80px;" />
           </td>
-          <td width="40%" align="left" nowrap style="padding:0px 10px;">
+          <td nowrap style="width:40%; text-align:left; padding:0px 10px;">
             <input type="button" value="<%= t('btn.order') %>" onclick="onOrderFoldersClicked();" style="width:80px;" />
           </td>
         </tr>
@@ -143,6 +151,7 @@ end
 
 
 <%= render(:partial => 'common/addressbook_func', :locals => {:from => 'mail_folders'}) %>
+<%= render(:partial => 'send_mails/popup_func', :locals => {:mail_account_not_set => @mail_accounts.empty?, :ctrl_mails_list_update => true}) %>
 
 <script type="text/javascript">
 //<![CDATA[
@@ -621,7 +630,7 @@ function doMove()
   addParams.push("id="+folder_id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
   thetisBox.setAdditionalParams(addParams);
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>", "<%= t('folder.select_dest')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>", "<%= t('folder.select_dest') %>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
@@ -632,6 +641,10 @@ function selectFolder(folder_id)
 
 function doUpdateMails(folder_id, do_pop)
 {
+  if (folder_id == null) {
+    folder_id = getCurrentFolderId();
+  }
+
   var addParams = new Array();
   addParams.push("id="+folder_id);
 
@@ -750,17 +763,37 @@ function doUpdateViewMails(method, action, addParams)
 
 function doCreateMail()
 {
-  showMailForm("<%= url_for(:controller => 'send_mails', :action => 'new') %>", true);
+  var addParams = new Array();
+
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
+
+  showMailForm(true, addParams);
 }
 
 function doEditMail(mode)
 {
   var sel_tr = getSelectedRow();
-  if (!sel_tr)
+  if (!sel_tr) {
     return;
+  }
+
+  var addParams = new Array();
+  addParams.push("mode="+mode);
+
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
 
   var email_id = sel_tr.split("_")[1];
-  showMailForm("<%= url_for(:controller => 'send_mails', :action => 'edit') %>?id="+email_id+"&mode="+mode, false);
+  addParams.push("id="+email_id);
+
+  showMailForm(false, addParams);
 }
 
 function doReplyMail(to_all)
@@ -771,73 +804,6 @@ function doReplyMail(to_all)
 function doForwardMail()
 {
   doEditMail('forward');
-}
-
-var thetisBoxMailForm = null;
-var _need_update = false;
-
-function showMailForm(action, is_new)
-{
-<% if @mail_accounts.empty? %>
-  msg("<%= t('msg.configure_mail_account') %>");
-<% else %>
-  if (thetisBoxMailForm != null){
-    msg("<%= t('msg.cannot_edit_multiple') %>");
-    return;
-  }
-
-  _need_update = false;
-
-  var thetisBoxProgress = prog("CENTER");
-
-  thetisBoxMailForm = new ThetisBox;
-  thetisBoxMailForm.resizable = true;
-  var on_close_func = function(){
-                        thetisBoxMailForm = null;
-                        if (_need_update) {
-                          var folder_id = getCurrentFolderId();
-                          if (folder_id) {
-                            doUpdateMails(folder_id, false);
-                          }
-                        }
-                      };
-  thetisBoxMailForm.setOnClose(on_close_func);
-  if (is_new) {
-    thetisBoxMailForm.title = "<%= t('cap.new_mail') %>";
-  } else {
-    thetisBoxMailForm.title = "<%= t('cap.edit_mail') %>";
-  }
-
-  var addParams = new Array();
-  var folder_id = getCurrentFolderId();
-  var mail_account_id = getMailAccountId(folder_id);
-  if (mail_account_id) {
-    addParams.push("mail_account_id="+mail_account_id);
-  }
-
-  new Ajax.Request(
-          action,
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxMailForm.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*90/100,
-                          "TRAY",
-                          "",
-                          "<input type='button' value='<%= t('mail.send') %>' style='width:80px; height:24px;' onclick='doSend();'/>"
-                            +"&nbsp;<input type='button' value='<%= t('btn.save') %>' style='width:80px; height:24px;' onclick='doSave(false);'/>",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-<% end %>
 }
 
 function getSelectedRow()
@@ -1017,7 +983,7 @@ function showAddressBook()
 
   thetisBox.show(
             "CENTER",
-            (mainWidth*80/100)+','+(mainHeight*90/100),
+            (mainWidth*80/100)+","+(mainHeight*90/100),
             "IFRAME",
             "",
             "",
@@ -1025,14 +991,61 @@ function showAddressBook()
           );
 }
 
+thetisBoxFilters = null;
+
+function showFilters()
+{
+  if (thetisBoxFilters != null){
+    thetisBoxFilters.remove();
+    thetisBoxFilters = null;
+  }
+
+  var thetisBoxProgress = prog("CENTER");
+
+  thetisBoxFilters = new ThetisBox;
+  thetisBoxFilters.resizable = true;
+  thetisBoxFilters.title = "<%= MailFilter.model_name.human %>";
+  thetisBoxFilters.bgcolor_title = "#8486e0";
+  thetisBoxFilters.bgcolor_body = "#a5baff";
+
+  var addParams = new Array();
+  var folder_id = getCurrentFolderId();
+  var mail_account_id = getMailAccountId(folder_id);
+  if (mail_account_id) {
+    addParams.push("mail_account_id="+mail_account_id);
+  }
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'list') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxFilters.show(
+                          "CENTER",
+                          "520,360",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
 thetisBoxAccount = null;
 
-function showAccountSetting(is_new)
+function showAccountSetting(isNew)
 {
   var folder_id = getCurrentFolderId();
   var mail_account_id = getMailAccountId(folder_id);
 
-  if (!is_new) {
+  if (!isNew) {
     if (!folder_id || !mail_account_id) {
       msg("<%= t('msg.select_account') %>");
       return;
@@ -1056,7 +1069,7 @@ function showAccountSetting(is_new)
 <% end %>
 
   var action = null;
-  if (is_new) {
+  if (isNew) {
     addParams.push("xtype=<%= params[:mail_account_xtype] %>");
     action = "<%= url_for(:controller => 'mail_accounts', :action => 'new') %>";
   } else {

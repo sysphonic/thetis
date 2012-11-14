@@ -1,0 +1,74 @@
+<%
+mail_account_not_set ||= false
+ctrl_mails_list_update ||= false
+%>
+
+<script type="text/javascript">
+
+var thetisBoxMailForm = null;
+_need_update = false;
+
+showMailForm = function(isNew, addParams)
+{
+<% if mail_account_not_set %>
+  msg("<%= t('msg.configure_mail_account') %>");
+<% else %>
+  if (thetisBoxMailForm != null){
+    msg("<%= t('msg.cannot_edit_multiple') %>");
+    return;
+  }
+
+  _need_update = false;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  thetisBoxMailForm = new ThetisBox;
+  var on_close_func = function(){
+                        thetisBoxMailForm = null;
+<% if ctrl_mails_list_update %>
+                        if (_need_update) {
+                          var folder_id = getCurrentFolderId();
+                          if (folder_id) {
+                            doUpdateMails(folder_id, false);
+                          }
+                        }
+<% end %>
+                      };
+  thetisBoxMailForm.setOnClose(on_close_func);
+  var action = null;
+  if (isNew) {
+    thetisBoxMailForm.title = "<%= t('cap.new_mail') %>";
+    action = "<%= url_for(:controller => 'send_mails', :action => 'new') %>";
+  } else {
+    thetisBoxMailForm.title = "<%= t('cap.edit_mail') %>";
+    action = "<%= url_for(:controller => 'send_mails', :action => 'edit') %>";
+  }
+
+  if (!addParams) {
+    addParams = new Array();
+  }
+  new Ajax.Request(
+          action,
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxMailForm.show(
+                          "CENTER",
+                          mainWidth*80/100+"," + mainHeight*90/100,
+                          "TRAY",
+                          "",
+                          "<input class='nodrag' type='button' value='<%= t('mail.send') %>' style='width:80px; height:24px;' onclick='doSend();'/>"
+                            +"&nbsp;<input class='nodrag' type='button' value='<%= t('btn.save') %>' style='width:80px; height:24px;' onclick='doSave(false);'/>",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+<% end %>
+}
+</script>

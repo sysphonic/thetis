@@ -29,16 +29,12 @@ class Setting < ActiveRecord::Base
   #return:: Hash of Settings. { key => value }
   #
   def self.get_for(user_id, category=nil)
-    begin
-      con = ['user_id = ?', user_id]
-      unless category.nil?
-        con[0] << ' and category = ?'
-        con << category
-      end
 
-      settings =  Setting.find(:all, :conditions => con)
-    rescue
-    end
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(category='#{category}')" unless category.nil?
+
+    settings =  Setting.find(:all, :conditions => con.join(' and '))
 
     return nil if settings.nil? or settings.empty?
 
@@ -61,13 +57,16 @@ class Setting < ActiveRecord::Base
   #return:: Setting value.
   #
   def self.get_value(user_id, category, key)
-    begin
-      con = ['user_id = ? and category = ? and xkey = ?', user_id, category, key]
-      setting =  Setting.find(:first, :conditions => con)
 
-      return setting.xvalue unless setting.nil?
-    rescue
-    end
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(category='#{category}')"
+    con << "(xkey='#{key}')"
+
+    setting = Setting.find(:first, :conditions => con.join(' and '))
+
+    return setting.xvalue unless setting.nil?
+
     return nil
   end
 
@@ -81,11 +80,13 @@ class Setting < ActiveRecord::Base
   #_value_:: Value to save.
   #
   def self.save_value(user_id, category, key, value)
-    begin
-      con = ['user_id = ? and category = ? and xkey = ?', user_id, category, key]
-      setting =  Setting.find(:first, :conditions => con)
-    rescue
-    end
+
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(category='#{category}')"
+    con << "(xkey='#{key}')"
+
+    setting = Setting.find(:first, :conditions => con.join(' and '))
 
     if value.nil?
       unless setting.nil?
@@ -116,16 +117,12 @@ class Setting < ActiveRecord::Base
   #return:: Hash of Settings. { key => value }
   #
   def self.get_for_group(group_id, category=nil)
-    begin
-      con = ['group_id = ?', group_id]
-      unless category.nil?
-        con[0] << ' and category = ?'
-        con << category
-      end
 
-      settings =  Setting.find(:all, :conditions => con)
-    rescue
-    end
+    con = []
+    con << "(group_id=#{group_id})"
+    con << "(category='#{category}')" unless category.nil?
+
+    settings =  Setting.find(:all, :conditions => con.join(' and '))
 
     return nil if settings.nil? or settings.empty?
 
@@ -148,13 +145,16 @@ class Setting < ActiveRecord::Base
   #return:: Setting value.
   #
   def self.get_group_value(group_id, category, key)
-    begin
-      con = ['group_id = ? and category = ? and xkey = ?', group_id, category, key]
-      setting = Setting.find(:first, :conditions => con)
 
-      return setting.xvalue unless setting.nil?
-    rescue
-    end
+    con = []
+    con << "(group_id=#{group_id})"
+    con << "(category='#{category}')"
+    con << "(xkey='#{key}')"
+
+    setting = Setting.find(:first, :conditions => con.join(' and '))
+
+    return setting.xvalue unless setting.nil?
+
     return nil
   end
 
@@ -168,11 +168,13 @@ class Setting < ActiveRecord::Base
   #_value_:: Value to save.
   #
   def self.save_group_value(group_id, category, key, value)
-    begin
-      con = ['group_id = ? and category = ? and xkey = ?', group_id, category, key]
-      setting = Setting.find(:first, :conditions => con)
-    rescue
-    end
+
+    con = []
+    con << "(group_id=#{group_id})"
+    con << "(category='#{category}')"
+    con << "(xkey='#{key}')"
+
+    setting = Setting.find(:first, :conditions => con.join(' and '))
 
     if value.nil?
       unless setting.nil?

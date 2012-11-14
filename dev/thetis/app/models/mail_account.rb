@@ -16,6 +16,8 @@ class MailAccount < ActiveRecord::Base
 
   validates_presence_of(:title)
 
+  has_many(:mail_filters, :dependent => :destroy, :order=>'mail_filters.xorder')
+
   public::UIDL_SEPARATOR = "\n"
 
   public::POP_SECURE_CONN_NONE = 'none'

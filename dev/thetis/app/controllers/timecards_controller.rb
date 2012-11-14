@@ -21,7 +21,7 @@ class TimecardsController < ApplicationController
     controller.check_auth(User::AUTH_TIMECARD)
   end
 
-  require RAILS_ROOT+'/lib/util/util_datetime'
+  require ::Rails.root.to_s+'/lib/util/util_datetime'
 
 
   #=== month

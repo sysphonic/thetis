@@ -37,15 +37,7 @@ class AddressbookController < ApplicationController
     end
     disp_name = params[:disp_name]
 
-    email_con = []
-    email_con.push("(email1='#{email}')")
-    email_con.push("(email2='#{email}')")
-    email_con.push("(email3='#{email}')")
-    con = []
-    con.push('('+email_con.join(' or ')+')')
-    con.push(AddressbookHelper.get_scope_condition_for(@login_user, Address::BOOK_BOTH))
-
-    @address = Address.find(:first, :conditions => con.join(' and '))
+    @address = Address.get_by_email(email, @login_user, Address::BOOK_BOTH).first
 
     if @address.nil?
       @address = Address.new
@@ -76,13 +68,14 @@ class AddressbookController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    unless AddressbookHelper.arrange_per_scope(params, @login_user)
+    @address = Address.new(params[:address])
+
+    @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
+    if @address.nil?
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
       return
     end
-
-    @address = Address.new(params[:address])
 
     begin
       @address.save!
@@ -150,14 +143,16 @@ class AddressbookController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @address = Address.find(params[:id])
+    @address.attributes = params[:address]
 
-    unless AddressbookHelper.arrange_per_scope(params, @login_user)
+    @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
+    if @address.nil?
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
       return
     end
 
-    if @address.update_attributes(params[:address])
+    if @address.save
       flash[:notice] = t('msg.update_success')
       if request.xhr?
         render(:partial => 'common/flash_notice', :layout => false)

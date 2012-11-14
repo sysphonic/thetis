@@ -327,8 +327,13 @@ class MailFolder < ActiveRecord::Base
         name_ary.unshift(I18n.t('paren.deleted')) unless folders_cache.nil?
         break
       else
-        path = '/' + folder.name + path
-        name_ary.unshift(folder.name) unless folders_cache.nil?
+        folder_name = folder.name
+        if (folder_name.nil? or folder_name.empty?) \
+            and (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
+          folder_name = MailAccount.get_title(folder.mail_account_id)
+        end
+        path = '/' + folder_name + path
+        name_ary.unshift(folder_name) unless folders_cache.nil?
       end
 
       mail_folder_id = folder.parent_id
@@ -380,8 +385,14 @@ class MailFolder < ActiveRecord::Base
 
     order_by = 'sent_at desc' if order_by.nil? or order_by.empty?
 
+    if user.instance_of?(User)
+      user_id = user.id
+    else
+      user_id = user.to_s
+    end
+
     sql = 'select emails.* from emails'
-    sql << " where mail_folder_id=#{mail_folder_id} and user_id=#{user.id}"
+    sql << " where mail_folder_id=#{mail_folder_id} and user_id=#{user_id}"
     sql << " and (#{add_con})" unless add_con.nil? or add_con.empty?
     sql << " order by #{order_by}"
 

@@ -6,31 +6,31 @@
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule') %>
 
 <% if params[:user_id].nil? %>
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="left" width="30%">
+    <td style="text-align:left; width:30%;">
     <% unless @login_user.nil? %>
-      <table align="left" cellspacing="0" cellpadding="0" width="65">
+      <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
         <tr>
-          <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
+          <td nowrap style="text-align:left; width:30px;">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin?(User::AUTH_SCHEDULE) %>
-          <td width="5"></td>
-          <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
+          <td style="width:5px;"></td>
+          <td style="text-align:left; width:30px;">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
           </td>
           <% end %>
         </tr>
       </table>
     <% end %>
     </td>
-    <td align="center" nowrap width="40%">
+    <td nowrap style="text-align:center; width:40%;">
       <% if @login_user.nil? %>
         &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
       <% end %>
     </td>
-    <td align="right" nowrap width="30%">
+    <td nowrap style="text-align:right; width:30%;">
       <%
       display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
       unless @login_user.nil?
@@ -46,28 +46,27 @@
       end
       %>
       <%= t('cap.display') %>
-      <%= select_tag 'display',
-           options_for_select(display, params[:display]),
-           :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
+      <%= select_tag('display', options_for_select(display, params[:display]), :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }")
       %>
     </td>
   </tr>
 </table>
 <% end %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="25">
-    <td width="25%"></td>
-    <td align="center" width="50%">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
+  <tr style="height:25px;">
+    <td style="width:25%;">
+    </td>
+    <td style="text-align:center; width:50%;">
       <%
       last_month = Date.new(@date.year, @date.month, 1) << 1
       next_month = Date.new(@date.year, @date.month, 1) >> 1
       %>
-      <a class="calendar_paging" href="#" onclick="doPageCalendar('<%= last_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageCalendar('<%= last_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
       <span style="color:crimson; cursor:pointer;" onclick="selectMonth(function(date){doPageCalendar(date);});"><u><%= sprintf('%4d - %02d', @date.year, @date.month) %></u></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
     </td>
-    <td align="right" width="25%">
+    <td style="text-align:right; width:25%;">
     <% if params[:user_id].nil? and !@login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
       <input type="hidden" name="timecard_icons" value="false" />
       <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
@@ -76,8 +75,8 @@
   </tr>
 </table>
 
-<table id="div_calendar" style="overflow:auto;" cellspacing="5" cellpadding="3" width="100%" style="background-color:white">
-  <tr height="20">
+<table id="div_calendar" cellspacing="5" cellpadding="3" style="width:100%; overflow:auto; background-color:white">
+  <tr style="height:20px;">
   <%
   ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].each_with_index do |wday_name, idx|
   %>
@@ -112,7 +111,7 @@ for wd in 0..6 do
         day_caption = '<div style="background-color:darkorange; color:white; width:95%;">&nbsp;<b>' + day_caption + '</b></div>'
       end
     %>
-    <td class="td_calendar" valign="top" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
+    <td class="td_calendar" style="vertical-align:top;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
       <%= raw(day_caption) %><br/>
       <%
       standard_num = 3
@@ -126,11 +125,11 @@ for wd in 0..6 do
 
           if schedule.holiday?
       %>
-            <div class="span_holiday" style="padding:1px;" width="100%" align="center"><%= title %></div>
+            <div class="span_holiday" style="padding:1px; width:100%; text-align:center;"><%= title %></div>
           <% elsif schedule.repeat? %>
             <b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<%= title %><br/>
           <% else %>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="" />&nbsp;<%= title %><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" />&nbsp;<%= title %><br/>
         <%
           end
         end
@@ -149,17 +148,17 @@ for wd in 0..6 do
       unless timecard.nil?
     %>
         <% alt = h(timecard.workcode_name) %>
-        <a href="#" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => @login_user.id) %>'; return false;">
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
+        <a href="javascript:this.onclick()" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => @login_user.id) %>'; return false;">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" title="<%= alt %>">
           <%
           options = ''
           if timecard.business_trip?
-            options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" alt="'+t('timecard.business_trip')+'" title="'+t('timecard.business_trip')+'">'
+            options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" title="'+t('timecard.business_trip')+'">'
           end
           %>
           <%= raw(options) %>
           <% if !timecard.start.nil? and timecard.end.nil? %>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>"/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" title="<%= t('msg.not_fulfilled') %>"/>
           <% end %>
         </a>
     <%

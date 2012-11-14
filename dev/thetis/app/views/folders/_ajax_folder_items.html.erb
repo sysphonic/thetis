@@ -232,17 +232,10 @@ onPaginate = function(url)
       <% end %>
     </td>
     <%
-    updated_at = ''
-    unless item.updated_at.nil?
-      if UtilDate.create(item.updated_at).get_date == Date.today
-        updated_at = item.updated_at.strftime('%H:%M')
-      else
-        updated_at = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD)
-      end
-      updated_at_prec = item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
-    end
+    updated_at = item.get_timestamp_exp(false)
+    updated_at_full = item.get_timestamp_exp(true)
     %>
-    <td class="<%= td_class %>" nowrap title="<%= updated_at_prec %>" style="text-align:center;">
+    <td class="<%= td_class %>" nowrap title="<%= updated_at_full %>" style="text-align:center;">
       <%= updated_at %>
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
@@ -254,7 +247,7 @@ onPaginate = function(url)
       user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
       unless u_groups.empty?
       %>
-      <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+      <a href="#" onclick="showUserGroups('<%= item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
       <% end %>
       <%= truncate(user_name, :length => 10) %>
       <% unless u_groups.empty? %>

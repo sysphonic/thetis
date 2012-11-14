@@ -145,8 +145,8 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
 queryAddressEmail = function(email, dispName)
 {
   var addParams = new Array();
-  addParams.push("disp_name="+dispName);
-  addParams.push("email="+email);
+  addParams.push("disp_name="+encodeURIComponent(restoreHTML(dispName).replace(/&quot;/g, "\"")));
+  addParams.push("email="+encodeURIComponent(restoreHTML(email).replace(/&quot;/g, "\"")));
 <% unless from.nil? %>
   addParams.push("from=<%= from %>");
 <% end %>

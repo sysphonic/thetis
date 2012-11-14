@@ -12,16 +12,16 @@
 @group_obj_cache ||= {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td align="left" nowrap width="1%">
+    <td nowrap style="width:1%; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
     </td>
-    <td width="10"></td>
-    <td align="left" nowrap width="1%">
+    <td style="width:10px;"></td>
+    <td nowrap style="width:1%; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= t('item.show_url') %>" title="<%= t('item.show_url') %>" onclick="showURL();">
     </td>
-    <td align="right" nowrap>
+    <td nowrap style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
       <%= t('msg.search_in') %> <%= select_tag 'find_in',
                                options_for_select([[h(t('folder.current')),Item::FOLDER_CURRENT],
@@ -35,9 +35,9 @@
   </tr>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td align="left" nowrap>
+    <td style="text-align:left;" nowrap>
   <% if @folder_id.nil? or @folder_id.empty? %>
       <div class="button_gray" style="float:left;" onclick="showFolderTreeToSelect('');">
         <%= t('btn.select_folder') %>
@@ -75,7 +75,7 @@
     <% end %>
   <% end %>
     </td>
-    <td align="right">
+    <td style="text-align:right;">
       <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_list.submit();">
       <%
       excepts = nil
@@ -94,9 +94,9 @@
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:10px;">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -122,13 +122,13 @@
 
 <% else %>
 
-<table id="list_items" width="100%" cellpadding="0" cellspacing="0">
+<table id="list_items" style="width:100%;" cellpadding="0" cellspacing="0">
 <% @items.each do |item| %>
   <tr>
     <td>
-      <TABLE width="100%" cellpadding="0" cellspacing="0">
+      <TABLE style="width:100%;" cellpadding="0" cellspacing="0">
         <TR>
-          <TD align="left" style="font-size:11pt; line-height:14pt; text-indent:5px;">
+          <TD style="font-size:11pt; line-height:14pt; text-align:left; text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%= item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
 
             <% if !item.workflow.nil? and item.workflow.decided? %>
@@ -162,12 +162,12 @@
           </TD>
         </TR>
         <TR>
-          <TD align="left" style="font-size:11pt; padding:5px; line-height:14pt; text-indent:60px;">
+          <TD style="font-size:11pt; text-align:left; padding:5px; line-height:14pt; text-indent:60px;">
             <%
             user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             unless u_groups.empty?
             %>
-            <a href="#" onclick="showUserGroups('<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+            <a href="#" onclick="showUserGroups('<%= item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
             <% end %>
               <span style="color:green;">by <%= item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
             <% unless u_groups.empty? %>
@@ -206,8 +206,8 @@
         </TR>
       <% if item.featured? and !item.update_message.nil? and !item.update_message.empty? %>
         <TR>
-          <TD align="center">
-          <div align="left" style="width:90%; padding-bottom:5px;">
+          <TD style="text-align:center;">
+          <div style="width:90%; text-align:left; padding-bottom:5px;">
             <div style="width:60%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
               <span style="padding:5px; font-size:10pt;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
@@ -224,20 +224,20 @@ attachments_num = item_attachments.length
         <TR>
           <TD>
 <% additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0)) %>
-            <table align="center" width="90%" cellspacing="0" cellpadding="0" style="border:1px solid goldenrod;">
+            <table align="center" cellspacing="0" cellpadding="0" style="width:90%; border:1px solid goldenrod;">
               <tr>
-                <td align="left" valign="top" width="<%= (additionalCol)?'70%':'100%' %>" bgcolor="<%= (item.public)?'#FFF5F0':'lightcyan' %>" style="font-size:10.5pt; padding:10px; line-height:15pt;">
+                <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>; font-size:10.5pt; padding:10px; line-height:15pt;">
 <% unless item.summary.nil? or item.summary.empty? %>
 <div>
-  <span style="color:orangered; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
+  <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
   <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
 </div>
-<div height="5">&nbsp;</div>
+<div style="height:5px;">&nbsp;</div>
 <% end %>
                   <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
                   <br/>
                   <% unless item.description.nil? or item.description.empty? %>
-                    <table width="100%" cellpadding="0" cellspacing="2">
+                    <table style="width:100%;" cellpadding="0" cellspacing="2">
                       <tr>
                         <td>
                         <script type="text/javascript">
@@ -257,7 +257,7 @@ attachments_num = item_attachments.length
                   show_num = true if attachments_num > max_bbs_attach
                   if show_num
                   %>
-                    <div align="right" style="padding:5px;">
+                    <div style="text-align:right; padding:5px;">
                       <a href="#" onclick="doShowItem(<%= item.id %>); return false;">
                         ( <%= t('image.plural') %>: <%= images_num %>, <%= t('attachment.plural_full') %>: <%= attachments_num %> )
                       </a>
@@ -266,18 +266,18 @@ attachments_num = item_attachments.length
 
                 </td>
               <% if additionalCol %>
-                <td bgcolor="<%= (item.public)?'#FFF5F0':'lightcyan' %>">
-                   <table align="center" width="100" cellspacing="0" cellpadding="0">
+                <td style="background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>;">
+                   <table align="center" style="width:100px;" cellspacing="0" cellpadding="0">
                 <% if params[:thumbnails]!='false' and images_num > 0 %>
                      <tr>
                        <td>
-                         <table align="center" width="100" cellspacing="0" cellpadding="0">
+                         <table align="center" style="width:100px;" cellspacing="0" cellpadding="0">
                   <%
                   item_images.each_with_index do |image, idx|
                     break if idx >= max_bbs_img
                   %>
                            <tr>
-                             <td width="90" style="padding:5px">
+                             <td style="width:90px; padding:5px">
                                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :ts => ApplicationHelper.get_timestamp(image)) %>
                                <img style="cursor:pointer" src="<%= img_url %>" width="120" onclick="doShowItem(<%= item.id %>);" />
                              </td>
@@ -296,7 +296,7 @@ attachments_num = item_attachments.length
                    attach_cnt += 1
                    break if attach_cnt > max_bbs_attach
                   %>
-                         <table cellspacing="1" cellpadding="0" align="center" width="120" style="cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+                         <table cellspacing="1" cellpadding="0" align="center" style="width:120px; cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                            <tr>
                              <td class="td_attachment_name" align="center">
                                <%= attach.name %>
@@ -304,7 +304,7 @@ attachments_num = item_attachments.length
                            </tr>
                     <% unless attach.title.nil? or attach.title.empty? %>
                            <tr>
-                             <td class="td_attachment_title" align="center">
+                             <td class="td_attachment_title" style="text-align:center;">
                                <%= attach.title %>
                              </td>
                            </tr>
@@ -329,10 +329,10 @@ attachments_num = item_attachments.length
           </TD>
         </TR>
         <TR>
-          <TD align="center">
-            <table align="center" width="90%" cellspacing="0" cellpadding="0">
+          <TD style="text-align:center;">
+            <table align="center" style="width:90%; margin-bottom:20px;" cellspacing="0" cellpadding="0">
               <tr>
-                <td align="center">
+                <td style="text-align:center;">
                   <%
                   @item = item
                   @for_print = true
@@ -340,7 +340,6 @@ attachments_num = item_attachments.length
                   <%= render(:partial => 'ajax_comments') %>
                 </td>
               </tr>
-              <tr height="20"><td></td></tr>
             </table>
           </TD>
         </TR>

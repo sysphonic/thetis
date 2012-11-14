@@ -321,15 +321,15 @@ unless @imp_errs.nil? or @imp_errs.empty?
 %>
 
 <div id="imp_errs" style="display:none;">
-<table valign="top" width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr style="height:20px;">
-    <td style="text-align:right;" style="color:blueviolet; padding-right:10px; padding-top:10px;">
+    <td style="text-align:right; color:blueviolet; padding-right:10px; padding-top:10px;">
       <%= @imp_cnt.to_s + t('user.imported') %><br/>
     </td>
   </tr>
   <tr>
-    <td valign="top" style="padding:10px;">
-      <table align="center" valign="top" width="100%" cellspacing="0" cellpadding="0" border="1">
+    <td style="vertical-align:top; padding:10px;">
+      <table style="width:100%;" cellspacing="0" cellpadding="0" border="1">
 <%
 err_cnt = 0
 @imp_errs.each do |user_cnt, errs|
@@ -337,12 +337,12 @@ err_cnt = 0
 %>
         <tr>
         <% if user_cnt > 0 %>
-          <td valign="top" style="text-align:right; padding:0px 3px;">
+          <td style="text-align:right; vertical-align:top; padding:0px 3px;">
             <%= user_cnt.to_s + t('user.err_list_cap') %>
           </td>
-          <td valign="top" style="text-align:left; padding:0px 3px;">
+          <td style="text-align:left; vertical-align:top; padding:0px 3px;">
         <% else %>
-          <td valign="top" style="text-align:left; padding:0px 3px;" colspan="2">
+          <td style="text-align:left; vertical-align:top; padding:0px 3px;" colspan="2">
         <% end %>
         <% errs.each do |err| %>
             &bull; <%= err %><br/>

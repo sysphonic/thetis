@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2011, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -87,6 +87,141 @@ function _z(elemId)
     return document.getElementById(elemId);
   } else {
     return elemId;
+  }
+}
+
+function getElemByClassNameInChildNodes(elem, className, recursive)
+{
+  for (var i=0; i < elem.childNodes.length; i++) {
+
+    var curNode = elem.childNodes[i];
+
+    if (curNode.className) {
+      var classes = curNode.className.split(" ");
+      for (var k=0; k < classes.length; k++) {
+        if (className == classes[k]) {
+          return curNode;
+        }
+      }
+    }
+
+    if (recursive) {
+      var node = getElemByClassNameInChildNodes(curNode, className, true);
+      if (node) {
+        return node;
+      }
+    }
+  }
+  return null;
+}
+
+function getElemByClassNameInParentNodes(elem, className)
+{
+  var node = elem.parentNode;
+  for (var i=0; node; node=node.parentNode) {
+    var classes = node.className.split(" ");
+    for (var k=0; k < classes.length; k++) {
+      if (className == classes[k]) {
+        return node;
+      }
+    }
+  }
+  return null;
+}
+
+function floorDecimal(val, prec)
+{
+  var precVal = Math.pow(10, prec);
+  return Math.floor(val*precVal) / precVal;
+}
+
+function roundDecimal(val, prec)
+{
+  var precVal = Math.pow(10, prec);
+  return Math.round(val*precVal) / precVal;
+}
+
+function checkInteger(str, signed)
+{
+  if (signed) {
+    return str.match(/^[ ]*[+-]?(0|[1-9]+[0-9]*)[ ]*$/);
+  } else {
+    return str.match(/^[ ]*(0|[1-9]+[0-9]*)[ ]*$/);
+  }
+}
+
+function checkDecimal(str, signed, prec)
+{
+  var checkOk = false;
+
+  if (signed) {
+    checkOk = str.match(/^[ ]*[+-]?(0|[1-9]+[0-9]*)([.][0-9]+)?[ ]*$/);
+  } else {
+    checkOk = str.match(/^[ ]*(0|[1-9]+[0-9]*)([.][0-9]+)?[ ]*$/);
+  }
+
+  if (!checkOk) {
+    return false;
+  }
+
+  if (prec) {
+    var regexp = new RegExp("[.][0-9]{" + (prec+1) + "}");
+    if (str.match(regexp)) {
+      checkOk = false;
+    }
+  }
+
+  return checkOk;
+}
+
+function collectionToArray(collection)
+{
+  var ret = new Array();
+  for (var i=0; i < collection.length; i++) {
+    ret.push(collection[i]);
+  }
+  return ret;
+}
+
+function getFormValue(name)
+{
+  var ret = null;
+  var entries = document.getElementsByName(name);
+  if (entries) {
+    for (var i=0; i < entries.length; i++) {
+      var entry = entries[i];
+      if (!entry
+          || entry.disabled
+          || ((entry.type == "radio" || entry.type == "checkbox") && !entry.checked)) {
+        continue;
+      }
+      ret = entry.value;
+    }
+  }
+  return ret;
+}
+
+// for Form.serialize() in prototype.js
+function disableBlockElems(parentNode, disabled)
+{
+  if (disabled == null) {
+    disabled = true;
+  }
+  for (var i=0; i < parentNode.childNodes.length; i++) {
+
+    var curNode = parentNode.childNodes[i];
+
+    switch (curNode.tagName) {
+      case "INPUT":
+      case "TEXTAREA":
+      case "SELECT":
+        curNode.disabled = disabled;
+        break;
+      default:
+        break;
+    }
+
+    disableBlockElems(curNode, disabled);
   }
 }
 
@@ -221,13 +356,13 @@ function removeArrayElements(ary, del_ary)
   return ary;
 }
 
-function getListSelected(list)
+function getListSelected(list, reqText)
 {
   var sel_ary = new Array();
   for (var i=0; i<list.length; i++) {
     var option=list.options[i];
     if (option.selected == true) {
-      sel_ary[sel_ary.length] = option.value;
+      sel_ary[sel_ary.length] = (reqText)?(option.text):(option.value);
     }
   }
   return sel_ary;

@@ -10,29 +10,26 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 </script>
 
 <%
-if @login_user.nil?
-  login_id = ''
-else
-  login_id = @login_user.id.to_s
-end
-%>
+date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
-<% date_s = @date.strftime(Schedule::SYS_DATE_FORM) %>
+@equip_name_cache ||= {}
+@equip_obj_cache ||= {}
+%>
 
 <%= form_tag( {:controller => 'equipment', :action => 'schedule_all', :id => params[:id]}, :method => 'get', :name => 'form_equipment', :id => 'form_equipment') %>
 
-<table align="center" width="98%" cellspacing="0" cellpadding="0">
+<table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="left" width="30%">
+    <td style="width:30%; text-align:left;">
     <% unless @login_user.nil? %>
-      <table align="left" cellspacing="0" cellpadding="0" width="65">
+      <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
         <tr>
-          <td align="left" nowrap width="30">
+          <td style="text-align:left; width:30px;" nowrap>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_s, :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin? User::AUTH_EQUIPMENT %>
-          <td width="5"></td>
-          <td align="left" nowrap width="30">
+          <td style="width:5px;"></td>
+          <td style="text-align:left; width:30px;" nowrap>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
           </td>
           <% end %>
@@ -40,52 +37,50 @@ end
       </table>
     <% end %>
     </td>
-    <td align="right" nowrap width="30%">
-  <%
-  display = [[h(t('equipment.all')), 'all']]
-  unless @login_user.nil?
-    group_obj_cache = {}
-    groups_a = @login_user.get_groups_a(true, group_obj_cache)
-    groups_a.each do |group_id|
-      if group_obj_cache[group_id].nil?
-        group_name = Group.get_name(group_id)
-      else
-        group_name = group_obj_cache[group_id].name
+    <td style="text-align:right; width:30px;" nowrap>
+      <%
+      display = [[h(t('equipment.all')), 'all']]
+      unless @login_user.nil?
+        group_obj_cache = {}
+        groups_a = @login_user.get_groups_a(true, group_obj_cache)
+        groups_a.each do |group_id|
+          if group_obj_cache[group_id].nil?
+            group_name = Group.get_name(group_id)
+          else
+            group_name = group_obj_cache[group_id].name
+          end
+          display << [h(group_name), 'group_'+group_id]
+        end
+        teams_a = @login_user.get_teams_a
+        teams_a.each do |team_id|
+          display << [h(Team.get_name(team_id)), 'team_'+team_id]
+        end
       end
-      display << [h(group_name), 'group_'+group_id]
-    end
-    teams_a = @login_user.get_teams_a
-    teams_a.each do |team_id|
-      display << [h(Team.get_name(team_id)), 'team_'+team_id]
-    end
-  end
-  %>
-  <%= t('cap.display') %> <%= select_tag 'display',
-                           options_for_select(display, params[:display]),
-                           :onchange => "prog('TOP-RIGHT'); submit();"
-            %>
+      %>
+      <%= t('cap.display') %>
+      <%= select_tag('display', options_for_select(display, params[:display]), :onchange => "prog('TOP-RIGHT'); submit();") %>
     </td>
   </tr>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center" width="20%">
+    <td style="width:20%;">
     </td>
-    <td align="center" width="60%">
+    <td style="text-align:center; width:60%;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+      <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
       <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-      &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'schedule_all', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>
-    <td align="right" width="20%" style="padding-right:10px; padding-top:10px;">
+    <td style="width:20%;">
     </td>
   </tr>
 </form>
@@ -94,9 +89,9 @@ next_week = @date + 7
 
 <% if @equip_schedule_hash.nil? or @equip_schedule_hash.empty? %>
   <div style="padding-top:20px;">
-    <table width="95%" cellspacing="0" cellpadding="0" style="border:green 1px solid; border-collapse:collapse;">
-      <tr height="50">
-        <td align="center" style="color:darkgreen;">
+    <table cellspacing="0" cellpadding="0" style="width:95%; border:green 1px solid; border-collapse:collapse;">
+      <tr style="height:50px;">
+        <td style="text-align:center; color:darkgreen;">
           <%= t('paren.no_equipment') %>
         </td>
       </tr>
@@ -111,16 +106,16 @@ next_week = @date + 7
   %>
 
   <div id="div_timetable_<%= @equipment_id %>">
-    <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:10px;">
+    <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:10px;">
       <tr>
-        <td align="left">
-          <% disp = Equipment.get_name(@equipment_id) %>
-          <a class="a_underline" href="#" onclick="showEquipment(<%= @equipment_id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;">
+        <td style="text-align:left;">
+          <% disp = Equipment.get_name(@equipment_id, @equip_name_cache, @equip_obj_cache) %>
+          <a class="a_underline" href="javascript:this.onclick()" onclick="showEquipment(<%= @equipment_id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;">
             <%= disp %>
           </a>
         </td>
       </tr>
-      <tr height="5"><td></td></tr>
+      <tr style="height:5px;"><td></td></tr>
       <tr>
         <td>
           <%= render(:partial => 'weektable') %>

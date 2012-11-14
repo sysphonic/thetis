@@ -1,11 +1,11 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @mail_account}) %>
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" width="100%">
+      <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
           <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_z('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('cap.basic_info') %>
@@ -23,13 +23,13 @@
     </td>
   </tr>
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <div id="div_basic" style="width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+      <div id="div_basic" style="width:100%; text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:10px 0px 15px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px 15px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_title"><%= MailAccount.human_attribute_name('title') %></label>
@@ -41,40 +41,52 @@
                 </tr>
 <!--
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap> <label for="mail_account_is_default"><%= t('mail_account.default') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_is_default"><%= t('mail_account.default') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= check_box('mail_account', 'is_default') %> <label for="mail_account_is_default"><%= MailAccount.human_attribute_name('is_default') %></label>
                   </td>
                 </tr>
 --><%= check_box('mail_account', 'is_default', :style => 'display:none;') %>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_from_name"><%= MailAccount.human_attribute_name('from_name') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_from_name"><%= MailAccount.human_attribute_name('from_name') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'from_name') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_from_address"><%= MailAccount.human_attribute_name('from_address') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_from_address"><%= MailAccount.human_attribute_name('from_address') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'from_address', :style => 'ime-mode:disabled') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_reply_to"><%= MailAccount.human_attribute_name('reply_to') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_reply_to"><%= MailAccount.human_attribute_name('reply_to') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'reply_to', :style => 'ime-mode:disabled') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_organization"><%= MailAccount.human_attribute_name('organization') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_organization"><%= MailAccount.human_attribute_name('organization') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'organization') %>
                   </td>
                 </tr>
               <% if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0 %>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.limit_num_per_account') %></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <%= t('mail.limit_num_per_account') %>
+                  </td>
                   <td class="item_value_td">
                     <%= THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT %>
                   </td>
@@ -82,7 +94,9 @@
               <% end %>
               <% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><%= t('mail.capacity_per_account') %></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <%= t('mail.capacity_per_account') %>
+                  </td>
                   <td class="item_value_td">
                     <%
                     if @mail_account.nil?
@@ -101,39 +115,49 @@
         </table>
       </div>
 
-      <div id="div_receive" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+      <div id="div_receive" style="display:none; width:100%; text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:10px 0px 15px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px 15px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'pop_server', :style => 'ime-mode:disabled') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_port"><%= MailAccount.human_attribute_name('pop_port') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_port"><%= MailAccount.human_attribute_name('pop_port') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'pop_port', :style => 'ime-mode:disabled; width:80px;') %>
                   </td>
                 </tr>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_username"><%= MailAccount.human_attribute_name('pop_username') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_username"><%= MailAccount.human_attribute_name('pop_username') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'pop_username', :style => 'ime-mode:disabled') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_password"><%= MailAccount.human_attribute_name('pop_password') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_password"><%= MailAccount.human_attribute_name('pop_password') %></label>
+                  </td>
                   <td class="item_value_td">
-                    <%= password_field 'mail_account', 'pop_password' %>
+                    <input id="mail_account_pop_password" name="mail_account[pop_password]" size="30" type="password" value="<%= (@mail_account.nil?)?(nil):(@mail_account.pop_password) %>" />
                   </td>
                 </tr>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_secure_conn"><%= t('mail_account.secure_connection') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_secure_conn"><%= t('mail_account.secure_connection') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= radio_button('mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_NONE) %><label for="mail_account_pop_secure_conn_none"> <%= t('msg.none') %></label><br/>
 <!--
@@ -143,15 +167,19 @@
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_pop_secure_auth"><%= t('mail_account.secure_auth') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_pop_secure_auth"><%= t('mail_account.secure_auth') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= radio_button('mail_account', 'pop_secure_auth', false) %><label for="mail_account_pop_secure_auth_false"> <%= t('msg.none') %></label><br/>
                     <%= radio_button('mail_account', 'pop_secure_auth', true) %><label for="mail_account_pop_secure_auth_true"> APOP</label><br/>
                   </td>
                 </tr>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_remove_from_server"><%= t('mail.messages') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_remove_from_server"><%= t('mail.messages') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= check_box('mail_account', 'remove_from_server', :disabled => true) %> <label for="mail_account_remove_from_server"><%= MailAccount.human_attribute_name('remove_from_server') %></label>
                     <span style="color:dimgray;">(Disabled)</span>
@@ -163,35 +191,43 @@
         </table>
       </div>
 
-      <div id="div_send" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px blueviolet;">
+      <div id="div_send" style="display:none; width:100%; text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
-            <td align="center" style="padding:10px 0px 15px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px 15px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'smtp_server', :style => 'ime-mode:disabled') %>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_port"><%= MailAccount.human_attribute_name('smtp_port') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_smtp_port"><%= MailAccount.human_attribute_name('smtp_port') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= text_field('mail_account', 'smtp_port', :style => 'ime-mode:disabled; width:80px;') %>
                   </td>
                 </tr>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_secure_conn"><%= t('mail_account.secure_connection') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_smtp_secure_conn"><%= t('mail_account.secure_connection') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_NONE) %><label for="mail_account_smtp_secure_conn_none"> <%= t('msg.none') %></label><br/>
                     <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_STARTTLS) %><label for="mail_account_smtp_secure_conn_starttls"> STARTTLS</label><br/>
                     <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_SSL_TLS) %><label for="mail_account_smtp_secure_conn_ssl_tls"> SSL/TLS</label><br/>
                   </td>
                 </tr>
-                <tr height="10"><td colspan="2"></td></tr>
+                <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_auth"><%= MailAccount.human_attribute_name('smtp_auth') %></label></td>
+                  <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                    <label for="mail_account_smtp_auth"><%= MailAccount.human_attribute_name('smtp_auth') %></label>
+                  </td>
                   <td class="item_value_td">
                     <%= check_box('mail_account', 'smtp_auth', :onClick => '_z("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
                   </td>
@@ -205,17 +241,21 @@
                         <%= radio_button('mail_account', 'smtp_auth_method', 'cram_md5') %><label for="mail_account_smtp_auth_method_cram_md5">CRAM MD5</label>
                       </div>
 
-                      <table width="100%" cellpadding="0" cellspacing="2">
+                      <table style="width:100%;" cellpadding="0" cellspacing="2">
                         <tr>
-                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_username"><%= t('user.u_name') %></label></td>
+                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                            <label for="mail_account_smtp_username"><%= t('user.u_name') %></label>
+                          </td>
                           <td class="item_value_td">
                             <%= text_field('mail_account', 'smtp_username', :style => 'ime-mode:disabled;') %>
                           </td>
                         </tr>
                         <tr>
-                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap><label for="mail_account_smtp_password"><%= t('password.name') %></label></td>
+                          <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
+                            <label for="mail_account_smtp_password"><%= t('password.name') %></label>
+                          </td>
                           <td class="item_value_td">
-                            <%= password_field('mail_account', 'smtp_password') %>
+                            <input id="mail_account_smtp_password" name="mail_account[smtp_password]" size="30" type="password" value="<%= (@mail_account.nil?)?(nil):(@mail_account.smtp_password) %>" />
                           </td>
                         </tr>
                       </table>

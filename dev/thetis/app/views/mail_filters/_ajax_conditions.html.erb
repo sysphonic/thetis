@@ -1,0 +1,135 @@
+
+<%
+unless @mail_filter.nil? or @mail_filter.conditions.nil?
+
+  opts_point = MailFiltersHelper.opts_condition_point(false)
+  opts_compare = MailFiltersHelper.opts_condition_compare(false)
+  opts_priority = MailFiltersHelper.opts_condition_priority(false)
+  opts_status = MailFiltersHelper.opts_condition_status(false)
+
+  conditions = @mail_filter.get_conditions
+  conditions.each_with_index do |entry, idx|
+    point, compare, val = entry
+
+    opt_point = opts_point.find{|opt| opt.last == point}
+    disp_point = (opt_point.nil?)?(nil):(opt_point.first)
+
+    opt_compare = opts_compare.find{|opt| opt.last == compare}
+    disp_compare = (opt_compare.nil?)?(nil):(opt_compare.first)
+
+    if point == 'priority'
+      opt_priority = opts_priority.find{|opt| opt.last == val}
+      disp_val = (opt_priority.nil?)?(nil):(opt_priority.first)
+    elsif point == 'status'
+      opt_status = opts_status.find{|opt| opt.last == val}
+      disp_val = (opt_status.nil?)?(nil):(opt_status.first)
+    else
+      disp_val = val
+    end
+
+    disp = "#{disp_point} #{disp_compare}"
+    unless disp_val.nil? or disp_val.empty?
+      disp << ": #{disp_val}"
+    end
+%>
+<div class="filter_condition_entry" id="div_filter_condition<%= idx %>" style="height:18px; padding:4px 0px;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+  <%= disp %>
+  &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editFilterCondition('<%= idx %>', false);" />
+  &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="deleteFilterCondition('<%= idx %>');" />
+  <input type="hidden" id="filter_condition<%= idx %>" name="filter_condition[<%= idx %>]" value="<%= [point, compare, val].join("\n") %>" />
+</div>
+<%
+  end
+end
+%>
+
+<script type="text/javascript">
+
+getFilterConditionEntryHtml = function(disp, point, compare, val, condition_id, reqDivTag)
+{
+  var content = "";
+  if (reqDivTag) {
+    content += "<div class=\"filter_condition_entry\" id=\"div_filter_condition"+condition_id+"\" style=\"height:18px; padding:4px 0px;\">";
+  }
+  content += "  <img src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif\" title=\"<%= t('msg.drag_to_change_orger') %>\" style=\"cursor:move\" />";
+  content += "  " + disp;
+  content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif\" title=\"<%= t('btn.edit') %>\" onclick=\"editFilterCondition('"+condition_id+"', false);\" />";
+  content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif\" title=\"<%= t('btn.delete') %>\" onclick=\"deleteFilterCondition('"+condition_id+"'); return false;\" />";
+  content += "  <input type=\"hidden\" id=\"filter_condition"+condition_id+"\" name=\"filter_condition["+condition_id+"]\" value=\""+new Array(point, compare, val).join("\n")+"\" />";
+  if (reqDivTag) {
+    content += "</div>";
+  }
+
+  return content;
+}
+
+var thetisBoxFilterCondition = null;
+
+editFilterCondition = function(condition_id, isNew)
+{
+  if (thetisBoxFilterCondition) {
+    thetisBoxFilterCondition.remove();
+    thetisBoxFilterCondition = null;
+  }
+
+  var addParams = new Array();
+  addParams.push("condition_id="+condition_id);
+
+  if (!isNew) {
+    var vals = _z("filter_condition"+condition_id).value.split("\n");
+    var point = vals[0];
+    var compare = vals[1];
+    var val = vals[2];
+
+    addParams.push("point="+point);
+    addParams.push("compare="+compare);
+    addParams.push("val="+val);
+  }
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'mail_filters', :action => 'edit_condition') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+                thetisBoxFilterCondition = new ThetisBox;
+                thetisBoxFilterCondition.bgcolor_title = "#8486e0";
+                thetisBoxFilterCondition.bgcolor_body = "#a5baff";
+                thetisBoxFilterCondition.title = "<%= t('mail_filter.condition.cap') %>";
+                if (thetisBoxFilterEdit) {
+                  thetisBoxFilterEdit.addChildBox(thetisBoxFilterCondition);
+                }
+                thetisBoxFilterCondition.show(
+                          "CENTER",
+                          "620,180",
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+}
+
+deleteFilterCondition = function(condition_id)
+{
+  var div_filter_condition = _z("div_filter_condition"+condition_id);
+  if (div_filter_condition) {
+    removeElem(div_filter_condition);
+  }
+}
+
+getFilterConditionsOrderParams = function()
+{
+  return Sortable.serialize("div_filter_conditions", { name: "filter_conditions_order" });
+}
+
+</script>

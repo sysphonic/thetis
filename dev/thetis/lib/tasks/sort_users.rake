@@ -1,7 +1,7 @@
 # rake thetis:sort_users RAILS_ENV=production
 
 namespace :thetis do
-  task :sort_users do
+  task :sort_users => :environment do
     groups ={}
     ('A'..'Z').to_a.each do |group_name|
       groups[group_name] = Group.find(:first, :conditions => "name='#{group_name}'")

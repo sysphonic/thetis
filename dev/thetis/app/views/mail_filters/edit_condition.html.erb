@@ -1,0 +1,284 @@
+<%
+form_idx = Time.now.to_f.to_s.gsub('.', '_')
+
+point = params[:point]
+compare = params[:compare]
+val = params[:val]
+%>
+
+<%= form_tag({:controller => 'mail_filters', :action => 'update_condition', :id => (@mail_filter.nil?)?(nil):(@mail_filter.id)}, :method => 'post', :name => 'form_filter_condition'+form_idx) %>
+
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 15px;">
+  <tr>
+    <td style="vertical-align:top;">
+      <table align="center" style="width:90%; padding:10px 0px;" cellpadding="0" cellspacing="2">
+        <tr>
+          <td class="item_value_td" style="width:33%">
+            <%
+            opts = MailFiltersHelper.opts_condition_point(true)
+            %>
+            <%= select_tag('filter_condition_point', options_for_select(opts, point), :style => 'min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
+          </td>
+          <td class="item_value_td" style="width:33%">
+            <%
+            opts = MailFiltersHelper.opts_condition_compare(true)
+            %>
+            <%= select_tag('filter_condition_compare', options_for_select(opts, compare), :style => 'display:none; min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
+          </td>
+          <td class="item_value_td" style="width:33%">
+            <input type="text" id="filter_condition_text" name="filter_condition_text" value="<%= val %>" style="display:none; width:100%;" />
+
+            <%
+            opts = MailFiltersHelper.opts_condition_priority(true)
+            %>
+            <%= select_tag('filter_condition_priority', options_for_select(opts, val), :style => 'display:none; min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
+
+            <%
+            opts = MailFiltersHelper.opts_condition_status(true)
+            %>
+            <%= select_tag('filter_condition_status', options_for_select(opts, val), :style => 'display:none; min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
+
+            <input type="text" id="filter_condition_date" name="filter_condition_date" value="<%= val %>" readonly onclick="showCalFilterConditionDate();" style="display:none; width:90px; cursor:pointer;" />
+            <span id="div_cal_filter_condition_date"></span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+</form>
+
+<table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+  <tr>
+    <td style="text-align:center;">
+      <input type="button" id="btn_filter_condition_ok" value="<%= t('btn.ok')%>" style="width:90px; height:25px;" onclick="onFilterConditionOkClicked(this);" />
+    </td>
+    <td style="min-width:15px; width:15px;"></td>
+    <td style="text-align:center;">
+      <input type="button" id="btn_filter_condition_cancel" value="<%= t('btn.cancel')%>" style="width:90px; height:25px;" onclick="onFilterConditionCancelClicked(this);" />
+    </td>
+  </tr>
+</table>
+
+
+<%= render(:partial => 'common/jkl_calendar_init') %>
+
+<script type="text/javascript">
+
+var _compareOptions = null;
+
+setFilterConditionCompareOptions = function(ctrl, vals)
+{
+  if (!_compareOptions) {
+    _compareOptions = new Array();
+<%
+opts_compare = MailFiltersHelper.opts_condition_compare(false)
+opts_compare.each do |opt|
+%>
+    _compareOptions.push(new Option("<%= opt.first %>", "<%= opt.last %>"));
+<% end %>
+  }
+
+  var curVal = ctrl.value;
+
+  ctrl.options.length = 0;
+  for (var i=0, idx=0; i < _compareOptions.length; i++) {
+    if (vals.indexOf(_compareOptions[i].value) >= 0) {
+      ctrl.options[idx] = _compareOptions[i];
+      if (ctrl.options[idx].value == curVal) {
+        ctrl.options[idx].selected = true;
+      }
+      idx++;
+    }
+  }
+}
+
+onFilterConditionOptionChanged = function(elem, keepVal)
+{
+  if (elem.style.display == "none") {
+    return;
+  }
+
+  if (elem.name == "filter_condition_point") {
+    var compares = null;
+    var filter_condition_text = _z("filter_condition_text");
+    var filter_condition_priority = _z("filter_condition_priority");
+    var filter_condition_status = _z("filter_condition_status");
+    var filter_condition_date = _z("filter_condition_date");
+    filter_condition_text.style.display = "none";
+    filter_condition_priority.style.display = "none";
+    filter_condition_status.style.display = "none";
+    filter_condition_date.style.display = "none";
+
+    if (!keepVal) {
+      filter_condition_text.value = "";
+      filter_condition_priority.selectedIndex = 0;
+      filter_condition_status.selectedIndex = 0;
+      filter_condition_date.value = "";
+    }
+
+    switch (elem.value) {
+      case "subject":
+      case "message_body":
+        compares = new Array("include", "not_include", "equal", "not_equal", "begin_with", "end_with");
+        filter_condition_text.style.display = "";
+        break;
+      case "from":
+      case "to":
+      case "cc":
+      case "to_cc":
+      case "from_to_cc_bcc":
+        compares = new Array("include", "not_include", "equal", "not_equal", "begin_with", "end_with", "in_addressbook", "not_in_addressbook");
+        filter_condition_text.style.display = "";
+        break;
+      case "sent_at":
+        compares = new Array("equal", "not_equal", "before", "after");
+        filter_condition_date.style.display = "";
+        break;
+      case "priority":
+        compares = new Array("equal", "heigher_than", "lower_than");
+        filter_condition_priority.style.display = "";
+        break;
+      case "status":
+        compares = new Array("equal", "not_equal");
+        filter_condition_status.style.display = "";
+        break;
+      case "days_from_sent_at":
+      case "size":
+        compares = new Array("equal", "more_than", "less_than");
+        filter_condition_text.style.display = "";
+        break;
+    }
+    var filter_condition_compare = _z("filter_condition_compare");
+    if (compares) {
+      setFilterConditionCompareOptions(filter_condition_compare, compares);
+      filter_condition_compare.style.display = "";
+    }
+
+  } else if (elem.name == "filter_condition_compare") {
+
+    var filter_condition_text = _z("filter_condition_text");
+
+    switch (elem.value) {
+      case "in_addressbook":
+      case "not_in_addressbook":
+        filter_condition_text.style.display = "none";
+        break;
+      default:
+        for (var i=0; i < elem.options.length; i++) {
+          if (elem.options[i].value == "in_addressbook") {
+            filter_condition_text.style.display = "";
+            break;
+          }
+        }
+        break;
+    }
+  }
+
+  removeOptionNotSelected(elem);
+}
+onFilterConditionOptionChanged(_z("filter_condition_point"), true);
+onFilterConditionOptionChanged(_z("filter_condition_compare"), true);
+
+checkIndispensablesFilterCondition = function()
+{
+  var frm = document.form_filter_condition<%= form_idx %>;
+
+  for (var i=0; i < frm.elements.length; i++) {
+    var elem = frm.elements[i];
+    if (elem.style.display != "none"
+        && trim(elem.value) == "") {
+      var thetisBox = msg("<%= t('msg.specify_all_indispensable') %>");
+      thetisBox.setOnClose(
+          function() {
+            elem.focus();
+          }
+        );
+      return false;
+    }
+  }
+  return true;
+}
+
+onFilterConditionOkClicked = function(elem)
+{
+  var frm = document.form_filter_condition<%= form_idx %>;
+  var btn_filter_condition_ok = _z("btn_filter_condition_ok");
+  var btn_filter_condition_cancel = _z("btn_filter_condition_cancel");
+  btn_filter_condition_ok.disabled = true;
+  btn_filter_condition_cancel.disabled = true;
+
+  if (!checkIndispensablesFilterCondition()) {
+    btn_filter_condition_ok.disabled = false;
+    btn_filter_condition_cancel.disabled = false;
+    return false;
+  }
+
+  var filter_condition_point = _z("filter_condition_point");
+  var filter_condition_compare = _z("filter_condition_compare");
+
+  var filter_condition_text = _z("filter_condition_text");
+  var filter_condition_priority = _z("filter_condition_priority");
+  var filter_condition_status = _z("filter_condition_status");
+  var filter_condition_date = _z("filter_condition_date");
+
+  var point = filter_condition_point.value;
+  var compare = filter_condition_compare.value;
+  var val = "";
+  var dispVal = null;
+  var valCtrls = new Array(filter_condition_text, filter_condition_priority, filter_condition_status, filter_condition_date);
+  for (var i=0; i < valCtrls.length; i++) {
+    var valCtrl = valCtrls[i];
+    if (valCtrl.style.display != "none") {
+      val = valCtrl.value;
+      if (valCtrl.options) {
+        if (valCtrl.selectedIndex >= 0) {
+          dispVal = valCtrl.options[valCtrl.selectedIndex].text;
+        }
+      } else {
+        dispVal = val;
+      }
+      break;
+    }
+  }
+  var disp = getListSelected(filter_condition_point, true)[0]
+              + " " + getListSelected(filter_condition_compare, true)[0];
+  if (dispVal != null) {
+    disp += ": " + dispVal;
+  }
+
+  var div_filter_conditions = _z("div_filter_conditions");
+  var condition_id = "<%= params[:condition_id] %>";
+
+  var div_filter_condition = _z("div_filter_condition"+condition_id);
+  if (div_filter_condition) {
+    div_filter_condition.innerHTML = getFilterConditionEntryHtml(disp, point, compare, val, condition_id, false);
+  } else {
+    div_filter_conditions.innerHTML += getFilterConditionEntryHtml(disp, point, compare, val, condition_id, true);
+  }
+
+  initSortableFilterCondition();
+
+  var boxInstance = ThetisBox.getInstanceForElem(elem);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
+}
+
+onFilterConditionCancelClicked = function(elem)
+{
+  var boxInstance = ThetisBox.getInstanceForElem(elem);
+  if (boxInstance) {
+    boxInstance.remove();
+  }
+}
+
+var calFilterConditionDate = new JKL.Calendar("div_cal_filter_condition_date", "filter_condition_date");
+
+showCalFilterConditionDate = function()
+{
+  calFilterConditionDate.write();
+}
+
+</script>
