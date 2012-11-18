@@ -36,7 +36,7 @@ onSearchClicked = function()
   var addParams = new Array();
   addParams.push(Form.serialize(document.form_list));
 
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 onResetClicked = function()
@@ -46,7 +46,7 @@ onResetClicked = function()
   var addParams = new Array();
   addParams.push(Form.serialize(document.form_list));
 
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 doDeleteMulti = function()
@@ -71,7 +71,7 @@ _doDeleteMulti = function()
   var addParams = getCheckedMailsParam();
   addParams.push(Form.serialize(document.form_list));
 
-  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mails') %>", addParams);
+  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 doMoveMulti = function()
@@ -95,7 +95,7 @@ doMoveMails = function(frmTree)
   addParams.push(Form.serialize(document.form_list));
   addParams.push(Form.serialize(frmTree));
 
-  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams);
+  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 getCheckedMailsParam = function()
@@ -139,7 +139,7 @@ sortList = function(col)
   var addParams = new Array();
   addParams.push(Form.serialize(document.form_list));
 
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 selectAll = function()
@@ -161,7 +161,7 @@ onPaginate = function(url)
 {
 //  var m = url.match(/page=(\d+)/);
 //  var page = m[1];
-  doUpdateViewMails("get", url);
+  doUpdateViewMails("get", url, null, "<%= @folder_id %>");
 }
 
 </script>

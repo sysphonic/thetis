@@ -149,6 +149,23 @@ class MailAccountsController < ApplicationController
       redirect_to(:controller => 'login', :action => 'logout')
       return
     end
+
+    @folder_tree = MailFolder.get_tree_for(@login_user, [mail_account_id])
+    mail_folders = @folder_tree.values.flatten.uniq
+    mail_folder_ids = mail_folders.collect{|rec| rec.id}
+    @unread_emails_h = {}
+    unless mail_folder_ids.nil? or mail_folder_ids.empty?
+      unread_emails = Email.find(:all, :conditions => "user_id=#{@login_user.id} and status='#{Email::STATUS_UNREAD}' and mail_folder_id in (#{mail_folder_ids.join(',')})")
+      unread_emails.each do |email|
+        mail_folder = mail_folders.find{|rec| rec.id == email.mail_folder_id}
+        unless mail_folder.nil?
+          @unread_emails_h[mail_folder] ||= 0
+          @unread_emails_h[mail_folder] += 1
+        end
+      end
+    end
+    @folder_obj_cache ||= MailFolder.build_cache(mail_folders)
+
     render(:layout => (!request.xhr?))
   end
 

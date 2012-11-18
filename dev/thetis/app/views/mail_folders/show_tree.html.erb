@@ -413,12 +413,7 @@ function onLoadSub()
   %>
 
 <% unless session[:mailfolder_id].nil? or session[:mailfolder_id].empty? %>
-  var menuId = "a_mailTree:<%= session[:mailfolder_id] %>";
-  ThetisBox.selectTree("selKeeper", menuId, null, true);
-  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
-    selectFolder(<%= session[:mailfolder_id] %>);
-//    doUpdateMails(<%= session[:mailfolder_id] %>, false);
-  }
+  doSelectTree(<%= session[:mailfolder_id] %>);
 <% end %>
 
 <% if @mail_accounts.empty? %>
@@ -634,6 +629,15 @@ function doMove()
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
+function doSelectTree(folder_id)
+{
+  var menuId = "a_mailTree:" + folder_id;
+  ThetisBox.selectTree("selKeeper", menuId, null, true);
+  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
+    selectFolder(folder_id);
+  }
+}
+
 function selectFolder(folder_id)
 {
   doUpdateMails(folder_id, false);
@@ -655,7 +659,7 @@ function doUpdateMails(folder_id, do_pop)
   if (do_pop) {
     addParams.push("pop=true");
   }
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, folder_id);
 }
 
 function showMail(email_id)
@@ -706,15 +710,11 @@ function clearMailContent()
   }
 }
 
-function showMailAccountSummary()
+var curSummaryAccountId = null;
+
+function showMailAccountSummary(mail_account_id)
 {
-<% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
   var addParams = new Array();
-  var folder_id = getCurrentFolderId();
-  var mail_account_id = getMailAccountId(folder_id);
-  if (!mail_account_id) {
-    return;
-  }
   addParams.push("id="+mail_account_id);
 
 //  var thetisBox = prog("TOP-RIGHT");
@@ -726,16 +726,32 @@ function showMailAccountSummary()
                   parameters: addParams.join("&"),
                   asynchronous: true,
                   evalScripts: true,
-                  onComplete: function(request){ /*thetisBox.remove();*/ },
+                  onComplete: function(request) {
+                      // thetisBox.remove();
+                      curSummaryAccountId = mail_account_id;
+                    },
                 }
               );
-<% end %>
 }
 
-function doUpdateViewMails(method, action, addParams)
+function doUpdateViewMails(method, action, addParams, folder_id)
 {
   removeHeaderInfo();
-  clearMailContent();
+
+  if (folder_id == null) {
+    folder_id = getCurrentFolderId();
+  }
+  var mail_account_id = getMailAccountId(folder_id);
+
+  var summaryNode = getElemByClassNameInChildNodes(_z("div_mail_content"), "mail_account_summary", true);
+  if (summaryNode) {
+    if (!mail_account_id || mail_account_id != curSummaryAccountId) {
+      clearMailContent();
+    }
+  } else {
+    clearMailContent();
+    curSummaryAccountId = null;
+  }
 
   if (!addParams) {
     addParams = new Array();
@@ -755,7 +771,9 @@ function doUpdateViewMails(method, action, addParams)
                   evalScripts: true,
                   onComplete: function(request){
                     thetisBox.remove();
-                    showMailAccountSummary();
+                    if (mail_account_id && mail_account_id != curSummaryAccountId) {
+                      showMailAccountSummary(mail_account_id);
+                    }
                   },
                 }
               );
@@ -856,7 +874,7 @@ function getSelectedRow()
 #     addParams.push("mail_account_id="+mail_account_id);
 #   }
 # 
-#   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", addParams);
+#   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", addParams, folder_id);
 # }
 # 
 # function doMoveMail()
@@ -915,7 +933,7 @@ function _doEmpty(folder_id)
     addParams.push("mail_account_id="+mail_account_id);
   }
 
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams);
+  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams, folder_id);
 }
 
 

@@ -1,16 +1,28 @@
 
-<div id="mail_account_summary<%= @mail_account.id %>" style="text-align:left; padding:10px 10px 0px;">
+<div class="mail_account_summary" id="mail_account_summary<%= @mail_account.id %>" style="text-align:left; padding:10px 10px 0px;">
 
-<%= @mail_account.title %><br/>
-
-<table align="left" cellspacing="0" cellpadding="0" style="width:90%; padding:0px 10px 0px;">
-<% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td nowrap style="width:80px; padding-right:5px; text-align:right; color:gray;">
+    <td nowrap style="width:80%; text-align:left; color:blueviolet;">
+      <%= @mail_account.title %>
+    </td>
+    <td nowrap style="text-align:right;">
+<!--
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/reload.png" title="<%= t('btn.clear') %>" onclick="onRefreshAccountSummaryClicked(); return false;" />
+-->
+    </td>
+  </tr>
+</table>
+
+
+<% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:0px 10px 0px;">
+  <tr style="height:18px;">
+    <td nowrap style="width:80px; padding-right:5px; line-height:1.0; text-align:left; color:gray;">
       <%
       cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
       %>
-      <%= t('mail.using') %> <%= cur_mb %>MB
+      &bull; <%= t('mail.using') %> <%= cur_mb %>MB
     </td>
     <td style="text-align:left;">
       <%
@@ -18,12 +30,12 @@
       %>
       <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse;collapse; border:solid 1px dimgray;">
         <tr style="height:18px;">
-          <td style="width:<%= cur_percent %>%; vertical-align:middle; background-color:limegreen;">
+          <td style="width:<%= cur_percent %>%; line-height:1.0; vertical-align:middle; background-color:limegreen;">
 <% if cur_percent > 50 %>
             <span style="font-size:9pt; color:white; margin-right:5px;"><%= cur_percent %>%</span>
 <% end %>
           </td>
-          <td style="width:<%= 100 - cur_percent %>%; vertical-align:middle;">
+          <td style="width:<%= 100 - cur_percent %>%; line-height:1.0; vertical-align:middle;">
 <% if cur_percent <= 50 %>
             <span style="font-size:9pt; color:green; margin-left:3px;"><%= cur_percent %>%</span>
 <% end %>
@@ -31,11 +43,43 @@
         </tr>
       </table>
     </td>
-    <td nowrap style="width:100px; text-align:left; padding-left:5px; color:gray;">
+    <td nowrap style="width:100px; line-height:1.0; text-align:left; padding-left:5px; color:gray;">
        <%= t('mail.capacity_per_account') %> <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB
     </td>
   </tr>
-<% end %>
 </table>
+<% end %>
+
+<%
+unless @unread_emails_h.empty?
+  @folder_path_cache ||= {}
+  @folder_obj_cache ||= {}
+%>
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:0px 10px 0px;">
+  <tr>
+    <td nowrap style="text-align:left; color:gray;">
+      &bull; <%= t('msg.unread') %>
+    </td>
+  </tr>
+  <tr>
+    <td nowrap style="text-align:left; padding-left:20px;">
+      <table cellspacing="0" cellpadding="0" style="width:100%;">
+  <% @unread_emails_h.each do |mail_folder, count| %>
+        <tr>
+          <td style="width:40%; text-align:left; color:gray;">
+            <a href="javascript:this.onclick()" onclick="doSelectTree(<%= mail_folder.id %>); return false;">
+              <%= mail_folder.get_path(@folder_path_cache, @folder_obj_cache) %>
+            </a>
+          </td>
+          <td style="width:60%; text-align:left; padding-left:10px; color:gray;">
+            <%= count %>
+          </td>
+        </tr>
+  <% end %>
+      </table>
+    </td>
+  </tr>
+</table>
+<% end %>
 </div>
 
