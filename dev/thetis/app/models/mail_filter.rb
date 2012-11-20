@@ -119,4 +119,23 @@ class MailFilter < ActiveRecord::Base
 
     return (self.mail_account.user_id == user.id)
   end
+
+  #=== get_triggers_a
+  #
+  #Gets Array of trigger strings.
+  #
+  #return:: Array of trigger strings.
+  #
+  def get_triggers_a
+
+    return [] if self.triggers.nil? or self.triggers.empty?
+
+    array = self.triggers.split('|')
+    array.compact!
+    array.delete('')
+
+    return array
+  end
+
+
 end

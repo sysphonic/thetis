@@ -933,6 +933,10 @@ de:
     received_list: "Empfangsliste"
     received_list_info: "Kopien von beschlossenen Arbeitsabläufe werden automatisch im folgenden Ordner in My Folder speichern."
     select_to_create: "Bitte wählen Sie Arbeitsablauf zu erstellen aus."
+  sign:
+    applicable: "&Omicron;"
+    not_applicable: "-"
+    negative: "&Chi;"
   msg:
     select_encoding_of_csv: "Bitte wählen Sie die Buchstabe-Codierung der CSV-Datei aus."
     specify_csv_encoding: "Bitte geben Sie die CSV-Datei und die Buchstabe-Codierung an."

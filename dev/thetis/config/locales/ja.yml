@@ -934,6 +934,10 @@ ja:
     received_list: "自分あてリスト"
     received_list_info: "確定されたワークフローのコピーは My Folder の中の次のフォルダに自動的に保存されます。"
     select_to_create: "作成するワークフローを選択してください。"
+  sign:
+    applicable: "○"
+    not_applicable: "-"
+    negative: "×"
   msg:
     select_encoding_of_csv: "CSVファイルのエンコーディングを選択してください。"
     specify_csv_encoding: "CSVファイルとそのエンコーディングを指定してください。"

@@ -199,7 +199,7 @@ function doResize()
     var mailTreePos = getPos(div);
     var borderPos = getPos(_z("drag_v_border"));
     var leftWidth = borderPos.x - mailTreePos.x;
-    div_mails.style.width  = (treeMainWidth - leftWidth - 3) + "px";
+    div_mails.style.width  = (treeMainWidth - leftWidth) + "px";
     div_mails.style.height = ((h-5) / 2) + "px";
 
     div_mail_content.style.width  = div_mails.style.width;

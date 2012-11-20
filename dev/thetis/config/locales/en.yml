@@ -933,6 +933,10 @@ en:
     received_list: "Received List"
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
+  sign:
+    applicable: "&Omicron;"
+    not_applicable: "-"
+    negative: "&Chi;"
   msg:
     select_encoding_of_csv: "Please select Character-encoding of CSV-file."
     specify_csv_encoding: "Please specify CSV-file and select its Character-Encoding."

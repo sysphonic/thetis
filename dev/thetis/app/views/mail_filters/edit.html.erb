@@ -82,6 +82,7 @@ onRegisterFilterClicked = function()
                   evalScripts: true,
                   onComplete: function(request){
                     thetisBoxProgress.remove();
+                    doUpdateFiltersList();
                   }
                 }
               );
