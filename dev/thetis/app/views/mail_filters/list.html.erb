@@ -102,14 +102,14 @@ mail_account_id = params[:mail_account_id]
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
     <% if filter.get_triggers_a.include?(MailFilter::TRIGGER_CHECKING) %>
-      <%= raw(t('sign.applicable')) %>
+      <%= raw(t('sign.positive')) %>
     <% else %>
       <%= raw(t('sign.not_applicable')) %>
     <% end %>
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
     <% if filter.get_triggers_a.include?(MailFilter::TRIGGER_MANUAL) %>
-      <%= raw(t('sign.applicable')) %>
+      <%= raw(t('sign.positive')) %>
     <% else %>
       <%= raw(t('sign.not_applicable')) %>
     <% end %>

@@ -934,7 +934,7 @@ en:
     received_list_info: "Copies of decided workflows will be automatically stored in the following folder in My Folder."
     select_to_create: "Please select a workflow to create."
   sign:
-    applicable: "&Omicron;"
+    positive: "&Omicron;"
     not_applicable: "-"
     negative: "&Chi;"
   msg:

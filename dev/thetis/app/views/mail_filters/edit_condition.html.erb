@@ -206,22 +206,33 @@ onFilterConditionOkClicked = function(elem)
   var frm = document.form_filter_condition<%= form_idx %>;
   var btn_filter_condition_ok = _z("btn_filter_condition_ok");
   var btn_filter_condition_cancel = _z("btn_filter_condition_cancel");
-  btn_filter_condition_ok.disabled = true;
-  btn_filter_condition_cancel.disabled = true;
 
   if (!checkIndispensablesFilterCondition()) {
-    btn_filter_condition_ok.disabled = false;
-    btn_filter_condition_cancel.disabled = false;
     return false;
   }
 
   var filter_condition_point = _z("filter_condition_point");
+
   var filter_condition_compare = _z("filter_condition_compare");
 
   var filter_condition_text = _z("filter_condition_text");
   var filter_condition_priority = _z("filter_condition_priority");
   var filter_condition_status = _z("filter_condition_status");
   var filter_condition_date = _z("filter_condition_date");
+
+  switch (filter_condition_point.value) {
+    case "days_from_sent_at":
+    case "size":
+      if (!checkInteger(filter_condition_text.value, false)) {
+        var msgBox = msg(getListSelected(filter_condition_point, true)[0] + "<%= t('msg.must_be_numeric') %>");
+        msgBox.setOnClose(function() { filter_condition_text.focus(); });
+        return false;
+      }
+      break;
+  }
+
+  btn_filter_condition_ok.disabled = true;
+  btn_filter_condition_cancel.disabled = true;
 
   var point = filter_condition_point.value;
   var compare = filter_condition_compare.value;

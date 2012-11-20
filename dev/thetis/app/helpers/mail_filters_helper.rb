@@ -370,7 +370,7 @@ module MailFiltersHelper
   def self.match_condition_size(email, compare, val)
 
     is_matched = false
-    target = email.size
+    target = (email.size / 1024)
 
     case compare.to_sym
       when :equal

@@ -99,6 +99,11 @@ showFolderTreeToSelect = function(folder_id)
 onFilterActionTreeDestSelected = function(frmTree)
 {
   var folder_id = thetisBoxFilterActionFolderTree.getTreeSelect();
+
+  if (folder_id == "<%= TreeElement::ROOT_ID %>") {
+    msg("<%= t('msg.cannot_save_in_folder') %>");
+    return;
+  }
   var fullPath = ThetisBox.getTreeFullPath("thetisBoxTree-"+ thetisBoxFilterActionFolderTree.id, folder_id);
   var m = fullPath.match(/^[/]?[^/]+(.+)/);   // Omit User-name
   fullPath = m[1];
