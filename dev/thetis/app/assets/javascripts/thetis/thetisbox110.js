@@ -1096,7 +1096,13 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     evt = evt || window.event;
     var elem = evt.target || evt.srcElement;
     for (var node=elem; node && node.className != "thetisbox"; node=node.parentNode) {
-      if (node.className.indexOf("nodrag") >= 0) {
+      if (node.className.indexOf("nodrag") >= 0
+          || node.tagName.toLowerCase() == "select") {
+        /*
+         * For IE:
+         * <select> which has a dropdown list can't recognize Click
+         * on the options exceeding the popup window.
+         */
         return true;
       }
     }
