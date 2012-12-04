@@ -119,10 +119,12 @@ function getElemByClassNameInParentNodes(elem, className)
 {
   var node = elem.parentNode;
   for (var i=0; node; node=node.parentNode) {
-    var classes = node.className.split(" ");
-    for (var k=0; k < classes.length; k++) {
-      if (className == classes[k]) {
-        return node;
+    if (node.className) {
+      var classes = node.className.split(" ");
+      for (var k=0; k < classes.length; k++) {
+        if (className == classes[k]) {
+          return node;
+        }
       }
     }
   }
@@ -800,6 +802,9 @@ function getBodyScroll()
 
 function isFunc(func)
 {
+  if (!func) {
+    return false;
+  }
   var targetType = typeof(func);
   return (targetType && targetType == "function");
 }

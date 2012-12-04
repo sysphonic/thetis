@@ -7,8 +7,7 @@ var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
 calDisp.setFunc(
           function() {
             _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-            document.form_schedule.submit();
-            prog("TOP-RIGHT");
+            doUpdatePage();
           }
         );
 calDisp.setStyle( "frame_color", "#3333CC" );
@@ -184,6 +183,12 @@ function showCalendar(user_id, user_name)
             "",
             "<%= url_for(:controller => 'schedules', :action => 'month') %>?date=" + getDateString() + "&user_id=" + user_id
           );
+}
+
+function doUpdatePage()
+{
+  document.form_schedule.submit();
+  prog("TOP-RIGHT");
 }
 
 </script>

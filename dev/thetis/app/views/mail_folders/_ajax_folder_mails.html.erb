@@ -17,8 +17,8 @@ mail_account_id = params[:mail_account_id]
     <td align="right" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteMulti();">
-      <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteMailsClicked();">
+      <input type="button" value="<%= t('btn.move')%>" onclick="onMoveMailsClicked();">
     </td>
   </tr>
 </table>
@@ -49,7 +49,7 @@ onResetClicked = function()
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
 }
 
-doDeleteMulti = function()
+onDeleteMailsClicked = function()
 {
   var elems = document.getElementsByClassName("check_mail");
   var count = 0;
@@ -63,18 +63,20 @@ doDeleteMulti = function()
     return;
   }
   var msg = count + "<%= t('mail.confirm_to_delete') %>";
-  confm(msg, "_doDeleteMulti()");
+  confm(msg, "doDeleteMails()");
 }
 
-_doDeleteMulti = function()
+doDeleteMails = function()
 {
+  invalidateAccountSummary();
+
   var addParams = getCheckedMailsParam();
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mails') %>", addParams, "<%= @folder_id %>");
 }
 
-doMoveMulti = function()
+onMoveMailsClicked = function()
 {
   var elems = document.getElementsByClassName("check_mail");
   var count = 0;
@@ -91,6 +93,8 @@ doMoveMulti = function()
 
 doMoveMails = function(frmTree)
 {
+  invalidateAccountSummary();
+
   var addParams = getCheckedMailsParam();
   addParams.push(Form.serialize(document.form_list));
   addParams.push(Form.serialize(frmTree));

@@ -7,7 +7,9 @@ unless @user_groups.nil?
 
   <% end %>
 
-<% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+<%
+if ($thetis_config[:menu]['disp_user_list'] == '1') and (!@login_user.nil?)
+%>
   <%
   mail_account = MailAccount.get_default_for(@login_user.id, nil)
   %>

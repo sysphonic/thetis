@@ -712,6 +712,11 @@ function clearMailContent()
 
 var curSummaryAccountId = null;
 
+function invalidateAccountSummary()
+{
+  curSummaryAccountId = null;
+}
+
 function showMailAccountSummary(mail_account_id)
 {
   var addParams = new Array();
@@ -750,7 +755,7 @@ function doUpdateViewMails(method, action, addParams, folder_id)
     }
   } else {
     clearMailContent();
-    curSummaryAccountId = null;
+    invalidateAccountSummary();
   }
 
   if (!addParams) {

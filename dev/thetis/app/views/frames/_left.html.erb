@@ -79,7 +79,7 @@ style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') cent
 
 function activateMenu(menu, obj)
 {
-  obj.style.background = "<%= style_bg_on %>";
+  obj.style.background = "<%= raw(style_bg_on) %>";
 
   for (var i=0; i< obj.childNodes.length; i++) {
     if (obj.childNodes[i].tagName == "A") {
@@ -96,7 +96,7 @@ function activateMenu(menu, obj)
 
 function deactivateMenu(obj)
 {
-  obj.style.background = "<%= style_bg_off %>";
+  obj.style.background = "<%= raw(style_bg_off) %>";
 
   for (var i=0; i< obj.childNodes.length; i++) {
     if (obj.childNodes[i].tagName == "A") {

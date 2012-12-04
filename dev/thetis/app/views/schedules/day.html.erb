@@ -153,6 +153,11 @@ function onLoadSub()
   }
 }
 
+function doUpdatePage()
+{
+  doPageDay("<%= date_s %>");
+}
+
 function doPageDay(date)
 {
   var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?date=" + date;

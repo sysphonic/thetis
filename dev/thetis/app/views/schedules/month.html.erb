@@ -187,6 +187,11 @@ end
 
 <script type="text/javascript">
 
+function doUpdatePage()
+{
+  doPageCalendar("<%= @date.strftime(Schedule::SYS_DATE_FORM) %>");
+}
+
 function doPageCalendar(date)
 {
   var url = "<%= url_for(:controller => 'schedules', :action => 'month') %>?date=" + date;
