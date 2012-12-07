@@ -145,11 +145,11 @@ ja:
               invalid: "%{attribute}は英数字の大小文字しか使えません。"
       messages:
         blank: "%{attribute}は必須です。"
-        too_short: "%{attribute}が小さすぎます。"
-        too_long: "%{attribute}が大きすぎます。"
+        too_short: "%{attribute}が短すぎます。"
+        too_long: "%{attribute}が長すぎます。"
         invalid: "%{attribute}が不正です。"
-        greater_than: "%{attribute}"
-        less_than: "%{attribute}"
+        greater_than: "%{attribute}が小さすぎます。"
+        less_than: "%{attribute}が大きすぎます。"
         confirmation: "%{attribute}が一致しません。"
         taken: "%{attribute}が重複しています。"
   about:

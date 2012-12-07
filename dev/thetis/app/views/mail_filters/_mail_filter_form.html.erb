@@ -25,7 +25,7 @@ mail_account = MailAccount.find_by_id(mail_account_id)
       <%= MailAccount.model_name.human %>
     </td>
     <td class="item_value_td">
-      <%= mail_account.title %>
+      <%= mail_account.get_title %>
     </td>
   </tr>
   <tr>

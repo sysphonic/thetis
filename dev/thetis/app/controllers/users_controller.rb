@@ -37,6 +37,8 @@ class UsersController < ApplicationController
   #
   def new
     Log.add_info(request, params.inspect)
+
+    render(:layout => (!request.xhr?))
   end
 
   #=== create
@@ -102,6 +104,7 @@ class UsersController < ApplicationController
     if @user.nil?
       flash[:notice] = t('msg.already_deleted', :name => User.model_name.human)
     end
+    render(:layout => (!request.xhr?))
   end
 
   #=== update

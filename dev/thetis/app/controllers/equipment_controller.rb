@@ -78,6 +78,8 @@ class EquipmentController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @equipment = Equipment.find(params[:id])
+
+    render(:layout => (!request.xhr?))
   end
 
   #=== show
@@ -88,6 +90,8 @@ class EquipmentController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @equipment = Equipment.find(params[:id])
+
+    render(:layout => (!request.xhr?))
   end
 
   #=== update
@@ -225,13 +229,13 @@ class EquipmentController < ApplicationController
 
     return if con.nil?
 
-    equipment = Equipment.find(:all, :conditions => con)
-    @equip_obj_cache ||= Equipment.build_cache(equipment)
+    equipment_a = Equipment.find(:all, :conditions => con)
+    @equip_obj_cache ||= Equipment.build_cache(equipment_a)
 
     @equip_schedule_hash = {}
-    unless equipment.nil?
+    unless equipment_a.nil?
       @holidays = Schedule.get_holidays
-      equipment.each do |equip|
+      equipment_a.each do |equip|
         @equip_schedule_hash[equip.id.to_s] = Schedule.get_equipment_week(equip.id, @date, @holidays)
       end
     end

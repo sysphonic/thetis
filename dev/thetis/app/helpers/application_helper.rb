@@ -137,15 +137,23 @@ module ApplicationHelper
   #_t1_end_:: End time of the first span.
   #_t2_start_:: Start time of the second span.
   #_t2_end_:: End time of the second span.
+  #_check_boundary_:: Flag to check overlapped boundary.
   #return:: Array of the start and end time of the overlapped span. If not exists, returns nil.
   #
-  def self.get_overlapped_span(t1_start, t1_end, t2_start, t2_end)
+  def self.get_overlapped_span(t1_start, t1_end, t2_start, t2_end, check_boundary=false)
 
     if (t1_start <= t2_start) and (t2_start < t1_end)
       span_from = t2_start
-    elsif t2_start <= t1_start and t1_start < t2_end
+    elsif (t2_start <= t1_start) and (t1_start < t2_end)
       span_from = t1_start
     else
+      if check_boundary
+        if (t1_start <= t2_start) and (t2_start == t1_end)
+          return [t2_start, t1_end]
+        elsif (t2_start <= t1_start) and (t1_start == t2_end)
+          return [t1_start, t2_end]
+        end
+      end
       return nil
     end
     span_to = (t1_end < t2_end)?t1_end:t2_end

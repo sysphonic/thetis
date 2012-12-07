@@ -32,6 +32,8 @@ module MailFiltersHelper
   #
   def self.match_conditions?(email, conditions, and_or)
 
+    return true if and_or.nil? and conditions.empty?
+
     is_matched = false
 
     conditions.each do |entry|

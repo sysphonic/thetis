@@ -7,16 +7,16 @@
 
       <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_z('div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_basic" class="td_item_tab" nowrap style="text-align:left; width:120px; background-color:silver;" onclick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onmouseover="if(_z('div_basic').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_receive" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onMouseOver="if(_z('div_receive').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_receive" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onmouseover="if(_z('div_receive').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('mail.receive') %>
           </td>
-          <td id="tab_send" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onMouseOver="if(_z('div_send').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_send" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onmouseover="if(_z('div_send').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
             <%= t('mail.send') %>
           </td>
-          <td>&nbsp;</td>
+          <td><!-- SPACER --></td>
         </tr>
       </table>
 
@@ -229,7 +229,7 @@
                     <label for="mail_account_smtp_auth"><%= MailAccount.human_attribute_name('smtp_auth') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= check_box('mail_account', 'smtp_auth', :onClick => '_z("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
+                    <%= check_box('mail_account', 'smtp_auth', :onclick => '_z("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
                   </td>
                 </tr>
                 <tr>

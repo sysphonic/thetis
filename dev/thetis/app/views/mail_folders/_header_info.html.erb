@@ -30,7 +30,7 @@
   </tr>
 <% unless email.to_addresses.nil? or email.to_addresses.empty? %>
   <tr>
-    <td nowrap style="width:20%; text-align:left; vertical-align:top; padding:0px 10px;">
+    <td nowrap style="text-align:left; vertical-align:top; padding:0px 10px;">
       <%= t('cap.to') %>
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">
@@ -44,7 +44,7 @@
 <% end %>
 <% unless email.cc_addresses.nil? or email.cc_addresses.empty? %>
   <tr>
-    <td nowrap style="width:20%; text-align:left; vertical-align:top; padding:0px 10px;">
+    <td nowrap style="text-align:left; vertical-align:top; padding:0px 10px;">
       <%= t('cap.cc') %>
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">
@@ -58,7 +58,7 @@
 <% end %>
 <% unless email.bcc_addresses.nil? or email.bcc_addresses.empty? %>
   <tr>
-    <td nowrap style="width:20%; text-align:left; vertical-align:top; padding:0px 10px;">
+    <td nowrap style="text-align:left; vertical-align:top; padding:0px 10px;">
       <%= t('cap.bcc') %>
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">

@@ -10,23 +10,23 @@
   <tr>
   <% if @login_user.admin?(User::AUTH_USER) %>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new', :from => 'users_list') %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.create') %>" onclick="doEditUser(null);">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" alt="<%= t('btn.import_csv') %>" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'configure') %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'configure') %>';">
     </td>
   <% end %>
     <td style="text-align:right;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
       <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'users', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; prog('TOP-RIGHT');"/>
     </td>
@@ -88,15 +88,23 @@
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
+    <td class="<%= td_class %>" nowrap style="text-align:right;">
+      <%= user.id %>
+    </td>
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
+      <a class="a_underline" href="#" onclick="showUser(<%= user.id %>); return false;">
         <%= truncate(user.name, :length => 20) %>
       </a>
     </td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.fullname, :length => 30) %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.email, :length => 30) %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.title, :length => 10) %></td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.fullname, :length => 30) %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.email, :length => 30) %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.title, :length => 10) %>
+    </td>
     <td class="<%= td_class %>" nowrap>
       <% user.get_groups_a.each do |group_id| %>
         <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
@@ -104,7 +112,7 @@
     </td>
   <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users',:action => 'edit', :id => user.id, :from => 'users_list') %>';" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditUser(<%= user.id %>);" />
     </td>
     <td class="<%= td_class %>" style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
@@ -122,6 +130,133 @@
 </form>
 
 <script type="text/javascript">
+
+function doUpdatePage()
+{
+  prog("TOP-RIGHT");
+  document.form_list.submit();
+}
+
+var thetisBoxUser = null;
+
+function setUserModified()
+{
+  if (thetisBoxUser) {
+    thetisBoxUser.setOnClose("doUpdatePage()");
+  }
+}
+
+function doEditUser(user_id)
+{
+  prog("TOP-RIGHT");
+
+  var addParams = new Array();
+  addParams.push("from=users_list");
+
+  if (user_id) {
+    addParams.push("id="+user_id);
+    location.href = "<%= url_for(:controller => 'users',:action => 'edit') %>?" + addParams.join("&");
+  } else {
+    location.href = "<%= url_for(:controller => 'users', :action => 'new') %>?" + addParams.join("&");
+  }
+
+/* POP-UP Edition
+  if (thetisBoxUser != null) {
+    thetisBoxUser.remove();
+    thetisBoxUser = null;
+  }
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var addParams = new Array();
+  addParams.push("from=users_list");
+
+  var action = null;
+  var width = null;
+  if (user_id) {
+    action = "<%= url_for(:controller => 'users', :action => 'edit') %>";
+    addParams.push("id="+user_id);
+    width = mainWidth*8/10;
+  } else {
+    action = "<%= url_for(:controller => 'users', :action => 'new') %>";
+    width = 560;
+  }
+
+  new Ajax.Request(
+          action,
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            parameters:addParams.join("&"),
+            onComplete:function(request) {
+                thetisBoxUser = new ThetisBox;
+                thetisBoxUser.title = "<%= User.model_name.human %>";
+                //thetisBoxUser.overflow = "scroll";
+                thetisBoxUser.show(
+                          "CENTER",
+                          width+",+"+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+*/
+}
+
+function showUser(user_id)
+{
+  prog("TOP-RIGHT");
+
+  var addParams = new Array();
+  addParams.push("id="+user_id);
+
+  location.href = "<%= url_for(:controller => 'users', :action => 'show') %>?" + addParams.join("&");
+
+/* POP-UP Edition
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var addParams = new Array();
+  addParams.push("id="+user_id);
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'users', :action => 'show') %>",
+          {
+            method:"get",
+            asynchronous:true,
+            evalScripts:true,
+            parameters:addParams.join("&"),
+            onComplete:function(request) {
+                var thetisBox = new ThetisBox;
+                thetisBox.title = "<%= User.model_name.human %>";
+                //thetisBox.overflow = "scroll";
+                thetisBox.show(
+                          "CENTER",
+                          (mainWidth*8/10)+",+"+(mainHeight*9/10),
+                          "TRAY",
+                          "",
+                          "",
+                          request.responseText.stripScripts()
+                        );
+                thetisBoxProgress.remove();
+                request.responseText.evalScripts();
+              }
+          }
+        );
+*/
+}
 
 var thetisBox = null;
 

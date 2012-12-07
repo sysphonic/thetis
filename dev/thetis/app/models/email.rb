@@ -56,6 +56,19 @@ class Email < ActiveRecord::Base
     return (self.status == Email::STATUS_UNREAD)
   end
 
+  #=== get_mail_account
+  #
+  #Gets MailAccount of the E-mail.
+  #
+  #return:: MailAccount to which the E-mail belongs.
+  #
+  def get_mail_account
+
+    return nil if self.mail_account_id.nil?
+
+    return MailAccount.find_by_id(self.mail_account_id)
+  end
+
   #=== recalc_size
   #
   #Recalcurates E-mail size.

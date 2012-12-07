@@ -17,7 +17,7 @@ mail_account_id = params[:mail_account_id]
             <%
             opts = []
             @mail_accounts.each do |mail_account|
-              opts << [mail_account.title, mail_account.id]
+              opts << [mail_account.get_title, mail_account.id]
             end
             %>
             <%= t('mail_filter.target_account') %><%= t('cap.suffix') %>

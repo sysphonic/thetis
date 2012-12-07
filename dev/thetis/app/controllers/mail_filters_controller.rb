@@ -74,7 +74,9 @@ class MailFiltersController < ApplicationController
 
     @filter_pages, @filters, @total_num = paginate_by_sql(MailFilter, sql, 50)
 
-    render(:action => 'list', :layout => false)   # (!request.xhr?)
+    if (params[:action] == 'list')
+      render(:action => 'list', :layout => false)   # (!request.xhr?)
+    end
   end
 
   #=== new
@@ -190,6 +192,7 @@ class MailFiltersController < ApplicationController
     end
 
     list
+    render(:action => 'list', :layout => !request.xhr?)
   end
 
   #=== destroy
@@ -201,7 +204,7 @@ class MailFiltersController < ApplicationController
 
     if params[:check_filter].nil?
       list
-      render(:action => 'list')
+      render(:action => 'list', :layout => !request.xhr?)
       return
     end
 
@@ -222,7 +225,7 @@ class MailFiltersController < ApplicationController
     flash[:notice] = t('address.deleted', :count => count)
 
     list
-    render(:action => 'list')
+    render(:action => 'list', :layout => !request.xhr?)
   end
 
   #=== do_execute

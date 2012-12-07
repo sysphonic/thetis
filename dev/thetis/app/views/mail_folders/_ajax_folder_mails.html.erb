@@ -6,15 +6,15 @@ mail_account_id = params[:mail_account_id]
 <% unless @emails.nil? %>
 
 <%= form_tag( {:controller => 'mail_folders', :action => 'get_mails' }, :method => 'get', :name => 'form_list') %>
-<table width="100%" cellspacing="0" cellpadding="0" style="padding:2px 5px 5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:2px 5px 5px;">
   <tr>
-    <td align="left" nowrap>
+    <td style="text-align:left;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
 
       <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
     </td>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
       <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteMailsClicked();">
@@ -170,9 +170,9 @@ onPaginate = function(url)
 
 </script>
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:5px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('mail', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -190,12 +190,12 @@ onPaginate = function(url)
 <input type='hidden' id="selected_row" value="" />
 <input type='hidden' id="req_detail" value="false" />
 
-<table width="100%" cellpadding="0" cellspacing="1">
+<table cellpadding="0" cellspacing="1" style="width:100%;">
   <tr>
-    <th class="list_sort" width="55%" nowrap onclick="sortList('subject')"><%= t('mail.subject') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('subject', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="5%" nowrap onclick="sortList('has_attach')"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif"><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('has_attach', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onclick="sortList('from_address')"><%= t('mail.sender') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('from_address', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onclick="sortList('sent_at')"><%= t('mail.sent_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('sent_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:55%;" nowrap onclick="sortList('subject')"><%= t('mail.subject') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('subject', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;" nowrap onclick="sortList('has_attach')"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif"><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('has_attach', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('from_address')"><%= t('mail.sender') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('from_address', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('sent_at')"><%= t('mail.sent_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('sent_at', @sort_col, @sort_type)) %></span></th>
   </tr>
 
 <%

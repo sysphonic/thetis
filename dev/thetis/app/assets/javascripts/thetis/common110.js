@@ -284,7 +284,7 @@ function fillLeft(str, ch, len)
   return str;
 }
 
-function addInputHidden(frm, id, name, value)
+function addInputHidden(frm, id, name, value, parentElem)
 {
   if (frm.elements != null) {
     for (var i=0; i < frm.elements.length; i++) {
@@ -301,7 +301,11 @@ function addInputHidden(frm, id, name, value)
   }
   elem.name = name;
   elem.value = value;
-  frm.appendChild(elem);
+  if (parentElem) {
+    parentElem.appendChild(elem);
+  } else {
+    frm.appendChild(elem);
+  }
   return elem;
 }
 
@@ -342,6 +346,17 @@ function replaceAll(str, from, to)
     startIdx = idx;
   }
   return str;
+}
+
+function uniq(arr)
+{
+  var ret = new Array();
+  for (var i=0; i < arr.length; i++) {
+    if (ret.indexOf(arr[i]) < 0) {
+      ret.push(arr[i]);
+    }
+  }
+  return ret;
 }
 
 function removeArrayElements(ary, del_ary)
@@ -665,6 +680,13 @@ function getDateString(date)
   ret += "-"+day;
 
   return ret;
+}
+
+function getDateFromString(date_s)
+{
+  var parts = date_s.split("-");
+
+  return new Date(parts[0], parseInt(parts[1], 10)-1, parts[2]);
 }
 
 function getByteSize(str)

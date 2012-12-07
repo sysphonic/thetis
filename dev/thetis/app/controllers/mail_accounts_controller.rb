@@ -50,16 +50,17 @@ class MailAccountsController < ApplicationController
       if request.xhr?
         render(:partial => 'mail_account_error', :layout => false)
       else
-        render(:controller => 'mail_accounts', :action => 'new')
+        redirect_to(:controller => 'mail_folders', :action => 'show_tree')
       end
       return
     end
 
     flash[:notice] = t('msg.register_success')
+
     if request.xhr?
       render(:partial => 'common/flash_notice', :layout => false)
     else
-      redirect_to(:controller => 'mail_accounts', :action => 'list')
+      redirect_to(:controller => 'mail_folders', :action => 'show_tree')
     end
   end
 
@@ -90,12 +91,14 @@ class MailAccountsController < ApplicationController
   def edit_default
     Log.add_info(request, params.inspect)
 
-    mail_account = MailAccount.get_default_for(@login_user.id)
+    mail_account_xtype = params[:mail_account_xtype]
+
+    mail_account = MailAccount.get_default_for(@login_user.id, mail_account_xtype)
 
     if mail_account.nil?
-      redirect_to(:action => 'new')
+      redirect_to(:action => 'new', :xtype => mail_account_xtype)
     else
-      redirect_to(:action => 'edit', :id => mail_account.id)
+      redirect_to(:action => 'edit', :id => mail_account.id, :xtype => mail_account_xtype)
     end
   end
 
@@ -120,15 +123,19 @@ class MailAccountsController < ApplicationController
         render(:partial => 'common/flash_notice', :layout => false)
       else
         prms = ApplicationHelper.get_fwd_params(params)
-        prms[:controller] = 'mail_accounts'
-        prms[:action] = 'list'
+        prms[:controller] = 'mail_folders'
+        prms[:action] = 'show_tree'
         redirect_to(prms)
       end
     else
+      Log.add_error(request, nil, @mail_account.errors.inspect)
       if request.xhr?
         render(:partial => 'mail_account_error', :layout => false)
       else
-        render(:controller => 'mail_accounts', :action => 'edit')
+        prms = ApplicationHelper.get_fwd_params(params)
+        prms[:controller] = 'mail_folders'
+        prms[:action] = 'show_tree'
+        redirect_to(prms)
       end
     end
   end
