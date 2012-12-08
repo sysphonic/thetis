@@ -6,33 +6,33 @@
 
 <%= form_tag( {:controller => 'timecards', :action => 'users'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%;" cellspacing="3" cellpadding="0">
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
         <% if @login_user.admin?(User::AUTH_TIMECARD) %>
-          <td align="left" nowrap width="1%">
+          <td nowrap style="width:1%; text-align:left;">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
           </td>
         <% end %>
-          <td align="right" nowrap>
+          <td style="text-align:right;" nowrap>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-            <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'timecards', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
-            <input type="button" value="<%= t('btn.reset') %>" onClick="location.href='<%= url_for(:controller => 'timecards', :action => 'users') %>'; prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'timecards', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
+            <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'timecards', :action => 'users') %>'; prog('TOP-RIGHT');"/>
           </td>
         </tr>
       </table>
     </td>
   </tr>
-  <tr height="1"><td></td></tr>
+  <tr style="height:1px;"><td></td></tr>
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap style="padding-bottom:5px;">
+          <td nowrap style="text-align:left; padding-bottom:5px;">
   <% if @group_id.nil? or @group_id.empty? %>
-            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
   <% else %>
@@ -40,7 +40,7 @@
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
   <% end %>
           </td>
-          <td align="right">
+          <td style="text-align:right;">
   <% if @login_user.admin?(User::AUTH_TIMECARD) %>
             <input type="button" value="<%= t('btn.multi_update')%>" onclick="showUpdateMulti();">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.multi_update_paid_holidays_info') %>');">
@@ -56,9 +56,9 @@
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; padding-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -71,18 +71,17 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onClick="sortList('name')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="25%" nowrap onClick="sortList('xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="30%" nowrap onClick="sortList('groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
-    <td width="10%" align="center" nowrap style="background-color:#FFDFAD;"><%= t('timecard.applied') %></td>
-    <td width="10%" align="center" nowrap style="background-color:#D4FFA9;"><%= t('timecard.remainder') %></td>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('name')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:25%;" nowrap onclick="sortList('xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:30%;" nowrap onclick="sortList('groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <td nowrap style="width:10%; text-align:center; background-color:#FFDFAD;"><%= t('timecard.applied') %></td>
+    <td nowrap style="width:10%; text-align:center; background-color:#D4FFA9;"><%= t('timecard.remainder') %></td>
   </tr>
 <%
 yaml = ApplicationHelper.get_config_yaml
@@ -93,7 +92,7 @@ year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_fr
 @users.each_with_index do |user, idx|
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
 %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
     <td  class="<%= td_class %>"nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
@@ -124,7 +123,7 @@ year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_fr
     <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= user.id %>, '<%= ApplicationHelper.h_s_quote(user.get_name_for_timecard(yaml)) %>');" />
     </td>
-    <td class="<%= td_class %>" width="20" style="text-align:center;">
+    <td class="<%= td_class %>" style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   <% end %>
@@ -274,34 +273,34 @@ function onUpdateMultiCancel()
 function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
 {
   content = "<form name='form_update_multi'>";
-  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' style='padding:15px 0px;'>";
+  content += "    <td style='text-align:center; padding:15px 0px;'>";
 
-  content += "<table align='center' width='95%' cellspacing='0' cellpadding='0'>";
+  content += "<table align='center' style='width:95%;' cellspacing='0' cellpadding='0'>";
   content += "  <tr>";
-  content += "    <td colspan='2' align='left'>";
+  content += "    <td colspan='2' style=\"text-align:left;\">";
   content += "      <%= t('timecard.updating_paid_holidays') %>";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='left' width='40%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "    <td nowrap style='width:40%; text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.fiscal_year') %>";
   content += "    </td>";
-  content += "    <td align='left'>";
+  content += "    <td style=\"text-align:left;\">";
   content += "      <input type='text' name='year' value='"+defYear+"' style='ime-mode:disabled; width:60px;' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td colspan='2' align='left'>";
+  content += "    <td colspan='2' style=\"text-align:left;\">";
   content += "      <%= t('timecard.uniformly_to') %>";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='left' width='40%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "    <td nowrap style='text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.days') %>";
   content += "    </td>";
-  content += "    <td align='left'>";
+  content += "    <td style=\"text-align:left;\">";
   content += "      <input type='text' name='num' value='"+defNum+"' style='ime-mode:disabled; width:60px;' />";
   content += "    </td>";
   content += "  </tr>";
@@ -310,12 +309,12 @@ function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
+  content += "    <td style=\"text-align:center; vertical-align:top;\">";
   content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
-  content += "  <tr height='100%'>";
+  content += "  <tr style=\"100%\">";
   content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";
@@ -437,23 +436,23 @@ function getUpdateGivenDaysDialog(defYear, defNum, onOk, onCancel)
   content = "<form name='form_given_days'>";
   content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' style='padding:15px 0px;'>";
+  content += "    <td style='text-align:center; padding:15px 0px;'>";
 
   content += "<table align='center' width='95%' cellspacing='0' cellpadding='0'>";
   content += "  <tr>";
-  content += "    <td align='left' width='50%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "    <td nowrap style='width:50%; text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.fiscal_year') %>";
   content += "    </td>";
-  content += "    <td align='left'>";
+  content += "    <td style='text-align:left;'>";
   content += "      "+defYear;
   content += "      <input type='hidden' name='year' value='"+defYear+"' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='left' width='50%' nowrap style='padding:5px 0px; text-indent:20px;'>";
+  content += "    <td nowrap style='text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.days') %>";
   content += "    </td>";
-  content += "    <td align='left'>";
+  content += "    <td style='text-align:left;'>";
   content += "      <input type='text' name='num' value='"+defNum+"' style='ime-mode:disabled; width:60px;' />";
   content += "    </td>";
   content += "  </tr>";
@@ -462,12 +461,12 @@ function getUpdateGivenDaysDialog(defYear, defNum, onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
+  content += "    <td style=\"text-align:center; vertical-align:top;\">";
   content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
-  content += "  <tr height='100%'>";
+  content += "  <tr style=\"height:100%;\">";
   content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";

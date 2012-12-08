@@ -357,7 +357,7 @@ ja:
     execute_now_info: "<strong>今すぐ実行</strong><br/>「有効」かつ「適用タイミング＝手動実行」と指定されているフィルタを（チェックの有無にかかわらず）実行します。"
     target_account: "対象メールアカウント"
     new: "新しいフィルタ"
-    confirm_delete: "件のフィルタが削除されます。よろしいですか？"
+    confirm_delete: "件のフィルタを削除します。よろしいですか？"
     trigger:
       cap: "適用タイミング"
       checking: "メールチェック時"

@@ -1,12 +1,12 @@
 <div style="padding:3px;">
-<table class='timecard' width="100%">
+<table class='timecard' style="width:100%;">
   <tr>
-    <td align="center" width="14%" nowrap><%= t('msg.year') %></th>
-    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%= t('timecard.given_days') %></td>
-    <td align="center" width="19%" bgcolor="#C6D3EF" nowrap><%= t('timecard.carried_over') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" nowrap><%= t('msg.total') %></td>
-    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%= t('timecard.applied_days') %></td>
-    <td align="center" width="19%" bgcolor="#D6ECFA" nowrap><%= t('timecard.remainder') %></td>
+    <td style="text-align:center; width:14%;" nowrap><%= t('msg.year') %></td>
+    <td style="text-align:center; width:19%; background-color:#C6D3EF;" nowrap><%= t('timecard.given_days') %></td>
+    <td style="text-align:center; width:19%; background-color:#C6D3EF;" nowrap><%= t('timecard.carried_over') %></td>
+    <td style="text-align:center; width:10%; background-color:#B9FFBC;" nowrap><%= t('msg.total') %></td>
+    <td style="text-align:center; width:19%; background-color:#D6ECFA;" nowrap><%= t('timecard.applied_days') %></td>
+    <td style="text-align:center; width:19%; background-color:#D6ECFA;" nowrap><%= t('timecard.remainder') %></td>
   </tr>
 <%
 yaml = ApplicationHelper.get_config_yaml
@@ -42,7 +42,7 @@ end
 if start_year > end_year and !edit
 %>
   <tr height="50">
-    <td align="center" style="color:mediumblue;" colspan="6">
+    <td style="text-align:center; color:mediumblue;" colspan="6">
       <%= t('paren.no_entries') %>
     </td>
   </tr>
@@ -61,18 +61,18 @@ else
       paidhld_per_year = yaml[:timecard]['paidhld_per_year']
     end
 %>
-  <tr bgcolor="white">
-    <td align="center" nowrap>
+  <tr style="background-color:white;">
+    <td style="text-align:center;" nowrap>
       <%= year %>
     </td>
-    <td align="center" style="color:blue;">
+    <td style="text-align:center; color:blue;">
       -
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
     </td>
-    <td align="center">-</td>
-    <td align="center">-</td>
-    <td align="center">-</td>
-    <td align="center">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
   </tr>
 <%
   end
@@ -85,30 +85,30 @@ else
       paid_hld = @paid_holidays.find{ |hld| hld.year == year }
     end
 %>
-  <tr bgcolor="<%= bgcolor %>">
-    <td align="center" nowrap>
+  <tr style="background-color:<%= bgcolor %>;">
+    <td style="text-align:center;" nowrap>
       <%= year %>
     </td>
     <%
     style = ''
-    style = 'style="color:blue;"' if edit
+    style = 'color:blue;' if edit
     %>
-    <td align="center" <%= style %>>
+    <td style="text-align:center; <%= raw(style) %>">
       <% given_num = (paid_hld.nil?)?0:paid_hld.num %>
       <%= given_num %>
     <% if edit %>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= given_num %>);" />
     <% end %>
     </td>
-    <td align="center">
+    <td style="text-align:center;">
       <% carried_over = PaidHoliday.get_carried_over(@selected_user.id, year) %>
       <%= carried_over %>
     </td>
-    <td align="center">
+    <td style="text-align:center;">
       <% total = given_num + carried_over %>
       <%= total %>
     </td>
-    <td align="center">
+    <td style="text-align:center;">
       <%
       year_start, year_end = TimecardsHelper.get_year_span(year, @year_begins_from, @month_begins_at)
       applied_paid_hlds = Timecard.applied_paid_hlds(@selected_user.id, year_start, year_end)
@@ -118,9 +118,9 @@ else
     <%
     remainder_num = total - applied_paid_hlds
     style = ''
-    style = 'style="color:red;"' if remainder_num < 0
+    style = 'color:red;' if remainder_num < 0
     %>
-    <td align="center" <%= style %>>
+    <td style="text-align:center; <%= raw(style) %>">
       <%= remainder_num %>
     </td>
   </tr>
@@ -131,18 +131,18 @@ else
     year = end_year + 1
     bgcolor = (i%2 == 1) ? 'gainsboro' : 'white'
 %>
-  <tr bgcolor="<%= bgcolor %>">
-    <td align="center" nowrap>
+  <tr style="background-color:<%= bgcolor %>;">
+    <td style="text-align:center;" nowrap>
       <%= year %>
     </td>
-    <td align="center" style="color:blue;">
+    <td style="text-align:center; color:blue;">
       -
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="showUpdateGivenDays(<%= @selected_user.id %>, <%= year %>, <%= paidhld_per_year %>);" />
     </td>
-    <td align="center">-</td>
-    <td align="center">-</td>
-    <td align="center">-</td>
-    <td align="center">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
+    <td style="text-align:center;">-</td>
   </tr>
 <%
   end
