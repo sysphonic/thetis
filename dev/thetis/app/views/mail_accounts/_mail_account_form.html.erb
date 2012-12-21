@@ -99,13 +99,21 @@
                   </td>
                   <td class="item_value_td">
                     <%
+                    capacity_mb = (@mail_account.nil?)?(THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT):(@mail_account.get_capacity_mb)
+
                     if @mail_account.nil?
                       cur_mb = 0
                     else
                       cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
                     end
+
+                    if capacity_mb == 0
+                      cur_percent = 100
+                    else
+                      cur_percent = ((cur_mb * 100) / capacity_mb)
+                    end
                     %>
-                    <%= THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT %>MB (<%= t('mail.using') %> <%= cur_mb %>MB =<%= ((cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT) %>%)
+                    <%= capacity_mb %>MB (<%= t('mail.using') %> <%= cur_mb %>MB =<%= cur_percent %>%)
                   </td>
                 </tr>
               <% end %>

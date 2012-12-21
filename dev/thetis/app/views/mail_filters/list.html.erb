@@ -281,14 +281,26 @@ doDelete = function()
 
 _doDelete = function()
 {
-  addInputHidden(document.form_filters, null, "authenticity_token", "<%= form_authenticity_token %>");
-  document.form_filters.action = "<%= url_for(:controller => 'mail_filters', :action => 'destroy') %>";
-  document.form_filters.method = "post";
-  document.form_filters.submit();
+  var addParams = new Array();
+  addParams.push(Form.serialize(document.form_filters));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Updater(
+                document.form_filters.parentNode,
+                "<%= url_for(:controller => 'mail_filters', :action => 'destroy') %>",
+                {
+                  method: "post",
+                  parameters: addParams.join("&"),
+                  asynchronous: true,
+                  evalScripts: true,
+                  onComplete: function(request){
+                    thetisBoxProgress.remove();
+                    doUpdateFiltersList();
+                  }
+                }
+              );
 }
-
 
 sortList = function(col)
 {

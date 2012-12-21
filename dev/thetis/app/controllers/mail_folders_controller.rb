@@ -296,7 +296,7 @@ class MailFoldersController < ApplicationController
 
     email_id = params[:id]
 
-    email = Email.find(email_id)
+    email = Email.find_by_id(email_id)
     if email.nil? or email.user_id != @login_user.id
       render(:text => '')
       return
@@ -321,14 +321,14 @@ class MailFoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     attached_id = params[:id].to_i
-    mail_attach = MailAttachment.find(attached_id)
+    mail_attach = MailAttachment.find_by_id(attached_id)
 
     if mail_attach.nil?
       redirect_to(THETIS_RELATIVE_URL_ROOT + '/404.html')
       return
     end
 
-    email = Email.find(mail_attach.email_id)
+    email = Email.find_by_id(mail_attach.email_id)
     if email.nil? or email.user_id != @login_user.id
       render(:text => '')
       return
@@ -580,7 +580,7 @@ class MailFoldersController < ApplicationController
 
     begin
       email = Email.find(email_id)
-      unless email.nil?
+      if !email.nil? and (email.user_id == @login_user.id)
         if email.xtype == Email::XTYPE_RECV
           status = (unread)?(Email::STATUS_UNREAD):(Email::STATUS_NONE)
           email.update_attribute(:status, status)

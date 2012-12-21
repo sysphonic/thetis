@@ -227,7 +227,7 @@ class SendMailsController < ApplicationController
         Email.trim(@login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
       end
       if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
-        Email.trim_by_capacity(@login_user.id, @mail_account.id, THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT)
+        Email.trim_by_capacity(@login_user.id, @mail_account.id, @mail_account.get_capacity_mb)
       end
       # flash[:notice] = t('msg.save_success')
     rescue => evar

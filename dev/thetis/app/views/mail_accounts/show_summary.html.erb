@@ -24,13 +24,18 @@
   <tr style="height:18px;">
     <td nowrap style="width:80px; padding-right:5px; line-height:1.0; text-align:left; color:gray;">
       <%
+      capacity_mb = (@mail_account.nil?)?(THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT):(@mail_account.get_capacity_mb)
       cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
       %>
       &bull; <%= t('mail.using') %> <%= cur_mb %>MB
     </td>
     <td style="text-align:left;">
       <%
-      cur_percent = (cur_mb * 100) / THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT
+      if capacity_mb == 0
+        cur_percent = 100
+      else
+        cur_percent = ((cur_mb * 100) / capacity_mb)
+      end
       %>
       <table cellspacing="0" cellpadding="0" style="width:100%; border-collapse;collapse; border:solid 1px dimgray;">
         <tr style="height:18px;">

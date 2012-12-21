@@ -47,6 +47,18 @@ class MailAccount < ActiveRecord::Base
     end
   end
 
+  #=== get_capacity_mb
+  #
+  #Gets Mailbox Capacity in MB.
+  #
+  #return:: Mailbox Capacity in MB.
+  #
+  def get_capacity_mb
+
+    return THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT
+    #return (self.capacity_mb.nil?)?(THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT):(self.capacity_mb)
+  end
+
   #=== self.get_using_size
   #
   #Gets using size of specified MailAccount.

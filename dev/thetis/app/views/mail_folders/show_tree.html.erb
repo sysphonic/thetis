@@ -658,6 +658,7 @@ function doUpdateMails(folder_id, do_pop)
   }
   if (do_pop) {
     addParams.push("pop=true");
+    invalidateAccountSummary();
   }
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, folder_id);
 }
@@ -938,6 +939,7 @@ function _doEmpty(folder_id)
     addParams.push("mail_account_id="+mail_account_id);
   }
 
+  invalidateAccountSummary();
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams, folder_id);
 }
 

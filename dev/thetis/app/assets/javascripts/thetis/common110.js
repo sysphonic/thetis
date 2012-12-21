@@ -36,6 +36,12 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
+
+function escapeRegExp(s)
+{
+  return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+}
+
 function appendClassName(elem, className)
 {
   var classNames = elem.className.split(/\s/);

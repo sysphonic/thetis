@@ -182,10 +182,10 @@ module EmailsHelper
     sort_type = 'DESC' if sort_type.nil? or sort_type.empty?
 
     if sort_col == 'has_attach'
-      sql = "select distinct Email.*, count(MailAttachment.id) as AttachmentsNum from (emails Email left join mail_attachments MailAttachment on (Email.id=MailAttachment.email_id)), mail_folders MailFolder"
+      sql = "select distinct Email.*, count(MailAttachment.id) as AttachmentsNum from (emails Email left join mail_attachments MailAttachment on (Email.id=MailAttachment.email_id))"
       order_by = ' group by Email.id order by AttachmentsNum ' + sort_type
     else
-      sql = 'select distinct Email.* from emails Email, mail_folders MailFolder'
+      sql = 'select distinct Email.* from emails Email'
       order_by = ' order by ' + sort_col + ' ' + sort_type
     end
 

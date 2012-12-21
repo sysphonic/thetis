@@ -335,7 +335,7 @@ EOT
       Email.trim(mail_account.user_id, mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
     end
     if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
-      Email.trim_by_capacity(mail_account.user_id, mail_account.id, THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT)
+      Email.trim_by_capacity(mail_account.user_id, mail_account.id, mail_account.get_capacity_mb)
     end
 
     return emails
