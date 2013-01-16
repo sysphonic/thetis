@@ -18,8 +18,9 @@ else
 %>
 <%= form_tag( {:controller => 'schedules', :action => 'save', :id => params[:id]}, :method => 'post', :name => 'form_detail', :id => 'form_detail') %>
   <%= hidden_field_tag('date', date_s) %>
-
+  <%= hidden_field_tag('display', params[:display]) %>
   <%= hidden_field('schedule', 'id') %>
+
   <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
     <tr>
       <td class="prim_cap_td" nowrap>

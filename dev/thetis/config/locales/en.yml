@@ -351,9 +351,10 @@ en:
       authorities: "Authorities"
       display_control: "Display Control"
   mail_filter:
+    no_more_action_available: "No more action available."
     specify_folder_to_filter: "Please select a Mail Folder in the Target Mail Account."
-    confirm_to_execute_now: "Enabled manual filters will be executed from a top. Are you sure?"
-    execute_now_info: "<strong>Execute Now</strong><br/>applies Filters Enabled and specified Apply where Manually Run no matter checked or unchecked."
+    confirm_to_execute_now: "Enabled manual filters will be executed from a top to E-mails in the selected folder. Are you sure?"
+    execute_now_info: "<strong>Execute Now</strong><br/>applies Filters Enabled and specified Apply where Manually Run no matter checked or not, to E-mails in the selected folder."
     target_account: "Target Mail Account"
     new: "New filter"
     confirm_delete: " filter(s) will be deleted. Are you sure?"

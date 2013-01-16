@@ -44,6 +44,9 @@ function escapeRegExp(s)
 
 function appendClassName(elem, className)
 {
+  if (!elem || !className) {
+    return;
+  }
   var classNames = elem.className.split(/\s/);
   if (classNames.indexOf(className) < 0) {
     classNames.push(className);
@@ -53,6 +56,9 @@ function appendClassName(elem, className)
 
 function removeClassName(elem, className)
 {
+  if (!elem || !className) {
+    return;
+  }
   var classNames = elem.className.split(/\s/);
   var idx = classNames.indexOf(className);
   if (idx >= 0) {
@@ -708,10 +714,13 @@ function getByteSize(str)
   return cnt;
 }
 
-function truncate(str, len)
+function truncateStr(str, len)
 {
+  var truncation = "...";
+  str = (str.length > len)?(str.substring(0, len - truncation.length)+truncation):(str);
+/*
   var cnt = 0;
-  for (var i=0; i<str.length; i++) {
+  for (var i=0; i < str.length; i++) {
     if (escape(str.charAt(i)).length < 4) {
       cnt++;
     } else {
@@ -721,6 +730,7 @@ function truncate(str, len)
       return str.substr(0, i)+"...";
     }
   }
+*/
   return str;
 }
 

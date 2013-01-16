@@ -33,7 +33,7 @@ unless @mail_filter.nil? or @mail_filter.actions.nil?
   <span title="<%= disp_title %>"><%= disp %></span>
   &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editFilterAction('<%= idx %>', false);" />
   &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="deleteFilterAction('<%= idx %>');" />
-  <input type="hidden" id="filter_action<%= idx %>" name="filter_action[<%= idx %>]" value="<%= [verb, val].join("\n") %>" />
+  <input type="hidden" class="filter_action_input" id="filter_action<%= idx %>" name="filter_action[<%= idx %>]" value="<%= [verb, val].join("\n") %>" />
 </div>
 <%
   end
@@ -52,7 +52,7 @@ getFilterActionEntryHtml = function(disp, verb, val, action_id, reqDivTag)
   content += "  " + disp;
   content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif\" title=\"<%= t('btn.edit') %>\" onclick=\"editFilterAction('"+action_id+"', false);\" />";
   content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif\" title=\"<%= t('btn.delete') %>\" onclick=\"deleteFilterAction('"+action_id+"'); return false;\" />";
-  content += "  <input type=\"hidden\" id=\"filter_action"+action_id+"\" name=\"filter_action["+action_id+"]\" value=\""+new Array(verb, val).join("\n")+"\" />";
+  content += "  <input type=\"hidden\" class=\"filter_action_input\" id=\"filter_action"+action_id+"\" name=\"filter_action["+action_id+"]\" value=\""+new Array(verb, val).join("\n")+"\" />";
   if (reqDivTag) {
     content += "</div>";
   }

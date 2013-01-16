@@ -167,10 +167,13 @@ class SchedulesController < ApplicationController
         params[:schedule][:teams] = '|' + params[:teams].join('|') + '|'
       end
 
-      if params[:equipment].nil? or params[:equipment].empty?
+      equipment_ids = params[:equipment] || []
+      equipment_ids.delete('')
+
+      if equipment_ids.empty?
         params[:schedule][:equipment] = nil
       else
-        params[:equipment].each do |equipment_id|
+        equipment_ids.each do |equipment_id|
           equipment = Equipment.find(equipment_id)
           if equipment.nil? or !equipment.is_accessible_by(@login_user)
             flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
@@ -178,7 +181,7 @@ class SchedulesController < ApplicationController
             return
           end
         end
-        params[:schedule][:equipment] = '|' + params[:equipment].join('|') + '|'
+        params[:schedule][:equipment] = '|' + equipment_ids.join('|') + '|'
       end
 
       if params[:items].nil? or params[:items].empty?
@@ -218,9 +221,20 @@ class SchedulesController < ApplicationController
       nearest_day = check_schedule.get_nearest_day(date)
       if nearest_day.nil?
         check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
-        session[:edit_schedule] = check_schedule
+# ActionDispatch::Cookies::CookieOverflow occurs!
+#        session[:edit_schedule] = check_schedule
         flash[:notice] = 'ERROR:' + t('schedule.no_day_in_rule')
-        redirect_to(:action => 'day', :date => params[:date])
+        if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+          self.index
+        else
+          prms = ApplicationHelper.get_fwd_params(params)
+          prms.delete('id')
+          prms.delete('schedule')
+          prms[:controller] = params[:fwd_controller]
+          prms[:action] = params[:fwd_action]
+          redirect_to(prms)
+        end
+      # redirect_to(:action => 'day', :date => params[:date])
         return
       end
 
@@ -262,10 +276,18 @@ class SchedulesController < ApplicationController
       flash[:notice] = t('msg.update_success')
     end
 
-    prms ||= {}
-    prms[:action] = 'day'
-    prms[:date] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
-    redirect_to(prms)
+    params[:date] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
+
+    if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+      self.index
+    else
+      prms = ApplicationHelper.get_fwd_params(params)
+      prms.delete('id')
+      prms.delete('schedule')
+      prms[:controller] = params[:fwd_controller]
+      prms[:action] = params[:fwd_action]
+      redirect_to(prms)
+    end
 
   rescue => evar
     Log.add_error(request, evar)
@@ -420,11 +442,29 @@ class SchedulesController < ApplicationController
   #Shows Schedules for specified diplay type.
   #
   def index
-    Log.add_info(request, params.inspect)
+    if params[:action] == 'index'
+      Log.add_info(request, params.inspect)
+    end
 
     if params[:display].nil? or params[:display].empty?
 
     else
+      case params[:display]
+        when 'month', 'week', 'day'
+          params[:action] = params[:display]
+        else
+          display_type = params[:display].split('_')[0]
+          display_id = params[:display].split('_')[1]
+          params[:action] = display_type
+          params[:id] = display_id
+      end
+      self.send(params[:action])
+      render(:action => params[:action])
+=begin
+      # 2013-01-13
+      # Very long POST data causes Internal Server Error,
+      # because Redirection supports only GET method.
+      #
       prms = ApplicationHelper.get_fwd_params(params)
 
       case params[:display]
@@ -444,6 +484,7 @@ class SchedulesController < ApplicationController
           prms[:id] = display_id
           redirect_to(prms)
       end
+=end
     end
   end
 

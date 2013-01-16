@@ -51,6 +51,41 @@ val = params[:val]
 
 <script type="text/javascript">
 
+initFilterActionVerbOpts = function()
+{
+  var avoidVerbs = new Array();
+  var filter_action_inputs = document.getElementsByClassName("filter_action_input");
+  for (var i=0; i < filter_action_inputs.length; i++) {
+    var verb = filter_action_inputs[i].value.split("\n")[0];
+    if (verb != "<%= verb %>") {
+      avoidVerbs.push(verb);
+    }
+  }
+  var validOpts = new Array();
+  var filter_action_verb = _z("filter_action_verb");
+  for (var i=0; i < filter_action_verb.options.length; i++) {
+    var verb = filter_action_verb.options[i].value;
+    if (avoidVerbs.indexOf(verb) < 0) {
+      validOpts.push(filter_action_verb.options[i]);
+    }
+  }
+
+  filter_action_verb.options.length = 0;
+  for (var i=0; i < validOpts.length; i++) {
+    filter_action_verb.options[i] = validOpts[i];
+  }
+  if (filter_action_verb.options.length <= 0
+      || (filter_action_verb.options.length == 1 && !filter_action_verb.options[0].value)) {
+    tips("<%= t('mail_filter.no_more_action_available') %>", "CENTER");
+
+    var boxInstance = ThetisBox.getInstanceForElem(filter_action_verb);
+    if (boxInstance) {
+      boxInstance.remove();
+    }
+  }
+}
+initFilterActionVerbOpts();
+
 onFilterActionOptionChanged = function(elem, keepVal)
 {
   if (elem.style.display == "none") {
@@ -141,12 +176,6 @@ onFilterActionOkClicked = function(elem)
   btn_filter_action_ok.disabled = true;
   btn_filter_action_cancel.disabled = true;
 
-  if (!checkIndispensablesFilterAction()) {
-    btn_filter_action_ok.disabled = false;
-    btn_filter_action_cancel.disabled = false;
-    return false;
-  }
-
   var filter_action_verb = _z("filter_action_verb");
   var filter_action_dest = _z("filter_action_dest");
   var filter_action_dest_folder_id = _z("filter_action_dest_folder_id");
@@ -156,11 +185,21 @@ onFilterActionOkClicked = function(elem)
   var val = null;
   var dispVal = null;
 
+  if (!verb || !checkIndispensablesFilterAction()) {
+    btn_filter_action_ok.disabled = false;
+    btn_filter_action_cancel.disabled = false;
+    return false;
+  }
+
   if (verb == "move") {
     val = filter_action_dest_folder_id.value;
     dispVal = filter_action_dest_path.innerHTML;
     var m = dispVal.match(/[^/]+$/);   // Extract last folder name
-    dispVal = m[0];
+    if (m && m[0]) {
+      dispVal = m[0];
+    } else {
+      dispVal = "";
+    }
   }
 
   var disp = getListSelected(filter_action_verb, true)[0];

@@ -352,9 +352,10 @@ ja:
       authorities: "権限設定"
       display_control: "表示設定"
   mail_filter:
+    no_more_action_available: "追加できる動作がありません。"
     specify_folder_to_filter: "対象メールアカウント内のメールフォルダを選択してください。"
-    confirm_to_execute_now: "有効とされている手動実行フィルタを上から順に実行します。よろしいですか？"
-    execute_now_info: "<strong>今すぐ実行</strong><br/>「有効」かつ「適用タイミング＝手動実行」と指定されているフィルタを（チェックの有無にかかわらず）実行します。"
+    confirm_to_execute_now: "選択されているメールフォルダに対して、有効な手動実行フィルタを上から順に実行します。よろしいですか？"
+    execute_now_info: "<strong>今すぐ実行</strong><br/>選択されているメールフォルダに対して、<br/>「有効」かつ「適用タイミング＝手動実行」と指定されているフィルタを（チェックの有無にかかわらず）実行します。"
     target_account: "対象メールアカウント"
     new: "新しいフィルタ"
     confirm_delete: "件のフィルタを削除します。よろしいですか？"

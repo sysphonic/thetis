@@ -29,7 +29,7 @@ unless @mail_filter.nil? or @mail_filter.conditions.nil?
 
     disp = "#{disp_point} #{disp_compare}"
     unless disp_val.nil? or disp_val.empty?
-      disp << ": #{disp_val}"
+      disp << ": #{truncate(disp_val, :length => 16)}"
     end
 %>
 <div class="filter_condition_entry" id="div_filter_condition<%= idx %>" style="height:18px; padding:4px 0px;">

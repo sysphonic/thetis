@@ -256,7 +256,7 @@ onFilterConditionOkClicked = function(elem)
   var disp = getListSelected(filter_condition_point, true)[0]
               + " " + getListSelected(filter_condition_compare, true)[0];
   if (dispVal != null) {
-    disp += ": " + dispVal;
+    disp += ": " + truncateStr(dispVal, 16);
   }
 
   var div_filter_conditions = _z("div_filter_conditions");

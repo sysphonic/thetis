@@ -430,11 +430,11 @@ module MailFiltersHelper
         or mail_folder.id == trash_folder.id \
         or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
       email.destroy
+      return false
     else
       email.update_attribute(:mail_folder_id, trash_folder.id)
+      return true
     end
-
-    return true
   end
 
   def self.execute_action_read(mail_filter, email, val)

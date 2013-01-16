@@ -239,6 +239,7 @@ class MailFoldersController < ApplicationController
         end
       rescue => evar
         flash[:notice] = 'ERROR:' + t('mail.receive_error') + '<br/>' + evar.to_s
+        Log.add_error(nil, evar)
       end
     end
 

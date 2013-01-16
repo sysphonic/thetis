@@ -1173,8 +1173,8 @@ function onEmailUnreadClicked(elem, email_id)
                 thetisBoxProgress.remove();
                 request.responseText.evalScripts();
 
-                var div_mail_subect = _z("mail_subect_"+email_id);
-                appendClassName(div_mail_subect, "email_subject_unread");
+                var div_mail_subject = _z("mail_subject_"+email_id);
+                appendClassName(div_mail_subject, "email_subject_unread");
               }
           }
         );

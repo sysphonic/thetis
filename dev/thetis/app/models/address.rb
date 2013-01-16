@@ -225,7 +225,7 @@ class Address < ActiveRecord::Base
   #
   def self.parse_csv_row(row, book, idxs, user)
 
-    imp_id = (row[idxs[0]].nil?)?nil:(row[idxs[0]].strip)
+    imp_id = (idxs[0].nil? or row[idxs[0]].nil?)?(nil):(row[idxs[0]].strip)
     unless imp_id.nil? or imp_id.empty?
       org_address = Address.find_by_id(imp_id)
     end
@@ -236,30 +236,39 @@ class Address < ActiveRecord::Base
       address = org_address
     end
 
-    address.id =           imp_id
-    address.name =         (row[idxs[1]].nil?)?nil:(row[idxs[1]].strip)
-    address.name_ruby =    (row[idxs[2]].nil?)?nil:(row[idxs[2]].strip)
-    address.nickname =     (row[idxs[3]].nil?)?nil:(row[idxs[3]].strip)
-    address.screenname =   (row[idxs[4]].nil?)?nil:(row[idxs[4]].strip)
-    address.email1 =       (row[idxs[5]].nil?)?nil:(row[idxs[5]].strip)
-    address.email2 =       (row[idxs[6]].nil?)?nil:(row[idxs[6]].strip)
-    address.email3 =       (row[idxs[7]].nil?)?nil:(row[idxs[7]].strip)
-    address.postalcode =   (row[idxs[8]].nil?)?nil:(row[idxs[8]].strip)
-    address.address =      (row[idxs[9]].nil?)?nil:(row[idxs[9]].strip)
-    address.tel1_note =    (row[idxs[10]].nil?)?nil:(row[idxs[10]].strip)
-    address.tel1 =         (row[idxs[11]].nil?)?nil:(row[idxs[11]].strip)
-    address.tel2_note =    (row[idxs[12]].nil?)?nil:(row[idxs[12]].strip)
-    address.tel2 =         (row[idxs[13]].nil?)?nil:(row[idxs[13]].strip)
-    address.tel3_note =    (row[idxs[14]].nil?)?nil:(row[idxs[14]].strip)
-    address.tel3 =         (row[idxs[15]].nil?)?nil:(row[idxs[15]].strip)
-    address.fax =          (row[idxs[16]].nil?)?nil:(row[idxs[16]].strip)
-    address.url =          (row[idxs[17]].nil?)?nil:(row[idxs[17]].strip)
-    address.organization = (row[idxs[18]].nil?)?nil:(row[idxs[18]].strip)
-    address.title =        (row[idxs[19]].nil?)?nil:(row[idxs[19]].strip)
-    address.memo =         (row[idxs[20]].nil?)?nil:(row[idxs[20]].strip)
-    address.xorder =       (row[idxs[21]].nil?)?nil:(row[idxs[21]].strip)
-    address.groups =       (row[idxs[22]].nil?)?nil:(row[idxs[22]].strip)
-    address.teams =        (row[idxs[23]].nil?)?nil:(row[idxs[23]].strip)
+    address.id = imp_id
+    attr_names = [
+      :name,
+      :name_ruby,
+      :nickname,
+      :screenname,
+      :email1,
+      :email2,
+      :email3,
+      :postalcode,
+      :address,
+      :tel1_note,
+      :tel1,
+      :tel2_note,
+      :tel2,
+      :tel3_note,
+      :tel3,
+      :fax,
+      :url,
+      :organization,
+      :title,
+      :memo,
+      :xorder,
+      :groups,
+      :teams
+    ]
+    attr_names.each_with_index do |attr_name, idx|
+      row_idx = idxs[idx+1]
+      break if row_idx.nil?
+
+      val = (row[row_idx].nil?)?(nil):(row[row_idx].strip)
+      address.send(attr_name.to_s + '=', val)
+    end
     if (address.groups == Address::EXP_IMP_FOR_ALL) \
         or (book == Address::BOOK_COMMON and address.groups.blank? and address.teams.blank?)
       address.groups = nil

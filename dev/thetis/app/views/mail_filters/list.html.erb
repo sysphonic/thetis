@@ -235,8 +235,8 @@ doExecNowFilters = function(mail_account_id, folder_id)
                 onComplete:function(request){
                   thetisBoxProgress.remove();
 
-                  if (thetisBoxFilters){
-                    thetisBoxFilters.setOnClose("doUpdateMails(null, false)");
+                  if (doUpdateMails) {
+                    doUpdateMails(null, false);
                   }
 
                   if (request.responseText == "") {

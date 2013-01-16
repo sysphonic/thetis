@@ -110,6 +110,7 @@ onEditToAddressClicked = function()
   thetisBoxSendTo.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif' /> <%= t('cap.send_to') %>";
   thetisBoxSendTo.overflow = "hidden";
   thetisBoxSendTo.show("CENTER", "420,168", "TRAY", "", "", content);
+  addEvent(_z("to_addr_bare"), "keypress", avoidSubmit);
 }
 
 getToAddrEditor = function(onOk, onCancel)

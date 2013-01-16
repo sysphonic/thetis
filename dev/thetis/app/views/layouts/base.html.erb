@@ -75,10 +75,10 @@ function doOnLoad()
 function showTopicBox()
 {
   var thetisBox = new ThetisBox;
+  thetisBox.z_index += 10;
   thetisBox.resizable = true;
   thetisBox.title = "<%= t('topicbox.title') %>";
   thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
-  _z("divThetisBox-" + thetisBox.id).style.zIndex += 1;
 }
 
 function _forBugfullIE(div, list)

@@ -5,22 +5,22 @@
 tabs = new Array("basic", "address", "memo", "scope");
 </script>
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" width="100%">
+      <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_basic" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_address" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('address', tabs); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if(_z('tab_div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_address" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('address', tabs); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if(_z('tab_div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= Address.human_attribute_name('address') %>
           </td>
-          <td id="tab_memo" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('memo', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_memo" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('memo', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= Address.human_attribute_name('memo') %>
           </td>
-          <td id="tab_scope" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('scope', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_scope').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_scope').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_scope" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('scope', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_scope').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_scope').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
             <%= t('schedule.scope') %>
           </td>
           <td><!-- SPACER --></td>
@@ -30,15 +30,15 @@ tabs = new Array("basic", "address", "memo", "scope");
     </td>
   </tr>
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
       <%= hidden_field('address', 'id') %>
 
       <div id="tab_div_basic">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
-            <td align="center" style="padding:10px 0px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name">
                     <%= Address.human_attribute_name('name') %></label>
@@ -110,10 +110,10 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_address" style="display:none;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
-            <td align="center" style="padding:10px 0px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
@@ -161,10 +161,10 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_memo" style="display:none;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
-            <td align="center" style="padding:10px 0px;">
-              <table align="center" width="85%" cellpadding="0" cellspacing="2">
+            <td style="text-align:center; padding:10px 0px;">
+              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
@@ -180,9 +180,9 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_scope" style="display:none;">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
-            <td align="left" style="padding:20px 10px;">
+            <td style="text-align:left; padding:20px 10px;">
             <% if (@login_user.nil? or !@login_user.admin?(User::AUTH_ADDRESSBOOK)) %>
               <ul>
                 <li><%= t('scope.private') %></li>
@@ -201,7 +201,7 @@ tabs = new Array("basic", "address", "memo", "scope");
               <input type="radio" id="scope_private" name="scope" value="private" onclick="_z('div_edit_scope').style.display='none';" <%= (is_private)?'checked':'' %> /><label for="scope_private"><%= t('scope.private') %></label><br/>
               <input type="radio" id="scope_all" name="scope" value="all" onclick="_z('div_edit_scope').style.display='none';" <%= (is_for_all)?'checked':'' %> /><label for="scope_all"><%= t('scope.common') %><%= t('paren.round.left') %><%= t('msg.all_users') %><%= t('paren.round.right') %></label><br/>
               <input type="radio" id="scope_common" name="scope" value="common" onclick="_z('div_edit_scope').style.display='block';" <%= (is_private or is_for_all)?'':'checked' %> /><label for="scope_common"><%= t('scope.common') %></label><br/>
-              <div id="div_edit_scope" style="display:<%= (is_private)?'none':'block' %>; padding-left:10px">
+              <div id="div_edit_scope" style="display:<%= (is_private or is_for_all)?'none':'block' %>; padding-left:10px">
                 <%= render(:partial => 'common/edit_scope', :locals => {:obj => @address}) %>
               </div>
             <% end %>
