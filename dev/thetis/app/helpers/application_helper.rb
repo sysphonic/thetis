@@ -348,6 +348,7 @@ module ApplicationHelper
   #return:: Formatted text.
   #
   def self.format_text_block(text)
+    return nil if text.nil?
     return text.gsub("\n", '<br/>').gsub('  ', '&nbsp; ')
   end
 

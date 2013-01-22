@@ -2,7 +2,12 @@
 <table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
     <td nowrap style="padding:0px 10px; text-align:left;">
-      <%= email.get_sent_at_exp %>
+    <%
+    sent_at_exp = email.get_sent_at_exp
+    if sent_at_exp.match(/\d/)
+    %>
+      <%= sent_at_exp %>
+    <% end %>
     </td>
   <% if email.xtype == Email::XTYPE_RECV %>
     <td nowrap style="padding:0px 10px; text-align:right;">

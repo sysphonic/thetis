@@ -134,9 +134,11 @@ ThetisBox.setCloseImg = function(image) {__thetisbox_close_img=image;};
 // DRAG BY PROTOTYPE.JS >>>
 ThetisBox.onResizeHandleDragged = function(x, y, elem, base, box, content, deltaWidth, deltaHeight, clientRegion, pos, bodyScroll)
 {
+/*
   if (x <= 0 && y <= 0) {
     return [x, y];
   }
+*/
   var aborted = false;
   var widthContent = x + elem.offsetWidth;
   var heightContent = y + elem.offsetHeight;

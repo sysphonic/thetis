@@ -72,20 +72,16 @@ doDeleteMails = function()
 
   var addParams = getCheckedMailsParam();
   addParams.push(Form.serialize(document.form_list));
+<% unless params[:page].blank? %>
+  addParams.push("page=<%= params[:page] %>");
+<% end %>
 
   doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mails') %>", addParams, "<%= @folder_id %>");
 }
 
 onMoveMailsClicked = function()
 {
-  var elems = document.getElementsByClassName("check_mail");
-  var count = 0;
-  for (var i=0; elems != null && i < elems.length; i++) {
-    if (elems[i].checked) {
-      count++;
-    }
-  }
-  if (count <= 0) {
+  if (countCheckedMails() <= 0) {
     return;
   }
   showFolderTreeToMove(<%= @folder_id %>);
@@ -98,8 +94,24 @@ doMoveMails = function(frmTree)
   var addParams = getCheckedMailsParam();
   addParams.push(Form.serialize(document.form_list));
   addParams.push(Form.serialize(frmTree));
+<% unless params[:page].blank? %>
+  addParams.push("page=<%= params[:page] %>");
+<% end %>
 
   doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams, "<%= @folder_id %>");
+}
+
+countCheckedMails = function()
+{
+  var cnt = 0;
+
+  var elems = document.getElementsByClassName("check_mail");
+  for (var i=0; elems != null && i < elems.length; i++) {
+    if (elems[i].checked) {
+      cnt++;
+    }
+  }
+  return cnt;
 }
 
 getCheckedMailsParam = function()
@@ -202,7 +214,7 @@ onPaginate = function(url)
 @emails.each_with_index do |email, idx|
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
   sbj_style = (email.status == Email::STATUS_UNREAD)?'email_subject_unread':''
-  show_header = (email.status != Email::STATUS_DRAFT)
+  show_header = true # (email.status != Email::STATUS_DRAFT)
 %>
   <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="30" onclick="onSelChanged(this, '<%= email.id %>');" style="cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
     <td class="<%= td_class %> <%= sbj_style %>" id="mail_subject_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">

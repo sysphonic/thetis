@@ -18,9 +18,9 @@ end
 
 <%= render(:partial => 'common/dojo_init') %>
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td align="left" valign="bottom" style="padding-left:20px; vertical-align:top;" >
+    <td style="text-align:left; padding-left:20px; vertical-align:top;" >
 <%
 unless @for_print
   @workflow = @item.workflow
@@ -39,17 +39,17 @@ unless @for_print
 <% end %>
     </td>
     <td>
-      <table width="100%" cellpadding="0" cellspacing="0">
+      <table style="width:100%;" cellpadding="0" cellspacing="0">
         <tr>
           <td>
-            <table align="right" width="40%" cellpadding="0" cellspacing="1">
-              <tr height="18">
+            <table align="right" style="width:40%;" cellpadding="0" cellspacing="1">
+              <tr style="height:18px;">
               <% if @item.xtype == Item::XTYPE_PROJECT %>
-                <td rowspan="2" valign="middle" style="padding-right:10px;">
+                <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
                 </td>
               <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
-                <td rowspan="2" valign="middle" style="padding-right:10px;">
+                <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
                 </td>
               <% end %>
@@ -60,7 +60,7 @@ unless @for_print
               <% end %>
                 <td class="td_entry_info_cap" nowrap><%= Item.human_attribute_name('public') %></td>
               </tr>
-              <tr height="18">
+              <tr style="height:18px;">
                 <td class="td_entry_info_val" nowrap>
                   <%
                   user_name, u_groups, figure = UsersHelper.get_groups_info(@item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
@@ -93,9 +93,9 @@ unless @for_print
     <% if @item.is_a_copy? %>
         <tr>
           <td style="padding-bottom:10px;">
-            <table align="right" width="40%" cellpadding="0" cellspacing="0">
+            <table align="right" style="width:40%;" cellpadding="0" cellspacing="0">
               <tr>
-                <td nowrap width="20%" style="background-color:orange; padding:0px 5px;">
+                <td nowrap style="width:20%; background-color:orange; padding:0px 5px;">
                   <%= t('cap.original') %><%= t('cap.suffix') %>
                 </td>
                 <td nowrap style="background-color:#FBD320; padding:0px 5px;">
@@ -121,15 +121,15 @@ unless @for_print
     </td>
   </tr>
   <tr>
-    <td colspan="2" align="center" valign="bottom">
-      <table align="center" width="95%" cellpadding="0" cellspacing="2">
+    <td colspan="2" style="text-align:center; vertical-align:bottom;">
+      <table align="center" style="width:95%;" cellpadding="0" cellspacing="2">
         <tr>
-          <td nowrap style="color:navy; font-size:14pt; line-height:1.0;">
+          <td style="width:50%; text-align:left; color:navy; font-size:14pt; line-height:1.0;  word-break:break-all;">
             <%= raw(t('paren.aquo_b.right')) %> <%= @item.title %>
           </td>
          <% unless @item.folder_id.nil? %>
-          <td width="40">&nbsp;&nbsp;</td>
-          <td id="folder_path" align="left" nowrap width="80%">
+          <td style="width:40px;">&nbsp;&nbsp;</td>
+          <td id="folder_path" style="text-align:left; width:48%; word-break:break-all;">
             <%
             in_system_folder = @item.in_system_folder?(@folder_obj_cache)
             %>
@@ -161,33 +161,32 @@ end
 
 <% unless @for_print %>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table align="center" cellspacing="0" cellpadding="0" style="margin:20px 0px 5px;">
   <tr>
-  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
-    <%= t('btn.back') %>
-  </td>
-  <td width="10"></td>
-  <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for(:controller => 'items', :action => 'show_for_print', :id => @item.id) %>').focus(); thetisBox.remove();">
-    <%= t('btn.for_print') %>
-  </td>
-<% unless @login_user.nil? or @item.is_a_copy? %>
-  <td width="10"></td>
-  <td class="img_button_td" onclick="doDuplicate();">
-    <%= t('btn.duplicate') %>
-  </td>
-<% end %>
-<% if !@login_user.nil? and @item.editable?(@login_user) %>
-  <td width="10"></td>
-  <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
-  </td>
-<% end %>
-<% if !@login_user.nil? and @item.movable?(@login_user) %>
-  <td width="10"></td>
-  <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
-  </td>
+    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <%= t('btn.back') %>
+    </td>
+    <td style="width:10px;"></td>
+    <td class="img_button_td" onclick="var thetisBox=prog('TOP-RIGHT'); window.open('<%= url_for(:controller => 'items', :action => 'show_for_print', :id => @item.id) %>').focus(); thetisBox.remove();">
+      <%= t('btn.for_print') %>
+    </td>
+  <% unless @login_user.nil? or @item.is_a_copy? %>
+    <td style="width:10px;"></td>
+    <td class="img_button_td" onclick="doDuplicate();">
+      <%= t('btn.duplicate') %>
+    </td>
+  <% end %>
+  <% if !@login_user.nil? and @item.editable?(@login_user) %>
+    <td style="width:10px;"></td>
+    <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
+    </td>
+  <% end %>
+  <% if !@login_user.nil? and @item.movable?(@login_user) %>
+    <td style="width:10px;"></td>
+    <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
+    </td>
 
 <script type="text/javascript">
 
@@ -208,15 +207,14 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 }
 
 </script>
-<% end %>
-<% if !@login_user.nil? and @item.deletable?(@login_user) %>
-  <td width="10"></td>
-  <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
-    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
-  </td>
-<% end %>
+  <% end %>
+  <% if !@login_user.nil? and @item.deletable?(@login_user) %>
+    <td style="width:10px;"></td>
+    <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
+    </td>
+  <% end %>
   </tr>
-  <tr height="5"><td></td></tr>
 </table>
 
 <% end %>
@@ -243,7 +241,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
       </tr>
     <% if @workflow.status == Workflow::STATUS_NOT_ISSUED and !@login_user.nil? and @login_user.id == @item.user_id%>
       <% if @orders.empty? %>
-      <tr height="20">
+      <tr style="height:20px;">
         <td>
           <table id="issue_button" align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
             <tr>
@@ -255,7 +253,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
         </td>
       </tr>
       <% else %>
-      <tr height="20">
+      <tr style="height:20px;">
         <td>
           <table id="issue_button" align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
             <tr>
@@ -348,9 +346,9 @@ function _doWfIssue()
 
 <div id="div_team">
 
-  <table width="95%" cellpadding="5" align="center"> 
-    <tr> 
-      <td align="left" style="font-size:14pt; line-height:1.0;">
+  <table style="width:95%;" cellpadding="5" align="center"> 
+    <tr>
+      <td style="text-align:left; font-size:14pt; line-height:1.0;">
         <%= t('cap.information') %>
         <div class="hr"></div>
       </td>
@@ -367,9 +365,9 @@ function _doWfIssue()
 
   <a name="team_organize"></a>
 
-  <table width="95%" cellpadding="5" align="center"> 
-    <tr> 
-      <td align="left" style="font-size:14pt; line-height:1.0;">
+  <table style="width:95%;" cellpadding="5" align="center"> 
+    <tr>
+      <td style="text-align:left; font-size:14pt; line-height:1.0;">
         <%= t('team.organize') %>
         <div class="hr"></div>
       </td>
@@ -377,9 +375,9 @@ function _doWfIssue()
   </table>
 
   <div id="div_team_organize">
-    <table width="95%" cellpadding="5" align="center"> 
-      <tr> 
-        <td align="left"> 
+    <table style="width:95%;" cellpadding="5" align="center"> 
+      <tr>
+        <td style="text-align:left;"> 
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif">&nbsp;
           <%= t('team.organize_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span>
           <%= t('team.organize_info2') %>
@@ -389,13 +387,12 @@ function _doWfIssue()
 
     <%= form_tag( {:controller => 'items', :action => 'team_organize', :id => @item.id}, :name => 'form_team', :method => 'post') %>
       <input type="hidden" id="team_id" name="team_id" value="<%= (@team.nil?)?'':@team.id %>" />
-      <table cellspacing="0" cellpadding="0" align="center" width="90%" bgcolor="lightcyan">
-        <tr height="20"><td></td></tr>
+      <table cellspacing="0" cellpadding="0" align="center" style="width:90%; background-color:lightcyan; margin:20px 0px;">
         <tr>
           <td style="padding-left:20px;">
-            <table cellspacing="0" cellpadding="0" align="left" width="450">
+            <table cellspacing="0" cellpadding="0" align="left" style="width:450px;">
               <tr>
-                <td align="left">
+                <td style="text-align:left;">
                   <%= t('team.cap.applicants') %><br/>
                   <select id="team_candidates" class="select_candidates" size="5" multiple="multiple">
                   <%
@@ -419,24 +416,24 @@ function _doWfIssue()
                   </select>
                 </td>
               </tr>
-              <tr height="5"><td></td></tr>
+              <tr style="height:5px;"><td></td></tr>
               <tr>
                 <td>
-                  <table cellspacing="0" cellpadding="0" width="100%">
+                  <table cellspacing="0" cellpadding="0" style="width:100%;">
                     <tr>
-                      <td align="left" valign="bottom" width="33%">
+                      <td style="width:33%; text-align:left; vertical-align:bottom;">
                         <%= t('cap.members') %>
                       </td>
-                      <td align="center" width="34%" nowrap>
+                      <td style="width:34%; text-align:center;" nowrap>
                         <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="moveList(_z('team_candidates'), _z('team_members')); return false;" style="width:80px;">
                         <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="moveList(_z('team_members'), _z('team_candidates')); return false;" style="width:80px;">
                       </td>
-                      <td width="33%">&nbsp;</td>
+                      <td style="width:33%;">&nbsp;</td>
                     </tr>
                   </table>
                 </td>
               </tr>
-              <tr height="5"><td></td></tr>
+              <tr style="height:5px;"><td></td></tr>
               <tr>
                 <td>
                   <select id="team_members" name="team_members[]" class="select_multi" size="5" multiple="multiple">
@@ -449,10 +446,10 @@ function _doWfIssue()
             </table>
           </td>
         </tr>
-        <tr height="20">
+        <tr style="height:20px;">
           <td>
             <table align="center" cellspacing="0" cellpadding="0">
-              <tr height="20"><td></td></tr>
+              <tr style="height:20px;"><td></td></tr>
               <tr>
                 <td class="img_button_td" onclick="selectListAll(_z('team_members')); doOrganizeTeam(document.form_team);">
                   <%= t('btn.register') %>
@@ -461,7 +458,6 @@ function _doWfIssue()
             </table>
           </td>
         </tr>
-        <tr height="20"><td></td></tr>
       </table>
     </form>
   </div>  <!-- div_team_organize -->
@@ -473,9 +469,9 @@ else
   if @team.nil? or (!@team.nil? and @team.status != Team::STATUS_DEACTIVATED) or !@comment.nil?
 %>
 
-  <table width="95%" cellpadding="5" align="center"> 
-    <tr> 
-      <td align="left" style="font-size:14pt; line-height:1.0;">
+  <table style="width:95%;" cellpadding="5" align="center"> 
+    <tr>
+      <td style="text-align:left; font-size:14pt; line-height:1.0;">
         <%= t('team.application') %>
         <div class="hr"></div>
       </td>
@@ -486,8 +482,8 @@ else
 
     <% if @login_user.nil? %>
 
-    <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
-      <tr><td align="center"><%= t('team.application_info') %></td></tr>
+    <table cellspacing="0" cellpadding="0" align="center" style="width:90%; background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
+      <tr><td style="text-align:center;"><%= t('team.application_info') %></td></tr>
     </table>
 
     <%
@@ -495,9 +491,9 @@ else
       if @comment.nil?
         if !@team.nil? and @team.get_users_a.include?(@login_user.id.to_s)
     %>
-        <table cellspacing="0" cellpadding="0" align="center" width="90%" style="background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
+        <table cellspacing="0" cellpadding="0" align="center" style="width:90%; background-color:#FFEBCB; padding-top:15px; padding-bottom:15px;">
           <tr>
-            <td align="center">
+            <td style="text-align:center;">
               <%= t('team.is_member') %>
               &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('team.leave_info') %>');">
             </td>
@@ -532,7 +528,7 @@ end
 <!-- Response for Zeptair Distribution Package -->
 <% if @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
 <a name="zeptair_dist_res"></a>
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
     <td style="padding-top:20px;">
 
@@ -540,14 +536,12 @@ end
 
     <div id="div_zeptair_dist_res">
   <% if @login_user.nil? %>
-      <table align="center" width="50%" cellspacing="0" cellpadding="0">
-        <tr height="15"><td></td></tr>
+      <table align="center" style="width:50%; margin:15px 0px;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center" nowrap>
+          <td style="text-align:center;" nowrap>
             <%= t('msg.please_login') %>
           </td>
         </tr>
-        <tr height="15"><td></td></tr>
       </table>
   <%
   else
@@ -556,32 +550,30 @@ end
     comment = ZeptairDistHelper.get_comment_of(@item.id, @login_user.id)
     entries = ZeptairDistHelper.get_ack_array_of(comment)
   %>
-      <table width="95%" cellpadding="5" align="center"> 
-        <tr height="15"><td></td></tr>
+      <table style="width:95%; margin-top:15px;" cellpadding="5" align="center"> 
         <tr>
-          <td align="left" style="font-size:14pt; line-height:1.0;">
+          <td style="text-align:left; font-size:14pt; line-height:1.0;">
             <%= t('msg.myself') %>
             <div class="hr"></div>
           </td>
         </tr>
       </table>
 
-      <table align="center" width="80%" cellspacing="0" cellpadding="0">
-        <tr height="10"><td></td></tr>
+      <table align="center" style="width:80%; margin:10px 0px 15px;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="center">
-            <table width="100%" cellspacing="1" cellpadding="0">
+          <td style="text-align:center;">
+            <table style="width:100%;" cellspacing="1" cellpadding="0">
               <tr>
-                <th class="list_th" width="22%" nowrap><%= t('user.u_name') %></th>
-                <th class="list_th" width="25%" nowrap><%= t('activerecord.attributes.updated_at') %></th>
+                <th class="list_th" style="width:22%;" nowrap><%= t('user.u_name') %></th>
+                <th class="list_th" style="width:25%;" nowrap><%= t('activerecord.attributes.updated_at') %></th>
             <% @attachments.each_with_index do |attach, attach_idx| %>
-                <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
+                <td nowrap style="width:10px; text-align:center; background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
             <% end %>
             <% unless zept_cmd.nil? %>
-                <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
+                <td nowrap style="width:10px; text-align:center; background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
             <% end %>
               </tr>
-              <tr height="33">
+              <tr style="height:33px;">
                 <td nowrap>
                   <%= truncate(@login_user.get_name, :length => 20) %>
                 </td>
@@ -624,37 +616,36 @@ end
             </table>
           </td>
         </tr>
-        <tr height="15"><td></td></tr>
       </table>
 
     <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
-      <table width="95%" cellpadding="5" align="center"> 
-        <tr> 
-          <td align="left" style="font-size:14pt; line-height:1.0;">
+      <table style="width:95%;" cellpadding="5" align="center"> 
+        <tr>
+          <td style="text-align:left; font-size:14pt; line-height:1.0;">
             <%= t('msg.all_users') %>
             <div class="hr"></div>
           </td>
         </tr>
       </table>
 
-      <table align="center" width="60%" cellspacing="0" cellpadding="0">
-        <tr height="15"><td></td></tr>
+      <table align="center" style="width:60%;" cellspacing="0" cellpadding="0">
+        <tr style="height:15px;"><td></td></tr>
         <tr>
-          <td align="center">
-            <table width="100%" cellspacing="2" cellpadding="0" style="border:solid 1px pink;">
+          <td style="text-align:center;">
+            <table cellspacing="2" cellpadding="0" style="width:100%; border:solid 1px pink;">
               <tr>
-                <td class="item_cap_td" width="40%">
+                <td class="item_cap_td" style="width:40%;">
                   <%= t('zeptair.dist.response') %>
                 </td>
-                <td class="item_value_td" align="left" width="60%" style="padding-left:20px">
+                <td class="item_value_td" style="width:60%; text-align:left; padding-left:20px">
                   <%= ZeptairDistHelper.count_ack_users(@item.id) %>
                 </td>
               </tr>
               <tr>
-                <td class="item_cap_td" width="40%">
+                <td class="item_cap_td" style="width:40%;">
                   <b><%= t('msg.completed') %></b>
                 </td>
-                <td class="item_value_td" align="left" width="60%" style="padding-left:20px">
+                <td class="item_value_td" style="width:60%; text-align:left; padding-left:20px">
                   <b><%= ZeptairDistHelper.count_completed_users(@item.id) %></b>
                 </td>
               </tr>
@@ -662,7 +653,7 @@ end
           </td>
         </tr>
         <tr>
-          <td align="right">
+          <td style="text-align:right;">
             <i>
               <%= t('paren.round.left') %>
               <%= t('user.plural') %>
@@ -670,12 +661,12 @@ end
             </i>
           </td>
         </tr>
-        <tr height="20"><td></td></tr>
+        <tr style="height:20px;"><td></td></tr>
       </table>
 
-      <table cellspacing="0" cellpadding="0" width="300" align="center" onclick="showZeptairDistUsers()" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') center no-repeat; cursor:pointer;">
-        <tr height="35">
-          <td align="center">
+      <table cellspacing="0" cellpadding="0" align="center" onclick="showZeptairDistUsers()" style="width:300px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') center no-repeat; cursor:pointer;">
+        <tr style="height:35px;">
+          <td style="text-align:center;">
             <%= t('msg.show_list') %>
           </td>
         </tr>
@@ -715,9 +706,9 @@ function showZeptairDistUsers()
   <%= render(:partial => 'caption', :locals => {:title => t('item.message'), :div_name => 'div_message'}) %>
 
   <div id="div_message">
-    <table width="95%" cellpadding="5" align="center">
+    <table style="width:95%;" cellpadding="5" align="center">
       <tr>
-        <td align="left" style="background-color:ghostwhite;">
+        <td style="text-align:left; background-color:ghostwhite;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif">&nbsp;
           <%= t('item.message_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info2') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info3') %>
           <%= t('item.message_info4') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info5') %><br/>
@@ -759,30 +750,30 @@ function showZeptairDistUsers()
       </tr>
       <tr>
         <td style="padding:20px 15px 15px;">
-          <table cellspacing="0" cellpadding="0" align="center" width="85%" style="">
+          <table cellspacing="0" cellpadding="0" align="center" style="width:85%;">
             <tr>
               <td>
                 <textarea id="comment_message" name="comment[message]" rows="4" wrap="off" style="width:100%"></textarea>
               </td>
             </tr>
-            <tr height="10"><td></td></tr>
+            <tr style="height:10px;"><td></td></tr>
             <tr>
               <td>
-                <table cellspacing="0" cellpadding="0" width="100%">
+                <table cellspacing="0" cellpadding="0" style="width:100%;">
                   <tr>
-                    <td width="80" valign="middle" nowrap align="left" style="padding-left:10px; font-size:10pt;">
+                    <td nowrap style="width:80px; text-align:left; vertical-align:middle; padding-left:10px; font-size:10pt;">
                       <%= t('item.file') %> :
                     </td>
-                    <td valign="middle">
+                    <td style="vertical-align:middle;">
                       <%= file_field(:comment, :file, :size => '60', :style => 'width:100%') %>
                     </td>
                   </tr>
                 </table>
               </td>
             </tr>
-            <tr height="15"><td></td></tr>
+            <tr style="height:15px;"><td></td></tr>
             <tr>
-              <td align="center">
+              <td style="text-align:center;">
                 <input type="button" value="<%= t('item.register_message') %>" onclick="doRegisterComment(document.form_comment); return false;"/>
               </td>
             </tr>
@@ -800,7 +791,7 @@ function showZeptairDistUsers()
 
     </td>
   </tr>
-  <tr height="20"><td></td></tr>
+  <tr style="height:20px;"><td></td></tr>
 </table>
 
 <%= render(:partial => 'common/user_groups') %>

@@ -158,7 +158,8 @@ class MailAccountsController < ApplicationController
     end
 
     @folder_tree = MailFolder.get_tree_for(@login_user, [mail_account_id])
-    mail_folders = @folder_tree.values.flatten.uniq
+# logger.fatal('@@@ ' + sorted_mail_folders.flatten.collect{|rec| rec.name}.inspect)
+    mail_folders = TreeElement.get_flattened_nodes(@folder_tree)
     mail_folder_ids = mail_folders.collect{|rec| rec.id}
     @unread_emails_h = {}
     unless mail_folder_ids.nil? or mail_folder_ids.empty?
@@ -171,6 +172,7 @@ class MailAccountsController < ApplicationController
         end
       end
     end
+    @unread_emails_h = @unread_emails_h.sort_by{|mail_folder, count| mail_folders.index(mail_folder) }
     @folder_obj_cache ||= MailFolder.build_cache(mail_folders)
 
     render(:layout => (!request.xhr?))

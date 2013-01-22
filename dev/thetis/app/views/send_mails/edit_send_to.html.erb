@@ -36,9 +36,9 @@ tabs_send_mail_address.push("users");
       </table>
 
       <div id="tab_div_direct" style="width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px cornflowerblue;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px cornflowerblue;">
           <tr>
-            <td align="center" style="padding:20px 0px;">
+            <td style="padding:20px 0px; text-align:center;">
 
               <input type="text" id="addr_direct" name="addr_direct" value="" style="width:95%" />
 
@@ -47,10 +47,10 @@ tabs_send_mail_address.push("users");
         </table>
       </div>
 
-      <div id="tab_div_addrbook" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="height:100%; border:outset 3px cornflowerblue;">
+      <div id="tab_div_addrbook" style="display:none; width:100%; text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; height:100%; border:outset 3px cornflowerblue;">
           <tr>
-            <td align="center" style="padding:5px; height:100%;">
+            <td style="text-align:center; padding:5px; height:100%;">
               <div style="text-align:left; padding-bottom:3px;">
                 <%
                 opts = []
@@ -116,11 +116,11 @@ tabs_send_mail_address.push("users");
         </table>
       </div>
 
-      <div id="tab_div_users" style="width:100%;" align="center">
+      <div id="tab_div_users" style="width:100%; text-align:center;">
 <% if enable_users_tab %>
-        <table width="100%" cellpadding="0" cellspacing="0" style="height:83%; border:outset 3px cornflowerblue;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; height:83%; border:outset 3px cornflowerblue;">
           <tr>
-            <td id="div_selectUsers" align="center" style="padding:5px; height:100%;">
+            <td id="div_selectUsers" style="text-align:center; padding:5px; height:100%;">
 
               <%
               submit_url = url_for(:controller => 'send_mails', :action => 'get_group_users')
@@ -136,7 +136,8 @@ tabs_send_mail_address.push("users");
     </td>
   </tr>
   <tr>
-    <td align="center" valign="bottom">
+    <td style="text-align:center; vertical-align:bottom;">
+      <span style="float:left;"><a class="a_underline" href="javascript:this.onclick()" onclick="ThetisBox.getInstanceForElem(this).remove(); return false;" style="font-weight:normal; font-size:11px;"><%= t('btn.close') %></a></span>
       <input type="button" value="<%= t('btn.to') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_TO %>', '<%= t('cap.to') %> ');" style="width:90px; margin-bottom:5px;" />
       <input type="button" value="<%= t('btn.cc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_CC %>', '<%= t('cap.cc') %> ');" style="width:90px; margin-bottom:5px;" />
       <input type="button" value="<%= t('btn.bcc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_BCC %>', '<%= t('cap.bcc') %> ');" style="width:90px;" />

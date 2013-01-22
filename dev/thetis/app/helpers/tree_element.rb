@@ -149,4 +149,39 @@ module TreeElement
 
     return tree
   end
+
+  #=== self.get_flattened_nodes
+  #
+  #Gets sorted flattened Array of the tree nodes.
+  #
+  #_tree_:: Tree Array.
+  #return:: Subnodes.
+  #
+  def self.get_flattened_nodes(tree)
+    nodes = tree.values.flatten.uniq
+    sorted_nodes = []
+    self._get_sorted_nodes(sorted_nodes, nodes, nodes)
+    return sorted_nodes
+  end
+
+private
+  #=== self._get_sorted_nodes
+  #
+  #Gets sorted Array of the tree nodes.
+  #Called recursive.
+  #
+  #_sorted_nodes_:: Output Array.
+  #_nodes_:: Array of the whole nodes.
+  #_subnodes_:: Subnodes.
+  #
+  def self._get_sorted_nodes(sorted_nodes, nodes, subnodes)
+    subnodes.each do |node|
+      next if sorted_nodes.include?(node)
+      sorted_nodes << node
+      subsubnodes = nodes.select{|rec| rec.parent_id == node.id}
+      unless subsubnodes.empty?
+        self._get_sorted_nodes(sorted_nodes, nodes, subsubnodes)
+      end
+    end
+  end
 end

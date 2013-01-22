@@ -174,7 +174,7 @@ end
         <label for="schedule_detail"><%= t('btn.detail') %></label>
       </td>
       <td class="item_value_td">
-       <pre><%= @schedule.detail %></pre>
+        <%= raw(ApplicationHelper.format_text_block(h(@schedule.detail))) %>
       </td>
     </tr>
     <tr>
@@ -189,17 +189,16 @@ end
         text_color, bg_color = @schedule.scope_colors
         case @schedule.scope
           when Schedule::SCOPE_ALL
-            scope = '<span style="color:'+text_color+';">' + t('schedule.disp_to_all') + '</span>'
+            scope = t('schedule.disp_to_all')
           when Schedule::SCOPE_PUBLIC
-            scope = '<span style="color:'+text_color+';">' + t('schedule.public') + '</span>'
+            scope = t('schedule.public')
           when Schedule::SCOPE_PRIVATE
-            scope = '<span style="color:'+text_color+';">' + t('schedule.private') + '</span>'
+            scope = t('schedule.private')
           else
             scope = ''
         end
-        if scope.length > 0
-          color_square = '<span style="display:inline-block; min-width:20px; width:20px; background-color:'+bg_color+';">&nbsp;</span>'
-          scope = color_square + ' ' + scope + ' ' + color_square
+        unless scope.empty?
+          scope = '<span style="display:inline-block; padding:0px 20px; color:'+text_color+'; background-color:'+bg_color+';">' + scope + '</span>'
         end
         %>
         <%= raw(scope) %>

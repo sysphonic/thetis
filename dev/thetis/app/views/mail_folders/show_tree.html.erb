@@ -643,13 +643,15 @@ function selectFolder(folder_id)
   doUpdateMails(folder_id, false);
 }
 
-function doUpdateMails(folder_id, do_pop)
+function doUpdateMails(folder_id, do_pop, addParams)
 {
   if (folder_id == null) {
     folder_id = getCurrentFolderId();
   }
 
-  var addParams = new Array();
+  if (!addParams) {
+    addParams = new Array();
+  }
   addParams.push("id="+folder_id);
 
   var mail_account_id = getMailAccountId(folder_id);
@@ -1142,7 +1144,7 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo = new ThetisBox;
   thetisBoxHeaderInfo.bgcolor_title = "#8DB7EB";
   thetisBoxHeaderInfo.bgcolor_body = "aliceblue";
-  thetisBoxHeaderInfo.title = title;
+  thetisBoxHeaderInfo.title = truncateStr(title, 28);
   thetisBoxHeaderInfo.close_by_icon_button = true;
   thetisBoxHeaderInfo.button_ok = "<%= t('btn.close') %>";
   var content = _z("mail_header_"+email_id).innerHTML.replace(/org_email/g, "email");

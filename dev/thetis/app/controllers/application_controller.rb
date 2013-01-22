@@ -140,7 +140,7 @@ module ActiveRecord
     def get_timestamp_exp(req_full=true, attr=:updated_at)
       val = self.send(attr)
       if val.nil?
-        return '---'
+        return I18n.t('msg.hyphen')
       else
         if req_full
           format = THETIS_DATE_FORMAT_YMD+' %H:%M'

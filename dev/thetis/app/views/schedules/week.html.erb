@@ -23,25 +23,25 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
 
-<table align="center" width="98%" cellspacing="0" cellpadding="0">
+<table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="left" width="30%">
+    <td style="width:30%; text-align:left;">
     <% if !@login_user.nil? and @login_user.admin? User::AUTH_SCHEDULE %>
-      <table align="left" cellspacing="0" cellpadding="0" width="65">
+      <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
         <tr>
-          <td align="left" nowrap width="30">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
+          <td nowrap style="width:30px; text-align:left;">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png"  title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
           </td>
         </tr>
       </table>
     <% end %>
     </td>
-    <td align="center" nowrap width="40%">
+    <td nowrap style="width:40%; text-align:center;">
       <% if @login_user.nil? %>
         &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
       <% end %>
     </td>
-    <td align="right" nowrap width="30%">
+    <td nowrap style="width:30%; text-align:right;">
       <%
       display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
       unless @login_user.nil?
@@ -64,9 +64,9 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   </tr>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
@@ -92,30 +92,28 @@ next_week = @date + 7
   date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 %>
 
-<div id="div_timetable_<%= day_idx %>">
-<table width="100%" cellspacing="0" cellpadding="0">
+<div id="div_timetable_<%= day_idx %>" style="padding-bottom:5px">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
+  <% unless @login_user.nil? %>
   <tr>
-    <td>
-    </td>
-    <td align="left" style="padding-left:8px;">
-    <% unless @login_user.nil? %>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => date_s, :showNew => 'true') %>';">
-    <% end %>
+    <td></td>
+    <td style="text-align:left; padding-left:8px;">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => date_s, :showNew => 'true') %>';">
     </td>
   </tr>
+  <tr style="height:2px;"><td></td></tr>
+  <% end %>
   <tr>
-    <td align="center" width="10%" nowrap style="background-color:<%= THETIS_WDAY_COLOR[@date.wday] %>;">
+    <td nowrap style="width:10%; text-align:center; background-color:<%= THETIS_WDAY_COLOR[@date.wday] %>;">
       <%= @date.strftime(THETIS_DATE_FORMAT_MD) %><br/>
       (<%= Schedule::wday_name(@date.wday) %>)
     </td>
-    <td align="center" width="90%" style="padding:8px 0px;">
+    <td style="width:90%; text-align:center; padding:0px;">
       <%= render(:partial => 'timetable') %>
     </td>
   </tr>
 </table>
 </div>
-
-<div style="height:5px"></div>
 <%
   @date += 1
 end
