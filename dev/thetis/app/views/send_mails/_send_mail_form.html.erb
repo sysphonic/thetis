@@ -218,74 +218,78 @@ doSave = function(do_smtp)
 
   // Basic
   saveFuncs.push(
-        function() {
-          // Trim order suffix
-          var addresList = _z("addresses_selected");
-          for (var i=0; i < addresList.options.length; i++) {
-            var opt = addresList.options[i];
-            opt.value = trimAddressOrder(opt.value);
-          }
-          selectListAll(addresList);
-
-          var frm = document.form_send_mail<%= form_idx %>;
-          var target_id = "div_sendmail_content";
-
-          new Ajax.Updater(
-                    target_id,
-                    frm.action + "?id="+_z("email_id").value,
-                    {
-                      method:"post",
-                      parameters:Form.serialize(frm),
-                      asynchronous:true,
-                      evalScripts:true,
-                      onComplete:function(request){
-                                    if (showErrorMsg(_z(target_id)) == true) {
-                                      setTimeout("onSaveError('basic')", 10);
-                                    } else {
-                                      setTimeout("onSaveComplete('basic')", 10);
-                                    }
-                                  }
-                    }
-                  );
+      function() {
+        // Trim order suffix
+        var addresList = _z("addresses_selected");
+        for (var i=0; i < addresList.options.length; i++) {
+          var opt = addresList.options[i];
+          opt.value = trimAddressOrder(opt.value);
         }
-      );
+        selectListAll(addresList);
+
+        var frm = document.form_send_mail<%= form_idx %>;
+        var target_id = "div_sendmail_content";
+
+        var addParams = new Array();
+        addParams.push("id="+_z("email_id").value);
+        addParams.push(Form.serialize(frm));
+
+        new Ajax.Updater(
+            target_id,
+            frm.action,
+            {
+              method:"post",
+              parameters:addParams.join("&"),
+              asynchronous:true,
+              evalScripts:true,
+              onComplete:function(request){
+                            if (request.responseText.stripScripts().indexOf("<!-- $FLASH_NOTICE:ERROR -->") >= 0) {
+                              setTimeout("onSaveError('basic')", 10);
+                            } else {
+                              setTimeout("onSaveComplete('basic')", 10);
+                            }
+                          }
+            }
+          );
+      }
+    );
 
   // Attachment
   var attach_file = _z("attach_file");
   if (attach_file && attach_file.value.length > 0) {
     saveFuncs.push(
-          function() {
-            var frm = document.form_sendmail_attach<%= form_idx %>;
-            ajaxUploadFile(
-                    frm,
-                    frm.action + "?id="+_z("email_id").value,
-                    "div_sendmail_attach",
-                    function(){ onSaveComplete("attachment") },
-                    function(){ onSaveError("attachment") }
-                  );
-          }
-        );
+        function() {
+          var frm = document.form_sendmail_attach<%= form_idx %>;
+          ajaxUploadFile(
+                  frm,
+                  frm.action + "?id="+_z("email_id").value,
+                  "div_sendmail_attach",
+                  function(){ onSaveComplete("attachment") },
+                  function(){ onSaveError("attachment") }
+                );
+        }
+      );
   }
 
   if (_do_send) {
     saveFuncs.push(
-          function() {
-            var frm = document.form_send_mail<%= form_idx %>;
-            new Ajax.Request(
-                        "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_z("email_id").value,
-                        {
-                          method:"post",
-                          parameters:"authenticity_token=<%= form_authenticity_token %>",
-                          asynchronous:true,
-                          evalScripts:true,
-                          onComplete:function(request){
-                            request.responseText.evalScripts();
-                            onSaveComplete("send")
-                          }
+        function() {
+          var frm = document.form_send_mail<%= form_idx %>;
+          new Ajax.Request(
+                      "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_z("email_id").value,
+                      {
+                        method:"post",
+                        parameters:"authenticity_token=<%= form_authenticity_token %>",
+                        asynchronous:true,
+                        evalScripts:true,
+                        onComplete:function(request){
+                          request.responseText.evalScripts();
+                          onSaveComplete("send")
                         }
-                      );
-          }
-        );
+                      }
+                    );
+        }
+      );
   }
 
   if (saveFuncs.length > 0) {
@@ -341,6 +345,15 @@ attachFile = function()
 onFileSelectOK = function()
 {
   _need_update = true;
+
+  var btn_file_ok = _z("btn_file_ok");
+  var btn_file_cancel = _z("btn_file_cancel");
+  if (btn_file_ok) {
+    btn_file_ok.disabled = true;
+  }
+  if (btn_file_cancel) {
+    btn_file_cancel.disabled = true;
+  }
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 

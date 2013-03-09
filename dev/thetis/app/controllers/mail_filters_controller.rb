@@ -51,23 +51,7 @@ class MailFiltersController < ApplicationController
       where = ' where ' + con.join(' and ')
     end
 
-    order_by = nil
-    @sort_col = params[:sort_col]
-    @sort_type = params[:sort_type]
-
-    if (@sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?)
-      @sort_col = 'xorder'
-      @sort_type = 'ASC'
-    end
-
-    order_by = ' order by ' + @sort_col + ' ' + @sort_type
-
-    if @sort_col != 'xorder'
-      order_by << ', xorder ASC'
-    end
-    if @sort_col != 'title'
-      order_by << ', title ASC'
-    end
+    order_by = ' order by (xorder is null) ASC, xorder ASC, id ASC'
 
     sql = 'select distinct MailFilter.* from mail_filters MailFilter'
     sql << where + order_by

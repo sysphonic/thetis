@@ -131,15 +131,12 @@ module TreeElement
   #
   def self.get_tree(klass, tree, conditions, node_id, order_by)
 
-    con = Marshal.load(Marshal.dump(conditions)) unless conditions.nil?
-
-    if con.nil?
-      con = ['']
+    if conditions.nil?
+      con = ''
     else
-      con[0] << ' and '
+      con = Marshal.load(Marshal.dump(conditions)) + ' and '
     end
-    con[0] << 'parent_id=?'
-    con << node_id
+    con << "(parent_id=#{node_id})"
 
     tree[node_id] = klass.find(:all, {:conditions => con, :order => order_by})
 

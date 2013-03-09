@@ -3,7 +3,7 @@
 
 <table cellspacing="0" cellpadding="0" style="width:100%; padding-top:15px;">
   <tr>
-    <td style="min-width:80px; width:80px; text-align:center; font-weight:bold;">
+    <td style="min-width:80px; width:80px; text-align:left;">
       <%= t('cap.sender') %>
     </td>
     <td style="text-align:left;">
@@ -24,7 +24,7 @@
   </tr>
   <tr style="height:10px;"><td></td></tr>
   <tr>
-    <td style="text-align:center; font-weight:bold;">
+    <td style="text-align:left;">
       <%= t('cap.send_to') %><%= t('cap.suffix') %>
     </td>
     <td style="text-align:center;">
@@ -62,7 +62,7 @@
   </tr>
   <tr style="height:10px;"><td></td></tr>
   <tr>
-    <td style="text-align:center; font-weight:bold;">
+    <td style="text-align:left;">
       <%= t('cap.subject') %>
     </td>
     <td style="text-align:left;">
@@ -71,11 +71,8 @@
   </tr>
   <tr style="height:10px;"><td></td></tr>
   <tr>
-    <td style="text-align:center; vertical-align:top; font-weight:bold;">
-      <%= t('cap.mail_body') %><br/>
-    </td>
-    <td style="text-align:left;">
-      <%= text_area('email', 'message', :rows => '10', :style => 'width:95%;') %>
+    <td colspan="2" style="text-align:center;">
+      <%= text_area('email', 'message', :rows => '10', :style => 'width:100%;') %>
     </td>
   </tr>
 </table>
@@ -84,6 +81,8 @@
 
 
 <script type="text/javascript">
+
+addEvent(_z("email_subject"), "keypress", avoidSubmit);
 
 var thetisBoxSendTo = null;
 

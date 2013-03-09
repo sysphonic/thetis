@@ -136,8 +136,8 @@ tabs_send_mail_address.push("users");
     </td>
   </tr>
   <tr>
-    <td style="text-align:center; vertical-align:bottom;">
-      <span style="float:left;"><a class="a_underline" href="javascript:this.onclick()" onclick="ThetisBox.getInstanceForElem(this).remove(); return false;" style="font-weight:normal; font-size:11px;"><%= t('btn.close') %></a></span>
+    <td style="text-align:center; vertical-align:bottom; padding-right:40px;">
+      <span style="float:left;"><a href="javascript:this.onclick()" onclick="ThetisBox.getInstanceForElem(this).remove(); return false;" style="font-weight:normal; font-size:11px;"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/close_tiny.png" /> <span style="text-decoration:underline;"><%= t('btn.close') %></span></a></span>
       <input type="button" value="<%= t('btn.to') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_TO %>', '<%= t('cap.to') %> ');" style="width:90px; margin-bottom:5px;" />
       <input type="button" value="<%= t('btn.cc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_CC %>', '<%= t('cap.cc') %> ');" style="width:90px; margin-bottom:5px;" />
       <input type="button" value="<%= t('btn.bcc') %>" onclick="addAddress('<%= Email::ADDR_PREFIX_BCC %>', '<%= t('cap.bcc') %> ');" style="width:90px;" />

@@ -43,7 +43,25 @@ class Email < ActiveRecord::Base
 
 
   before_save do |email|
+
+# FEATURE_MAIL_STRICT_CAPACITY >>>
+    org_size = (email.size || 0)
+# FEATURE_MAIL_STRICT_CAPACITY <<<
+
     email.recalc_size
+
+# FEATURE_MAIL_STRICT_CAPACITY >>>
+    if (email.status != Email::STATUS_TEMPORARY) \
+        and (email.size > org_size)
+      mail_account = MailAccount.find_by_id(email.mail_account_id)
+      max_size = mail_account.get_capacity_mb * 1024 * 1024
+      con = "(id != #{email.id})" unless email.id.nil?
+      cur_size = MailAccount.get_using_size(mail_account.id, con)
+      if email.size > (max_size - cur_size)
+        raise('ERROR:' + I18n.t('mail.msg.capacity_over'))
+      end
+    end
+# FEATURE_MAIL_STRICT_CAPACITY <<<
   end
 
   #=== unread?
@@ -189,7 +207,7 @@ class Email < ActiveRecord::Base
     if mail_account.organization.nil? or mail_account.organization.empty?
       organization = nil
     else
-      organization = Mail::Encodings.decode_encode(mail_account.organization, :encode)
+      organization = EmailsHelper.encode_b(mail_account.organization)
     end
 
     has_attach = !(self.mail_attachments.nil? or self.mail_attachments.empty?)
@@ -197,7 +215,9 @@ class Email < ActiveRecord::Base
 
     email_content = ''
     email_content << "From: #{email_from}\n"
-    email_content << "To: #{email_to.join(",\n ")}\n"
+    unless email_to.nil?
+      email_content << "To: #{email_to.join(",\n ")}\n"
+    end
     unless email_cc.nil?
       email_content << "Cc: #{email_cc.join(",\n ")}\n"
     end
@@ -207,7 +227,7 @@ class Email < ActiveRecord::Base
     unless organization.nil?
       email_content << "Organization: #{organization}\n"
     end
-    email_content << "Subject: #{Mail::Encodings.decode_encode(self.subject, :encode)}\n"
+    email_content << "Subject: #{EmailsHelper.encode_b(self.subject)}\n"
     email_content << "Date: #{Time::now.strftime('%a, %d %b %Y %X %z')}\n"
     email_content << "Mime-Version: 1.0\n"
     email_content << "User-Agent: Thetis\n"
@@ -231,7 +251,7 @@ EOT
     if has_attach
       email_content << "\n"
       self.mail_attachments.each do |mail_attach|
-        attach_name = Mail::Encodings.decode_encode(mail_attach.name, :encode)
+        attach_name = EmailsHelper.encode_b(mail_attach.name)
 
         attach_content = File.open(mail_attach.get_path).readlines.join('')
 
@@ -424,20 +444,24 @@ EOT
     # Email Body ###
     plain_part = (@mail.multipart?) ? ((@mail.text_part) ? @mail.text_part : nil) : nil
     html_part = (@mail.html_part) ? @mail.html_part : nil
-    message_part = plain_part || html_part || @mail
+    message_part = (plain_part || html_part)
+    message_part ||= @mail unless @mail.multipart?
 
-    charset = @mail.header.charset
-    charset = nil if !charset.nil? and (charset.casecmp('US-ASCII') == 0)
+    if message_part.nil?
+      self.message = ''
+    else
+      charset = @mail.header.charset
+      charset = nil if !charset.nil? and (charset.casecmp('US-ASCII') == 0)
 
-    charset ||= message_part.header.charset
-    charset = nil if !charset.nil? and (charset.casecmp('US-ASCII') == 0)
+      charset ||= message_part.header.charset
+      charset = nil if !charset.nil? and (charset.casecmp('US-ASCII') == 0)
 
-    message = message_part.body.decoded
-    unless charset.nil? or charset.empty?
-      message.encode!(Encoding::UTF_8, charset, {:invalid => :replace, :undef => :replace, :replace => ' '})
+      message = message_part.body.decoded
+      unless charset.nil? or charset.empty?
+        message.encode!(Encoding::UTF_8, charset, {:invalid => :replace, :undef => :replace, :replace => ' '})
+      end
+      self.message = message
     end
-
-    self.message = message
   end
 
   #=== get_to_addresses
@@ -494,7 +518,13 @@ EOT
 
       mail_attachment = MailAttachment.new
       mail_attachment.email_id = self.id
-      mail_attachment.name = Mail::Encodings.decode_encode(attach.filename, :decode)
+      begin
+        mail_attachment.name = Mail::Encodings.decode_encode(attach.filename, :decode)
+      rescue => evar
+    # for Platform dependent characters in ISO-2022-JP >>>
+        mail_attachment.name = EmailsHelper.decode_b(attach.filename)
+    # for Platform dependent characters in ISO-2022-JP <<<
+      end
       mail_attachment.content_type = attach.content_type
 
       temp = Tempfile.new('thetis_mail_part', path)
@@ -622,41 +652,44 @@ EOT
   #
   def self.trim_by_capacity(user_id, mail_account_id, capacity_mb)
 
-    max_size = capacity_mb * 1024 * 1024
-    cur_size = MailAccount.get_using_size(mail_account_id)
-
-    if cur_size > max_size
-      over_size = cur_size - max_size
-      emails = []
-
-      # First, empty Trashbox
-      user = User.find(user_id)
-      trashbox = MailFolder.get_for(user, mail_account_id, MailFolder::XTYPE_TRASH)
-      trash_nodes = [trashbox.id.to_s]
-      trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
-      con = "mail_folder_id in (#{trash_nodes.join(',')})"
-      emails = Email.find(:all, {:conditions => con, :order => 'updated_at ASC'})
-      emails.each do |email|
-        next if email.size.nil?
-
-        email.destroy
-        over_size -= email.size
-        break if over_size <= 0
-      end
-
-      # Now, remove others
-      if over_size > 0
-        over_num -= emails.length
-        emails = Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :order => 'updated_at ASC'})
-        emails.each do |email|
-          next if email.size.nil?
-
-          email.destroy
-          over_size -= email.size
-          break if over_size <= 0
-        end
-      end
-    end
+# FEATURE_MAIL_STRICT_CAPACITY >>>
+=begin
+#    max_size = capacity_mb * 1024 * 1024
+#    cur_size = MailAccount.get_using_size(mail_account_id)
+#
+#    if cur_size > max_size
+#      over_size = cur_size - max_size
+#      emails = []
+#
+#      # First, empty Trashbox
+#      user = User.find(user_id)
+#      trashbox = MailFolder.get_for(user, mail_account_id, MailFolder::XTYPE_TRASH)
+#      trash_nodes = [trashbox.id.to_s]
+#      trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
+#      con = "mail_folder_id in (#{trash_nodes.join(',')})"
+#      emails = Email.find(:all, {:conditions => con, :order => 'updated_at ASC'})
+#      emails.each do |email|
+#        next if email.size.nil?
+#
+#        email.destroy
+#        over_size -= email.size
+#        break if over_size <= 0
+#      end
+#
+#      # Now, remove others
+#      if over_size > 0
+#        emails = Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :order => 'updated_at ASC'})
+#        emails.each do |email|
+#          next if email.size.nil?
+#
+#          email.destroy
+#          over_size -= email.size
+#          break if over_size <= 0
+#        end
+#      end
+#    end
+=end
+# FEATURE_MAIL_STRICT_CAPACITY <<<
   end
 
   #=== get_attach_size

@@ -65,8 +65,10 @@ module SendMailsHelper
       email.message = params[:email][:message]
     end
 
-    drafts_folder = MailFolder.get_for(user, email.mail_account_id, MailFolder::XTYPE_DRAFTS)
-    email.mail_folder_id = drafts_folder.id unless drafts_folder.nil?
+    if email.mail_folder_id.nil?
+      drafts_folder = MailFolder.get_for(user, email.mail_account_id, MailFolder::XTYPE_DRAFTS)
+      email.mail_folder_id = drafts_folder.id unless drafts_folder.nil?
+    end
 
     email.xtype = Email::XTYPE_SEND
     email.status = Email::STATUS_DRAFT

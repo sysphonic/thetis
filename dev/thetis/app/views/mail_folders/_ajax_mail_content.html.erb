@@ -1,4 +1,6 @@
 
+<span style="position:absolute; left:90%;"><a href="javascript:this.onclick()" onclick="showMailAccountSummary(null); return false;" style="font-weight:normal; font-size:11px;"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/close_tiny.png" /> <span style="text-decoration:underline;"><%= t('btn.close') %></span></a></span>
+
 <%
 enable_attachments_all = ((!@email.mail_attachments.nil?) and (@email.mail_attachments.length > 1))
 %>
@@ -6,7 +8,8 @@ enable_attachments_all = ((!@email.mail_attachments.nil?) and (@email.mail_attac
 <table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
     <td id="mail_body_view" style="vertical-align:top; cursor:text;">
-      <div id="div_mail_body" style="width:100%; text-align:left; padding:5px; overflow:auto; background-color:whitesmoke;">
+      <div id="div_mail_body" style="width:100%; text-align:left; overflow:auto; background-color:whitesmoke;">
+<div style="padding:5px;">
         <%
         linked_content = h(@email.message)
         unless linked_content.nil?
@@ -14,11 +17,12 @@ enable_attachments_all = ((!@email.mail_attachments.nil?) and (@email.mail_attac
         end
         %>
         <%= raw(ApplicationHelper.format_text_block(linked_content)) %>
+</div>
       </div>
     </td>
   </tr>
 <% unless @email.mail_attachments.nil? or @email.mail_attachments.empty? %>
-  <tr height="20">
+  <tr style="height:20px;">
     <td id="mail_attach_view" style="border-top:solid 1px gray;">
       <div id="div_mail_attach" style="width:100%; overflow:auto; padding:5px; text-align:left;">
       <% @email.mail_attachments.each do |attach| %>
@@ -39,7 +43,7 @@ enable_attachments_all = ((!@email.mail_attachments.nil?) and (@email.mail_attac
 
 
 <%
-if @email.status == Email::STATUS_UNREAD
+if @email.unread?
   @email.update_attribute(:status, Email::STATUS_NONE)
 end
 %>

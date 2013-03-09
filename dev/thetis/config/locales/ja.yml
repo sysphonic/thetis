@@ -397,7 +397,7 @@ ja:
         to_cc: "宛先またはCc"
         from_to_cc_bcc: "差出人または宛先、Cc、Bcc"
         days_from_sent_at: "送信日からの日数"
-        size: "サイズ（KB）"
+        size: "サイズ（KB：整数部）"
     action:
       cap: "実行する動作"
       verb:
@@ -408,6 +408,8 @@ ja:
     one: "1件"
     other: "%{count}件"
   mail_folder:
+    btn:
+      control: "フォルダ操作"
     select_attach_name_enc: "ファイル名に適用する文字コードを選択してください。"
     download_mail_attachments: "添付ファイル・ダウンロード"
     root_cannot_have_folders: "フォルダはルートには作成・移動できません。"
@@ -514,6 +516,8 @@ ja:
     one: "1件"
     other: "%{count}件"
   mail:
+    msg:
+      capacity_over: "容量制限値を超えるため、保存出来ません。\n（処理は中断されました）"
     inbox: "受信トレイ"
     drafts: "下書き"
     sent: "送信済み"
@@ -543,6 +547,9 @@ ja:
     one: "1件"
     other: "%{count}件"
   mail_account:
+    short_name: "アカウント"
+    btn:
+      control: "アカウント操作"
     default: "デフォルト・アカウント"
     secure_connection: "接続の保護"
     secure_auth: "認証の保護"
@@ -946,6 +953,7 @@ ja:
     wait_for_a_while: "しばらくお待ちください。"
     been_read: "既読"
     unread: "未読"
+    untransmitted: "未送信"
     specify: "%{name}を指定してください。"
     select_account: "アカウントを選択してください。"
     session_reset: "ログイン情報が変わったため、画面を更新します。"

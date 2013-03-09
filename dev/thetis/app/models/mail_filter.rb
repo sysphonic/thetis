@@ -69,7 +69,7 @@ class MailFilter < ActiveRecord::Base
     con << "(enabled=#{(enabled)?(1):(0)})" unless enabled.nil?
     con << "(triggers like '%|#{trigger.to_s}|%')" unless trigger.nil?
 
-    return MailFilter.find(:all, :conditions => con, :order => 'xorder ASC, id ASC') || []
+    return MailFilter.find(:all, :conditions => con.join(' and '), :order => '(xorder is null) ASC, xorder ASC, id ASC') || []
   end
 
   #=== get_conditions

@@ -354,6 +354,8 @@ module MailFiltersHelper
 
   def self.match_condition_days_from_sent_at(email, compare, val)
 
+    return false if email.sent_at.nil?
+
     is_matched = false
     target = UtilDate.create(email.sent_at).get_date - Date.today
 

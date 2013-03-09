@@ -396,7 +396,7 @@ de:
         to_cc: "To or Cc"
         from_to_cc_bcc: "From, To, Cc or Bcc"
         days_from_sent_at: "Days from Send at"
-        size: "Size (KB)"
+        size: "Size (KB as integer)"
     action:
       cap: "Actions"
       verb:
@@ -407,6 +407,8 @@ de:
     one: "1 Filter"
     other: "%{count} Filters"
   mail_folder:
+    btn:
+      control: "Folder Control"
     select_attach_name_enc: "Please select encoding for file names."
     download_mail_attachments: "Download E-mail attachments"
     root_cannot_have_folders: "Root cannot have folders."
@@ -513,6 +515,8 @@ de:
     one: "1 Log"
     other: "%{count} Logs"
   mail:
+    msg:
+      capacity_over: "E-mail cannot be saved because the capacity limit has been reached.\n(The operation was aborted)"
     inbox: "Inbox"
     drafts: "Drafts"
     sent: "Sent"
@@ -542,6 +546,9 @@ de:
     one: "1 mail"
     other: "%{count} mails"
   mail_account:
+    short_name: "Account"
+    btn:
+      control: "Account Control"
     default: "Default account"
     secure_connection: "Secure Connection"
     secure_auth: "Secure Auth."
@@ -945,6 +952,7 @@ de:
     wait_for_a_while: "Please wait for a while."
     been_read: "Read"
     unread: "Unread"
+    untransmitted: "Untransmitted"
     specify: "Please specify %{name}."
     select_account: "Please select an account."
     session_reset: "Login info. has been changed. Updating the view .."

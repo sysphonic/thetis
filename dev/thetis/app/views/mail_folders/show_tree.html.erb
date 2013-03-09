@@ -1,7 +1,7 @@
 
 <table id="tree_main" cellspacing="0" cellpadding="0" style="width:100%; background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
-    <td style="padding:5px 0px;">
+    <td style="padding:2px 0px;">
       <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
           <td nowrap style="text-align:left; width:20%; padding:0px 10px; border-right:solid 1px gray;">
@@ -52,12 +52,25 @@
                   </form>
                 </td>
               </tr>
-              <tr style="height:40px">
-                <td style="text-align:center; vertical-align:middle; background-color:aliceblue;">
-                  <a href="#" onclick="showAccountSetting(false); return false;">
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png">
-                    <%= t('btn.account_setting') %>
-                  </a>
+              <tr style="height:22px">
+                <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
+                  <div style="display:inline-block; padding-left:10px;">
+                    <a href="javascript:this.onclick()" onclick="onMailAccountOptsClicked(this); return false;" onblur="onMailAccountOptsClicked(this, true);" style="color:white; font-weight:bold;">
+                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/account_close.gif" />
+                      <span class="toolbtn_label"><%= t('mail_account.btn.control') %> <%= raw('&raquo;') %></span>
+                    </a>
+                    <div class="toolbtn_dropdown" id="div_mail_account_opts" style="display:none; width:140px; margin:-60px 0px 0px 150px; z-index:1001;">
+                      <div style="text-align:center; padding:0px;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="showAccountSetting(false); return false;">
+                          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png">
+                          <%= t('btn.config') %>
+                        </a>
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="showAccountSetting(true); return false;">
+                          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif">
+                          <%= t('btn.add') %>
+                        </a>
+                      </div>
+                    </div>
 <%
 =begin
 %>
@@ -73,11 +86,42 @@
 <%
 =end
 %>
-                  &nbsp;
-                  <a href="#" onclick="showAccountSetting(true); return false;">
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif">
-                    <%= t('btn.add') %>
-                  </a>
+                </td>
+              </tr>
+              <tr style="height:22px">
+                <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
+                  <div style="display:inline-block; padding-left:10px;">
+                    <a href="javascript:this.onclick()" onclick="onMailFolderOptsClicked(this); return false;" onblur="onMailFolderOptsClicked(this, true);" style="color:white; font-weight:bold;">
+                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.gif">
+                      <span class="toolbtn_label"><%= t('mail_folder.btn.control') %> <%= raw('&raquo;') %></span>
+                    </a>
+                    <div class="toolbtn_dropdown" id="div_mail_folder_opts" style="display:none; width:140px; margin:-162px 0px 0px 150px; z-index:1001;">
+                      <div style="text-align:center; padding:0px; border-bottom:solid 1px gray;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doCreate(); return false;">
+                          <%= t('btn.new') %>
+                        </a>
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doRename(); return false;">
+                          <%= t('btn.rename') %>
+                        </a>
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doMove(); return false;">
+                          <%= t('btn.move') %>
+                        </a>
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doDelete(); return false;">
+                          <%= t('btn.delete') %>
+                        </a>
+                      </div>
+                      <div style="text-align:center; padding:0px; border-bottom:solid 1px gray;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doEmpty(); return false;">
+                          <%= t('btn.empty') %>
+                        </a>
+                      </div>
+                      <div style="text-align:center; padding:0px;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="onOrderFoldersClicked(); return false;">
+                          <%= t('btn.order') %>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </table>
@@ -105,29 +149,6 @@
                 </td>
               </tr>
             </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-  <tr style="height:20px;">
-    <td style="padding:3px 0px;">
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
-        <tr>
-          <td nowrap style="width:15%; text-align:left; color:white; text-indent:20px;"><b><%= t('cap.mail_folders') %></b></td>
-          <td nowrap style="width:40%; text-align:left; padding:0px 10px; border-right:solid 1px gray;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.gif">
-            &nbsp;
-            <input type="button" value="<%= t('btn.new') %>" onclick="doCreate();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onclick="doRename();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
-          </td>
-          <td nowrap style="width:5%; text-align:left; padding:0px 10px; border-right:solid 1px gray;">
-            <input type="button" value="<%= t('btn.empty') %>" onclick="doEmpty();" style="width:80px;" />
-          </td>
-          <td nowrap style="width:40%; text-align:left; padding:0px 10px;">
-            <input type="button" value="<%= t('btn.order') %>" onclick="onOrderFoldersClicked();" style="width:80px;" />
           </td>
         </tr>
       </table>
@@ -284,16 +305,16 @@ function arrangeMailContentSection(div_mail_content)
     return;
   }
   var div_mail_attach = _z("div_mail_attach");
-  var col_height = parseInt(div_mail_content.style.height, 10) - 10;
+  var col_height = parseInt(div_mail_content.style.height, 10);
   if (div_mail_attach) {
     div_mail_body.style.height = (col_height / 4 * 3) + "px";
-    div_mail_body.style.width = (div_mail_content.clientWidth - 10) + "px";
+    div_mail_body.style.width = div_mail_content.clientWidth + "px";
 
     div_mail_attach.style.height = (col_height / 4 * 1) + "px";
     div_mail_attach.style.width = div_mail_body.style.width;
   } else {
     div_mail_body.style.height = col_height + "px";
-    div_mail_body.style.width = (div_mail_content.clientWidth - 10) + "px";
+    div_mail_body.style.width = div_mail_content.clientWidth + "px";
   }
 }
 
@@ -720,33 +741,44 @@ function invalidateAccountSummary()
   curSummaryAccountId = null;
 }
 
+var lastMailAccountSummary = null;
+
 function showMailAccountSummary(mail_account_id)
 {
-  var addParams = new Array();
-  addParams.push("id="+mail_account_id);
+  if (mail_account_id) {
+    var addParams = new Array();
+    addParams.push("id="+mail_account_id);
 
-//  var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater(
-                "div_mail_content",
-                "<%= url_for(:controller => 'mail_accounts', :action => 'show_summary') %>",
-                {
-                  method: "get",
-                  parameters: addParams.join("&"),
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request) {
-                      // thetisBox.remove();
-                      curSummaryAccountId = mail_account_id;
-                    },
-                }
-              );
+    // var thetisBox = prog("TOP-RIGHT");
+    new Ajax.Updater(
+                  "div_mail_content",
+                  "<%= url_for(:controller => 'mail_accounts', :action => 'show_summary') %>",
+                  {
+                    method: "get",
+                    parameters: addParams.join("&"),
+                    asynchronous: true,
+                    evalScripts: true,
+                    onComplete: function(request) {
+                        // thetisBox.remove();
+                        curSummaryAccountId = mail_account_id;
+
+                        lastMailAccountSummary = request.responseText;
+                      },
+                  }
+                );
+  } else {
+    if (lastMailAccountSummary) {
+      _z("div_mail_content").innerHTML = lastMailAccountSummary.stripScripts();
+      lastMailAccountSummary.evalScripts();
+    }
+  }
 }
 
 function doUpdateViewMails(method, action, addParams, folder_id)
 {
   removeHeaderInfo();
 
-  if (folder_id == null) {
+  if (!folder_id) {
     folder_id = getCurrentFolderId();
   }
   var mail_account_id = getMailAccountId(folder_id);
@@ -770,21 +802,21 @@ function doUpdateViewMails(method, action, addParams, folder_id)
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-                "div_mails",
-                action,
-                {
-                  method: method,
-                  parameters: addParams.join("&"),
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request){
-                    thetisBox.remove();
-                    if (mail_account_id && mail_account_id != curSummaryAccountId) {
-                      showMailAccountSummary(mail_account_id);
-                    }
-                  }
-                }
-              );
+        "div_mails",
+        action,
+        {
+          method: method,
+          parameters: addParams.join("&"),
+          asynchronous: true,
+          evalScripts: true,
+          onComplete: function(request){
+            thetisBox.remove();
+            if (mail_account_id && mail_account_id != curSummaryAccountId) {
+              showMailAccountSummary(mail_account_id);
+            }
+          }
+        }
+      );
 }
 
 function doCreateMail()
@@ -1145,10 +1177,11 @@ function showHeaderInfo(email_id, title)
   thetisBoxHeaderInfo.bgcolor_title = "#8DB7EB";
   thetisBoxHeaderInfo.bgcolor_body = "aliceblue";
   thetisBoxHeaderInfo.title = truncateStr(title, 28);
-  thetisBoxHeaderInfo.close_by_icon_button = true;
-  thetisBoxHeaderInfo.button_ok = "<%= t('btn.close') %>";
+  thetisBoxHeaderInfo.border_content = "";
+  thetisBoxHeaderInfo.bgcolor_content = "transparent";
+  //thetisBoxHeaderInfo.resizable = true;
   var content = _z("mail_header_"+email_id).innerHTML.replace(/org_email/g, "email");
-  thetisBoxHeaderInfo.show("TOP-RIGHT", "400,", "MESSAGE", "", content, "");
+  thetisBoxHeaderInfo.show("TOP-RIGHT", "400,", "TRAY", "", "", content);
 }
 
 function onEmailUnreadClicked(elem, email_id)
@@ -1209,6 +1242,75 @@ function doRegisterAddress(frm)
           }
         );
   return true;
+}
+
+function setFormListParams(formListParams_h)
+{
+  if (document.form_list) {
+    document.form_list.folder_id.value = formListParams_h["folder_id"];
+    document.form_list.mail_account_id.value = formListParams_h["mail_account_id"];
+    document.form_list.sort_col.value = formListParams_h["sort_col"];
+    document.form_list.sort_type.value = formListParams_h["sort_type"];
+  }
+}
+
+function onMailAccountOptsClicked(elem, isBlur)
+{
+  var div_mail_account_opts = _z("div_mail_account_opts");
+  if (div_mail_account_opts) {
+    if (isBlur) {
+      setPopupSweeper(div_mail_account_opts);
+    } else {
+      abortPopupSweeper(div_mail_account_opts);
+
+      div_mail_account_opts.style.display = "";
+      elem.focus();
+    }
+  }
+}
+
+function onMailFolderOptsClicked(elem, isBlur)
+{
+  var div_mail_folder_opts = _z("div_mail_folder_opts");
+  if (div_mail_folder_opts) {
+    if (isBlur) {
+      setPopupSweeper(div_mail_folder_opts);
+    } else {
+      abortPopupSweeper(div_mail_folder_opts);
+
+      div_mail_folder_opts.style.display = "";
+      elem.focus();
+    }
+  }
+}
+
+var sweepTimersHash = {};
+
+function setPopupSweeper(target, timerKey)
+{
+  var func = null;
+  if (isFunc(target)) {
+    func = target;
+  } else {
+    func = function() {
+            target.style.display = "none";
+          };
+    if (!timerKey) {
+      timerKey = target.id;
+    }
+  }
+
+  sweepTimersHash[timerKey] = setTimeout(func, 200);
+}
+
+function abortPopupSweeper(target)
+{
+  var timerKey = target.id;
+
+  if (sweepTimersHash[timerKey]) {
+    clearTimeout(sweepTimersHash[timerKey]);
+    sweepTimersHash[timerKey] = null;
+  }
 }
 
 </script>

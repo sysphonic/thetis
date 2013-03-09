@@ -35,7 +35,9 @@ class SendMailsController < ApplicationController
     else
       @mail_account = MailAccount.find(mail_account_id)
       if @mail_account.user_id != @login_user.id
-        raise t('msg.need_to_be_owner')
+        flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
+        render(:partial => 'common/flash_notice', :layout => false)
+        return
       end
     end
 
@@ -80,14 +82,16 @@ class SendMailsController < ApplicationController
 
     @mail_account = MailAccount.find(org_email.mail_account_id)
     if @mail_account.user_id != @login_user.id
-      raise t('msg.need_to_be_owner')
+      flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
+      render(:partial => 'common/flash_notice', :layout => false)
+      return
     end
 
     case params[:mode]
       when 'reply'
         @email = Email.new
         @email.user_id = @login_user.id
-        @email.subject = 'Re: ' + org_email.subject
+        @email.subject = 'Re: ' + (org_email.subject || '')
         @email.message = EmailsHelper.quote_message(org_email)
         @email.mail_account_id = @mail_account.id
 
@@ -96,7 +100,7 @@ class SendMailsController < ApplicationController
       when 'reply_to_all'
         @email = Email.new
         @email.user_id = @login_user.id
-        @email.subject = 'Re: ' + org_email.subject
+        @email.subject = 'Re: ' + (org_email.subject || '')
         @email.message = EmailsHelper.quote_message(org_email)
         @email.mail_account_id = @mail_account.id
 
@@ -124,8 +128,8 @@ class SendMailsController < ApplicationController
 
       when 'forward'
         @email = SendMailsHelper.get_mail_to_send(@login_user, @mail_account, nil)
-        @email.subject = 'FW: ' + org_email.subject
-        @email.message = EmailsHelper.quote_message(org_email)
+        @email.subject = 'FW: ' + (org_email.subject || '')
+        @email.message = EmailsHelper.quote_message(org_email, :forward)
 
         @email.copy_attachments_from(org_email)
 
@@ -208,7 +212,9 @@ class SendMailsController < ApplicationController
 
     @mail_account = MailAccount.find(params[:mail_account_id])
     if @mail_account.user_id != @login_user.id
-      raise t('msg.need_to_be_owner')
+      flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
+      render(:partial => 'common/flash_notice', :layout => false)
+      return
     end
 
     @email = SendMailsHelper.get_mail_to_send(@login_user, @mail_account, params)
@@ -216,7 +222,7 @@ class SendMailsController < ApplicationController
     begin
       @email.save!
 
-      unless attach_attrs.nil? or attach_attrs[:file].size <= 0
+      unless attach_attrs.nil?
         attach_attrs[:email_id] = @email.id
         attach_attrs[:xorder] = 0
         @email.mail_attachments << MailAttachment.create(attach_attrs)
@@ -232,7 +238,11 @@ class SendMailsController < ApplicationController
       # flash[:notice] = t('msg.save_success')
     rescue => evar
       logger.fatal(evar.to_s)
-      flash[:notice] = 'ERROR:' + t('msg.system_error') + '<br/>' + evar.to_s
+      if evar.to_s.starts_with?('ERROR:')
+        flash[:notice] = evar.to_s
+      else
+        flash[:notice] = 'ERROR:' + t('msg.system_error') + '<br/>' + evar.to_s
+      end
     end
 
     render(:partial => 'ajax_mail_content', :layout => false)
@@ -261,7 +271,7 @@ class SendMailsController < ApplicationController
       @email = Email.find(params[:id])
     end
 
-    unless attach_attrs.nil? or attach_attrs[:file].size <= 0
+    unless attach_attrs.nil?
 
       unless @email.can_attach?(attach_attrs[:file].size)
         flash[:notice] = 'ERROR:' + t('mail.sum_of_attach_size_over')
@@ -271,7 +281,8 @@ class SendMailsController < ApplicationController
 
       attach_attrs[:email_id] = @email.id
       attach_attrs[:xorder] = 0
-      @email.mail_attachments << MailAttachment.create(attach_attrs)
+      @mail_attachment = MailAttachment.create(attach_attrs)
+      @email.mail_attachments << @mail_attachment
 
       update_attrs = {:updated_at => Time.now}
       if @email.status == Email::STATUS_TEMPORARY \
@@ -282,6 +293,33 @@ class SendMailsController < ApplicationController
     end
 
     render(:partial => 'ajax_mail_attachments', :layout => false)
+
+  rescue => evar
+    begin
+      unless @mail_attachment.nil? or @mail_attachment.id.nil?
+        @email.mail_attachments.delete(@mail_attachment)
+      end
+    rescue
+    end
+    begin
+      unless @mail_attachment.nil? or @mail_attachment.id.nil?
+        @mail_attachment.destroy
+      end
+    rescue
+    end
+    if evar.to_s.starts_with?('ERROR:')
+      err_msg = evar.to_s
+    else
+      err_msg = 'ERROR:' + t('msg.system_error') + '<br/>' + evar.to_s
+    end
+    respond_to do |format|
+      format.text { render(:text => err_msg) }
+      format.html {
+        flash[:notice] = err_msg
+        render(:partial => 'ajax_mail_attachments', :layout => false)
+        return
+      }
+    end
   end
 
   #=== delete_attachment

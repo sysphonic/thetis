@@ -28,7 +28,7 @@
       <%
       from_addr = email.from_address
       %>
-      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(from_addr) %>', '<%= ApplicationHelper.h_s_quote(from_addr) %>'); return false;">
+      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(from_addr) %>', '<%= ApplicationHelper.h_s_quote(from_addr) %>'); return false;" title="<%= from_addr %>">
         <%= from_addr %>
       </a>
     </td>
@@ -40,7 +40,7 @@
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">
     <% email.get_to_addresses.each do |to_addr| %>
-      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(to_addr) %>', '<%= ApplicationHelper.h_s_quote(to_addr) %>'); return false;">
+      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(to_addr) %>', '<%= ApplicationHelper.h_s_quote(to_addr) %>'); return false;" title="<%= to_addr %>">
         <%= to_addr %>
       </a><br/>
     <% end %>
@@ -54,7 +54,7 @@
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">
     <% email.get_cc_addresses.each do |cc_addr| %>
-      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(cc_addr) %>', '<%= ApplicationHelper.h_s_quote(cc_addr) %>'); return false;">
+      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(cc_addr) %>', '<%= ApplicationHelper.h_s_quote(cc_addr) %>'); return false;" title="<%= cc_addr %>">
         <%= cc_addr %>
       </a><br/>
     <% end %>
@@ -68,7 +68,7 @@
     </td>
     <td nowrap style="text-align:left; padding:0px 10px;">
     <% email.get_bcc_addresses.each do |bcc_addr| %>
-      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(bcc_addr) %>', '<%= ApplicationHelper.h_s_quote(bcc_addr) %>'); return false;">
+      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(bcc_addr) %>', '<%= ApplicationHelper.h_s_quote(bcc_addr) %>'); return false;" title="<%= bcc_addr %>">
         <%= bcc_addr %>
       </a><br/>
     <% end %>
@@ -77,3 +77,5 @@
 <% end %>
 </table>
 </div>
+
+<span style="float:left;"><a href="javascript:this.onclick()" onclick="ThetisBox.getInstanceForElem(this).remove(); return false;" style="font-weight:normal; font-size:11px;"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/close_tiny.png" /> <span style="text-decoration:underline;"><%= t('btn.close') %></span></a></span>

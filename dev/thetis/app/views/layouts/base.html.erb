@@ -88,6 +88,18 @@ function _forBugfullIE(div, list)
   }
 }
 
+var iframe_main = top._z("iframe_main");
+
+function enableFrameScrolling(sw)
+{
+  if (iframe_main) {
+    iframe_main.style.overflow = (sw)?"auto":"hidden";
+    document.body.style.overflow = (sw)?"auto":"hidden";
+    //iframe_main.scrolling = (sw)?"auto":"no";
+    //alert(iframe_main.style.overflow);
+  }
+}
+
 var mainRegion = getClientRegion();
 var mainWidth = mainRegion.width;
 var mainHeight = mainRegion.height;
@@ -103,15 +115,24 @@ function doResize()
   mainHeight = mainRegion.height;
 
   var main_div = _z("main_div");
-  main_div.style.height = mainHeight + "px";
-  main_div.style.width = mainWidth + "px";
+  main_div.style.height = (mainHeight - (3+3)) + "px";
+  main_div.style.width = (mainWidth - (5+5)) + "px";
+
+  var availHeight = main_div.offsetHeight;
+  var availWidth = main_div.offsetWidth;
+
+//alert("mainWidth="+mainWidth+", "+"mainHeight="+mainHeight+", "+"availWidth="+availWidth+", "+"availHeight="+availHeight);
+//alert("offsetHeight="+main_div.offsetHeight+", "+"clientHeight="+main_div.clientHeight+", "+"scrollHeight="+main_div.scrollHeight);
 
   var div = null;
 
   if (div = _z("div_desktop")) {
 
-    var h = mainHeight - 20;
+    enableFrameScrolling(false);
+
+    var h = availHeight - 6;
     div.style.height = h + "px";
+
     if (!is_MS) {
       var deskTrs = document.getElementsByClassName("desktop_tr");
       for (var i=0; deskTrs != null && i < deskTrs.length; i++) {
@@ -121,16 +142,16 @@ function doResize()
       if (deskTds != null) {
         var deskColNum = deskTds.length / deskTrs.length;
         for (var i=0; i < deskColNum; i++) {
-          deskTds[i].style.width = mainWidth / deskColNum + "px";
+          deskTds[i].style.width = availWidth / deskColNum + "px";
         }
       }
     }
 
     var toolbox = _z("toolbox");
-    var toolbox_top = mainHeight - 30;
-    var toolbox_left = 50;
+    var toolbox_top = availHeight - 20;
+    var toolbox_left = 40;
     if (toolbox != null) {
-      toolbox_top = mainHeight - toolbox.clientHeight - 30;
+      toolbox_top = availHeight - toolbox.clientHeight - 20;
       toolbox.style.top = toolbox_top + "px";
       toolbox.style.left = toolbox_left + "px";
     }
@@ -143,7 +164,9 @@ function doResize()
 
   } else if (div = _z("div_list")) {
 
-    div.style.height = (mainHeight - 110) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 95) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_items"));
@@ -151,10 +174,12 @@ function doResize()
 
   } else if ((div = _z("divFolderTree")) || (div = _z("divGroupTree"))) {
 
+    enableFrameScrolling(false);
+
   <% if params[:controller] == 'folders' and !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
-    var h = mainHeight - 110;
+    var h = availHeight - 95;
   <% else %>
-    var h = mainHeight - 65;
+    var h = availHeight - 54;
   <% end %>
 
     div.style.height = h + "px";
@@ -177,7 +202,9 @@ function doResize()
 
   } else if (div = _z("divMailTree")) {
 
-    var h = mainHeight - 95;
+    enableFrameScrolling(false);
+
+    var h = availHeight - 48;
 
     var td_tree = _z("td_tree");
     var td_view = _z("td_view");
@@ -186,10 +213,10 @@ function doResize()
     var div_mail_content = _z("div_mail_content");
 
     var tree_main = _z("tree_main");
-    var treeMainWidth = tree_main.offsetWidth - (3+7+3);
+    var treeMainWidth = tree_main.offsetWidth - (3+5+3);
 
     div.style.width = treeMainWidth / 4 + "px";
-    div.style.height = (h - 40) + "px";
+    div.style.height = (h - 44) + "px";
 
     td_tree.style.width = div.style.width;
     td_view.style.width   = treeMainWidth / 4 * 3 + "px";
@@ -209,7 +236,9 @@ function doResize()
 
   } else if (div = _z("div_users")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_users"));
@@ -217,7 +246,9 @@ function doResize()
 
   } else if (div = _z("div_addresses")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_addresses"));
@@ -225,7 +256,9 @@ function doResize()
 
   } else if (div = _z("div_logs")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_logs"));
@@ -233,7 +266,9 @@ function doResize()
 
   } else if (div = _z("div_teams")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_teams"));
@@ -241,7 +276,9 @@ function doResize()
 
   } else if (div = _z("div_equipment")) {
 
-    div.style.height = (mainHeight - 120) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 120) + "px";
 
     if (is_MS) {
       _forBugfullIE(div, _z("list_equipment"));
@@ -250,47 +287,55 @@ function doResize()
 /* GREP WITH BUGFULL-IE!
   } else if (div = _z("div_schedule")) {
 
-    div.style.height = (mainHeight - 70) + "px";
+    div.style.height = (availHeight - 70) + "px";
 */
   } else if (div = _z("div_calendar")) {
 
-    div.style.height = (mainHeight - 100) + "px";
+    enableFrameScrolling(true);
+
+    div.style.height = (availHeight - 100) + "px";
 
   } else if (div = _z("div_workflow_list")) {
 
-    div.style.height = (mainHeight - 35) + "px";
+    enableFrameScrolling(false);
 
-    _z("workflow_list_received").style.height = (mainHeight - 120) + "px";
-    _z("div_ajax_workflow").style.height = (mainHeight - 245) + "px";
+    div.style.height = (availHeight - 25) + "px";
+
+    _z("workflow_list_received").style.height = (availHeight - 110) + "px";
+    _z("div_ajax_workflow").style.height = (availHeight - 235) + "px";
 
   } else if (div = _z("div_login")) {
 
-    div.style.height = (mainHeight - 20) + "px";
+    enableFrameScrolling(false);
+
+    div.style.height = (availHeight - 20) + "px";
 
   } else {
 
     if (div = _z("div_item_workflow")) {
-      div.style.height = (mainHeight - 140) + "px";
+      div.style.height = (availHeight - 140) + "px";
     }
     if (div = _z("div_item_basic")) {
-      div.style.height = (mainHeight - 140) + "px";
+      div.style.height = (availHeight - 140) + "px";
     }
     if (div = _z("div_item_description")) {
-      div.style.height = (mainHeight - 140) + "px";
+      div.style.height = (availHeight - 140) + "px";
     }
     if (div = _z("div_item_image")) {
-      div.style.height = (mainHeight - 140) + "px";
+      div.style.height = (availHeight - 140) + "px";
     }
     if (div = _z("div_item_attachment")) {
-      div.style.height = (mainHeight - 140) + "px";
+      div.style.height = (availHeight - 140) + "px";
     }
 
     if (div = _z("div_research_records")) {
-      div.style.height = (mainHeight - 137) + "px";
+      div.style.height = (availHeight - 137) + "px";
     }
     if (div = _z("div_research_lists")) {
-      div.style.height = (mainHeight - 137) + "px";
+      div.style.height = (availHeight - 137) + "px";
     }
+
+    enableFrameScrolling((div == null));
   }
 }
 
@@ -304,10 +349,10 @@ addEvent(window, "resize", doResize);
 
 <a name="top"></a>
 
-<div id="main_div" style="text-align:center;">
-  <table align="center" width="96%" height="100%" cellpadding="0" cellspacing="0">
+<div id="main_div" style="text-align:center; padding:3px 5px;">
+  <table style="width:100%; height:100%;" cellpadding="0" cellspacing="0">
     <tr>
-      <td align="center" style="padding-top:7px; vertical-align:top;">
+      <td style="text-align:center; vertical-align:top;">
         <%= yield %>
       </td>
     </tr>

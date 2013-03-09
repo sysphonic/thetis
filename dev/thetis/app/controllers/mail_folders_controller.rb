@@ -238,7 +238,11 @@ class MailFoldersController < ApplicationController
         # FEATURE_MAIL_FILTERS <<<
         end
       rescue => evar
-        flash[:notice] = 'ERROR:' + t('mail.receive_error') + '<br/>' + evar.to_s
+        if evar.to_s.starts_with?('ERROR:')
+          flash[:notice] = evar.to_s
+        else
+          flash[:notice] = 'ERROR:' + t('mail.receive_error') + '<br/>' + evar.to_s
+        end
         Log.add_error(nil, evar)
       end
     end
@@ -251,8 +255,8 @@ class MailFoldersController < ApplicationController
 #      @emails = MailFolder.get_mails_to_show(@folder_id, @login_user)
 =end
 # FEATURE_PAGING_IN_TREE >>>
-      @sort_col = params[:sort_col]
-      @sort_type = params[:sort_type]
+      @sort_col = (params[:sort_col] || 'sent_at')
+      @sort_type = (params[:sort_type] || 'DESC')
 
       folder_ids = nil
       add_con = nil
@@ -422,27 +426,28 @@ class MailFoldersController < ApplicationController
 
       count = 0
       params[:check_mail].each do |email_id, value|
-        if value == '1'
+        next if value != '1'
 
+        email = Email.find_by_id(email_id)
+        next if email.nil? or (email.user_id != @login_user.id)
+
+        if trash_folder.nil? \
+            or folder_id == trash_folder.id.to_s \
+            or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
+          email.destroy
+          flash[:notice] ||= t('msg.delete_success')
+        else
           begin
-            email = Email.find(email_id)
-            next if email.user_id != @login_user.id
-
-            if trash_folder.nil? \
-                or folder_id == trash_folder.id.to_s \
-                or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
-              email.destroy
-              flash[:notice] ||= t('msg.delete_success')
-            else
-              email.update_attribute(:mail_folder_id, trash_folder.id)
-              flash[:notice] ||= t('msg.moved_to_trash')
-            end
+            email.update_attribute(:mail_folder_id, trash_folder.id)
+            flash[:notice] ||= t('msg.moved_to_trash')
           rescue => evar
             Log.add_error(request, evar)
+            email.destroy
+            flash[:notice] ||= t('msg.delete_success')
           end
-
-          count += 1
         end
+
+        count += 1
       end
     end
 

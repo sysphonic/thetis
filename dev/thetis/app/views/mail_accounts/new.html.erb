@@ -4,9 +4,9 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 <%= form_tag({:controller => 'mail_accounts', :action => 'create'}, :method => 'post', :name => 'form_mail_account'+form_idx) %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding:10px 15px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:10px 15px;">
   <tr>
-    <td valign="top">
+    <td style="vertical-align:top;">
       <%= render(:partial => 'mail_account_form', :locals => {:form_idx => form_idx}) %>
     </td>
   </tr>

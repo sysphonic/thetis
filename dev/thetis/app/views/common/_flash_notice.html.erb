@@ -1,8 +1,12 @@
-<% unless flash[:notice].nil? or flash[:notice].empty? %>
+<% unless flash[:notice].blank? %>
+
+<% if flash[:notice].starts_with?('ERROR:') %>
+<!-- $FLASH_NOTICE:ERROR -->
+<% end %>
 
 <script type="text/javascript">
 <%
-if flash[:notice].index('ERROR:')
+if flash[:notice].starts_with?('ERROR:')
   msg = flash[:notice]['ERROR:'.length .. -1].gsub("\n", '<br/>')
 %>
   setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);

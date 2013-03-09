@@ -22,7 +22,11 @@ getCsrfToken = function()
 alertSessionRenewed = function()
 {
   if (getCsrfToken() != "<%= form_authenticity_token %>") {
-    tips("<%= t('msg.session_reset') %>", "CENTER");
+    var tipsBox = tips("<%= t('msg.session_reset') %>", "CENTER");
+    var tipsContainer = tipsBox.getContainer();
+    if (tipsContainer) {
+      tipsContainer.style.zIndex += 100;
+    }
     top.document.location.href = "<%= THETIS_RELATIVE_URL_ROOT %>";
   }
 }

@@ -531,19 +531,19 @@ _onUploadCompletedForOpera = function(target_id) {
 function getFileSelector(onOk, onCancel, btnOk, btnCancel, authToken, input_name)
 {
   content = "<form name='form_file' method='post' enctype='multipart/form-data'>";
-  content += "<table valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' valign='middle'>";
+  content += "    <td style='text-align:center; vertical-align:middle;'>";
   content += "      <input type='file' name='"+input_name+"' size='46' style='width:90%;' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
-  content += "      <input type='button' value='"+btnOk+"' onclick='"+onOk+"' style='width:80px' />";
-  content += "      &nbsp;<input type='button' value='"+btnCancel+"' onclick='"+onCancel+"' style='width:80px' />";
+  content += "    <td style='text-align:center; vertical-align:top;'>";
+  content += "      <input id='btn_file_ok' type='button' value='"+btnOk+"' onclick='"+onOk+"' style='width:80px' />";
+  content += "      &nbsp;<input id='btn_file_cancel' type='button' value='"+btnCancel+"' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
-  content += "  <tr height='100%'>";
+  content += "  <tr style='height:100%;'>";
   content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";

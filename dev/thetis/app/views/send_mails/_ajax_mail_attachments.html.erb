@@ -7,25 +7,25 @@ else
 end
 %>
 
-<table width="90%" align="center" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td nowrap style="min-width:100px; width:100px; text-align:center; font-weight:bold;">
+    <td nowrap style="min-width:100px; width:100px; text-align:left;">
       <%= t('cap.attach_file') %>
     </td>
     <td style="padding-left:10px; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%= t('btn.add') %>" title="<%= t('btn.add') %>" onclick="attachFile();" />
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+  <tr style="height:5px;"><td></td></tr>
   <tr>
-    <td colspan="2" style="border:solid 1px gray; padding:5px; text-align:left; background-color:white;">
+    <td colspan="2" style="border:solid 1px gray; padding:5px; text-align:left; background-color:white;  word-break:break-all;">
       <% if mail_attachments.nil? or mail_attachments.empty? %>
-        <%= t('paren.not_specified') %><br/>
+        <span style="color:dimgray;"><%= t('paren.not_specified') %></span><br/>
       <% else %>
         <% mail_attachments.each do |attach| %>
           <span id="sendmail_attach_<%= attach.id %>">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
-            &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteAttachment('sendmail_attach_<%= attach.id %>', <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+            &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteAttachment('sendmail_attach_<%= attach.id %>', <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
           </span><br/>
         <% end %>
       <% end %>
@@ -33,7 +33,7 @@ end
   </tr>
 <% unless mail_attachments.nil? or mail_attachments.empty? %>
   <tr>
-    <td colspan="2" align="right" style="color:dimgray;">
+    <td colspan="2" style="text-align:right; color:dimgray;">
       <%= t('paren.round.left') %><%= t('msg.total') %> <%= ApplicationHelper.float_exp(@email.get_attach_size / 1024.0, 2) %> KB<%= t('paren.round.right') %>
     </td>
   </tr>

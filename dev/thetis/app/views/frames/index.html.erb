@@ -31,7 +31,7 @@ function doResize()
   var mainHeight = mainRegion.height;
 
   _z("sect_nav").style.height = mainHeight + "px";
-  _z("sect_main").style.height = (mainHeight - 28 - 14) + "px";
+  _z("sect_main").style.height = (mainHeight - 28 - 8) + "px";
 
   var height = window.innerHeight;  // Firefox
   if (isNaN(height))  {
@@ -88,12 +88,12 @@ addEvent(window, "resize", doResize);
       end
       %>
       <div id="sect_main" style="overflow:hidden;">
-        <iframe id="iframe_main" name="main" src="<%= main %>" frameborder="0" scrolling="auto" style="width:100%; height:100%; border:none; margin:0px;"></iframe>
+        <iframe id="iframe_main" name="main" src="<%= main %>" frameborder="0" style="width:100%; height:100%; border:none; margin:0px; overflow:hidden;"></iframe>
       </div>
     </td>
   </tr>
   <tr>
-    <td style="min-height:14px; height:14px;">
+    <td style="min-height:8px; height:8px;">
       <%= render(:partial => 'footer', :layout => false) %>
     </td>
   </tr>

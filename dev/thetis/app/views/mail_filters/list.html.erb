@@ -42,9 +42,9 @@ mail_account_id = params[:mail_account_id]
           <td style="text-align:center;" nowrap>
           </td>
           <td style="text-align:right;" nowrap>
-            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
+            <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAllFilters();">
             <span style="color:silver;">|</span>
-            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteFilters();">
           </td>
          </tr>
       </table>
@@ -144,6 +144,11 @@ mail_account_id = params[:mail_account_id]
 
 doUpdateFiltersList = function()
 {
+  if (thetisBoxFilterEdit) {
+    thetisBoxFilterEdit.remove();
+    thetisBoxFilterEdit = null;
+  }
+
   var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Updater(
                 document.form_filters.parentNode,
@@ -236,6 +241,7 @@ doExecNowFilters = function(mail_account_id, folder_id)
                   thetisBoxProgress.remove();
 
                   if (doUpdateMails) {
+                    invalidateAccountSummary();
                     doUpdateMails(null, false);
                   }
 
@@ -249,7 +255,7 @@ doExecNowFilters = function(mail_account_id, folder_id)
             );
 }
 
-selectAll = function()
+selectAllFilters = function()
 {
   var elems = document.getElementsByClassName("check_filter", document.form_filters);
   var all_selected = true;
@@ -264,7 +270,7 @@ selectAll = function()
   }
 }
 
-doDelete = function()
+doDeleteFilters = function()
 {
   var elems = document.getElementsByClassName("check_filter", document.form_filters);
   var count=0;
@@ -276,10 +282,10 @@ doDelete = function()
   if (count <= 0) {
     return;
   }
-  confm(count+"<%= t('mail_filter.confirm_delete') %>", "_doDelete()");
+  confm(count+"<%= t('mail_filter.confirm_delete') %>", "_doDeleteFilters()");
 }
 
-_doDelete = function()
+_doDeleteFilters = function()
 {
   var addParams = new Array();
   addParams.push(Form.serialize(document.form_filters));
@@ -302,6 +308,7 @@ _doDelete = function()
               );
 }
 
+/*
 sortList = function(col)
 {
   var type = "<%= @sort_type %>";
@@ -315,6 +322,7 @@ sortList = function(col)
   document.form_filters.submit();
   prog("TOP-RIGHT");
 }
+*/
 
 doRegisterFilter = function(frm)
 {

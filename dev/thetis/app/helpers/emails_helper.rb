@@ -60,13 +60,59 @@ module EmailsHelper
   #
   #Gets given message in quoted format.
   #
-  #_msg_:: Source message.
+  #_email_:: Source Email.
+  #_mode_:: Quoting mode.
   #return:: Message in quoted format.
   #
-  def self.quote_message(email)
-    sender = EmailsHelper.get_sender_exp(email.from_address)
-    return "\n\n(#{email.get_sent_at_exp}), #{sender} wrote:\n" \
-           + email.message.split("\n").map!{|line| '> ' + line}.join("\n")
+  def self.quote_message(email, mode=:reply)
+
+    case mode
+      when :reply
+        sender = EmailsHelper.get_sender_exp(email.from_address)
+        msg = "\r\n\r\n\r\n\r\n(#{email.get_sent_at_exp}), #{sender} wrote:\r\n"
+        msg << email.message.split("\n").map!{|line| '> ' + line.chomp}.join("\r\n")
+        msg << "\r\n\r\n"
+        return msg
+      when :forward
+        msg = "\r\n\r\n\r\n\r\n-------- Original Message --------\r\n"
+
+        header = EmailsHelper.raw_header(email.get_raw)
+        parsed_header = ''
+        parse_keys = ['Subject', 'Date', 'From', 'Reply-To', 'Organization', 'To', 'Cc', 'Bcc']
+        header.each_line {|line|
+          line.chomp!
+          if !parsed_header.empty? and line.match(/^\s/).nil?
+            parsed_header << "\r\n"
+          end
+          parsed_header << line
+        }
+        lines = parsed_header.split("\r\n")
+        parse_keys.each do |key|
+          key_line = lines.find {|line| !line.match(Regexp.new("^#{key}:")).nil? }
+          unless key_line.nil?
+            msg << EmailsHelper.decode_b(key_line) + "\r\n"
+          end
+        end
+        msg << "\r\n"
+        msg << email.message + "\r\n\r\n"
+        return msg
+      else
+        return email.message
+    end
+  end
+
+  #=== self.raw_header
+  #
+  #Gets raw header of the Email.
+  #
+  #_raw_source_:: Target raw source of the Email.
+  #return:: Raw header of the Email.
+  #
+  def self.raw_header(raw_source)
+
+    return nil if raw_source.nil?
+
+    return raw_source.split("\r\n\r\n").first
   end
 
   #=== self.extract_addr
@@ -181,12 +227,16 @@ module EmailsHelper
     sort_col = 'sent_at' if sort_col.nil? or sort_col.empty?
     sort_type = 'DESC' if sort_type.nil? or sort_type.empty?
 
-    if sort_col == 'has_attach'
-      sql = "select distinct Email.*, count(MailAttachment.id) as AttachmentsNum from (emails Email left join mail_attachments MailAttachment on (Email.id=MailAttachment.email_id))"
-      order_by = ' group by Email.id order by AttachmentsNum ' + sort_type
-    else
-      sql = 'select distinct Email.* from emails Email'
-      order_by = ' order by ' + sort_col + ' ' + sort_type
+    case sort_col
+      when 'has_attach'
+        sql = "select distinct Email.*, count(MailAttachment.id) as AttachmentsNum from (emails Email left join mail_attachments MailAttachment on (Email.id=MailAttachment.email_id))"
+        order_by = ' group by Email.id order by AttachmentsNum ' + sort_type
+      else
+        sql = 'select distinct Email.* from emails Email'
+        order_by = " order by #{sort_col} #{sort_type}"
+        if sort_col == 'sent_at'
+          order_by << ", updated_at #{sort_type}"
+        end
     end
 
     limit = ''
@@ -197,5 +247,57 @@ module EmailsHelper
     sql << where + order_by + limit
 
     return sql
+  end
+
+  #=== self.encode_b
+  #
+  #Gets B-Encoded String.
+  #
+  #_str_:: Target String.
+  #return:: Decoded String.
+  #
+  def self.encode_b(str)
+    require 'nkf'
+
+    return str if str.nil? or str.empty?
+
+    # return Mail::Encodings.decode_encode(str, :encode)
+    parts = str.scan(/.{16}|.+\Z/)
+    parts.collect!{|part| "=?UTF-8?B?#{NKF.nkf('-wWMB', part).gsub(/[\r\n]/, '')}?="}
+    return parts.join("\r\n ")
+  end
+
+  #=== self.decode_b
+  #
+  #Gets decoded String of the B-Encoded header info.
+  #
+  #_header_:: Target mail header.
+  #_key_:: Target key of the mail header.
+  #return:: Decoded String.
+  #
+  def self.decode_b(header, key=nil)
+    require 'nkf'
+
+    if key.nil?
+      return NKF.nkf('-w', header)
+    else
+      parsed_header = ''
+      header.each_line {|line|
+        line.chomp!
+        if !parsed_header.empty? and line.match(/^\s/).nil?
+          parsed_header << "\r\n"
+        end
+        parsed_header << line
+      }
+
+      m = parsed_header.scan(Regexp.new("#{key}:(.*)$"))
+
+      unless m.nil? or m.empty?
+        raw_val = m.flatten.first.strip
+        val = NKF.nkf('-w', raw_val)
+        return val
+      end
+      return nil
+    end
   end
 end

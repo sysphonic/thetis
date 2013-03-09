@@ -1,188 +1,7 @@
 
-<%
-mail_account_id = params[:mail_account_id]
-%>
-
 <% unless @emails.nil? %>
 
-<%= form_tag( {:controller => 'mail_folders', :action => 'get_mails' }, :method => 'get', :name => 'form_list') %>
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:2px 5px 5px;">
-  <tr>
-    <td style="text-align:left;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
-
-      <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
-    </td>
-    <td style="text-align:right;" nowrap>
-      <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
-      <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteMailsClicked();">
-      <input type="button" value="<%= t('btn.move')%>" onclick="onMoveMailsClicked();">
-    </td>
-  </tr>
-</table>
-
-<input type="hidden" id="folder_id" name="id" value="<%= @folder_id %>" />
-<input type="hidden" name="mail_account_id" value="<%= mail_account_id %>" />
-<%= hidden_field_tag('sort_col', params[:sort_col]) %>
-<%= hidden_field_tag('sort_type', params[:sort_type]) %>
-</form>
-
-<script type="text/javascript">
-
-onSearchClicked = function()
-{
-  var addParams = new Array();
-  addParams.push(Form.serialize(document.form_list));
-
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
-}
-
-onResetClicked = function()
-{
-  document.form_list.keyword.value = "";
-
-  var addParams = new Array();
-  addParams.push(Form.serialize(document.form_list));
-
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
-}
-
-onDeleteMailsClicked = function()
-{
-  var elems = document.getElementsByClassName("check_mail");
-  var count = 0;
-  var teams = new Array();
-  for (var i=0; elems != null && i < elems.length; i++) {
-    if (elems[i].checked) {
-      count++;
-    }
-  }
-  if (count <= 0) {
-    return;
-  }
-  var msg = count + "<%= t('mail.confirm_to_delete') %>";
-  confm(msg, "doDeleteMails()");
-}
-
-doDeleteMails = function()
-{
-  invalidateAccountSummary();
-
-  var addParams = getCheckedMailsParam();
-  addParams.push(Form.serialize(document.form_list));
-<% unless params[:page].blank? %>
-  addParams.push("page=<%= params[:page] %>");
-<% end %>
-
-  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mails') %>", addParams, "<%= @folder_id %>");
-}
-
-onMoveMailsClicked = function()
-{
-  if (countCheckedMails() <= 0) {
-    return;
-  }
-  showFolderTreeToMove(<%= @folder_id %>);
-}
-
-doMoveMails = function(frmTree)
-{
-  invalidateAccountSummary();
-
-  var addParams = getCheckedMailsParam();
-  addParams.push(Form.serialize(document.form_list));
-  addParams.push(Form.serialize(frmTree));
-<% unless params[:page].blank? %>
-  addParams.push("page=<%= params[:page] %>");
-<% end %>
-
-  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams, "<%= @folder_id %>");
-}
-
-countCheckedMails = function()
-{
-  var cnt = 0;
-
-  var elems = document.getElementsByClassName("check_mail");
-  for (var i=0; elems != null && i < elems.length; i++) {
-    if (elems[i].checked) {
-      cnt++;
-    }
-  }
-  return cnt;
-}
-
-getCheckedMailsParam = function()
-{
-  var params = new Array();
-
-  var elems = document.getElementsByClassName("check_mail");
-  for (var i=0; elems != null && i < elems.length; i++) {
-    if (elems[i].checked) {
-      var email_id = elems[i].id.split("_")[2];
-      params[params.length] = "check_mail["+email_id+"]=1";
-    }
-  }
-  return params;
-}
-
-showFolderTreeToMove = function(folder_id)
-{
-  var addParams = getCheckedMailsParam();
-
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>\" method=\"post\" onsubmit=\"doMoveMails(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
-  thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>", folder_id);
-}
-
-sortList = function(col)
-{
-  var type = "<%= @sort_type %>";
-
-  if (col == "<%= @sort_col %>") {
-    type = (type == "ASC") ? "DESC" : "ASC";
-  }
-
-  document.form_list.sort_col.value = col;
-  document.form_list.sort_type.value = type;
-
-  var addParams = new Array();
-  addParams.push(Form.serialize(document.form_list));
-
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
-}
-
-selectAll = function()
-{
-  var elems = document.getElementsByClassName("check_mail");
-  var all_selected = true;
-  for (var i=0; elems != null && i < elems.length; i++) {
-    if (!elems[i].checked) {
-      all_selected = false;
-      break;
-    }
-  }
-  for (var i=0; elems != null && i < elems.length; i++) {
-    elems[i].checked = !all_selected;
-  }
-}
-
-onPaginate = function(url)
-{
-//  var m = url.match(/page=(\d+)/);
-//  var page = m[1];
-  doUpdateViewMails("get", url, null, "<%= @folder_id %>");
-}
-
-</script>
-
-<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:5px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; margin:3px 0px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('mail', :count => @total_num) %>
@@ -213,10 +32,10 @@ onPaginate = function(url)
 <%
 @emails.each_with_index do |email, idx|
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
-  sbj_style = (email.status == Email::STATUS_UNREAD)?'email_subject_unread':''
+  sbj_style = (email.unread?)?'email_subject_unread':''
   show_header = true # (email.status != Email::STATUS_DRAFT)
 %>
-  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" height="30" onclick="onSelChanged(this, '<%= email.id %>');" style="cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
+  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" onclick="onSelChanged(this, '<%= email.id %>');" style="height:26px; cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
     <td class="<%= td_class %> <%= sbj_style %>" id="mail_subject_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">
     <% if show_header %>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="_z('req_detail').value='true';">
@@ -244,7 +63,7 @@ onPaginate = function(url)
     <td class="<%= td_class %>" title="<%= sent_at_full %>" nowrap style="text-align:center;">
       <%= sent_at %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;" onclick="event.cancelBubble = true;">
+    <td class="<%= td_class %>" nowrap style="text-align:center;" onclick="onCheckBoxCellClicked(this, '<%= email.id %>');">
       <%= check_box(:check_mail, email.id, :class => 'check_mail') %>
     </td>
   </tr>
@@ -256,6 +75,31 @@ onPaginate = function(url)
 
 
 <script type="text/javascript">
+
+_sort_col = "<%= params[:sort_col] %>";
+_sort_type = "<%= params[:sort_type] %>";
+
+formListParams_h = {
+  folder_id: "<%= @folder_id %>",
+  mail_account_id: "<%= params[:mail_account_id] %>",
+  sort_col: "<%= params[:sort_col] %>",
+  sort_type: "<%= params[:sort_type] %>"
+}
+setFormListParams(formListParams_h);
+
+onCheckBoxCellClicked = function(elem, email_id)
+{
+  var sel_tr = _z("selected_row").value;
+  if (sel_tr == "") {
+    if (elem.parentNode.onclick) {
+      elem.parentNode.onclick();
+    }
+  }
+
+  if (window.event) {
+    window.event.cancelBubble = true;
+  }
+}
 
 onSelChanged = function(cur_tr, email_id)
 {

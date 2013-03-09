@@ -160,7 +160,8 @@ class MailAccountsController < ApplicationController
     @folder_tree = MailFolder.get_tree_for(@login_user, [mail_account_id])
 # logger.fatal('@@@ ' + sorted_mail_folders.flatten.collect{|rec| rec.name}.inspect)
     mail_folders = TreeElement.get_flattened_nodes(@folder_tree)
-    mail_folder_ids = mail_folders.collect{|rec| rec.id}
+    mail_folder_ids = mail_folders.collect{|rec| rec.id.to_s}
+
     @unread_emails_h = {}
     unless mail_folder_ids.nil? or mail_folder_ids.empty?
       unread_emails = Email.find(:all, :conditions => "user_id=#{@login_user.id} and status='#{Email::STATUS_UNREAD}' and mail_folder_id in (#{mail_folder_ids.join(',')})")
@@ -173,6 +174,20 @@ class MailAccountsController < ApplicationController
       end
     end
     @unread_emails_h = @unread_emails_h.sort_by{|mail_folder, count| mail_folders.index(mail_folder) }
+
+    @draft_emails_h = {}
+    unless mail_folder_ids.nil? or mail_folder_ids.empty?
+      draft_emails = Email.find(:all, :conditions => "user_id=#{@login_user.id} and status='#{Email::STATUS_DRAFT}' and mail_folder_id in (#{mail_folder_ids.join(',')})")
+      draft_emails.each do |email|
+        mail_folder = mail_folders.find{|rec| rec.id == email.mail_folder_id}
+        unless mail_folder.nil?
+          @draft_emails_h[mail_folder] ||= 0
+          @draft_emails_h[mail_folder] += 1
+        end
+      end
+    end
+    @draft_emails_h = @draft_emails_h.sort_by{|mail_folder, count| mail_folders.index(mail_folder) }
+
     @folder_obj_cache ||= MailFolder.build_cache(mail_folders)
 
     render(:layout => (!request.xhr?))

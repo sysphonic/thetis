@@ -23,6 +23,7 @@ showMailForm = function(isNew, addParams)
   var thetisBoxProgress = prog("CENTER");
 
   thetisBoxMailForm = new ThetisBox;
+  thetisBoxMailForm.resizable = true;
   var on_close_func = function(){
                         thetisBoxMailForm = null;
 <% if ctrl_mails_list_update %>

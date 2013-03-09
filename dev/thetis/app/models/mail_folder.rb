@@ -123,13 +123,10 @@ class MailFolder < ActiveRecord::Base
   def self.get_condtions_for(user, mail_account_ids)
 
     if mail_account_ids.nil? or mail_account_ids.empty?
-      con = ["user_id=? and (mail_account_id is null)"]
+      return "(user_id=#{user.id} and (mail_account_id is null))"
     else
-      con = ["user_id=? and (mail_account_id is null or mail_account_id in (#{mail_account_ids.join(',')}))"]
+      return "(user_id=#{user.id} and (mail_account_id is null or mail_account_id in (#{mail_account_ids.join(',')})))"
     end
-    con << user.id
-
-    return con
   end
 
   #=== self.get_for

@@ -19,39 +19,39 @@ else
   bg_img_style = ''
 end
 %>
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:<%= @desktop.get_background_color %>; <%= raw(bg_img_style) %> border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid;  border-bottom:lightcyan 2px solid; display:none;">
-  <tr class="desktop_tr" height="30%">
+<table id="div_desktop" cellpadding="0" cellspacing="0" style="width:100%; height:100%; background-color:<%= @desktop.get_background_color %>; <%= raw(bg_img_style) %> border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid; border-bottom:lightcyan 2px solid; display:none;">
+  <tr class="desktop_tr" style="height:30%;">
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :left)}'); background-repeat:no-repeat; background-position:top left;" %>
-    <td class="desktop_td" id="cell_0x0" align="left" valign="top" style="width:30%; <%= raw(corner_img_style) %>">
+    <td class="desktop_td" id="cell_0x0" style="text-align:left; vertical-align:top; min-width:30%; width:30%; height:100%; <%= raw(corner_img_style) %>">
       &nbsp;
     </td>
-    <td class="desktop_td" id="cell_1x0" align="center" valign="top" style="width:40%;" nowrap>
+    <td class="desktop_td" id="cell_1x0" style="text-align:center; vertical-align:top; min-width:40%; width:40%;" nowrap>
       <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%= t('msg.desktop_public') %></span><% end %>
     </td>
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :right)}'); background-repeat:no-repeat; background-position:top right;" %>
-    <td class="desktop_td" id="cell_2x0" align="right" valign="top" style="width:30%; <%= raw(corner_img_style) %>">
+    <td class="desktop_td" id="cell_2x0" style="text-align:right; vertical-align:top; min-width:30%; width:30%; <%= raw(corner_img_style) %>">
       &nbsp;
     </td>
   </tr>
-  <tr class="desktop_tr" height="40%">
-    <td class="desktop_td" id="cell_0x1" align="left" valign="middle">
+  <tr class="desktop_tr" style="height:40%;">
+    <td class="desktop_td" id="cell_0x1" style="text-align:left; vertical-align:middle;">
     </td>
-    <td class="desktop_td" id="cell_1x1" align="center" valign="middle">
+    <td class="desktop_td" id="cell_1x1" style="text-align:center; vertical-align:middle;">
       &nbsp;
     </td>
-    <td class="desktop_td" id="cell_2x1" align="right" valign="middle">
+    <td class="desktop_td" id="cell_2x1" style="text-align:right; vertical-align:middle;">
     </td>
   </tr>
-  <tr class="desktop_tr" height="30%">
+  <tr class="desktop_tr" style="height:30%;">
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:bottom, :left)}'); background-repeat:no-repeat; background-position:bottom left;" %>
-    <td class="desktop_td" id="cell_0x2" align="left" valign="bottom" style="<%= raw(corner_img_style) %>">
+    <td class="desktop_td" id="cell_0x2" style="text-align:left; vertical-align:bottom; <%= raw(corner_img_style) %>">
       &nbsp;
     </td>
-    <td class="desktop_td" id="cell_1x2" align="center" valign="bottom" nowrap>
+    <td class="desktop_td" id="cell_1x2" style="text-align:center; vertical-align:bottom;" nowrap>
       <% if is_def_desktop %><span style="color:white; font-weight:bold; background-color:deeppink; padding:3px; padding-left:10px; padding-right:10px;"><%= t('msg.desktop_public') %></span><% end %>
     </td>
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:bottom, :right)}'); background-repeat:no-repeat; background-position:bottom right;" %>
-    <td class="desktop_td" id="cell_2x2" align="right" valign="bottom" style="<%= raw(corner_img_style) %>">
+    <td class="desktop_td" id="cell_2x2" style="text-align:right; vertical-align:bottom; <%= raw(corner_img_style) %>">
       &nbsp;
     </td>
   </tr>
@@ -59,8 +59,8 @@ end
 
 <% unless @login_user.nil? %>
 <table id="menubox" cellpadding="0" cellspacing="0" style="height:35px; position:absolute; display:none;">
-  <tr height="35">
-    <td align="center" valign="middle">
+  <tr style="height:35px;">
+    <td style="text-align:center; vertical-align:middle;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/gear32x32.png" onclick="editConfig();" title="<%= Desktop.model_name.human %> <%= t('btn.config') %>" style="cursor:pointer;" />
     </td>
   </tr>
@@ -160,7 +160,7 @@ unless @toys.nil?
       width_limit = '';
       width_limit = 'width:200px;' if toy.name.length >= 30;
 %>
-  <div class="toy_desktop" id="<%= toy_id %>" align="left" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
+  <div class="toy_desktop" id="<%= toy_id %>" style="text-align:left; position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
     img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
     icon_img = ""

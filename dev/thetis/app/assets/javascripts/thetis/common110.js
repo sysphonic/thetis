@@ -143,6 +143,20 @@ function getElemByClassNameInParentNodes(elem, className)
   return null;
 }
 
+function isElemDisplayed(elem)
+{
+  if (!elem) {
+    return false;
+  }
+
+  for (var node=elem; node; node=node.parentNode) {
+    if (node.style && node.style.display == "none") {
+      return false;
+    }
+  }
+  return true;
+}
+
 function floorDecimal(val, prec)
 {
   var precVal = Math.pow(10, prec);

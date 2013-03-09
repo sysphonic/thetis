@@ -64,10 +64,16 @@ class MailAccount < ActiveRecord::Base
   #Gets using size of specified MailAccount.
   #
   #_mail_account_id_:: Target MailAccount-ID.
+  #_add_con_:: Additional condition to query by.
   #return:: Using size.
   #
-  def self.get_using_size(mail_account_id)
-    return Email.count_by_sql("select SUM(size) from emails where mail_account_id=#{mail_account_id}") || 0
+  def self.get_using_size(mail_account_id, add_con=nil)
+
+    con = []
+    con << "(mail_account_id=#{mail_account_id})"
+    con << "(#{add_con})" unless add_con.nil? or add_con.empty?
+
+    return Email.count_by_sql("select SUM(size) from emails where #{con.join(' and ')}") || 0
   end
 
   #=== self.get_title
