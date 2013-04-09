@@ -56,7 +56,7 @@ initFilterActionVerbOpts = function()
   var avoidVerbs = new Array();
   var filter_action_inputs = document.getElementsByClassName("filter_action_input");
   for (var i=0; i < filter_action_inputs.length; i++) {
-    var verb = filter_action_inputs[i].value.split("\n")[0];
+    var verb = filter_action_inputs[i].value.split(/\r?\n/)[0];
     if (verb != "<%= verb %>") {
       avoidVerbs.push(verb);
     }

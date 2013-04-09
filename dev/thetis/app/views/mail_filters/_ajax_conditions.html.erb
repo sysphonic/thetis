@@ -77,7 +77,7 @@ editFilterCondition = function(condition_id, isNew)
   addParams.push("condition_id="+condition_id);
 
   if (!isNew) {
-    var vals = _z("filter_condition"+condition_id).value.split("\n");
+    var vals = _z("filter_condition"+condition_id).value.split(/\r?\n/);
     var point = vals[0];
     var compare = vals[1];
     var val = vals[2];

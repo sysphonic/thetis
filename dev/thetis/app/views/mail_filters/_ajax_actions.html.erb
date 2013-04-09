@@ -73,7 +73,7 @@ editFilterAction = function(action_id, isNew)
   addParams.push("action_id="+action_id);
 
   if (!isNew) {
-    var vals = _z("filter_action"+action_id).value.split("\n");
+    var vals = _z("filter_action"+action_id).value.split(/\r?\n/);
     var verb = vals[0];
     var val = vals[1];
 

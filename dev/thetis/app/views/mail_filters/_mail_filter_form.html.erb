@@ -145,6 +145,8 @@ mail_account = MailAccount.find_by_id(mail_account_id)
 
 <script type="text/javascript">
 
+addEvent(_z("mail_filter_title"), "keypress", avoidSubmit);
+
 onOptionChangedFilter = function(elem)
 {
   if (elem.id == "mail_filter_and_or") {
