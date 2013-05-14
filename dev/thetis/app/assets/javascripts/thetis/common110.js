@@ -37,6 +37,25 @@ var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox,
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
 
+function getUserAgentName()
+{
+  var userAgent = window.navigator.userAgent.toLowerCase();
+
+  if (userAgent.indexOf("opera") >= 0) {
+    return "opera";
+  } else if (userAgent.indexOf("msie") >= 0) {
+    return "msie";
+  } else if (userAgent.indexOf("chrome") >= 0) {
+    return "chrome";
+  } else if (userAgent.indexOf("safari") >= 0) {
+    return "safari";
+  } else if (userAgent.indexOf("gecko") >= 0) {
+    return "gecko";
+  } else {
+    return "unknown";
+  }
+}
+
 function escapeRegExp(s)
 {
   return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');

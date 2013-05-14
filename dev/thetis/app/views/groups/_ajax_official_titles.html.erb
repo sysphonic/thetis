@@ -1,0 +1,150 @@
+
+<table class="info_area" style="width:100%; height:100%;" cellpadding="10" cellspacing="0">
+  <tr>
+    <td style="vertical-align:top;">
+      <div id="div_ajax_official_titles">
+
+        <%= render(:partial => 'ajax_group_official_titles') %>
+
+      </div>
+
+      <div class="button_gray" style="float:right; margin-top:3px;" onclick="doEditOfficialTitle(null);">
+        <%= t('btn.create') %>
+      </div>
+    </td>
+  </tr>
+</table>
+
+
+<script type="text/javascript">
+
+showOfficialTitle = function(official_title_id)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var add_params = new Array();
+  add_params.push("id=" + official_title_id);
+  add_params.push("group_id=<%= @group_id %>");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'official_titles', :action => 'show') %>",
+          {
+            method:"get",
+            parameters:add_params.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+
+              var thetisBox = new ThetisBox;
+              thetisBox.title = "<%= OfficialTitle.model_name.human %>";
+              thetisBox.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+var thetisBoxOfficialTitle = null;
+
+onOfficialTitleOK = function()
+{
+  var btnOk = _z("official_title_ok");
+  btnOk.disabled = true;
+  var btnCancel = _z("official_title_cancel");
+  btnCancel.disabled = true;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  new Ajax.Updater(
+          _z("div_ajax_official_titles"),
+          document.form_official_title.action,
+          {
+            method:"post",
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(document.form_official_title),
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBoxOfficialTitle.remove();
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+onOfficialTitleCancel = function()
+{
+  thetisBoxOfficialTitle.remove();
+}
+
+doEditOfficialTitle = function(official_title_id)
+{
+  if (thetisBoxOfficialTitle != null) {
+    return;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var add_params = new Array();
+  if (official_title_id) {
+    add_params.push("id=" + official_title_id);
+  }
+  add_params.push("group_id=<%= @group_id %>");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'official_titles', :action => 'edit') %>",
+          {
+            method:"get",
+            parameters:add_params.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+
+              thetisBoxOfficialTitle = new ThetisBox;
+              thetisBoxOfficialTitle.setOnClose(function(){ thetisBoxOfficialTitle = null; });
+              thetisBoxOfficialTitle.title = "<%= OfficialTitle.model_name.human %>";
+              thetisBoxOfficialTitle.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+              request.responseText.evalScripts();
+            }
+          }
+        );
+  return true;
+}
+
+doDeleteOfficialTitle = function(official_title_id, official_title_disp)
+{
+  confm("<%= t('paren.square.left') %>" + esc_w_quotes(official_title_disp) + "<%= t('msg.confirm_to_delete') %>", "_doDeleteOfficialTitle("+official_title_id+")");
+}
+
+_doDeleteOfficialTitle = function(official_title_id)
+{
+  if (thetisBoxOfficialTitle != null) {
+    thetisBoxOfficialTitle.remove();
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var add_params = new Array();
+  add_params.push("authenticity_token=<%= form_authenticity_token %>");
+  add_params.push("group_id=<%= @group_id %>");
+  add_params.push("id=" + official_title_id);
+
+  new Ajax.Updater(
+      _z("div_ajax_official_titles"),
+      "<%= url_for(:controller => 'official_titles', :action => 'destroy') %>",
+      {
+        method:"post",
+        asynchronous:true,
+        parameters:add_params.join("&"),
+        evalScripts:true,
+        onComplete:function(request){
+            thetisBoxProgress.remove();
+          },
+      }
+    );
+}
+
+</script>

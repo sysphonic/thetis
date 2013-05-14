@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2013 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -285,21 +285,25 @@ class GroupsController < ApplicationController
     @sort_type = params[:sort_type]
 
     if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
-      @sort_col = 'xorder'
+      @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
 
-    order_by = ' order by ' + @sort_col + ' ' + @sort_type
+    order_by = @sort_col + ' ' + @sort_type
 
-    if @sort_col != 'xorder'
-      order_by << ', xorder ASC'
+    if @sort_col == 'OfficialTitle.xorder'
+      order_by = '(OfficialTitle.xorder is null) ' + @sort_type + ', ' + order_by
+    else
+      order_by << ', (OfficialTitle.xorder is null) ASC, OfficialTitle.xorder ASC'
     end
     if @sort_col != 'name'
       order_by << ', name ASC'
     end
 
-    sql = 'select distinct User.* from users User'
-    sql << where + order_by
+    sql = 'select distinct User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
+    sql << ' left join official_titles OfficialTitle on UserTitle.official_title_id=OfficialTitle.id'
+
+    sql << where + ' order by ' + order_by
 
     @user_pages, @users, @total_num = paginate_by_sql(User, sql, 50)
 # FEATURE_PAGING_IN_TREE <<<
@@ -374,6 +378,22 @@ class GroupsController < ApplicationController
     end
 
     render(:text => '')
+  end
+
+  #=== get_official_titles
+  #
+  #<Ajax>
+  #Gets OfficialTitles which belong to the specified Group.
+  #
+  def get_official_titles
+    Log.add_info(request, params.inspect)
+
+    @group_id = (params[:id] || '0')  # '0' for ROOT
+
+    session[:group_id] = params[:id]
+    session[:group_option] = 'official_title'
+
+    render(:partial => 'ajax_official_titles', :layout => false)
   end
 
   #=== get_workflows

@@ -14,6 +14,10 @@
 
 <script type="text/javascript">
 
+if (typeof(thetisBoxMailForm) == "undefined") {
+  thetisBoxMailForm = null;
+}
+
 _findInsertIdx = function(dst, valPrefix, val)
 {
   var valOrder = parseInt(val.split("<%= Email::ADDR_ORDER_SEPARATOR %>")[1], 10);
@@ -306,7 +310,10 @@ onSaveComplete = function(tab_name)
     saveFuncsIdx = 0;
     thetisBoxSaveProgress.remove();
     if (_do_send) {
-      thetisBoxMailForm.remove();
+      if (thetisBoxMailForm) {
+        thetisBoxMailForm.remove();
+        thetisBoxMailForm = null;
+      }
     } else {
       tips("<%= t('msg.save_success') %>");
     }

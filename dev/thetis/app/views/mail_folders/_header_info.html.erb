@@ -33,6 +33,18 @@
       </a>
     </td>
   </tr>
+<% unless email.reply_to.nil? or email.reply_to.empty? %>
+  <tr>
+    <td nowrap style="text-align:left; vertical-align:top; padding:0px 10px;">
+      <%= Email.human_attribute_name('reply_to') %><%= t('cap.suffix') %>
+    </td>
+    <td nowrap style="text-align:left; padding:0px 10px;">
+      <a href="javascript:this.onclick()" onclick="queryAddressEmail('<%= ApplicationHelper.h_s_quote(email.reply_to) %>', '<%= ApplicationHelper.h_s_quote(email.reply_to) %>'); return false;">
+        <%= email.reply_to %>
+      </a><br/>
+    </td>
+  </tr>
+<% end %>
 <% unless email.to_addresses.nil? or email.to_addresses.empty? %>
   <tr>
     <td nowrap style="text-align:left; vertical-align:top; padding:0px 10px;">

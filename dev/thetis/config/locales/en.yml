@@ -68,6 +68,11 @@ en:
         remote_ip: "IP address"
         log_type: "Log type"
         access_path: "Access path"
+      email:
+        reply_to: "Reply-To"
+        to_addresses: "To"
+        size: "Size"
+        updated_at: "Updated at"
       mail_account:
         title: "Account title"
         is_default: "Is default"
@@ -117,7 +122,7 @@ en:
         groups: "Groups"
         created_at: "Created at"
         login_at: "Last LOGIN"
-        title: "Official Title"
+        title: "Official Title(ext.)"
         time_zone: "Time Zone"
         birthday: "Birthday"
         figure: "Icon"
@@ -579,7 +584,7 @@ en:
     general_conf: "General Configuration"
     desktop_manage: "Desktop Management"
     users_manage: "Users Management"
-    groups_manage: "Groups Management (Users, Workflows and Maps)"
+    groups_manage: "Groups Management (Users, Official Titles, Workflows and Maps)"
     teams_manage: "Teams Management"
     schedules_manage: "Schedules Management"
     equipment_manage: "Equipment Management"
@@ -606,6 +611,8 @@ en:
     confirm_to_leave: "You are leaving. Are you sure?"
   addressbook:
     specify_name: "Please specify name."
+  official_title:
+    confirm_remove_from_user: "title(s) will be removed from this User. Are you sure?"
   paren:
     round:
       left: "("
@@ -891,7 +898,6 @@ en:
     select_title: "Select Title"
     show_by_full_name: "Show by Full name"
     official_titles: "Official Titles"
-    official_titles_info: "Official Titles decises the default order of Users."
     specify_title_name: "Please specify the title name."
     select_group_to_add_to: "Please select group to add user to."
     select_group_to_move_to: "Please select group to move users to."
@@ -946,6 +952,7 @@ en:
     not_applicable: "-"
     negative: "&Chi;"
   msg:
+    manage_in_groups: "You can register or edit it on Groups Management screen."
     select_encoding_of_csv: "Please select Character-encoding of CSV-file."
     specify_csv_encoding: "Please specify CSV-file and select its Character-Encoding."
     specify_csv: "Please specify CSV-file."

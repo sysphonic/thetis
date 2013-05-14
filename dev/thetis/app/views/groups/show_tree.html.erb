@@ -1,12 +1,12 @@
 
 <%= render(:partial => 'common/dojo_init') %>
 
-<table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style='background-color:burlywood; border:solid 2px; border-top-color:palegoldenrod; border-left-color:palegoldenrod; border-bottom-color:dimgray; border-right-color:dimgray;' cellspacing='10'>
+<table id="tree_main" cellpadding="0" cellspacing="0" style="width:100%; background-color:burlywood; border:solid 2px; border-top-color:palegoldenrod; border-left-color:palegoldenrod; border-bottom-color:dimgray; border-right-color:dimgray;" cellspacing="10">
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap style="padding:5px 20px;">
+          <td nowrap style="padding:5px 20px; text-align:left;">
           <% if @login_user.admin?(User::AUTH_GROUP) %>
             <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
@@ -16,11 +16,12 @@
             <%= t('group.only_admin_can_edit_tree') %>
           <% end %>
           </td>
-          <td align="right" style="padding:5px 20px;">
+          <td style="padding:5px 20px; text-align:right;">
             <%
             options = []
             options << [h(User.model_name.human), 'user']
             options << [t('group.opt.subgroups_order'), 'groups_order']
+            options << [h(OfficialTitle.model_name.human), 'official_title']
             options << [h(Workflow.model_name.human), 'workflow']
             options << [h(OfficeMap.model_name.human), 'office_map']
             %>
@@ -30,22 +31,22 @@
       </table>
     </td>
   </tr>
-  <tr height="100%">
-    <td align="center" style="padding-bottom:7px;">
+  <tr style="height:100%;">
+    <td style="padding-bottom:7px; text-align:center;">
 
-      <table width="100%" cellspacing="0" cellpadding="0" style="background-color:white;">
+      <table cellspacing="0" cellpadding="0" style="background-color:white; width:100%;">
         <tr>
-          <td id="td_tree" align="left" valign="top" style='border:inset 2px silver; padding:0px;'>
+          <td id="td_tree" style="text-align:left; vertical-align:top; border:inset 2px silver; padding:0px;">
             <%= form_tag( {:controller => 'groups', :action => 'show_tree'}, :method => 'post', :name => 'form_group_tree') %>
               <div id="divGroupTree" style="overflow:auto;"><div id="groupTree" style="text-align:left; margin:10px;"></div></div>
-              <input type='hidden' name='selKeeper' id='selKeeper' value='' />
+              <input type="hidden" name="selKeeper" id="selKeeper" value="" />
             </form>
           </td>
-          <td id="drag_border" width="5" valign="middle" style="background-color:burlywood; cursor:w-resize;">
+          <td id="drag_border" style="width:5px; background-color:burlywood; cursor:w-resize; vertical-align:middle;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
           </td>
-          <td id="td_view" align="center" valign="top" style='width:63%; border:inset 2px silver;'>
-            <div id="div_view" width="100%" style="overflow:auto;">&nbsp;</div>
+          <td id="td_view" style="width:63%; border:inset 2px silver; text-align:center; vertical-align:top;">
+            <div id="div_view" style="width:100%; overflow:auto;">&nbsp;</div>
           </td>
         </tr>
       </table>
@@ -70,7 +71,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       var divGroupTree = _z("divGroupTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
@@ -87,7 +88,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (is_MS || is_Opera) {
+    if (getUserAgentName() != "gecko") {
       var divGroupTree = _z("divGroupTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
@@ -104,7 +105,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       draggable.options.snap = false;
     }
   }
@@ -279,6 +280,15 @@ function doGetGroupsOrder(group_id)
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_groups_order') %>", addParams);
 }
 
+function doGetOfficialTitles(group_id)
+{
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+
+  doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_official_titles') %>", addParams);
+}
+
 function doGetWorkflows(group_id)
 {
   var addParams = new Array();
@@ -308,6 +318,7 @@ function selectGroup(group_id)
     {
       case "user": doGetUsers(group_id); break;
       case "groups_order": doGetGroupsOrder(group_id); break;
+      case "official_title": doGetOfficialTitles(group_id); break;
       case "workflow": doGetWorkflows(group_id); break;
       case "office_map": doGetMaps(group_id); break;
     }
@@ -324,6 +335,7 @@ function changeOption(val)
   switch (val) {
     case "user": doGetUsers(group_id); break;
     case "groups_order": doGetGroupsOrder(group_id); break;
+    case "official_title": doGetOfficialTitles(group_id); break;
     case "workflow": doGetWorkflows(group_id); break;
     case "office_map": doGetMaps(group_id); break;
   }

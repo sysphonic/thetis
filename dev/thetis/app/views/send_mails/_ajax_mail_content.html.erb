@@ -15,7 +15,8 @@
         opts = []
         mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
         mail_accounts.each do |account|
-          opts << [account.get_from_exp + ' ' + t('paren.round.enclose', :name => account.get_title), account.id]
+          from_exp = (account.get_from_exp || '')
+          opts << [from_exp + ' ' + t('paren.round.enclose', :name => account.get_title), account.id]
         end
       %>
         <%= select_tag('mail_account_id', options_for_select(opts, @mail_account.id), :style => 'width:80%;') %>

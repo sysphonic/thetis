@@ -186,7 +186,10 @@ onPaginate = function(url)
     <th class="list_sort" width="26%" nowrap onclick="sortList('title')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></th>
     <th class="list_sort" width="20%" nowrap onclick="sortList('organization')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></th>
   </tr>
-<% @users.each_with_index do |user, idx|  %>
+<%
+official_title_obj_cache = {}
+@users.each_with_index do |user, idx|
+%>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr height="33">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
@@ -195,10 +198,20 @@ onPaginate = function(url)
         <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.fullname, :length => 30) %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.email, :length => 30) %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.title, :length => 10) %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(user.organization, :length => 30) %></td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.fullname, :length => 30) %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.email, :length => 30) %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+    <% user.user_titles.each do |user_title|  %>
+      <%= truncate(OfficialTitle.get_name(user_title.official_title_id, official_title_obj_cache), :length => 10) %><br/>
+    <% end %>
+    </td>
+    <td class="<%= td_class %>" nowrap>
+      <%= truncate(user.organization, :length => 30) %>
+    </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
     </td>

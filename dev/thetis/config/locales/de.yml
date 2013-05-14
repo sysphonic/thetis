@@ -68,6 +68,11 @@ de:
         remote_ip: "IP Adresse"
         log_type: "Log typ"
         access_path: "Access Pfad"
+      email:
+        reply_to: "Reply-To"
+        to_addresses: "To"
+        size: "Size"
+        updated_at: "Updated at"
       mail_account:
         title: "Konto Titel"
         is_default: "Is default"
@@ -117,7 +122,7 @@ de:
         groups: "Gruppen"
         created_at: "Registriert an"
         login_at: "Letzte LOGIN"
-        title: "Stellenbezeichnung"
+        title: "Stellenbezeichnung(ext.)"
         time_zone: "Time Zone"
         birthday: "Geburtstag"
         figure: "Icon"
@@ -579,7 +584,7 @@ de:
     general_conf: "Generelle Einstellungen"
     desktop_manage: "Desktop verwalten"
     users_manage: "Benutzern verwalten"
-    groups_manage: "Gruppe verwalten (Benutzern, Arbeitsabläufe und Maps)"
+    groups_manage: "Gruppe verwalten (Benutzern, Stellenbezeich., Arbeitsabläufe und Maps)"
     teams_manage: "Teams verwalten"
     schedules_manage: "Zeitpläne verwalten"
     equipment_manage: "Einrichtungen verwalten"
@@ -606,6 +611,8 @@ de:
     confirm_to_leave: "You are leaving. Are you sure?"
   addressbook:
     specify_name: "Please specify name."
+  official_title:
+    confirm_remove_from_user: "title(s) will be removed from this User. Are you sure?"
   paren:
     round:
       left: "("
@@ -891,7 +898,6 @@ de:
     select_title: "Titel auswählen"
     show_by_full_name: "Mit Vollst. Name zeigen"
     official_titles: "Stellenbezeichnung"
-    official_titles_info: "Stellenbezeichnungen entscheiden die vorgegebene Ordnung der Benutzern."
     specify_title_name: "Bitte geben Sie den Titelname an."
     select_group_to_add_to: "Bitte wählen Sie Gruppe zu hinzufügen aus."
     select_group_to_move_to: "Please select group to move users to."
@@ -946,6 +952,7 @@ de:
     not_applicable: "-"
     negative: "&Chi;"
   msg:
+    manage_in_groups: "You can register or edit it on Groups Management screen."
     select_encoding_of_csv: "Bitte wählen Sie die Buchstabe-Codierung der CSV-Datei aus."
     specify_csv_encoding: "Bitte geben Sie die CSV-Datei und die Buchstabe-Codierung an."
     specify_csv: "Bitte geben Sie die CSV-Datei an."

@@ -9,21 +9,21 @@ var modified_teams = 0;
 @group_obj_cache ||= {}
 %>
 
-<table id="tree_main" width="100%" cellpadding="0" cellspacing="0" style="background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<table id="tree_main" cellpadding="0" cellspacing="0" style="width:100%; background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
 <% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
   <tr>
-    <td align="right" style="padding:5px 5px 2px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
+    <td style="padding:5px 5px 2px; text-align:right;">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
          <tr>
-            <td align="left" style="background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
+            <td style="text-align:left; background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
             <% if @group_id.nil? or @group_id.empty? %>
-              <div class="button_gray" style="width:110px;" onClick="showGroupTreeToSelect('0');">
+              <div class="button_gray" style="width:110px;" onclick="showGroupTreeToSelect('0');">
                 <%= t('btn.select_group') %>
               </div>
             <% else %>
-              <table width="100%" cellpadding="0" cellspacing="0">
+              <table style="width:100%;" cellpadding="0" cellspacing="0">
                 <tr>
-                  <td align="left" nowrap style="text-indent:10px;">
+                  <td nowrap style="text-indent:10px; text-align:left;">
                     <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></span></a>
                     &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                   </td>
@@ -38,21 +38,21 @@ var modified_teams = 0;
 <% end %>
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
         <% if !@login_user.nil? %>
-          <td align="left" nowrap style="padding:5px 20px;">
-            <input type="button" value="<%= t('btn.new') %>" onClick="onCreateClicked(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;" />
+          <td nowrap style="padding:5px 20px; text-align:left;">
+            <input type="button" value="<%= t('btn.new') %>" onclick="onCreateClicked(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onclick="doRename(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;" />
           </td>
         <% else %>
-          <td align="left" style="padding:5px 20px;">
+          <td style="padding:5px 20px; text-align:left;">
             <%= t('folder.login_to_edit_tree') %>
           </td>
         <% end %>
-          <td align="right" style="padding:5px 20px;">
+          <td style="padding:5px 20px; text-align:right;">
         <% unless @login_user.nil? %>
             <%
             options = []
@@ -69,22 +69,22 @@ var modified_teams = 0;
       </table>
     </td>
   </tr>
-  <tr height="100%">
-    <td align="center" style="padding-bottom:7px;">
+  <tr style="height:100%;">
+    <td style="padding-bottom:7px; text-align:center;">
 
-      <table width="100%" cellspacing="0" cellpadding="0" style="background-color:white;">
+      <table cellspacing="0" cellpadding="0" style="background-color:white; width:100%;">
         <tr>
-          <td id="td_tree" align="left" valign="top" style="border:inset 2px silver; padding:0px;">
+          <td id="td_tree" style="border:inset 2px silver; padding:0px; text-align:left; vertical-align:top;">
             <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
               <div id="divFolderTree" style="overflow:auto;"><div id="folderTree" style="text-align:left; margin:10px;"></div></div>
-              <input type='hidden' name='selKeeper' id='selKeeper' value='' />
+              <input type="hidden" name="selKeeper" id="selKeeper" value="" />
             </form>
           </td>
-          <td id="drag_border" width="5" valign="middle" style="background-color:#F9BF8B; cursor:w-resize;">
+          <td id="drag_border" style="width:5px; background-color:#F9BF8B; cursor:w-resize; vertical-align:middle;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
           </td>
-          <td id="td_view" align="center" valign="top" style="width:63%; border:inset 2px silver;">
-            <div id="div_view" width="100%" style="overflow:auto;">&nbsp;</div>
+          <td id="td_view" style="width:63%; border:inset 2px silver; text-align:center; vertical-align:top;">
+            <div id="div_view" style="overflow:auto; width:100%;">&nbsp;</div>
           </td>
         </tr>
       </table>
@@ -148,7 +148,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       var divFolderTree = _z("divFolderTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
@@ -165,7 +165,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (is_MS || is_Opera) {
+    if (getUserAgentName() != "gecko") {
       var divFolderTree = _z("divFolderTree");
       var td_tree = _z("td_tree");
       var view = _z("div_view");
@@ -182,7 +182,7 @@ BorderDragObserver.prototype = {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       draggable.options.snap = false;
     }
   }
@@ -200,8 +200,8 @@ function onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFo
   }
   divFolderTree.style.width = leftWidth + "px";
   td_tree.style.width = leftWidth + "px";
+  td_view.style.width = "auto";
   view.style.width = rightWidth + "px";
-  td_view.style.width = rightWidth + "px";
   return [x, y];
 }
 

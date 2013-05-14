@@ -44,7 +44,11 @@ class MailFiltersController < ApplicationController
     @mail_account ||= @mail_accounts.first
 
     con = []
-    con << "(mail_account_id=#{@mail_account.id})" unless @mail_account.nil?
+    if @mail_account.nil?
+      con << "(mail_account_id=0)"  # Force to get empty set.
+    else
+      con << "(mail_account_id=#{@mail_account.id})"
+    end
 
     where = ''
     unless con.empty?

@@ -149,7 +149,7 @@ end
     </tr>
     <tr>
       <td class="item_cap_td" nowrap>
-        <label for="user_title"><%= t('user.title') %></label>
+        <label for="user_title"><%= User.human_attribute_name('title') %></label>
       </td>
       <td class="item_value_td">
         <%= text_field('user', 'title', :style => 'width:80%; vertical-align:middle;') %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showTitleSelector();" style="cursor:pointer;" />
@@ -243,24 +243,24 @@ doRegisterUser = function(frm)
   return true;
 }
 
-var selector = null;
+var titleSelector = null;
 
-function showTitleSelector()
+showTitleSelector = function()
 {
-  if (selector != null){
-    selector.remove();
-    selector = null;
+  if (titleSelector != null){
+    titleSelector.remove();
+    titleSelector = null;
   }
 
   var content = getTitleSelector("onTitleSelectOK()", "onTitleSelectCancel()");
 
-  selector = new ThetisBox;
-  selector.title = "<%= t('user.select_title') %>";
-  selector.overflow = "hide";
-  selector.show("CENTER", "350,200", "TRAY", "", "", content);
+  titleSelector = new ThetisBox;
+  titleSelector.title = "<%= t('user.select_title') %>";
+  titleSelector.overflow = "hide";
+  titleSelector.show("CENTER", "350,200", "TRAY", "", "", content);
 }
 
-function getTitleSelector(onOk, onCancel)
+getTitleSelector = function(onOk, onCancel)
 {
   var titles = new Array(
   <%
@@ -315,17 +315,17 @@ function getTitleSelector(onOk, onCancel)
   return content;
 }
 
-function onTitleSelectOK()
+onTitleSelectOK = function()
 {
   _z("user_title").value = document.form_title.title.value;
-  selector.remove();
-  selector = null;
+  titleSelector.remove();
+  titleSelector = null;
 }
 
-function onTitleSelectCancel()
+onTitleSelectCancel = function()
 {
-  selector.remove();
-  selector = null;
+  titleSelector.remove();
+  titleSelector = null;
 }
 
 </script>

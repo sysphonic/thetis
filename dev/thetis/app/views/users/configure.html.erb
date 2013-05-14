@@ -2,13 +2,12 @@
 
 <%= form_tag( {:controller => 'config', :action => 'update_by_ajax'}, :name => 'form_user_config', :method => 'post') %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
+<table style="width:100%; margin-top:10px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="49%" valign="top">
+    <td style="width:49%; vertical-align:top;">
 
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
               <%= t('menu.settings') %>
@@ -22,9 +21,9 @@
               <input type="checkbox" id="user_by_full_name" name="user[by_full_name]" value="1" <%= checked %>><label for="user_by_full_name"><%= t('user.show_by_full_name') %></label>
             </td>
           </tr>
-          <tr height="10"><td></td></tr>
+          <tr style="height:10px;"><td></td></tr>
           <tr>
-            <td style="width:100%;" colspan="2" align="right">
+            <td style="width:100%; text-align:right;" colspan="2">
               <input type="button" style="width:100px;" value="<%= t('btn.save') %>" onclick="doUpdateConfig();">
             </td>
           </tr>
@@ -32,16 +31,30 @@
       </div>
 
     </td>
-    <td width="10">&nbsp;</td>
-    <td width="49%" valign="top">
+    <td style="min-width:10px; width:10px;"></td>
+    <td style="width:49%; vertical-align:top;">
+      <!-- User Titles -->
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+          <tr>
+            <td class="item_cap_td" nowrap style="width:100%;">
+              <%= t('user.official_titles') %>
+            </td>
+          </tr>
+          <tr>
+            <td class="item_value_td">
+              <%= t('msg.manage_in_groups') %>
+            </td>
+          </tr>
+        </table>
+      </div>
 
       <!-- User Titles -->
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
-              <%= t('user.official_titles') %>&nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('user.official_titles_info')%>');">
+              <%= User.human_attribute_name('title') %>
             </td>
           </tr>
           <tr>
@@ -57,21 +70,18 @@
           </tr>
         </table>
       </div>
-
     </td>
   </tr>
 </table>
 
 </form>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table align="center" style="margin:20px 0px 10px;" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <br/>
 

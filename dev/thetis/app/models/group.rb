@@ -15,6 +15,8 @@
 #
 class Group < ActiveRecord::Base
 
+  has_many(:official_titles, :dependent => :destroy)
+
   extend CachedRecord
   include TreeElement
 
@@ -251,7 +253,7 @@ class Group < ActiveRecord::Base
 
     users |= User.find_all(con)
 
-    return users
+    return OfficialTitlesHelper.sort_users(users, :asc, group_id)
   end
 
   #=== self.get_equipment

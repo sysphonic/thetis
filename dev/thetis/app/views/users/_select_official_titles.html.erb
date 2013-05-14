@@ -1,0 +1,106 @@
+<%
+@groups_cache ||= {}
+%>
+
+<%= form_tag( {:controller => 'users', :action => 'add_official_titles'}, :name => 'form_user_titles', :id => 'form_user_titles', :method => 'post') %>
+
+  <div id="div_select_official_titles">
+    <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <tr>
+        <td style="width:130px;">
+          <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');">
+            <%= t('btn.select_group') %>
+          </div>
+        </td>
+        <td style="text-align:left; color:blue;">
+          <% unless @group_id.nil? %>
+            <%= Group.get_path(@group_id, @groups_cache) %>
+            &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroup();" title="<%= t('btn.clear') %>">
+          <% end %>
+        </td>
+      </tr>
+    </table>
+
+    <select id="official_title_candidates" name="official_titles[]" class="select_candidates" size="7" multiple>
+      <%
+      official_titles_selected = {}
+      @user.user_titles.each do |user_title|
+        official_title_id = user_title.official_title_id.to_s
+        official_titles_selected[official_title_id] = OfficialTitle.get_name(official_title_id)
+      end
+
+      official_titles_available = {}
+
+      unless @official_titles.nil?
+        @official_titles.each do |official_title|
+          official_title_id = official_title.id.to_s
+          official_titles_available[official_title_id] = official_title.name
+        end
+      end
+
+      official_titles_available.each do |official_title_id, name|
+        next if official_titles_selected.include?(official_title_id)
+      %>
+        <option value="<%= official_title_id %>"><%= name %></option>
+      <% end %>
+    </select>
+
+    <div style="padding-top:10px; text-align:center;">
+      <input type="button" id="user_titles_ok" value="<%= t('btn.ok') %>" onclick="onUserTitlesOK()" style="width:80px" />
+      &nbsp;
+      <input type="button" id="user_titles_cancel" value="<%= t('btn.cancel') %>" onclick="onUserTitlesCancel()" style="width:80px" />
+    </div>
+  </div>
+
+  <%= hidden_field_tag('user_id', @user.id) %>
+</form>
+
+<script type="text/javascript">
+
+showGroupTreeToSelect = function(group_id)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.progress = true;
+  thetisBox.setAdditionalParams(new Array("user_id=<%= @user.id %>"));
+  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'users', :action => 'select_official_titles') %>\" onsubmit=\"onGroupSelectedToShow(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+onGroupSelectedToShow = function(frm)
+{
+  new Ajax.Updater(
+            "div_select_official_titles",
+            frm.action,
+            {
+              method:"get",
+              parameters:Form.serialize(frm),
+              asynchronous:true,
+              evalScripts:true,
+              onComplete:function(request){
+                ThetisBox.removeLastProgressBar();
+              }
+            }
+          );
+}
+
+doClearGroup = function()
+{
+  var thetisBox = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+              "div_select_official_titles",
+              "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+              {
+                method:"get",
+                parameters:"user_id=<%= @user.id %>",
+                asynchronous:true,
+                evalScripts:true,
+                onComplete:function(request) {
+                  thetisBox.remove();
+                }
+              }
+            );
+}
+
+</script>

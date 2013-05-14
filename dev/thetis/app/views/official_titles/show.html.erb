@@ -1,0 +1,27 @@
+
+<table style="width:100%; margin:10px 0px 20px;" cellpadding="0" cellspacing="0">
+  <tr>
+    <td class="item_cap_td" nowrap>
+      <%= Group.model_name.human %>
+    </td>
+    <td class="item_value_td">
+    <% if @group_id.nil? %>
+      <%= t('paren.not_specified') %>
+    <%
+    else
+      groups_cache = {}
+    %>
+      <%= Group.get_path(@group_id, groups_cache) %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" nowrap>
+      <%= OfficialTitle.human_attribute_name('name') %>
+    </td>
+    <td class="item_value_td">
+      <%= @official_title.name %>
+    </td>
+  </tr>
+</table>
+

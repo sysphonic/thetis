@@ -188,7 +188,7 @@ BorderDragObserver.prototype = {
   initialize: function() {
   },
   onStart: function(eventName, draggable, event) {
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       if (draggable.element.id == "drag_v_border") {
         var divMailTree = _z("divMailTree");
         var td_tree = _z("td_tree");
@@ -217,7 +217,7 @@ BorderDragObserver.prototype = {
     }
   },
   onDrag: function(eventName, draggable, event) {
-    if (is_MS || is_Opera) {
+    if (getUserAgentName() != "gecko") {
       if (draggable.element.id == "drag_v_border") {
         var divMailTree = _z("divMailTree");
         var td_tree = _z("td_tree");
@@ -250,7 +250,7 @@ BorderDragObserver.prototype = {
         && draggable.element.id != "drag_h_border") {
       return;
     }
-    if (!is_MS && !is_Opera) {
+    if (getUserAgentName() == "gecko") {
       draggable.options.snap = false;
     }
   }

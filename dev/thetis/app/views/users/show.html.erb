@@ -11,25 +11,33 @@
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
         <table align="center" width="85%" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="prim_cap_td" nowrap><label for="user_name"><%= t('user.u_name') %></label></td>
+            <td class="prim_cap_td" nowrap>
+              <label for="user_name"><%= t('user.u_name') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.name %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_email"><%= User.human_attribute_name('email') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_email"><%= User.human_attribute_name('email') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.email %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_fullname"><%= User.human_attribute_name('fullname') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_fullname"><%= User.human_attribute_name('fullname') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.fullname %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_address"><%= User.human_attribute_name('address') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_address"><%= User.human_attribute_name('address') %></label>
+            </td>
             <td class="item_value_td">
               <% unless @user.postalcode.nil? or @user.postalcode.empty? %>
                 <%= t('cap.postalcode') %> <%= @user.postalcode %><br/>
@@ -38,7 +46,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label>
+            </td>
             <td class="item_value_td">
               <% if @user.nil? or @user.time_zone.nil? or @user.time_zone.empty? %>
                 <%= t('paren.not_specified') %>
@@ -48,7 +58,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_tel"><%= t('cap.tel') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_tel"><%= t('cap.tel') %></label>
+            </td>
             <td class="item_value_td">
               <% unless @user.tel1.nil? or @user.tel1.empty? %>
                 <%= @user.tel1_note %>: <%= @user.tel1 %><br/>
@@ -62,38 +74,50 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_fax"><%= User.human_attribute_name('fax') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_fax"><%= User.human_attribute_name('fax') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.fax %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_organization"><%= User.human_attribute_name('organization') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_organization"><%= User.human_attribute_name('organization') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.organization %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_url"><%= User.human_attribute_name('url') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_url"><%= User.human_attribute_name('url') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.url %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_title"><%= t('user.title') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_title"><%= User.human_attribute_name('title') %></label>
+            </td>
             <td class="item_value_td">
               <%= @user.title %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_figure"><%= User.human_attribute_name('figure') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_figure"><%= User.human_attribute_name('figure') %></label>
+            </td>
             <td class="item_value_td">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @user.get_figure %>.png" />
             </td>
           </tr>
           <tr height="15"><td></td></tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('item.profile_sheet') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('item.profile_sheet') %>
+            </td>
             <td class="item_value_td">
               <!-- Profile Sheet -->
               <%
@@ -111,7 +135,9 @@
         <% if @login_user.admin?(User::AUTH_USER) %>
           <tr height="15"><td></td></tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_created_at"><%= User.human_attribute_name('created_at') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_created_at"><%= User.human_attribute_name('created_at') %></label>
+            </td>
             <td class="item_value_td">
               <%
               created_at = ''
@@ -121,7 +147,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><label for="user_login_at"><%= User.human_attribute_name('login_at') %></label></td>
+            <td class="item_cap_td" nowrap>
+              <label for="user_login_at"><%= User.human_attribute_name('login_at') %></label>
+            </td>
             <td class="item_value_td">
               <%
               login_at = ''

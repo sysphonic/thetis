@@ -379,8 +379,14 @@ showFilterNew = function()
     thetisBoxFilterEdit = null;
   }
 
+  var mail_account_id = _z("mail_account_id").value;
+  if (!mail_account_id) {
+    tips("<%= t('msg.select_account') %>", "CENTER");
+    return false;
+  }
+
   var addParams = new Array();
-  addParams.push("mail_account_id="+_z("mail_account_id").value);
+  addParams.push("mail_account_id="+mail_account_id);
 
   var thetisBoxProgress = prog("CENTER");
 
@@ -414,6 +420,7 @@ showFilterNew = function()
               }
           }
         );
+  return true;
 }
 
 showFilterEdit = function(mail_filter_id, mail_filter_title)

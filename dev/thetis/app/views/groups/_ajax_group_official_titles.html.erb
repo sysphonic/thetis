@@ -1,0 +1,55 @@
+
+<table class="info_area" cellspacing="0" cellpadding="0" style="width:100%;">
+  <tr>
+    <td id="sortable_items" style="padding-left:10px; text-align:left;">
+      <%
+      official_titles = OfficialTitle.get_for(@group_id, false, true)
+      unless official_titles.nil?
+        official_titles.each do |official_title|
+      %>
+        <div id="item_<%= official_title.id %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+          <a class="a_underline" href="#" onclick="showOfficialTitle(<%= official_title.id %>); return false;">
+            <%= truncate(official_title.name, :length => 20) %>
+          </a>
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteOfficialTitle(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" />
+        </div>
+      <%
+        end
+      end
+      %>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+
+onOfficialTitlesOrderUpdated = function()
+{
+  var addParams = new Array();
+  addParams.push("group_id=<%= @group_id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  new Ajax.Request(
+      "<%= url_for(:controller => 'official_titles', :action => 'update_order') %>",
+      {
+        method:"post",
+        parameters:Sortable.serialize("sortable_items", {name:"official_titles_order"}) + "&" + addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true
+      }
+    );
+}
+
+//<![CDATA[
+Sortable.create(
+      "sortable_items",
+      {
+        onUpdate: onOfficialTitlesOrderUpdated,
+        tag:"div"
+      }
+    );
+//]]>
+</script>
+

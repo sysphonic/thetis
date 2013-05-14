@@ -14,6 +14,7 @@
 #* 
 #
 class OfficialTitle < ActiveRecord::Base
+  attr_accessible(:name)
 
   extend CachedRecord
 
@@ -52,7 +53,7 @@ class OfficialTitle < ActiveRecord::Base
   def self.get_for(group_id, include_parents=false, enabled=nil)
 
     con = []
-    con << "(disabled=#{!enabled})" unless enabled.nil?
+    #con << "(disabled=#{!enabled})" unless enabled.nil?
 
     if include_parents
       group_con = '(group_id is null)'
@@ -70,7 +71,8 @@ class OfficialTitle < ActiveRecord::Base
       con << "(group_id=#{group_id})"
     end
 
-    order_by = 'order by disabled ASC, xorder ASC, id ASC'
+    order_by = 'order by xorder ASC, id ASC'
+    #order_by = 'order by disabled ASC, xorder ASC, id ASC'
 
     sql = 'select * from official_titles where ' + con.join(' and ') + ' ' + order_by
 

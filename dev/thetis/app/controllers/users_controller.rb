@@ -168,9 +168,9 @@ class UsersController < ApplicationController
 
     unless @group_id.nil?
       if @group_id == '0'
-        con << "((groups like '%|0|%') or (groups is null))"
+        con << "((User.groups like '%|0|%') or (User.groups is null))"
       else
-        con << "(groups like '%|#{@group_id}|%')"
+        con << "(User.groups like '%|#{@group_id}|%')"
       end
     end
 
@@ -178,7 +178,7 @@ class UsersController < ApplicationController
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
         key = '%' + key + '%'
-        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
+        con << "(User.name like '#{key}' or User.email like '#{key}' or User.fullname like '#{key}' or User.address like '#{key}' or User.organization like '#{key}' or User.tel1 like '#{key}' or User.tel2 like '#{key}' or User.tel3 like '#{key}' or User.fax like '#{key}' or User.url like '#{key}' or User.postalcode like '#{key}' or User.title like '#{key}' )"
       end
     end
 
@@ -192,21 +192,25 @@ class UsersController < ApplicationController
     @sort_type = params[:sort_type]
 
     if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
-      @sort_col = 'xorder'
+      @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
 
-    order_by = ' order by ' + @sort_col + ' ' + @sort_type
+    order_by = @sort_col + ' ' + @sort_type
 
-    if @sort_col != 'xorder'
-      order_by << ', xorder ASC'
+    if @sort_col == 'OfficialTitle.xorder'
+      order_by = '(OfficialTitle.xorder is null) ' + @sort_type + ', ' + order_by
+    else
+      order_by << ', (OfficialTitle.xorder is null) ASC, OfficialTitle.xorder ASC'
     end
-    if @sort_col != 'name'
-      order_by << ', name ASC'
+    if @sort_col != 'User.name'
+      order_by << ', User.name ASC'
     end
 
-    sql = 'select distinct User.* from users User'
-    sql << where + order_by
+    sql = 'select distinct User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
+    sql << ' left join official_titles OfficialTitle on UserTitle.official_title_id=OfficialTitle.id'
+
+    sql << where + ' order by ' + order_by
 
     @user_pages, @users, @total_num = paginate_by_sql(User, sql, 50)
 # Copy to FEATURE_PAGING_IN_TREE <<<
@@ -251,6 +255,75 @@ class UsersController < ApplicationController
     end
     flash[:notice] = count.to_s + t('user.deleted')
     redirect_to(:action => 'list')
+  end
+
+  #=== select_official_titles
+  #
+  #Show dialog to select User's OfficialTitles.
+  #
+  def select_official_titles
+    Log.add_info(request, params.inspect)
+
+    @user = User.find(params[:user_id])
+
+    unless params[:thetisBoxSelKeeper].nil?
+      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    end
+
+    if @group_id.nil?
+      @official_titles = OfficialTitle.get_for('0', false, true)
+    else
+      @official_titles = OfficialTitle.get_for(@group_id, false, true)
+    end
+
+    render(:partial => 'select_official_titles', :layout => false)
+  end
+
+  #=== add_official_titles
+  #
+  #Add OfficialTitles to the User.
+  #
+  def add_official_titles
+    Log.add_info(request, params.inspect)
+
+    @user = User.find(params[:user_id])
+
+    unless params[:official_titles].nil?
+      params[:official_titles].each do |official_title_id|
+        if @user.user_titles.index{|user_title| user_title.official_title_id.to_s == official_title_id}.nil?
+          user_title = UserTitle.new
+          user_title.user_id = @user.id
+          user_title.official_title_id = official_title_id
+          user_title.save!
+
+          @user.user_titles << user_title
+        end
+      end
+    end
+
+    render(:partial => 'ajax_user_titles', :layout => false)
+  end
+
+  #=== remove_official_titles
+  #
+  #Add OfficialTitles to the User.
+  #
+  def remove_official_titles
+    Log.add_info(request, params.inspect)
+
+    @user = User.find(params[:user_id])
+
+    unless params[:official_titles].nil?
+      params[:official_titles].each do |official_title_id|
+        idx = @user.user_titles.index{|user_title| user_title.official_title_id.to_s == official_title_id}
+        unless idx.nil?
+          user_title = @user.user_titles[idx]
+          @user.user_titles.delete(user_title)
+        end
+      end
+    end
+
+    render(:partial => 'ajax_user_titles', :layout => false)
   end
 
   #=== notify

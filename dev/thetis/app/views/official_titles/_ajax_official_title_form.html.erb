@@ -1,0 +1,56 @@
+
+<%= form_tag( {:controller => 'official_titles', :action => 'update'}, :name => 'form_official_title', :method => 'post') %>
+
+<table style="width:100%; margin:10px 0px 20px;" cellpadding="0" cellspacing="1">
+  <tr>
+    <td class="item_cap_td" nowrap>
+      <%= Group.model_name.human %>
+    </td>
+    <td class="item_value_td">
+    <% if @group_id.nil? %>
+      <%= t('paren.not_specified') %>
+    <%
+    else
+      groups_cache = {}
+    %>
+      <%= Group.get_path(@group_id, groups_cache) %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <td class="item_cap_td" nowrap>
+      <%= OfficialTitle.human_attribute_name('name') %>
+    </td>
+    <td class="item_value_td">
+      <%= text_field('official_title', 'name', :style => 'width:90%') %>
+    </td>
+  </tr>
+  <tr style="height:10px;"><td></td></tr>
+  <tr>
+    <td colspan="2">
+      <table align="center" cellpadding="0" cellspacing="0">
+        <tr>
+          <td class="img_button_td" id="official_title_ok" onclick="onOfficialTitleOK();">
+        <% if @official_title.nil? %>
+            <%= t('btn.register') %>
+        <% else %>
+            <%= t('btn.update') %>
+        <% end %>
+          </td>
+          <td style="min-width:10px; width:10px;"></td>
+          <td class="img_button_td" id="official_title_cancel" onclick="onOfficialTitleCancel();">
+            <%= t('btn.cancel') %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<%= hidden_field_tag('group_id', @group_id) %>
+<%= hidden_field_tag('id', (@official_title.nil?)?nil:@official_title.id) %>
+
+<input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
+
+</form>
+

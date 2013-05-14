@@ -5,22 +5,20 @@
 <%= form_tag({:controller => 'equipment', :action => 'update', :id => @equipment.id}, :method => 'post', :name => 'form_equipment') %>
 <% end %>
 
-<table width="80%" align="center" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
+<table style="width:80%; margin-top:10px;" align="center" cellspacing="0" cellpadding="0">
   <tr>
-    <td valign="top">
+    <td style="vertical-align:top;">
       <%= render(:partial => 'equipment_form') %>
     </td>
   </tr>
 </table>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table align="center" cellspacing="0" cellpadding="0" style="margin:20px 0px 10px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); history.back();">
       <%= t('btn.back') %>
     </td>
-    <td width="15"></td>
+    <td style="min-width:15px; width:15px;"></td>
     <td class="img_button_td" onclick="doRegister();">
     <% if (@equipment.nil? or @equipment.id == 0) %>
       <%= t('btn.register')%>
@@ -29,12 +27,12 @@
     <% end %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 </form>
 
 <script type="text/javascript">
+
 function doRegister()
 {
   selectListAll(_z("groups_selected"));

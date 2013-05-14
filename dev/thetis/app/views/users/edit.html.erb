@@ -1,17 +1,19 @@
 <% HistoryHelper.set_back(request) %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="15"><td colspan="3"></td></tr>
+<table style="width:100%;" cellspacing="0" cellpadding="0">
+  <tr style="height:15px;"><td colspan="3"></td></tr>
   <tr>
-    <td width="54%" valign="top">
+    <td style="width:52%; vertical-align:top;">
       <%= form_tag({:controller => 'users', :action => 'update', :id => @user.id}, :name => 'form_user_basic', :method => 'post') %>
         <%= render(:partial => 'user_form') %>
       </form>
       <div class="info_area" style="width:100%; padding-top:0px; padding-bottom:15px;" align="center">
         <%= hidden_field('user', 'id') %>
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap><%= t('item.profile_sheet') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('item.profile_sheet') %>
+            </td>
             <td class="item_value_td">
               <%= form_tag({:controller => 'items', :action => 'create_profile_sheet', :id => @user.id}, :name => 'form_ajax_userItem', :method => 'post') %>
                 <div id="div_ajax_userItem" style="padding-left:10px;">
@@ -23,8 +25,8 @@
         </table>
       </div>
     </td>
-    <td width="10">&nbsp;</td>
-    <td width="45%" valign="top">
+    <td style="min-width:10px; width:10px;"></td>
+    <td style="width:47%; vertical-align:top;">
 
     <% if @login_user.admin?(User::AUTH_USER) %>
       <!-- Authority -->
@@ -33,10 +35,12 @@
       <div style="height:10px"></div>
 
       <!-- Groups -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:95%;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" nowrap><%= t('group.plural') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('group.plural') %>
+            </td>
             <td class="item_value_td">
               <div id="div_user_groups">
                 <%= render(:partial => 'ajax_groups') %>
@@ -54,9 +58,27 @@
 
       <div style="height:10px"></div>
 
+      <!-- OfficialTitles -->
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table class="info_area" cellspacing="0" cellpadding="0" style="width:95%;" align="center">
+          <tr>
+            <td class="item_cap_td" nowrap>
+              <%= OfficialTitle.model_name.human %>
+            </td>
+            <td class="item_value_td" style="padding-top:0px; padding-bottom:0px;">
+              <div id="div_ajax_user_titles">
+                <%= render(:partial => 'ajax_user_titles') %>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <div style="height:10px"></div>
+
       <!-- Teams -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:95%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap>
               <%= t('team.plural') %>
@@ -89,8 +111,8 @@
       <div style="height:10px"></div>
 
       <!-- Zeptair VPN -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table align="center" style="width:95%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap>
               <%= t('zeptair.vpn_connection') %>
@@ -111,10 +133,9 @@
               </form>
             </td>
 
-            <table cellspacing="0" cellpadding="0" width="100%">
-              <tr height="5"><td></td></tr>
+            <table cellspacing="0" cellpadding="0" style="width:100%; margin-top:5px;">
               <tr>
-                <td align="center">
+                <td style="text-align:center;">
                   <input type="button" value="<%= t('btn.apply') %>" style="width:80px;" onclick="doUpdateZeptAllowed(); return false;" />
                 </td>
               </tr>
@@ -152,12 +173,131 @@
 
 <script type="text/javascript">
 
-function doDelete(user_id, title)
+var thetisBoxUserTitles = null;
+
+onUserTitlesAddClicked = function()
+{
+  if (thetisBoxUserTitles != null) {
+    return;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var addParams = new Array();
+  addParams.push("user_id=<%= @user.id %>");
+
+  new Ajax.Request(
+          "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request){
+              thetisBoxProgress.remove();
+
+              thetisBoxUserTitles = new ThetisBox;
+              thetisBoxUserTitles.setOnClose(function(){ thetisBoxUserTitles = null; });
+              thetisBoxUserTitles.title = "<%= OfficialTitle.model_name.human %>";
+              thetisBoxUserTitles.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+              request.responseText.evalScripts();
+            }
+          }
+        );
+  return true;
+}
+
+onUserTitlesOK = function()
+{
+  if (getListSelected(_z("official_title_candidates")).length <= 0) {
+    return;
+  }
+
+  var btnOk = _z("user_titles_ok");
+  btnOk.disabled = true;
+  var btnCancel = _z("user_titles_cancel");
+  btnCancel.disabled = true;
+
+  var thetisBoxProgress = prog("CENTER");
+
+  var frm = _z("form_user_titles");
+
+  new Ajax.Updater(
+          "div_ajax_user_titles",
+          frm.action,
+          {
+            method:"post",
+            asynchronous:true,
+            evalScripts:false,
+            parameters:Form.serialize(frm),
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBoxUserTitles.remove();
+              if (setUserModified) {
+                setUserModified();
+              }
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+onUserTitlesCancel = function()
+{
+  thetisBoxUserTitles.remove();
+}
+
+onUserTitlesRemoveClicked = function()
+{
+  var selAry = getListSelected(_z("official_titles"));
+  if (selAry.length <= 0) {
+    return;
+  }
+
+  confm(selAry.length+"<%= t('official_title.confirm_remove_from_user') %>", "_onUserTitlesRemoveClicked()");
+}
+
+_onUserTitlesRemoveClicked = function()
+{
+  var thetisBoxProgress = prog("CENTER");
+
+  var add_params = new Array();
+  add_params.push("user_id=<%= @user.id %>");
+
+  var selAry = getListSelected(_z("official_titles"));
+  for (var i=0; i < selAry.length; i++) {
+    add_params.push("official_titles[]="+selAry[i]);
+  }
+  add_params.push("authenticity_token=<%= form_authenticity_token %>");
+
+  new Ajax.Updater(
+          "div_ajax_user_titles",
+          "<%= url_for(:controller => 'users', :action => 'remove_official_titles') %>",
+          {
+            method:"post",
+            asynchronous:true,
+            evalScripts:false,
+            parameters:add_params.join("&"),
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+              thetisBoxUserTitles.remove();
+              if (setUserModified) {
+                setUserModified();
+              }
+
+              request.responseText.evalScripts();
+            }
+          }
+        );
+}
+
+doDelete = function(user_id, title)
 {
   confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDelete("+user_id+")");
 }
 
-function _doDelete(user_id)
+_doDelete = function(user_id)
 {
   var thetisBox = prog("TOP-RIGHT");
 
@@ -173,7 +313,7 @@ function _doDelete(user_id)
       );
 }
 
-function showGroupTreeToSelect(group_id, do_change)
+showGroupTreeToSelect = function(group_id, do_change)
 {
   var additionalParams = new Array(
                             "authenticity_token=<%= form_authenticity_token %>",
@@ -198,12 +338,12 @@ function showGroupTreeToSelect(group_id, do_change)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-function doRemoveGroup(group_id, path, user_id)
+doRemoveGroup = function(group_id, path, user_id)
 {
   confm("<%= t('user.confirm_to_excluded_from1') %>" + path + "<%= t('user.confirm_to_excluded_from2') %>", "_doRemoveGroup("+group_id+", "+user_id+")");
 }
 
-function _doRemoveGroup(group_id, user_id)
+_doRemoveGroup = function(group_id, user_id)
 {
   var thetisBox = prog("TOP-RIGHT");
 

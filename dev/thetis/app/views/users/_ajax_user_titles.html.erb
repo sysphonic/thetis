@@ -1,0 +1,17 @@
+<table cellspacing="0" cellpadding="0" style="width:100%;">
+  <tr>
+    <td style="width:80%; padding-right:3px; text-align:center;">
+      <select id="official_titles" name="official_titles[]" class="select_multi" size="4" style="width:100%;" multiple>
+      <%
+      @user.user_titles.each do |user_title|
+      %>
+        <option value="<%= user_title.official_title_id %>"><%= OfficialTitle.get_name(user_title.official_title_id) %></option>
+      <% end %>
+      </select>
+    </td>
+    <td style="text-align:center; vertical-align:top; width:20%;">
+      <input type="button" id="btn_user_titles_add" value="<%= t('btn.add') %>" onclick="onUserTitlesAddClicked();" style="width:60px; margin-bottom:5px;">
+      <input type="button" id="btn_user_titles_remove" value="<%= t('btn.remove') %>" onclick="onUserTitlesRemoveClicked();" style="width:60px;">
+    </td>
+  </tr>
+</table>

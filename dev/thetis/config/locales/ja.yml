@@ -22,6 +22,7 @@ ja:
       desktop: "デスクトップ"
       location: "位置情報"
       office_map: "マップ"
+      official_title: "役職"
     attributes:
       id: "ID"
       updated_at: "更新日時"
@@ -68,6 +69,11 @@ ja:
         remote_ip: "IPアドレス"
         log_type: "種別"
         access_path: "アクセスパス"
+      email:
+        reply_to: "返信先"
+        to_addresses: "宛先"
+        size: "サイズ"
+        updated_at: "保存日時"
       mail_account:
         title: "アカウント名"
         is_default: "デフォルト"
@@ -87,6 +93,8 @@ ja:
         title: "フィルタ名"
         xorder: "順番"
         enabled: "有効"
+      official_title:
+        name: "役職名"
       research:
         status: "ステータス"
       schedule:
@@ -117,7 +125,7 @@ ja:
         groups: "グループ"
         created_at: "登録日時"
         login_at: "最後のログイン"
-        title: "役職"
+        title: "役職（外部）"
         time_zone: "タイムゾーン"
         birthday: "生年月日"
         figure: "アイコン"
@@ -580,7 +588,7 @@ ja:
     general_conf: "動作設定"
     desktop_manage: "デスクトップ管理"
     users_manage: "ユーザー管理"
-    groups_manage: "グループ管理 （ユーザー／ワークフロー／マップ）"
+    groups_manage: "グループ管理 （ユーザー／役職／ワークフロー／マップ）"
     teams_manage: "チーム管理"
     schedules_manage: "スケジュール管理"
     equipment_manage: "設備管理"
@@ -607,6 +615,8 @@ ja:
     confirm_to_leave: "退出します。よろしいですか？"
   addressbook:
     specify_name: "名前を指定してください。"
+  official_title:
+    confirm_remove_from_user: "件の役職をこのユーザーから削除します。よろしいですか？"
   paren:
     round:
       left: "（"
@@ -892,7 +902,6 @@ ja:
     select_title: "役職の選択"
     show_by_full_name: "フルネームで表示"
     official_titles: "役職"
-    official_titles_info: "役職によってユーザーのデフォルトの表示順序が決まります。"
     specify_title_name: "役職名を指定してください。"
     select_group_to_add_to: "追加するグループを選択してください。"
     select_group_to_move_to: "移動するグループを選択してください。"
@@ -947,6 +956,7 @@ ja:
     not_applicable: "-"
     negative: "×"
   msg:
+    manage_in_groups: "「グループ管理」で登録・編集できます。"
     select_encoding_of_csv: "CSVファイルのエンコーディングを選択してください。"
     specify_csv_encoding: "CSVファイルとそのエンコーディングを指定してください。"
     specify_csv: "CSVファイルを指定してください。"

@@ -2,6 +2,8 @@
 <%
 @groups_cache ||= {}
 @group_obj_cache ||= {}
+
+official_title_obj_cache = {}
 %>
 
 <%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'get', :name => 'form_list') %>
@@ -78,12 +80,12 @@
 <div class="base_list" id="div_users">
 <table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="16%" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onclick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="26%"  nowrap onclick="sortList('email')"><%= User.human_attribute_name('email') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="10%"  nowrap onclick="sortList('xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('xorder', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%"  nowrap onclick="sortList('groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:16%;" nowrap onclick="sortList('User.name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('User.fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.fullname', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:26%;" nowrap onclick="sortList('User.email')"><%= User.human_attribute_name('email') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.email', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:10%;" nowrap onclick="sortList('OfficialTitle.xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('OfficialTitle.xorder', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('User.groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.groups', @sort_col, @sort_type)) %></span></th>
   </tr>
 <% @users.each_with_index do |user, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
@@ -103,7 +105,9 @@
       <%= truncate(user.email, :length => 30) %>
     </td>
     <td class="<%= td_class %>" nowrap>
-      <%= truncate(user.title, :length => 10) %>
+    <% user.user_titles.each do |user_title|  %>
+      <%= truncate(OfficialTitle.get_name(user_title.official_title_id, official_title_obj_cache), :length => 10) %><br/>
+    <% end  %>
     </td>
     <td class="<%= td_class %>" nowrap>
       <% user.get_groups_a.each do |group_id| %>
