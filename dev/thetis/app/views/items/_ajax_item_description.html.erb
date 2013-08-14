@@ -1,16 +1,7 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
-<table align="center" width="90%" cellpadding="0" cellspacing="2">
-  <tr height="10"><td></td></tr>
-<!--
-  <tr>
-    <td align="left" style="text-indent:10px; color:blueviolet; font-size:9pt;">
-      <%= raw(t('item.edit_desc_info')) %><br />
-    </td>
-  </tr>
-  <tr height="3"><td></td></tr>
--->
+<table align="center" style="width:98%; padding-top:10px;" cellpadding="0" cellspacing="2">
   <tr>
     <td>
       <%= text_area('item', 'description', :cols => '60', :rows => '20', :wrap => 'off', :style => 'display:none;') %>

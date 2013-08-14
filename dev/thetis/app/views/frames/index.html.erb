@@ -19,9 +19,56 @@
 
 <script type="text/javascript">
 
+ThetisBox.setTitle("<%= $thetis_config[:general]['app_title'] %>");
+ThetisBox.setOK("<%= t('btn.ok') %>");
+ThetisBox.setCancel("<%= t('btn.cancel') %>");
+ThetisBox.setClose("<%= t('btn.close') %>");
+ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/close.png");
+
+function setLoginName(name)
+{
+  if (name == null || name.length <= 0) {
+    _z("login_name").innerHTML = "";
+    _z("table_login_user").style.display = "none";
+  } else {
+    _z("login_name").innerHTML = name;
+    _z("table_login_user").style.display = "block";
+  }
+}
+
+function setHeaderLogin(loginName)
+{
+  setLoginName(loginName);
+}
+
+function setLeftLogin(loginName, loginAdmin)
+{
+  if (typeof(setNavLogin) != "undefined") {
+    setNavLogin(loginName, loginAdmin);
+  }
+}
+
+function showTopicBox()
+{
+  var mainRegion = getClientRegion();
+  var mainWidth = mainRegion.width;
+  var mainHeight = mainRegion.height;
+
+  var thetisBox = new ThetisBox;
+  thetisBox.resizable = true;
+  thetisBox.title = "<%= t('topicbox.title') %>";
+  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+}
+
+_iframes = null;
+
 function doOnLoad()
 {
-//  doResize();
+  _iframes = new Array(_z("iframe_groupware"), _z("iframe_business"));
+
+  setMode("groupware");
+
+  doResize();
 }
 
 function doResize()
@@ -34,20 +81,93 @@ function doResize()
   _z("sect_main").style.height = (mainHeight - 28 - 8) + "px";
 
   var height = window.innerHeight;  // Firefox
-  if (isNaN(height))  {
+  if (isNaN(height)) {
     height = mainHeight;
   }
-  var left_table = _z("left_table");
-  left_table.style.height = height + "px";
+  var tbl_left_groupware = _z("tbl_left_groupware");
+  tbl_left_groupware.style.height = height + "px";
 
-  if (height < left_table.scrollHeight) {
+  if (height < tbl_left_groupware.scrollHeight) {
     toggleSymbol(false);
   }
 }
 
-function progMain()
+function getActiveIframe()
 {
-  eval("try{ top.main.prog('TOP-RIGHT'); }catch(e){}");
+  for (var i=0; _iframes && i < _iframes.length; i++) {
+    if (_iframes[i].style.display != "none") {
+      return _iframes[i];
+    }
+  }
+  return null;
+}
+
+function getActiveContent()
+{
+  var iframe = getActiveIframe();
+  if (iframe) {
+    return iframe.contentWindow;
+  } else {
+    return null;
+  }
+}
+
+function setMode(mode)
+{
+  var targetIframe = null;
+  for (var i=0; _iframes && i < _iframes.length; i++) {
+    var iframe = _iframes[i];
+    if (iframe.id == "iframe_" + mode) {
+      if (iframe.style.display != "none") {
+        return false;
+      }
+      iframe.style.display = "";
+      targetIframe = iframe;
+    } else {
+      iframe.style.display = "none";
+    }
+  }
+  var leftTables = new Array(_z("tbl_left_groupware"), _z("tbl_left_business"));
+  for (var i=0; i < leftTables.length; i++) {
+    var tbl = leftTables[i];
+    tbl.style.display = (tbl.id == "tbl_left_" + mode)?"":"none";
+  }
+  toggleModeSign(mode);
+
+  if (mode == "groupware"
+      && targetIframe.contentWindow.document.location.href == "about:blank") {
+    <%
+    if params[:default].blank?
+      url = ''
+      url << $thetis_config[:general]['default_page']
+      if $thetis_config[:general]['default_topicbox'] == '1'
+        url << "#{url.include?('?')?'&':'?'}topicBox=true"
+      end
+    else
+      url = params[:default]
+    end
+    %>
+    doUpdateIframe("<%= url %>", mode);
+  }
+  return true;
+}
+
+function doUpdateIframe(url, mode)
+{
+  if (mode) {
+    setMode(mode);
+  }
+
+  try {
+    var iframeContent = getActiveContent();
+    if (typeof(iframeContent.prog) != "undefined") {
+      iframeContent.prog("TOP-RIGHT");
+    }
+    iframeContent.document.location.href = url;
+  } catch (e) {
+    var iframe = getActiveIframe();
+    iframe.src = url;
+  }
 }
 
 addEvent(window, "resize", doResize);
@@ -58,11 +178,12 @@ addEvent(window, "resize", doResize);
 
 <body onload="doOnLoad()" style="overflow:hidden;">
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
     <td rowspan="3" style="min-width:150px; width:150px;">
       <div id="sect_nav" style="overflow:auto;">
-        <%= render(:partial => 'left', :layout => false) %>
+        <%= render(:partial => 'left_groupware', :layout => false) %>
+        <%= render(:partial => 'left_business', :layout => false) %>
       </div>
     </td>
     <td style="min-height:28px; height:28px;">
@@ -71,24 +192,9 @@ addEvent(window, "resize", doResize);
   </tr>
   <tr>
     <td>
-      <%
-      if params[:default].nil? or params[:default].empty?
-        main = ''
-        main << $thetis_config[:general]['default_page']
-        if $thetis_config[:general]['default_topicbox'] == '1'
-          if main.include?('?')
-            main << '&'
-          else
-            main << '?'
-          end
-          main << 'topicBox=true'
-        end
-      else
-        main = params[:default]
-      end
-      %>
       <div id="sect_main" style="overflow:hidden;">
-        <iframe id="iframe_main" name="main" src="<%= main %>" frameborder="0" style="width:100%; height:100%; border:none; margin:0px; overflow:hidden;"></iframe>
+        <iframe id="iframe_groupware" src="about:blank" frameborder="0" style="width:100%; height:100%; border:none; margin:0px; overflow:hidden; display:none;"></iframe>
+        <iframe id="iframe_business" src="about:blank" frameborder="0" style="width:100%; height:100%; border:none; margin:0px; overflow:hidden; display:none;"></iframe>
       </div>
     </td>
   </tr>
@@ -98,12 +204,6 @@ addEvent(window, "resize", doResize);
     </td>
   </tr>
 </table>
-
-<script type="text/javascript">
-
-doResize();
-
-</script>
 
 </body>
 </html>

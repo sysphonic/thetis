@@ -76,16 +76,18 @@ module EmailsHelper
       when :forward
         msg = "\r\n\r\n\r\n\r\n-------- Original Message --------\r\n"
 
+        parse_keys = ['Subject', 'Date', 'From', 'Reply-To', 'Organization', 'To', 'Cc', 'Bcc']
         header = EmailsHelper.raw_header(email.get_raw)
         parsed_header = ''
-        parse_keys = ['Subject', 'Date', 'From', 'Reply-To', 'Organization', 'To', 'Cc', 'Bcc']
-        header.each_line {|line|
-          line.chomp!
-          if !parsed_header.empty? and line.match(/^\s/).nil?
-            parsed_header << "\r\n"
-          end
-          parsed_header << line
-        }
+        unless header.nil?
+          header.each_line {|line|
+            line.chomp!
+            if !parsed_header.empty? and line.match(/^\s/).nil?
+              parsed_header << "\r\n"
+            end
+            parsed_header << line
+          }
+        end
         lines = parsed_header.split("\r\n")
         parse_keys.each do |key|
           key_line = lines.find {|line| !line.match(Regexp.new("^#{key}:")).nil? }

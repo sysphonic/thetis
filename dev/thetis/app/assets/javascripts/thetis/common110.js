@@ -809,9 +809,13 @@ function within(elem, x, y)
 
 function getPos(elem)
 {
+  if (!elem) {
+    return null;
+  }
+
   var change_display = false;
   if (elem.style.display == "none") {
-    elem.style.display = "block";
+    elem.style.display = "";
     change_display = true;
   }
 

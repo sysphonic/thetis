@@ -1,6 +1,9 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 ja:
+  mode:
+    groupware: "グループウェア"
+    business: "業務"
   activerecord:
     models:
       address: "アドレス"
@@ -241,7 +244,6 @@ ja:
     emblem_image: "標章欄画像"
     default_page: "デフォルトページ"
     show_topicbox: "トピックボックスを表示する"
-    show_topicbox_info: "デフォルトページがThetisのページの場合のみ有効です。"
     cap_menus: "メニュー"
     mode: "モード"
     display: "表示"
@@ -858,7 +860,6 @@ ja:
     uniformly_to: "一括して次の日数に更新します。"
   topicbox:
     title: "トピックボックス"
-    info: "トピックボックスを表示できるのはThetisのページ上のみです。"
   login:
     name: "ログイン"
     mail_address: "メールアドレス"

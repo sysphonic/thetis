@@ -2,53 +2,64 @@
 
 <%= form_tag( {:controller => 'config', :action => 'update'}, :name => 'form_config', :method => 'post', :enctype => 'multipart/form-data') %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="15"><td></td></tr>
+<table style="width:100%; margin-top:15px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="49%" valign="top">
+    <td style="width:49%; vertical-align:top;">
 
       <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('config.general_settings') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('config.general_settings') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.app_title') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.app_title') %>
+            </td>
             <td class="item_value_td" style="width:70%;">
               <input type="text" name="general[app_title]" value="<%= @yaml[:general]['app_title'] %>" style="width:95%" />
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.emblem_title') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.emblem_title') %>
+            </td>
             <td class="item_value_td">
               <input type="text" name="general[symbol_title]" value="<%= @yaml[:general]['symbol_title'] %>" style="width:95%" />
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.emblem_image') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.emblem_image') %>
+            </td>
             <td class="item_value_td">
               <input type="file" name="general[symbol_image]" size="30" style="width:95%" />
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.default_page') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.default_page') %>
+            </td>
             <td class="item_value_td" nowrap>
               <input type="text" id="general_default_page" name="general[default_page]" value="" style="width:95%" /><br/>
               <% checked = (@yaml[:general]['default_topicbox']=='1')?'checked':'' %>
               <input name="general[default_topicbox]" type="hidden" value="0" />
               <input type="checkbox" id="general_default_topicbox" name="general[default_topicbox]" value="1" <%= checked %>><label for="general_default_topicbox"> <%= t('config.show_topicbox') %></label>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('config.show_topicbox_info')%>');">
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
 
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('config.cap_menus') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('config.cap_menus') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.mode') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.mode') %>
+            </td>
             <td class="item_value_td" style="width:70%">
               <% checked = (@yaml[:menu]['open_user_reg']=='1')?'checked':'' %>
               <input name="menu[open_user_reg]" type="hidden" value="0" />
@@ -56,7 +67,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.display') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.display') %>
+            </td>
             <td class="item_value_td">
               <% checked = (@yaml[:menu]['disp_equipment']=='1')?'checked':'' %>
               <input name="menu[disp_equipment]" type="hidden" value="0" />
@@ -92,7 +105,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.login_required') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.login_required') %>
+            </td>
             <td class="item_value_td">
               <% checked = (@yaml[:menu]['req_login_desktop']=='1')?'checked':'' %>
               <input name="menu[req_login_desktop]" type="hidden" value="0" />
@@ -111,80 +126,99 @@
               <input type="checkbox" id="menu_req_login_equipment" name="menu[req_login_equipment]" value="1" <%= checked %>><label for="menu_req_login_equipment"> <%= t('menu.equipment') %></label><br/>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
       </div>
 
     </td>
-    <td width="10">&nbsp;</td>
-    <td width="49%" valign="top">
+    <td style="min-width:10px; width:10px;"></td>
+    <td style="width:49%; vertical-align:top;">
 
-      <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
+      <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px; text-align:center;">
         <!-- Topic Box -->
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('topicbox.title') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('topicbox.title') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.caption') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.caption') %>
+            </td>
             <td class="item_value_td" style="width:70%;">
               <input type="text" id="topic_caption" name="topic[caption]" value="" style="width:95%" />
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.html') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.html') %>
+            </td>
             <td class="item_value_td">
               <input type="file" name="topic[src]" size="30" style="width:95%;" />
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
 
         <!-- Note -->
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('config.note') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('config.note') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.html') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.html') %>
+            </td>
             <td class="item_value_td" style="width:70%;">
               <input type="file" name="note[src]" size="30" style="width:95%;" />
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
 
         <!-- E-mail Settings -->
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('config.smtp_settings') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('config.smtp_settings') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.from_address') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.from_address') %>
+            </td>
             <td class="item_value_td" style="width:70%;" nowrap>
               <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%= @yaml[:smtp]['from_address'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.server') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.server') %>
+            </td>
             <td class="item_value_td" nowrap>
               <input type="text" id="smtp_server" name="smtp[server]" value="<%= @yaml[:smtp]['server'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.port') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.port') %>
+            </td>
             <td class="item_value_td" nowrap>
               <input type="text" id="smtp_port" name="smtp[port]" value="<%= @yaml[:smtp]['port'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.domain') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.domain') %>
+            </td>
             <td class="item_value_td">
               <input type="text" name="smtp[domain]" value="<%= @yaml[:smtp]['domain'] %>" style="ime-mode:disabled; width:95%" />
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('mail_account.secure_connection') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('mail_account.secure_connection') %>
+            </td>
             <td class="item_value_td">
               <% checked = (@yaml[:smtp]['starttls']=='1')?'checked':'' %>
               <input name="smtp[starttls]" type="hidden" value="0" />
@@ -192,7 +226,9 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('config.authentication') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('config.authentication') %>
+            </td>
             <td class="item_value_td">
               <% checked = (@yaml[:smtp]['auth_enabled']=='1')?'checked':'' %>
               <input name="smtp[auth_enabled]" type="hidden" value="0" />
@@ -200,7 +236,7 @@
             </td>
           </tr>
         </table>
-        <div id="smtp_auth_param" align="center" style="padding-left:10px; display:<%= (checked.empty?)?'none':'block' %>">
+        <div id="smtp_auth_param" style="padding-left:10px; text-align:center; display:<%= (checked.empty?)?'none':'block' %>">
           <%
           checked_plain = ''
           checked_login = ''
@@ -217,32 +253,37 @@
             <input type="radio" id="smtp_auth_cram_md5" name="smtp[auth]" value="cram_md5" <%= checked_cram_md5 %> /><label for="smtp_auth_cram_md5">CRAM MD5</label>
             <sup style="color:red">*</sup>
           </div>
-          <table align="center" width="85%" cellpadding="0" cellspacing="2">
+          <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
             <tr>
-              <td class="item_cap_td" nowrap><%= t('user.u_name') %></td>
+              <td class="item_cap_td" nowrap>
+                <%= t('user.u_name') %>
+              </td>
               <td class="item_value_td" nowrap>
                 <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%= @yaml[:smtp]['user_name'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
               </td>
             </tr>
             <tr>
-              <td class="item_cap_td" nowrap><%= t('password.name') %></td>
+              <td class="item_cap_td" nowrap>
+                <%= t('password.name') %>
+              </td>
               <td class="item_value_td">
                 <input type="password" id="smtp_password" name="smtp[password]" value="<%= @yaml[:smtp]['password'] %>" style="width:95%" />
               </td>
             </tr>
           </table>
         </div>
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
-          <tr height="15"><td></td></tr>
-        </table>
 
         <!-- Feeds -->
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%; margin:15px 0px;" cellpadding="0" cellspacing="2">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('feed.cap') %></td>
+            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+              <%= t('feed.cap') %>
+            </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('feed.name') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('feed.name') %>
+            </td>
             <td class="item_value_td" style="width:70%;">
               <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
               <input name="feed[enabled]" type="hidden" value="0" />
@@ -250,18 +291,19 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap><%= t('feed.data') %></td>
+            <td class="item_cap_td" nowrap>
+              <%= t('feed.data') %>
+            </td>
             <td class="item_value_td">
               <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
               <input name="feed[feed_content]" type="hidden" value="0" />
               <input type="checkbox" id="feed_feed_content" name="feed[feed_content]" value="1" <%= checked %>><label for="feed_feed_content"> <%= t('feed.feed_content') %></label><br/>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
 
         <!-- Header Menus -->
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
               <%= t('config.header_menus') %>&nbsp;
@@ -288,18 +330,16 @@
 
 </form>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table align="center" style="margin:20px 0px 10px;" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
-    <td width="15"></td>
+    <td style="min-width:15px; width:15px;"></td>
     <td class="img_button_td" onclick="doRegister();">
       <%= t('btn.register') %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <br/>
 

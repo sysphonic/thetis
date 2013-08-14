@@ -1,6 +1,9 @@
 # See http://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 de:
+  mode:
+    groupware: "Groupware"
+    business: "Business"
   activerecord:
     models:
       address: "Adresse"
@@ -237,7 +240,6 @@ de:
     emblem_image: "Sinnbild"
     default_page: "Vorgegebene Seite"
     show_topicbox: "Topic Box zeigen."
-    show_topicbox_info: "Effektiv nur wenn Vorgegebene Seite eine der Seiten in Thetis ist."
     cap_menus: "Menüs"
     mode: "Modus"
     display: "Zeigen"
@@ -854,7 +856,6 @@ de:
     uniformly_to: "gleichmäßig zu"
   topicbox:
     title: "Topic Box"
-    info: "Topic Box kann nur auf eigener Seiten von Thetis gezeigt wird."
   login:
     name: "LOGIN"
     mail_address: "E-Mail Adresse"

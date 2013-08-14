@@ -36,8 +36,12 @@ ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/close.png");
 login_name = (@login_user.nil?)?'':(truncate(@login_user.name, :length => 10))
 login_admin = (!@login_user.nil? and @login_user.admin?)?'true':'false'
 %>
-setHeaderLogin("<%= login_name %>");
-setLeftLogin("<%= login_name %>", <%= login_admin %>);
+if (top && typeof(top.setHeaderLogin) != "undefined") {
+  top.setHeaderLogin("<%= login_name %>");
+}
+if (top && typeof(top.setLeftLogin) != "undefined") {
+  top.setLeftLogin("<%= login_name %>", <%= login_admin %>);
+}
 
 
 function doOnLoad()
@@ -68,17 +72,10 @@ function doOnLoad()
   setTimeout("doResize()", 10);
 
 <% if params[:topicBox] == 'true' %>
-  setTimeout("showTopicBox()", 10);
+  if (typeof(top.showTopicBox) != "undefined") {
+    setTimeout(top.showTopicBox, 10);
+  }
 <% end %>
-}
-
-function showTopicBox()
-{
-  var thetisBox = new ThetisBox;
-  thetisBox.z_index += 10;
-  thetisBox.resizable = true;
-  thetisBox.title = "<%= t('topicbox.title') %>";
-  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
 }
 
 function _forBugfullIE(div, list)
@@ -88,15 +85,15 @@ function _forBugfullIE(div, list)
   }
 }
 
-var iframe_main = top._z("iframe_main");
+var iframe_groupware = top._z("iframe_groupware");
 
 function enableFrameScrolling(sw)
 {
-  if (iframe_main) {
-    iframe_main.style.overflow = (sw)?"auto":"hidden";
+  if (iframe_groupware) {
+    iframe_groupware.style.overflow = (sw)?"auto":"hidden";
     document.body.style.overflow = (sw)?"auto":"hidden";
-    //iframe_main.scrolling = (sw)?"auto":"no";
-    //alert(iframe_main.style.overflow);
+    //iframe_groupware.scrolling = (sw)?"auto":"no";
+    //alert(iframe_groupware.style.overflow);
   }
 }
 
@@ -133,17 +130,15 @@ function doResize()
     var h = availHeight - 6;
     div.style.height = h + "px";
 
-    if (!is_MS) {
-      var deskTrs = document.getElementsByClassName("desktop_tr");
-      for (var i=0; deskTrs != null && i < deskTrs.length; i++) {
-        deskTrs[i].style.height = (h-1) / deskTrs.length + "px";
-      }
-      var deskTds = document.getElementsByClassName("desktop_td");
-      if (deskTds != null) {
-        var deskColNum = deskTds.length / deskTrs.length;
-        for (var i=0; i < deskColNum; i++) {
-          deskTds[i].style.width = availWidth / deskColNum + "px";
-        }
+    var deskTrs = document.getElementsByClassName("desktop_tr");
+    for (var i=0; deskTrs != null && i < deskTrs.length; i++) {
+      deskTrs[i].style.height = (h-1) / deskTrs.length + "px";
+    }
+    var deskTds = document.getElementsByClassName("desktop_td");
+    if (deskTds != null) {
+      var deskColNum = deskTds.length / deskTrs.length;
+      for (var i=0; i < deskColNum; i++) {
+        deskTds[i].style.width = availWidth / deskColNum + "px";
       }
     }
 
@@ -313,19 +308,19 @@ function doResize()
   } else {
 
     if (div = _z("div_item_workflow")) {
-      div.style.height = (availHeight - 140) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
     if (div = _z("div_item_basic")) {
-      div.style.height = (availHeight - 140) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
     if (div = _z("div_item_description")) {
-      div.style.height = (availHeight - 140) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
     if (div = _z("div_item_image")) {
-      div.style.height = (availHeight - 140) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
     if (div = _z("div_item_attachment")) {
-      div.style.height = (availHeight - 140) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
 
     if (div = _z("div_research_records")) {
@@ -358,8 +353,6 @@ addEvent(window, "resize", doResize);
     </tr>
   </table>
 </div>
-
-<%= render(:partial => 'layouts/popup') %>
 
 <%= render(:partial => 'common/flash_notice') %>
 

@@ -5,8 +5,8 @@
 getCsrfToken = function()
 {
   var targetFrame = top;
-  if (top.main) {
-    targetFrame = top.main;
+  if (typeof(top.getActiveContent) != "undefined") {
+    targetFrame = top.getActiveContent();
   }
   var metas = targetFrame.document.getElementsByTagName ("meta");
   for (var i=0; i < metas.length; i++) {

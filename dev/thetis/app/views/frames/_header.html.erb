@@ -1,35 +1,18 @@
 
-<script type="text/javascript">
-
-function setLoginName(name)
-{
-  if (name == null || name.length <= 0) {
-    _z("login_name").innerHTML = "";
-    _z("table_login_user").style.display = "none";
-  } else {
-    _z("login_name").innerHTML = name;
-    _z("table_login_user").style.display = "block";
-  }
-}
-
-</script>
-
-<input type="hidden" id="offset_from_top" value="33" />
-
-<table cellspacing="0" cellpadding="0" width="100%">
-  <tr height="7">
-    <td width="78%" style="background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_corner.png'); background-repeat:no-repeat; background-position:top right;">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
+  <tr style="height:7px;">
+    <td style="width:100%; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_corner.png'); background-repeat:no-repeat; background-position:top right;">
     </td>
-    <td width="20%" background="<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png">
+    <td style="width:20%; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png') repeat-x;">
     </td>
-    <td rowspan="2" background="<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png">
-      <table cellspacing="0" cellpadding="0" width="100%">
+    <td rowspan="2" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png') repeat-x;">
+      <table cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-          <td align="center" style="padding-left:5px;">
-            <a href="#" onclick="progMain(); top.main.location.href='<%= url_for(:controller => 'users', :action => 'edit') %>'" style="color:navy;">
+          <td style="padding-left:5px; text-align:center;">
+            <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= url_for(:controller => 'users', :action => 'edit') %>', 'groupware'); return false;" style="color:navy;">
               <table id="table_login_user" cellspacing="0" cellpadding="0" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
                 <tr>
-                  <td align="center" nowrap style="padding:5px; padding-left:10px; padding-right:10px; line-height:1.0;">
+                  <td nowrap style="text-align:center; padding:5px 10px; line-height:1.0;">
                     <%= t('cap.login') %> 
                     <span id="login_name"></span>&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>">
                   </td>
@@ -38,13 +21,13 @@ function setLoginName(name)
             </a>
           </td>
         <% if $thetis_config[:feed]['enabled'] == '1' %>
-          <td width="10"></td>
-          <td align="center" style="vertical-align:middle;">
-            <a href="#" onclick="window.open('<%= ApplicationHelper.url_for(:controller => 'feeds', :action => 'index', :feed => 'all') %>', 'thetis_feeds');">
-              <table cellspacing="0" cellpadding="0" width="36" style="padding:0px; cursor:pointer;">
+          <td style="width:10px;"></td>
+          <td style="text-align:center; vertical-align:middle;">
+            <a href="javascript:this.onclick()" onclick="window.open('<%= ApplicationHelper.url_for(:controller => 'feeds', :action => 'index', :feed => 'all') %>', 'thetis_feeds'); return false;">
+              <table cellspacing="0" cellpadding="0" style="width:36px; padding:0px; cursor:pointer;">
                 <tr>
-                  <td align="center" valign="bottom">
-                    <img border="0" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/feed_icon.png" title="<%= t('feed.cap') %>" alt="<%= t('feed.name') %>" />
+                  <td style="text-align:center; vertical-align:bottom;">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/feed_icon.png" title="<%= t('feed.cap') %>" />
                   </td>
                 </tr>
               </table>
@@ -55,15 +38,31 @@ function setLoginName(name)
       </table>
     </td>
   </tr>
-  <tr height="21">
-    <td colspan="2" style="border-top:1px solid white; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_menu.png'); background-repeat:repeat-x;" bgcolor="#BA6F18">
-      <table cellspacing="0" cellpadding="0" width="100%">
+  <tr style="height:21px;">
+    <td colspan="2" style="border-top:1px solid white; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_menu.png'); background-repeat:repeat-x; background-color:#BA6F18;">
+
+      <table cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-          <td style="padding-bottom:2px; font-size:11pt; text-indent:30px; line-height:1.0;" align="left">
-            <a href="#" onclick="eval('var ret=false; try{ top.main.showTopicBox(); ret=true; }catch(e){}'); if (!ret) { alert('<%= t('topicbox.info') %>'); } return false;"><span style="color:white;"><%= t('topicbox.title') %></span></a>
+          <td style="padding-left:10px;">
+            <table cellspacing="0" cellpadding="0">
+              <tr>
+                <td onclick="onBtnModeBusinessClicked(this);" style="border-radius:3px; min-width:100px; width:100px; height:100%; font-size:10pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
+                  <img id="sign_mode_business" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/selected_blue.png" style="padding-bottom:2px; display:none;" />
+                  <%= t('mode.business') %>
+                </td>
+                <td style="min-width:5px; width:5px;">
+                </td>
+                <td onclick="onBtnModeGroupwareClicked(this);" style="border-radius:3px; min-width:100px; width:100px; height:100%; font-size:10pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
+                  <img id="sign_mode_groupware" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/selected_red.png" style="padding-bottom:2px; display:none;" />
+                  <%= t('mode.groupware') %>
+                </td>
+              </tr>
+            </table>
+          </td>
+          <td style="padding:0px 10px 2px; font-size:11pt; font-weight:bold; line-height:1.0; text-align:right;">
+            <a href="javascript:this.onclick()" onclick="if (typeof(top.showTopicBox) != 'undefined') { top.showTopicBox(); }; return false;"><span style="color:white;"><%= t('topicbox.title') %></span></a>
               <span style="color:lightblue;">/ </span>
-            <a href="#" onclick="top.main.location.href='<%= THETIS_NOTE_URL %>?'+((new Date()).getTime()); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>
-              <span style="color:lightblue;">/ </span>
+            <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= THETIS_NOTE_URL %>?'+((new Date()).getTime())); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>
             <%
             headlines = {}
             header_menus = $thetis_config[:general]['header_menus']
@@ -76,10 +75,17 @@ function setLoginName(name)
               headlines[t('menu.user_reg')] = ['main', url_for(:controller => 'users', :action => 'new')]
             end
 
-            headlines.each do |caption, params|
+            headlines.each do |caption, args|
+              target, url = args
             %>
-              <a href="<%= params[1] %>" target="<%= params[0] %>"><span style="color:white;"><%= caption %></span></a>
-                <span style="color:lightblue;">/ </span>
+              <span style="color:lightblue;">/ </span>
+              <% if target == 'main' %>
+              <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= url %>'); return false;" style="color:white;">
+              <% else %>
+              <a href="<%= url %>" target="<%= target %>" style="color:white;">
+              <% end %>
+                <%= caption %>
+              </a>
             <% end %>
           </td>
         </tr>
@@ -87,4 +93,46 @@ function setLoginName(name)
     </td>
   </tr>
 </table>
+
+
+<script type="text/javascript">
+
+function onBtnModeBusinessClicked(elem)
+{
+  setMode("business");
+}
+
+function onBtnModeGroupwareClicked(elem)
+{
+  setMode("groupware");
+}
+
+function toggleModeSign(mode)
+{
+  var sign_mode_business = _z("sign_mode_business");
+  var sign_mode_groupware = _z("sign_mode_groupware");
+
+  var selected = null;
+  var unselected = null;
+  if (mode == "business") {
+    selected = sign_mode_business;
+    unselected = sign_mode_groupware;
+  } else {
+    selected = sign_mode_groupware;
+    unselected = sign_mode_business;
+  }
+
+  if (selected.style.display == "") {
+    return false;
+  }
+
+  selected.style.display = "";
+  selected.parentNode.style.cursor = "";
+  unselected.style.display = "none";
+  unselected.parentNode.style.cursor = "pointer";
+
+  return true;
+}
+
+</script>
 

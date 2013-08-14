@@ -16,38 +16,38 @@ var users_cache = new Array();
 <%= hidden_field_tag('item_id', @item.id) %>
 <%= hidden_field_tag('folder_id', @item.folder_id) %>
 
-<table cellspacing="0" cellpadding="0" width="100%">
-  <tr height="5">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
+  <tr style="height:5px;">
     <td></td>
     <td rowspan="2">
   <% if @item.id.nil? %>
-      <div id="tmpl_button" class="button_gray" style="float:left;" onClick="showTemplateTreeToSelect();">
+      <div id="tmpl_button" class="button_gray" style="float:left;" onclick="showTemplateTreeToSelect();">
         <%= t('btn.template') %>
       </div>
   <% end %>
     </td>
   </tr>
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-    <table cellspacing="2" cellpadding="0" width="100%">
+    <table cellspacing="2" cellpadding="0" style="width:100%;">
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-        <td id="tab_workflow" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if(_z('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
+        <td id="tab_workflow" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showTab('workflow', tabs); this.bgColor='orange'" bgColor="orange" onMouseOver="if(_z('tab_div_workflow').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_workflow').style.display == 'none') this.bgColor='silver'; else this.bgColor='orange';">
             <%= Workflow.model_name.human %>
         </td>
       <% end %>
-        <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+        <td id="tab_basic" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showTab('basic', tabs); this.bgColor='blue'" bgColor="blue" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
             <%= t('cap.basic_info') %>
         </td>
-        <td id="tab_description" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('description', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if(_z('tab_div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+        <td id="tab_description" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showTab('description', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if(_z('tab_div_description').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_description').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
             <%= Item.human_attribute_name('description') %>
         </td>
-        <td id="tab_image" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('image', tabs); this.bgColor='red'" bgColor="red" onMouseOver="if(_z('tab_div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
+        <td id="tab_image" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showTab('image', tabs); this.bgColor='red'" bgColor="red" onMouseOver="if(_z('tab_div_image').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_image').style.display == 'none') this.bgColor='silver'; else this.bgColor='red';">
             <%= t('image.plural') %>
         </td>
-        <td id="tab_attachment" class="td_item_tab" nowrap width="120" style="background-color:silver;" onClick="showTab('attachment', tabs); this.bgColor='brown'" bgColor="brown" onMouseOver="if(_z('tab_div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+        <td id="tab_attachment" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showTab('attachment', tabs); this.bgColor='brown'" bgColor="brown" onMouseOver="if(_z('tab_div_attachment').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_attachment').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
             <%= t('attachment.plural_full') %>
         </td>
         <td>&nbsp;</td>
@@ -57,12 +57,12 @@ var users_cache = new Array();
     </td>
   </tr>
   <tr>
-    <td align="center" colspan="2">
+    <td style="text-align:center;" colspan="2">
 
     <% if @item.xtype == Item::XTYPE_WORKFLOW %>
       <div id="tab_div_workflow">
         <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
-        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFF8D7" style="border:solid 5px gold;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; background-color:#FFF8D7; border:solid 5px gold; padding-bottom:15px;">
           <tr>
             <td>
               <div id="div_item_workflow" style="overflow:auto;">
@@ -70,7 +70,7 @@ var users_cache = new Array();
               </div>
             </td>
           </tr>
-          <tr height="20"><td></td></tr>
+          <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
@@ -78,11 +78,11 @@ var users_cache = new Array();
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doSave();">
                     <%= t('btn.save') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doShow();">
                     <%= t('btn.show') %>
                   </td>
@@ -90,7 +90,6 @@ var users_cache = new Array();
               </table>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
         </form>
       </div>
@@ -98,7 +97,7 @@ var users_cache = new Array();
 
       <div id="tab_div_basic">
         <%= form_tag( {:controller => 'items', :action => 'set_basic', :id => @item }, :id => 'form_basic', :method => 'post') %>
-        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="aliceblue" style="border:solid 5px cornflowerblue;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:aliceblue; border:solid 5px cornflowerblue;">
           <tr>
             <td>
               <div id="div_item_basic" style="overflow:auto;">
@@ -106,7 +105,7 @@ var users_cache = new Array();
               </div>
             </td>
           </tr>
-          <tr height="20"><td></td></tr>
+          <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
@@ -114,11 +113,11 @@ var users_cache = new Array();
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doSave();">
                     <%= t('btn.save') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doShow();">
                     <%= t('btn.show') %>
                   </td>
@@ -126,14 +125,13 @@ var users_cache = new Array();
               </table>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
         </form>
       </div>
 
       <div id="tab_div_description" style="display:none;">
       <%= form_tag( {:controller => 'items', :action => 'set_description', :id => @item }, :id => 'form_description', :method => 'post') %>
-      <table cellspacing="0" cellpadding="0" width="100%" bgcolor="honeydew" style="border:solid 5px yellowgreen;">
+      <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:honeydew; border:solid 5px yellowgreen;">
         <tr>
           <td>
             <div id="div_item_description" style="overflow:auto;">
@@ -141,7 +139,7 @@ var users_cache = new Array();
             </div>
           </td>
         </tr>
-        <tr height="20"><td></td></tr>
+        <tr style="height:20px;"><td></td></tr>
         <tr>
           <td>
             <table align="center" cellspacing="0" cellpadding="0">
@@ -150,16 +148,16 @@ var users_cache = new Array();
                   <%= t('btn.back') %>
                 </td>
               <% unless @item.id.nil? %>
-                <td width="15"></td>
+                <td style="width:15px;"></td>
                 <td class="img_button_td" onclick="showRestoreSelector();">
                   <%= t('btn.restore') %>
                 </td>
               <% end %>
-                <td width="15"></td>
+                <td style="width:15px;"></td>
                 <td class="img_button_td" onclick="doSave();">
                   <%= t('btn.save') %>
                 </td>
-                <td width="15"></td>
+                <td style="width:15px;"></td>
                 <td class="img_button_td" onclick="doShow();">
                   <%= t('btn.show') %>
                 </td>
@@ -167,7 +165,6 @@ var users_cache = new Array();
             </table>
           </td>
         </tr>
-        <tr height="15"><td></td></tr>
       </table>
       </form>
       </div>
@@ -176,7 +173,7 @@ var users_cache = new Array();
 
        <%= form_tag( {:controller => 'items', :action => 'set_image', :id => @item }, :id => 'form_image', :name => 'form_image', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFEEED" style="border:solid 5px salmon;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:#FFEEED; border:solid 5px salmon;">
           <tr>
             <td>
               <div id="div_item_image" style="overflow:auto;">
@@ -184,7 +181,7 @@ var users_cache = new Array();
               </div>
             </td>
           </tr>
-          <tr height="20"><td></td></tr>
+          <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
@@ -192,11 +189,11 @@ var users_cache = new Array();
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doSave();">
                     <%= t('btn.register') %>
                   </td>
-                    <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doShow();">
                     <%= t('btn.show') %>
                   </td>
@@ -204,7 +201,6 @@ var users_cache = new Array();
               </table>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
         </form>
 
@@ -214,7 +210,7 @@ var users_cache = new Array();
 
        <%= form_tag( {:controller => 'items', :action => 'set_attachment', :id => @item }, :id => 'form_attachment', :name => 'form_attachment', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table cellspacing="0" cellpadding="0" width="100%" bgcolor="#FFF6DD" style="border:solid 5px tan;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; background-color:#FFF6DD; padding-bottom:15px; border:solid 5px tan;">
           <tr>
             <td>
               <div id="div_item_attachment" style="overflow:auto;">
@@ -222,7 +218,7 @@ var users_cache = new Array();
               </div>
             </td>
           </tr>
-          <tr height="20"><td></td></tr>
+          <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
               <table align="center" cellspacing="0" cellpadding="0">
@@ -230,11 +226,11 @@ var users_cache = new Array();
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
-                  <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doSave();">
                     <%= t('btn.register') %>
                   </td>
-                    <td width="15"></td>
+                  <td style="width:15px;"></td>
                   <td class="img_button_td" onclick="doShow();">
                     <%= t('btn.show') %>
                   </td>
@@ -242,7 +238,6 @@ var users_cache = new Array();
               </table>
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
         </table>
 
         </form>

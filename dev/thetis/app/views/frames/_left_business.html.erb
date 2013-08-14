@@ -1,0 +1,29 @@
+<%
+mode = 'business'
+%>
+
+<table id="tbl_left_business" cellspacing="0" cellpadding="0" style="width:100%; height:100%; display:none;">
+  <tr style="height:30px;"><td></td></tr>
+<%
+menus = {
+  :dummy1 => {:disp => "#{t('mode.business')}1", :icon_tag => '', :action => "doUpdateIframe('http://hospie.net/ja/summary.html', '#{mode}');"},
+  :dummy2 => {:disp => "#{t('mode.business')}2", :icon_tag => '', :action => "doUpdateIframe('http://hospie.net/ja/summary.html', '#{mode}');"},
+  :dummy3 => {:disp => "#{t('mode.business')}3", :icon_tag => '', :action => "doUpdateIframe('http://hospie.net/ja/summary.html', '#{mode}');"},
+  :dummy4 => {:disp => "#{t('mode.business')}4", :icon_tag => '', :action => "doUpdateIframe('http://hospie.net/ja/summary.html', '#{mode}');"}
+}
+menus.each do |menu_name, menu_attrs|
+%>
+  <tr style="height:31px;">
+    <td class="menu_item" onclick="<%= raw(menu_attrs[:action]) %> return false;">
+      <a id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></a>
+    </td>
+  </tr>
+<% end %>
+  <tr style="height:100%;"><td></td></tr>
+</table>
+
+
+<script type="text/javascript">
+
+</script>
+

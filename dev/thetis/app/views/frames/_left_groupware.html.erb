@@ -1,0 +1,364 @@
+<%
+mode = 'groupware'
+style_bg_on = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_on.png') center no-repeat"
+style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') center no-repeat"
+%>
+
+<table id="tbl_left_groupware" cellspacing="0" cellpadding="0" style="width:100%; display:none;">
+  <tr>
+    <td style="text-align:center; vertical-align:top;">
+      <!-------INDEX-Column START------->
+      <TABLE cellspacing="1" cellpadding="0" style="width:100%;">
+        <TR id="tr_top_space_upper" style="height:3px;"><TD></TD></TR>
+        <TR id="tr_symbol" style="height:90px;">
+          <TD onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
+            <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
+              <%= $thetis_config[:general]['symbol_title'] %>
+            </span>
+          </TD>
+        </TR>
+        <TR id="tr_top_space_lower" style="height:3px;"><TD></TD></TR>
+        <TR id="tr_drop_down" style="height:15px; display:none;">
+          <TD style="text-align:center; vertical-align:middle;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
+          </TD>
+        </TR>
+      <%
+      menus = {
+        :login => {:disp => t('btn.login'), :icon_tag => '', :action => 'doLogin();'},
+        :desktop => {:disp => t('menu.desktop'), :icon_tag => 'desktop', :action => "doUpdateIframe('#{url_for(:controller => 'desktop', :action => 'show')}', '#{mode}');"},
+        :items_bbs => {:disp => t('menu.items_bbs'), :icon_tag => 'item_bbs', :action => "doUpdateIframe('#{url_for(:controller => 'items', :action => 'bbs', :tips => 'true')}', '#{mode}');"},
+        :item_list => {:disp => t('menu.items_list'), :icon_tag => 'item_list', :action => "doUpdateIframe('#{url_for(:controller => 'items', :action => 'list', :tips => 'true')}', '#{mode}');"},
+        :folder_tree => {:disp => t('menu.folder_tree'), :icon_tag => 'folder_tree', :action => "doUpdateIframe('#{url_for(:controller => 'folders', :action => 'show_tree')}', '#{mode}');"},
+        :schedule => {:disp => t('menu.schedule'), :icon_tag => 'schedule', :action => "doUpdateIframe('#{url_for(:controller => 'schedules', :action => 'day')}?id='+getDateString(), '#{mode}');"}
+      }
+      if $thetis_config[:menu]['disp_equipment'] == '1'
+        menus[:equipment] = {:disp => t('menu.equipment'), :icon_tag => 'equipment', :action => "doUpdateIframe('#{url_for(:controller => 'equipment', :action => 'schedule_all')}?id='+getDateString(), '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_workflow'] == '1'
+        menus[:workflow] = {:disp => t('menu.workflow'), :icon_tag => 'workflow', :action => "doUpdateIframe('#{url_for(:controller => 'workflows', :action => 'list')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_research'] == '1'
+        menus[:research] = {:disp => t('menu.research'), :icon_tag => 'research', :action => "doUpdateIframe('#{url_for(:controller => 'researches', :action => 'index')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_user_list'] == '1'
+        menus[:user_list] = {:disp => t('menu.user_list'), :icon_tag => 'user_list', :action => "doUpdateIframe('#{url_for(:controller => 'users', :action => 'list')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_mail'] == '1'
+        menus[:mail] = {:disp => t('menu.mail'), :icon_tag => 'mail', :action => "doUpdateIframe('#{url_for(:controller => 'mail_folders', :action => 'show_tree', :tips => 'true')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_addressbook'] == '1'
+        menus[:addressbook] = {:disp => t('menu.addressbook'), :icon_tag => 'addressbook', :action => "doUpdateIframe('#{url_for(:controller => 'addressbook', :action => 'list')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_paintmail'] == '1'
+        menus[:paintmail] = {:disp => t('menu.paintmail'), :icon_tag => 'paintmail', :action => "doUpdateIframe('#{url_for(:controller => 'paintmail', :action => 'index')}', '#{mode}');"}
+      end
+      if $thetis_config[:menu]['disp_timecard'] == '1'
+        menus[:timecard] = {:disp => t('menu.timecard'), :icon_tag => 'timecard', :action => "doUpdateIframe('#{url_for(:controller => 'timecards', :action => 'month')}', '#{mode}');"}
+      end
+      menus.each do |menu_name, menu_attrs|
+      %>
+        <TR style="height:31px;">
+          <TD class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
+            <A id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></A>
+          </TD>
+        </TR>
+      <% end %>
+      </TABLE>
+      <!-------INDEX-Column END------->
+      <div id="adminMenu" style="display:none;">
+        <table cellspacing="1" cellpadding="0" style="width:100%; margin-top:5px;" align="center">
+          <tr style="height:31px;">
+            <td class="menu_td" style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
+              <a href="#" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
+            </td>
+          </tr>
+        </table>
+      </div>
+    </td>
+  </tr>
+  <tr style="height:100%;"><td></td></tr>
+
+  <tr style="height:48px;">
+    <td style="text-align:left; padding-left:15px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/left_down.png') center top no-repeat;">
+      <table cellspacing="0" cellpadding="0" style="width:50%; cursor:pointer;" onclick="doUpdateIframe('<%= url_for(:controller => 'schedules', :action => 'month') %>?id='+getDateString(), '<%= mode %>');" onmouseover="this.style.border='1px dotted white'; hideAdminMenu();" onmouseout="this.style.border=''">
+        <tr>
+          <td style="padding:0px 5px; color:white; font-size:9pt; line-height:13px;" nowrap>
+            <div id="div_time" style="text-align:center;"></div>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table id="adminPopup" cellspacing="0" cellpadding="0" style="width:170px; position:absolute; display:none; z-index:99999; background-color:white; border:outset 3px green;">
+  <tr style="height:10px;">
+    <td style="text-align:right; vertical-align:top; background-color:white; padding:0px 5px; border:none;">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/close_tiny.png" onclick="hideAdminMenu();" style="cursor:pointer;">
+    </td>
+  </tr>
+  <tr>
+    <td style="text-align:center; padding:5px 7px;">
+      <table cellspacing="1" cellpadding="0" style="width:150px;" align="center">
+        <tr style="height:31px;">
+          <td class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
+            <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.admin_menu') %></a>
+          </td>
+        </tr>
+        <tr style="height:31px;">
+          <td class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
+            <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.access_logs') %></a>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<span style="display:none;">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/menu_on.png" />
+</span>
+
+<img id='popupImg_desktop' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/desktop.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<img id='popupImg_item_bbs' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/item_bbs.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<img id='popupImg_item_list' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/item_list.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<img id='popupImg_folder_tree' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/folder_tree.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<img id='popupImg_schedule' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/schedule.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% if $thetis_config[:menu]['disp_equipment'] == '1' %>
+<img id='popupImg_equipment' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/equipment.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_workflow'] == '1' %>
+<img id='popupImg_workflow' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/workflow.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_research'] == '1' %>
+<img id='popupImg_research' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/research.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+<img id='popupImg_user_list' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/user_list.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_mail'] == '1' %>
+<img id='popupImg_mail' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/mail.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_addressbook'] == '1' %>
+<img id='popupImg_addressbook' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/addressbook.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_paintmail'] == '1' %>
+<img id='popupImg_paintmail' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/paintmail.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+<% if $thetis_config[:menu]['disp_timecard'] == '1' %>
+<img id='popupImg_timecard' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/timecard.png" style="position:absolute; display:none; z-index:99999;" alt="" />
+<% end %>
+
+<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png" style="display:none;" alt="" />
+
+<script type="text/javascript">
+
+var min = -1;
+function doUpdateTime()
+{
+  setTimeout("doUpdateTime()", 1000);
+
+  var div_time = _z("div_time");
+  if (div_time == null) {
+    return;
+  }
+
+  var date = new Date();
+  var curMin = date.getMinutes();
+  if (min == curMin) {
+    return;
+  }
+  min = curMin;
+
+  var date_locale_s = date.toLocaleDateString();
+  // ex. (jp) 2007nen12gatsu31nichi  (with Kanji characters)
+  // ex. (en) Friday, December 31, 2007  (Safari)
+  // ex. (jp) Friday, December 31, 2007 (Chrome)
+  var day = date_locale_s;
+  if (date_locale_s.split(", ").length > 2) {
+    day = date_locale_s.split(", ")[1];
+  }
+  var h = date.getHours();
+  var m = date.getMinutes();
+  if (m < 10) {
+    m = "0" + m;
+  }
+  var time = new Array(h, m).join(":");
+  var date_disp = day + "<br/>("+getDay(date)+")<br/>"+time;
+  eval("try{ div_time.innerHTML = date_disp }catch(e){}");
+}
+
+function getDay(date)
+{
+  switch (date.getDay()) {
+    case 0: return "<%= t('wday.sun') %>";
+    case 1: return "<%= t('wday.mon') %>";
+    case 2: return "<%= t('wday.tue') %>";
+    case 3: return "<%= t('wday.wed') %>";
+    case 4: return "<%= t('wday.thu') %>";
+    case 5: return "<%= t('wday.fri') %>";
+    case 6: return "<%= t('wday.sat') %>";
+  }
+}
+
+function setNavLogin(loginName, isAdmin)
+{
+  if (isAdmin) {
+    _z("adminMenu").style.display = "block";
+    doResize();
+  } else {
+    _z("adminMenu").style.display = "none";
+  }
+
+  if (loginName != null && loginName.length > 0) {
+    _z("menu_login").innerHTML= "<%= t('btn.logout') %>";
+  } else {
+    _z("menu_login").innerHTML= "<%= t('btn.login') %>";
+  }
+}
+
+function doLogin()
+{
+  if (_z("menu_login").innerHTML == "<%= t('btn.logout') %>") {
+    doUpdateIframe("<%= url_for(:controller => 'login', :action => 'logout') %>", "<%= mode %>");
+  } else {
+    doUpdateIframe("<%= url_for(:controller => 'login', :action => 'index') %>", "<%= mode %>");
+  }
+}
+
+function activateMenu(menu, elem)
+{
+  elem.style.background = "<%= raw(style_bg_on) %>";
+
+  for (var i=0; i< elem.childNodes.length; i++) {
+    if (elem.childNodes[i].tagName == "A") {
+      elem.childNodes[i].style.color = "deeppink";
+      break;
+    }
+  }
+  showPopupIcon(menu, elem);
+  if (menu.indexOf("admin") < 0) {
+    hideAdminMenu();
+  }
+}
+
+function deactivateMenu(elem)
+{
+  elem.style.background = "<%= raw(style_bg_off) %>";
+
+  for (var i=0; i< elem.childNodes.length; i++) {
+    if (elem.childNodes[i].tagName == "A") {
+      elem.childNodes[i].style.color = "#404040";
+      break;
+    }
+  }
+  hidePopupIcon();
+}
+
+function activateAdminMenu(elem)
+{
+  for (var i=0; i< elem.childNodes.length; i++) {
+    if (elem.childNodes[i].tagName == "A") {
+      elem.childNodes[i].style.color = "deeppink";
+      break;
+    }
+  }
+  showAdminMenu(elem);
+}
+
+function deactivateAdminMenu(elem)
+{
+  for (var i=0; i< elem.childNodes.length; i++) {
+    if (elem.childNodes[i].tagName == "A") {
+      elem.childNodes[i].style.color = "darkgreen";
+      break;
+    }
+  }
+}
+
+function showAdminMenu(elem)
+{
+  var adminPopup = _z("adminPopup");
+
+  if (adminPopup && adminPopup.style.display == "none") {
+
+    var pos = getPos(elem);
+
+    adminPopup.style.left = elem.clientWidth + "px";
+    adminPopup.style.top = (pos.y - 40) + "px";
+    adminPopup.style.display = "";
+  }
+}
+
+function hideAdminMenu()
+{
+  try {
+    var adminPopup = _z("adminPopup");
+
+    if (adminPopup) {
+      adminPopup.style.display = "none";
+    }
+  } catch (e) {
+  }
+}
+
+function toggleSymbol(sw)
+{
+  var tr_top_space_upper = _z("tr_top_space_upper");
+  var tr_top_space_lower = _z("tr_top_space_lower");
+  var tr_symbol = _z("tr_symbol");
+  var tr_drop_down = _z("tr_drop_down");
+
+  if (sw) {
+    tr_top_space_upper.style.display = "table-row";
+    tr_top_space_lower.style.display = "table-row";
+    tr_symbol.style.display = "table-row";
+    tr_drop_down.style.display = "none";
+  } else {
+    tr_top_space_upper.style.display = "none";
+    tr_top_space_lower.style.display = "none";
+    tr_symbol.style.display = "none";
+    tr_drop_down.style.display = "table-row";
+  }
+}
+
+var curPopup = null;
+function showPopupIcon(menu, elem)
+{
+  if (curPopup != null) {
+     try {
+      curPopup.style.display = "none";
+    } catch (e) {}
+  }
+  var icon = _z("popupImg_"+menu);
+  if (icon == null) {
+    curPopup = null;
+    return;
+  } else {
+    var pos = Position.cumulativeOffset(elem);
+
+    var bodyScroll = getBodyScroll();
+    icon.style.display = "";
+    icon.style.left = (bodyScroll.left + elem.offsetWidth + 5) + "px";
+    icon.style.top = (bodyScroll.top + pos[1] - ((icon.offsetHeight - elem.offsetHeight)/2)) + "px";
+
+    curPopup = icon;
+  }
+}
+
+function hidePopupIcon()
+{
+  if (curPopup != null) {
+     try {
+      curPopup.style.display = "none";
+    } catch (e) {}
+  }
+  curPopup = null;
+}
+
+setTimeout("doUpdateTime()", 1000);
+
+</script>
+

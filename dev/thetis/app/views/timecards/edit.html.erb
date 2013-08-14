@@ -37,9 +37,9 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 
 <% unless @schedules.nil? %>
 <div style="padding-bottom:10px;">
-  <table align="center" cellspacing="0" cellpadding="0" width="98%" style="border:1px outset lightgrey; background-color:#eee;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+  <table align="center" cellspacing="0" cellpadding="0" style="width:98%; border:1px outset lightgrey; background-color:#eee;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
     <tr>
-      <td valign="top" style="padding:10px;">
+      <td style="padding:10px; vertical-align:top;">
         <div id="div_timetable" style="background-color:white;">
           <%= render(:partial => 'schedules/timetable') %>
         </div>
@@ -53,12 +53,12 @@ calDisp.setStyle( "frame_color", "#3333CC" );
   <%= render :partial => 'toolbar'%>
 </div>
 
-<div class="info_area" style="width:98%; padding:20px 0px; background-color:lightcyan" align="center">
+<div class="info_area" style="width:98%; margin:0px 1%; padding-top:10px; padding-bottom:10px; background-color:lightcyan; text-align:center;">
 
 <%= form_tag( {:controller => 'timecards', :action => 'edit', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table style="width:100%; padding-bottom:10px;" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="center">
+      <td style="text-align:center;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
@@ -72,13 +72,12 @@ next_week = @date + 7
         &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
-    <tr height="10"><td></td></tr>
   </table>
 </form>
 
-<table align="center" width="95%" cellspacing="0" cellpadding="0">
+<table align="center" style="width:95%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
       <%= render :partial => 'user_profile'%>
     </td>
   </tr>
@@ -92,9 +91,11 @@ end
 %>
 
 <%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
-  <table class="timecard" align="center" width="95%" cellpadding="0" cellspacing="0">
+  <table class="timecard" align="center" cellpadding="0" cellspacing="0" style="width:95%;">
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('cap.classification') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+        <%= t('cap.classification') %>
+      </td>
       <td class="item_value_td">
       <% if editable or !@timecard.nil? %>
         <span style="padding:0px 5px;">
@@ -127,7 +128,9 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('timecard.labor_time') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+        <%= t('timecard.labor_time') %>
+      </td>
       <td class="item_value_td">
       <% if editable %>
         <select id="start_hour" onchange="changeHour(this.value, _z('start_min'));">
@@ -194,7 +197,9 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= t('cap.option') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+        <%= t('cap.option') %>
+      </td>
       <td class="item_value_td">
       <% if editable %>
         <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
@@ -205,15 +210,17 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;"><%= Timecard.human_attribute_name('comment') %></td>
+      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+        <%= Timecard.human_attribute_name('comment') %>
+      </td>
       <td class="item_value_td">
       <% if editable %>
-        <table cellpadding="0" cellspacing="0" width="100%">
+        <table cellpadding="0" cellspacing="0" style="width:100%;">
           <tr>
-            <td style="border:0px">
+            <td style="border:none;">
               <%= text_area('timecard', 'comment', :rows => 3, :style => 'width:100%;') %>
             </td>
-            <td width="25" align="center" style="border:0px">
+            <td style="width:25px; text-align:center; border:none;">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showDescSelector();" style="cursor:pointer; vertical-align:middle;" />
             </td>
           </tr>
@@ -225,45 +232,42 @@ end
     </tr>
   </table>
   <%
-  display_with_clear = 'block'
+  display_with_clear = ''
   display_without_clear = 'none'
   if @timecard.nil?
     display_with_clear = 'none'
-    display_without_clear = 'block'
+    display_without_clear = ''
   end
   %>
-  <table id="buttons_with_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_with_clear %>">
-    <tr height="10"><td></td></tr>
+  <table id="buttons_with_clear" align="center" cellpadding="0" cellspacing="0" style="padding:10px; display:<%= display_with_clear %>;">
     <tr>
       <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>
       </td>
     <% if editable %>
-      <td width="10"></td>
+      <td style="width:10px;"></td>
       <td class="img_button_td" onclick="doRegister();">
         <%= t('btn.register') %>
       </td>
-      <td width="10"></td>
+      <td style="width:10px;"></td>
       <td class="img_button_td" onclick="doClear();">
         <%= t('btn.clear') %>
       </td>
     <% end %>
     </tr>
-    <tr height="10"><td></td></tr>
   </table>
-  <table id="buttons_without_clear" align="center" cellpadding="0" cellspacing="0" style="display:<%= display_without_clear %>">
-    <tr height="10"><td></td></tr>
+  <table id="buttons_without_clear" align="center" cellpadding="0" cellspacing="0" style="padding:10px; display:<%= display_without_clear %>;">
+    <tr>
       <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>
       </td>
     <% if editable %>
-      <td width="10"></td>
+      <td style="width:10px;"></td>
       <td class="img_button_td" onclick="doRegister();">
         <%= t('btn.register') %>
       </td>
     <% end %>
     </tr>
-    <tr height="10"><td></td></tr>
   </table>
 
   <div id="div_break">

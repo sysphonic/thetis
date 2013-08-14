@@ -40,10 +40,10 @@ module OfficialTitlesHelper
 
       if xorder_a != xorder_b
         (direction.to_s.downcase == 'asc')?(xorder_a - xorder_b):(xorder_b - xorder_a)
-      elsif (user_a.fullname_kana || '') != (user_b.fullname_kana || '')
-        kana_a = user_a.fullname_kana || ''
-        kana_b = user_b.fullname_kana || ''
-        (direction.to_s.downcase == 'asc')?(kana_a <=> kana_b):(kana_b <=> kana_a)
+#     elsif (user_a.fullname_kana || '') != (user_b.fullname_kana || '')
+#       kana_a = user_a.fullname_kana || ''
+#       kana_b = user_b.fullname_kana || ''
+#       (direction.to_s.downcase == 'asc')?(kana_a <=> kana_b):(kana_b <=> kana_a)
       else
         (direction.to_s.downcase == 'asc')?(user_a.name <=> user_b.name):(user_b.name <=> user_a.name)
       end

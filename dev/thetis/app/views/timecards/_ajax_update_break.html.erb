@@ -7,10 +7,11 @@ if @login_user.admin?(User::AUTH_TIMECARD) or @login_user.id == @selected_user.i
 end
 %>
 
-<div style="padding-bottom:10px;">
-  <table class="timecard" align="center" width="95%" cellpadding="0" cellspacing="0">
+  <table class="timecard" align="center" style="width:95%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
     <tr>
-      <td class="item_cap_td" style="width:20%; background-color:#FFC9A9;" nowrap><%= Timecard.human_attribute_name('status') %></td>
+      <td class="item_cap_td" style="width:20%; background-color:#FFC9A9;" nowrap>
+        <%= Timecard.human_attribute_name('status') %>
+      </td>
       <td class="item_value_td" style="padding-left:20px;">
         <% if !@timecard.start.nil? and @timecard.end.nil? %>
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif"/>
@@ -33,14 +34,13 @@ end
       </td>
     </tr>
   </table>
-</div>
 
-  <table style="border-collapse:collapse; background-color:white" id="times_table" align="center" width="95%" cellpadding="0" cellspacing="0">
+  <table id="times_table" align="center" style="width:95%; border-collapse:collapse; background-color:white" cellpadding="0" cellspacing="0">
     <tr>
-      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+      <td class="cap_td" style="width:20%; border:solid black 1px;" nowrap>
         <%= t('timecard.within_standard') %>
       </td>
-      <td class="item_value_td" colspan="2" width="60%" style="padding-left:15px; border:solid black 1px;">
+      <td class="item_value_td" colspan="2" style="width:60%; padding-left:15px; border:solid black 1px;">
         <%
         standard_wktime = Timecard.get_standard_wktime
         actual_wktime = @timecard.get_actual_wktime
@@ -52,15 +52,15 @@ end
         %>
         <%= ApplicationHelper.float_exp(within_standard, 2) %>
       </td>
-      <td align="center" rowspan="3" width="20%" style="border:solid black 1px;">
+      <td rowspan="3" style="width:20%; text-align:center; border:solid black 1px;">
         <%= ApplicationHelper.float_exp(actual_wktime / 60.0, 2) %>
       </td>
     </tr>
     <tr>
-      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+      <td class="cap_td" style="width:20%; border:solid black 1px;" nowrap>
         <%= t('timecard.usual_overtime') %>
       </td>
-      <td class="item_value_td" width="40%" style="padding-left:15px; border:solid black 1px;">
+      <td class="item_value_td" style="width:40%; padding-left:15px; border:solid black 1px;">
         <%
         overtime = @timecard.get_overtime
         usual_overtime = @timecard.get_usual_overtime
@@ -69,12 +69,12 @@ end
         %>
         <%= ApplicationHelper.float_exp(usual_overtime / 60.0, 2) %>
       </td>
-      <td align="center" rowspan="2" width="20%" style="border:solid black 1px;">
+      <td rowspan="2" style="width:20%; text-align:center; border:solid black 1px;">
         <%= ApplicationHelper.float_exp(overtime / 60.0, 2) %>
       </td>
     </tr>
     <tr>
-      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+      <td class="cap_td" style="width:20%; border:solid black 1px;" nowrap>
         <%= t('timecard.midnight_overtime') %>
       </td>
       <td class="item_value_td" style="padding-left:15px; border:solid black 1px;">
@@ -100,10 +100,10 @@ end
       </td>
     </tr>
     <tr>
-      <td class="cap_td" width="20%" style="border:solid black 1px;" nowrap>
+      <td class="cap_td" style="width:20%; border:solid black 1px;" nowrap>
         <%= t('timecard.break') %>
       </td>
-      <td class="item_value_td" colspan="3" width="80%" style="padding-left:15px; border:solid black 1px;">
+      <td class="item_value_td" colspan="3" style="width:80%; padding-left:15px; border:solid black 1px;">
         <%
         @timecard.get_breaks_a.each do |spans|
           break_start = spans.first
@@ -139,7 +139,7 @@ end
   <input type="hidden" id="timecard_id" name="timecard_id" value="<%= @timecard.id %>" />
   
   <script type="text/javascript">
-    _z("buttons_with_clear").style.display = "block";
+    _z("buttons_with_clear").style.display = "";
     _z("buttons_without_clear").style.display = "none";
 
     <% unless params[:action] == 'edit' %>
