@@ -14,7 +14,7 @@
 #* 
 #
 class OfficialTitle < ActiveRecord::Base
-  attr_accessible(:name)
+  public::PERMIT_BASE = [:name]
 
   extend CachedRecord
 

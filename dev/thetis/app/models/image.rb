@@ -14,10 +14,10 @@
 #* 
 #
 class Image < ActiveRecord::Base
-  attr_accessible(:title, :memo, :item_id, :xorder, :file)
+  public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :file]
 
   validates_length_of(:content, :within => 1..THETIS_IMAGE_MAX_KB*1024)
-  validates_format_of(:content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i)
+  validates_format_of(:content_type, :with => /\Aimage\/(p?jpeg|gif|(x-)?png)\z/i)
   validates_presence_of(:name, :size, :content_type, :content)
 
   belongs_to(:item)

@@ -12,6 +12,8 @@
 #* 
 #
 class MailAttachment < ActiveRecord::Base
+  public::PERMIT_BASE = [:email_id, :xorder, :file]
+
   belongs_to :email
 
   require 'tempfile'

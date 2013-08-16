@@ -52,7 +52,7 @@ class UsersController < ApplicationController
     password = attrs[:password]
     attrs.delete(:password)
 
-    @user = UsersHelper.get_initialized_user(attrs)
+    @user = UsersHelper.get_initialized_user(attrs.permit(User::PERMIT_BASE))
     @user.auth = User::AUTH_ALL if User.count <= 0
 
     begin
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     user_id = params[:id]
-    user_id = @login_user.id if user_id.nil? or user_id.empty?
+    user_id = @login_user.id if user_id.blank?
 
     begin
       @user = User.find(user_id)
@@ -130,7 +130,7 @@ class UsersController < ApplicationController
       end
     end
 
-    if @user.update_attributes(attrs.except(:id))
+    if @user.update_attributes(attrs.except(:id).permit(User::PERMIT_BASE))
 
       flash[:notice] = t('msg.update_success')
 

@@ -214,7 +214,7 @@ class TimecardsController < ApplicationController
       return
     end
 
-    if @timecard.update_attributes(params[:timecard])
+    if @timecard.update_attributes(params.require(:timecard).permit(Timecard::PERMIT_BASE))
 
       if @timecard.off? and !@timecard.get_breaks_a.empty?
         @timecard.update_breaks(nil)

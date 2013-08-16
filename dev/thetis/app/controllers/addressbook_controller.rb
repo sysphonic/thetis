@@ -68,7 +68,7 @@ class AddressbookController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    @address = Address.new(params[:address])
+    @address = Address.new(params.require(:address).permit(Address::PERMIT_BASE))
 
     @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
     if @address.nil?

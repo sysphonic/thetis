@@ -14,10 +14,10 @@
 #* 
 #
 class OfficeMap < ActiveRecord::Base
-  attr_accessible(:group_id, :img_enabled, :file)
+  public::PERMIT_BASE = [:group_id, :img_enabled, :file]
 
   validates_length_of(:img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true)
-  validates_format_of(:img_content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i, :allow_nil => true)
+  validates_format_of(:img_content_type, :with => /\Aimage\/(p?jpeg|gif|(x-)?png)\z/i, :allow_nil => true)
 
 
   #=== self.get_for_group

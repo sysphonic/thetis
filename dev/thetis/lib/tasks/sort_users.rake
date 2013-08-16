@@ -21,7 +21,9 @@ namespace :thetis do
         next if group.nil?
 
         puts(user.name + ' ==> ' + group.get_path(groups_cache))
-        user.update_attributes({:groups => "|#{group.id}|"})
+        attrs = ActionController::Parameters.new({groups: "|#{group.id}|"})
+        attrs.permit!
+        user.update_attributes(attrs)
 
         cnt += 1
         sleep(1) if cnt % 10 == 0

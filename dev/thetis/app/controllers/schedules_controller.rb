@@ -217,7 +217,7 @@ class SchedulesController < ApplicationController
 
       params[:schedule][:end] = SchedulesHelper.regularize(params[:schedule][:end])
 
-      check_schedule = Schedule.new(params[:schedule])
+      check_schedule = Schedule.new(params.require(:schedule).permit(Schedule::PERMIT_BASE))
       nearest_day = check_schedule.get_nearest_day(date)
       if nearest_day.nil?
         check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
@@ -243,20 +243,20 @@ class SchedulesController < ApplicationController
         # Create
         params[:schedule][:created_by] = @login_user.id
         params[:schedule][:created_at] = Time.now
-        schedule = Schedule.new(params[:schedule])
+        schedule = Schedule.new(params.require(:schedule).permit(Schedule::PERMIT_BASE))
         schedule.save!
         created = true
       else
         # Update
         params[:schedule][:updated_by] = @login_user.id
         params[:schedule][:updated_at] = Time.now
-        schedule.update_attributes(params[:schedule])
+        schedule.update_attributes(params.require(:schedule).permit(Schedule::PERMIT_BASE))
       end
 
       if params[:repeat_update_target] == 'each'
         # Update original repeated schedule
         org_schedule = Schedule.find(params[:id])
-        attrs = {}
+        attrs = ActionController::Parameters.new()
         attrs[:updated_by] = @login_user.id
         attrs[:updated_at] = Time.now
         excepts = org_schedule.get_excepts_a
@@ -264,7 +264,7 @@ class SchedulesController < ApplicationController
         excepts.sort!
         excepts.reverse!
         attrs[:except] = '|' + excepts.join('|') + '|'
-        org_schedule.update_attributes(attrs)
+        org_schedule.update_attributes(attrs.permit(Schedule::PERMIT_BASE))
       end
 
       # prms = {:show_id => schedule.id}

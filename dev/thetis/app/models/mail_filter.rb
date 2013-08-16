@@ -12,7 +12,7 @@
 #* 
 #
 class MailFilter < ActiveRecord::Base
-  attr_accessible(:title, :enabled, :triggers, :and_or, :conditions, :actions, :xorder)
+  public::PERMIT_BASE = [:title, :enabled, :triggers, :and_or, :conditions, :actions, :xorder]
 
   validates_presence_of(:title)
 

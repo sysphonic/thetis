@@ -14,10 +14,10 @@
 #* 
 #
 class Desktop < ActiveRecord::Base
-  attr_accessible(:theme, :background_color, :popup_news, :popup_timecard, :popup_schedule, :img_enabled, :file)
+  public::PERMIT_BASE = [:theme, :background_color, :popup_news, :popup_timecard, :popup_schedule, :img_enabled, :file]
 
   validates_length_of(:img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true)
-  validates_format_of(:img_content_type, :with => /^image\/(p?jpeg|gif|(x-)?png)$/i, :allow_nil => true)
+  validates_format_of(:img_content_type, :with => /\Aimage\/(p?jpeg|gif|(x-)?png)\z/i, :allow_nil => true)
 
   public::THEME_BOLT = 'bolt'
   public::THEME_GRAPE = 'grape'

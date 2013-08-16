@@ -36,11 +36,11 @@ class PaintmailController < ApplicationController
     unless @login_user.nil?
 
       if @login_user.paintmail.nil?
-        paintmail = Paintmail.new(params[:paintmail])
+        paintmail = Paintmail.new(params.require(:paintmail).permit(Paintmail::PERMIT_BASE))
         paintmail.user_id = @login_user.id
         paintmail.save
       else
-        @login_user.paintmail.update_attributes(params[:paintmail])
+        @login_user.paintmail.update_attributes(params.require(:paintmail).permit(Paintmail::PERMIT_BASE))
       end
     end
 

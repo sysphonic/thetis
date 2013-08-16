@@ -14,7 +14,7 @@
 #* 
 #
 class User < ActiveRecord::Base
-  attr_accessible(:name, :fullname, :pass_md5, :address, :organization, :email, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :postalcode, :birthday, :time_zone, :figure, :email_sub1, :email_sub1_type, :email_sub2, :email_sub2_type, :title, :xorder)
+  public::PERMIT_BASE = [:name, :fullname, :pass_md5, :address, :organization, :email, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :postalcode, :birthday, :time_zone, :figure, :email_sub1, :email_sub1_type, :email_sub2, :email_sub2_type, :title, :xorder]
 
   has_many(:user_titles, :dependent => :destroy)
   has_one(:paintmail, :dependent => :destroy)
@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
   validates_uniqueness_of(:name)
 # Comment out considering about administrative users.
 #  validates_uniqueness_of(:email)
-  validates_format_of(:name, :with => /^[01-9a-zA-Z]+$/)
+  validates_format_of(:name, :with => /\A[01-9a-zA-Z]+\z/)
   validates_presence_of(:name, :pass_md5, :email)
 
   public::PASSWORD_DUMMY = '********'

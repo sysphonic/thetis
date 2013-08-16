@@ -14,7 +14,7 @@
 #* 
 #
 class Location < ActiveRecord::Base
-  attr_accessible(:group_id, :x, :y, :memo)
+  public::PERMIT_BASE = [:group_id, :x, :y, :memo]
 
   #=== self.get_for
   #

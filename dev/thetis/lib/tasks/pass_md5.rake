@@ -8,10 +8,11 @@ namespace :thetis do
       users.each do |user|
         break unless user.respond_to?(:password)
         next if user.password.nil?
-        attrs = {
-          :password => nil,
-          :pass_md5 => UsersHelper.generate_digest_pass(user.name, user.password)
-        }
+        attrs = ActionController::Parameters.new({
+          password: nil,
+          pass_md5: UsersHelper.generate_digest_pass(user.name, user.password)
+        })
+        attrs.permit!
         user.update_attributes(attrs)
         puts("#{user.name} = " + user.pass_md5)
         cnt += 1

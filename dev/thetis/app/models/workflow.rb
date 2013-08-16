@@ -15,7 +15,7 @@
 #* 
 #
 class Workflow < ActiveRecord::Base
-  attr_accessible(:status, :issued_at)
+  public::PERMIT_BASE = [:status, :issued_at]
 
   belongs_to(:item)
 

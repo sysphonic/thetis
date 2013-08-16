@@ -185,9 +185,11 @@ class SendMailsController < ApplicationController
       end
 
       sent_folder = MailFolder.get_for(@login_user, mail_account.id, MailFolder::XTYPE_SENT)
-
       email.do_smtp(mail_account)
-      email.update_attributes({:status => Email::STATUS_TRANSMITTED, :mail_folder_id => sent_folder.id, :sent_at => Time.now})
+
+      attrs = ActionController::Parameters.new({status: Email::STATUS_TRANSMITTED, mail_folder_id: sent_folder.id, sent_at: Time.now})
+      email.update_attributes(attrs.permit(Email::PERMIT_BASE))
+
       flash[:notice] = t('msg.transmit_success')
     rescue => evar
       Log.add_error(request, evar)
@@ -257,11 +259,11 @@ class SendMailsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     unless params[:attach_file].nil?
-      attach_attrs = { :file => params[:attach_file] }
+      attach_attrs = ActionController::Parameters.new({file: params[:attach_file]})
       params.delete(:attach_file)
     end
 
-    if params[:id].nil? or params[:id].empty?
+    if params[:id].blank?
       mail_account = MailAccount.find(params[:mail_account_id])
 
       @email = SendMailsHelper.get_mail_to_send(@login_user, mail_account, nil)
@@ -281,15 +283,15 @@ class SendMailsController < ApplicationController
 
       attach_attrs[:email_id] = @email.id
       attach_attrs[:xorder] = 0
-      @mail_attachment = MailAttachment.create(attach_attrs)
+      @mail_attachment = MailAttachment.create(attach_attrs.permit(MailAttachment::PERMIT_BASE))
       @email.mail_attachments << @mail_attachment
 
-      update_attrs = {:updated_at => Time.now}
+      update_attrs = ActionController::Parameters.new({updated_at: Time.now})
       if @email.status == Email::STATUS_TEMPORARY \
           and !@email.mail_account_id.nil?
         update_attrs[:status] = Email::STATUS_DRAFT
       end
-      @email.update_attributes(update_attrs)
+      @email.update_attributes(update_attrs.permit(Email::PERMIT_BASE))
     end
 
     render(:partial => 'ajax_mail_attachments', :layout => false)
@@ -337,11 +339,11 @@ class SendMailsController < ApplicationController
       if attachment.email_id == @email.id
         attachment.destroy
 
-        update_attrs = {:updated_at => Time.now}
+        update_attrs = ActionController::Parameters.new({updated_at: Time.now})
         if @email.status == Email::STATUS_TEMPORARY
           update_attrs[:status] = Email::STATUS_DRAFT
         end
-        @email.update_attributes(update_attrs)
+        @email.update_attributes(update_attrs.permit(Email::PERMIT_BASE))
       end
     rescue => evar
       Log.add_error(request, evar)

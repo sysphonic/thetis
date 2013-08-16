@@ -159,7 +159,7 @@ class MailFiltersController < ApplicationController
 
     mail_filter_id = params[:id]
     if mail_filter_id.blank?
-      @mail_filter = MailFilter.new(attrs)
+      @mail_filter = MailFilter.new(attrs.permit(MailFilter::PERMIT_BASE))
       @mail_filter.mail_account_id = params[:mail_account_id]
     else
       @mail_filter = MailFilter.find(mail_filter_id)
@@ -175,7 +175,7 @@ class MailFiltersController < ApplicationController
       @mail_filter.save!
       flash[:notice] = t('msg.register_success')
     else
-      @mail_filter.update_attributes(attrs)
+      @mail_filter.update_attributes(attrs.permit(MailFilter::PERMIT_BASE))
       flash[:notice] = t('msg.update_success')
     end
 

@@ -14,7 +14,7 @@
 #* 
 #
 class Comment < ActiveRecord::Base
-  attr_accessible(:user_id, :item_id, :message, :xtype)
+  public::PERMIT_BASE = [:user_id, :item_id, :message, :xtype]
 
   belongs_to(:item)
 

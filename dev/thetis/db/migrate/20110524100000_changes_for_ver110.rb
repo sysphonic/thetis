@@ -24,7 +24,9 @@ class ChangesForVer110 < ActiveRecord::Migration
         end
         next if item.nil?
 
-        team.update_attributes({:created_at => item.created_at, :updated_at => item.updated_at})
+        attrs = ActionController::Parameters.new({created_at: item.created_at, updated_at: item.updated_at})
+        attrs.permit!
+        team.update_attributes(attrs)
       end
     end
   end

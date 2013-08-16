@@ -14,7 +14,7 @@
 #*
 #
 class Equipment < ActiveRecord::Base
-  attr_accessible(:name, :note, :users, :groups, :teams)
+  public::PERMIT_BASE = [:name, :note, :users, :groups, :teams]
 
   extend CachedRecord
 

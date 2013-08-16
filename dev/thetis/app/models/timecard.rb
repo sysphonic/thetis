@@ -14,7 +14,7 @@
 #* 
 #
 class Timecard < ActiveRecord::Base
-  attr_accessible(:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options)
+  public::PERMIT_BASE = [:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options]
 
   belongs_to(:user)
 

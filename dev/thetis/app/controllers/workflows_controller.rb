@@ -54,7 +54,8 @@ class WorkflowsController < ApplicationController
 
     item = tmpl_item.copy(@login_user.id, my_wf_folder.id)
 
-    item.update_attributes({:title => tmpl_item.title + t('msg.colon') + User.get_name(@login_user.id), :public => false})
+    attrs = ActionController::Parameters.new({title: tmpl_item.title + t('msg.colon') + User.get_name(@login_user.id), public: false})
+    item.update_attributes(attrs.permit(Item::PERMIT_BASE))
 
     item.workflow.update_attribute(:status, Workflow::STATUS_NOT_ISSUED)
 

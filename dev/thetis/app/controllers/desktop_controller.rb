@@ -130,7 +130,7 @@ class DesktopController < ApplicationController
 
     params[:desktop].delete(:user_id)
 
-    desktop.update_attributes(params[:desktop])
+    desktop.update_attributes(params.require(:desktop).permit(Desktop::PERMIT_BASE))
 
     params.delete(:desktop)
 
@@ -365,7 +365,8 @@ class DesktopController < ApplicationController
       end
 
       unless toy.nil?
-        toy.update_attributes({:x => params[:x], :y => params[:y]})
+        attrs = ActionController::Parameters.new({x: params[:x], y: params[:y]})
+        toy.update_attributes(attrs.permit(Toy::PERMIT_BASE))
       end
     end
 

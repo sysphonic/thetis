@@ -3,7 +3,7 @@
 namespace :thetis do
   task :email_ver110 do
     Email.find(:all).each do |email|
-      attrs = {}
+      attrs = ActionController::Parameters.new()
 
       [:to_addresses, :cc_addresses, :bcc_addresses, :reply_to].each do |attr|
         addrs = email.send(attr)
@@ -18,7 +18,10 @@ namespace :thetis do
         # Force to recalcurate size
         attrs[:updated_at] = email.updated_at
       end
-      email.update_attributes(attrs) unless attrs.empty?
+      unless attrs.empty?
+        attrs.permit!
+        email.update_attributes(attrs)
+      end
 
       path = email.get_dir
       filepaths = Dir.glob([File.join(path, '*')].join("\0"))

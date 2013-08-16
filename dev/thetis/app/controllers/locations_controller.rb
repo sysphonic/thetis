@@ -147,7 +147,7 @@ class LocationsController < ApplicationController
 
     params[:office_map].delete(:group_id)
 
-    @office_map.update_attributes(params[:office_map])
+    @office_map.update_attributes(params.require(:office_map).permit(OfficeMap::PERMIT_BASE))
 
     params.delete(:office_map)
 
@@ -219,7 +219,8 @@ class LocationsController < ApplicationController
     unless location.nil?
       group_id = params[:group_id]
       group_id = nil if group_id.empty?
-      location.update_attributes({:group_id => group_id, :x => params[:x], :y => params[:y]})
+      attrs = ActionController::Parameters.new({group_id: group_id, x: params[:x], y: params[:y]})
+      location.update_attributes(attrs.permit(Location::PERMIT_BASE))
     end
 
     render(:text => (location.nil?)?'':location.id.to_s)

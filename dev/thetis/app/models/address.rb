@@ -12,7 +12,7 @@
 #* 
 #
 class Address < ActiveRecord::Base
-  attr_accessible(:name, :name_ruby, :nickname, :screenname, :email1, :email2, :email3, :postalcode, :address, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :organization, :title, :memo)
+  public::PERMIT_BASE = [:name, :name_ruby, :nickname, :screenname, :email1, :email2, :email3, :postalcode, :address, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :organization, :title, :memo]
 
   require 'csv'
 

@@ -475,13 +475,13 @@ class ItemsController < ApplicationController
     folder_id = params[:item][:folder_id]
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
-      @item = Item.new(params[:item])
+      @item = Item.new(params.require(:item).permit(Item::PERMIT_BASE))
       @item.errors.add_to_base t('folder.need_auth_to_write_in')
       render(:partial => 'ajax_item_basic', :layout => false)
       return
     end
 
-    if params[:check_create_folder] == '1' and !params[:create_folder_name].empty?
+    if (params[:check_create_folder] == '1') and !params[:create_folder_name].empty?
       folder = Folder.new
       folder.name = params[:create_folder_name]
       folder.parent_id = folder_id
@@ -496,9 +496,9 @@ class ItemsController < ApplicationController
       params[:item][:source_id] = nil
     end
 
-    if params[:id].nil? or params[:id].empty?
+    if params[:id].blank?
       @item = Item.new_info(folder_id)
-      @item.attributes = params[:item]
+      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
       @item.user_id = @login_user.id
       @item.save
     else
@@ -523,7 +523,7 @@ class ItemsController < ApplicationController
         delete_zept_cmd = true
       end
 
-      @item.update_attributes(params[:item])
+      @item.update_attributes(params.require(:item).permit(Item::PERMIT_BASE))
 
       unless @item.team.nil?
         if rename_team
@@ -582,13 +582,13 @@ class ItemsController < ApplicationController
 
     if params[:id].nil? or params[:id].empty?
       @item = Item.new_info(0)
-      @item.attributes = params[:item]
+      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
       @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
       @item.save
     else
       @item = Item.find(params[:id])
-      @item.update_attributes(params[:item])
+      @item.update_attributes(params.require(:item).permit(Item::PERMIT_BASE))
     end
 
     render(:partial => 'ajax_item_description', :layout => false)
@@ -770,7 +770,7 @@ class ItemsController < ApplicationController
     if !params[:image][:file].nil? and params[:image][:file].size == 0
       params[:image].delete(:file)
     end
-    unless image.update_attributes(params[:image])
+    unless image.update_attributes(params.require(:image).permit(Image::PERMIT_BASE))
       @image = image
       render(:partial => 'ajax_item_image', :layout => false)
       return
@@ -997,7 +997,7 @@ class ItemsController < ApplicationController
     if !params[:attachment][:file].nil? and params[:attachment][:file].size == 0
       params[:attachment].delete(:file)
     end
-    unless attachment.update_attributes(params[:attachment])
+    unless attachment.update_attributes(params.require(:attachment).permit(Attachment::PERMIT_BASE))
       @attachment = attachment
       render(:partial => 'ajax_item_attachment', :layout => false)
       return
@@ -1065,7 +1065,7 @@ class ItemsController < ApplicationController
       params[:comment].delete(:file)
     end
 
-    @comment = Comment.new(params[:comment])
+    @comment = Comment.new(params.require(:comment).permit(Comment::PERMIT_BASE))
     @comment.save!
     @item = @comment.item
 
@@ -1240,8 +1240,8 @@ class ItemsController < ApplicationController
       Log.add_error(request, evar)
     end
  
-    attr = {:status => Workflow::STATUS_ACTIVE, :issued_at => Time.now}
-    @workflow.update_attributes(attr)
+    attrs = ActionController::Parameters.new({status: Workflow::STATUS_ACTIVE, issued_at: Time.now})
+    @workflow.update_attributes(attrs.permit(Workflow::PERMIT_BASE))
 
     @orders = @workflow.get_orders
 

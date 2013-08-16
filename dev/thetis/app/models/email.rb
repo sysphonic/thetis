@@ -12,7 +12,7 @@
 #* 
 #
 class Email < ActiveRecord::Base
-  attr_accessible(:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size)
+  public::PERMIT_BASE = [:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size]
 
   has_many(:mail_attachments, :dependent => :destroy, :order=>'mail_attachments.xorder')
 

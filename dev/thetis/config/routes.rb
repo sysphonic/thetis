@@ -6,7 +6,7 @@ Thetis::Application.routes.draw do
   #   match 'products/:id' => 'catalog#view'
   # Keep in mind you can assign values other than :controller and :action
 
-  match 'rss/rss' => 'feeds#index'
+  get 'rss/rss' => 'feeds#index'
 
   # Sample of named route:
   #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
@@ -60,5 +60,6 @@ Thetis::Application.routes.draw do
   # Note: This route will make all actions in every controller accessible via GET requests.
   # match ':controller(/:action(/:id))(.:format)'
 
-  match '/:controller(/:action)'
+  match '/:controller(/:action)', via: [:get, :post]
+
 end

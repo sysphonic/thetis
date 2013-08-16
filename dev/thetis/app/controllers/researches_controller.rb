@@ -467,12 +467,12 @@ class ResearchesController < ApplicationController
     end
 
     if params[:research_id].nil? or params[:research_id].empty?
-      @research = Research.new(params[:research])
+      @research = Research.new(params.require(:research).permit(Research::PERMIT_BASE))
       @research.status = Research::U_STATUS_IN_ACTON
       @research.update_attribute(:user_id, @login_user.id)
     else
       @research = Research.find(params[:research_id])
-      @research.update_attributes(params[:research])
+      @research.update_attributes(params.require(:research).permit(Research::PERMIT_BASE))
     end
 
     if pave_val <= page_num

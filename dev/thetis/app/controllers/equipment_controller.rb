@@ -42,19 +42,19 @@ class EquipmentController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    if params[:groups].nil? or params[:groups].empty?
+    if params[:groups].blank?
       params[:equipment][:groups] = nil
     else
       params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
     end
 
-    if params[:teams].nil? or params[:teams].empty?
+    if params[:teams].blank?
       params[:equipment][:teams] = nil
     else
       params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
     end
 
-    @equipment = Equipment.new(params[:equipment])
+    @equipment = Equipment.new(params.require(:equipment).permit(Equipment::PERMIT_BASE))
 
     begin
       @equipment.save!
@@ -115,7 +115,7 @@ class EquipmentController < ApplicationController
       params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
     end
 
-    if @equipment.update_attributes(params[:equipment])
+    if @equipment.update_attributes(params.require(:equipment).permit(Equipment::PERMIT_BASE))
       flash[:notice] = t('msg.update_success')
       list
       render(:action => 'list')

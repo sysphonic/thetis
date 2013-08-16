@@ -14,7 +14,7 @@
 #* 
 #
 class Attachment < ActiveRecord::Base
-  attr_accessible(:title, :memo, :item_id, :xorder, :location, :comment_id, :file)
+  public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :location, :comment_id, :file]
 
   belongs_to(:item)
   belongs_to(:comment)

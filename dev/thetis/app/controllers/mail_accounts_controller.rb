@@ -39,7 +39,7 @@ class MailAccountsController < ApplicationController
       params[:mail_account].delete(:smtp_password)
     end
 
-    @mail_account = MailAccount.new(params[:mail_account])
+    @mail_account = MailAccount.new(params.require(:mail_account).permit(MailAccount::PERMIT_BASE))
     @mail_account.user_id = @login_user.id
 
     @mail_account.is_default = true
@@ -116,7 +116,7 @@ class MailAccountsController < ApplicationController
       params[:mail_account].delete(:smtp_password)
     end
 
-    if @mail_account.update_attributes(params[:mail_account])
+    if @mail_account.update_attributes(params.require(:mail_account).permit(MailAccount::PERMIT_BASE))
 
       flash[:notice] = t('msg.update_success')
       if request.xhr?

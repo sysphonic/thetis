@@ -14,7 +14,7 @@
 #*
 #
 class Team < ActiveRecord::Base
-  attr_accessible(:name, :item_id, :users, :status, :req_to_del_at)
+  public::PERMIT_BASE = [:name, :item_id, :users, :status, :req_to_del_at]
 
   belongs_to(:item)
 
@@ -60,7 +60,8 @@ class Team < ActiveRecord::Base
   #
   def update_status(new_stat)
 
-    self.update_attributes({:status => new_stat, :req_to_del_at => nil})
+    attrs = ActionController::Parameters.new({status: new_stat, req_to_del_at: nil})
+    self.update_attributes(attrs.permit(Team::PERMIT_BASE))
   end
 
   #=== need_req_to_del?
@@ -102,7 +103,8 @@ class Team < ActiveRecord::Base
       def record_timestamps; false; end
     end
 
-    self.update_attributes({:req_to_del_at => Time.now})
+    attrs = ActionController::Parameters.new({req_to_del_at: Time.now})
+    self.update_attributes(attrs.permit(Team::PERMIT_BASE))
 
     class << self
       remove_method :record_timestamps

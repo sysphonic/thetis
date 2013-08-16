@@ -62,14 +62,14 @@ class OfficialTitlesController < ApplicationController
     @group_id = params[:group_id]
     official_title_id = params[:id]
 
-    if official_title_id.nil? or official_title_id.empty?
-      @official_title = OfficialTitle.new(params[:official_title])
+    if official_title_id.blank?
+      @official_title = OfficialTitle.new(params.require(:official_title).permit(OfficialTitle::PERMIT_BASE))
       @official_title.group_id = @group_id
 
       @official_title.save!
     else
       @official_title = OfficialTitle.find(official_title_id)
-      @official_title.update_attributes(params[:official_title])
+      @official_title.update_attributes(params.require(:official_title).permit(OfficialTitle::PERMIT_BASE))
     end
 
     @official_titles = OfficialTitle.get_for(@group_id, false, true)
