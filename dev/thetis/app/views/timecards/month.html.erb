@@ -1,10 +1,10 @@
 
 <%= render(:partial => 'toolbar') %>
 
-<table align="center" width="95%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
-  <tr height="25">
-    <td width="20%"></td>
-    <td width="60%" align="center" valign="top">
+<table align="center" cellspacing="0" cellpadding="0" style="width:95%; padding-bottom:5px;">
+  <tr style="height:25px;">
+    <td style="width:20%;"></td>
+    <td style="width:60%; text-align:center; vertical-align:top;">
       <%
       last_month = Date.new(@year, @month, 1) << 1
       next_month = Date.new(@year, @month, 1) >> 1
@@ -13,7 +13,7 @@
       <span style="color:crimson; cursor:pointer;" onclick="selectMonth(function(date){doUpdatePage(date);});"><u><%= sprintf('%4d - %02d', @year, @month) %></u></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => next_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
     </td>
-    <td width="20%" align="right" style="padding-top:5px;">
+    <td style="width:20%; text-align:right; padding-top:5px;">
     <% unless params[:display].nil? or params[:display].empty? or params[:display] == 'mine' %>
       <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :user_id => @selected_user.id, :display => params[:display]) %>'; return false;"><%= t('btn.arrow_back') %></a>
     <% else %>
@@ -26,22 +26,22 @@
 
 <%= render(:partial => 'user_profile') %>
 
-<table class='timecard' width="100%">
+<table class="timecard" style="width:100%;">
   <tr>
-    <td align="center" width="8%" rowspan="2" nowrap><%= t('msg.date') %></th>
-    <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= t('cap.class') %></td>
-    <td align="center" width="5%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
-    <td align="center" width="5%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= t('cap.option') %></td>
-    <td align="center" width="24%" bgcolor="#D6ECFA" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
-    <td align="center" width="35%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
-    <td align="center" width="16%" bgcolor="#C6D3EF" colspan="2" nowrap><%= t('timecard.overtime') %></td>
+    <td style="text-align:center; width:8%;" rowspan="2" nowrap><%= t('msg.date') %></th>
+    <td style="text-align:center; width:5%; background-color:#D6ECFA;" rowspan="2" nowrap><%= t('cap.class') %></td>
+    <td style="text-align:center; width:5%; background-color:#B9FFBC;" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
+    <td style="text-align:center; width:5%; background-color:#B9FFBC;" rowspan="2" nowrap><%= t('cap.option') %></td>
+    <td style="text-align:center; width:24%; background-color:#D6ECFA;" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
+    <td style="text-align:center; width:35%; background-color:#D6ECFA;" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
+    <td style="text-align:center; width:16%; background-color:#C6D3EF;" colspan="2" nowrap><%= t('timecard.overtime') %></td>
   </tr>
   <tr>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.from') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.to') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('msg.hours_full') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.usual') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.midnight') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('timecard.from') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('timecard.to') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('msg.hours_full') %></td>
+    <td style="text-align:center; width:8%; background-color:#C6D3EF;" nowrap><%= t('timecard.usual') %></td>
+    <td style="text-align:center; width:8%; background-color:#C6D3EF;" nowrap><%= t('timecard.midnight') %></td>
   </tr>
 <%
 today = Date.today
@@ -90,16 +90,16 @@ days.times do
   timecard = @timecards[date_s]
   timecard = Timecard.new if timecard.nil?
 %>
-  <tr bgcolor="<%= bgcolor %>">
+  <tr style="background-color:<%= bgcolor %>;">
     <%
     today_bg_style = ''
     today_txt_style = ''
     if day.year == today.year and day.month == today.month and day.day == today.day
-      today_bg_style = 'style="background-color:darkorange;"'
-      today_txt_style = 'style="color:white;"'
+      today_bg_style = 'background-color:darkorange;'
+      today_txt_style = 'color:white;'
     end
     %>
-    <td align="center" nowrap <%= raw(today_bg_style) %>>
+    <td nowrap style="text-align:center; <%= today_bg_style %>">
       <% if @start_date.day != 1 and (day == @start_date or day.day == 1) %>
         <sup><%= day.month.to_s %>/</sup>
       <% end %>
@@ -126,13 +126,13 @@ days.times do
       end
     end
     %>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
     <% unless timecard.workcode.nil? %>
       <% alt = h(timecard.workcode_name) %>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
     <% end %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <% if !timecard.start.nil? and timecard.end.nil? %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>">
       <%
@@ -160,7 +160,7 @@ days.times do
       end
       %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       options = ''
       if timecard.business_trip?
@@ -170,10 +170,10 @@ days.times do
       %>
       <%= options %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%= (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %>
     </td>
     <%
@@ -184,14 +184,14 @@ days.times do
       wktime_on_holidays += actual_wktime
     end
     %>
-    <td align="center" nowrap style="color:blue;">
+    <td nowrap style="text-align:center; color:blue;">
       <%= (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
     </td>
-    <td align="left" style="padding:0px 5px;">
+    <td style="text-align:left; padding:0px 5px;">
       <%= timecard.comment %>
     </td>
 
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       # Note that "overtime != usual_overtime + midnight_overtime".
       overtime_sum += timecard.get_overtime unless timecard.work_on_holiday?
@@ -218,7 +218,7 @@ days.times do
       end
       %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       unless timecard.start.nil? or timecard.end.nil?
         midnight_overtime = timecard.get_midnight_overtime
@@ -241,70 +241,90 @@ end
 %>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-top:15px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-top:15px;">
   <tr>
-    <td align="left" valign="top" width="49%">
-      <table class="timecard" width="100%">
+    <td style="text-align:left; vertical-align:top; width:49%;">
+      <table class="timecard" style="width:100%;">
         <tr>
-          <th nowrap><%= t('timecard.labor_days') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <%= t('timecard.labor_days') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= labor_days %>
           </td>
         </tr>
-        <tr height="2"><td></td></tr>
+        <tr style="height:1px;"><td colspan="2"></td></tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= business_trip_days %>
           </td>
         </tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif"> <%= t('timecard.lateness') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif"> <%= t('timecard.lateness') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= lateness_days %>
           </td>
         </tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif"> <%= t('timecard.leaving_early') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif"> <%= t('timecard.leaving_early') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= leaving_early_days %>
           </td>
         </tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/work_on_holiday.gif"> <%= t('timecard.working_on_holiday') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/work_on_holiday.gif"> <%= t('timecard.working_on_holiday') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= work_on_holidays %>
           </td>
         </tr>
-        <tr height="2"><td></td></tr>
+        <tr style="height:1px;"><td colspan="2"></td></tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/makeup_holiday.gif"> <%= t('timecard.makeup_holidays') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/makeup_holiday.gif"> <%= t('timecard.makeup_holidays') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= makeup_holidays %>
           </td>
         </tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/special_holiday.gif"> <%= t('timecard.special_holidays') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/special_holiday.gif"> <%= t('timecard.special_holidays') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= special_holidays %>
           </td>
         </tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/absence.gif"> <%= t('timecard.absence') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/absence.gif"> <%= t('timecard.absence') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= absence_days %>
           </td>
         </tr>
-        <tr height="2"><td></td></tr>
+        <tr style="height:1px;"><td colspan="2"></td></tr>
         <tr>
-          <th nowrap><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/paid_holiday.gif"> <%= t('timecard.paid_holidays') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/paid_holiday.gif"> <%= t('timecard.paid_holidays') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%= paid_holidays %>
           </td>
         </tr>
         <tr>
-          <th nowrap><%= t('timecard.left_paid_holidays') %></th>
-          <td align="center" nowrap width="120">
+          <th nowrap>
+            <%= t('timecard.left_paid_holidays') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <%
             given_num = (@paid_holiday.nil?)?0:@paid_holiday.num
             carried_over = PaidHoliday.get_carried_over(@selected_user.id, @fiscal_year)
@@ -317,32 +337,34 @@ end
         </tr>
       </table>
     </td>
-    <td width="5"></td>
-    <td align="right" valign="top" width="49%">
-      <table class="timecard" width="100%">
+    <td style="width:5px;"></td>
+    <td style="width:49%; text-align:right; vertical-align:top;">
+      <table class="timecard" style="width:100%;">
         <tr>
-          <th align="center" nowrap><%= t('timecard.total_labor_time') %></th>
-          <td align="center" nowrap width="120">
+          <th style="text-align:center;" nowrap>
+            <%= t('timecard.total_labor_time') %>
+          </th>
+          <td style="text-align:center; width:120px;" nowrap>
             <span style="color:blue;"><%= ApplicationHelper.float_exp(wktime_sum / 60.0, 2) %></span>
           </td>
         </tr>
-        <tr height="2"><td></td></tr>
+        <tr style="height:1px;"><td colspan="2"></td></tr>
         <tr>
-          <th align="center" nowrap>
+          <th style="text-align:center;" nowrap>
             <%= t('timecard.overtime_sum') %> <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.overtime_sum_info')%><br/>');"><br/>
             [ <%= t('timecard.usual') %> + <%= t('timecard.midnight') %> ]
           </th>
-          <td align="center" nowrap width="120">
+          <td style="text-align:center; width:120px;" nowrap>
             <span style="color:black;"><%= ApplicationHelper.float_exp(overtime_sum / 60.0, 2) %></span><br/>
             [ <span style="color:orangered;"><%= ApplicationHelper.float_exp(usual_overtime_sum / 60.0, 2) %></span> + <span style="color:red;"><%= ApplicationHelper.float_exp(midnight_overtime_sum / 60.0, 2) %></span> ]
           </td>
         </tr>
         <tr>
-          <th align="center" nowrap>
+          <th style="text-align:center;" nowrap>
             <%= t('timecard.labor_time_on_holidays') %><br/>
             [ <%= t('timecard.midnight') %> ]
           </th>
-          <td align="center" nowrap width="120">
+          <td style="text-align:center; width:120px;" nowrap>
             <span style="color:black;"><%= ApplicationHelper.float_exp(wktime_on_holidays / 60.0, 2) %></span><br/>
             [ <span style="color:red;"><%= ApplicationHelper.float_exp(wktime_on_holidays_midnight / 60.0, 2) %></span> ]
           </td>

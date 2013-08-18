@@ -88,8 +88,8 @@ next_week = @date + 7
 
 
 <% if @equip_schedule_hash.nil? or @equip_schedule_hash.empty? %>
-  <div style="padding-top:20px;">
-    <table cellspacing="0" cellpadding="0" style="width:95%; border:green 1px solid; border-collapse:collapse;">
+  <div style="padding-top:10px;">
+    <table class="border_collapse green" align="center" cellspacing="0" cellpadding="0" style="width:95%;">
       <tr style="height:50px;">
         <td style="text-align:center; color:darkgreen;">
           <%= t('paren.no_equipment') %>

@@ -1,12 +1,12 @@
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td align="center" valign="top">
+    <td style="text-align:center; vertical-align:top;">
 
-      <table width="100%" cellspacing="0" cellpadding="0" style="border:steelblue 1px solid; border-collapse:collapse;">
+      <table class="border_collapse steelblue" cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
       <% @schedules_hash.each do |day, schedules| %>
-          <td align="center" style="width:14.28%; word-break:break-all; border:steelblue 1px solid; font-weight:400; font-size:11pt; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%= Schedule::wday_name(day.wday) %>)</td>
+          <td style="width:14.28%; text-align:center; word-break:break-all; font-weight:400; font-size:11pt; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%= Schedule::wday_name(day.wday) %>)</td>
       <% end %>
         </tr>
         <tr>
@@ -14,16 +14,16 @@
       @schedules_hash.each do |day, schedules|
         @day = day
       %>
-          <td valign="top" style="border:steelblue 1px solid;">
+          <td style="vertical-align:top;">
 
-            <table width="100%" cellspacing="1" cellpadding="0" style="border-collapse:collapse;">
+            <table cellspacing="1" cellpadding="0" style="width:100%;">
 
               <%
               sche_holiday = Schedule.check_holiday(@day, @holidays)
               unless sche_holiday.nil?
               %>
               <tr>
-                <td align="center">
+                <td style="text-align:center; border:none;">
                   <span class="span_holiday"><%= sche_holiday.title %></span>
                 </td>
               </tr>
@@ -42,7 +42,7 @@
           <% end %>
         <% else %>
               <tr>
-                <td>&nbsp;</td>
+                <td style="border:none;">&nbsp;</td>
               </tr>
         <% end %>
             </table>

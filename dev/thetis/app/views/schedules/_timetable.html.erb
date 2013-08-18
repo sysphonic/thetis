@@ -4,7 +4,7 @@ read_only ||= false
 brief_view ||= false
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="border:dimgray 1px solid; border-collapse:collapse;">
+<table class="border_collapse dimgray" style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
 <% for time in (THETIS_HOURS.first)..(THETIS_HOURS.last) do %>
   <%
@@ -12,15 +12,15 @@ brief_view ||= false
   timecolor = THETIS_SCHEDULE_TIMECOLORS.find{|entry| entry[:range].include?(time)}
   bgcolor = timecolor[:color] unless timecolor.nil?
   %>
-    <td colspan="<%= THETIS_DIV_IN_HOUR %>" align="center" style="background-color:<%= bgcolor %>; border:dimgray 1px solid; font-weight:400; font-size:11pt;"><%= time%></td>
+    <td colspan="<%= THETIS_DIV_IN_HOUR %>" style="text-align:center; background-color:<%= bgcolor %>; font-weight:400; font-size:11pt;"><%= time%></td>
 <% end %>
   </tr>
-  <tr height="10">
+  <tr style="height:10px;">
 <%
  cell_num = THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR
  cell_num.times do |q|
 %>
-    <td style="line-height:10px; border:dimgray 1px solid;">&nbsp</td>
+    <td style="line-height:10px;">&nbsp</td>
 <% end %>
   </tr>
 <%
@@ -38,13 +38,13 @@ if @schedules.length > 0
         scope = ''
     end
 %>
-  <tr height="30">
+  <tr style="height:30px;">
     <% if schedule.holiday? %>
-    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center">
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" style="text-align:center;">
       <span class="span_holiday"><%= schedule.title %></span>
     </td>
     <% elsif schedule.allday %>
-    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center" style="color:navy">
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" style="text-align:center; color:navy;">
       &bull;
       <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
       <a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;">
@@ -81,7 +81,7 @@ if @schedules.length > 0
     <td colspan="<%= span_before %>"></td>
     <% end %>
 
-    <td colspan="<%= span %>" align="left" style="padding-left:5px; padding-top:5px; padding-bottom:5px; background-color:<%= bg_color %>; border:1px solid <%= border_color %>; line-height:1.3;">
+    <td colspan="<%= span %>" style="text-align:left; padding:5px 0px 5px 5px; background-color:<%= bg_color %>; border-color:<%= border_color %>; line-height:1.3;">
       <% if schedule.within_a_day? %>
         <%= schedule.start.strftime('%H:%M') + '-' + schedule.end.strftime('%H:%M') %><% if !auth_write or read_only %><br/><% end %>
       <% else %>
@@ -105,7 +105,7 @@ if @schedules.length > 0
 end
 if @schedules.find { |schedule| !schedule.holiday? }.nil?
 %>
-  <tr height="50">
+  <tr style="height:50px;">
     <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center" style="color:gray;">
       <%= t('paren.no_schedules') %>
     </td>

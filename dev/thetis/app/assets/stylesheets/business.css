@@ -1,7 +1,7 @@
 
 #tbl_left_business {border-collapse:separate; border-spacing:2px;}
 #tbl_left_business td {background:#f3f3f3; border-bottom:solid 1px #b2b2b2; border-right:solid 1px #b2b2b2; white-space:nowrap; text-align:center;}
-#tbl_left_business td.menu_item {background:#fff3ea; cursor:pointer;}
+#tbl_left_business td.menu_item {background:#fff3ea; cursor:pointer; border-radius:5px;}
 #tbl_left_business td.menu_item:hover {border-bottom:solid 1px limegreen; border-right:solid 1px limegreen; background:lawngreen;}
 
 

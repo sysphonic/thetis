@@ -11,9 +11,20 @@
 
 .sort_direction{color:darkcyan; font-size:9pt;}
 
-table.timecard {border-collapse:collapse; background-color:white;}
-table.timecard th {border:solid black 1px; background-color:#eee; font-weight:normal; padding:0px 10px;}
-table.timecard td {border:solid black 1px; padding:2px 5px;}
+table.border_collapse, table.timecard{border-collapse:separate; border-spacing:0px;}
+table.border_collapse.black{border-top:1px solid black; border-left:1px solid black;}
+table.border_collapse.black td{border-right:1px solid black; border-bottom:1px solid black;}
+table.border_collapse.dimgray{border-top:1px solid dimgray; border-left:1px solid dimgray;}
+table.border_collapse.dimgray td{border-right:1px solid dimgray; border-bottom:1px solid dimgray;}
+table.border_collapse.steelblue{border-top:1px solid steelblue; border-left:1px solid slateblue;}
+table.border_collapse.steelblue td{border-right:1px solid steelblue; border-bottom:1px solid slateblue;}
+table.border_collapse.green{border-top:1px solid green; border-left:1px solid green;}
+table.border_collapse.green td{border-right: 1px solid green; border-bottom:1px solid green;}
+
+table.timecard {border-top:1px solid black; border-left:1px solid black; background-color:white;}
+table.timecard th, table.timecard td{border-right:1px solid black; border-bottom:1px solid black;}
+table.timecard th{background-color:#eee; font-weight:normal; padding:0px 10px;}
+table.timecard td{padding:2px 5px;}
 .span_holiday {background-color:red; color:white; padding:3px 10px;}
 .info_area {background-color:#FFF0FA;}
 .info_section_header {color:dimgray; padding:2px; line-height:1.7; text-align:center; background-color:#dfdfdf; font-weight:bold;}

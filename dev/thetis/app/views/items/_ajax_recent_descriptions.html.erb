@@ -1,21 +1,21 @@
 
-<div id="div_reset" align="right" style="display:none; padding:5px;">
+<div id="div_reset" style="text-align:right; display:none; padding:5px;">
   <a href="#" onclick="resetRestore(); return false;">
     <u><%= t('item.reset_restore') %></u>
   </a>
 </div>
 
-<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0" width="100%">
+<table class="border_collapse dimgray" cellspacing="0" cellpadding="0" style="width:100%;">
 <% if @logs.nil? or @logs.empty? %>
   <tr>
-    <td align="center" style="padding:10px;">
+    <td style="text-align:center; padding:10px;">
       <%= t('paren.no_entries') %>
     </td>
   </tr>
 <% else %>
   <% @logs.each_with_index do |log, idx| %>
   <tr>
-    <td align="left" style="padding:10px; border:solid dimgray 1px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelectDesc('desc_<%= idx %>')">
+    <td style="text-align:left; padding:10px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelectDesc('desc_<%= idx %>')">
       <%
       desc_ary = log.detail.scan(/["]description["]=>["]((\\"|[^"])*)["]/)
       next if desc_ary.nil? or desc_ary.empty? or desc_ary.first.nil?

@@ -1,8 +1,8 @@
 
-<table style="border-collapse:collapse;" cellspacing="0" cellpadding="0" width="100%">
+<table class="border_collapse dimgray" cellspacing="0" cellpadding="0" style="width:100%;">
 <% @timecards.each_with_index do |timecard, idx| %>
   <tr>
-    <td align="left" style="padding:10px; border:solid dimgray 1px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelect('desc_<%= idx %>')">
+    <td style="text-align:left; padding:10px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelect('desc_<%= idx %>')">
       <pre id="desc_<%= idx %>" style="font-size:10pt;"><%= timecard.comment %></pre>
     </td>
   </tr>
