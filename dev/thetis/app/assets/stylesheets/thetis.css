@@ -54,7 +54,6 @@ table.timecard td{padding:2px 5px;}
 .td_attachment_title {color:white; font-size:9pt; padding:3px; padding-left:10px; padding-right:20px; line-height:10pt; background-color:gray;}
 .td_attachment_memo {color:black; font-size:9pt; padding:3px; padding-left:10px; padding-right:20px; line-height:10pt; background-color:gainsboro; text-align:left;}
 
-/*.td_show_cap_bar {background-color:dodgerblue; text-indent:10px; color:white; border-bottom:#9699A2; border-right:#9699A2; text-align:left;}*/
 .td_show_cap_bar {background:url("../images/caption_bg.png") repeat-x center; padding:0px 10px; color:dimgray; border:solid 1px silver; text-align:left; -webkit-box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); -moz-box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); box-shadow:2px 2px 3px rgba(100, 100, 100, 0.2); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 
 .td_entry_info_cap {border:solid 1px #0066ff; font-size:10pt; padding:0px 3px; line-height:1.5; text-align:center; vertical-align:middle;}
@@ -72,7 +71,7 @@ table.timecard td{padding:2px 5px;}
 .comment_sys_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#EA3C50;}
 
 .img_button_td {background-image:url("../images/button.png"); vertical-align:middle; background-repeat:no-repeat; cursor:pointer; text-align:center; width:103px; height:35px; font-weight:600; color:white;}
-.menu_td {padding:0px; font-size:11pt; line-height:1.0; cursor:pointer;}
+.menu_td {cursor:pointer; font-size:11pt; line-height:1.0; background:url("../images/menu/menu_bg_off.png") repeat-x center; padding:0px; color:black; border:solid 1px silver; text-align:center; -webkit-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-border-radius:13px; -webkit-border-radius:13px; border-radius:13px;}
 .cap_td {font-size:10.5pt; line-height:17pt; background-color:#FFCBCF; padding:5px; text-align:center;}
 .item_cap_td {font-size:10.5pt; line-height:17pt; background-color:#FFCBCF; padding:5px; width:110px; text-align:center;}
 .prim_cap_td {font-size:10.5pt; line-height:17pt; white-space:nowrap; background-color:#7FE8FF; padding:5px; width:110px; text-align:center;}

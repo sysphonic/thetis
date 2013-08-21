@@ -1,14 +1,12 @@
 <%
 mode = 'groupware'
-style_bg_on = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_on.png') center no-repeat"
-style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') center no-repeat"
 %>
 
 <table id="tbl_left_groupware" cellspacing="0" cellpadding="0" style="width:100%; display:none;">
   <tr>
     <td style="text-align:center; vertical-align:top;">
       <!-------INDEX-Column START------->
-      <TABLE cellspacing="1" cellpadding="0" style="width:100%;">
+      <TABLE cellspacing="1" cellpadding="0" style="width:100%; padding:0px 2px;">
         <TR id="tr_top_space_upper" style="height:3px;"><TD></TD></TR>
         <TR id="tr_symbol" style="height:90px;">
           <TD onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
@@ -58,17 +56,18 @@ style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') cent
       end
       menus.each do |menu_name, menu_attrs|
       %>
-        <TR style="height:31px;">
-          <TD class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
+        <TR style="height:28px;">
+          <TD class="menu_td" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
             <A id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></A>
           </TD>
         </TR>
+        <TR style="height:3px;"><td></td></tr>
       <% end %>
       </TABLE>
       <!-------INDEX-Column END------->
       <div id="adminMenu" style="display:none;">
         <table cellspacing="1" cellpadding="0" style="width:100%; margin-top:5px;" align="center">
-          <tr style="height:31px;">
+          <tr style="height:28px;">
             <td class="menu_td" style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
               <a href="#" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
@@ -102,13 +101,14 @@ style_bg_off = "url('#{THETIS_RELATIVE_URL_ROOT}/images/menu/menu_off.png') cent
   <tr>
     <td style="text-align:center; padding:5px 7px;">
       <table cellspacing="1" cellpadding="0" style="width:150px;" align="center">
-        <tr style="height:31px;">
-          <td class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
+        <tr style="height:28px;">
+          <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
             <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.admin_menu') %></a>
           </td>
         </tr>
-        <tr style="height:31px;">
-          <td class="menu_td" style="background:<%= style_bg_off %>; text-align:center;" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
+        <TR style="height:3px;"><td></td></tr>
+        <tr style="height:28px;">
+          <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
             <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.access_logs') %></a>
           </td>
         </tr>
@@ -230,9 +230,7 @@ function doLogin()
 
 function activateMenu(menu, elem)
 {
-  elem.style.background = "<%= raw(style_bg_on) %>";
-
-  for (var i=0; i< elem.childNodes.length; i++) {
+  for (var i=0; i < elem.childNodes.length; i++) {
     if (elem.childNodes[i].tagName == "A") {
       elem.childNodes[i].style.color = "deeppink";
       break;
@@ -246,9 +244,7 @@ function activateMenu(menu, elem)
 
 function deactivateMenu(elem)
 {
-  elem.style.background = "<%= raw(style_bg_off) %>";
-
-  for (var i=0; i< elem.childNodes.length; i++) {
+  for (var i=0; i < elem.childNodes.length; i++) {
     if (elem.childNodes[i].tagName == "A") {
       elem.childNodes[i].style.color = "#404040";
       break;
