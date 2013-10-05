@@ -71,7 +71,9 @@ table.timecard td{padding:2px 5px;}
 .comment_sys_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#EA3C50;}
 
 .img_button_td {background-image:url("../images/button.png"); vertical-align:middle; background-repeat:no-repeat; cursor:pointer; text-align:center; width:103px; height:35px; font-weight:600; color:white;}
-.menu_td {cursor:pointer; font-size:11pt; line-height:1.0; background:url("../images/menu/menu_bg_off.png") repeat-x center; padding:0px; color:black; border:solid 1px silver; text-align:center; -webkit-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-border-radius:13px; -webkit-border-radius:13px; border-radius:13px;}
+.menu_td {cursor:pointer; font-size:11pt; line-height:1.0; background:url("../images/menu/menu_bg_off.png") repeat-x center; padding:0px; color:#404040; border:solid 1px silver; text-align:center; -webkit-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); -moz-border-radius:13px; -webkit-border-radius:13px; border-radius:13px;}
+.menu_td.hovered {color:forestgreen;}
+.menu_td.selected {background:url("../images/menu/menu_bg_on.png") repeat-x center; color:deeppink; border:solid 1px pink; -webkit-box-shadow:1px 1px 2px rgba(100, 50, 50, 0.2); -moz-box-shadow:1px 1px 2px rgba(100, 50, 50, 0.2); box-shadow:1px 1px 2px rgba(50, 50, 100, 0.2);}
 .cap_td {font-size:10.5pt; line-height:17pt; background-color:#FFCBCF; padding:5px; text-align:center;}
 .item_cap_td {font-size:10.5pt; line-height:17pt; background-color:#FFCBCF; padding:5px; width:110px; text-align:center;}
 .prim_cap_td {font-size:10.5pt; line-height:17pt; white-space:nowrap; background-color:#7FE8FF; padding:5px; width:110px; text-align:center;}

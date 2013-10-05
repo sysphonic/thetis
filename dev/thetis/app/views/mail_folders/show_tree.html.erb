@@ -597,23 +597,23 @@ function _doDelete(folder_id)
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Request(
-              "<%= url_for(:controller => 'mail_folders', :action => 'destroy') %>",
-              {
-                method:"post",
-                parameters:Form.serialize(document.form_folder_tree)+"&"+addParams.join("&"),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                  if (request.responseText == "") {
-                    removeElem(_z("base_mailTree:"+folder_id));
-                    document.form_folder_tree.selKeeper.value = "";
-                    clearMails();
-                  }
-                  request.responseText.evalScripts();
-                }
-              }
-            );
+      "<%= url_for(:controller => 'mail_folders', :action => 'destroy') %>",
+      {
+        method:"post",
+        parameters:Form.serialize(document.form_folder_tree)+"&"+addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
+          if (request.responseText == "") {
+            removeElem(_z("base_mailTree:"+folder_id));
+            document.form_folder_tree.selKeeper.value = "";
+            clearMails();
+          }
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function doMove()
@@ -701,16 +701,16 @@ function doUpdateViewMailContent(action, addParams)
   }
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-                "div_mail_content",
-                action,
-                {
-                  method: "get",
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request){ thetisBox.remove(); },
-                  parameters: addParams.join("&")
-                }
-              );
+      "div_mail_content",
+      action,
+      {
+        method: "get",
+        asynchronous: true,
+        evalScripts: true,
+        onComplete: function(request){ thetisBox.remove(); },
+        parameters: addParams.join("&")
+      }
+    );
 }
 
 function clearMails()
@@ -751,21 +751,21 @@ function showMailAccountSummary(mail_account_id)
 
     // var thetisBox = prog("TOP-RIGHT");
     new Ajax.Updater(
-                  "div_mail_content",
-                  "<%= url_for(:controller => 'mail_accounts', :action => 'show_summary') %>",
-                  {
-                    method: "get",
-                    parameters: addParams.join("&"),
-                    asynchronous: true,
-                    evalScripts: true,
-                    onComplete: function(request) {
-                        // thetisBox.remove();
-                        curSummaryAccountId = mail_account_id;
+        "div_mail_content",
+        "<%= url_for(:controller => 'mail_accounts', :action => 'show_summary') %>",
+        {
+          method: "get",
+          parameters: addParams.join("&"),
+          asynchronous: true,
+          evalScripts: true,
+          onComplete: function(request) {
+              // thetisBox.remove();
+              curSummaryAccountId = mail_account_id;
 
-                        lastMailAccountSummary = request.responseText;
-                      },
-                  }
-                );
+              lastMailAccountSummary = request.responseText;
+            },
+        }
+      );
   } else {
     if (lastMailAccountSummary) {
       _z("div_mail_content").innerHTML = lastMailAccountSummary.stripScripts();
@@ -998,28 +998,28 @@ function onOrderFoldersClicked()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Request(
-              "<%= url_for(:controller => 'mail_folders', :action => 'get_folders_order') %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                parameters:addParams.join("&"),
-                onComplete:function(request){
-                  thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'mail_folders', :action => 'get_folders_order') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        parameters:addParams.join("&"),
+        onComplete:function(request){
+          thetisBoxProgress.remove();
 
-                  thetisBoxFoldersOrder.title = "<%= t('btn.order') %>";
-                  thetisBoxFoldersOrder.show(
-                            "CENTER",
-                            "480,+280",
-                            "TRAY",
-                            "",
-                            "",
-                            request.responseText.stripScripts()
-                          );
-                  request.responseText.evalScripts();
-                }
-              }
-            );
+          thetisBoxFoldersOrder.title = "<%= t('btn.order') %>";
+          thetisBoxFoldersOrder.show(
+                    "CENTER",
+                    "480,+280",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function doDownloadMail()
@@ -1041,13 +1041,13 @@ function showAddressBook()
   thetisBox.bgcolor_body = "lightcyan";
 
   thetisBox.show(
-            "CENTER",
-            (mainWidth*80/100)+","+(mainHeight*90/100),
-            "IFRAME",
-            "",
-            "",
-            "<%= url_for(:controller => 'addressbook', :action => 'list', :user_id => (@login_user.nil?)?(nil):(@login_user.id)) %>"
-          );
+        "CENTER",
+        (mainWidth*80/100)+","+(mainHeight*90/100),
+        "IFRAME",
+        "",
+        "",
+        "<%= url_for(:controller => 'addressbook', :action => 'list', :user_id => (@login_user.nil?)?(nil):(@login_user.id)) %>"
+      );
 }
 
 thetisBoxFilters = null;
@@ -1075,26 +1075,26 @@ function showFilters()
   }
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'mail_filters', :action => 'list') %>",
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxFilters.show(
-                          "CENTER",
-                          "520,360",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'mail_filters', :action => 'list') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxFilters.show(
+                      "CENTER",
+                      "520,360",
+                      "TRAY",
+                      "",
+                      "",
+                      request.responseText
+                    );
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
 thetisBoxAccount = null;
@@ -1137,26 +1137,26 @@ function showAccountSetting(isNew)
   }
 
   new Ajax.Request(
-          action,
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAccount.show(
-                          "CENTER",
-                          "540," + mainHeight*90/100,
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      action,
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxAccount.show(
+                      "CENTER",
+                      "540," + mainHeight*90/100,
+                      "TRAY",
+                      "",
+                      "",
+                      request.responseText
+                    );
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
 var thetisBoxHeaderInfo = null;
@@ -1198,21 +1198,21 @@ function onEmailUnreadClicked(elem, email_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'mail_folders', :action => 'update_mail_unread') %>",
-          {
-            method:"post",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
+      "<%= url_for(:controller => 'mail_folders', :action => 'update_mail_unread') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
 
-                var div_mail_subject = _z("mail_subject_"+email_id);
-                appendClassName(div_mail_subject, "email_subject_unread");
-              }
+            var div_mail_subject = _z("mail_subject_"+email_id);
+            appendClassName(div_mail_subject, "email_subject_unread");
           }
-        );
+      }
+    );
   return true;
 }
 
@@ -1224,23 +1224,23 @@ function doRegisterAddress(frm)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          frm.action,
-          {
-            method:"post",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
+      frm.action,
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
 
-                var instance = ThetisBox.getInstanceForElem(frm);
-                if (instance) {
-                  instance.remove();
-                }
-              }
+            var instance = ThetisBox.getInstanceForElem(frm);
+            if (instance) {
+              instance.remove();
+            }
           }
-        );
+      }
+    );
   return true;
 }
 

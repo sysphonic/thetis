@@ -6,70 +6,70 @@ mode = 'groupware'
   <tr>
     <td style="text-align:center; vertical-align:top;">
       <!-------INDEX-Column START------->
-      <TABLE cellspacing="1" cellpadding="0" style="width:100%; padding:0px 2px;">
-        <TR id="tr_top_space_upper" style="height:3px;"><TD></TD></TR>
-        <TR id="tr_symbol" style="height:90px;">
-          <TD onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
+      <table cellspacing="1" cellpadding="0" style="width:100%; padding:0px 2px;">
+        <tr id="tr_top_space_upper" style="height:3px;"><td></td></tr>
+        <tr id="tr_symbol" style="height:90px;">
+          <td onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
             <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
               <%= $thetis_config[:general]['symbol_title'] %>
             </span>
-          </TD>
-        </TR>
-        <TR id="tr_top_space_lower" style="height:3px;"><TD></TD></TR>
-        <TR id="tr_drop_down" style="height:15px; display:none;">
-          <TD style="text-align:center; vertical-align:middle;">
+          </td>
+        </tr>
+        <tr id="tr_top_space_lower" style="height:3px;"><td></td></tr>
+        <tr id="tr_drop_down" style="height:15px; display:none;">
+          <td style="text-align:center; vertical-align:middle;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
-          </TD>
-        </TR>
+          </td>
+        </tr>
       <%
       menus = {
         :login => {:disp => t('btn.login'), :icon_tag => '', :action => 'doLogin();'},
-        :desktop => {:disp => t('menu.desktop'), :icon_tag => 'desktop', :action => "doUpdateIframe('#{url_for(:controller => 'desktop', :action => 'show')}', '#{mode}');"},
-        :items_bbs => {:disp => t('menu.items_bbs'), :icon_tag => 'item_bbs', :action => "doUpdateIframe('#{url_for(:controller => 'items', :action => 'bbs', :tips => 'true')}', '#{mode}');"},
-        :item_list => {:disp => t('menu.items_list'), :icon_tag => 'item_list', :action => "doUpdateIframe('#{url_for(:controller => 'items', :action => 'list', :tips => 'true')}', '#{mode}');"},
-        :folder_tree => {:disp => t('menu.folder_tree'), :icon_tag => 'folder_tree', :action => "doUpdateIframe('#{url_for(:controller => 'folders', :action => 'show_tree')}', '#{mode}');"},
-        :schedule => {:disp => t('menu.schedule'), :icon_tag => 'schedule', :action => "doUpdateIframe('#{url_for(:controller => 'schedules', :action => 'day')}?id='+getDateString(), '#{mode}');"}
+        :desktop => {:disp => t('menu.desktop'), :icon_tag => 'desktop', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'desktop', :action => 'show')}');"},
+        :items_bbs => {:disp => t('menu.items_bbs'), :icon_tag => 'item_bbs', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'bbs', :tips => 'true')}');"},
+        :item_list => {:disp => t('menu.items_list'), :icon_tag => 'item_list', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'list', :tips => 'true')}');"},
+        :folder_tree => {:disp => t('menu.folder_tree'), :icon_tag => 'folder_tree', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'folders', :action => 'show_tree')}');"},
+        :schedule => {:disp => t('menu.schedule'), :icon_tag => 'schedule', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'schedules', :action => 'day')}?id='+getDateString());"}
       }
       if $thetis_config[:menu]['disp_equipment'] == '1'
-        menus[:equipment] = {:disp => t('menu.equipment'), :icon_tag => 'equipment', :action => "doUpdateIframe('#{url_for(:controller => 'equipment', :action => 'schedule_all')}?id='+getDateString(), '#{mode}');"}
+        menus[:equipment] = {:disp => t('menu.equipment'), :icon_tag => 'equipment', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'equipment', :action => 'schedule_all')}?id='+getDateString());"}
       end
       if $thetis_config[:menu]['disp_workflow'] == '1'
-        menus[:workflow] = {:disp => t('menu.workflow'), :icon_tag => 'workflow', :action => "doUpdateIframe('#{url_for(:controller => 'workflows', :action => 'list')}', '#{mode}');"}
+        menus[:workflow] = {:disp => t('menu.workflow'), :icon_tag => 'workflow', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'workflows', :action => 'list')}');"}
       end
       if $thetis_config[:menu]['disp_research'] == '1'
-        menus[:research] = {:disp => t('menu.research'), :icon_tag => 'research', :action => "doUpdateIframe('#{url_for(:controller => 'researches', :action => 'index')}', '#{mode}');"}
+        menus[:research] = {:disp => t('menu.research'), :icon_tag => 'research', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'researches', :action => 'index')}');"}
       end
       if $thetis_config[:menu]['disp_user_list'] == '1'
-        menus[:user_list] = {:disp => t('menu.user_list'), :icon_tag => 'user_list', :action => "doUpdateIframe('#{url_for(:controller => 'users', :action => 'list')}', '#{mode}');"}
+        menus[:user_list] = {:disp => t('menu.user_list'), :icon_tag => 'user_list', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'users', :action => 'list')}');"}
       end
       if $thetis_config[:menu]['disp_mail'] == '1'
-        menus[:mail] = {:disp => t('menu.mail'), :icon_tag => 'mail', :action => "doUpdateIframe('#{url_for(:controller => 'mail_folders', :action => 'show_tree', :tips => 'true')}', '#{mode}');"}
+        menus[:mail] = {:disp => t('menu.mail'), :icon_tag => 'mail', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'mail_folders', :action => 'show_tree', :tips => 'true')}');"}
       end
       if $thetis_config[:menu]['disp_addressbook'] == '1'
-        menus[:addressbook] = {:disp => t('menu.addressbook'), :icon_tag => 'addressbook', :action => "doUpdateIframe('#{url_for(:controller => 'addressbook', :action => 'list')}', '#{mode}');"}
+        menus[:addressbook] = {:disp => t('menu.addressbook'), :icon_tag => 'addressbook', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'addressbook', :action => 'list')}');"}
       end
       if $thetis_config[:menu]['disp_paintmail'] == '1'
-        menus[:paintmail] = {:disp => t('menu.paintmail'), :icon_tag => 'paintmail', :action => "doUpdateIframe('#{url_for(:controller => 'paintmail', :action => 'index')}', '#{mode}');"}
+        menus[:paintmail] = {:disp => t('menu.paintmail'), :icon_tag => 'paintmail', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'paintmail', :action => 'index')}');"}
       end
       if $thetis_config[:menu]['disp_timecard'] == '1'
-        menus[:timecard] = {:disp => t('menu.timecard'), :icon_tag => 'timecard', :action => "doUpdateIframe('#{url_for(:controller => 'timecards', :action => 'month')}', '#{mode}');"}
+        menus[:timecard] = {:disp => t('menu.timecard'), :icon_tag => 'timecard', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'timecards', :action => 'month')}');"}
       end
       menus.each do |menu_name, menu_attrs|
       %>
-        <TR style="height:28px;">
-          <TD class="menu_td" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
-            <A id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></A>
-          </TD>
-        </TR>
-        <TR style="height:3px;"><td></td></tr>
+        <tr style="height:28px;">
+          <td class="menu_td" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
+            <a id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:inherit;"><%= menu_attrs[:disp] %></a>
+          </td>
+        </tr>
+        <tr style="height:3px;"><td></td></tr>
       <% end %>
-      </TABLE>
+      </table>
       <!-------INDEX-Column END------->
       <div id="adminMenu" style="display:none;">
         <table cellspacing="1" cellpadding="0" style="width:100%; margin-top:5px;" align="center">
           <tr style="height:28px;">
-            <td class="menu_td" style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
-              <a href="#" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
+            <td style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
+              <a href="javascript:this.onclick()" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onblur="setTimeout('hideAdminMenu()', 200);" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
             </td>
           </tr>
@@ -103,23 +103,19 @@ mode = 'groupware'
       <table cellspacing="1" cellpadding="0" style="width:150px;" align="center">
         <tr style="height:28px;">
           <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
-            <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.admin_menu') %></a>
+            <a href="#" onclick="return false;" style="color:inherit;"><%= t('menu.admin_menu') %></a>
           </td>
         </tr>
-        <TR style="height:3px;"><td></td></tr>
+        <tr style="height:3px;"><td></td></tr>
         <tr style="height:28px;">
           <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
-            <a href="#" onclick="return false;" style="color:#404040;"><%= t('menu.access_logs') %></a>
+            <a href="#" onclick="return false;" style="color:inherit;"><%= t('menu.access_logs') %></a>
           </td>
         </tr>
       </table>
     </td>
   </tr>
 </table>
-
-<span style="display:none;">
-  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/menu_on.png" />
-</span>
 
 <img id='popupImg_desktop' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/desktop.png" style="position:absolute; display:none; z-index:99999;" alt="" />
 <img id='popupImg_item_bbs' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/item_bbs.png" style="position:absolute; display:none; z-index:99999;" alt="" />
@@ -221,6 +217,8 @@ function setNavLogin(loginName, isAdmin)
 
 function doLogin()
 {
+  clearSelectedGroupwareMenu();
+
   if (_z("menu_login").innerHTML == "<%= t('btn.logout') %>") {
     doUpdateIframe("<%= url_for(:controller => 'login', :action => 'logout') %>", "<%= mode %>");
   } else {
@@ -228,14 +226,25 @@ function doLogin()
   }
 }
 
+function clearSelectedGroupwareMenu()
+{
+  var elems = document.getElementsByClassName("menu_td selected");
+  for (var i=0; i < elems.length; i++) {
+    removeClassName(elems[i], "selected");
+  }
+}
+
+function onGroupwareMenuClicked(elem, url)
+{
+  clearSelectedGroupwareMenu();
+  appendClassName(elem, "selected");
+
+  doUpdateIframe(url, "<%= mode %>");
+}
+
 function activateMenu(menu, elem)
 {
-  for (var i=0; i < elem.childNodes.length; i++) {
-    if (elem.childNodes[i].tagName == "A") {
-      elem.childNodes[i].style.color = "deeppink";
-      break;
-    }
-  }
+  appendClassName(elem, "hovered");
   showPopupIcon(menu, elem);
   if (menu.indexOf("admin") < 0) {
     hideAdminMenu();
@@ -244,34 +253,26 @@ function activateMenu(menu, elem)
 
 function deactivateMenu(elem)
 {
-  for (var i=0; i < elem.childNodes.length; i++) {
-    if (elem.childNodes[i].tagName == "A") {
-      elem.childNodes[i].style.color = "#404040";
-      break;
-    }
-  }
+  removeClassName(elem, "hovered");
   hidePopupIcon();
 }
 
 function activateAdminMenu(elem)
 {
+  appendClassName(elem, "hovered");
+  showAdminMenu(elem);
+
   for (var i=0; i< elem.childNodes.length; i++) {
     if (elem.childNodes[i].tagName == "A") {
-      elem.childNodes[i].style.color = "deeppink";
+      elem.childNodes[i].focus();
       break;
     }
   }
-  showAdminMenu(elem);
 }
 
 function deactivateAdminMenu(elem)
 {
-  for (var i=0; i< elem.childNodes.length; i++) {
-    if (elem.childNodes[i].tagName == "A") {
-      elem.childNodes[i].style.color = "darkgreen";
-      break;
-    }
-  }
+  removeClassName(elem, "hovered");
 }
 
 function showAdminMenu(elem)
