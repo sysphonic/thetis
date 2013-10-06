@@ -11,7 +11,7 @@ mode = 'groupware'
         <%
         title = $thetis_config[:general]['symbol_title']
         %>
-        <tr id="tr_symbol" style="height:<%= (title.blank?)?(60):(90) %>px;">
+        <tr id="tr_symbol" style="height:<%= (title.blank?)?(68):(90) %>px;">
           <td onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
           <% unless title.blank? %>
             <span class="symbol_title">
