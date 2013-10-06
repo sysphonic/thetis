@@ -10,9 +10,14 @@ mode = 'groupware'
         <tr id="tr_top_space_upper" style="height:3px;"><td></td></tr>
         <tr id="tr_symbol" style="height:90px;">
           <td onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
-            <span style="line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;">
-              <%= $thetis_config[:general]['symbol_title'] %>
+          <%
+          title = $thetis_config[:general]['symbol_title']
+          unless title.blank?
+          %>
+            <span class="symbol_title">
+              <%= title %>
             </span>
+          <% end %>
           </td>
         </tr>
         <tr id="tr_top_space_lower" style="height:3px;"><td></td></tr>

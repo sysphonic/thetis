@@ -1,4 +1,6 @@
 
+.login_title {text-align:center; vertical-align:bottom; line-height:1.0; font-family:Times New Roman; font-size:38pt; font-weight:bold;}
+.symbol_title {line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;}
 .base_list {overflow:scroll; overflow-x:visible; background-color:white;}
 
 .desktop_toolbtn {cursor:pointer; width:64px; vertical-align:middle; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px;}
