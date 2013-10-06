@@ -8,12 +8,12 @@ mode = 'groupware'
       <!-------INDEX-Column START------->
       <table cellspacing="1" cellpadding="0" style="width:100%; padding:0px 2px;">
         <tr id="tr_top_space_upper" style="height:3px;"><td></td></tr>
-        <tr id="tr_symbol" style="height:90px;">
+        <%
+        title = $thetis_config[:general]['symbol_title']
+        %>
+        <tr id="tr_symbol" style="height:<%= (title.blank?)?(60):(90) %>px;">
           <td onclick="toggleSymbol(false);" style="text-align:center; vertical-align:bottom; cursor:pointer; background:url('<%= raw(THETIS_RELATIVE_URL_ROOT+'/'+THETIS_SYMBOL_IMAGE+'?'+rand(10000000000).to_s) %>') center top no-repeat; border:2px white solid;" onmouseover="this.style.backgroundColor='gainsboro'" onmouseout="this.style.backgroundColor='white'">
-          <%
-          title = $thetis_config[:general]['symbol_title']
-          unless title.blank?
-          %>
+          <% unless title.blank? %>
             <span class="symbol_title">
               <%= title %>
             </span>
