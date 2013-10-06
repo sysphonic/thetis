@@ -122,7 +122,7 @@ function toggleModeSign(mode)
     unselected = sign_mode_business;
   }
 
-  if (selected.style.display == "") {
+  if (!selected || selected.style.display == "") {
     return false;
   }
 
