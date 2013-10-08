@@ -2,29 +2,26 @@
 
 <%= form_tag({:controller => 'users', :action => 'create'}, :method => 'post', :name => 'form_user') %>
 
-<table width="80%" align="center" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
+<table style="width:80%; padding-top:10px;" align="center" cellspacing="0" cellpadding="0">
   <tr>
-    <td valign="top">
+    <td style="text-align:center; vertical-align:top;">
       <%= render(:partial => 'user_form') %>
     </td>
   </tr>
 </table>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table style="padding:20px 0px 10px;" align="center" cellspacing="0" cellpadding="0">
   <tr>
   <% if params[:from] == 'users_list' %>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
-    <td width="15"></td>
+    <td style="width:15px;"></td>
   <% end %>
     <td class="img_button_td" onclick="doRegisterUser(document.form_user);">
       <%= t('btn.register')%>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <br/>
 </form>

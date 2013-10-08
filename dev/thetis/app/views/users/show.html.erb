@@ -2,14 +2,13 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="15"><td colspan="3"></td></tr>
+<table style="width:100%; padding-top:15px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="54%" valign="top">
+    <td style="width:54%; vertical-align:top;">
 
       <!-- Basic Information -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px; text-align:center;">
+        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="prim_cap_td" nowrap>
               <label for="user_name"><%= t('user.u_name') %></label>
@@ -113,7 +112,7 @@
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @user.get_figure %>.png" />
             </td>
           </tr>
-          <tr height="15"><td></td></tr>
+          <tr style="height:15px;"><td></td></tr>
           <tr>
             <td class="item_cap_td" nowrap>
               <%= t('item.profile_sheet') %>
@@ -133,7 +132,7 @@
             </td>
           </tr>
         <% if @login_user.admin?(User::AUTH_USER) %>
-          <tr height="15"><td></td></tr>
+          <tr style="height:15px;"><td></td></tr>
           <tr>
             <td class="item_cap_td" nowrap>
               <label for="user_created_at"><%= User.human_attribute_name('created_at') %></label>
@@ -163,8 +162,8 @@
       </div>
 
     </td>
-    <td width="10">&nbsp;</td>
-    <td width="45%" valign="top">
+    <td style="min-width:10px; width:10px;"></td>
+    <td style="width:45%; vertical-align:top;">
 
       <%= render(:partial => 'show_addition') %>
 
@@ -173,14 +172,12 @@
 </table>
 
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table style="padding:20px 0px 10px;" align="center" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <br/>
 

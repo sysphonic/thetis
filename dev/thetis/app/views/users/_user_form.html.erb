@@ -1,9 +1,9 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
-<div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
+<div class="info_area" style="width:100%; padding:20px 0px; text-align:center;">
   <%= hidden_field('user', 'id') %>
-  <table align="center" width="85%" cellpadding="0" cellspacing="2">
+  <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
     <tr>
       <td class="prim_cap_td" nowrap>
         <label for="user_name"><%= t('user.u_name') %></label><sup style="color:red">*</sup>
@@ -177,7 +177,9 @@ end
         def_birth_d = @user.birthday.strftime('%d')
       end
       %>
-      <td class="item_cap_td" nowrap><label for="user_birthday"><%= User.human_attribute_name('birthday') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="user_birthday"><%= User.human_attribute_name('birthday') %></label>
+      </td>
       <td class="item_value_td">
         <input type="text" id="user_birthday_y" name="user[birthday_y]" value="<%= def_birth_y %>" size="30" style="width:50px; ime-mode:disabled">
         <%
@@ -285,9 +287,9 @@ getTitleSelector = function(onOk, onCancel)
   var def = _z("user_title").value;
 
   content = "<form name='form_title'>";
-  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px' cellspacing='0' cellpadding='0'>";
   content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' valign='middle'>";
+  content += "    <td style='text-align:center; vertical-align:middle;'>";
   content += "      <select name='title'>";
   var found_flag = false;
   for (var i=0; i < titles.length; i++) {
@@ -302,12 +304,12 @@ getTitleSelector = function(onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
+  content += "    <td style='text-align:center; vertical-align:top;'>";
   content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
   content += "  </tr>";
-  content += "  <tr height='100%'>";
+  content += "  <tr style='height:100%;'>";
   content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";
