@@ -302,7 +302,7 @@ en:
       priority_5: "Lowest"
     address_not_found: "Specified E-mail address is not found."
     sent: "E-mail has been sent."
-    greeting1: "Dear"
+    greeting1: "Dear "
     greeting2: ","
     your_account: "[ Your Account ]"
     registered: "You have been successfully registered in Thetis."

@@ -302,7 +302,7 @@ de:
       priority_5: "Lowest"
     address_not_found: "Die angegebene E-Mail-Adresse konnte nicht lokalisiert werden."
     sent: "E-Mail wurde abgesandt."
-    greeting1: "Herr/Frau"
+    greeting1: "Herr/Frau "
     greeting2: ","
     your_account: "[ Ihres Benutzerkonto ]"
     registered: "Sie wurden fehlerfrei in Thetis registriert."
