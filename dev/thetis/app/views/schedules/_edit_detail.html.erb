@@ -1,9 +1,9 @@
 
 <% if @schedule.nil? %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
       <%= t('paren.deleted') %>
     </td>
   </tr>
@@ -21,7 +21,7 @@ else
   <%= hidden_field_tag('display', params[:display]) %>
   <%= hidden_field('schedule', 'id') %>
 
-  <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <table align="center" cellpadding="0" cellspacing="2" style="width:95%; padding:10px 0px;">
     <tr>
       <td class="prim_cap_td" nowrap>
         <label for="schedule_title"><%= Schedule.human_attribute_name('title') %></label><sup style="color:red">*</sup>
@@ -175,10 +175,10 @@ else
             <div style="height:5px"></div>
           </div>
 
-          <table cellspacing="0" cellpadding="0" width="100%" style="padding-bottom:5px;">
+          <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
             <tr>
-              <td width="30%" align="left">
-                <table cellspacing="0" cellpadding="0" width="100%">
+              <td style="width:30%; text-align:left;">
+                <table cellspacing="0" cellpadding="0" style="width:100%;">
                   <tr>
                     <td>
                       <%= t('schedule.cap_rule') %>
@@ -210,23 +210,23 @@ else
                       <% end %>
                       </select>
                     </td>
-                    <td width="10">&nbsp;</td>
-                    <td width="70">
-                      <table cellspacing="0" cellpadding="0" width="100%">
+                    <td style="width:10px;">&nbsp;</td>
+                    <td style="width:70px;">
+                      <table cellspacing="0" cellpadding="0" style="width:100%;">
                         <tr>
-                          <td align="center">
+                          <td style="text-align:center;">
                             <input type="button" value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_z('rule_candidates'), _z('repeat_rules')); setForceTargetAll(); return false;" style="width:80px;">
                           </td>
                         </tr>
-                        <tr height="10"><td></td></tr>
+                        <tr style="height:10px;"><td></td></tr>
                         <tr>
-                          <td align="center">
+                          <td style="text-align:center;">
                             <input type="button" value="<%= raw(t('arrow.left')) %><%= t('btn.remove') %>" onclick="moveList(_z('repeat_rules'), _z('rule_candidates')); setForceTargetAll(); return false;" style="width:80px;">
                           </td>
                         </tr>
                       </table>
                     </td>
-                    <td width="10">&nbsp;</td>
+                    <td style="width:10px;">&nbsp;</td>
                     <td>
                       <select id="repeat_rules" name="repeat_rules[]" class="select_multi" size="5" multiple style="width:200px;">
                       <% rule_cache.each do |rule, disp| %>
@@ -237,7 +237,7 @@ else
                   </tr>
                 </table>
               </td>
-              <td width="70%">&nbsp;</td>
+              <td style="width:70%;">&nbsp;</td>
             </tr>
           </table>
 
@@ -252,10 +252,10 @@ else
           <span id="div_cal_repEnd"></span>
           <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
-          <table cellspacing="0" cellpadding="0" width="100%" style="padding-top:5px;">
+          <table cellspacing="0" cellpadding="0" style="width:100%; padding-top:5px;">
             <tr>
-              <td width="30%" align="left">
-                <table cellspacing="0" cellpadding="0" width="100%">
+              <td style="width:30%; text-align:left;">
+                <table cellspacing="0" cellpadding="0" style="width:100%;">
                   <tr>
                     <td colspan="3">
                       <%= t('schedule.cap_except') %>
@@ -272,19 +272,19 @@ else
                       <% end %>
                       </select>
                     </td>
-                    <td width="10">&nbsp;</td>
-                    <td valign="top">
-                      <table cellspacing="0" cellpadding="0" width="100%">
+                    <td style="width:10px;">&nbsp;</td>
+                    <td style="vertical-align:top;">
+                      <table cellspacing="0" cellpadding="0" style="width:100%;">
                         <tr>
-                          <td align="center">
+                          <td style="text-align:center;">
                             <input type="button" value="<%= t('btn.add') %>" onclick="addRepeatExcept();" style="width:80px;">
                             <input type="hidden" id="except_day" name="except_day" />
                             <span id="div_cal_except"></span>
                           </td>
                         </tr>
-                        <tr height="5"><td></td></tr>
+                        <tr style="height:5px;"><td></td></tr>
                         <tr>
-                          <td align="center">
+                          <td style="text-align:center;">
                             <input type="button" value="<%= t('btn.remove') %>" onclick="removeRepeatExcept();" style="width:80px;">
                           </td>
                         </tr>
@@ -293,7 +293,7 @@ else
                   </tr>
                 </table>
               </td>
-              <td width="70%">&nbsp;</td>
+              <td style="width:70%;">&nbsp;</td>
             </tr>
           </table>
 
@@ -363,7 +363,7 @@ _z("div_equipment").style.display = "block";
 
       <% end %>
         <div id="div_equipment" style="display:<%= div_equipment_display %>">
-          <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+          <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
             <tr>
               <td>
                 <select id="equipment_selected" name="equipment[]" class="select_multi" size="5" multiple="multiple">
@@ -375,7 +375,7 @@ _z("div_equipment").style.display = "block";
                 <% end %>
                 </select>
               </td>
-              <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+              <td style="width:35px; text-align:center; vertical-align:middle; line-height:20px;">
                 <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" title="<%= t('btn.add') %>" onclick="onSelectEquipmentClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
                 <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleEquipment();" style="cursor:pointer; margin-bottom:3px;" /><br/>
               </td>
@@ -412,7 +412,7 @@ _z("div_items").style.display = "block";
 
       <% end %>
         <div id="div_items" style="display:<%= div_items_display %>">
-          <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+          <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
             <tr>
               <td>
                 <select id="items_selected" name="items[]" class="select_multi" size="5" multiple="multiple">
@@ -424,7 +424,7 @@ _z("div_items").style.display = "block";
                 <% end %>
                 </select>
               </td>
-              <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+              <td style="width:35px; text-align:center; vertical-align:middle; line-height:20px;">
                 <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.add') %>" onclick="onSelectItemsClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
                 <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleItems();" style="cursor:pointer; margin-bottom:3px;" /><br/>
               </td>

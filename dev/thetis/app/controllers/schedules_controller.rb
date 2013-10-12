@@ -105,7 +105,7 @@ class SchedulesController < ApplicationController
     @schedule.scope = Schedule::SCOPE_PUBLIC
     @schedule.start = DateTime.parse(@date.strftime(Schedule::SYS_DATE_FORM+' 08:00 '+Time.zone.to_s))
     @schedule.end = DateTime.parse(@date.strftime(Schedule::SYS_DATE_FORM+' 09:00 '+Time.zone.to_s))
-    render(:partial => 'ajax_edit_detail', :layout => false)
+    render(:partial => 'edit_detail', :layout => false)
   end
 
   #=== save
@@ -329,12 +329,12 @@ class SchedulesController < ApplicationController
       return
     end
 
-    render(:partial => 'ajax_edit_detail', :layout => false)
+    render(:partial => 'edit_detail', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
 
-    render(:partial => 'ajax_edit_detail', :layout => false)
+    render(:partial => 'edit_detail', :layout => false)
   end
 
   #=== destroy
@@ -405,12 +405,12 @@ class SchedulesController < ApplicationController
       return
     end
 
-    render(:partial => 'ajax_show_detail', :layout => false)
+    render(:partial => 'show_detail', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
 
-    render(:partial => 'ajax_show_detail', :layout => false)
+    render(:partial => 'show_detail', :layout => false)
   end
 
   #=== show_in_day

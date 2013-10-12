@@ -115,16 +115,16 @@ if session[:edit_schedule].nil?
   unless @schedule.nil?
     if params[:edit_id].nil?
 %>
-    <%= render(:partial => 'ajax_show_detail') %>
+    <%= render(:partial => 'show_detail') %>
   <% else %>
-    <%= render(:partial => 'ajax_edit_detail') %>
+    <%= render(:partial => 'edit_detail') %>
 <%
     end
   end
 else
   @schedule = session[:edit_schedule]
 %>
-  <%= render(:partial => 'ajax_edit_detail') %>
+  <%= render(:partial => 'edit_detail') %>
 <%
   session[:edit_schedule] = nil
 end
