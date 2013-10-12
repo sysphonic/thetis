@@ -25,18 +25,18 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
 
 <% if params[:user_id].nil? %>
-  <table align="center" width="98%" cellspacing="0" cellpadding="0">
+  <table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="left" width="30%">
+      <td style="width:30%; text-align:left;">
       <% unless @login_user.nil? %>
-        <table align="left" cellspacing="0" cellpadding="0" width="65">
+        <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
           <tr>
-            <td align="left" nowrap width="30">
+            <td style="width:30px; text-align:left;" nowrap>
               <img class="img_btn" onclick="showNewDetail(); return false;" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>">
             </td>
             <% if @login_user.admin? User::AUTH_SCHEDULE %>
-            <td width="5"></td>
-            <td align="left" nowrap width="30">
+            <td style="width:5px;"></td>
+            <td style="width:30px; text-align:left;" nowrap>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
             </td>
             <% end %>
@@ -44,12 +44,12 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         </table>
       <% end %>
       </td>
-      <td align="center" nowrap width="40%">
+      <td nowrap style="width:40%; text-align:center;">
         <% if @login_user.nil? %>
           &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
         <% end %>
       </td>
-      <td align="right" nowrap width="30%">
+      <td nowrap style="width:30%; text-align:right;">
         <%
         display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
         unless @login_user.nil?
@@ -73,9 +73,9 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   </table>
 
 <% else %>
-  <table align="center" width="98%" cellspacing="0" cellpadding="0">
+  <table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="right">
+      <td style="text-align:right;">
         <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'month', :user_id => params[:user_id]) %>'; return false;">
           <%= t('schedule.back_to_calendar') %>
         </a>
