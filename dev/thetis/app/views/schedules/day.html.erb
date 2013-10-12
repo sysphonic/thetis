@@ -111,22 +111,14 @@ next_week = @date + 7
 
   <div id="div_schedule_detail">
 <%
-if session[:edit_schedule].nil?
-  unless @schedule.nil?
-    if params[:edit_id].nil?
+unless @schedule.nil?
+  if params[:edit_id].nil?
 %>
     <%= render(:partial => 'show_detail') %>
   <% else %>
     <%= render(:partial => 'edit_detail') %>
 <%
-    end
   end
-else
-  @schedule = session[:edit_schedule]
-%>
-  <%= render(:partial => 'edit_detail') %>
-<%
-  session[:edit_schedule] = nil
 end
 %>
   </div>

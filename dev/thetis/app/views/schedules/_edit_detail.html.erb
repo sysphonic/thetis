@@ -59,7 +59,7 @@ else
             end_val = @schedule.end.strftime(THETIS_DATE_FORMAT_YMD)
           end
           %>
-          <input id="start_date" name="start_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= start_val %>" onClick="showCalStart();" />
+          <input id="start_date" name="start_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= start_val %>" onclick="showCalStart();" />
           <input id="schedule_start" name="schedule[start]" type="hidden" />
           <span id="div_cal_start"></span>
 
@@ -90,7 +90,7 @@ else
 
           &nbsp;<span style="color:firebrick">-</span>&nbsp;
 
-          <input id="end_date" name="end_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= end_val %>" onClick="showCalEnd();" />
+          <input id="end_date" name="end_date" type="text" readonly style="width:90px; cursor:pointer;" value="<%= end_val %>" onclick="showCalEnd();" />
           <input id="schedule_end" name="schedule[end]" type="hidden" />
           <span id="div_cal_end"></span>
 
@@ -302,7 +302,9 @@ else
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="schedule_detail"><%= t('btn.detail') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="schedule_detail"><%= t('btn.detail') %></label>
+      </td>
       <td class="item_value_td">
         <%= text_area('schedule', 'detail', :rows => '4', :style => 'width:100%', :onChange => 'reqTargetDay++') %>
       </td>
@@ -328,7 +330,9 @@ else
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><label for="schedule_members"><%= t('msg.members') %></label></td>
+      <td class="item_cap_td" nowrap>
+        <label for="schedule_members"><%= t('msg.members') %></label>
+      </td>
       <td class="item_value_td">
 
         <%= render(:partial => 'edit_members') %>
@@ -336,7 +340,9 @@ else
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><%= t('menu.equipment') %></td>
+      <td class="item_cap_td" nowrap>
+        <%= t('menu.equipment') %>
+      </td>
       <td class="item_value_td">
 
       <%
@@ -385,7 +391,9 @@ _z("div_equipment").style.display = "block";
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><%= t('menu.items') %></td>
+      <td class="item_cap_td" nowrap>
+        <%= t('menu.items') %>
+      </td>
       <td class="item_value_td">
 
       <%
@@ -438,14 +446,18 @@ _z("div_items").style.display = "block";
     users_cache = {}
   %>
     <tr>
-      <td class="item_cap_td" nowrap><%= t('msg.created_by') %></td>
+      <td class="item_cap_td" nowrap>
+        <%= t('msg.created_by') %>
+      </td>
       <td class="item_value_td">
         <b style="color:darkgreen;"><%= User.get_name(@schedule.created_by, users_cache) %></b>
         &nbsp;<span style="font-size:10pt; vertical-align:middle;">(<%= @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+" %H:%M") %>)</span>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap><%= t('msg.updated_by') %></td>
+      <td class="item_cap_td" nowrap>
+        <%= t('msg.updated_by') %>
+      </td>
       <td class="item_value_td">
       <% unless @schedule.updated_by.nil? %>
         <b style="color:darkgreen;"><%= User.get_name(@schedule.updated_by, users_cache) %></b>
@@ -457,7 +469,9 @@ _z("div_items").style.display = "block";
 
   <% if ((params[:action] == 'edit') or (params[:action] == 'day' and !params[:edit_id].nil?)) and is_repeat %>
     <tr>
-      <td class="prim_cap_td" nowrap><%= t('msg.update_target') %></td>
+      <td class="prim_cap_td" nowrap>
+        <%= t('msg.update_target') %>
+      </td>
       <td class="item_value_td">
         <div id="update_target">
           <input type="radio" id="repeat_update_target_all" name="repeat_update_target" value="all" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=true; is_repeat.disabled=false; forceRepeat(true);" /><label for="repeat_update_target_all"><%= t('schedule.all_repeated') %></label>

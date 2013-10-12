@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2013 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -117,7 +117,7 @@ class SchedulesController < ApplicationController
 
     date = Date.parse(params[:date])
 
-    unless params[:id].nil? or params[:id].empty?
+    unless params[:id].blank?
       begin
         schedule = Schedule.find(params[:id])
       rescue => evar
@@ -140,34 +140,34 @@ class SchedulesController < ApplicationController
       end
     end
 
-    if (params[:users].nil? or params[:users].empty?) \
-        and (params[:groups].nil? or params[:groups].empty?) \
-        and (params[:teams].nil? or params[:teams].empty?) \
+    if (params[:users].blank?) \
+        and (params[:groups].blank?) \
+        and (params[:teams].blank?) \
         and (params[:schedule][:scope] != Schedule::SCOPE_ALL)
 
       nearest_day = schedule.get_nearest_day(date)
       schedule.destroy unless schedule.nil?
     else
 
-      if params[:users].nil? or params[:users].empty?
+      if params[:users].blank?
         params[:schedule][:users] = nil
       else
         params[:schedule][:users] = '|' + params[:users].join('|') + '|'
       end
 
-      if params[:groups].nil? or params[:groups].empty?
+      if params[:groups].blank?
         params[:schedule][:groups] = nil
       else
         params[:schedule][:groups] = '|' + params[:groups].join('|') + '|'
       end
 
-      if params[:teams].nil? or params[:teams].empty?
+      if params[:teams].blank?
         params[:schedule][:teams] = nil
       else
         params[:schedule][:teams] = '|' + params[:teams].join('|') + '|'
       end
 
-      equipment_ids = params[:equipment] || []
+      equipment_ids = (params[:equipment] || [])
       equipment_ids.delete('')
 
       if equipment_ids.empty?
@@ -184,7 +184,7 @@ class SchedulesController < ApplicationController
         params[:schedule][:equipment] = '|' + equipment_ids.join('|') + '|'
       end
 
-      if params[:items].nil? or params[:items].empty?
+      if params[:items].blank?
         params[:schedule][:items] = nil
       else
         params[:schedule][:items] = '|' + params[:items].join('|') + '|'
@@ -192,13 +192,13 @@ class SchedulesController < ApplicationController
 
       if params[:is_repeat] == '1'
 
-        if params[:repeat_rules].nil? or params[:repeat_rules].empty?
+        if params[:repeat_rules].blank?
           params[:schedule][:repeat_rule] = nil
         else
           params[:schedule][:repeat_rule] = '|' + params[:repeat_rules].join('|') + '|'
         end
 
-        if params[:excepts].nil? or params[:excepts].empty?
+        if params[:excepts].blank?
           params[:schedule][:except] = nil
         else
           excepts = params[:excepts]
@@ -221,8 +221,6 @@ class SchedulesController < ApplicationController
       nearest_day = check_schedule.get_nearest_day(date)
       if nearest_day.nil?
         check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
-# ActionDispatch::Cookies::CookieOverflow occurs!
-#        session[:edit_schedule] = check_schedule
         flash[:notice] = 'ERROR:' + t('schedule.no_day_in_rule')
         if params[:fwd_controller].nil? or params[:fwd_controller].empty?
           self.index
@@ -278,7 +276,7 @@ class SchedulesController < ApplicationController
 
     params[:date] = nearest_day.strftime(Schedule::SYS_DATE_FORM)
 
-    if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+    if params[:fwd_controller].blank?
       self.index
     else
       prms = ApplicationHelper.get_fwd_params(params)
@@ -446,7 +444,7 @@ class SchedulesController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    if params[:display].nil? or params[:display].empty?
+    if params[:display].blank?
 
     else
       case params[:display]
@@ -556,7 +554,7 @@ class SchedulesController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    if params[:user_id].nil? or params[:user_id].empty?
+    if params[:user_id].blank?
       user_id = @login_user.id unless @login_user.nil?
       @schedules = Schedule.get_user_day(@login_user, @date)
     else
