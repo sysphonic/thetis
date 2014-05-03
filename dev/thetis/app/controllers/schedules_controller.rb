@@ -140,31 +140,20 @@ class SchedulesController < ApplicationController
       end
     end
 
-    if (params[:users].blank?) \
-        and (params[:groups].blank?) \
-        and (params[:teams].blank?) \
+    if params[:users].blank? \
+        and params[:groups].blank? \
+        and params[:teams].blank? \
         and (params[:schedule][:scope] != Schedule::SCOPE_ALL)
 
       nearest_day = schedule.get_nearest_day(date)
       schedule.destroy unless schedule.nil?
     else
-
-      if params[:users].blank?
-        params[:schedule][:users] = nil
-      else
-        params[:schedule][:users] = '|' + params[:users].join('|') + '|'
-      end
-
-      if params[:groups].blank?
-        params[:schedule][:groups] = nil
-      else
-        params[:schedule][:groups] = '|' + params[:groups].join('|') + '|'
-      end
-
-      if params[:teams].blank?
-        params[:schedule][:teams] = nil
-      else
-        params[:schedule][:teams] = '|' + params[:teams].join('|') + '|'
+      [:users, :groups, :teams, :items].each do |attr|
+        if params[attr].blank?
+          params[:schedule][attr] = nil
+        else
+          params[:schedule][attr] = '|' + params[attr].join('|') + '|'
+        end
       end
 
       equipment_ids = (params[:equipment] || [])
@@ -184,12 +173,6 @@ class SchedulesController < ApplicationController
         params[:schedule][:equipment] = '|' + equipment_ids.join('|') + '|'
       end
 
-      if params[:items].blank?
-        params[:schedule][:items] = nil
-      else
-        params[:schedule][:items] = '|' + params[:items].join('|') + '|'
-      end
-
       if params[:is_repeat] == '1'
 
         if params[:repeat_rules].blank?
@@ -206,9 +189,7 @@ class SchedulesController < ApplicationController
           excepts.reverse!
           params[:schedule][:except] = '|' + excepts.join('|') + '|'
         end
-
       else
-
         params[:schedule][:repeat_rule] = nil
         params[:schedule][:repeat_start] = nil
         params[:schedule][:repeat_end] = nil

@@ -130,12 +130,12 @@ class GroupsController < ApplicationController
 
     @group = Group.find(params[:id])
 
-    unless params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    unless params[:thetisBoxSelKeeper].blank?
 
       parent_id = params[:thetisBoxSelKeeper].split(':').last
 
       childs = @group.get_childs(true, false)
-      if childs.include?(parent_id) or @group.id.to_s == parent_id
+      if childs.include?(parent_id) or (@group.id == parent_id.to_i)
         flash[:notice] = 'ERROR:' + t('group.cannot_be_parent')
         redirect_to(:action => 'show_tree')
         return

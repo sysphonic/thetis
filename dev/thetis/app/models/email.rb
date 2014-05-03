@@ -122,6 +122,8 @@ class Email < ActiveRecord::Base
     temp.binmode
     temp.close(false)
 
+    fnames = []
+
     Zip::Archive.open(temp.path) do |arc|
       self.mail_attachments.each do |mail_attach|
         fname = mail_attach.name
@@ -130,6 +132,8 @@ class Email < ActiveRecord::Base
         rescue => evar
           Log.add_error(nil, evar)
         end
+        fname += "(#{fnames.count(fname)+1})" if fnames.include?(fname)
+        fnames << fname
         arc.add_file(fname, mail_attach.get_path)
       end
     end

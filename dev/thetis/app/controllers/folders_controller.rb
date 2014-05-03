@@ -152,7 +152,7 @@ class FoldersController < ApplicationController
 
     @folder = Folder.find(params[:id])
 
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    if params[:thetisBoxSelKeeper].blank?
       redirect_to(:action => 'show_tree')
       return
     end
@@ -177,7 +177,7 @@ class FoldersController < ApplicationController
 
     # Check if specified parent is not one of subfolders.
     childs = Folder.get_childs(@folder.id, nil, true, true, false)
-    if childs.include?(parent_id) or @folder.id.to_s == parent_id
+    if childs.include?(parent_id) or (@folder.id == parent_id.to_i)
       flash[:notice] = 'ERROR:' + t('folder.cannot_be_parent')
       redirect_to(:action => 'show_tree')
       return

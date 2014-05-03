@@ -152,7 +152,7 @@ class MailFoldersController < ApplicationController
 
     @mail_folder = MailFolder.find(params[:id])
 
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    if params[:thetisBoxSelKeeper].blank?
       prms = ApplicationHelper.get_fwd_params(params)
       prms[:action] = 'show_tree'
       redirect_to(prms)
@@ -166,7 +166,7 @@ class MailFoldersController < ApplicationController
     else
       # Check if specified parent is not one of subfolders.
       childs = MailFolder.get_childs(@mail_folder.id, true, false)
-      if childs.include?(parent_id) or @mail_folder.id.to_s == parent_id
+      if childs.include?(parent_id) or (@mail_folder.id == parent_id.to_i)
         flash[:notice] = 'ERROR:' + t('folder.cannot_be_parent')
         prms = ApplicationHelper.get_fwd_params(params)
         prms[:action] = 'show_tree'
@@ -307,12 +307,12 @@ class MailFoldersController < ApplicationController
       return
     end
 
+    download_name = "mail_attachments#{email.id}.zip"
     zip_file = email.zip_attachments(params[:enc])
 
     if zip_file.nil?
-      render(:text => '')
+      send_data('', :type => 'application/octet-stream;', :disposition => 'attachment;filename="'+download_name+'"')
     else
-      download_name = "mail_attachments#{email.id}.zip"
       filepath = zip_file.path
       send_file(filepath, :filename => download_name, :stream => true, :disposition => 'attachment')
     end
@@ -351,7 +351,11 @@ class MailFoldersController < ApplicationController
     end
 
     filepath = mail_attach.get_path
-    send_file(filepath, :filename => mail_attach_name, :stream => true, :disposition => 'attachment')
+    if FileTest.exist?(filepath)
+      send_file(filepath, :filename => mail_attach_name, :stream => true, :disposition => 'attachment')
+    else
+      send_data('', :type => 'application/octet-stream;', :disposition => 'attachment;filename="'+mail_attach_name+'"')
+    end
   end
 
   #=== get_mail_raw
@@ -374,7 +378,11 @@ class MailFoldersController < ApplicationController
     end
 
     filepath = File.join(email.get_dir, email.id.to_s + Email::EXT_RAW)
-    send_file(filepath, :filename => email_name, :stream => true, :disposition => 'attachment')
+    if FileTest.exist?(filepath)
+      send_file(filepath, :filename => email_name, :stream => true, :disposition => 'attachment')
+    else
+      send_data('', :type => 'application/octet-stream;', :disposition => 'attachment;filename="'+email_name+'"')
+    end
   end
 
   #=== empty

@@ -83,25 +83,6 @@ class MailAccountsController < ApplicationController
     render(:layout => (!request.xhr?))
   end
 
-  #=== edit_default
-  #
-  #Shows form to edit default MailAccount information.
-  #If not found, shows New Account form.
-  #
-  def edit_default
-    Log.add_info(request, params.inspect)
-
-    mail_account_xtype = params[:mail_account_xtype]
-
-    mail_account = MailAccount.get_default_for(@login_user.id, mail_account_xtype)
-
-    if mail_account.nil?
-      redirect_to(:action => 'new', :xtype => mail_account_xtype)
-    else
-      redirect_to(:action => 'edit', :id => mail_account.id, :xtype => mail_account_xtype)
-    end
-  end
-
   #=== update
   #
   #Updates MailAccount information.

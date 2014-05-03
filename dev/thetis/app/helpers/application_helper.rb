@@ -183,7 +183,7 @@ module ApplicationHelper
 
   #=== self.h_s_quote
   #
-  #Escapes a specified string as an argument with single-quotes of JavaScript.
+  #Escapes specified string as a JavaScript argument enclosed with single-quotes.
   #
   #_str_:: Target string.
   #return:: Escaped string.

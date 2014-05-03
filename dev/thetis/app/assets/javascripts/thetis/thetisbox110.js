@@ -1611,7 +1611,7 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
       }
       base.appendChild(d);
 
-      menu.href = "javascript:this.onclick()";
+      menu.href = "javascript:void(0)";
       ThetisBox.addEvent(menu, "click",
             function(_onclick, menu_id, d_id){
               return function(evt){
@@ -1632,7 +1632,7 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
             }.call(this, onclick, menu.id, d.id));
       //menu.onclick = onclick+" var selKeeper=_z('"+selKeeperId+"'); if (selKeeper != null) { if (selKeeper.value == '"+menu.id+"') { ThetisBox.toggleTree('"+d.id+"'); } else { ThetisBox.openTree('"+d.id+"', true); } ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); } return false;";
     } else {
-      menu.href = "javascript:this.onclick()";
+      menu.href = "javascript:void(0)";
       ThetisBox.addEvent(menu, "click",
             function(_onclick, menu_id){
               return function(evt){

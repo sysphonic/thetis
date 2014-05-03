@@ -36,14 +36,14 @@ var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sl
 var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
 var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
 
-
 function getUserAgentName()
 {
   var userAgent = window.navigator.userAgent.toLowerCase();
 
   if (userAgent.indexOf("opera") >= 0) {
     return "opera";
-  } else if (userAgent.indexOf("msie") >= 0) {
+  } else if (userAgent.indexOf("msie") >= 0
+              || userAgent.indexOf("trident") >= 0) {
     return "msie";
   } else if (userAgent.indexOf("chrome") >= 0) {
     return "chrome";
@@ -109,6 +109,15 @@ function getVerIE()
       return parseInt(ie_ver, 10);
     }
   }
+
+  m = navigator.userAgent.match(/.*Trident[/ ]*([0-9]+)/);
+  if (m && m.length > 1) {
+    var trident_ver = m[1];
+    if (trident_ver) {
+      return (parseInt(trident_ver, 10) + 4);
+    }
+  }
+
   return -1;
 }
 
