@@ -259,6 +259,7 @@ class SchedulesController < ApplicationController
 
     if params[:fwd_controller].blank?
       self.index
+      self.show unless self.performed?
     else
       prms = ApplicationHelper.get_fwd_params(params)
       prms.delete('id')

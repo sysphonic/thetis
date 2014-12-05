@@ -1181,7 +1181,7 @@ en:
     bcc: "Bcc :"
     message: "Message :"
     edit_message: "Please edit message."
-    edit_new_label: "Please specify message for a new label."
+    edit_new_label: "Please input message for a new label."
     search_keywords: "Search Keywords"
     total: "Total "
     import_error: "Import Error"

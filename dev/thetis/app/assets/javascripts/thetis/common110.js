@@ -88,11 +88,14 @@ function removeClassName(elem, className)
 
 function avoidSubmit(evt)
 {
-  evt = evt || window.event;
+  evt = (evt || window.event);
 
   if (evt.keyCode == 13) {
     if (evt.cancelBubble != null) {
       evt.cancelBubble = true;
+      if (evt.preventDefault) { // for IE11
+        evt.preventDefault();
+      }
     }
     return false;
   } else {

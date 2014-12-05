@@ -177,6 +177,9 @@ module ApplicationHelper
     if vals.length <= 1 or vals.last.length <= max_prec
       return exp
     else
+      prec_val = 10 ** max_prec
+      f = ((f*prec_val).round.to_f / prec_val)
+
       return sprintf("%.#{max_prec}f", f)
     end
   end

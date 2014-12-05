@@ -1185,7 +1185,7 @@ ja:
     bcc: "Bcc:"
     message: "メッセージ ："
     edit_message: "メッセージを編集してください。"
-    edit_new_label: "新しい付箋紙のメッセージを指定してください。"
+    edit_new_label: "新しい付箋紙の内容を入力してください。"
     search_keywords: "検索キーワード"
     total: "全"
     import_error: "インポート・エラー"

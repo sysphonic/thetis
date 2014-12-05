@@ -636,31 +636,28 @@ doRegisterSchedule = function(schedule_id, addParams)
   }
   addParams.push("id=" + schedule_id);
 
+<% if params[:from].blank? %>
+// No Ajax because of the case in which a different day is specified.
   document.form_detail.action = "<%= url_for(:controller => 'schedules', :action => 'save') %>" + "?" + addParams.join("&");
   document.form_detail.submit();
+<% else %>
 
-/* No Ajax because of the case in which a different day is specified.
+  addParams.push(Form.serialize(document.form_detail));
+
   new Ajax.Updater(
-            "div_timetable",
-            "<%= url_for(:controller => 'schedules', :action => 'save') %>?id="+schedule_id,
-            {
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){
-                thetisBox.remove();
-
-                _z("div_schedule_detail").innerHTML = "";
-
-                if (is_MS) {    // Bugfull IE6.x/7.0 has a lot of serious BUGs in arrignment.
-                  doResize();
-                  _z("main_div").style.overflow = "";
-                }
-                tips("<%= t('msg.register_success') %>");
-              },
-              parameters:Form.serialize(document.form_detail)
-            }
-          );
-*/
+        ThetisBox.getInstanceForElem(document.form_detail).getContent(),
+        "<%= url_for(:controller => 'schedules', :action => 'save') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBox.remove();
+          }
+        }
+      );
+<% end %>
 }
 
 setAllDay = function(sw)

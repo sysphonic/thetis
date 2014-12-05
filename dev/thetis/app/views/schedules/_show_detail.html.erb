@@ -343,6 +343,9 @@ end
   </table>
 
 <%= render(:partial => 'common/user_groups') %>
+<% if request.xhr? %>
+<%= render(:partial => 'common/flash_notice') %>
+<% end %>
 
 <script type="text/javascript">
 
