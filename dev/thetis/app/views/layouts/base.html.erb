@@ -46,27 +46,6 @@ if (top && typeof(top.setLeftLogin) != "undefined") {
 
 function doOnLoad()
 {
-<% if request.path.index('/items/show').nil?   # Not to be scrolled by default.. %>
-  if (document.forms
-      && document.forms[0]
-      && document.forms[0].elements)
-  {
-    try {
-      for (var i=0; i < document.forms[0].elements.length; i++) {
-        var first_elem = document.forms[0].elements[i];
-        if (first_elem.type != "select-one"
-            && first_elem.type != "hidden"
-            && !first_elem.readOnly
-            && first_elem.name != "authenticity_token") {
-          first_elem.focus();
-          break;
-        }
-      }
-    } catch(e) {
-    }
-  }
-<% end %>
-
   eval("try{ if(onLoadSub){ onLoadSub() } }catch(e){}");
 
   setTimeout("doResize()", 10);

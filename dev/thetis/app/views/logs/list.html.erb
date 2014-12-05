@@ -1,56 +1,54 @@
 
 <%= form_tag( {:controller => 'logs', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%; margin:0px 0px 5px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="left" nowrap width="1%">
+    <td nowrap style="width:1%; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'configure') %>';">
     </td>
-    <td align="right">
+    <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
       &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-<% unless @login_user.nil? %>
-  <%= t('cap.targets') %> <%= select_tag 'filter',
-                           options_for_select([
-                                                [h(t('log.all')),'all'],
-                                                [h(t('btn.login')),'login'],
-                                                [h(t('menu.desktop')),'desktop'],
-                                                [h(t('menu.items')),'items'],
-                                                [h(t('folder.plural')),'folders'],
-                                                [h(t('menu.schedules')),'schedules'],
-                                                [h(t('menu.equipment')),'equipment'],
-                                                [h(t('user.plural')),'users'],
-                                                [h(t('group.plural')),'groups'],
-                                                [h(t('team.plural')),'teams'],
-                                                [h(t('template.plural')),'templates'],
-                                                [h(t('workflow.plural')),'workflows'],
-                                                [h(t('research.plural')), 'researches'],
-                                                [h(t('menu.mail')), 'emails'],
-                                                [h(t('address.book')), 'addressbook'],
-                                                [h(t('feed.cap')), 'feeds']
-                                              ],
-                                              params[:filter])
-            %>
+<%
+unless @login_user.nil?
+  opts = []
+  opts << [h(t('log.all')),'all']
+  opts << [h(t('btn.login')),'login']
+  opts << [h(t('menu.desktop')),'desktop']
+  opts << [h(t('menu.items')),'items']
+  opts << [h(t('folder.plural')),'folders']
+  opts << [h(t('menu.schedules')),'schedules']
+  opts << [h(t('menu.equipment')),'equipment']
+  opts << [h(t('user.plural')),'users']
+  opts << [h(t('group.plural')),'groups']
+  opts << [h(t('team.plural')),'teams']
+  opts << [h(t('template.plural')),'templates']
+  opts << [h(t('workflow.plural')),'workflows']
+  opts << [h(t('research.plural')), 'researches']
+  opts << [h(t('menu.mail')), 'emails']
+  opts << [h(t('address.book')), 'addressbook']
+  opts << [h(t('feed.cap')), 'feeds']
+%>
+  <%= t('cap.targets') %> <%= select_tag 'filter', options_for_select(opts, params[:filter]) %>
 <% end %>
       <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
       <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'list') %>';"/>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+  <tr style="height:5px;"><td></td></tr>
   <tr>
-    <td colspan="2" align="right" nowrap>
+    <td colspan="2" style="text-align:right;" nowrap>
         <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
         <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
         <span style="color:silver;">|</span>
         <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin:0px 0px 10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('log', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -63,18 +61,17 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_logs">
-<table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_logs" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('logs.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="22%" nowrap onClick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onClick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onClick="sortList('remote_ip')"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="7%"  nowrap onClick="sortList('log_type')"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="28%" nowrap onClick="sortList('access_path')"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;" nowrap onclick="sortList('logs.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:22%;" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('remote_ip')"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:7%;"  nowrap onclick="sortList('log_type')"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:28%;" nowrap onclick="sortList('access_path')"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}
@@ -82,7 +79,7 @@ user_obj_cache = {}
 @logs.each_with_index do |log, idx|
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= log.id %></td>
     <td class="<%= td_class %>" nowrap style="text-align:center;"><%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
     <%
@@ -195,6 +192,7 @@ function _doDeleteAll()
 {
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'destroy_all') %>";
   document.form_list.method = "post";
+  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.submit();
   prog("TOP-RIGHT");
 }

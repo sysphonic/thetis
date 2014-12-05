@@ -115,10 +115,11 @@ class Log < ActiveRecord::Base
     detail = detail.gsub(/'/m, '\\\\\'')
 
     log = self.new
-    log._build(type, request, detail)
-    begin
-      log.save
-    rescue
+    if log._build(type, request, detail)
+      begin
+        log.save
+      rescue
+      end
     end
   end
 
@@ -151,6 +152,7 @@ class Log < ActiveRecord::Base
   #_type_:: Log type.
   #_request_:: Request parameters from client.
   #_detail_:: Detail information.
+  #return:: true if succeeded, false otherwise.
   #
   def _build(type, request, detail)
 
@@ -165,6 +167,12 @@ class Log < ActiveRecord::Base
     end
     self.log_type = type
 
-    self.detail = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': ')) + detail
+    user_agent = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': '))
+    if user_agent.include?('Googlebot')
+      return false
+    end
+
+    self.detail = user_agent + detail
+    return true
   end
 end

@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2012, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2014, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -53,6 +53,23 @@ function getUserAgentName()
     return "gecko";
   } else {
     return "unknown";
+  }
+}
+
+function focusFirstElem(frm)
+{
+  try {
+    for (var i=0; i < frm.elements.length; i++) {
+      var firstElem = frm.elements[i];
+      if (firstElem.type != "select-one"
+          && firstElem.type != "hidden"
+          && !firstElem.readOnly
+          && firstElem.name != "authenticity_token") {
+        firstElem.focus();
+        break;
+      }
+    }
+  } catch(e) {
   }
 }
 
