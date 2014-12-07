@@ -27,7 +27,7 @@ class ZeptairXlog < ActiveRecord::Base
       count = ZeptairXlog.count
       if count > max
         over_num = count - max
-        logs = ZeptairXlog.find(:all, {:limit => over_num, :order => 'id ASC'})
+        logs = ZeptairXlog.where(nil).limit(over_num).order('id ASC').to_a
         logs.each do |log|
           log.destroy
         end
@@ -42,7 +42,7 @@ class ZeptairXlog < ActiveRecord::Base
   #
   def self.export_csv
 
-    xlogs = ZeptairXlog.find(:all, :order => 'id ASC')
+    xlogs = ZeptairXlog.where(nil).order('id ASC').to_a
 
     csv_line = ''
 

@@ -356,7 +356,7 @@ class Research < ActiveRecord::Base
   #
   def self.get_for(user_id)
 
-    return Research.find(:first, :conditions => {:user_id => user_id})
+    return Research.where("user_id=#{user_id}").first
   end
 
   #=== self.get_q_codes

@@ -99,11 +99,17 @@
 
 function onBtnModeBusinessClicked(elem)
 {
+  if (typeof(hideTopicBox) == "function") {
+    hideTopicBox();
+  }
   setMode("business");
 }
 
 function onBtnModeGroupwareClicked(elem)
 {
+  if (typeof(hideTopicBox) == "function") {
+    hideTopicBox();
+  }
   setMode("groupware");
 }
 

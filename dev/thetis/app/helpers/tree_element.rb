@@ -98,7 +98,7 @@ module TreeElement
 
     else
 
-      nodes = klass.find(:all, :conditions => ['parent_id=?', node_id], :order => 'xorder ASC, id ASC')
+      nodes = klass.where("parent_id=#{node_id}").order('xorder ASC, id ASC').to_a
       if ret_obj
         array = nodes
       else
@@ -138,7 +138,7 @@ module TreeElement
     end
     con << "(parent_id=#{node_id})"
 
-    tree[node_id] = klass.find(:all, {:conditions => con, :order => order_by})
+    tree[node_id] = klass.where(con).order(order_by).to_a
 
     tree[node_id].each do |node|
       tree = klass.get_tree(tree, conditions, node.id.to_s)

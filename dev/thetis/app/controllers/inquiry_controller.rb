@@ -38,7 +38,7 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     ary = []
-    groups = Group.find(:all)
+    groups = Group.where(nil).to_a
     unless groups.nil?
       groups_cache = {}
       group_obj_cache = Group.build_cache(groups)

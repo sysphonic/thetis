@@ -81,7 +81,7 @@ module FoldersHelper
     else
 
       users_cache = Hash.new
-      all_users = User.find(:all)
+      all_users = User.where(nil).to_a
       unless all_users.nil?
         all_users.each do |user|
           users_cache[user.id] = user
@@ -93,7 +93,7 @@ module FoldersHelper
         top_childs.each do |folder|
           if folder.xtype == Folder::XTYPE_USER
 
-            user = users_cache.delete folder.owner_id
+            user = users_cache.delete(folder.owner_id)
 
             unless user.nil? or user.get_groups_a.empty?
               delete_ary << folder

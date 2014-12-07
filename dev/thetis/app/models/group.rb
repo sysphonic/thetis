@@ -57,7 +57,7 @@ class Group < ActiveRecord::Base
 
     # General Folders
     con = "(read_groups like '%|#{self.id}|%') or (write_groups like '%|#{self.id}|%')"
-    folders = Folder.find(:all, :conditions => con)
+    folders = Folder.where(con).to_a
 
     unless folders.nil?
       folders.each do |folder|
@@ -274,7 +274,7 @@ class Group < ActiveRecord::Base
       con = "groups like '%|"+group_id+"|%'"
     end
 
-    return Equipment.find(:all, :conditions => con)
+    return Equipment.where(con).to_a
   end
 
   #=== get_path
@@ -375,7 +375,7 @@ class Group < ActiveRecord::Base
   def self.get_group_folder(group_id)
 
     begin
-      return Folder.find(:first, :conditions => ['owner_id=? and xtype=?', group_id.to_i, Folder::XTYPE_GROUP])
+      return Folder.where("(owner_id=#{group_id}) and (xtype='#{Folder::XTYPE_GROUP}')").first
     rescue => evar
       Log.add_error(nil, evar)
       return nil

@@ -229,7 +229,7 @@ class EquipmentController < ApplicationController
 
     return if con.nil?
 
-    equipment_a = Equipment.find(:all, :conditions => con)
+    equipment_a = Equipment.where(con).to_a
     @equip_obj_cache ||= Equipment.build_cache(equipment_a)
 
     @equip_schedule_hash = {}

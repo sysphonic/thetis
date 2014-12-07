@@ -369,7 +369,7 @@ class UsersController < ApplicationController
 
         user_admin_err = false
 
-        user_admins = User.find(:all, :conditions => ["auth like '%|#{User::AUTH_USER}|%' or auth = ?", User::AUTH_ALL] )
+        user_admins = User.where("auth like '%|#{User::AUTH_USER}|%' or auth='#{User::AUTH_ALL}'").to_a
 
         if user_admins.nil? or user_admins.empty?
 

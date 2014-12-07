@@ -16,7 +16,7 @@ class MailAccount < ActiveRecord::Base
 
   validates_presence_of(:title)
 
-  has_many(:mail_filters, :dependent => :destroy, :order=>'mail_filters.xorder')
+  has_many(:mail_filters, -> {order('mail_filters.xorder asc')}, :dependent => :destroy)
 
   public::UIDL_SEPARATOR = "\n"
 
@@ -154,12 +154,10 @@ class MailAccount < ActiveRecord::Base
 
     con = "user_id=#{user_id}"
     con << " and (#{add_con})" unless add_con.nil? or add_con.empty?
-    mail_accounts = MailAccount.find(:all, :conditions => con)
+    mail_accounts = MailAccount.where(con).to_a
 
-    unless mail_accounts.nil?
-      mail_accounts.each do |mail_account|
-        mail_account.destroy
-      end
+    mail_accounts.each do |mail_account|
+      mail_account.destroy
     end
   end
 

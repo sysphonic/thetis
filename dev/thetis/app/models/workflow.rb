@@ -388,8 +388,8 @@ class Workflow < ActiveRecord::Base
   #
   def self.get_received_list(user_id, order_by=nil)
 
-    con = ["(status=?) and (users like '%|?|%')", STATUS_ACTIVE, user_id.to_i]
-    return Workflow.find(:all, :conditions => con, :order => order_by)
+    con = "(status='#{STATUS_ACTIVE}') and (users like '%|#{user_id}|%')"
+    return Workflow.where(con).order(order_by).to_a
   end
 
   #=== expected_list_for

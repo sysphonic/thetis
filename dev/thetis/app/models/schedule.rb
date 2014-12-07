@@ -160,7 +160,7 @@ class Schedule < ActiveRecord::Base
     con << "('#{from_s}' <= end)" unless from_s.nil?
     con << "(start <= '#{till_s}')" unless till_s.nil?
 
-    return Schedule.find(:all, :conditions => con.join(' and '), :order => 'start DESC')
+    return Schedule.where(con.join(' and ')).order('start DESC').to_a
   end
 
   #=== self.check_holiday
@@ -911,9 +911,9 @@ private
     # To work it around, we should not use the Array wrapper
     # as much as possible.
     #
-    con = con[0] if con.length == 1
+    con = con[0] if (con.length == 1)
 
-    schedules = Schedule.find(:all, :conditions => con, :order => 'xtype DESC, start ASC');
+    schedules = Schedule.where(con).order('xtype DESC, start ASC').to_a
 
     schedules.sort! { |a, b|
       if a.holiday?
@@ -1007,7 +1007,7 @@ private
     end
     con << " and (scope != '#{Schedule::SCOPE_ALL}')"
 
-    schedules = Schedule.find(:all, :conditions => con) || []
+    schedules = Schedule.where(con).to_a
     schedules.each do |schedule|
       break if SchedulesHelper.check_valid_members(schedule.get_users_a, user_exists_cache, User)
       break if SchedulesHelper.check_valid_members(schedule.get_groups_a, group_exists_cache, Group)

@@ -27,7 +27,7 @@ scope_tabs = new Array("groups", "teams");
           <tr>
             <td>
               <%
-              groups = Group.find(:all) || []
+              groups = Group.where(nil).to_a
               groups_selected = (obj.nil?)?([]):(obj.get_groups_a)
               @groups_cache ||= {}
               @group_obj_cache = Group.build_cache(groups)

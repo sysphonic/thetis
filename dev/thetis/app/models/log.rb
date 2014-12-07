@@ -31,7 +31,7 @@ class Log < ActiveRecord::Base
       count = Log.count
       if count > max
         over_num = count - max
-        logs = Log.find(:all, {:limit => over_num, :order => 'id ASC'})
+        logs = Log.where(nil).limit(over_num).order('id ASC').to_a
         logs.each do |log|
           log.destroy
         end
@@ -168,8 +168,8 @@ class Log < ActiveRecord::Base
     self.log_type = type
 
     user_agent = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': '))
-    if user_agent.include?('Googlebot')
-      return false
+    ['Googlebot', 'bingbot'].each do |bot|
+      return false if user_agent.include?(bot)
     end
 
     self.detail = user_agent + detail

@@ -137,7 +137,7 @@ class FeedsController < ApplicationController
       unless user.nil?
         @login_user = user
       end
-      user.pass_md5
+      ((user.nil?)?(nil):(user.pass_md5))
     end
   end
 

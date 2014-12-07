@@ -419,7 +419,7 @@ class ResearchesController < ApplicationController
 
     # Saved contents of Login User
     begin
-      @research = Research.find(:first, :conditions => ['user_id=?', @login_user.id])
+      @research = Research.where("user_id=#{@login_user.id}").first
     rescue
     end
     if @research.nil?
@@ -567,7 +567,7 @@ class ResearchesController < ApplicationController
           con << "((Research.user_id=User.id) and (Research.status=#{filter_status}))"
           include_research = true
         when (-1).to_s
-          researches = Research.find(:all)
+          researches = Research.where(nil).to_a
           except_users = []
           unless researches.nil?
             researches.each do |research|
@@ -659,8 +659,7 @@ class ResearchesController < ApplicationController
 
     @sum_groups = Research.get_statistics_groups
 
-    con = ['status=?', Research::U_STATUS_COMMITTED]
-    researches = Research.find(:all, :conditions => con)
+    researches = Research.where("status='#{Research::U_STATUS_COMMITTED}'").to_a
 
     unless researches.nil? or researches.empty?
 

@@ -43,7 +43,7 @@ class MailFoldersController < ApplicationController
 
       mail_account_ids << mail_account.id
 
-      if MailFolder.count(:id, :conditions => "mail_account_id=#{mail_account.id}") <= 0
+      if MailFolder.where("mail_account_id=#{mail_account.id}").count <= 0
         @login_user.create_default_mail_folders(mail_account.id)
       end
 

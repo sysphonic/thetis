@@ -427,8 +427,8 @@ class Timecard < ActiveRecord::Base
   #
   def self.get_for(user_id, date)
     begin
-      con = ['user_id=? and date=?', user_id, date]
-      return Timecard.find(:first, :conditions => con)
+      con = "(user_id=#{user_id}) and (date='#{date}')"
+      return Timecard.where(con).first
     rescue
     end
     return nil
@@ -444,8 +444,8 @@ class Timecard < ActiveRecord::Base
   #return:: Timecard for the specified User and span.
   #
   def self.find_term(user_id, start_date, end_date)
-    con = ['user_id = ? and date >= ? and date <= ?', user_id, start_date, end_date]
-    ary = Timecard.find(:all, :conditions => con, :order => 'date')
+    con = "(user_id=#{user_id}) and (date >= '#{start_date}') and (date <= '#{end_date}')"
+    ary = Timecard.where(con).order('date ASC').to_a
     timecards_h = Hash.new
     unless ary.nil?
       ary.each do |timecard|

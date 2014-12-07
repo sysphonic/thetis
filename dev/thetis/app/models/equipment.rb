@@ -108,7 +108,7 @@ class Equipment < ActiveRecord::Base
 
     con = EquipmentHelper.get_scope_condition_for(user)
 
-    return Equipment.find(:all, :conditions => con) || []
+    return Equipment.where(con).to_a
   end
 
   #=== is_accessible_by

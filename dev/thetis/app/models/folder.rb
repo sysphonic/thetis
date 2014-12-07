@@ -306,7 +306,7 @@ class Folder < ActiveRecord::Base
         end
         con << "(xtype='#{Folder::XTYPE_GROUP}') and (owner_id=#{group.id})"
         begin
-          group_folder = Folder.find(:first, :conditions => con)
+          group_folder = Folder.where(con).first
         rescue => evar
           Log.add_error(nil, evar)
         end
@@ -323,7 +323,7 @@ class Folder < ActiveRecord::Base
       con << ' and '
     end
     con << "parent_id=#{tree_id}"
-    folder_tree[tree_id] += Folder.find(:all, :conditions => con, :order => 'xorder ASC, id ASC')
+    folder_tree[tree_id] += Folder.where(con).order('xorder ASC, id ASC').to_a
 
     delete_ary = []
 
@@ -669,7 +669,7 @@ class Folder < ActiveRecord::Base
         con << " and (xtype is null or not (xtype='#{Folder::XTYPE_SYSTEM}'))"
       end
 
-      folders = Folder.find(:all, :conditions => con, :order => 'xorder ASC')
+      folders = Folder.where(con).order('xorder ASC').to_a
       if ret_obj
         array = folders
       else
@@ -754,13 +754,13 @@ class Folder < ActiveRecord::Base
         Log.add_error(nil, evar)
       end
 
-      items = Item.find(:all, :conditions => ['folder_id=?', folder.id])
+      items = Item.where("folder_id=#{folder.id}").to_a
       items.each do |item|
         item.destroy
       end
     end
 
-    items = Item.find(:all, :conditions => ['folder_id=?', self.id])
+    items = Item.where("folder_id=#{self.id}").to_a
     items.each do |item|
       item.destroy
     end

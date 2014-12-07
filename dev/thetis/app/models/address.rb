@@ -44,7 +44,7 @@ class Address < ActiveRecord::Base
     con.push('('+email_con.join(' or ')+')')
     con.push(AddressbookHelper.get_scope_condition_for(user, book))
 
-    return Address.find(:all, :conditions => con.join(' and '))
+    return Address.where(con.join(' and ')).to_a
   end
 
   #=== self.find_all
@@ -125,7 +125,7 @@ class Address < ActiveRecord::Base
       con_or << "owner_id=0"
     end
 
-    addresses = Address.find(:all, :conditions => con_or.join(' or '), :order => 'id ASC')
+    addresses = Address.where(con_or.join(' or ')).order('id ASC').to_a
 
     csv_line = ''
 
@@ -136,7 +136,7 @@ class Address < ActiveRecord::Base
       csv_line << "\n"
 
       csv_line << I18n.t('address.export.rem_groups') + "\n"
-      groups = Group.find(:all)
+      groups = Group.where(nil).to_a
       unless groups.nil?
         groups_cache = {}
         group_obj_cache = Group.build_cache(groups)
@@ -434,7 +434,7 @@ class Address < ActiveRecord::Base
 
     con = AddressbookHelper.get_scope_condition_for(user, book)
 
-    return Address.find(:all, :conditions => con) || []
+    return Address.where(con).to_a
   end
 
   #=== visible?

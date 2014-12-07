@@ -35,10 +35,7 @@ class OfficeMap < ActiveRecord::Base
       office_map = nil
     else
       if incl_img_content
-        begin
-          office_map = OfficeMap.find(:first, :conditions => ['group_id=?', group_id])
-        rescue
-        end
+        office_map = OfficeMap.where("group_id=#{group_id}").first
       else
         sql = 'select id, group_id, img_enabled, img_name, img_size, img_content_type, created_at, updated_at from office_maps'
         sql << " where group_id=#{group_id}"

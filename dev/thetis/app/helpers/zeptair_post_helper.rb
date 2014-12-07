@@ -27,7 +27,7 @@ module ZeptairPostHelper
 
     return nil unless user.allowed_zept_connect?
 
-    post_item = Item.find(:first, :conditions => ['user_id=? and xtype=?', user.id, Item::XTYPE_ZEPTAIR_POST])
+    post_item = Item.where("(user_id=#{user.id}) and (xtype='#{Item::XTYPE_ZEPTAIR_POST}')").first
 
     if post_item.nil? and auto_create
       post_item = Item.new_by_type(Item::XTYPE_ZEPTAIR_POST, user.get_my_folder.id)

@@ -97,7 +97,7 @@ class LoginController < ApplicationController
     Log.add_info(request, params.inspect)
 
     begin
-      users = User.find(:all, :conditions => "email='"+params[:thetisBoxEdit]+"'")
+      users = User.where("email='#{params[:thetisBoxEdit]}'").to_a
     rescue => evar
     end
 

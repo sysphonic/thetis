@@ -145,7 +145,7 @@ class MailAccountsController < ApplicationController
 
     @unread_emails_h = {}
     unless mail_folder_ids.nil? or mail_folder_ids.empty?
-      unread_emails = Email.find(:all, :conditions => "user_id=#{@login_user.id} and status='#{Email::STATUS_UNREAD}' and mail_folder_id in (#{mail_folder_ids.join(',')})")
+      unread_emails = Email.where("user_id=#{@login_user.id} and status='#{Email::STATUS_UNREAD}' and mail_folder_id in (#{mail_folder_ids.join(',')})").to_a
       unread_emails.each do |email|
         mail_folder = mail_folders.find{|rec| rec.id == email.mail_folder_id}
         unless mail_folder.nil?
@@ -158,7 +158,7 @@ class MailAccountsController < ApplicationController
 
     @draft_emails_h = {}
     unless mail_folder_ids.nil? or mail_folder_ids.empty?
-      draft_emails = Email.find(:all, :conditions => "user_id=#{@login_user.id} and status='#{Email::STATUS_DRAFT}' and mail_folder_id in (#{mail_folder_ids.join(',')})")
+      draft_emails = Email.where("user_id=#{@login_user.id} and status='#{Email::STATUS_DRAFT}' and mail_folder_id in (#{mail_folder_ids.join(',')})").to_a
       draft_emails.each do |email|
         mail_folder = mail_folders.find{|rec| rec.id == email.mail_folder_id}
         unless mail_folder.nil?

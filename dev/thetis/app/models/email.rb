@@ -14,7 +14,7 @@
 class Email < ActiveRecord::Base
   public::PERMIT_BASE = [:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size]
 
-  has_many(:mail_attachments, :dependent => :destroy, :order=>'mail_attachments.xorder')
+  has_many(:mail_attachments, -> {order('mail_attachments.xorder asc')}, :dependent => :destroy)
 
   require 'net/pop'
   require 'base64'
@@ -619,8 +619,9 @@ EOT
   #
   def self.trim(user_id, mail_account_id, max)
     begin
-      count = Email.count(:id, :conditions => "mail_account_id=#{mail_account_id}")
+      count = Email.where("mail_account_id=#{mail_account_id}").count
       if count > max
+#logger.fatal("[INFO] Email.trim(user_id:#{user_id}, mail_account_id:#{mail_account_id}, max:#{max})")
         over_num = count - max
         emails = []
 
@@ -630,12 +631,12 @@ EOT
         trash_nodes = [trashbox.id.to_s]
         trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
         con = "mail_folder_id in (#{trash_nodes.join(',')})"
-        emails = Email.find(:all, {:conditions => con, :limit => over_num, :order => 'updated_at ASC'})
+        emails = Email.where(con).order('updated_at ASC').limit(over_num).to_a
 
         # Now, remove others
         if emails.length < over_num
           over_num -= emails.length
-          emails += Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :limit => over_num, :order => 'updated_at ASC'})
+          emails += Email.where("mail_account_id=#{mail_account_id}").order('updated_at ASC').limit(over_num).to_a
         end
 
         emails.each do |email|
@@ -671,7 +672,7 @@ EOT
 #      trash_nodes = [trashbox.id.to_s]
 #      trash_nodes += MailFolder.get_childs(trash_nodes.first, true, false)
 #      con = "mail_folder_id in (#{trash_nodes.join(',')})"
-#      emails = Email.find(:all, {:conditions => con, :order => 'updated_at ASC'})
+#      emails = Email.where(con).order('updated_at ASC').to_a
 #      emails.each do |email|
 #        next if email.size.nil?
 #
@@ -682,7 +683,7 @@ EOT
 #
 #      # Now, remove others
 #      if over_size > 0
-#        emails = Email.find(:all, {:conditions => "mail_account_id=#{mail_account_id}", :order => 'updated_at ASC'})
+#        emails = Email.where("mail_account_id=#{mail_account_id}").order('updated_at ASC').to_a
 #        emails.each do |email|
 #          next if email.size.nil?
 #
@@ -758,12 +759,10 @@ EOT
 
     con = "user_id=#{user_id}"
     con << " and (#{add_con})" unless add_con.nil? or add_con.empty?
-    emails = Email.find(:all, :conditions => con)
+    emails = Email.where(con).to_a
 
-    unless emails.nil?
-      emails.each do |email|
-        email.destroy
-      end
+    emails.each do |email|
+      email.destroy
     end
   end
 

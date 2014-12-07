@@ -31,7 +31,7 @@ module TemplatesHelper
   def self.setup_tmpl_folder
 
     begin
-      tmpl_folder = Folder.find(:first, :conditions => ["folders.name = ?", TMPL_ROOT])
+      tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
     rescue
     end
     if tmpl_folder.nil?
@@ -45,12 +45,7 @@ module TemplatesHelper
       tmpl_folder = folder
     end
 
-    begin
-      con = ["folders.parent_id = ?"]
-      con << tmpl_folder.id
-      childs = Folder.find(:all, :conditions => con)
-    rescue
-    end
+    childs = Folder.where("folders.parent_id=#{tmpl_folder.id}").to_a
 
     # System
     tmpl_system_folder = childs.find{|child| child.name == TMPL_SYSTEM}
@@ -122,11 +117,7 @@ module TemplatesHelper
   #
   def self.get_tmpl_folder
 
-    begin
-      con = ["folders.name = ?", TMPL_ROOT]
-      tmpl_folder = Folder.find(:first, :conditions => con)
-    rescue
-    end
+    tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
 
     if tmpl_folder.nil?
 
@@ -142,8 +133,7 @@ module TemplatesHelper
 
     else
 
-      con = ['parent_id=?', tmpl_folder.id]
-      folders = Folder.find(:all, :conditions => con)
+      folders = Folder.where("parent_id=#{tmpl_folder.id}").to_a
       unless folders.nil?
         folders.each do |child|
           case child.name
@@ -176,17 +166,12 @@ module TemplatesHelper
   #
   def self.get_tmpl_subfolder(name)
 
-    begin
-      condition = ["folders.name = ?", TMPL_ROOT]
-      tmpl_folder = Folder.find(:first, :conditions => condition)
-    rescue => evar
-      Log.add_error(nil, evar)
-    end
+    tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
 
     unless tmpl_folder.nil?
-      condition = ['parent_id=? and name=?', tmpl_folder.id, name]
+      con = "(parent_id=#{tmpl_folder.id}) and (name='#{name}')"
       begin
-        child = Folder.find(:first, :conditions => condition)
+        child = Folder.where(con).first
       rescue => evar
         Log.add_error(nil, evar)
       end

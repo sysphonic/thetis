@@ -46,12 +46,14 @@ if (top && typeof(top.setLeftLogin) != "undefined") {
 
 function doOnLoad()
 {
-  eval("try{ if(onLoadSub){ onLoadSub() } }catch(e){}");
+  if (typeof(onLoadSub) == "function") {
+    onLoadSub();
+  }
 
   setTimeout("doResize()", 10);
 
 <% if params[:topicBox] == 'true' %>
-  if (typeof(top.showTopicBox) != "undefined") {
+  if (typeof(top.showTopicBox) == "function") {
     setTimeout(top.showTopicBox, 10);
   }
 <% end %>

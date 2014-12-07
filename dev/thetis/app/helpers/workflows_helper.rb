@@ -31,10 +31,10 @@ module WorkflowsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = ['parent_id=? and name=?', my_folder.id, MY_WF_ROOT]
+      con = "(parent_id=#{my_folder.id}) and (name='#{MY_WF_ROOT}')"
 
       begin
-        my_wf_folder = Folder.find(:first, :conditions => con)
+        my_wf_folder = Folder.where(con).first
       rescue
       end
       if my_wf_folder.nil?
@@ -67,10 +67,10 @@ module WorkflowsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = ['parent_id=? and name=?', my_folder.id, Workflow.decided_inbox]
+      con = "(parent_id=#{my_folder.id}) and (name='#{Workflow.decided_inbox}')"
 
       begin
-        decided_inbox = Folder.find(:first, :conditions => con)
+        decided_inbox = Folder.where(con).first
       rescue
       end
       if decided_inbox.nil?
@@ -102,10 +102,10 @@ module WorkflowsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = ['parent_id=? and name=?', my_folder.id, Workflow.decided_inbox]
+      con = "(parent_id=#{my_folder.id}) and (name='#{Workflow.decided_inbox}')"
 
       begin
-        decided_inbox = Folder.find(:first, :conditions => con)
+        decided_inbox = Folder.where(con).first
       rescue
       end
     end

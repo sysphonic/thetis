@@ -153,7 +153,7 @@ class MailFolder < ActiveRecord::Base
     con << "(mail_account_id=#{mail_account_id})"
     con << "(xtype='#{xtype}')"
 
-    return MailFolder.find(:first, :conditions => con.join(' and '))
+    return MailFolder.where(con.join(' and ')).first
   end
 
   #=== self.get_account_roots_for
@@ -179,7 +179,7 @@ class MailFolder < ActiveRecord::Base
 
     order_by = 'xorder ASC, id ASC'
 
-    return MailFolder.find(:all, :conditions => con.join(' and '), :order => order_by)
+    return MailFolder.where(con.join(' and ')).order(order_by).to_a
   end
 
   #=== self.get_tree_for
@@ -443,13 +443,13 @@ class MailFolder < ActiveRecord::Base
         Log.add_error(nil, evar)
       end
 
-      mails = Email.find(:all, :conditions => ['mail_folder_id=?', folder.id])
+      mails = Email.where("mail_folder_id=#{folder.id}").to_a
       mails.each do |mail|
         mail.destroy
       end
     end
 
-    mails = Email.find(:all, :conditions => ['mail_folder_id=?', self.id])
+    mails = Email.where("mail_folder_id=#{self.id}").to_a
     mails.each do |mail|
       mail.destroy
     end

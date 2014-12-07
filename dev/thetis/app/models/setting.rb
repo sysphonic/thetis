@@ -34,7 +34,7 @@ class Setting < ActiveRecord::Base
     con << "(user_id=#{user_id})"
     con << "(category='#{category}')" unless category.nil?
 
-    settings =  Setting.find(:all, :conditions => con.join(' and '))
+    settings = Setting.where(con.join(' and ')).to_a
 
     return nil if settings.nil? or settings.empty?
 
@@ -63,7 +63,7 @@ class Setting < ActiveRecord::Base
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
-    setting = Setting.find(:first, :conditions => con.join(' and '))
+    setting = Setting.where(con.join(' and ')).first
 
     return setting.xvalue unless setting.nil?
 
@@ -86,7 +86,7 @@ class Setting < ActiveRecord::Base
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
-    setting = Setting.find(:first, :conditions => con.join(' and '))
+    setting = Setting.where(con.join(' and ')).first
 
     if value.nil?
       unless setting.nil?
@@ -122,7 +122,7 @@ class Setting < ActiveRecord::Base
     con << "(group_id=#{group_id})"
     con << "(category='#{category}')" unless category.nil?
 
-    settings =  Setting.find(:all, :conditions => con.join(' and '))
+    settings = Setting.where(con.join(' and ')).to_a
 
     return nil if settings.nil? or settings.empty?
 
@@ -151,7 +151,7 @@ class Setting < ActiveRecord::Base
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
-    setting = Setting.find(:first, :conditions => con.join(' and '))
+    setting = Setting.where(con.join(' and ')).first
 
     return setting.xvalue unless setting.nil?
 
@@ -174,7 +174,7 @@ class Setting < ActiveRecord::Base
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
-    setting = Setting.find(:first, :conditions => con.join(' and '))
+    setting = Setting.where(con.join(' and ')).first
 
     if value.nil?
       unless setting.nil?

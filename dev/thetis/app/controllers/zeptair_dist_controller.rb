@@ -67,7 +67,7 @@ class ZeptairDistController < ApplicationController
           con << "((Comment.item_id=#{@item.id}) and (Comment.xtype='#{Comment::XTYPE_DIST_ACK}') and (Comment.user_id=User.id) and (Comment.message='#{ack_msg}'))"
           include_comment = true
         when ZeptairDistHelper::STATUS_NO_REPLY
-          comments = Comment.find(:all, :conditions => "((Comment.item_id=#{@item.id}) and (Comment.xtype='#{Comment::XTYPE_DIST_ACK}'))")
+          comments = Comment.where("((Comment.item_id=#{@item.id}) and (Comment.xtype='#{Comment::XTYPE_DIST_ACK}'))").to_a
           except_users = []
           unless comments.nil?
             comments.each do |comment|

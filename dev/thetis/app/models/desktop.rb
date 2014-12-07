@@ -44,16 +44,13 @@ class Desktop < ActiveRecord::Base
       desktop = nil
     else
       if incl_img_content
-        begin
-          desktop = Desktop.find(:first, :conditions => ['user_id=?', user.id])
-        rescue
-        end
+        desktop = Desktop.where("user_id=#{user.id}").first
       else
         sql = 'select id, user_id, theme, background_color, popup_news, popup_timecard, popup_schedule, img_enabled, img_name, img_size, img_content_type, created_at, updated_at from desktops'
         sql << ' where user_id=' + user.id.to_s
-        begin
-          desktop = Desktop.find_by_sql(sql).first
-        rescue
+        desktops = Desktop.find_by_sql(sql)
+        unless desktops.nil? or desktops.empty?
+          desktop = desktops.first
         end
       end
     end

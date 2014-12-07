@@ -124,7 +124,7 @@ class Toy < ActiveRecord::Base
 
     return [] if user.nil?
 
-    toys = Toy.find(:all, :conditions => ['user_id = ?', user.id])
+    toys = Toy.where("user_id=#{user.id}").to_a
     deleted_ary = []
 
     return [] if toys.nil?
@@ -132,11 +132,7 @@ class Toy < ActiveRecord::Base
     toys.each do |toy|
       case toy.xtype
         when Toy::XTYPE_ITEM
-          begin
-            item = Item.find(toy.target_id)
-          rescue
-            item = nil
-          end
+          item = Item.find_by_id(toy.target_id)
           if item.nil?
             deleted_ary << toy
             next
@@ -144,11 +140,7 @@ class Toy < ActiveRecord::Base
           Toy.copy(toy, item)
 
         when Toy::XTYPE_COMMENT
-          begin
-            comment = Comment.find(toy.target_id)
-          rescue
-            comment = nil
-          end
+          comment = Comment.find_by_id(toy.target_id)
           if comment.nil?
             deleted_ary << toy
             next
@@ -156,11 +148,7 @@ class Toy < ActiveRecord::Base
           Toy.copy(toy, comment)
 
         when Toy::XTYPE_WORKFLOW
-          begin
-            workflow = Workflow.find(toy.target_id)
-          rescue
-            workflow = nil
-          end
+          workflow = Workflow.find_by_id(toy.target_id)
           if workflow.nil?
             deleted_ary << toy
             next
@@ -168,11 +156,7 @@ class Toy < ActiveRecord::Base
           Toy.copy(toy, workflow)
 
         when Toy::XTYPE_SCHEDULE
-          begin
-            schedule = Schedule.find(toy.target_id)
-          rescue
-            shedule = nil
-          end
+          schedule = Schedule.find_by_id(toy.target_id)
           if schedule.nil?
             deleted_ary << toy
             next
@@ -180,11 +164,7 @@ class Toy < ActiveRecord::Base
           Toy.copy(toy, schedule)
 
         when Toy::XTYPE_FOLDER
-          begin
-            folder = Folder.find(toy.target_id)
-          rescue
-            folder = nil
-          end
+          folder = Folder.find_by_id(toy.target_id)
           if folder.nil?
             deleted_ary << toy
             next
@@ -214,10 +194,10 @@ class Toy < ActiveRecord::Base
 
     return false if user.nil? or xtype.nil? or target_id.nil?
 
-    con = ['user_id=? and xtype=? and target_id=?', user.id, xtype, target_id]
+    con = "(user_id=#{user.id}) and (xtype='#{xtype}') and (target_id=#{target_id})"
 
     begin
-      toy = Toy.find(:first, :conditions => con)
+      toy = Toy.where(con).first
     rescue => evar
       Log.add_error(nil, evar)
     end

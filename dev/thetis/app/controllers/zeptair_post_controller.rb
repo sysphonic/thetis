@@ -81,17 +81,17 @@ class ZeptairPostController < ApplicationController
 
     target_user = nil
 
-    unless params[:user_id].nil? or params[:user_id].empty?
+    unless params[:user_id].blank?
       target_user = User.find(params[:user_id])
     end
 
-    unless params[:zeptair_id].nil? or params[:zeptair_id].empty?
-      target_user = User.find(:first, :conditions => ['zeptair_id=?', params[:zeptair_id]])
+    unless params[:zeptair_id].blank?
+      target_user = User.where("zeptair_id=#{params[:zeptair_id]}").first
     end
 
     if target_user.nil?
 
-      if params[:group_id].nil? or params[:group_id].empty?
+      if params[:group_id].blank?
         sql = 'select distinct Item.* from items Item, attachments Attachment'
         sql << " where Item.xtype='#{Item::XTYPE_ZEPTAIR_POST}' and Item.id=Attachment.item_id"
         sql << ' order by Item.user_id ASC'
@@ -131,15 +131,15 @@ class ZeptairPostController < ApplicationController
 
     target_user = nil
 
-    unless params[:user_id].nil? or params[:user_id].empty?
+    unless params[:user_id].blank?
       if @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id.to_s == params[:user_id].to_s
         target_user = User.find(params[:user_id])
       end
     end
 
-    unless params[:zeptair_id].nil? or params[:zeptair_id].empty?
+    unless params[:zeptair_id].blank?
 
-      target_user = User.find(:first, :conditions => ['zeptair_id=?', params[:zeptair_id]])
+      target_user = User.where("zeptair_id=#{params[:zeptair_id]}").first
 
       unless @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id == target_user.id
         target_user = nil
@@ -147,7 +147,7 @@ class ZeptairPostController < ApplicationController
     end
 
     if target_user.nil?
-      if params[:attachment_id].nil? or params[:attachment_id].empty?
+      if params[:attachment_id].blank?
 
         query
         unless @post_items.nil?

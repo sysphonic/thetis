@@ -277,7 +277,7 @@ class User < ActiveRecord::Base
 
     pass_md5 = UsersHelper.generate_digest_pass(name, password)
 
-    return User.find(:first, :conditions => "name='#{name}' and pass_md5='#{pass_md5}'")
+    return User.where("(name='#{name}') and (pass_md5='#{pass_md5}')").first
   end
 
   #=== self.destroy
@@ -299,7 +299,7 @@ class User < ActiveRecord::Base
 
     # General Folders
     con = "(read_users like '%|#{self.id}|%') or (write_users like '%|#{self.id}|%')"
-    folders = Folder.find(:all, :conditions => con)
+    folders = Folder.where(con).to_a
 
     unless folders.nil?
       folders.each do |folder|
@@ -530,7 +530,7 @@ class User < ActiveRecord::Base
   def self.get_from_name(user_name)
 
     begin
-      user = User.find(:first, :conditions => ['name=?', user_name])
+      user = User.where("name='#{user_name}'").first
     rescue => evar
       Log.add_error(nil, evar)
     end
@@ -608,7 +608,7 @@ class User < ActiveRecord::Base
   #
   def get_teams_a
 
-    teams = Team.find(:all, :conditions => ['users like \'%|?|%\'', self.id])
+    teams = Team.where("users like '%|#{self.id}|%'").to_a
 
     array = []
 
@@ -730,9 +730,9 @@ class User < ActiveRecord::Base
     tmpl_folder, tmpl_system_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_SYSTEM)
 
     unless tmpl_system_folder.nil?
-      con = ['folder_id=? and xtype=?', tmpl_system_folder.id, Item::XTYPE_PROFILE]
+      con = "(folder_id=#{tmpl_system_folder.id}) and (xtype='#{Item::XTYPE_PROFILE}')"
       begin
-        tmpl_item = Item.find(:first, :conditions => con)
+        tmpl_item = Item.where(con).first
       rescue
       end
     end
@@ -763,7 +763,7 @@ class User < ActiveRecord::Base
   #
   def get_my_folder
 
-    User.get_my_folder(self.id)
+    return User.get_my_folder(self.id)
   end
 
   #=== self.get_my_folder
@@ -775,7 +775,7 @@ class User < ActiveRecord::Base
   #
   def self.get_my_folder(user_id)
 
-    Folder.find(:first, :conditions => ['owner_id=? and xtype=?', user_id.to_i, Folder::XTYPE_USER])
+    return Folder.where("(owner_id=#{user_id}) and (xtype='#{Folder::XTYPE_USER}')").first
   end
 
   #=== create_my_folder
@@ -897,7 +897,7 @@ class User < ActiveRecord::Base
   #
   def self.export_csv
 
-    users = User.find(:all, :order => 'id ASC')
+    users = User.where(nil).order('id ASC').to_a
 
     csv_line = ''
 
@@ -907,7 +907,7 @@ class User < ActiveRecord::Base
     csv_line << "\n"
 
     csv_line << I18n.t('user.export.rem_groups') + "\n"
-    groups = Group.find(:all)
+    groups = Group.where(nil).to_a
     unless groups.nil?
       groups_cache = {}
       group_obj_cache = Group.build_cache(groups)
@@ -1182,13 +1182,9 @@ class User < ActiveRecord::Base
   #
   def get_project_application(item_id)
 
-    con = ['item_id=? and user_id=? and xtype=?']
-    con << item_id
-    con << self.id
-    con << Comment::XTYPE_APPLY
-
+    con = "(item_id=#{item_id}) and (user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')"
     begin
-      comment = Comment.find(:first, :conditions => con)
+      comment = Comment.where(con).first
     rescue
     end
 

@@ -15,6 +15,8 @@
 #
 module MailFiltersHelper
 
+  require ::Rails.root.to_s+'/lib/util/util_date'
+
   public::CONDITION_POINTS = [:subject, :from, :message_body, :sent_at, :priority, :status, :to, :cc, :to_cc, :from_to_cc_bcc, :days_from_sent_at, :size]
   public::CONDITION_COMPARES = [:include, :not_include, :equal, :not_equal, :begin_with, :end_with, :in_addressbook, :not_in_addressbook, :before, :after, :more_than, :less_than, :heigher_than, :lower_than]
 

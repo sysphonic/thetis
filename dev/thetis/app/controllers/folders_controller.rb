@@ -594,7 +594,7 @@ class FoldersController < ApplicationController
       @folder = nil
     end
 
-    @groups = Group.find(:all)
+    @groups = Group.where(nil).to_a
 
     session[:folder_id] = params[:id]
 
@@ -638,7 +638,7 @@ class FoldersController < ApplicationController
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_modify')
     end
 
-    @groups = Group.find(:all)
+    @groups = Group.where(nil).to_a
     render(:partial => 'ajax_auth_groups', :layout => false)
 
   rescue => evar

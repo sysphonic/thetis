@@ -48,16 +48,26 @@ function setLeftLogin(loginName, loginAdmin)
   }
 }
 
+var thetisBoxTopic = null;
+
 function showTopicBox()
 {
   var mainRegion = getClientRegion();
   var mainWidth = mainRegion.width;
   var mainHeight = mainRegion.height;
 
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.title = "<%= t('topicbox.title') %>";
-  thetisBox.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+  thetisBoxTopic = new ThetisBox;
+  thetisBoxTopic.resizable = true;
+  thetisBoxTopic.title = "<%= t('topicbox.title') %>";
+  thetisBoxTopic.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+}
+
+function hideTopicBox()
+{
+  if (thetisBoxTopic) {
+    thetisBoxTopic.remove();
+    thetisBoxTopic = null;
+  }
 }
 
 _iframes = null;
@@ -154,13 +164,15 @@ function setMode(mode)
 
 function doUpdateIframe(url, mode)
 {
+  hideTopicBox();
+
   if (mode) {
     setMode(mode);
   }
 
   try {
     var iframeContent = getActiveContent();
-    if (typeof(iframeContent.prog) != "undefined") {
+    if (typeof(iframeContent.prog) == "function") {
       iframeContent.prog("TOP-RIGHT");
     }
     iframeContent.document.location.href = url;

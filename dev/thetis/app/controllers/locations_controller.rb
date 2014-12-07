@@ -52,7 +52,7 @@ class LocationsController < ApplicationController
         next if con.empty?
 
         begin
-          @target_user = User.find(:first, :conditions => con.join(' and '))
+          @target_user = User.where(con.join(' and ')).first
         rescue
         end
         next if @target_user.nil?

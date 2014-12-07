@@ -24,7 +24,7 @@ module ItemsHelper
   #return:: Next revision number.
   #
   def self.get_next_revision(user_id, source_id)
-    copied_items = Item.find(:all, :conditions => ['user_id=? and source_id=?', user_id, source_id], :order => 'created_at DESC')
+    copied_items = Item.where("user_id=#{user_id} and source_id=#{source_id}").order('created_at DESC').to_a
 
     rev = 0
     copied_items.each do |item|
@@ -51,10 +51,10 @@ module ItemsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = ['parent_id=? and name=?', my_folder.id, Item.copies_folder]
+      con = "(parent_id=#{my_folder.id}) and (name='#{Item.copies_folder}')"
 
       begin
-        copies_folder = Folder.find(:first, :conditions => con)
+        copies_folder = Folder.where(con).first
       rescue
       end
       if copies_folder.nil?
@@ -86,10 +86,10 @@ module ItemsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = ['parent_id=? and name=?', my_folder.id, Item.copies_folder]
+      con = "(parent_id=#{my_folder.id}) and (name='#{Item.copies_folder}')"
 
       begin
-        copies_folder = Folder.find(:first, :conditions => con)
+        copies_folder = Folder.where(con).first
       rescue
       end
     end

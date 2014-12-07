@@ -62,7 +62,7 @@ module ZeptairDistHelper
   def self.get_comment_of(item_id, user_id)
 
     begin
-      comment = Comment.find(:first, :conditions => ['user_id=? and item_id=? and xtype=?', user_id, item_id, Comment::XTYPE_DIST_ACK])
+      comment = Comment.where("(user_id=#{user_id}) and (item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").first
     rescue => evar
       Log.add_error(nil, evar)
     end
@@ -141,7 +141,7 @@ module ZeptairDistHelper
   #return:: The number of ACK messages to the specified Distribution Item.
   #
   def self.count_ack_users(item_id)
-    return Comment.count(:id, :conditions => ['item_id=? and xtype=?', item_id, Comment::XTYPE_DIST_ACK])
+    return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").count
   end
 
   #=== self.count_completed_users
@@ -153,7 +153,7 @@ module ZeptairDistHelper
   #
   def self.count_completed_users(item_id)
     ack_msg = ZeptairDistHelper.completed_ack_message(item_id)
-    return Comment.count(:id, :conditions => ['item_id=? and xtype=? and message=?', item_id, Comment::XTYPE_DIST_ACK, ack_msg])
+    return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}') and (message='#{ack_msg}')").count
   end
 
   #=== self.get_feeds
@@ -177,7 +177,7 @@ module ZeptairDistHelper
       admin_ids = []
       admins.each do |admin_name|
         begin
-          admin_user = User.find(:first, :conditions => "name='#{admin_name}'")
+          admin_user = User.where("name='#{admin_name}'").first
         rescue
         end
         unless admin_user.nil?

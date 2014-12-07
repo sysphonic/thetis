@@ -14,6 +14,7 @@
 #* 
 #
 module ApplicationHelper
+  require ::Rails.root.to_s+'/lib/util/sym_hash'
   require 'tempfile'
   require 'uri'     # for URI.extract()
 
@@ -424,17 +425,17 @@ module ApplicationHelper
 
     return nil if hash.nil?
 
-    begin
-      ret = Marshal.load(Marshal.dump(hash))
-    rescue
-      ret = {}
+#    begin
+#      ret = Marshal.load(Marshal.dump(hash))
+#    rescue
+      ret = SymHash.new
       hash.each{|key, value|
         begin
           ret[key] = Marshal.load(Marshal.dump(value))
         rescue
         end
       }
-    end
+#    end
 
     return ret
   end

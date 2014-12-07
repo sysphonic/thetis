@@ -34,7 +34,7 @@ function doOnLoad()
   setTimeout("doResize()", 10);
 
 <% if params[:topicBox] == 'true' %>
-  if (typeof(top.showTopicBox) != "undefined") {
+  if (typeof(top.showTopicBox) == "function") {
     setTimeout(top.showTopicBox, 10);
   }
 <% end %>

@@ -25,11 +25,7 @@ class Location < ActiveRecord::Base
   #
   def self.get_for(user)
 
-    location = nil
-    begin
-      location = Location.find(:first, :conditions => "user_id=#{user.id}")
-    rescue
-    end
+    location = Location.where("user_id=#{user.id}").first
 
     if !location.nil? and location.expired?
       location.destroy
@@ -56,7 +52,7 @@ class Location < ActiveRecord::Base
 
     Location.do_expire(con)
 
-    return Location.find(:all, :conditions => con) || []
+    return Location.where(con).to_a
   end
 
   #=== self.do_expire

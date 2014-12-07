@@ -123,7 +123,7 @@ class Team < ActiveRecord::Base
 
     con = "xtype='#{Item::XTYPE_PROJECT}'"
 
-    project_items = Item.find(:all, :conditions => con)
+    project_items = Item.where(con).to_a
     return if project_items.nil? or project_items.empty?
 
     project_items.each do |item|
@@ -155,7 +155,7 @@ class Team < ActiveRecord::Base
     con = []
     con << "(users like '%|#{user_id}|%')" unless user_id.nil? or user_id.to_s.empty?
     con << "(status != '#{Team::STATUS_DEACTIVATED}')" if exclude_deact
-    return Team.find(:all, :conditions => con.join(' and ')) || []
+    return Team.where(con.join(' and ')).to_a
   end
 
   #=== self.destroy
@@ -195,7 +195,7 @@ class Team < ActiveRecord::Base
 
     # General Folders
     con = "(read_teams like '%|#{self.id}|%') or (write_teams like '%|#{self.id}|%')"
-    folders = Folder.find(:all, :conditions => con)
+    folders = Folder.where(con).to_a
 
     unless folders.nil?
       folders.each do |folder|
@@ -366,7 +366,7 @@ class Team < ActiveRecord::Base
   def self.get_team_folder(team_id)
 
     begin
-      return Folder.find(:first, :conditions => ['owner_id=? and xtype=?', team_id.to_i, Folder::XTYPE_TEAM])
+      return Folder.where("(owner_id=#{team_id}) and (xtype='#{Folder::XTYPE_TEAM}')").first
     rescue => evar
       Log.add_error(nil, evar)
       return nil

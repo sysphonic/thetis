@@ -193,19 +193,19 @@ class DesktopController < ApplicationController
     @toys = Toy.get_for_user(user)
 
     if is_config_desktop
-      @toys.delete_if { |toy| 
-              ret = false
-              if toy.xtype == Toy::XTYPE_FOLDER
-                begin
-                  folder = Folder.find(toy.target_id)
-                  ret = folder.my_folder?
-                rescue
-                end
-              elsif toy.xtype == Toy::XTYPE_POSTLABEL
-                ret = true
-              end
-              ret == true
-            }
+      @toys.delete_if {|toy|
+        ret = false
+        if toy.xtype == Toy::XTYPE_FOLDER
+          begin
+            folder = Folder.find(toy.target_id)
+            ret = folder.my_folder?
+          rescue
+          end
+        elsif toy.xtype == Toy::XTYPE_POSTLABEL
+          ret = true
+        end
+        ret == true
+      }
     end
 
     agent = request.env['HTTP_USER_AGENT']
