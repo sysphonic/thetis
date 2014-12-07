@@ -186,13 +186,14 @@ class TemplatesController < ApplicationController
 
     @tmpl_folder, @tmpl_local_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_LOCAL)
 
-    tmpl_items = Folder.get_items_admin(@tmpl_local_folder.id, 'xorder ASC')
-    
     @tmpl_tree = {}
-    
-    unless tmpl_items.nil?
-      tmpl_items.each do |item|
-        @tmpl_tree[item.id.to_s] = []
+
+    unless @tmpl_local_folder.nil?
+      tmpl_items = Folder.get_items_admin(@tmpl_local_folder.id, 'xorder ASC')
+      unless tmpl_items.nil?
+        tmpl_items.each do |item|
+          @tmpl_tree[item.id.to_s] = []
+        end
       end
     end
 

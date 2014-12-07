@@ -168,7 +168,7 @@ class Log < ActiveRecord::Base
     self.log_type = type
 
     user_agent = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': '))
-    ['Googlebot', 'bingbot'].each do |bot|
+    ['Googlebot', 'bingbot', 'Baiduspider'].each do |bot|
       return false if user_agent.include?(bot)
     end
 
