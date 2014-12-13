@@ -2,7 +2,7 @@
 <%= form_tag( {:controller => 'users', :action => 'update_auth', :id => @user.id }, :name => 'form_ajax_userAuth', :method => 'post') %>
 
 <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
-  <table align="center" style="width:95%;" cellpadding="0" cellspacing="2">
+  <table style="margin:0px auto; width:95%;" cellpadding="0" cellspacing="2">
     <tr>
       <td class="item_cap_td" nowrap style="width:100%">
         <span nowrap><%= t('cap.admin_authorities') %></span>

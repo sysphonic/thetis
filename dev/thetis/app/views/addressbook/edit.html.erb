@@ -21,7 +21,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 </form>
 
-<table align="center" cellspacing="0" cellpadding="0" style="margin-bottom:20px;">
+<table cellspacing="0" cellpadding="0" style="margin:0px auto 20px;">
   <tr>
     <td class="img_button_td" onclick="onRegisterAddressClicked();">
     <% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
@@ -43,7 +43,7 @@ onRegisterAddressClicked = function()
     var thetisBox = msg("<%= t('addressbook.specify_name') %>");
     thetisBox.setOnClose(
         function() {
-          showTab("basic", tabs);
+          showTab("basic", tabs, "sienna");
           _z("address_name").focus();
         }
       );

@@ -1,6 +1,6 @@
 
 <!-- Don't use <table> instead of <div> because of IE's bug for alignment -->
-<div id="tray" align="left" width="100%">
+<div id="tray" style="text-align:left; width:100%;">
 <% @toys.each do |toy| %>
   <% toy_id = "#{toy.xtype}:#{toy.target_id}" %>
   <div class="toy_tray" id="<%= toy_id %>" style="z-index:10000; padding:5px; font-size:9pt; word-break:break-all;">

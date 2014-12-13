@@ -3,17 +3,17 @@
 @group_obj_cache ||= {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
    <tr>
-    <td align="left" style="padding:5px; padding-top:10px; padding-left:10px;">
+    <td style="text-align:left; padding:5px; padding-top:10px; padding-left:10px;" >
     <% if @group_id.nil? or @group_id.empty? %>
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
     <% else %>
       <table cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap>
+          <td style="text-align:left;" nowrap>
             <%= t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
           </td>
         </tr>
@@ -25,10 +25,10 @@
 
 <% if @researches.nil? or @researches.empty? %>
 
-<table cellspacing="0" cellpadding="0" width="100%" height="80%">
-  <tr height="20%"><td>&nbsp;</td></tr>
-  <tr height="60%">
-    <td valign="middle" align="center">
+<table cellspacing="0" cellpadding="0" style="width:100%; height:80%;">
+  <tr style="height:20%;"><td>&nbsp;</td></tr>
+  <tr style="height:60%;">
+    <td style="vertical-align:middle; text-align:center;" >
 
   <% if @group_id.nil? or @group_id.empty? %>
       <%= t('group.select_to_show')%>
@@ -38,7 +38,7 @@
 
     </td>
   </tr>
-  <tr height="20%"><td>&nbsp;</td></tr>
+  <tr style="height:20%;"><td>&nbsp;</td></tr>
 </table>
 
 <%
@@ -47,7 +47,7 @@ else
     if idx >= 100
 %>
 
-    <div align="center" style="padding-top:10px; width:100%; color:red; font-weight:bold;">
+    <div style="text-align:center; padding-top:10px; width:100%; color:red; font-weight:bold;" >
       <%= t('research.max_to_display1') %><%= @researches.length %><%= t('research.max_to_display2') %>
     </div>
     <br/>
@@ -57,24 +57,23 @@ else
   else
   %>
 
-<table width="95%" cellpadding="2" cellspacing="2" align="center">
-  <tr height="3"><td></td></tr>
+<table style="width:95%; margin:3px auto 0px;" cellpadding="2" cellspacing="2">
   <tr>
-    <td valign="top" width="20">
+    <td style="vertical-align:top; width:20px;">
       <%= idx + 1 %>.
     </td>
     <td>
 
-      <table width="100%" cellpadding="2" cellspacing="2">
+      <table style="width:100%;" cellpadding="2" cellspacing="2">
     <%
     unless @q_codes.nil?
       @q_codes.each do |q_code|
     %>
         <tr>
-          <td nowrap bgcolor="#99ccff" width="100" align="center" style="padding:3px; line-height:11pt;">
+          <td nowrap style="background-color:#99ccff; width:100px; padding:3px; line-height:11pt; text-align:center;" >
             <%= q_code %>.
           </td>
-          <td bgcolor="#ccffff" align="left" style="padding-left:10px;">
+          <td style="background-color:#ccffff; padding-left:10px; text-align:left;">
           <%
           vals = research.get_by_q_code(q_code)
           unless vals.nil?

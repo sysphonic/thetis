@@ -16,9 +16,9 @@ end
 
 <%= form_tag( {:controller => 'researches', :action => 'users'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%;" cellspacing="3" cellpadding="0">
   <tr>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
       <%= t('cap.status') %><%= select_tag 'filter_status',
                                options_for_select([[h(t('msg.all')), ''],
@@ -26,18 +26,18 @@ end
                                                   [h(t('research.in_action')), Research::U_STATUS_IN_ACTON.to_s],
                                                   [h(t('research.committed')), Research::U_STATUS_COMMITTED.to_s]], 
                                                   params[:filter_status])  %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'users') %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'users') %>';"/>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+  <tr style="height:5px;"><td></td></tr>
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap style="padding-bottom:5px;">
+          <td style="text-align:left; padding-bottom:5px;" nowrap>
         <% if @group_id.nil? or @group_id.empty? %>
-            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
         <% else %>
@@ -45,7 +45,7 @@ end
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
         <% end %>
           </td>
-          <td align="right" nowrap>
+          <td style="text-align:right;" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <input type="button" value="<%= t('research.select_not_committed')%>" onclick="selectNotCommitted();">
             <span style="color:silver;">|</span>
@@ -58,9 +58,9 @@ end
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -73,21 +73,20 @@ end
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="22%" nowrap onClick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="25%" nowrap onClick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="28%" nowrap onClick="sortList('groups')"><%= t('msg.organizations') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onClick="sortList('Research.status')"><%= Research.human_attribute_name('status') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Research.status', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:22%;" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:25%;" nowrap onclick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:28%;" nowrap onclick="sortList('groups')"><%= t('msg.organizations') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('groups', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('Research.status')"><%= Research.human_attribute_name('status') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Research.status', @sort_col, @sort_type)) %></span></th>
   </tr>
 <% @users.each_with_index do |user, idx| %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%= td_class %>" nowrap>

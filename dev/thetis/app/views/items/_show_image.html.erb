@@ -1,25 +1,25 @@
-<table align="center" cellspacing="0" cellpadding="0" width="85%" style="padding-top:5px;">
+<table cellspacing="0" cellpadding="0" style="width:85%; margin:5px auto 0px;">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
       <% @item.images_without_content.each do |img| %>
         <table cellspacing="0" cellpadding="0" style="display:inline-block; min-width:200px; padding:15px 5px;">
           <tr>
-            <td class="img_td" align="center">
+            <td class="img_td" style="text-align:center;">
               <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img)) %>
               <img id="<%= "img#{img.id}" %>" src="<%= img_url %>" />
             </td>
           </tr>
         <% unless img.title.nil? or img.title.empty? %>
           <tr>
-            <td class="img_title_td" align="center">
+            <td class="img_title_td" style="text-align:center;">
               &lt;<%= img.title %>&gt;
             </td>
           </tr>
         <% end %>
         <% unless img.memo.nil? or img.memo.empty? %>
-          <tr height="6"><td></td></tr>
+          <tr style="height:6px;"><td></td></tr>
           <tr>
-            <td class="img_memo_td" align="center">
+            <td class="img_memo_td" style="text-align:center;">
               <pre style="font-size:10pt;"><%= img.memo %></pre>
             </td>
           </tr>

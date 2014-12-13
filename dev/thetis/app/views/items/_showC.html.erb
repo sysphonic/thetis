@@ -13,9 +13,9 @@ function getDescriptionWidth()
 
 </script>
 
-<table align="center" style="width:600px;" cellpadding="0" cellspacing="2">
+<table style="margin:0px auto; width:600px;" cellpadding="0" cellspacing="2">
   <tr>
-    <td valign="top">
+    <td style="vertical-align:top;">
     <% unless @item.summary.nil? or @item.summary.empty? %>
       <div style="padding-bottom:10px;">
         <%= render(:partial => 'show_summary') %>
@@ -28,17 +28,17 @@ function getDescriptionWidth()
   </tr>
 </table>
 
-<table width="100%" style="padding-top:10px;" cellpadding="0" cellspacing="0">
+<table style="width:100%; padding-top:10px;" cellpadding="0" cellspacing="0">
   <tr>
     <td>&nbsp;</td>
  <% if @item.images_without_content.length > 0 %>
-    <td width="10%">
+    <td style="width:10%;">
       <%= render(:partial => 'show_image') %>
     </td>
  <% end %>
     <td>&nbsp;</td>
  <% if @item.attachments_without_content.length > 0 %>
-    <td width="30%" valign="top">
+    <td style="width:30%; vertical-align:top;">
       <%= render(:partial => 'show_attachment') %>
     </td>
  <% end %>

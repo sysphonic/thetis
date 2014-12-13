@@ -9,14 +9,14 @@ rows = 5
 @equipment = Group.get_equipment(@group_id)
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="130">
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelectEquipment('<%= (@group_id.nil?)?'':@group_id %>', this);">
+    <td style="width:130px;">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelectEquipment('<%= (@group_id.nil?)?'':@group_id %>', this);">
         <%= t('btn.select_group') %>
       </div>
     </td>
-    <td align="left" style="color:blue;">
+    <td style="text-align:left; color:blue;">
       <% unless @group_id.nil? %>
         <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectEquipment();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">

@@ -7,7 +7,7 @@
     <td style="width:49%; vertical-align:top;">
 
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
-        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
               <%= t('menu.settings') %>
@@ -34,8 +34,8 @@
     <td style="min-width:10px; width:10px;"></td>
     <td style="width:49%; vertical-align:top;">
       <!-- User Titles -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;" >
+        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
               <%= t('user.official_titles') %>
@@ -50,8 +50,8 @@
       </div>
 
       <!-- User Titles -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
               <%= User.human_attribute_name('title') %>
@@ -63,7 +63,7 @@
                 <%= render(:partial => 'ajax_title') %>
               </div>
 
-              <div class="button_gray" style="float:right; margin-top:3px;" onClick="doCreateTitle();">
+              <div class="button_gray" style="float:right; margin-top:3px;" onclick="doCreateTitle();">
                 <%= t('btn.create') %>
               </div>
             </td>
@@ -76,7 +76,7 @@
 
 </form>
 
-<table align="center" style="margin:20px 0px 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>

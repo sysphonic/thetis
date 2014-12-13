@@ -8,9 +8,9 @@ zept_cmd = @item.zeptair_command
 
 <%= form_tag( {:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%;" cellspacing="3" cellpadding="0">
   <tr>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
       <%= t('cap.status') %><%= select_tag 'filter_status',
                                options_for_select([[h(t('msg.all')), ''],
@@ -18,21 +18,21 @@ zept_cmd = @item.zeptair_command
                                                   [h(t('zeptair.replied')), ZeptairDistHelper::STATUS_REPLIED],
                                                   [h(t('msg.completed')), ZeptairDistHelper::STATUS_COMPLETE]], 
                                                   params[:filter_status])  %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_dist', :action => 'users', :item_id => @item.id) %>';"/>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+  <tr style="height:5px;"><td></td></tr>
   <tr>
     <td style="padding-bottom:5px;">
     <% if @group_id.nil? or @group_id.empty? %>
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
     <% else %>
-      <table width="100%" cellpadding="0" cellspacing="0">
+      <table style="width:100%;" cellpadding="0" cellspacing="0">
         <tr>
-          <td align="left" nowrap>
+          <td style="text-align:left;" nowrap>
             <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
           </td>
@@ -43,9 +43,9 @@ zept_cmd = @item.zeptair_command
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -57,20 +57,19 @@ zept_cmd = @item.zeptair_command
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="22%" nowrap onClick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="25%" nowrap onClick="sortList('Comment.updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Comment.updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:22%;" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:25%;" nowrap onclick="sortList('Comment.updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Comment.updated_at', @sort_col, @sort_type)) %></span></th>
 <% attachments.each_with_index do |attach, attach_idx| %>
-    <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
+    <td style="width:10px; background-color:#FFDFAD; padding:0px 3px; text-align:center;" nowrap><%= attach_idx+1 %></td>
 <% end %>
 <% unless zept_cmd.nil? %>
-    <td width="10" align="center" nowrap style="background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
+    <td style="width:10px; background-color:#FFDFAD; padding:0px 3px; text-align:center;" nowrap><%= t('zeptair.dist.command_exec') %></td>
 <% end %>
   </tr>
 <%
@@ -79,7 +78,7 @@ zept_cmd = @item.zeptair_command
   entries = ZeptairDistHelper.get_ack_array_of(comment)
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%= td_class %>" nowrap>

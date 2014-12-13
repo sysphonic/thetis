@@ -1,18 +1,18 @@
 
 <%= form_tag( {:controller => 'workflows', :action => 'create' }, :name => 'form_workflow', :method => 'post') %>
 
-<table id="div_workflow_list" width="100%" cellspacing="0" cellpadding="0" style="background-color:wheat; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<table id="div_workflow_list" cellspacing="0" cellpadding="0" style="width:100%; background-color:wheat; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
   <tr>
-    <td width="50%" valign="top" style="padding:5px;">
+    <td style="width:50%; padding:5px; vertical-align:top;"  >
 
-        <table align="center" width="100%" cellpadding="0" cellspacing="0">
+        <table style="width:100%;" cellpadding="0" cellspacing="0">
           <tr>
-            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+            <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('btn.create') %>
             </td>
           </tr>
           <tr>
-            <td align="center">
+            <td style="text-align:center;">
               <span style="color:blueviolet; float:left;"><%= t('workflow.select_to_issue') %></span><br/>
               <select id="select_workflow" name="select_workflow" class="select_multi" size="5" style="width:100%;">
               <%
@@ -38,24 +38,24 @@
               end
               %>
               </select>
-              <div class="button_gray" style="display:block; margin:2px auto 0;" onClick="doCreate();">
+              <div class="button_gray" style="display:block; margin:2px auto 0;" onclick="doCreate();">
                 <%= raw(t('arrow.down')) %> <%= t('btn.create') %>
               </div>
             </td>
           </tr>
 
-          <tr height="10"><td></td></tr>
+          <tr style="height:10px;"><td></td></tr>
 
           <tr>
-            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+            <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('workflow.issuing_list') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= ApplicationHelper.h_s_quote(t('workflow.issuing_list_info')) %>');">
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
-              <div id="div_ajax_workflow" width="100%" style="overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
+              <div id="div_ajax_workflow" style="width:100%; overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
                 <%= render(:partial => 'ajax_workflow') %>
               </div>
             </td>
@@ -63,34 +63,34 @@
         </table>
 
     </td>
-    <td width="50%" valign="top" style="padding:5px;">
+    <td style="width:50%; padding:5px; vertical-align:top;">
 
-        <table align="center" width="100%" cellpadding="0" cellspacing="0">
+        <table style="width:100%;" cellpadding="0" cellspacing="0">
           <tr>
-            <td align="center" nowrap style="padding:2px 0px; background-color:burlywood;">
+            <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('workflow.received_list') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= t('arrow.right_full') %><%= ApplicationHelper.h_s_quote(Workflow.decided_inbox) %>');">
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
-              <div id="workflow_list_received" width="100%" style="overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
+              <div id="workflow_list_received" style="width:100%; overflow:auto; background-color:white; border:2px solid dimgray; border-right:2px solid lightgrey; border-bottom: 2px solid lightgrey;">
                 <%= render(:partial => 'received_list') %>
               </div>
             </td>
           </tr>
         <% if WorkflowsHelper.exists_decided_inbox?(@login_user.id) %>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
-            <td align="center">
-              <table cellspacing="0" cellpadding="0" width="300" align="center" onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
-                <tr height="35">
-                  <td width="15"></td>
-                  <td width="20" align="center">
+            <td style="text-align:center;">
+              <table cellspacing="0" cellpadding="0" onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
+                <tr style="height:35px;">
+                  <td style="width:15px;"></td>
+                  <td style="width:20px; text-align:center;" >
                     <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder.gif">
                   </td>
-                  <td align="left" style="padding-left:10px">
+                  <td style="text-align:left; padding-left:10px">
                     <span id="divWfStatus" style="color:black;" title="<%= Workflow.decided_inbox %>"><%= truncate(Workflow.decided_inbox, :length => 30) %></span><br/>
                   </td>
                 </tr>

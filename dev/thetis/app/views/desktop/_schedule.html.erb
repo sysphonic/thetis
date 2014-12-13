@@ -1,7 +1,7 @@
 <% unless @schedules.nil? %>
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td valign="top" style="padding:5px;">
+    <td style="vertical-align:top; padding:5px;">
       <div id="div_timetable" style="background-color:white;">
         <%= render(:partial => 'schedules/timetable', :locals => {:brief_view => true}) %>
       </div>

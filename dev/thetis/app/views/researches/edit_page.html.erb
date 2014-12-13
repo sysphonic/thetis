@@ -1,28 +1,26 @@
 <%= form_tag({:controller => 'researches', :action => 'save_page'}, :method => 'post', :name => 'form_research') %>
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td style="font-size:11pt;" align="left">
+    <td style="font-size:11pt; text-align:left;">
 
     <%= render(:inline => File.read(File.join(Research.page_dir, "_q#{@page}.html.erb"))) %>
 
     <%= hidden_field_tag('research_id', @research.id) %>
     <%= hidden_field_tag('page', @page) %>
 
-    <table align="center" cellspacing="0" cellpadding="0">
-      <tr height="10"><td></td></tr>
+    <table style="margin:10px auto 40px;" cellspacing="0" cellpadding="0">
       <tr>
-    <% if @page.to_i > 1 %>
-      <td class="img_button_td" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
-        <%= raw(t('btn.page_back')) %>
-      </td>
-        <td width="20"></td>
-    <% end %>
-      <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
-        <%= raw(t('btn.page_next')) %>
-      </td>
+      <% if @page.to_i > 1 %>
+        <td class="img_button_td" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
+          <%= raw(t('btn.page_back')) %>
+        </td>
+          <td style="width:20px;"></td>
+      <% end %>
+        <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
+          <%= raw(t('btn.page_next')) %>
+        </td>
       </tr>
-      <tr height="40"><td></td></tr>
     </table>
 
     </td>

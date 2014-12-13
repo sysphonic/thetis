@@ -4,19 +4,19 @@
   <% toy_id = "toy_#{@toy.id}" %>
 
   <div class="toy_desktop" id="<%= toy_id %>" style="position:absolute; z-index:10000; display:none;">
-  <table class="postlabel_frame" width="200" style="border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;" cellspacing="7">
+  <table class="postlabel_frame" style="width:200px; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:lightpink;" cellspacing="7">
     <tr>
-      <td rowspan="2" width="20" style="width:20px; cursor:move; background-color:deeppink; padding-left:10px;">
+      <td rowspan="2" style="width:20px; cursor:move; background-color:deeppink; padding-left:10px;">
         &nbsp;
       </td>
-      <td align="left" nowrap style="font-size:10pt;">
+      <td style="text-align:left; font-size:10pt;" nowrap >
         <%= t('postlabel.from') %>
         <% user_name = User.get_name(@toy.posted_by, @users_cache) %>
         <b><%= user_name %></b>&nbsp;&nbsp;(<%= @toy.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)
       </td>
     </tr>
     <tr>
-      <td align="left" style="font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editPostLabel('<%= toy_id %>', '<%= @toy.posted_by %>', '<%= ApplicationHelper.h_s_quote(user_name) %>')">
+      <td style="text-align:left; font-size:10.5pt; cursor:pointer; padding-left:3px; background-color:white;" onclick="editPostLabel('<%= toy_id %>', '<%= @toy.posted_by %>', '<%= ApplicationHelper.h_s_quote(user_name) %>')">
         <pre id="<%= toy_id %>_msg"><%= @toy.message %></pre>
       </td>
     </tr>

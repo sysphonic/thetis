@@ -8,10 +8,10 @@
         <tr>
           <td nowrap style="padding:5px 20px; text-align:left;">
           <% if @login_user.admin?(User::AUTH_GROUP) %>
-            <input type="button" value="<%= t('btn.new') %>" onClick="doCreate(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onClick="doRename(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onClick="doDelete();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onClick="doMove();" style="width:80px;"/>
+            <input type="button" value="<%= t('btn.new') %>" onclick="doCreate(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onclick="doRename(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;"/>
           <% else %>
             <%= t('group.only_admin_can_edit_tree') %>
           <% end %>

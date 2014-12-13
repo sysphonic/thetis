@@ -4,15 +4,15 @@
 </div>
 <div style="padding:0px 15px;">
 
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table style="width:100%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+      <td style="color:dimgray; padding:2px; line-height:1.7; background-color:#DFDFDF; text-align:center;" >
         <b><%= t('cap.basic_info') %></b>
       </td>
     </tr>
   </table>
 
-  <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <table style="width:95%; margin:10px auto;" cellpadding="0" cellspacing="2" >
   <% unless @address.name.nil? or @address.name.empty? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
@@ -104,15 +104,15 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
    or (!@address.organization.nil? and !@address.organization.empty?) \
    or (!@address.title.nil? and !@address.title.empty?)
 %>
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table style="width:100%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+      <td style="color:dimgray; padding:2px; line-height:1.7; background-color:#DFDFDF; text-align:center;"  >
         <b><%= Address.human_attribute_name('address') %></b>
       </td>
     </tr>
   </table>
 
-  <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <table style="width:95%; margin:10px auto;" cellpadding="0" cellspacing="2" >
   <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
@@ -178,15 +178,15 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
 <%
 if (!@address.memo.nil? and !@address.memo.empty?)
 %>
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table style="width:100%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+      <td style="color:dimgray; padding:2px; line-height:1.7; background-color:#DFDFDF; text-align:center;"  >
         <b><%= Address.human_attribute_name('memo') %></b>
       </td>
     </tr>
   </table>
 
-  <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <table style="width:95%; margin:10px auto;" cellpadding="0" cellspacing="2" >
   <% unless @address.memo.nil? or @address.memo.empty? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
@@ -200,17 +200,17 @@ if (!@address.memo.nil? and !@address.memo.empty?)
   </table>
 <% end %>
 
-  <table width="100%" cellspacing="0" cellpadding="0">
+  <table style="width:100%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td style="color:dimgray; padding:2px; line-height:1.7" align="center" bgcolor="#DFDFDF">
+      <td style="color:dimgray; padding:2px; line-height:1.7; background-color:#DFDFDF; text-align:center;">
         <b><%= t('schedule.scope') %></b>
       </td>
     </tr>
   </table>
 
-  <table align="center" width="95%" cellpadding="0" cellspacing="2" style="padding:10px 0px;">
+  <table style="width:95%; margin:10px auto;" cellpadding="0" cellspacing="2">
     <tr>
-      <td align="left">
+      <td style="text-align:left;">
         <%
         empty_msg = ''
         if @address.private?

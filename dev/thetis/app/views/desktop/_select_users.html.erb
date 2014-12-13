@@ -1,7 +1,7 @@
 
-<table width="95%" cellspacing="0" cellpadding="0" align="center" style="width:95%; height:100%; padding:10px 0px;">
+<table cellspacing="0" cellpadding="0" style="width:95%; height:100%; margin:10px auto;">
   <tr style="height:80%;">
-    <td align="center" valign="top" id="div_selectUsers" style="height:80%;">
+    <td style="text-align:center; vertical-align:top; height:80%;" id="div_selectUsers">
 
       <%
       submit_url = url_for(:controller => 'desktop', :action => 'get_group_users')
@@ -11,15 +11,15 @@
     </td>
   </tr>
   <tr style="height:20%;">
-    <td align="center" style="padding-top:5px;">
+    <td style="text-align:center; padding:5px 0px 15px;">
 
-      <table align="center" cellspacing="0" cellpadding="0">
+      <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="right">
+          <td style="text-align:right;">
             <input type="button" value="<%= t('btn.add') %>" onclick="onPostToOk();" style="width:90px; height:25px">
           </td>
-          <td width="10"></td>
-          <td align="left">
+          <td style="width:10px;"></td>
+          <td style="text-align:left;">
             <input type="button" value="<%= t('btn.cancel') %>" onclick="onPostToCancel();" style="width:90px; height:25px">
           </td>
         </tr>

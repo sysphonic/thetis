@@ -1,13 +1,13 @@
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%;" cellpadding="0" cellspacing="0">
   <tr>
     <td>
-      <table width="100%" cellpadding="5" cellspacing="2" style="border:1px solid lightskyblue;">
+      <table cellpadding="5" cellspacing="2" style="width:100%; border:1px solid lightskyblue;">
         <tr>
-          <td nowrap width="5%" align="center" style="padding:3px;">
+          <td nowrap style="width:5%; padding:3px; text-align:center;"  >
           </td>
-          <td nowrap width="85%" align="left" style="padding:3px; padding-left:10px;">
+          <td nowrap style="width:85%; padding:3px; padding-left:10px; text-align:left;"  >
           </td>
-          <td nowrap width="10%" align="right" style="padding:3px;">
+          <td nowrap style="width:10%; padding:3px; text-align:right;"  >
             <%= t('msg.total') %>
           </td>
           <td></td>
@@ -15,7 +15,7 @@
           @sum_groups.each do |group_id|
             group_name = Group.get_name group_id
           %>
-          <td nowrap width="10%" align="right" bgcolor="" style="padding:3px;">
+          <td nowrap style="width:10%; padding:3px; text-align:right;"  bgcolor="" >
             <%= group_name %>
           </td>
           <% end %>
@@ -32,13 +32,13 @@
         bg_color = (idx%2 == 1) ? "white" : "#ccffdf"
         %>
         <tr>
-          <td nowrap width="5%" bgcolor="<%= bg_color %>" align="center" style="padding:3px;">
+          <td nowrap style="width:5%; background-color:<%= bg_color %>; padding:3px; text-align:center;" >
             <%= (idx+1).to_s %>.
           </td>
-          <td nowrap width="85%" bgcolor="<%= bg_color %>" align="left" style="padding:3px; padding-left:10px;">
+          <td nowrap style="width:85%; background-color:<%= bg_color %>; padding:3px 3px 3px 10px; text-align:left;" >
             <%= vote %>
           </td>
-          <td nowrap width="10%" align="right" bgcolor="<%= bg_color %>" style="padding:3px;">
+          <td nowrap style="width:10%; background-color:<%= bg_color %>; padding:3px; text-align:right;" >
             <%= total.to_s %>
           </td>
           <td></td>
@@ -46,7 +46,7 @@
           @sum_groups.each do |group_id|
             group_sum = hash[group_id]
           %>
-            <td nowrap width="10%" align="right" bgcolor="" style="padding:3px;">
+            <td nowrap style="width:10%; padding:3px; text-align:right;" bgcolor="">
             <% if group_sum.nil? %>
               0
             <% else %>
@@ -65,7 +65,7 @@
 <!--
 <% if false %>
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
       <%
       bg_color = (idx%2 == 1) ? 'white' : '#ccffdf'
       url_h = ApplicationHelper.get_fwd_params(params)

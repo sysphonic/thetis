@@ -1,12 +1,12 @@
 
 <%= form_tag( {:controller => 'zeptair_xlogs', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%; margin-bottom:5px;" cellspacing="3" cellpadding="0">
   <tr>
-    <td align="left" nowrap width="1%">
+    <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
     </td>
-    <td align="right">
+    <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
       &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
 <% unless @login_user.nil? %>
@@ -24,25 +24,24 @@
                                               params[:filter])
             %>
 <% end %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_xlogs', :action => 'list') %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_xlogs', :action => 'list') %>';"/>
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
+  <tr style="height:5px;"><td></td></tr>
   <tr>
-    <td colspan="2" align="right" nowrap>
-        <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
-        <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
-        <span style="color:silver;">|</span>
-        <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+    <td colspan="2" style="text-align:right;" nowrap>
+      <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
+      <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
+      <span style="color:silver;">|</span>
+      <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
     </td>
   </tr>
-  <tr height="5"><td></td></tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('log', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -55,18 +54,17 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_logs">
-<table id="list_logs" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_logs" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="15%" nowrap onClick="sortList('fin_at')"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onClick="sortList('req_at')"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onClick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="20%" nowrap onClick="sortList('s_addr')"><%= ZeptairXlog.human_attribute_name('s_addr') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('s_addr', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="10%"  nowrap onClick="sortList('cs_protocol')"><%= ZeptairXlog.human_attribute_name('cs_protocol') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_protocol', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="25%" nowrap onClick="sortList('cs_uri')"><%= ZeptairXlog.human_attribute_name('cs_uri') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_uri', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('fin_at')"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('req_at')"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('s_addr')"><%= ZeptairXlog.human_attribute_name('s_addr') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('s_addr', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:10%;"  nowrap onclick="sortList('cs_protocol')"><%= ZeptairXlog.human_attribute_name('cs_protocol') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_protocol', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:25%;" nowrap onclick="sortList('cs_uri')"><%= ZeptairXlog.human_attribute_name('cs_uri') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_uri', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}
@@ -74,7 +72,7 @@ exist_cache = {}
 @xlogs.each_with_index do |xlog, idx|
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:center;"><%= xlog.fin_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
     <td class="<%= td_class %>" nowrap style="text-align:center;"><%= xlog.req_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
     <%

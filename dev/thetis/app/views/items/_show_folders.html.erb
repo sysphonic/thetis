@@ -1,15 +1,15 @@
 
-<table width="100%" height="100%" bgcolor="aliceblue" cellpadding="0" cellspacing="0">
+<table style="width:100%; background-color:aliceblue; height:100%;" cellpadding="0" cellspacing="0">
   <tr>
-    <td valign="top">
+    <td style="vertical-align:top;">
       <br/>
       <br/>
-      <table align="center" width="80%" cellpadding="0" cellspacing="0" style="background-color:white; border:5px dodgerblue dashed;">
+      <table cellpadding="0" cellspacing="0" style="width:80%; margin:0px auto; background-color:white; border:5px dodgerblue dashed;">
         <tr>
-          <td align="center" valign="top" style="padding:10px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
+          <td style="text-align:center; vertical-align:top; padding:10px;">
+            <table style="width:100%;" cellpadding="0" cellspacing="0">
               <tr>
-                <td align="left" valign="top" style="padding:0px; color:royalblue; font-size:14pt;">
+                <td style="text-align:left; vertical-align:top; padding:0px; color:royalblue; font-size:14pt;"  >
                   <b><%= t('cap.folders') %></b>
                 </td>
               </tr>
@@ -17,8 +17,8 @@
               unless @folder_id == '0'
                 folder = Folder.find(@folder_id)
               %>
-              <tr height="30">
-                <td align="left" valign="top" style="padding-left:50px; color:navy;">
+              <tr style="height:30px;">
+                <td style="text-align:left; vertical-align:top; padding-left:50px; color:navy;">
                   <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder.parent_id %>'; document.form_list.submit(); return false;">/ <%= t('folder.parent_path') %> </a><br/>
                 </td>
               </tr>
@@ -27,8 +27,8 @@
               childs = Folder.get_childs_for(@login_user, @folder_id, false, false, false)
               childs.each do |folder_id|
               %>
-              <tr height="30">
-                <td align="left" valign="top" style="padding-left:50px; color:navy;">
+              <tr style="height:30px;">
+                <td style="text-align:left; vertical-align:top; padding-left:50px; color:navy;">
                   <a href="#" onclick="prog('TOP-RIGHT'); document.form_list.folder_id.value = '<%= folder_id %>'; document.form_list.submit(); return false;">/ <%= Folder.get_name(folder_id) %> </a><br/>
                 </td>
               </tr>

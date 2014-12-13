@@ -5,8 +5,7 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @item}) %>
 
-<table align="center" width="90%" cellpadding="0" cellspacing="2">
-  <tr height="15"><td></td></tr>
+<table style="width:90%; margin:15px auto 0px;" cellpadding="0" cellspacing="2">
 <% unless @item.nil? %>
   <tr>
     <td class="item_cap_td" style="background-color:#97DCFF">
@@ -112,17 +111,17 @@ dispZeptCmdEdit = function(sw)
   <%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %>
   <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
 <% else %>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap width="20%">
+          <td style="text-align:left; width:20%;" nowrap>
             <span id="div_folderPath" style="color:red">
               <%= (@item.nil?)?'/(root)':@item.get_folder_path(@folders_cache, @folder_obj_cache) %>
               <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
             </span>
           </td>
-          <td width="10"></td>
+          <td style="width:10px;"></td>
           <td>
-            <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelect(_z('item_folder_id').value); modifiedBasic++;">
+            <div class="button_gray" style="float:left;" onclick="showFolderTreeToSelect(_z('item_folder_id').value); modifiedBasic++;">
               <%= t('btn.select_folder') %>
             </div>
           </td>
@@ -182,19 +181,19 @@ dispZeptCmdEdit = function(sw)
     <td class="item_value_td">
       <table cellspacing="0" cellpadding="0">
         <tr>
-          <td width="10"></td>
-          <td valign="top">
+          <td style="width:10px;"></td>
+          <td style="vertical-align:top;">
             <%= radio_button('item', 'layout', 'A', :onClick => 'modifiedBasic++') %><label for="item_layout_a"> A</label>
-            <table border="1" cellspacing="0" cellpadding="0" width="50">
+            <table border="1" cellspacing="0" cellpadding="0" style="width:50px;">
               <tr>
                 <td>
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
-                      <td nowrap valign="top">
+                      <td nowrap style="vertical-align:top;">
                         <%= truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
                         <%= truncate(Item.human_attribute_name('description'), :length => 8) %><br/>
                       </td>
-                      <td nowrap valign="top" width="30%">
+                      <td nowrap style="vertical-align:top; width:30%;" >
                         <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
@@ -202,32 +201,32 @@ dispZeptCmdEdit = function(sw)
                 </td>
               </tr>
               <tr>
-                <td align="center">
+                <td style="text-align:center;">
                   <%= truncate(t('image.plural'), :length => 8) %><br/>
                 </td>
               </tr>
             </table>
           </td>
-          <td width="20"></td>
-          <td valign="top">
+          <td style="width:20px;"></td>
+          <td style="vertical-align:top;">
             <%= radio_button('item', 'layout', 'B', :onClick => 'modifiedBasic++') %><label for="item_layout_b"> B</label>
-            <table border="1" cellspacing="0" cellpadding="0" width="50">
+            <table border="1" cellspacing="0" cellpadding="0" style="width:50px;">
               <tr>
                 <td>
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
-                      <td nowrap valign="top">
+                      <td nowrap style="vertical-align:top;">
                          <%= truncate(Item.human_attribute_name('summary'), :length => 8) %><br/>
                       </td>
-                      <td nowrap valign="top" width="30%">
+                      <td nowrap style="vertical-align:top; width:30%;" >
                          <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
                     <tr>
-                      <td nowrap valign="top">
+                      <td nowrap style="vertical-align:top;">
                          <%= truncate(Item.human_attribute_name('description'), :length => 8) %><br/>&nbsp;
                       </td>
-                      <td nowrap valign="top" width="30%">
+                      <td nowrap style="vertical-align:top; width:30%;">
                          <%= truncate(t('image.plural'), :length => 8) %><br/>
                       </td>
                     </tr>
@@ -236,15 +235,15 @@ dispZeptCmdEdit = function(sw)
               </tr>
             </table>
           </td>
-          <td width="20"></td>
-          <td valign="top">
+          <td style="width:20px;"></td>
+          <td style="vertical-align:top;">
             <%= radio_button('item', 'layout', 'C', :onClick => 'modifiedBasic++') %><label for="item_layout_c"> C</label>
-            <table border="1" cellspacing="0" cellpadding="0" width="50">
+            <table border="1" cellspacing="0" cellpadding="0" style="width:50px;">
               <tr>
-                <td align="center" colspan="2">
+                <td style="text-align:center;" colspan="2">
                   <table border="1" cellpadding="0" cellspacing="2">
                     <tr>
-                      <td nowrap valign="top">
+                      <td nowrap style="vertical-align:top;">
                          &nbsp;&nbsp;<%= truncate(Item.human_attribute_name('summary'), :length => 8) %>&nbsp;&nbsp;<br/>
                          &nbsp;&nbsp;<%= truncate(Item.human_attribute_name('description'), :length => 8) %>&nbsp;&nbsp;<br/>
                       </td>
@@ -253,10 +252,10 @@ dispZeptCmdEdit = function(sw)
                 </td>
               </tr>
               <tr>
-                <td align="center" nowrap>
+                <td style="text-align:center;" nowrap>
                    <%= truncate(t('image.plural'), :length => 8) %><br/>
                 </td>
-                <td align="center" nowrap>
+                <td style="text-align:center;" nowrap>
                    <%= truncate(t('attachment.plural'), :length => 8) %><br/>
                 </td>
               </tr>

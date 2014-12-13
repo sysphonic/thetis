@@ -1,8 +1,8 @@
 <% unless @tmpl_local_folder.nil? %>
 
-<table class="info_area" cellspacing="0" cellpadding="0" width="100%">
+<table class="info_area" cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td id="sortable_wfs" align="left" style="padding-left:10px;">
+    <td id="sortable_wfs" style="text-align:left; padding-left:10px;">
       <%
       items = Folder.get_items_admin(@tmpl_local_folder.id, 'xorder ASC')
       unless items.nil?

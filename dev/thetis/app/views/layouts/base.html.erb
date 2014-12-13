@@ -11,19 +11,6 @@
 <%= javascript_include_tag('application') %>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/ckeditor/ckeditor.js" type="text/javascript"></script>
 <script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/dojo/dojo.js" type="text/javascript"></script>
-<!--
-<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetis.css?ts=2013081701" media="all" rel="stylesheet" type="text/css" />
-<link href="<%= THETIS_RELATIVE_URL_ROOT %>/stylesheets/thetisbox.css" media="all" rel="stylesheet" type="text/css" />
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/prototype.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/scriptaculous/effects.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/scriptaculous/dragdrop.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/ckeditor/ckeditor.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/dojo/dojo.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/jkl-calendar/jkl-calendar.js" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/common110.js?ts=2012091801" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetis110.js?ts=2012052901" type="text/javascript"></script>
-<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/thetis/thetisbox110.js?ts=2012091801" type="text/javascript"></script>
--->
 
 <script type="text/javascript">
 
@@ -61,9 +48,9 @@ function doOnLoad()
 
 function _forBugfullIE(div, list)
 {
-  if (list != null) {
-    list.style.width = div.clientWidth+"px";
-  }
+//  if (list != null) {
+//    list.style.width = div.clientWidth+"px";
+//  }
 }
 
 var iframe_groupware = top._z("iframe_groupware");
@@ -94,7 +81,7 @@ function doResize()
 
   var main_div = _z("main_div");
   main_div.style.height = (mainHeight - (3+3)) + "px";
-  main_div.style.width = (mainWidth - (5+5)) + "px";
+//  main_div.style.width = (mainWidth - (5+5)) + "px";
 
   var availHeight = main_div.offsetHeight;
   var availWidth = main_div.offsetWidth;
@@ -305,10 +292,10 @@ function doResize()
     }
 
     if (div = _z("div_research_records")) {
-      div.style.height = (availHeight - 137) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
     if (div = _z("div_research_lists")) {
-      div.style.height = (availHeight - 137) + "px";
+      div.style.height = (availHeight - 120) + "px";
     }
 
     enableFrameScrolling((div == null));
@@ -321,7 +308,7 @@ addEvent(window, "resize", doResize);
 
 </head>
 
-<body onLoad="doOnLoad(); showErrorMsg(''); eval('try{ showTips() }catch(e){}')" bgcolor="white">
+<body onLoad="doOnLoad(); showErrorMsg(''); eval('try{ showTips() }catch(e){}')" style="background-color:white;">
 
 <a name="top"></a>
 

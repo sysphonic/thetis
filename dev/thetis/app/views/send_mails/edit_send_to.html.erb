@@ -20,14 +20,14 @@ tabs_send_mail_address.push("users");
 
       <table cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_direct" class="td_item_tab" nowrap onclick="showTab('direct', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_direct').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_direct').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+          <td id="tab_direct" class="td_item_tab" nowrap onclick="showTab('direct', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.direct_input') %>
           </td>
-          <td id="tab_addrbook" class="td_item_tab" nowrap onclick="showTab('addrbook', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_addrbook').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_addrbook').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+          <td id="tab_addrbook" class="td_item_tab" nowrap onclick="showTab('addrbook', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.address_book') %>
           </td>
 <% if enable_users_tab %>
-          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users', tabs_send_mail_address);" bgColor="cornflowerblue" onMouseOver="if(_z('tab_div_users').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='cornflowerblue';">
+          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users', tabs_send_mail_address, 'cornflowerblue');">
             <%= User.model_name.human %>
           </td>
 <% end %>
@@ -35,7 +35,7 @@ tabs_send_mail_address.push("users");
         </tr>
       </table>
 
-      <div id="tab_div_direct" style="width:100%;" align="center">
+      <div id="tab_div_direct" style="width:100%; text-align:center;">
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px cornflowerblue;">
           <tr>
             <td style="padding:20px 0px; text-align:center;">
@@ -147,7 +147,7 @@ tabs_send_mail_address.push("users");
 
 <script type="text/javascript">
 
-showTab(tabs_send_mail_address[0], tabs_send_mail_address);
+showTab(tabs_send_mail_address[0], tabs_send_mail_address, "cornflowerblue");
 
 onAddressbookScopeChanged = function(elem)
 {

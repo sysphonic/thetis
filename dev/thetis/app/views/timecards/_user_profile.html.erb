@@ -1,18 +1,18 @@
 <div style="padding-bottom:15px;">
-  <table class="timecard" width="100%">
+  <table class="timecard" style="width:100%;">
     <tr>
-      <th width="25%"><%= User.human_attribute_name('name') %></th>
-      <th width="20%"><%= t('user.title') %></th>
-      <th width="55%"><%= Group.model_name.human %></th>
+      <th style="width:25%;"><%= User.human_attribute_name('name') %></th>
+      <th style="width:20%;"><%= t('user.title') %></th>
+      <th style="width:55%;"><%= Group.model_name.human %></th>
     </tr>
     <tr>
-      <td align="center">
+      <td style="text-align:center;">
         <b><%= @selected_user.get_name_for_timecard %></b>
       </td>
-      <td align="center">
+      <td style="text-align:center;">
         <%= @selected_user.title %>
       </td>
-      <td align="left" style="padding:0px 5px">
+      <td style="text-align:left; padding:0px 5px">
         <%
         @groups_cache ||= {}
         @group_obj_cache ||= {}

@@ -1,12 +1,14 @@
 
-<table align="center" width="85%" cellpadding="0" cellspacing="2">
+<table style="width:85%; margin:0px auto 15px;" cellpadding="0" cellspacing="2">
   <tr>
     <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
       <%= @item.title %>
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" style="width:20%;" nowrap><%= Team.human_attribute_name('status') %></td>
+    <td class="prim_cap_td" style="width:20%;" nowrap>
+      <%= Team.human_attribute_name('status') %>
+    </td>
     <td class="item_value_td" id="status">
       <div id="div_team_status">
 
@@ -16,7 +18,9 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="width:20%;" nowrap><%= t('msg.members') %></td>
+    <td class="item_cap_td" style="width:20%;" nowrap>
+      <%= t('msg.members') %>
+    </td>
     <td class="item_value_td" nowrap>
     <%
     unless @team.nil?
@@ -74,7 +78,6 @@
     %>
     </td>
   </tr>
-  <tr height="15"><td></td></tr>
 </table>
 
 <%= render(:partial => 'common/flash_notice') %>

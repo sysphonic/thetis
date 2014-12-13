@@ -1,15 +1,15 @@
 <% unless @users.nil? %>
 
 <%= form_tag( {:controller => 'groups', :action => 'get_users' }, :method => 'get', :name => 'form_list') %>
-<table width="100%" cellspacing="0" cellpadding="0" style="padding:2px 5px 5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:2px 5px 5px;">
   <tr>
-    <td align="left" nowrap>
+    <td style="text-align:left;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
 
       <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
     </td>
-    <td align="right" nowrap>
+    <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
       <input type="button" value="<%= t('btn.exclude_from_group')%>" onclick="doExcludeMulti();">
@@ -160,9 +160,9 @@ onPaginate = function(url)
 
 </script>
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:5px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -177,21 +177,21 @@ onPaginate = function(url)
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="1">
+<table style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%" nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></th>
-    <th class="list_sort" width="16%" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></th>
-    <th class="list_sort" width="20%" nowrap onclick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></th>
-    <th class="list_sort" width="10%" nowrap onclick="sortList('email')"><%= User.human_attribute_name('email') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></th>
-    <th class="list_sort" width="26%" nowrap onclick="sortList('title')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></th>
-    <th class="list_sort" width="20%" nowrap onclick="sortList('organization')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:5%;" nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:16%;" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('fullname')"><%= User.human_attribute_name('fullname') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fullname', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:10%;" nowrap onclick="sortList('email')"><%= User.human_attribute_name('email') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:26%;" nowrap onclick="sortList('title')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></th>
+    <th class="list_sort" style="width:20%;" nowrap onclick="sortList('organization')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></th>
   </tr>
 <%
 official_title_obj_cache = {}
 @users.each_with_index do |user, idx|
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
     <td class="<%= td_class %>">
       <a class="a_underline" nowrap href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;" >

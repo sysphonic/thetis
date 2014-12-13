@@ -1,15 +1,15 @@
 
-<div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px; background-color:#FFEBCB;" align="center">
+<div class="info_area" style="width:90%; padding:15px 0px; background-color:#FFEBCB; text-align:center;" >
   <%= form_tag( {:controller => 'items', :action => 'destroy_comment', :id => '', :comment_id => @comment.id }, :name => 'form_team_cancel', :method => 'post') %>
-    <table align="center" cellspacing="0" cellpadding="0">
+    <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
       <tr>
         <td>
           <%= t('team.now_applying') %>
         </td>
       </tr>
       <tr>
-        <td style="padding-top:10px;" align="center">
-          <table align="center" cellspacing="0" cellpadding="0">
+        <td style="padding-top:10px; text-align:center;">
+          <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
             <tr>
               <td class="img_button_td" onclick="doTeamCancel();">
                 <%= t('btn.cancel') %>

@@ -15,9 +15,9 @@ else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
 end
 %>
-<table id="div_desktop" width="100%" cellpadding="0" cellspacing="0" style="background-color:white; display:none;">
+<table id="div_desktop" cellpadding="0" cellspacing="0" style="width:100%; background-color:white; display:none;">
   <tr class="desktop_tr">
-    <td class="desktop_td" align="center" valign="middle">
+    <td class="desktop_td" style="text-align:center; vertical-align:middle;" >
       <img id="img_map" src="<%= raw(img_url) %>" style="display:none;" />
     </td>
   </tr>
@@ -25,24 +25,24 @@ end
 
 <!-- Toolbox -->
 <span style="display:none;">
-  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png" width="0">
+  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png">
 </span>
 
-<table class="toolbar" id="toolbar" width="70%" cellpadding="0" cellspacing="0" style="z-index:999; position:absolute; display:none; background-color:white; border:inset 1px gray; -webkit-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+<table class="toolbar" id="toolbar" cellpadding="0" cellspacing="0" style="width:70%; z-index:999; position:absolute; display:none; background-color:white; border:inset 1px gray; -webkit-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
   <tr>
-    <td width="20" rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
+    <td rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
       &nbsp;
     </td>
-    <td width="8%" align="center" valign="middle" rowspan="3" style="padding:3px 20px;">
+    <td style="text-align:center; vertical-align:middle; width:8%; padding:3px 20px;"  rowspan="3">
       <div id="exit" style="height:100%;" onclick="tipsExit()" title="<%= t('office_map.drop_to_remove') %>">
         <img id="exit_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png" alt="<%= t('office_map.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
     </td>
-    <td width="90%" align="left">
+    <td style="width:90%; text-align:left;" >
     <%
     if @location.nil?
       location_id = "location_xx"
     %>
-      <div class="location_tray" id="<%= location_id %>" align="left" style="width:200px; z-index:1000; cursor:move;">
+      <div class="location_tray" id="<%= location_id %>" style="text-align:left; width:200px; z-index:1000; cursor:move;" >
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @login_user.get_figure %>.png" />
         <%= @login_user.get_name %>
       </div>
@@ -55,18 +55,18 @@ end
     </td>
   </tr>
   <tr>
-    <td align="left" style="padding:3px 0px;">
-      <table width="100%" cellspacing="0" cellpadding="0">
+    <td style="text-align:left; padding:3px 0px;" >
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
          <tr>
-          <td align="left" width="120" style="padding-bottom:5px;">
+          <td style="text-align:left; width:120px; padding-bottom:5px;" >
   <% if @group_id.nil? %>
-            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
   <% else %>
-            <table width="100%" cellpadding="0" cellspacing="0">
+            <table style="width:100%;" cellpadding="0" cellspacing="0">
               <tr>
-                <td align="left" nowrap>
+                <td style="text-align:left;" nowrap>
                   <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
                   &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
@@ -79,12 +79,12 @@ end
     </td>
   </tr>
   <tr>
-    <td align="left" style="padding:3px 0px;">
+    <td style="text-align:left; padding:3px 0px;">
       <%= form_tag( {:controller => 'locations', :action => 'open_map'}, :method => 'get', :name => 'form_map') %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
         <%= text_field_tag('keyword', params[:keyword]) %>
-        <input type="button" value="<%= t('btn.search') %>" onClick="form_map.submit(); prog('TOP-RIGHT');"/>
-        <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'locations', :action => 'open_map') %>';"/>
+        <input type="button" value="<%= t('btn.search') %>" onclick="form_map.submit(); prog('TOP-RIGHT');"/>
+        <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'locations', :action => 'open_map') %>';"/>
       </form>
     </td>
   </tr>
@@ -108,7 +108,7 @@ unless @locations.nil?
       location_at = location.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
     end
 %>
-  <div class="location_on_map" id="<%= location_id %>" align="left" title="<%= location_at %>" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
+  <div class="location_on_map" id="<%= location_id %>" style="text-align:left;" title="<%= location_at %>" style="position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
     user_name, u_groups, figure = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
     icon_img = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"

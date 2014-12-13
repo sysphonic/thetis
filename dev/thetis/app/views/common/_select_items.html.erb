@@ -11,14 +11,14 @@ if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
 end
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="130">
-      <div class="button_gray" style="float:left;" onClick="showFolderTreeToSelectItems('<%= (@folder_id.nil?)?'':@folder_id %>', this);">
+    <td style="width:130px;">
+      <div class="button_gray" style="float:left;" onclick="showFolderTreeToSelectItems('<%= (@folder_id.nil?)?'':@folder_id %>', this);">
         <%= t('btn.select_folder') %>
       </div>
     </td>
-    <td align="left" style="color:blue;">
+    <td style="text-align:left; color:blue;">
       <% unless @folder_id.nil? %>
         <%= Folder.get_path(@folder_id, @folders_cache, @folder_obj_cache) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearFolderToSelectItems();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">

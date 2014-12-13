@@ -73,13 +73,13 @@
 <div class="base_list" id="div_addresses">
 <table id="list_addresses" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="35%" nowrap onclick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="35%" nowrap onclick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="30%" nowrap onclick="sortList('organization')"><%= Address.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:35%;" nowrap onclick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:35%;" nowrap onclick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:30%;" nowrap onclick="sortList('organization')"><%= Address.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
   </tr>
 <% @addresses.each_with_index do |address, idx|  %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="showAddress(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>'); return false;">
         <%= truncate(address.name, :length => 30) %>

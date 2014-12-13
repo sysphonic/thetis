@@ -224,7 +224,7 @@ attachments_num = item_attachments.length
         <TR>
           <TD>
 <% additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0)) %>
-            <table align="center" cellspacing="0" cellpadding="0" style="width:90%; border:1px solid goldenrod;">
+            <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" cellspacing="0" cellpadding="0" >
               <tr>
                 <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>; font-size:10.5pt; padding:10px; line-height:15pt;">
 <% unless item.summary.nil? or item.summary.empty? %>
@@ -267,19 +267,19 @@ attachments_num = item_attachments.length
                 </td>
               <% if additionalCol %>
                 <td style="background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>;">
-                   <table align="center" style="width:100px;" cellspacing="0" cellpadding="0">
+                   <table style="margin:0px auto; width:100px;" cellspacing="0" cellpadding="0">
                 <% if params[:thumbnails]!='false' and images_num > 0 %>
                      <tr>
                        <td>
-                         <table align="center" style="width:100px;" cellspacing="0" cellpadding="0">
+                         <table style="margin:0px auto; width:100px;" cellspacing="0" cellpadding="0">
                   <%
                   item_images.each_with_index do |image, idx|
                     break if idx >= max_bbs_img
                   %>
                            <tr>
-                             <td style="width:90px; padding:5px">
+                             <td style="width:130px; padding:5px">
                                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :ts => ApplicationHelper.get_timestamp(image)) %>
-                               <img style="cursor:pointer" src="<%= img_url %>" width="120" onclick="doShowItem(<%= item.id %>);" />
+                               <img style="cursor:pointer; width:120px;" src="<%= img_url %>" onclick="doShowItem(<%= item.id %>);" />
                              </td>
                            </tr>
                 <% end %>
@@ -296,9 +296,9 @@ attachments_num = item_attachments.length
                    attach_cnt += 1
                    break if attach_cnt > max_bbs_attach
                   %>
-                         <table cellspacing="1" cellpadding="0" align="center" style="width:120px; cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+                         <table cellspacing="1" cellpadding="0" style="width:120px; margin:0px auto; cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                            <tr>
-                             <td class="td_attachment_name" align="center">
+                             <td class="td_attachment_name" style="text-align:center;">
                                <%= attach.name %>
                              </td>
                            </tr>
@@ -330,7 +330,7 @@ attachments_num = item_attachments.length
         </TR>
         <TR>
           <TD style="text-align:center;">
-            <table align="center" style="width:90%; margin-bottom:20px;" cellspacing="0" cellpadding="0">
+            <table style="width:90%; margin:0px auto 20px;" cellspacing="0" cellpadding="0">
               <tr>
                 <td style="text-align:center;">
                   <%

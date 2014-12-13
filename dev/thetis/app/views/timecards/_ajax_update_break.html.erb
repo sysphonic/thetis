@@ -7,7 +7,7 @@ if @login_user.admin?(User::AUTH_TIMECARD) or @login_user.id == @selected_user.i
 end
 %>
 
-<table class="timecard" align="center" style="width:95%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
+<table class="timecard" style="width:95%; margin:0px auto 10px;" cellpadding="0" cellspacing="0">
   <tr>
     <td class="item_cap_td" style="width:20%; background-color:#FFC9A9;" nowrap>
       <%= Timecard.human_attribute_name('status') %>
@@ -35,7 +35,7 @@ end
   </tr>
 </table>
 
-<table id="times_table" class="border_collapse black" align="center" style="width:95%; background-color:white;" cellpadding="0" cellspacing="0">
+<table id="times_table" class="border_collapse black" style="width:95%; margin:0px auto; background-color:white;" cellpadding="0" cellspacing="0">
   <tr>
     <td class="cap_td" style="width:20%;" nowrap>
       <%= t('timecard.within_standard') %>

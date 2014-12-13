@@ -1,43 +1,35 @@
 <% HistoryHelper.set_back(request) %>
 
-<table width="100%" cellpadding="0" cellspacing="0">
-  <tr height="2"><td></td></tr>
+<table cellspacing="2" cellpadding="0" style="margin:2px auto 0px 0px;">
   <tr>
-    <td>
-      <table cellspacing="2" cellpadding="0" align="left">
-        <tr>
-          <td id="tab_statistics" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_statistics', 'div_statistics'); this.bgColor='brown';" bgColor="brown" onMouseOver="if(_z('div_statistics').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_z('div_statistics').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
-            <%= t('menu.statistics') %>
-          </td>
-          <td id="tab_all" class="td_item_tab" nowrap width="180" onClick="showResearchTab('tab_all', 'div_all'); this.bgColor='blue';" bgColor="silver" onMouseOver="if(_z('div_all').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if(_z('div_all').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
-            <%= t('msg.all_records') %>
-          </td>
-        </tr>
-      </table>
+    <td id="tab_statistics" class="td_item_tab" nowrap style="width:180px;" onclick="showResearchTab('statistics', 'brown');">
+      <%= t('menu.statistics') %>
+    </td>
+    <td id="tab_all" class="td_item_tab" nowrap style="width:180px;" onclick="showResearchTab('all', 'blue');">
+      <%= t('msg.all_records') %>
     </td>
   </tr>
 </table>
 
-<div id="div_statistics">
-  <table cellspacing="0" cellpadding="0" width="100%" style="border:solid 5px peru;">
+<div id="tab_div_statistics">
+  <table cellspacing="0" cellpadding="0" style="width:100%; margin-bottom:15px; border:solid 5px peru;">
     <tr>
       <td>
         <div id="div_research_lists" style="overflow:auto;">
       <% if @ans_hash.nil? or @ans_hash.empty? %>
 
-        <table cellspacing="0" cellpadding="0" width="100%" height="80%">
-          <tr height="20%"><td>&nbsp;</td></tr>
-          <tr height="60%">
-            <td valign="middle" align="center">
+        <table cellspacing="0" cellpadding="0" style="width:100%; height:80%;">
+          <tr style="height:20%;"><td>&nbsp;</td></tr>
+          <tr style="height:60%;">
+            <td style="vertical-align:middle; text-align:center;" >
               <%= t('msg.no_data_to_display') %>
             </td>
           </tr>
-          <tr height="20%"><td>&nbsp;</td></tr>
+          <tr style="height:20%;"><td>&nbsp;</td></tr>
         </table>
 
       <% else %>
-          <table width="95%" align="center" cellspacing="5" cellpadding="0" style="font-size:10pt; padding:5px; line-height:2.0;">
-            <tr height="10"><td></td></tr>
+          <table style="width:95%; margin:10px auto 0px; font-size:10pt; padding:5px; line-height:2.0;" cellspacing="5" cellpadding="0">
 <%
 groups_cache = Hash.new
 @sum_groups.each do |group_id|
@@ -49,11 +41,11 @@ users_cache = Hash.new    # user_id => Array of group_ids
 %>
             <% @ans_hash.each do |q_code, users_ans| %>
             <tr>
-              <td width="1%" bgcolor="khaki" style="font-size:1pt;">&nbsp;</td>
-              <td width="13%" nowrap align="center" valign="middle" style="color:brown;"><%= q_code %>.</td>
-              <td width="1%" bgcolor="khaki" style="font-size:1pt;">&nbsp;</td>
-              <td width="1%"></td>
-              <td align="left">
+              <td style="width:1%; font-size:1pt; background-color:khaki;">&nbsp;</td>
+              <td style="width:13%; color:brown; vertical-align:middle; text-align:center;" nowrap><%= q_code %>.</td>
+              <td style="width:1%; font-size:1pt; background-color:khaki;">&nbsp;</td>
+              <td style="width:1%;"></td>
+              <td style="text-align:left;">
                 <%
                 if !@q_hash.nil? and !@q_hash[q_code].nil?
                   q_cap = @q_hash[q_code][:caption]
@@ -143,31 +135,30 @@ users_cache = Hash.new    # user_id => Array of group_ids
                 %>
               </td>
             </tr>
-            <tr height="5"><td></td></tr>
+            <tr style="height:5px;"><td></td></tr>
             <% end %>
           </table>
       <% end %>
         </div>
       </td>
     </tr>
-    <tr height="20"><td></td></tr>
+    <tr style="height:20px;"><td></td></tr>
     <tr>
       <td>
-        <table align="center" cellspacing="0" cellpadding="0">
+        <table style="margin:0px auto 10px;" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+            <td class="img_button_td" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>
             </td>
           </tr>
         </table>
       </td>
     </tr>
-    <tr height="15"><td></td></tr>
   </table>
 </div>
 
-<div id="div_all" style="display:none;">
-  <table cellspacing="0" cellpadding="0" width="100%" style="border:solid 5px cornflowerblue;">
+<div id="tab_div_all" style="display:none;">
+  <table cellspacing="0" cellpadding="0" style="width:100%; margin-bottom:15px; border:solid 5px cornflowerblue;">
     <tr>
       <td>
         <div id="div_research_records" style="overflow:auto;">
@@ -175,46 +166,30 @@ users_cache = Hash.new    # user_id => Array of group_ids
         </div>
       </td>
     </tr>
-    <tr height="20"><td></td></tr>
+    <tr style="height:20px;"><td></td></tr>
     <tr>
       <td>
-        <table align="center" cellspacing="0" cellpadding="0">
+        <table style="margin:0px auto 10px;" cellspacing="0" cellpadding="0">
           <tr>
-            <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+            <td class="img_button_td" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>
             </td>
           </tr>
         </table>
       </td>
     </tr>
-    <tr height="15"><td></td></tr>
   </table>
 </div>
 
 <script type="text/javascript">
 
-function showResearchTab(tab_id, div_id)
+function showResearchTab(name, bgcolor)
 {
-  _z("tab_statistics").style.cursor = "pointer";
-  _z("tab_all").style.cursor = "pointer";
-
-  var tab = _z(tab_id);
-  tab.style.cursor = "default";
-  var bg = tab.bgColor;
-
-  _z("tab_statistics").bgColor = "silver";
-  _z("tab_all").bgColor = "silver";
-
-  tab.bgColor = bg;
-
-  _z("div_statistics").style.display = "none";
-  _z("div_all").style.display = "none";
-
-  var div = _z(div_id);
-  div.style.display = "inline";
+  var nameArray = new Array("statistics", "all");
+  showTab(name, nameArray, bgcolor);
 }
 
-showResearchTab("tab_statistics", "div_statistics");
+showResearchTab("statistics", "brown");
 
 
 function showGroupTreeToSelect(group_id)
@@ -224,6 +199,12 @@ function showGroupTreeToSelect(group_id)
   thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'researches', :action => 'get_records_group') %>\" onsubmit=\"new Ajax.Updater('div_research_records', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onHistoryBackClicked()
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'history', :action => 'back') %>";
 }
 
 </script>

@@ -2,14 +2,13 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr height="10"><td></td></tr>
+<table style="width:100%; margin-top:10px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="49%" valign="top">
+    <td style="width:49%; vertical-align:top;" >
 
       <!-- Local -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;" >
+        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;"><%= t('template.item_templates') %></td>
           </tr>
@@ -19,7 +18,7 @@
                 <%= render(:partial => 'ajax_local') %>
               </div>
 
-              <div class="button_gray" style="float:right; margin-top:3px;" onClick="doCreateLocal();">
+              <div class="button_gray" style="float:right; margin-top:3px;" onclick="doCreateLocal();">
                 <%= t('btn.create') %>
               </div>
             </td>
@@ -28,12 +27,12 @@
       </div>
 
     </td>
-    <td width="10">&nbsp;</td>
-    <td width="49%" valign="top">
+    <td style="width:10px;">&nbsp;</td>
+    <td style="width:49%; vertical-align:top;">
 
       <!-- System -->
-      <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-        <table align="center" width="85%" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('template.system_templates') %></td>
           </tr>
@@ -50,14 +49,12 @@
   </tr>
 </table>
 
-<table align="center" cellspacing="0" cellpadding="0">
-  <tr height="20"><td></td></tr>
+<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 <br/>
 

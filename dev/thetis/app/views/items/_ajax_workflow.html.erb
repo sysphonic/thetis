@@ -1,5 +1,5 @@
 
-<table align="center" width="95%" cellpadding="0" cellspacing="2">
+<table style="margin:0px auto; width:95%;" cellpadding="0" cellspacing="2">
   <tr>
     <td class="item_cap_td" nowrap style="background-color:#ffde00;">
       <%= Workflow.human_attribute_name('status') %>
@@ -11,11 +11,11 @@
         back_style = "background:url('#{THETIS_RELATIVE_URL_ROOT}/images/colback.png') left no-repeat;"
       end
       %>
-      <table cellspacing="0" cellpadding="0" width="100%" style="<%= back_style %>">
-        <tr height="35">
+      <table cellspacing="0" cellpadding="0" style="width:100%; <%= back_style %>">
+        <tr style="height:35px;">
         <% unless back_style.empty? %>
-          <td width="15"></td>
-          <td width="20" align="center">
+          <td style="width:15px;"></td>
+          <td style="width:20px; text-align:center;">
             <%
             img = ''
             if @workflow.accepted?
@@ -27,7 +27,7 @@
             <img src="<%= img %>" />
           </td>
         <% end %>
-          <td align="left" style="padding-left:10px">
+          <td style="text-align:left; padding-left:10px">
             <span style="color:red; font-size:11pt; font-weight:bold;"><%= @workflow.get_status_name %></span>
           <% unless @workflow.decided_at.nil? %>
             &nbsp;<span style="font-size:10pt;">(<%= @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
@@ -48,7 +48,7 @@
       <%= t('workflow.order_prefix')+(order_idx+1).to_s %>
     </td>
     <td class="item_value_td">
-      <table cellspacing="0" cellpadding="0" width="100%">
+      <table cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
           <td>
           <%
@@ -80,7 +80,7 @@
             <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'doWfRespond(); return false;') %>
               <%= hidden_field('comment', 'item_id', :value => @item.id) %>
               <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
-              <table id="comment_box" cellspacing="5" cellpadding="0" align="center" width="95%" style="background-color:#b4d4fb;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+              <table id="comment_box" cellspacing="5" cellpadding="0" style="width:95%; margin:0px auto; background-color:#b4d4fb;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
                 <tr>
                   <td>
                     <span id="comment_ack">
@@ -99,7 +99,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td align="center">
+                  <td style="text-align:center;">
                     <input name="commit" type="submit" value="<%= t('btn.register') %>" style="width:80px;" />
                   </td>
                 </tr>

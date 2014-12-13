@@ -22,9 +22,9 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 
 <%= form_tag( {:controller => 'timecards', :action => 'group', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
   <input type="hidden" name="display" value="<%= params[:display] %>" />
-  <table width="100%" cellspacing="0" cellpadding="0" style="padding:10px 0px;">
+  <table cellspacing="0" cellpadding="0" style="width:100%; padding:10px 0px;">
     <tr>
-      <td align="center">
+      <td style="text-align:center;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
@@ -44,29 +44,29 @@ next_week = @date + 7
 <div style="padding-bottom:10px; color:navy;">
 
 </div>
-<table class='timecard' width="100%">
+<table class='timecard' style="width:100%;">
   <tr>
-    <td align="center" width="10%" rowspan="2" nowrap><%= User.model_name.human %></th>
-    <td align="center" width="5%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= t('cap.class') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
-    <td align="center" width="10%" bgcolor="#B9FFBC" rowspan="2" nowrap><%= t('cap.option') %></td>
-    <td align="center" width="24%" bgcolor="#D6ECFA" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
-    <td align="center" width="25%" bgcolor="#D6ECFA" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
-    <td align="center" width="16%" bgcolor="#C6D3EF" colspan="2" nowrap><%= t('timecard.overtime') %></td>
+    <td style="text-align:center; width:10%;"  rowspan="2" nowrap><%= User.model_name.human %></th>
+    <td style="text-align:center; width:5%; background-color:#D6ECFA;"  rowspan="2" nowrap><%= t('cap.class') %></td>
+    <td style="text-align:center; width:10%; background-color:#B9FFBC;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
+    <td style="text-align:center; width:10%; background-color:#B9FFBC;"  rowspan="2" nowrap><%= t('cap.option') %></td>
+    <td style="text-align:center; width:24%; background-color:#D6ECFA;"  colspan="3" nowrap><%= t('timecard.labor_time') %></td>
+    <td style="text-align:center; width:25%; background-color:#D6ECFA;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
+    <td style="text-align:center; width:16%; background-color:#C6D3EF;"  colspan="2" nowrap><%= t('timecard.overtime') %></td>
 <% unless @selected_users.nil? or @selected_users.empty? %>
-    <td align="center" width="1%" bgcolor="white" rowspan="2" style="border-top:0px; border-right:0px;"></td>
+    <td style="text-align:center; width:1%; border-top:0px; border-right:0px; background-color:white;"   rowspan="2"></td>
 <% end %>
   </tr>
   <tr>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.from') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('timecard.to') %></td>
-    <td align="center" width="8%" bgcolor="#D6ECFA" nowrap><%= t('msg.hours_full') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.usual') %></td>
-    <td align="center" width="8%" bgcolor="#C6D3EF" nowrap><%= t('timecard.midnight') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('timecard.from') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('timecard.to') %></td>
+    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('msg.hours_full') %></td>
+    <td style="text-align:center; width:8%; background-color:#C6D3EF;"  nowrap><%= t('timecard.usual') %></td>
+    <td style="text-align:center; width:8%; background-color:#C6D3EF;"  nowrap><%= t('timecard.midnight') %></td>
   </tr>
 <% if @selected_users.nil? or @selected_users.empty? %>
-  <tr height="50">
-    <td align="center" style="color:mediumblue;" colspan="10">
+  <tr style="height:50px;">
+    <td style="text-align:center; color:mediumblue;"  colspan="10">
       <%= t('paren.no_users') %>
     </td>
   </tr>
@@ -79,8 +79,8 @@ else
     timecard = Timecard.get_for(user.id, @date)
     timecard = Timecard.new if timecard.nil?
 %>
-  <tr bgcolor="<%= bgcolor %>">
-    <td align="center">
+  <tr style="background-color:<%= bgcolor %>;">
+    <td style="text-align:center;">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'month', :date => date_s, :user_id => user.id, :display => params[:display]) %>'; return false;">
         <%= user.get_name_for_timecard(yaml) %>
       </a>
@@ -106,13 +106,13 @@ else
         color = 'black'
     end
     %>
-    <td align="center" nowrap style="color:<%= color %>;">
+    <td style="text-align:center; color:<%= color %>;" nowrap >
     <% unless timecard.workcode.nil? %>
       <% alt = h(timecard.workcode_name) %>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
     <% end %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <% if !timecard.start.nil? and timecard.end.nil? %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>">
       <%
@@ -138,7 +138,7 @@ else
       end
       %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       options = ''
       if timecard.business_trip?
@@ -147,19 +147,19 @@ else
       %>
       <%= options %>
     </td>
-    <td align="center" nowrap><%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %></td>
-    <td align="center" nowrap><%= (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %></td>
+    <td style="text-align:center;" nowrap><%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %></td>
+    <td style="text-align:center;" nowrap><%= (timecard.end.nil?)?'':timecard.end.strftime('%H:%M') %></td>
     <%
     actual_wktime = timecard.get_actual_wktime
     %>
-    <td align="center" nowrap style="color:blue;">
+    <td style="text-align:center; color:blue;" nowrap >
       <%= (actual_wktime > 0)?(ApplicationHelper.float_exp(actual_wktime / 60.0, 2)):'' %>
     </td>
-    <td align="left" style="padding:0px 5px;">
+    <td style="text-align:left; padding:0px 5px;" >
       <%= timecard.comment %>
     </td>
 
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       unless timecard.start.nil? or timecard.end.nil?
         usual_overtime = timecard.get_usual_overtime
@@ -181,7 +181,7 @@ else
       end
       %>
     </td>
-    <td align="center" nowrap>
+    <td style="text-align:center;" nowrap>
       <%
       unless timecard.start.nil? or timecard.end.nil?
         midnight_overtime = timecard.get_midnight_overtime
@@ -193,7 +193,7 @@ else
         <%= (midnight_overtime <= 0)?'-':'<span style="color:red;">' + exp_midnight_overtime + '</span>' %>
       <% end %>
     </td>
-    <td align="center" nowrap style="text-align:center;">
+    <td style="text-align:center; text-align:center;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => user.id, :display => params[:display]) %>';">
     </td>
   </tr>

@@ -31,8 +31,8 @@ unless @login_user.nil?
 %>
   <%= t('cap.targets') %> <%= select_tag 'filter', options_for_select(opts, params[:filter]) %>
 <% end %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'list') %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'list') %>';"/>
     </td>
   </tr>
   <tr style="height:5px;"><td></td></tr>

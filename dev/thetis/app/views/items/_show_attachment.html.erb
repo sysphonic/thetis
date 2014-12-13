@@ -1,24 +1,24 @@
-<table cellspacing="2" cellpadding="0" width="100%">
+<table cellspacing="2" cellpadding="0" style="width:100%;">
   <tr>
     <td class="td_show_cap_bar" nowrap>
       <%= t('attachment.plural_full') %>
     </td>
   </tr>
   <tr>
-    <td align="center" style="padding-top:3px;">
+    <td style="text-align:center; padding-top:3px;">
     <%
     @attachments = @item.attachments_without_content
     @attachments.each do |attach|
     %>
-      <table cellspacing="1" cellpadding="0" width="100%" style="cursor:pointer; border:2px solid white; padding-bottom:2px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+      <table cellspacing="1" cellpadding="0" style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
         <tr>
-          <td class="td_attachment_name" nowrap align="center">
+          <td class="td_attachment_name" nowrap style="text-align:center;">
             <%= attach.name %>
           </td>
         </tr>
       <% unless attach.title.nil? or attach.title.empty? %>
         <tr>
-          <td class="td_attachment_title" align="center">
+          <td class="td_attachment_title" style="text-align:center;">
             <%= attach.title %>
           </td>
         </tr>

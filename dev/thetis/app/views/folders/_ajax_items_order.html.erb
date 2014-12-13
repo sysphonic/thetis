@@ -3,13 +3,13 @@
 
   <% if @items.nil? or @items.empty? %>
 
-    <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
       <tr>
-        <td valign="top">
+        <td style="vertical-align:top;">
           <br/><br/><br/>
-          <table align="center" width="80%" cellpadding="0" cellspacing="0">
+          <table style="width:80%; margin:0px auto;" cellpadding="0" cellspacing="0">
             <tr>
-              <td align="center" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+              <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
                 <%= t('paren.no_items') %>
               </td>
             </tr>
@@ -20,9 +20,9 @@
 
   <% else %>
 
-    <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
       <tr>
-        <td id="sortable_items" valign="top">
+        <td id="sortable_items" style="vertical-align:top;">
         <%
         users_cache = {}
         @items.each_with_index do |item, idx|
@@ -35,7 +35,7 @@
           end
           %>
           <div id="item_<%= item.id %>" class="<%= td_class %>" style="padding:0px;">
-            <table width="100%" cellpadding="0" cellspacing="0">
+            <table style="width:100%;" cellpadding="0" cellspacing="0">
               <tr>
                 <td nowrap style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                   <%
@@ -96,13 +96,13 @@ Sortable.create(
 
 <% else %>
 
-  <table width="100%" height="100%" bgcolor="honeydew" cellpadding="0" cellspacing="0">
+  <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
     <tr>
-      <td valign="top">
+      <td style="vertical-align:top;">
         <br/><br/><br/>
-        <table align="center" width="80%" cellpadding="0" cellspacing="0">
+        <table style="margin:0px auto; width:80%;" cellpadding="0" cellspacing="0">
           <tr>
-            <td valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <td style="vertical-align:top; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
               <%= t('folder.need_auth_to_modify') %>
             </td>
           </tr>

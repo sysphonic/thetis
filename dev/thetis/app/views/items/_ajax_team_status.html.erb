@@ -8,7 +8,7 @@ if team.nil?
 
 <% else %>
 
-  <table width="100%" cellpadding="0" cellspacing="0">
+  <table style="width:100%;" cellpadding="0" cellspacing="0">
     <tr>
       <td style="text-align:left; width:30%;">
         <%= team.get_status_name %>
@@ -17,7 +17,7 @@ if team.nil?
     if !@login_user.nil? \
         and (@login_user.admin?(User::AUTH_TEAM) or @login_user.id == @item.user_id)
     %>
-      <td align="left">
+      <td style="text-align:left;">
         <table cellpadding="0" cellspacing="0">
           <tr>
         <% if team.status == Team::STATUS_ACTIVATED %>

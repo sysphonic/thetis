@@ -11,16 +11,16 @@ tabs = new Array("basic", "address", "memo", "scope");
 
       <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('basic', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'sienna');">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_address" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('address', tabs); this.bgColor='sienna';" bgColor="sienna" onMouseOver="if(_z('tab_div_address').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_address').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_address" class="td_item_tab" nowrap onclick="showTab('address', tabs, 'sienna');">
             <%= Address.human_attribute_name('address') %>
           </td>
-          <td id="tab_memo" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('memo', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_memo').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_memo').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_memo" class="td_item_tab" nowrap onclick="showTab('memo', tabs, 'sienna');">
             <%= Address.human_attribute_name('memo') %>
           </td>
-          <td id="tab_scope" class="td_item_tab" nowrap style="background-color:silver;" onClick="showTab('scope', tabs); this.bgColor='sienna'" bgColor="sienna" onMouseOver="if(_z('tab_div_scope').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_scope').style.display == 'none') this.bgColor='silver'; else this.bgColor='sienna';">
+          <td id="tab_scope" class="td_item_tab" nowrap onclick="showTab('scope', tabs, 'sienna');">
             <%= t('schedule.scope') %>
           </td>
           <td><!-- SPACER --></td>
@@ -38,7 +38,7 @@ tabs = new Array("basic", "address", "memo", "scope");
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name">
                     <%= Address.human_attribute_name('name') %></label>
@@ -113,7 +113,7 @@ tabs = new Array("basic", "address", "memo", "scope");
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
@@ -164,7 +164,7 @@ tabs = new Array("basic", "address", "memo", "scope");
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
@@ -219,6 +219,6 @@ tabs = new Array("basic", "address", "memo", "scope");
 
 <script type="text/javascript">
 
-showTab("basic", tabs);
+showTab("basic", tabs, "sienna");
 
 </script>

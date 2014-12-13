@@ -1,13 +1,13 @@
 
 <%= form_tag( {:controller => 'teams', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table align="center"width="95%" cellspacing="3" cellpadding="0">
+<table style="margin:0px auto; width:95%;" cellspacing="3" cellpadding="0">
   <tr>
-    <td align="center" rowspan="3" width="30%">
+    <td style="text-align:center; width:30%;" rowspan="3">
 
     </td>
-    <td width="10" rowspan="3">&nbsp;</td>
-    <td align="right" nowrap>
+    <td style="width:10px;" rowspan="3">&nbsp;</td>
+    <td style="text-align:right;" nowrap>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
 <% unless @login_user.nil? %>
   <%= t('cap.targets') %> <%= select_tag 'filter',
@@ -18,22 +18,21 @@
                                               params[:filter])
             %>
 <% end %>
-      <input type="button" value="<%= t('btn.search') %>" onClick="form_list.action='<%= url_for(:controller => 'teams', :action => 'search') %>'; prog('TOP-RIGHT'); form_list.submit();"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>';"/>
+      <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'teams', :action => 'search') %>'; prog('TOP-RIGHT'); form_list.submit();"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>';"/>
     </td>
   </tr>
-  <tr height="2"><td></td></tr>
+  <tr style="height:2px;"><td></td></tr>
   <tr>
-    <td align="right">
+    <td style="text-align:right;">
 
     </td>
   </tr>
-  <tr height="0"><td></td></tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('team', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -45,26 +44,25 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_teams">
-<table id="list_teams" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_teams" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('teams.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('teams.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="30%" nowrap onClick="sortList('name')"><%= Team.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="28%" nowrap><%= t('team.team_folder') %></th>
-    <th class="list_sort" width="12%" nowrap onClick="sortList('status')"><%= Team.human_attribute_name('status') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('status', @sort_col, @sort_type)) %></span></th>
-    <th class="list_th" width="20%" nowrap><%= t('msg.members') %></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('teams.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('teams.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:30%;" nowrap onclick="sortList('name')"><%= Team.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" style="width:28%;" nowrap><%= t('team.team_folder') %></th>
+    <th class="list_sort" style="width:12%;" nowrap onclick="sortList('status')"><%= Team.human_attribute_name('status') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('status', @sort_col, @sort_type)) %></span></th>
+    <th class="list_th" style="width:20%;" nowrap><%= t('msg.members') %></th>
   </tr>
 <%
 users_cache = {}
 %>
 <% @teams.each_with_index do |team, idx| %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= team.id %></td>
-    <td align="left" nowrap class="<%= td_class %>">
+    <td style="text-align:left;" nowrap class="<%= td_class %>">
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
     <% if team.need_req_to_del?(true) %>
         <span style="color:red;">

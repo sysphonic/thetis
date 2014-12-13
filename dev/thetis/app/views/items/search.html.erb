@@ -7,9 +7,9 @@
 @folder_obj_cache ||= {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td align="right">
+    <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
       <%= t('msg.search_in') %> <%= select_tag 'find_in',
                                  options_for_select([[h(t('folder.all')),Item::FOLDER_ALL],
@@ -23,9 +23,9 @@
   </tr>
 </table>
 
-<table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:5px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
   <tr>
-    <td align="left" nowrap style="color:sienna">
+    <td style="text-align:left; color:sienna" nowrap >
     <%
     folder_id = params[:folder_id]
     if folder_id.nil? or folder_id.empty?
@@ -35,7 +35,7 @@
       <%= t('cap.folder') %> <%= Folder.get_path(folder_id, @folders_cache, @folder_obj_cache) %>
     <% end %>
     </td>
-    <td align="right">
+    <td style="text-align:right;">
       <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_search.submit();">
       <%
       excepts = nil
@@ -62,9 +62,9 @@
 
 </form>
 
-<table width="100%" cellpadding="0" cellspacing="0" style="padding-bottom:10px;">
+<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:10px;">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -88,11 +88,11 @@
 %>
 
 <div class="base_list" id="div_list">
-<table width="100%" cellpadding="0" cellspacing="0" style="background-color:white;">
+<table cellpadding="0" cellspacing="0" style="width:100%; background-color:white;">
 <% @items.each do |item| %>
   <tr>
     <td>
-      <table width="100%" cellpadding="0" cellspacing="0">
+      <table style="width:100%;" cellpadding="0" cellspacing="0">
         <tr>
           <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp;
@@ -140,9 +140,9 @@
         </tr>
         <tr>
           <td>
-            <table align="center" width="90%">
+            <table style="margin:0px auto; width:90%;">
               <tr>
-                <td align="left" bgcolor="#e0f7ff" style="font-size:10.5pt; padding:10px; line-height:15pt;">
+                <td style="text-align:left; background-color:#e0f7ff; font-size:10.5pt; padding:10px; line-height:15pt;">
 <div>
   <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
   <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>

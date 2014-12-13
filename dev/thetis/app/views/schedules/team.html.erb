@@ -30,18 +30,18 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
 
-<table align="center" width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="left" width="30%">
+    <td style="text-align:left; width:30%;" >
     <% unless @login_user.nil? %>
-      <table align="left" cellspacing="0" cellpadding="0" width="65">
+      <table style="margin:0px auto 0px 0px; width:65px;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap width="30">
+          <td style="text-align:left; width:30px;" nowrap >
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => date_s, :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin? User::AUTH_SCHEDULE %>
-          <td width="5"></td>
-          <td align="left" nowrap width="30">
+          <td style="width:5px;"></td>
+          <td style="text-align:left; width:30px;" nowrap >
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
           </td>
           <% end %>
@@ -49,12 +49,12 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
       </table>
     <% end %>
     </td>
-    <td align="center" nowrap width="40%">
+    <td style="text-align:center; width:40%;" nowrap >
       <% if @login_user.nil? %>
         &nbsp;&nbsp;<span style="color:navy"><%= t('schedule.login_required') %></span>&nbsp;&nbsp;
       <% end %>
     </td>
-    <td align="right" nowrap width="30%">
+    <td style="text-align:right; width:30%;" nowrap >
       <%
       display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
       unless @login_user.nil?
@@ -77,9 +77,9 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   </tr>
 </table>
 
-<table align="center" width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 <%
 yesterday = @date - 1
 tomorrow = @date + 1
@@ -88,7 +88,7 @@ next_week = @date + 7
 %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'team', :id => params[:id], :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'team', :id => params[:id], :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'team', :id => params[:id], :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'team', :id => params[:id], :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>
@@ -103,14 +103,14 @@ next_week = @date + 7
   user_name = User.get_name(user_id)
 %>
   <div id="div_timetable_<%= user_id %>">
-    <table width="100%" cellspacing="0" cellpadding="0" style="padding-bottom:10px;">
+    <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:10px;">
       <tr>
-        <td align="left"  style="color:navy;">
+        <td style="text-align:left; color:navy;">
           <%= user_name %>&nbsp;
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/calendar.gif" alt="<%= t('schedule.calendar') %>" title="<%= t('schedule.calendar') %>" onclick="showCalendar('<%= user_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>');">
         </td>
       </tr>
-      <tr height="5"><td></td></tr>
+      <tr style="height:5px;"><td></td></tr>
       <tr>
         <td>
           <%= render(:partial => 'weektable') %>

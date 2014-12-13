@@ -3,13 +3,13 @@
 
   <% if @folders.nil? or @folders.empty? %>
 
-    <table width="100%" height="100%" bgcolor="cornsilk" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:cornsilk; height:100%;" cellpadding="0" cellspacing="0">
       <tr>
-        <td valign="top">
+        <td style="vertical-align:top;">
           <br/><br/><br/>
-          <table align="center" width="80%" cellpadding="0" cellspacing="0">
+          <table style="width:80%; margin:0px auto;" cellpadding="0" cellspacing="0">
             <tr>
-              <td align="center" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+              <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
                 <%= t('paren.no_folders') %>
               </td>
             </tr>
@@ -20,15 +20,15 @@
 
   <% else %>
 
-    <table width="100%" height="100%" bgcolor="cornsilk" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:cornsilk; height:100%;"  cellpadding="0" cellspacing="0">
       <tr>
-        <td id="sortable_items" valign="top">
+        <td id="sortable_items" style="vertical-align:top;">
         <%
         @folders.each_with_index do |folder, idx|
           td_class = (idx % 2 == 1) ? 'list_td_off' : 'list_td_on'
         %>
           <div class="<%= td_class %>" id="folder_<%= folder.id %>" style="padding:0px;">
-            <table align="center" width="100%" cellpadding="0" cellspacing="0">
+            <table style="width:100%;" cellpadding="0" cellspacing="0">
               <tr>
                 <td style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
@@ -76,13 +76,13 @@ Sortable.create(
 
 <% else %>
 
-  <table width="100%" height="100%" valign="top" bgcolor="cornsilk" cellpadding="0" cellspacing="0">
+  <table style="width:100%; background-color:cornsilk; height:100%; vertical-align:top;" cellpadding="0" cellspacing="0">
     <tr>
-      <td valign="top">
+      <td style="vertical-align:top;">
         <br/><br/><br/>
-        <table align="center" width="80%" cellpadding="0" cellspacing="0">
+        <table style="margin:0px auto; width:80%;" cellpadding="0" cellspacing="0">
           <tr>
-            <td valign="top" style="padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <td style="vertical-align:top; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
               <%= t('folder.need_auth_to_modify') %>
             </td>
           </tr>

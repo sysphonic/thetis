@@ -168,9 +168,8 @@ getAxis = function(desktop, elem)
   return new Array(xAxis, yAxis);
 }
 
-showTab = function(name, nameArray)
+showTab = function(name, nameArray, bgcolor)
 {
-/*
   var tab = null;
   for (var i=0; i < nameArray.length; i++) {
     tab = _z("tab_"+nameArray[i]);
@@ -178,40 +177,19 @@ showTab = function(name, nameArray)
       continue;
     }
     if (name == nameArray[i]) {
-      tab.style.cursor = "default";
-      if (tab.className.indexOf("selected") < 0) {
-        tab.className += " selected";
+      if (bgcolor) {
+        tab.style.backgroundColor = bgcolor;
       }
+      appendClassName(tab, "selected");
     } else {
-      tab.style.cursor = "pointer";
-      if (tab.className.indexOf("selected") >= 0) {
-        tab.className = tab.className.replace(" selected", "");
+      if (bgcolor) {
+        tab.style.backgroundColor = "";
       }
-    }
-  }
-*/
-  var tab = null;
-  for (var i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.style.cursor = "pointer";
-      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
-    }
-  }
-  var target_tab = _z("tab_"+name);
-  target_tab.style.cursor = "default";
-  var bg = target_tab.bgColor;
-
-  for (var i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.bgColor = "silver";
+      removeClassName(tab, "selected");
     }
   }
 
-  target_tab.bgColor = bg;
-
-  for (var i=0; i<nameArray.length; i++) {
+  for (var i=0; i < nameArray.length; i++) {
     div = _z("tab_div_"+nameArray[i]);
     if (div != null) {
       div.style.display = "none";

@@ -18,11 +18,11 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 <%= form_tag( {:controller => 'equipment', :action => 'schedule_all', :id => params[:id]}, :method => 'get', :name => 'form_equipment', :id => 'form_equipment') %>
 
-<table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
+<table style="margin:0px auto; width:98%;" cellspacing="0" cellpadding="0">
   <tr>
     <td style="width:30%; text-align:left;">
     <% unless @login_user.nil? %>
-      <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
+      <table cellspacing="0" cellpadding="0" style="width:65px; margin: 0px auto 0px 0px;">
         <tr>
           <td style="text-align:left; width:30px;" nowrap>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_s, :showNew => 'true') %>';">
@@ -89,7 +89,7 @@ next_week = @date + 7
 
 <% if @equip_schedule_hash.nil? or @equip_schedule_hash.empty? %>
   <div style="padding-top:10px;">
-    <table class="border_collapse green" align="center" cellspacing="0" cellpadding="0" style="width:95%;">
+    <table class="border_collapse green" cellspacing="0" cellpadding="0" style="width:95%; margin:0px auto;">
       <tr style="height:50px;">
         <td style="text-align:center; color:darkgreen;">
           <%= t('paren.no_equipment') %>

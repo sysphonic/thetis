@@ -3,14 +3,14 @@
 @group_obj_cache ||= {}
 %>
 
-<table width="100%" cellspacing="0" cellpadding="0">
+<table style="width:100%;" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="130">
-      <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');">
+    <td style="width:130px;">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');">
         <%= t('btn.select_group') %>
       </div>
     </td>
-    <td align="left" style="color:blue; font-size:10pt;">
+    <td style="text-align:left; color:blue; font-size:10pt;">
       <% unless @group_id.nil? or @group_id == '' %>
         <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
       <% end %>

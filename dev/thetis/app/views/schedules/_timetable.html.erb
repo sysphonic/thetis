@@ -106,7 +106,7 @@ end
 if @schedules.find { |schedule| !schedule.holiday? }.nil?
 %>
   <tr style="height:50px;">
-    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" align="center" style="color:gray;">
+    <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" style="text-align:center; color:gray;">
       <%= t('paren.no_schedules') %>
     </td>
   </tr>

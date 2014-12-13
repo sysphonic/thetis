@@ -3,18 +3,18 @@
 tabs = new Array("users", "groups", "teams");
 </script>
 
-<table cellspacing="0" cellpadding="0" width="100%">
+<table cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
     <td style="vertical-align:top;">
-      <table cellspacing="2" cellpadding="0" width="100%">
-        <tr height="20">
-          <td id="tab_users" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('users', tabs); this.bgColor='blue';" bgcolor="blue" onMouseOver="if(_z('tab_div_users').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if (_z('tab_div_users').style.display == 'none') this.bgColor='silver'; else this.bgColor='blue';">
+      <table cellspacing="2" cellpadding="0" style="width:100%;">
+        <tr style="height:20px;">
+          <td id="tab_users" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('users', tabs, 'blue');">
             <%= t('user.plural') %>
           </td>
-          <td id="tab_groups" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('groups', tabs); this.bgColor='forestgreen';" bgColor="forestgreen" onMouseOver="if(_z('tab_div_groups').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if (_z('tab_div_groups').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_groups" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('groups', tabs, 'forestgreen');">
             <%= t('group.plural') %>
           </td>
-          <td id="tab_teams" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('teams', tabs); this.bgColor='brown';" bgColor="brown" onMouseOver="if(_z('tab_div_teams').style.display == 'none') this.bgColor='palegreen';" onMouseOut="if (_z('tab_div_teams').style.display == 'none') this.bgColor='silver'; else this.bgColor='brown';">
+          <td id="tab_teams" class="td_item_tab" nowrap style="width:110px;" onclick="showTab('teams', tabs, 'brown');">
             <%= t('team.plural') %>
           </td>
           <td><!-- SPACER --></td>
@@ -27,7 +27,7 @@ tabs = new Array("users", "groups", "teams");
     <td style="border:solid 1px gray; background-color:#FFFAFD;">
 
       <div id="tab_div_users">
-        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
           <tr>
             <td>
               <select id="users_selected" name="users[]" class="select_multi" size="5" multiple="multiple">
@@ -44,7 +44,7 @@ tabs = new Array("users", "groups", "teams");
               <% end %>
               </select>
             </td>
-            <td width="35" align="center" style="vertical-align:middle; line-height:20px;">
+            <td style="width:35px; vertical-align:middle; line-height:20px; text-align:center;" >
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.add') %>" onclick="onSelectUsersClicked()" style="cursor:pointer; margin-bottom:3px;" /><br/>
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.remove') %>" onclick="removeScheduleUsers();" style="cursor:pointer; margin-bottom:3px;" /><br/>
             </td>
@@ -52,7 +52,7 @@ tabs = new Array("users", "groups", "teams");
         </table>
       </div>
       <div id="tab_div_groups" style="display:none;">
-        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
           <tr>
             <td>
               <%
@@ -71,24 +71,24 @@ tabs = new Array("users", "groups", "teams");
               </select>
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
-              <table cellspacing="0" cellpadding="0" width="100%">
+              <table cellspacing="0" cellpadding="0" style="width:100%;">
                 <tr>
-                  <td align="left" valign="bottom" width="33%">
+                  <td style="text-align:left; vertical-align:bottom; width:33%;"  >
                     <%= t('group.plural') %><%= t('cap.suffix') %>
                   </td>
-                  <td align="center" width="34%" nowrap>
+                  <td style="text-align:center; width:34%;"  nowrap>
                     <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('group');" style="width:80px;" />
                     <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('group');" style="width:80px;" />
                   </td>
-                  <td width="33%">&nbsp;</td>
+                  <td style="width:33%;">&nbsp;</td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
               <select id="groups_selected" name="groups[]" class="select_multi" size="5" multiple="multiple">
@@ -101,7 +101,7 @@ tabs = new Array("users", "groups", "teams");
         </table>
       </div>
       <div id="tab_div_teams" style="display:none;">
-        <table width="100%" cellspacing="0" cellpadding="0" style="padding:5px 10px;">
+        <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
           <tr>
             <td>
               <%
@@ -120,24 +120,24 @@ tabs = new Array("users", "groups", "teams");
               </select>
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
-              <table cellspacing="0" cellpadding="0" width="100%">
+              <table cellspacing="0" cellpadding="0" style="width:100%;">
                 <tr>
-                  <td align="left" valign="bottom" width="33%">
+                  <td style="text-align:left; vertical-align:bottom; width:33%;" >
                     <%= t('team.plural') %><%= t('cap.suffix') %>
                   </td>
-                  <td align="center" width="34%" nowrap>
+                  <td style="text-align:center; width:34%;" nowrap>
                     <input type="button" value="<%= raw(t('arrow.down')) %><%= t('btn.add') %>" onclick="addMember('team');" style="width:80px;" />
                     <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="removeMember('team');" style="width:80px;" />
                   </td>
-                  <td width="33%">&nbsp;</td>
+                  <td style="width:33%;">&nbsp;</td>
                 </tr>
               </table>
             </td>
           </tr>
-          <tr height="5"><td></td></tr>
+          <tr style="height:5px;"><td></td></tr>
           <tr>
             <td>
               <select id="teams_selected" name="teams[]" class="select_multi" size="5" multiple="multiple">
@@ -155,7 +155,7 @@ tabs = new Array("users", "groups", "teams");
 
 <script type="text/javascript">
 
-showTab("users", tabs);
+showTab("users", tabs, "blue");
 
 removeScheduleUsers = function()
 {

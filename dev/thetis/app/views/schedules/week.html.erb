@@ -23,11 +23,11 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
 
-<table align="center" style="width:98%;" cellspacing="0" cellpadding="0">
+<table style="margin:0px auto; width:98%;" cellspacing="0" cellpadding="0">
   <tr>
     <td style="width:30%; text-align:left;">
     <% if !@login_user.nil? and @login_user.admin? User::AUTH_SCHEDULE %>
-      <table align="left" cellspacing="0" cellpadding="0" style="width:65px;">
+      <table style="margin:0px auto 0px 0px; width:65px;" cellspacing="0" cellpadding="0">
         <tr>
           <td nowrap style="width:30px; text-align:left;">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png"  title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>';">
@@ -75,7 +75,7 @@ next_week = @date + 7
 %>
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
       <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onClick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+      <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
       &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
     </td>

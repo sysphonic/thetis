@@ -5,7 +5,7 @@
 <%= form_tag({:controller => 'equipment', :action => 'update', :id => @equipment.id}, :method => 'post', :name => 'form_equipment') %>
 <% end %>
 
-<table style="width:80%; margin-top:10px;" align="center" cellspacing="0" cellpadding="0">
+<table style="width:80%; margin:10px auto 0px;" cellspacing="0" cellpadding="0">
   <tr>
     <td style="vertical-align:top;">
       <%= render(:partial => 'equipment_form') %>
@@ -13,7 +13,7 @@
   </tr>
 </table>
 
-<table align="center" cellspacing="0" cellpadding="0" style="margin:20px 0px 10px;">
+<table cellspacing="0" cellpadding="0" style="margin:20px auto 10px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); history.back();">
       <%= t('btn.back') %>

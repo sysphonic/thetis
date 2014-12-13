@@ -1,20 +1,20 @@
 
 <%= form_tag( {:controller => 'timecards', :action => 'group'}, :name => 'form_display', :method => 'get') %>
-  <table align="center" width="98%" cellspacing="0" cellpadding="0">
+  <table style="margin:0px auto; width:98%;" cellspacing="0" cellpadding="0">
     <tr>
-      <td align="left" width="30%">
+      <td style="text-align:left; width:30%;">
       <% if !@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD) %>
-        <table align="left" cellspacing="0" cellpadding="0" width="65">
+        <table style="margin:0px auto 0px 0px; width:65px;" cellspacing="0" cellpadding="0">
           <tr>
-            <td align="left" nowrap width="30">
+            <td style="text-align:left; width:30px;" nowrap >
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
             </td>
           </tr>
         </table>
       <% end %>
       </td>
-      <td align="center" nowrap width="40%"></td>
-      <td align="right" nowrap width="30%">
+      <td style="text-align:center; width:40%;" nowrap></td>
+      <td style="text-align:right; width:30%;" nowrap>
         <%
         display = []
         unless @user.nil?

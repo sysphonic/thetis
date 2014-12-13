@@ -6,8 +6,8 @@
   <tr>
     <td style="width:49%; vertical-align:top;">
 
-      <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px;" align="center">
-        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
+      <div class="info_area" style="width:100%; padding:20px 0px; text-align:center;">
+        <table style="width:85%; margin:0px auto 15px;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('config.general_settings') %>
@@ -50,7 +50,7 @@
           </tr>
         </table>
 
-        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
+        <table style="width:85%; margin:0px auto 15px;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('config.cap_menus') %>
@@ -135,7 +135,7 @@
 
       <div class="info_area" style="width:100%; padding-top:20px; padding-bottom:20px; text-align:center;">
         <!-- Topic Box -->
-        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
+        <table style="width:85%; margin:0px auto 15px;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('topicbox.title') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %>
@@ -160,7 +160,7 @@
         </table>
 
         <!-- Note -->
-        <table align="center" style="width:85%; margin-bottom:15px;" cellpadding="0" cellspacing="2">
+        <table style="width:85%; margin:0px auto 15px;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('config.note') %> <%= t('paren.round.left')+t('menu.header_menu')+t('paren.round.right') %>
@@ -177,7 +177,7 @@
         </table>
 
         <!-- E-mail Settings -->
-        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('config.smtp_settings') %>
@@ -253,7 +253,7 @@
             <input type="radio" id="smtp_auth_cram_md5" name="smtp[auth]" value="cram_md5" <%= checked_cram_md5 %> /><label for="smtp_auth_cram_md5">CRAM MD5</label>
             <sup style="color:red">*</sup>
           </div>
-          <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+          <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
             <tr>
               <td class="item_cap_td" nowrap>
                 <%= t('user.u_name') %>
@@ -274,7 +274,7 @@
         </div>
 
         <!-- Feeds -->
-        <table align="center" style="width:85%; margin:15px 0px;" cellpadding="0" cellspacing="2">
+        <table style="width:85%; margin:15px auto;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('feed.cap') %>
@@ -303,7 +303,7 @@
         </table>
 
         <!-- Header Menus -->
-        <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;">
               <%= t('config.header_menus') %>&nbsp;
@@ -315,7 +315,7 @@
                 <%= render(:partial => 'ajax_header_menu') %>
               </div>
 
-              <div class="button_gray" style="float:right; margin-top:3px;" onClick="doEditHeaderMenu();">
+              <div class="button_gray" style="float:right; margin-top:3px;" onclick="doEditHeaderMenu();">
                 <%= t('btn.create') %>
               </div>
             </td>
@@ -330,7 +330,7 @@
 
 </form>
 
-<table align="center" style="margin:20px 0px 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>

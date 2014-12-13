@@ -1,5 +1,5 @@
 
-<table align="center" width="85%" cellpadding="0" cellspacing="2">
+<table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
   <tr>
     <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
       <%= t('desktop.before_login') %>&nbsp;
@@ -8,7 +8,7 @@
   </tr>
   <tr>
     <td class="prim_cap_td" nowrap><%= t('desktop.currently_selected') %></td>
-    <td class="item_value_td" width="70%">
+    <td class="item_value_td" style="width:70%;">
       <%
       unless @yaml[:desktop].nil?
         user_before_login = @yaml[:desktop]['user_before_login']

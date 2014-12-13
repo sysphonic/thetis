@@ -7,13 +7,13 @@
 
       <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap style="text-align:left; width:120px; background-color:silver;" onclick="showAddressTab('basic'); this.bgColor='slateblue'" bgColor="slateblue" onmouseover="if(_z('div_basic').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_basic" class="td_item_tab" nowrap onclick="showAddressTab('basic');">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_receive" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showAddressTab('receive'); this.bgColor='slateblue';" bgColor="slateblue" onmouseover="if(_z('div_receive').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_receive').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_receive" class="td_item_tab" nowrap onclick="showAddressTab('receive');">
             <%= t('mail.receive') %>
           </td>
-          <td id="tab_send" class="td_item_tab" nowrap style="width:120px; background-color:silver;" onclick="showAddressTab('send'); this.bgColor='slateblue'" bgColor="slateblue" onmouseover="if(_z('div_send').style.display == 'none') this.bgColor='palegreen'" onmouseout="if (_z('div_send').style.display == 'none') this.bgColor='silver'; else this.bgColor='slateblue';">
+          <td id="tab_send" class="td_item_tab" nowrap onclick="showAddressTab('send');">
             <%= t('mail.send') %>
           </td>
           <td><!-- SPACER --></td>
@@ -25,11 +25,11 @@
   <tr>
     <td style="text-align:center;">
 
-      <div id="div_basic" style="width:100%; text-align:center;">
+      <div id="tab_div_basic" style="width:100%; text-align:center;">
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_title"><%= MailAccount.human_attribute_name('title') %></label>
@@ -123,11 +123,11 @@
         </table>
       </div>
 
-      <div id="div_receive" style="display:none; width:100%; text-align:center;">
+      <div id="tab_div_receive" style="display:none; width:100%; text-align:center;">
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label>
@@ -199,11 +199,11 @@
         </table>
       </div>
 
-      <div id="div_send" style="display:none; width:100%; text-align:center;">
+      <div id="tab_div_send" style="display:none; width:100%; text-align:center;">
         <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table align="center" style="width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label>
@@ -292,37 +292,7 @@ showAddressTab = function(name)
 {
   var nameArray = new Array("basic", "receive", "send");
 
-  var tab = null;
-  for (i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.style.cursor = "pointer";
-      tab.style.backgroundColor = "";   // Not bgColor but style.backgroundColor for initial display.
-    }
-  }
-  var target_tab = _z("tab_"+name);
-  target_tab.style.cursor = "default";
-  var bg = target_tab.bgColor;
-
-  for (i=0; i<nameArray.length; i++) {
-    tab = _z("tab_"+nameArray[i]);
-    if (tab != null) {
-      tab.bgColor = "silver";
-    }
-  }
-
-  target_tab.bgColor = bg;
-
-  for (i=0; i<nameArray.length; i++) {
-    div = _z("div_"+nameArray[i]);
-    if (div != null) {
-      div.style.display = "none";
-    }
-  }
-
-  div = _z("div_"+name);
-  div.style.visibility = "visible";
-  div.style.display = "inline";
+  showTab(name, nameArray, "slateblue");
 }
 
 showAddressTab("basic");

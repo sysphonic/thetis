@@ -10,19 +10,19 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
 
 <% else %>
 
-<table id="title_main" style="height:100%; padding:30px 0px;" cellspacing="0" cellpadding="0" width="97%">
+<table id="title_main" style="width:97%; height:100%; padding:30px 0px;" cellspacing="0" cellpadding="0">
   <tr>
-    <td valign="middle">
+    <td style="vertical-align:middle;">
 
-      <table style="height:100%;" cellspacing="0" cellpadding="0" width="100%">
-        <tr height="10%">
-          <td align="left" style="font-size:20pt; line-height:1.0; padding-left:60px; text-indent:80px;">
+      <table style="width:100%; height:100%;" cellspacing="0" cellpadding="0">
+        <tr style="height:10%;">
+          <td style="text-align:left; font-size:20pt; line-height:1.0; padding-left:60px; text-indent:80px;" >
             <%= t('menu.for_administrators') %>
             <div class="hr"></div>
           </td>
         </tr>
-        <tr height="90%">
-          <td align="left" style="vertical-align:top;">
+        <tr style="height:90%;">
+          <td style="text-align:left; vertical-align:top;" >
             <ul style="padding-left:200px;">
             <% if @login_user.admin?(User::AUTH_ALL) %>
               <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'config', :action => 'edit') %>'; return false;"><%= t('menu.general_conf') %></a></li>
@@ -52,10 +52,10 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
 
           <% if @login_user.admin?(User::AUTH_RESEARCH) %>
             <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
-                <tr height="30">
-                  <td width="5" bgcolor="blue"></td>
-                  <td align="left" valign="middle" style="padding:0px 20px; line-height:15pt;"> 
+              <table cellpadding="0" cellspacing="0" style="width:100%; border-bottom:solid 1px dimgray;">
+                <tr style="height:30px;">
+                  <td style="width:5px; background-color:blue;"></td>
+                  <td style="text-align:left; vertical-align:middle; padding:0px 20px; line-height:15pt;"  > 
                     <b style="color:dimgray; font-size:12pt;">
                       <%= t('menu.research_manage') %>
                     </b>
@@ -71,10 +71,10 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
           <% end %>
           <% if @login_user.admin?(User::AUTH_TIMECARD) %>
             <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
-                <tr height="30">
-                  <td width="5" bgcolor="blue"></td>
-                  <td align="left" valign="middle" style="padding:0px 20px; line-height:15pt;"> 
+              <table cellpadding="0" cellspacing="0" style="width:100%; border-bottom:solid 1px dimgray;">
+                <tr style="height:30px;">
+                  <td style="width:5px; background-color:blue;"></td>
+                  <td style="text-align:left; vertical-align:middle; padding:0px 20px; line-height:15pt;"  > 
                     <b style="color:dimgray; font-size:12pt;">
                       <%= t('menu.timecards_manage') %>
                     </b>
@@ -88,11 +88,11 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
             </div>
           <% end %>
           <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
-            <div style="padding-left:160px; padding-top:30px; padding-bottom:5px;">
-              <table width="100%" cellpadding="0" cellspacing="0" style="border-bottom:solid 1px dimgray;">
-                <tr height="30">
-                  <td width="5" bgcolor="blue"></td>
-                  <td align="left" valign="middle" style="padding:0px 20px; line-height:15pt;"> 
+            <div style="padding:30px 0px 5px 160px;">
+              <table cellpadding="0" cellspacing="0" style="width:100%; border-bottom:solid 1px dimgray;">
+                <tr style="height:30px;">
+                  <td style="width:5px; background-color:blue;"></td>
+                  <td style="text-align:left; vertical-align:middle; padding:0px 20px; line-height:15pt;"> 
                     <b style="color:dimgray; font-size:12pt;">
                       <%= t('zeptair.vpn') %>
                     </b>

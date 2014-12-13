@@ -8,17 +8,17 @@ is_admin = @login_user.admin?(User::AUTH_DESKTOP)
 tabs = new Array("basic", "admin");
 </script>
 
-<table cellspacing="0" cellpadding="0" width="100%" style="padding:10px 15px 20px;">
+<table cellspacing="0" cellpadding="0" style="width:100%; padding:10px 15px 20px;">
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" width="100%">
+      <table cellspacing="2" cellpadding="0" style="width:100%;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onclick="showTab('basic', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_basic').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_basic').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_item_tab" nowrap align="left" width="120" style="background-color:silver;" onclick="showTab('admin', tabs); this.bgColor='forestgreen'" bgColor="forestgreen" onMouseOver="if(_z('tab_div_admin').style.display == 'none') this.bgColor='palegreen'" onMouseOut="if (_z('tab_div_admin').style.display == 'none') this.bgColor='silver'; else this.bgColor='forestgreen';">
+          <td id="tab_admin" class="td_item_tab" nowrap onclick="showTab('admin', tabs, 'forestgreen');">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>
@@ -29,16 +29,16 @@ tabs = new Array("basic", "admin");
     </td>
   </tr>
   <tr>
-    <td align="center">
+    <td style="text-align:center;">
 
-      <div id="tab_div_basic" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkseagreen;">
+      <div id="tab_div_basic" style="text-align:center;">
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkseagreen;">
           <tr>
-            <td align="center" style="padding:20px 0px;">
+            <td style="text-align:center; padding:20px 0px;" >
 
               <%= form_tag( {:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
 
-                <table align="center" width="90%" cellpadding="0" cellspacing="2">
+                <table style="margin:0px auto; width:90%;" cellpadding="0" cellspacing="2">
                   <tr>
                     <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
@@ -58,21 +58,21 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
 
-                      <table align="left" cellpadding="0" cellspacing="5">
-                        <tr height="40">
-                          <td id="td_bgcolor_blue" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BLUE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BLUE) %>; cursor:pointer; border:solid 3px dimgray;">
+                      <table style="margin:0px auto 0px 0px;" cellpadding="0" cellspacing="5">
+                        <tr style="height:40px;">
+                          <td id="td_bgcolor_blue" onclick="selectBgColor('<%= Desktop::BGCOLOR_BLUE %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BLUE) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
                           </td>
-                          <td id="td_bgcolor_pink" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_PINK %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_PINK) %>; cursor:pointer; border:solid 3px dimgray;">
+                          <td id="td_bgcolor_pink" onclick="selectBgColor('<%= Desktop::BGCOLOR_PINK %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_PINK) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
                           </td>
-                          <td id="td_bgcolor_orange" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_ORANGE %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_ORANGE) %>; cursor:pointer; border:solid 3px dimgray;">
+                          <td id="td_bgcolor_orange" onclick="selectBgColor('<%= Desktop::BGCOLOR_ORANGE %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_ORANGE) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
                           </td>
-                          <td id="td_bgcolor_brown" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_BROWN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BROWN) %>; cursor:pointer; border:solid 3px dimgray;">
+                          <td id="td_bgcolor_brown" onclick="selectBgColor('<%= Desktop::BGCOLOR_BROWN %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BROWN) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
                           </td>
-                          <td id="td_bgcolor_green" width="50" onclick="selectBgColor('<%= Desktop::BGCOLOR_GREEN %>');" style="background-color:<%= Desktop.background_color(Desktop::BGCOLOR_GREEN) %>; cursor:pointer; border:solid 3px dimgray;">
+                          <td id="td_bgcolor_green" onclick="selectBgColor('<%= Desktop::BGCOLOR_GREEN %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_GREEN) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
                           </td>
                         </tr>
@@ -97,12 +97,12 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
                       <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
-                      <div align="left" style="padding:5px 0px 5px 30px;">
+                      <div style="text-align:left; padding:5px 0px 5px 30px;" >
                       <% if !@desktop.img_size.nil? and @desktop.img_size > 0 %>
-                        <img width="120" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />
+                        <img style="width:120px;" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />
                       <% end %>
                       </div>
-                      <div align="left" style="padding-left:20px;">
+                      <div style="text-align:left; padding-left:20px;" >
                         <%= file_field(:desktop, :file, :style => 'width:100%', :size => '50') %>
                       </div>
                     </td>
@@ -111,7 +111,7 @@ tabs = new Array("basic", "admin");
 
               </form>
 
-              <table align="center" cellspacing="0" cellpadding="0" style="padding-top:10px;">
+              <table cellspacing="0" cellpadding="0" style="margin:10px auto 0px;">
                 <tr>
                   <td class="img_button_td" onclick="doUpdatePref();">
                     <%= t('btn.update')%>
@@ -125,14 +125,14 @@ tabs = new Array("basic", "admin");
       </div>
 
     <% if is_admin %>
-      <div id="tab_div_admin" style="display:none; width:100%;" align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="border:outset 3px darkseagreen;">
+      <div id="tab_div_admin" style="display:none; width:100%; text-align:center;" >
+        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkseagreen;">
           <tr>
-            <td align="left" style="padding:20px 10px;">
+            <td style="text-align:left; padding:20px 10px;">
 
               <%= form_tag( {:controller => 'desktop', :action => 'update_config'}, :name => 'form_desktop_config', :method => 'post') %>
 
-                <div id="div_user_before_login" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
+                <div id="div_user_before_login" style="width:100%; padding:15px 0px; text-align:center;">
                   <%= render(:partial => 'ajax_user_before_login') %>
                 </div>
                 <input type="hidden" id="user_before_login" name="desktop[user_before_login]" value="" />
@@ -199,6 +199,6 @@ doUpdateConfig = function(user_id)
   return true;
 }
 
-showTab("basic", tabs);
+showTab("basic", tabs, "forestgreen");
 
 </script>

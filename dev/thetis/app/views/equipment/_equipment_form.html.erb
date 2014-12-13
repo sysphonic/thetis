@@ -1,8 +1,8 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @equipment}) %>
 
-<div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px;" align="center">
-  <table align="center" width="85%" cellpadding="0" cellspacing="2">
+<div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
+  <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
     <tr>
       <td class="prim_cap_td" nowrap>
         <label for="equipment_name"><%= Equipment.human_attribute_name('name') %></label>

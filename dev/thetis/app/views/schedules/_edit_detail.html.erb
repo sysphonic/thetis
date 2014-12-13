@@ -21,7 +21,7 @@ else
   <%= hidden_field_tag('display', params[:display]) %>
   <%= hidden_field('schedule', 'id') %>
 
-  <table align="center" cellpadding="0" cellspacing="2" style="width:95%; padding:10px 0px;">
+  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
     <tr>
       <td class="prim_cap_td" nowrap>
         <label for="schedule_title"><%= Schedule.human_attribute_name('title') %></label><sup style="color:red">*</sup>
@@ -484,7 +484,7 @@ _z("div_items").style.display = "block";
 
   </table>
 
-  <table align="center" cellspacing="0" cellpadding="0" style="padding:20px 0px 40px;">
+  <table cellspacing="0" cellpadding="0" style="margin:20px auto 40px;">
     <tr>
       <td class="img_button_td" onclick="doRegisterSchedule('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
         <%= t('btn.register')%>

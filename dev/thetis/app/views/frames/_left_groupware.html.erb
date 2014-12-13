@@ -70,7 +70,7 @@ mode = 'groupware'
       </table>
 
       <div id="adminMenu" style="display:none;">
-        <table cellspacing="1" cellpadding="0" style="width:100%; margin-top:5px;" align="center">
+        <table cellspacing="1" cellpadding="0" style="width:100%; margin:5px auto 0px;">
           <tr style="height:28px;">
             <td style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
               <a href="javascript:this.onclick()" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onblur="setTimeout('hideAdminMenu()', 200);" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
@@ -104,7 +104,7 @@ mode = 'groupware'
   </tr>
   <tr>
     <td style="text-align:center; padding:5px 7px;">
-      <table cellspacing="1" cellpadding="0" style="width:150px;" align="center">
+      <table cellspacing="1" cellpadding="0" style="width:150px; margin:0px auto;">
         <tr style="height:28px;">
           <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
             <a href="#" onclick="return false;" style="color:inherit;"><%= t('menu.admin_menu') %></a>

@@ -2,9 +2,9 @@
 date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 %>
 
-<table id="desktop_timecard" cellspacing="0" cellpadding="0" width="100%">
+<table id="desktop_timecard" cellspacing="0" cellpadding="0" style="width:100%;">
   <tr>
-    <td nowrap align="center" style="padding:5px; font-size:14pt;">
+    <td nowrap style="text-align:center; padding:5px; font-size:14pt;">
 
       <%
       sel_val = nil
@@ -55,14 +55,12 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         <input type="hidden" name="timecard[date]" value="<%= date_s %>" />
         <input type="hidden" id="timecard_start" name="timecard[start]" />
 
-        <table align="center" cellspacing="0" cellpadding="0">
-          <tr height="5"><td></td></tr>
+        <table cellspacing="0" cellpadding="0" style="margin:5px auto 10px;">
           <tr>
             <td class="img_button_td" onclick="doRegister();">
               <%= t('timecard.attendance')%>
             </td>
           </tr>
-          <tr height="10"><td></td></tr>
         </table>
 
       </form>

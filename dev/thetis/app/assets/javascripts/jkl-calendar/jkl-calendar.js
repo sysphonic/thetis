@@ -573,15 +573,15 @@ JKL.Calendar.prototype.write = function (x, y) {
 // 2006.11.27 MOM 描画フィールドの高さを取得するため、idをセットしておく
     src1 += '<div id="'+this.eid+'_screen" style="position:relative; z-index:'+(this.zindex+1)+';">\n';
 
-    src1 += '<table border="0" cellpadding="0" cellspacing="0" style="'+month_table_style+'">\n';
+    src1 += '<table cellpadding="0" cellspacing="0" style="'+month_table_style+'">\n';
     src1 += '  <tr style="height:10px;">\n';
     src1 += '    <td id="'+this.eid+'_handle" colspan="7" style="padding:0px; background-color:'+this.style.day_bgcolor+'; cursor:move;" onmousedown="JKL.Calendar.clear_blur_timer(\''+this.eid+'\');" onmouseup="JKL.Calendar.restoreFocus(\''+this.eid+'\');">\n';
-    src1 += '      <table width="100%" style="height:5px; border:ridge 5px '+this.style.frame_color+';"><tr><td></td></tr></table>\n\n';
+    src1 += '      <table style="width:100%; height:5px; border:ridge 5px '+this.style.frame_color+';"><tr><td></td></tr></table>\n\n';
     src1 += '    </td>\n';
     src1 += '  </tr>\n';
     src1 += '  <tr>\n';
     src1 += '    <td colspan="7">\n';
-    src1 += '      <table border="0" cellpadding="0" cellspacing="0" style="'+month_table_style+'">\n';
+    src1 += '      <table cellpadding="0" cellspacing="0" style="'+month_table_style+'">\n';
     src1 += '        <tr>\n';
     src1 += '          <td id="__'+this.eid+'_btn_prev" title="'+JKL.Calendar.captions[0]+'" style="'+month_td_style+'">&nbsp;&laquo;</td>\n';
     src1 += '          <td style="'+month_td_style+'">&nbsp;</td>\n';

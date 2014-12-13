@@ -6,20 +6,20 @@
 
 <%= form_tag( {:controller => 'equipment', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
-<table width="100%" cellspacing="3" cellpadding="0">
+<table style="width:100%;" cellspacing="3" cellpadding="0">
   <tr>
-    <td align="left">
+    <td style="text-align:left;">
       <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>"></a>
     </td>
   </tr>
-  <tr height="1"><td></td></tr>
+  <tr style="height:1px;"><td></td></tr>
   <tr>
     <td>
-      <table width="100%" cellspacing="0" cellpadding="0">
+      <table style="width:100%;" cellspacing="0" cellpadding="0">
         <tr>
-          <td align="left" nowrap style="padding-bottom:5px;">
+          <td style="text-align:left; padding-bottom:5px;" nowrap>
     <% if @group_id.nil? or @group_id.empty? %>
-            <div class="button_gray" style="float:left;" onClick="showGroupTreeToSelect('0');">
+            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
     <% else %>
@@ -27,7 +27,7 @@
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup();" />
     <% end %>
           </td>
-          <td align="right" nowrap>
+          <td style="text-align:right;" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <span style="color:silver;">|</span>
             <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
@@ -38,9 +38,9 @@
   </tr>
 </table>
 
-<table width="100%" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
   <tr>
-    <td class="pagination_td" align="center">
+    <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('equipment', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -53,23 +53,22 @@
       <%= raw(pagination) %>
     </td>
   </tr>
-  <tr height="10"><td></td></tr>
 </table>
 
 <div class="base_list" id="div_equipment">
-<table id="list_equipment" align="center" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_equipment" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onClick="sortList('equipment.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="28%" nowrap onClick="sortList('name')"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="30%" nowrap onClick="sortList('note')"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="27%"  nowrap onClick="sortList('belongs_to')"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('equipment.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:28%;" nowrap onclick="sortList('name')"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:30%;" nowrap onclick="sortList('note')"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:27%;"  nowrap onclick="sortList('belongs_to')"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 users_cache = {}
 @equipment.each_with_index do |equipment, idx|
 %>
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= equipment.id %></td>
     <td class="<%= td_class %>" nowrap>
       <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'show', :id => equipment.id) %>'; return false;">

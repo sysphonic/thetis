@@ -29,8 +29,8 @@
                                                   [h(t('folder.lower')), Item::FOLDER_LOWER]], 
                                                   params[:find_in])
                 %>
-      <input type="submit" value="<%= t('btn.search') %>" onClick="prog('TOP-RIGHT'); submit(); return false;"/>
-      <input type="button" value="<%= t('btn.reset') %>" onClick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :thumbnails => 'true') %>';"/>
+      <input type="submit" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit(); return false;"/>
+      <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'list', :thumbnails => 'true') %>';"/>
     </td>
   </tr>
 </table>
@@ -117,26 +117,26 @@
 
 <% else %>
 
-<table id="list_items" width="100%" cellpadding="0" cellspacing="1">
+<table id="list_items" style="width:100%;" cellpadding="0" cellspacing="1">
   <tr>
-    <th class="list_sort" width="5%"  nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="35%" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="22%"  nowrap onclick="sortList('folder_id')"><%= Folder.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('folder_id', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="15%" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="7%"  nowrap onclick="sortList('public')"><%= Item.human_attribute_name('public') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('public', @sort_col, @sort_type)) %></span></th>
-    <th class="list_sort" width="13%"  nowrap onclick="sortList('Item.user_id')"><%= t('item.registered_by') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.user_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:35%;" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:22%;"  nowrap onclick="sortList('folder_id')"><%= Folder.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('folder_id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:15%;" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:7%;"  nowrap onclick="sortList('public')"><%= Item.human_attribute_name('public') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('public', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:13%;"  nowrap onclick="sortList('Item.user_id')"><%= t('item.registered_by') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.user_id', @sort_col, @sort_type)) %></span></th>
   </tr>
 <%
 @items.each_with_index do |item, idx|
   item_images = item.images_without_content
   td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
 %>
-  <tr height="33">
+  <tr style="height:33px;">
     <td nowrap class="<%= td_class %>" style="text-align:right;"><%= item.id %></td>
     <td class="<%= td_class %>">
-      <table cellpadding="0" cellspacing="0" width="100%">
+      <table cellpadding="0" cellspacing="0" style="width:100%;">
         <tr>
-          <td align="left" width="100%">
+          <td style="text-align:left; width:100%;">
             <a class="a_underline" href="#" onclick="doShowItem(<%= item.id %>); return false;">
               <%= truncate(item.title, :length => 20) %>
             </a>
@@ -153,16 +153,16 @@
             <% end %>
           </td>
         <% if params[:thumbnails]!='false' and !item_images.nil? and item_images.length > 0 %>
-          <td width="90">
+          <td style="width:90px;">
              <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => item_images[0].id, :ts => ApplicationHelper.get_timestamp(item_images[0])) %>
-             <img style="cursor:pointer" src="<%= img_url %>" width="90" height="60" onclick="doShowItem(<%= item.id %>);" />
+             <img style="width:90px; cursor:pointer" src="<%= img_url %>" style="height:60px;" onclick="doShowItem(<%= item.id %>);" />
           </td>
         <% end %>
         </tr>
       <% if item.featured? and !item.update_message.nil? and !item.update_message.empty? %>
         <tr>
           <td colspan="2">
-            <div width="100%" style="background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
+            <div style="width:100%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
               <span style="padding:5px; font-size:10pt;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
           </td>

@@ -1,5 +1,5 @@
 
-<div class="info_area" style="width:90%; padding-top:15px; padding-bottom:15px; background-color:#FFEBCB;" align="center">
+<div class="info_area" style="width:90%; padding:15px 0px; background-color:#FFEBCB; text-align:center;">
 <% if !@item.team.nil? and @item.team.status == Team::STATUS_DEACTIVATED %>
     ---
 <% else %>
@@ -10,7 +10,7 @@
     <div style="padding-bottom:10px;">
       <%= t('team.apply_info') %><br/>
     </div>
-    <table align="center" cellspacing="0" cellpadding="0">
+    <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
       <tr>
         <td class="img_button_td" onclick="doTeamApply();">
           <%= t('btn.apply_for') %>
