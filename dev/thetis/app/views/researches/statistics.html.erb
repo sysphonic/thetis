@@ -192,11 +192,29 @@ function showResearchTab(name, bgcolor)
 showResearchTab("statistics", "brown");
 
 
+function doSelectGroup(frm)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_research_records",
+      "<%= url_for(:controller => 'researches', :action => 'get_records_group') %>",
+      {
+        method:"get",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'researches', :action => 'get_records_group') %>\" onsubmit=\"new Ajax.Updater('div_research_records', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" onsubmit=\"doSelectGroup(this); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }

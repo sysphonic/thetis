@@ -190,6 +190,33 @@ end
 
 <script type="text/javascript">
 
+function doSelectFolder(frm, item_id)
+{
+  var boxInstance = ThetisBox.getInstanceForElem(frm);
+  if (boxInstance) {
+    boxInstance.hide();
+  }
+
+  var addParams = new Array();
+  addParams.push("id="+item_id);
+  addParams.push(Form.serialize(frm));
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "folder_path",
+      "<%= url_for(:controller => 'items', :action => 'move') %>",
+      {
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 function showFolderTreeToSelect(folder_id, item_id, title)
 {
   if (_z("folder_id_" + item_id)) {
@@ -197,10 +224,8 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   }
   var thetisBox = new ThetisBox;
   thetisBox.title = title;
-  thetisBox.progress = true;
-
-  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'move') %>?id="+item_id+"\" method=\"post\" onsubmit=\"ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('folder_path', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
-  thetisBox.setFormTag(form_tag);
+  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doSelectFolder(this, "+item_id+"); return false;\">";
+  thetisBox.setFormTag(formTag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
@@ -910,13 +935,38 @@ function doRegisterComment(frm)
         );
 }
 
+function doUpdateComment(frm, comment_id)
+{
+  if (!_checkComment(frm.thetisBoxEdit)) {
+    return false;
+  }
+
+  var boxInstance = ThetisBox.getInstanceForElem(frm);
+  if (boxInstance) {
+    boxInstance.hide();
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_comment_"+comment_id,
+      "<%= url_for(:controller => 'items', :action => 'update_comment') %>",
+      {
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 function editComment(comment_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-
-  var form_tag = "<form action=\"<%= url_for(:controller => 'items', :action => 'update_comment') %>\" method=\"post\" onsubmit=\"if (!_checkComment(_z('thetisBoxEdit-"+thetisBox.id+"'))) { return false; } ThetisBox.hide("+thetisBox.id+"); new Ajax.Updater('div_comment_"+comment_id+"', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">";
-  thetisBox.setFormTag(form_tag);
+  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doUpdateComment(this, "+comment_id+"); return false;\">";
+  thetisBox.setFormTag(formTag);
   thetisBox.setAdditionalParams(new Array("comment_id="+comment_id, "authenticity_token=<%= form_authenticity_token %>"));
 
   // GREP WITH ~.gsub('  ', '&nbsp; ')

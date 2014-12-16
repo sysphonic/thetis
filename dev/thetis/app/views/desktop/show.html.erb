@@ -228,19 +228,24 @@ function saveBirthday(birthday)
 {
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = new Array();
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  addParams.push("id=<%= @login_user.id %>");
+  addParams.push("user[birthday]="+birthday);
+
   new Ajax.Request(
-          "<%= url_for(:controller => 'users', :action => 'update', :id => @login_user.id) %>&user[birthday]="+birthday,
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                setTimeout("showBiorhythm()", 10);
-                thetisBoxProgress.remove();
-                _z("biorhythm_req_birth").value = "false";
-              }
+      "<%= url_for(:controller => 'users', :action => 'update') %>",
+      {
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            setTimeout("showBiorhythm()", 10);
+            thetisBoxProgress.remove();
+            _z("biorhythm_req_birth").value = "false";
           }
-        );
+      }
+    );
 }
 <% end %>
 
@@ -257,24 +262,17 @@ function showBiorhythm()
   thetisBox.title = "<%= t('biorhythm.name') %>";
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'show_biorhythm') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          "530,407",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-              }
+      "<%= url_for(:controller => 'desktop', :action => 'show_biorhythm') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBox.show("CENTER", "530,407", "TRAY", "", "", request.responseText);
+            thetisBoxProgress.remove();
           }
-        );
+      }
+    );
 }
 
 </script>

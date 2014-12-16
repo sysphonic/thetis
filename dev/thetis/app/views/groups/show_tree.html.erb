@@ -8,8 +8,8 @@
         <tr>
           <td nowrap style="padding:5px 20px; text-align:left;">
           <% if @login_user.admin?(User::AUTH_GROUP) %>
-            <input type="button" value="<%= t('btn.new') %>" onclick="doCreate(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.rename') %>" onclick="doRename(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onclick="onCreateGroupClicked(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameGroupClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;"/>
           <% else %>
@@ -162,7 +162,26 @@ function onLoadSub()
 <% end %>
 }
 
-function doCreate(pos)
+function doCreateGroup(frm, group_id)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "groupTree:"+group_id,
+      "<%= url_for(:controller => 'groups', :action => 'create') %>",
+      {
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        insertion:Insertion.Bottom,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+function onCreateGroupClicked(pos)
 {
   if (document.form_group_tree.selKeeper.value == "") {
     msg("<%= t('group.select_parent') %>");
@@ -173,13 +192,34 @@ function doCreate(pos)
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'create') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'create') %>', {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doCreateGroup(this, "+group_id+"); return false;\">");
   thetisBox.setAdditionalParams(new Array("selectedGroupId="+group_id, "authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", "");
 }
 
-function doRename(pos)
+function doRenameGroup(frm, group_id)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(frm));
+
+  new Ajax.Updater(
+      "a_groupTree:"+group_id,
+      "<%= url_for(:controller => 'groups', :action => 'rename') %>",
+      {
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+function onRenameGroupClicked(pos)
 {
   if (document.form_group_tree.selKeeper.value == "") {
     msg("<%= t('group.select') %>");
@@ -195,8 +235,7 @@ function doRename(pos)
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"\" method=\"post\" onsubmit=\"new Ajax.Updater('a_groupTree:"+group_id+"', '<%= url_for(:controller => 'groups', :action => 'rename') %>?id="+group_id+"', {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doRenameGroup(this, "+group_id+"); return false;\">");
   thetisBox.setAdditionalParams(new Array('selectedGroupId='+group_id, "authenticity_token=<%= form_authenticity_token %>"));
   var name = trim(_z("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", name);

@@ -139,7 +139,7 @@ showFolderTreeToMove = function(folder_id)
 
   var thetisBox = new ThetisBox;
   thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'ajax_move_items') %>\" method=\"post\" onsubmit=\"doMoveItems(this); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveItems(this); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }

@@ -271,11 +271,29 @@ dispZeptCmdEdit = function(sw)
 document.getElementById("item_id").value = "<%= @item.id %>";
 <% end %>
 
+function doSelectFolder(frm)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_folderPath",
+      "<%= url_for(:controller => 'folders', :action => 'get_path') %>",
+      {
+        method:"get",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 function showFolderTreeToSelect(folder_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'folders', :action => 'get_path') %>\" onsubmit=\"new Ajax.Updater('div_folderPath', this.action, {method:'get', asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" onsubmit=\"doSelectFolder(this); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('msg.select_folder_to_save_in')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }

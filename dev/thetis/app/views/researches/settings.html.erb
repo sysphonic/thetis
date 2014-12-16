@@ -448,6 +448,25 @@ function _doResetCtrl()
             );
 }
 
+function doSelectGroup(frm)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_statistics_groups",
+      "<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>",
+      {
+        method:"post",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 function showGroupTreeToSelect(group_id, do_change)
 {
   var caption = "";
@@ -458,8 +477,7 @@ function showGroupTreeToSelect(group_id, do_change)
   }
 
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_statistics_groups', this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doSelectGroup(this); return false;\">");
   var params = new Array("authenticity_token=<%= form_authenticity_token %>");
   if (do_change == true) {
     params.push("current_id="+group_id);

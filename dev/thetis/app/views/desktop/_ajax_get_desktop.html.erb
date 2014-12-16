@@ -392,17 +392,34 @@ user_param += @login_user.id.to_s unless @login_user.nil?
           );
 }
 
+doUpdateLabel = function(frm, toy_id)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z(toy_id).parentNode,
+      "<%= url_for(:controller => 'desktop', :action => 'update_label') %>",
+      {
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 editLabel = function(toy_id)
 {
   var label = _z(toy_id);
 
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'update_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_z('"+toy_id+"').parentNode, this.action, {asynchronous:true, evalScripts:true, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
-  thetisBox.setFormTag(form_tag);
+  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doUpdateLabel(this, "+toy_id+"); return false;\">";
+  thetisBox.setFormTag(formTag);
 
   // for users without LOGIN
   var axis = getAxis(_z("div_desktop"), toy_id);
@@ -411,15 +428,33 @@ editLabel = function(toy_id)
   thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
 }
 
+doCeateLabel = function(frm)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      _z("div_desktop").parentNode,
+      "<%= url_for(:controller => 'desktop', :action => 'create_label') %>",
+      {
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        insertion:Insertion.Bottom,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    ); 
+}
+
 createLabel = function()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var form_tag = "<form action=\"<%= url_for(:controller => 'desktop', :action => 'create_label') %>\" method=\"post\" onsubmit=\"new Ajax.Updater(_z('div_desktop').parentNode, this.action, {asynchronous:true, evalScripts:true, insertion:Insertion.Bottom, onComplete:function(request){ __thetisBoxProgress.remove(); }, parameters:Form.serialize(this)}); return false;\">";
-  thetisBox.setFormTag(form_tag);
+  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doCeateLabel(this); return false;\">";
+  thetisBox.setFormTag(formTag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
 }

@@ -126,7 +126,7 @@ showFolderTreeToSelect = function(folder_id)
   var addParams = new Array();
 
   thetisBoxFilterActionFolderTree.setAdditionalParams(addParams);
-  thetisBoxFilterActionFolderTree.setFormTag("<form action=\"#\" method=\"get\" onsubmit=\"onFilterActionTreeDestSelected(this); return false;\">");
+  thetisBoxFilterActionFolderTree.setFormTag("<form action=\"\" method=\"get\" onsubmit=\"onFilterActionTreeDestSelected(this); return false;\">");
   thetisBoxFilterActionFolderTree.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest') %>", "");
   thetisBoxFilterActionFolderTree.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>", folder_id);
 }

@@ -117,11 +117,32 @@ modified_users = 0;
 modified_groups = 0;
 modified_teams = 0;
 
+doSelectGroup = function(frm)
+{
+  var addParams = new Array();
+  addParams.push(Form.serialize(frm));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_selectUsers",
+      "<%= url_for(:controller => 'folders', :action => 'get_group_users', :id => @folder.id) %>",
+      {
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
 showGroupTreeToSelect = function(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'items', :action => 'get_group_users') %>\" method=\"post\" onsubmit=\"new Ajax.Updater('div_selectUsers', '<%= url_for(:controller => 'folders', :action => 'get_group_users', :id => @folder.id) %>', {asynchronous:true, evalScripts:true, onComplete:function(request){__thetisBoxProgress.remove();}, parameters:Form.serialize(this)+'&authenticity_token=<%= form_authenticity_token %>'}); return false;\">");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doSelectGroup(this); return false;\">");
   thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }

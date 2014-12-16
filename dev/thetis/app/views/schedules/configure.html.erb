@@ -61,23 +61,40 @@
 
 <script type="text/javascript">
 
+function doAddHolidays(frm)
+{
+  var ret = _addHolidays(frm.thetisBoxEdit.value);
+  if (!ret) {
+    return false;
+  }
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_holidays",
+      "<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>",
+      {
+        method:"post",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+
+          var boxInstance = ThetisBox.getInstanceForElem(frm);
+          if (boxInstance) {
+            boxInstance.remove();
+          }
+        }
+      }
+    );
+}
+
 function addHolidays()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-
-  var updater = "new Ajax.Updater("
-                + "'div_holidays',"
-                + "this.action,"
-                + "{"
-                  + "asynchronous:true,"
-                  + "evalScripts:true,"
-                  + "onComplete:function(request){ __thetisBoxProgress.remove(); ThetisBox.remove("+thetisBox.id+"); },"
-                  + "parameters:Form.serialize(this)"
-                + "}"
-                + ");"
-  var form_tag = "<form action=\"<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>\" onsubmit=\"var ret=_addHolidays(_z('thetisBoxEdit-"+thetisBox.id+"').value); if (!ret) {return false;} " + updater + " return false;\">";
-  thetisBox.setFormTag(form_tag);
+  var formTag = "<form action=\"\" onsubmit=\"doAddHolidays(this); return false;\">";
+  thetisBox.setFormTag(formTag);
   thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   var cap = "<%= t('schedule.specify_holidays_info1') %><br/>"
             + "<div style='text-indent:20px'><%= t('schedule.specify_holidays_info2') %></div>"
