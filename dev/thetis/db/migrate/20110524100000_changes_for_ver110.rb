@@ -15,7 +15,7 @@ class ChangesForVer110 < ActiveRecord::Migration
       t.timestamps
     end
 
-    teams = Team.find(:all)
+    teams = Team.all
     unless teams.nil?
       teams.each do |team|
         begin
