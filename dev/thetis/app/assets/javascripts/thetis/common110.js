@@ -103,6 +103,16 @@ function removeClassName(elem, className)
   }
 }
 
+function hasClassName(elem, className)
+{
+  if (!elem || !className) {
+    return false;
+  }
+  var classNames = elem.className.split(/\s/);
+  var idx = classNames.indexOf(className);
+  return (idx >= 0);
+}
+
 function avoidSubmit(evt)
 {
   evt = (evt || window.event);
@@ -143,11 +153,86 @@ function getVerIE()
 
 function _z(elemId)
 {
-  if (elemId && (typeof(elemId.valueOf())) == "string") {
+  if (!elemId) {
+    return null;
+  }
+  /*
+   * Shortcut for most popular case.
+   */
+  if (typeof(elemId) == "string") {
+    return document.getElementById(elemId);
+  }
+
+  if (typeof(elemId.valueOf) != "undefined" // for HTMLBodyElement on IE8
+      && typeof(elemId.valueOf()) == "string") {
     return document.getElementById(elemId);
   } else {
     return elemId;
   }
+}
+
+function addEvent(elem, eventName, func)
+{
+  // elem["on"+eventName] = func;
+
+  if (elem.attachEvent){
+    elem.attachEvent("on"+eventName, func);
+  } else {
+    elem.addEventListener(eventName, func, false);
+  }
+}
+
+function removeEvent(elem, eventName, func)
+{
+  if (elem.detachEvent) {
+    elem.detachEvent("on"+eventName, func);
+  } else {
+    elem.removeEventListener(eventName, func, false);
+  }
+}
+
+function stopEvent(evt, preventDefault)
+{
+  evt = (evt || window.event);
+
+  if (preventDefault == null) {
+    preventDefault = true;
+  }
+
+  if (typeof(evt.stopPropagation) == "function") {
+    evt.stopPropagation();
+  } else {
+    evt.cancelBubble = true;
+  }
+  if (preventDefault && (typeof(evt.preventDefault) == "function")) {
+    evt.preventDefault();
+  }
+}
+
+function getElemByTagNameInChildNodes(elem, tagName, recursive)
+{
+  if (!elem) {
+    return null;
+  }
+  tagName = tagName.toLowerCase();
+
+  for (var i=0; i < elem.childNodes.length; i++) {
+
+    var curNode = elem.childNodes[i];
+
+    if (curNode.tagName
+        && tagName == curNode.tagName.toLowerCase()) {
+      return curNode;
+    }
+
+    if (recursive) {
+      var node = getElemByTagNameInChildNodes(curNode, tagName, true);
+      if (node) {
+        return node;
+      }
+    }
+  }
+  return null;
 }
 
 function getElemByClassNameInChildNodes(elem, className, recursive)
@@ -186,6 +271,20 @@ function getElemByClassNameInParentNodes(elem, className)
           return node;
         }
       }
+    }
+  }
+  return null;
+}
+
+function getElemByTagNameInParentNodes(elem, tagName)
+{
+  tagName = tagName.toLowerCase();
+
+  var node = elem.parentNode;
+  for (var i=0; node; node=node.parentNode) {
+    if (node.tagName
+        && tagName == node.tagName.toLowerCase()) {
+      return node;
     }
   }
   return null;
@@ -259,6 +358,20 @@ function collectionToArray(collection)
   return ret;
 }
 
+function isElemDisabled(elem)
+{
+  if (!elem) {
+    return false;
+  }
+
+  for (var node=elem; node; node=node.parentNode) {
+    if (node.disabled) {
+      return true;
+    }
+  }
+  return false;
+}
+
 function getFormValue(name)
 {
   var ret = null;
@@ -301,34 +414,14 @@ function disableBlockElems(parentNode, disabled)
   }
 }
 
-function addEvent(elem, eventName, func)
-{
-  // elem["on"+eventName] = func;
-
-  if (elem.attachEvent){
-    elem.attachEvent("on"+eventName, func);
-  } else {
-    elem.addEventListener(eventName, func, false);
-  }
-}
-
-function removeEvent(elem, eventName, func)
-{
-  if (elem.detachEvent) {
-    elem.detachEvent("on"+eventName, func);
-  } else {
-    elem.removeEventListener(eventName, func, false);
-  }
-}
-
 function posAbsolute(elem)
 {
   var pos = getPos(elem);
 
   elem.style.top    = pos.y + "px";
   elem.style.left   = pos.x + "px";
-  elem.style.width  = elem.clientWidth + "px";
-  elem.style.height = elem.clientHeight + "px";
+  elem.style.width  = elem.offsetWidth + "px";
+  elem.style.height = elem.offsetHeight + "px";
   elem.style.position = "absolute";
 }
 
@@ -433,11 +526,11 @@ function uniq(arr)
   return ret;
 }
 
-function removeArrayElements(ary, del_ary)
+function removeArrayElements(ary, entries)
 {
   for (var i=0; i < ary.length; i++) {
-    for (k=0; k < del_ary.length; k++) {
-      if (ary[i] == del_ary[k]) {
+    for (k=0; k < entries.length; k++) {
+      if (ary[i] == entries[k]) {
         ary.splice(i, 1);
         i--;
         break;
@@ -449,43 +542,65 @@ function removeArrayElements(ary, del_ary)
 
 function getListSelected(list, reqText)
 {
-  var sel_ary = new Array();
-  for (var i=0; i<list.length; i++) {
-    var option=list.options[i];
+  var entries = new Array();
+  if (!list) {
+    return entries;
+  }
+  for (var i=0; i < list.length; i++) {
+    var option = list.options[i];
     if (option.selected == true) {
-      sel_ary[sel_ary.length] = (reqText)?(option.text):(option.value);
+      entries.push((reqText)?(option.text):(option.value));
     }
   }
-  return sel_ary;
+  return entries;
+}
+
+function getListText(list, val)
+{
+  if (!list) {
+    return null;
+  }
+  for (var i=0; i < list.length; i++) {
+    var option = list.options[i];
+    if (option.value == val) {
+      return option.text;
+    }
+  }
+  return null;
 }
 
 function addList(list, text, value, allowDuplex)
 {
+  if (!list) {
+    return;
+  }
   if (!allowDuplex) {
-    for (var i=0; i<list.length; i++) {
-      var option=list.options[i];
+    for (var i=0; i < list.length; i++) {
+      var option = list.options[i];
       if (option.value == value) {
         return;
       }
     }
   }
-
   list.options[list.length++] = new Option(text, value);
 }
 
 function deleteList(list)
 {
-  var del_ary = new Array();
+  var entries = new Array();
+  if (!list) {
+    return entries;
+  }
   for (var i=0; i < list.length; i++) {
     var option = list.options[i];
     if (option.selected == true) {
-      del_ary[del_ary.length] = option.value;
+      entries.push(option.value);
       list.options[i] = null;
       i--;
     }
   }
   list.selectedIndex = -1;
-  return del_ary;
+  return entries;
 }
 
 function sortList(list, direction)
@@ -687,33 +802,73 @@ function deselectListAll(list)
   }
 }
 
+function _prepareShiftListItems(list)
+{
+  var selOptions = new Array();
+  var firstIdx = -1;
+
+  for (var i=0; i < list.options.length; i++) {
+
+    var option = list.options[i];
+
+    if (option.selected == true) {
+      selOptions.push(option);
+
+      if (firstIdx < 0) {
+        firstIdx = i;
+      }
+    }
+  }
+  deleteList(list);
+
+  return new Array(firstIdx, selOptions);
+}
+
+function shiftListUpper(list)
+{
+  var moveParams = _prepareShiftListItems(list);
+
+  var firstIdx = moveParams[0];
+  var selOptions = moveParams[1];
+
+  if (firstIdx < 0) {
+    return false;
+  }
+
+  var insertIdx = firstIdx;
+  if (insertIdx > 0) {
+    insertIdx--;
+  }
+
+  for (var i=0; i < selOptions.length; i++) {
+    list.options.add(selOptions[i], insertIdx++);
+  }
+  return true;
+}
+
+function shiftListLower(list)
+{
+  var moveParams = _prepareShiftListItems(list);
+
+  var firstIdx = moveParams[0];
+  var selOptions = moveParams[1];
+
+  if (firstIdx < 0) {
+    return false;
+  }
+
+  var insertIdx = firstIdx + 1;
+
+  for (var i=0; i < selOptions.length; i++) {
+    list.options.add(selOptions[i], insertIdx++);
+  }
+  return true;
+}
+
 function getClientRegion()
 {
   var obj = new Object();
-/*
-  if (is_MS) {
-    obj.width = document.documentElement.offsetWidth; // IE8.0
-    obj.height = document.documentElement.offsetHeight;
 
-    if ((isNaN(obj.width) || obj.width == 0) && document.body != null) {
-      obj.width = document.body.clientWidth;
-    }
-    if ((isNaN(obj.height) || obj.height == 0) && document.body != null) {
-      obj.height = document.body.clientHeight;
-    }
-  } else {
-    if (document.body) {
-      obj.width = document.body.clientWidth;
-      obj.height = document.body.clientHeight;
-    }
-    if (!document.body || (isNaN(obj.width) || obj.width == 0)) {
-      obj.width = document.documentElement.clientWidth; // Firefox, Safari, Opera
-    }
-    if (!document.body || (isNaN(obj.height) || obj.height == 0)) {
-      obj.height = document.documentElement.clientHeight;
-    }
-  }
-*/
   if (document.documentElement.clientWidth) {
     obj.width = document.documentElement.clientWidth;
   } else {
@@ -990,3 +1145,26 @@ function checkMailAddrExp(addr)
     return false;
   }
 }
+
+function getDateTimeExp(date)
+{
+  var exp = "";
+  date = (date || new Date());
+
+  exp += date.getFullYear();
+  exp += "-";
+  exp += fillLeft(String(date.getMonth()+1), "0", 2);
+  exp += "-";
+  exp += fillLeft(String(date.getDate()), "0", 2);
+  exp += " ";
+  exp += fillLeft(String(date.getHours()), "0", 2);
+  exp += ":";
+  exp += fillLeft(String(date.getMinutes()), "0", 2);
+  exp += ":";
+  exp += fillLeft(String(date.getSeconds()), "0", 2);
+  exp += ".";
+  exp += fillLeft(String(date.getMilliseconds()), "0", 3);
+
+  return exp;
+}
+

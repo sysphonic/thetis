@@ -213,53 +213,6 @@ showErrorMsg = function(target_element)
   return false;
 }
 
-msg = function(m)
-{
-  var thetisBox = new ThetisBox;
-  thetisBox.show("CENTER", "", "MESSAGE", "", m, "");
-
-  return thetisBox;
-}
-
-tips = function(m, position)
-{
-  if (!position) {
-    position = "TOP-RIGHT";
-  }
-  var thetisBox = new ThetisBox;
-  thetisBox.show(position, "", "TIPS", "", m, "");
-
-  return thetisBox;
-}
-
-prog = function(pos)
-{
-  var caption = "";
-
-  if (arguments.length >= 2) {
-    caption = arguments[1];
-  }
-
-  var thetisBox = new ThetisBox;
-  thetisBox.show(pos, "", "PROGRESS", "", caption, "");
-
-  return thetisBox;
-}
-
-confm = function(msg, action)
-{
-  var thetisBox = new ThetisBox;
-
-  if (arguments.length >= 3) {
-    thetisBox.setOnClose(arguments[2]);
-  }
-  if (arguments.length >= 4) {
-    thetisBox.button_ok = arguments[3];
-    thetisBox.button_cancel = arguments[4];
-  }
-  thetisBox.show("CENTER", "", "CONFIRM", action, msg, "");
-  return thetisBox;
-}
 /*
 var _thetis_ajax_item_data = null;
 var _thetis_ajax_item_func_complete = null;
