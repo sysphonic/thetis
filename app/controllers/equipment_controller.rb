@@ -143,7 +143,7 @@ class EquipmentController < ApplicationController
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
-        con << ApplicationHelper.get_sql_like([:groups], "|#{@group_id}|")
+        con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
     end
 
@@ -219,11 +219,11 @@ class EquipmentController < ApplicationController
       case display_type
        when 'group'
         if @login_user.get_groups_a(true).include?(display_id)
-          con = ApplicationHelper.get_sql_like([:groups], "|#{display_id}|")
+          con = SqlHelper.get_sql_like([:groups], "|#{display_id}|")
         end
        when 'team'
         if @login_user.get_teams_a.include?(display_id)
-          con = ApplicationHelper.get_sql_like([:teams], "|#{display_id}|")
+          con = SqlHelper.get_sql_like([:teams], "|#{display_id}|")
         end
       end
     end

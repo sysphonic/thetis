@@ -263,7 +263,7 @@ class GroupsController < ApplicationController
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
-        con << ApplicationHelper.get_sql_like([:groups], "|#{@group_id}|")
+        con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
     end
 
