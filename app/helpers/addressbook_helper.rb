@@ -80,10 +80,10 @@ module AddressbookHelper
 
       unless user.nil?
         user.get_groups_a(true).each do |group_id|
-          scope_con << "(groups like '%|#{group_id}|%')"
+          scope_con << SqlHelper.get_sql_like([:groups], "|#{group_id}|")
         end
         user.get_teams_a.each do |team_id|
-          scope_con << "(teams like '%|#{team_id}|%')"
+          scope_con << SqlHelper.get_sql_like([:teams], "|#{team_id}|")
         end
       end
     end

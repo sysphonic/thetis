@@ -44,17 +44,18 @@ class TeamsController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
+    SqlHelper.validate_token([params[:filter]])
     if params[:filter].nil? or params[:filter] == 'all'
       con = ['Team.id > 0']
     else
-      con = ["(Team.status = '#{params[:filter]}')"]
+      con = ["(Team.status='#{params[:filter]}')"]
     end
     
     keyword = params[:keyword]
-    unless keyword.nil? or keyword.empty?
+    unless keyword.blank?
       key_array = keyword.split(nil)
       key_array.each do |key| 
-        con << "(name like '%#{key}%' or item_id = '#{key}')"
+        con << "(#{SqlHelper.get_sql_like([:name], key)} or item_id='#{key}')"
       end
     end
 
@@ -67,10 +68,11 @@ class TeamsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = "Team.id"
       @sort_type = "ASC"
     end
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     sql = 'select distinct Team.* from teams Team'

@@ -136,14 +136,14 @@ class EquipmentController < ApplicationController
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     unless @group_id.nil?
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
-        con << "(groups like '%|#{@group_id}|%')"
+        con << ApplicationHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
     end
 
@@ -156,10 +156,11 @@ class EquipmentController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     sql = 'select distinct Equipment.* from equipment Equipment'
@@ -218,11 +219,11 @@ class EquipmentController < ApplicationController
       case display_type
        when 'group'
         if @login_user.get_groups_a(true).include?(display_id)
-          con = "(groups like '%|#{display_id}|%')"
+          con = ApplicationHelper.get_sql_like([:groups], "|#{display_id}|")
         end
        when 'team'
         if @login_user.get_teams_a.include?(display_id)
-          con = "(teams like '%|#{display_id}|%')"
+          con = ApplicationHelper.get_sql_like([:teams], "|#{display_id}|")
         end
       end
     end

@@ -35,29 +35,29 @@ class ZeptairDistController < ApplicationController
 
     con = []
 
-    if params[:keyword]
+    unless params[:keyword].blank?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = "\'%" + key + "%\'"
-        con << "(name like #{key} or email like #{key} or fullname like #{key} or address like #{key} or organization like #{key})"
+        con << SqlHelper.get_sql_like([:name, :email, :fullname, :address, :organization], key)
       end
     end
 
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     unless @group_id.nil?
-      con << "(groups like '%|#{@group_id}|%')"
+      con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
     end
 
     include_comment = false
 
     filter_status = params[:filter_status]
+    SqlHelper.validate_token([filter_status])
 
-    unless filter_status.nil? or filter_status.empty?
+    unless filter_status.blank?
       case filter_status
         when ZeptairDistHelper::STATUS_REPLIED
           con << "((Comment.item_id=#{@item.id}) and (Comment.xtype='#{Comment::XTYPE_DIST_ACK}') and (Comment.user_id=User.id))"
@@ -86,10 +86,11 @@ class ZeptairDistController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
+    SqlHelper.validate_token([@sort_col, @sort_type])
 
     fields = ['User.*']
     unless @sort_col.index('Comment.').nil?

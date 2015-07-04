@@ -31,6 +31,8 @@ class OfficeMap < ActiveRecord::Base
   #
   def self.get_for_group(group_id, incl_img_content=false)
 
+    SqlHelper.validate_token([group_id])
+
     if group_id.nil?
       office_map = nil
     else

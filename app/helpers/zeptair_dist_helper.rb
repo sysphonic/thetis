@@ -100,6 +100,8 @@ module ZeptairDistHelper
   #
   def self.completed_ack_message(item_id)
 
+    SqlHelper.validate_token([item_id])
+
     msg = ''
 
     sql = 'select id, updated_at from attachments'
@@ -174,6 +176,8 @@ module ZeptairDistHelper
     add_con = "(Item.xtype='#{Item::XTYPE_ZEPTAIR_DIST}')"
 
     unless admins.nil? or admins.empty?
+      SqlHelper.validate_token([admins])
+
       admin_ids = []
       admins.each do |admin_name|
         begin

@@ -30,10 +30,10 @@ module EquipmentHelper
     unless user.nil?
       con = ["(users like '%|#{user.id}|%')"]
       user.get_groups_a(true).each do |group_id|
-        con << "(groups like '%|#{group_id}|%')"
+        con << SqlHelper.get_sql_like([:groups], "|#{group_id}|")
       end
       user.get_teams_a.each do |team_id|
-        con << "(teams like '%|#{team_id}|%')"
+        con << SqlHelper.get_sql_like([:teams], "|#{team_id}|")
       end
 
       scope_con << ' or (' + con.join(' or ') + ')'

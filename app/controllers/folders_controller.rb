@@ -235,7 +235,7 @@ class FoldersController < ApplicationController
       @sort_col = params[:sort_col]
       @sort_type = params[:sort_type]
 
-      if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+      if @sort_col.blank? or @sort_type.blank?
         @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
       end
 

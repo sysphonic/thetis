@@ -158,41 +158,41 @@ class Folder < ActiveRecord::Base
       admin = user.admin?(User::AUTH_FOLDER) if admin.nil?
 
       unless admin
-        where_users = '(read_users like \'%|'+user.id.to_s+'|%\') or (write_users like \'%|'+user.id.to_s+'|%\')'
+        where_users = SqlHelper.get_sql_like([:read_users, :write_users], "|#{user.id}|")
 
-        array = []
+        arr = []
         group_obj_cache = {}
         groups = user.get_groups_a(true, group_obj_cache)
         groups.each do |group_id|
-          array << '(read_groups like \'%|'+group_id+'|%\') or (write_groups like \'%|'+group_id+'|%\')'
+          arr << SqlHelper.get_sql_like([:read_groups, :write_groups], "|#{group_id}|")
         end
-        where_groups = array.join(' or ')
+        where_groups = arr.join(' or ')
 
-        array = []
+        arr = []
         teams = user.get_teams_a
         teams.each do |team_id|
-          array << '(read_teams like \'%|'+team_id+'|%\') or (write_teams like \'%|'+team_id+'|%\')'
+          arr << SqlHelper.get_sql_like([:read_teams, :write_teams], "|#{team_id}|")
         end
-        where_teams = array.join(' or ')
+        where_teams = arr.join(' or ')
 
-        array = []
-        array << '('+where_users+')' unless where_users.empty?
-        array << '('+where_groups+')' unless where_groups.empty?
-        array << '('+where_teams+')' unless where_teams.empty?
-        restrict = array.join(' or ')
+        arr = []
+        arr << '('+where_users+')' unless where_users.empty?
+        arr << '('+where_groups+')' unless where_groups.empty?
+        arr << '('+where_teams+')' unless where_teams.empty?
+        restrict = arr.join(' or ')
       end
     end
 
     if admin
       con = nil
     else
-      array = []
+      arr = []
       unless restrict.nil? or restrict.empty?
-        array << '('+restrict+')'
+        arr << '('+restrict+')'
       end
-      array << '((read_users is null) and (read_groups is null) and (read_teams is null))'
-      array << '((write_users is null) and (write_groups is null) and (write_teams is null))'
-      con = '(' + array.join(' or ') + ')'
+      arr << '((read_users is null) and (read_groups is null) and (read_teams is null))'
+      arr << '((write_users is null) and (write_groups is null) and (write_teams is null))'
+      con = '(' + arr.join(' or ') + ')'
     end
 
     return con
@@ -232,6 +232,8 @@ class Folder < ActiveRecord::Base
   #
   def self.get_tree_by_group_for_admin(group_id)
 
+    SqlHelper.validate_token([group_id])
+
     folder_tree = {}
     tree_id = '0'
 
@@ -249,7 +251,7 @@ class Folder < ActiveRecord::Base
       where << ' and ('
       where <<      "(Folder.xtype = '#{XTYPE_GROUP}' and Folder.owner_id = #{group_id})"
       where <<      ' or '
-      where <<      "(Folder.xtype = '#{XTYPE_USER}' and  Folder.owner_id = User.id and User.groups like '%|#{group_id}|%')"
+      where <<      "(Folder.xtype = '#{XTYPE_USER}' and  Folder.owner_id = User.id and #{SqlHelper.get_sql_like(['User.groups'], "|#{group_id}|")})"
       where <<     ' )'
 
       order_by = ' order by Folder.xorder ASC, Folder.id ASC'
@@ -384,6 +386,8 @@ class Folder < ActiveRecord::Base
   #return:: Current maximum order.
   #
   def self.get_order_max(parent_id)
+
+    SqlHelper.validate_token([parent_id])
 
     begin
       max_order = Folder.count_by_sql("SELECT MAX(xorder) FROM folders where parent_id=#{parent_id}")
@@ -637,7 +641,7 @@ class Folder < ActiveRecord::Base
   #
   def self.get_childs(folder_id, conditions, recursive, admin, ret_obj)
 
-    array = []
+    arr = []
 
     if recursive
 
@@ -646,11 +650,11 @@ class Folder < ActiveRecord::Base
 
       folder_tree.each do |parent_id, childs|
         if ret_obj
-          array |= childs
+          arr |= childs
         else
           childs.each do |folder|
             folder_id = folder.id.to_s
-            array << folder_id unless array.include?(folder_id)
+            arr << folder_id unless arr.include?(folder_id)
           end
         end
       end
@@ -671,15 +675,15 @@ class Folder < ActiveRecord::Base
 
       folders = Folder.where(con).order('xorder ASC').to_a
       if ret_obj
-        array = folders
+        arr = folders
       else
         folders.each do |folder|
-          array << folder.id.to_s
+          arr << folder.id.to_s
         end
       end
     end
 
-    return array
+    return arr
   end
 
   #=== self.get_items
@@ -780,11 +784,11 @@ class Folder < ActiveRecord::Base
 
     ret = {}
 
-    array = self.disp_ctrl.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.disp_ctrl.split('|')
+    arr.compact!
+    arr.delete('')
 
-    array.each do |param|
+    arr.each do |param|
       if param.include?('=')
         kv = param.split('=')
         key = kv.first
@@ -867,11 +871,11 @@ class Folder < ActiveRecord::Base
 
     return [] if self.read_users.nil? or self.read_users.empty?
 
-    array = self.read_users.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.read_users.split('|')
+    arr.compact!
+    arr.delete('')
 
-    return array
+    return arr
   end
 
   #=== get_write_users_a
@@ -883,7 +887,7 @@ class Folder < ActiveRecord::Base
   #
   def get_write_users_a(include_parents=false)
 
-    array = []
+    arr = []
 
     if include_parents
       parents = self.get_parents(true)
@@ -891,30 +895,30 @@ class Folder < ActiveRecord::Base
         users = folder.get_write_users_a(false)
         next if users.nil? or users.length <= 0
 
-        if array.length <= 0
-          array = users
+        if arr.length <= 0
+          arr = users
         else
-          array = array & users
+          arr = arr & users
         end
       end
 
       users = self.get_write_users_a(false)
-      if array.length <= 0
-        array = users
+      if arr.length <= 0
+        arr = users
       else
-        array = array & users
+        arr = arr & users
       end
 
     else
 
       return [] if self.write_users.nil? or self.write_users.empty?
 
-      array = self.write_users.split('|')
-      array.compact!
-      array.delete('')
+      arr = self.write_users.split('|')
+      arr.compact!
+      arr.delete('')
     end
 
-    return array
+    return arr
   end
 
   #=== set_read_users
@@ -963,11 +967,11 @@ class Folder < ActiveRecord::Base
 
     return [] if self.read_groups.nil? or self.read_groups.empty?
 
-    array = self.read_groups.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.read_groups.split('|')
+    arr.compact!
+    arr.delete('')
 
-    return array
+    return arr
   end
 
   #=== get_write_groups_a
@@ -979,7 +983,7 @@ class Folder < ActiveRecord::Base
   #
   def get_write_groups_a(include_parents=false)
 
-    array = []
+    arr = []
 
     if include_parents
       parents = self.get_parents(true)
@@ -987,30 +991,30 @@ class Folder < ActiveRecord::Base
         groups =folder.get_write_groups_a(false)
         next if groups.nil? or groups.length <= 0
 
-        if array.length <= 0
-          array = groups
+        if arr.length <= 0
+          arr = groups
         else
-          array = array & groups
+          arr = arr & groups
         end
       end
 
       groups = self.get_write_groups_a(false)
-      if array.length <= 0
-        array = groups
+      if arr.length <= 0
+        arr = groups
       else
-        array = array & groups
+        arr = arr & groups
       end
 
     else
 
       return [] if self.write_groups.nil? or self.write_groups.empty?
 
-      array = self.write_groups.split('|')
-      array.compact!
-      array.delete('')
+      arr = self.write_groups.split('|')
+      arr.compact!
+      arr.delete('')
     end
 
-    return array
+    return arr
   end
 
   #=== set_read_groups
@@ -1059,11 +1063,11 @@ class Folder < ActiveRecord::Base
 
     return [] if self.read_teams.nil? or self.read_teams.empty?
 
-    array = self.read_teams.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.read_teams.split('|')
+    arr.compact!
+    arr.delete('')
 
-    return array
+    return arr
   end
 
   #=== get_write_teams_a
@@ -1075,7 +1079,7 @@ class Folder < ActiveRecord::Base
   #
   def get_write_teams_a(include_parents=false)
 
-    array = []
+    arr = []
 
     if include_parents
       parents = self.get_parents(true)
@@ -1083,30 +1087,30 @@ class Folder < ActiveRecord::Base
         teams = folder.get_write_teams_a(false)
         next if teams.nil? or teams.length <= 0
 
-        if array.length <= 0
-          array = teams
+        if arr.length <= 0
+          arr = teams
         else
-          array = array & teams
+          arr = arr & teams
         end
       end
 
       teams = self.get_write_teams_a(false)
-      if array.length <= 0
-        array = teams
+      if arr.length <= 0
+        arr = teams
       else
-        array = array & teams
+        arr = arr & teams
       end
 
     else
 
       return [] if self.write_teams.nil? or self.write_teams.empty?
 
-      array = self.write_teams.split('|')
-      array.compact!
-      array.delete('')
+      arr = self.write_teams.split('|')
+      arr.compact!
+      arr.delete('')
     end
 
-    return array
+    return arr
   end
 
   #=== set_read_teams

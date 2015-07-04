@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -174,7 +174,7 @@ class AddressbookController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    if params[:filter_book].nil? or params[:filter_book].empty?
+    if params[:filter_book].blank?
       params[:filter_book] = Address::BOOK_BOTH
     end
 
@@ -187,11 +187,10 @@ class AddressbookController < ApplicationController
       con << AddressbookHelper.get_scope_condition_for(@login_user, params[:filter_book])
     end
 
-    unless params[:keyword].nil? or params[:keyword].empty?
+    unless params[:keyword].blank?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = '%' + key + '%'
-        con << "(name like '#{key}' or email1 like '#{key}' or email2 like '#{key}' or email3 like '#{key}' or name_ruby like '#{key}' or nickname like '#{key}' or screenname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' or memo like '#{key}' )"
+        con << SqlHelper.get_sql_like([:name, :email1, :email2, :email3, :name_ruby, :nickname, :screenname, :address, :organization, :tel1, :tel2, :tel3, :fax, :url, :postalcode, :title, :memo], key)
       end
     end
 
@@ -204,11 +203,12 @@ class AddressbookController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if (@sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?)
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'xorder'
       @sort_type = 'ASC'
     end
 
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     if @sort_col != 'xorder'

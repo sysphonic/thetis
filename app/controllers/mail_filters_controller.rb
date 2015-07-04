@@ -31,10 +31,11 @@ class MailFiltersController < ApplicationController
 
     mail_account_id = params[:mail_account_id]
     account_xtype = params[:mail_account_xtype]
+    SqlHelper.validate_token([mail_account_id, account_xtype])
 
     accounts_con = []
     accounts_con << "(user_id=#{@login_user.id})"
-    unless account_xtype.nil? or account_xtype.empty?
+    unless account_xtype.blank?
       accounts_con << "(xtype='#{account_xtype}')"
     end
     @mail_accounts = MailAccount.find_all(accounts_con.join(' and '))

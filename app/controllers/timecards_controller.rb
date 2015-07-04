@@ -414,25 +414,24 @@ class TimecardsController < ApplicationController
     end
 
     con = ['User.id > 0']
-    if params[:keyword]
+    unless params[:keyword].blank?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = '%' + key + '%'
-        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
+        con << SqlHelper.get_sql_like([:name, :email, :fullname, :address, :organization, :tel1, :tel2, :tel3, :fax, :url, :postalcode, :title], key)
       end
     end
 
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     unless @group_id.nil?
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
-        con << "(groups like '%|#{@group_id}|%')"
+        con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
     end
 
@@ -445,7 +444,7 @@ class TimecardsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = "xorder"
       @sort_type = "ASC"
     end
@@ -454,6 +453,7 @@ class TimecardsController < ApplicationController
       @sort_col == 'fullname'
     end
 
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     if @sort_col != 'xorder'
@@ -538,7 +538,7 @@ class TimecardsController < ApplicationController
     num = params[:num].to_f
 
     group_id = params[:group_id]
-    users_hash = params[:check_user] || {}
+    users_hash = (params[:check_user] || {})
     done = false
     users_hash.each do |user_id, value|
       if value == '1'
@@ -548,8 +548,8 @@ class TimecardsController < ApplicationController
     end
 
     unless done
-      if group_id.nil? or group_id.empty?
-        users = User.find_all || []
+      if group_id.blank?
+        users = (User.find_all || [])
       else
         users = Group.get_users(group_id)
       end

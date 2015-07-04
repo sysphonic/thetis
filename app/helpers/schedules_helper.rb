@@ -55,12 +55,12 @@ module SchedulesHelper
   #return:: Array of SQL condition clauses about membership.
   #
   def self.get_members_condition_for(user)
-    members_con = ["(users like '%|#{user.id}|%')"]
+    members_con = [SqlHelper.get_sql_like([:users], "|#{user.id}|")]
     user.get_groups_a(true).each do |group_id|
-      members_con << "(groups like '%|#{group_id}|%')"
+      members_con << SqlHelper.get_sql_like([:groups], "|#{group_id}|")
     end
     user.get_teams_a.each do |team_id|
-      members_con << "(teams like '%|#{team_id}|%')"
+      members_con << SqlHelper.get_sql_like([:teams], "|#{team_id}|")
     end
     return members_con
   end
@@ -143,7 +143,7 @@ module SchedulesHelper
       con = []
       con << "(scope='#{Schedule::SCOPE_ALL}')"
       diff_con = []
-      diff_con << "(users like '%|#{user_id}|%')"
+      diff_con << SqlHelper.get_sql_like([:users], "|#{user_id}|")
 
       target_user = User.find(user_id)
 
@@ -153,11 +153,11 @@ module SchedulesHelper
 
       common_groups = target_user_groups & login_user_groups
       common_groups.each do |group_id|
-        con << "(groups like '%|#{group_id}|%')"
+        con << SqlHelper.get_sql_like([:groups], "|#{group_id}|")
       end
       diff_groups = target_user_groups - login_user_groups
       diff_groups.each do |group_id|
-        diff_con << "(groups like '%|#{group_id}|%')"
+        diff_con << SqlHelper.get_sql_like([:groups], "|#{group_id}|")
       end
 
       target_user_teams = target_user.get_teams_a
@@ -165,15 +165,15 @@ module SchedulesHelper
 
       common_teams = target_user_teams & login_user_teams
       common_teams.each do |team_id|
-        con << "(teams like '%|#{team_id}|%')"
+        con << SqlHelper.get_sql_like([:teams], "|#{team_id}|")
       end
       diff_teams = target_user_teams - login_user_teams
       diff_teams.each do |team_id|
-        diff_con << "(teams like '%|#{team_id}|%')"
+        diff_con << SqlHelper.get_sql_like([:teams], "|#{team_id}|")
       end
 
       unless diff_con.empty?
-        con << "((#{diff_con.join(' or ')}) and (((users like '%|#{login_user.id}|%')) or (scope != '#{Schedule::SCOPE_PRIVATE}')))"
+        con << "((#{diff_con.join(' or ')}) and ((#{SqlHelper.get_sql_like([:users], "|#{login_user.id}|")}) or (scope != '#{Schedule::SCOPE_PRIVATE}')))"
       end
 
       con = ['(' + con.join(' or ') + ')']

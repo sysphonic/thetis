@@ -71,21 +71,6 @@
                         </a>
                       </div>
                     </div>
-<%
-=begin
-%>
-#                  <%
-#                  exist_xtypes = []
-#                  MailAccount.find_all("user_id=#{@login_user.id}").each do |mail_account|
-#                    exist_xtypes << mail_account.xtype
-#                  end
-#
-#                  unless ([MailAccount::XTYPE_INTERNET, MailAccount::XTYPE_INTRANET] - exist_xtypes).empty?
-#                  %>
-#                  <% end %>
-<%
-=end
-%>
                 </td>
               </tr>
               <tr style="height:22px">

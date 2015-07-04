@@ -388,7 +388,7 @@ class Workflow < ActiveRecord::Base
   #
   def self.get_received_list(user_id, order_by=nil)
 
-    con = "(status='#{STATUS_ACTIVE}') and (users like '%|#{user_id}|%')"
+    con = "(status='#{STATUS_ACTIVE}') and " + SqlHelper.get_sql_like([:users], "|#{user_id}|")
     return Workflow.where(con).order(order_by).to_a
   end
 

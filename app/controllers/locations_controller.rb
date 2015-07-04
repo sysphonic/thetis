@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -35,18 +35,18 @@ class LocationsController < ApplicationController
 
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
 
-    if params[:keyword]
+    unless params[:keyword].blank?
       con_prim = []
       con_second = []
       key_array = params[:keyword].split(nil)
-      key_array.each do |key| 
-        con_prim << "(name='#{key}' or fullname='#{key}' or email='#{key}')"
-        key = '%' + key + '%'
-        con_second << "(name like '#{key}' or fullname like '#{key}' or email like '#{key}')"
+      key_array.each do |key|
+        key_quot = ActiveRecord::Base.connection.quote(key)
+        con_prim << "(name=#{key_quot} or fullname=#{key_quot} or email=#{key_quot})"
+        con_second << SqlHelper.get_sql_like([:name, :fullname, :email], key)
       end
       [con_prim, con_second].each do |con|
         next if con.empty?

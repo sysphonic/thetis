@@ -380,13 +380,15 @@ class MailFolder < ActiveRecord::Base
   #
   def self.get_mails(mail_folder_id, user, add_con=nil, order_by=nil)
 
-    order_by = 'sent_at desc' if order_by.nil? or order_by.empty?
+    order_by = 'sent_at desc' if order_by.blank?
 
     if user.instance_of?(User)
       user_id = user.id
     else
       user_id = user.to_s
     end
+
+    SqlHelper.validate_token([mail_folder_id, user_id])
 
     sql = 'select emails.* from emails'
     sql << " where mail_folder_id=#{mail_folder_id} and user_id=#{user_id}"

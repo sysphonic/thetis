@@ -159,7 +159,7 @@ class UsersController < ApplicationController
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
 
@@ -170,15 +170,14 @@ class UsersController < ApplicationController
       if @group_id == '0'
         con << "((User.groups like '%|0|%') or (User.groups is null))"
       else
-        con << "(User.groups like '%|#{@group_id}|%')"
+        con << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
       end
     end
 
     if params[:keyword]
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = '%' + key + '%'
-        con << "(User.name like '#{key}' or User.email like '#{key}' or User.fullname like '#{key}' or User.address like '#{key}' or User.organization like '#{key}' or User.tel1 like '#{key}' or User.tel2 like '#{key}' or User.tel3 like '#{key}' or User.fax like '#{key}' or User.url like '#{key}' or User.postalcode like '#{key}' or User.title like '#{key}' )"
+        con << SqlHelper.get_sql_like(['User.name', 'User.email', 'User.fullname', 'User.address', 'User.organization', 'User.tel1', 'User.tel2', 'User.tel3', 'User.fax', 'User.url', 'User.postalcode', 'User.title'], key)
       end
     end
 
@@ -191,11 +190,12 @@ class UsersController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
 
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = @sort_col + ' ' + @sort_type
 
     if @sort_col == 'OfficialTitle.xorder'

@@ -54,21 +54,20 @@ class LogsController < ApplicationController
      when 'emails'
         con << "((Log.access_path like '%/mail_folders/%') or (Log.access_path like '%/mail_accounts/%') or (Log.access_path like '%/send_mails/%'))"
      else
-        con << "(Log.access_path like '%/#{params[:filter]}/%')"
+        con << SqlHelper.get_sql_like(['Log.access_path'], "/#{params[:filter]}/")
     end
 
     include_user = false
 
     keyword = params[:keyword]
-    unless keyword.nil? or keyword.empty?
-      ary = []
+    unless keyword.blank?
+      arr = []
 
       key_array = keyword.split(nil)
       key_array.each do |key|
-        key = '%' + key + '%'
-        ary << "((User.id = Log.user_id) and (User.name like '#{key}' or User.fullname like '#{key}'))"
-        ary << "(Log.updated_at like '#{key}' or remote_ip like '#{key}' or log_type like '#{key}' or access_path like '#{key}' or detail like '#{key}' )"
-        con << '(' + ary.join(' or ') + ')'
+        arr << "((User.id = Log.user_id) and #{SqlHelper.get_sql_like(['User.name', 'User.fullname'], key)})"
+        arr << SqlHelper.get_sql_like(['Log.updated_at', 'Log.updated_at', :remote_ip, :log_type, :access_path, :detail], key)
+        con << '(' + arr.join(' or ') + ')'
         include_user = true
       end
     end
@@ -82,10 +81,11 @@ class LogsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = "updated_at"
       @sort_type = "DESC"
     end
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + " " + @sort_type
 
     sql = 'select distinct Log.* from logs Log'

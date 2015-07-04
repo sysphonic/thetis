@@ -56,7 +56,7 @@ class Group < ActiveRecord::Base
     end
 
     # General Folders
-    con = "(read_groups like '%|#{self.id}|%') or (write_groups like '%|#{self.id}|%')"
+    con = SqlHelper.get_sql_like([:read_groups, :write_groups], "|#{self.id}|")
     folders = Folder.where(con).to_a
 
     unless folders.nil?
@@ -248,7 +248,7 @@ class Group < ActiveRecord::Base
     if group_id == '0'
       con = "((groups like '%|0|%') or (groups is null))"
     else
-      con = "groups like '%|"+group_id+"|%'"
+      con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
     end
 
     users |= User.find_all(con)
@@ -271,7 +271,7 @@ class Group < ActiveRecord::Base
     if group_id == '0'
       con = "((groups like '%|0|%') or (groups is null))"
     else
-      con = "groups like '%|"+group_id+"|%'"
+      con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
     end
 
     return Equipment.where(con).to_a
@@ -323,11 +323,11 @@ class Group < ActiveRecord::Base
   #
   def count_users(recursive)
 
-    count = User.count_by_sql("SELECT COUNT(*) FROM users WHERE groups like %|"+self.id.to_s+"|%")
+    count = User.count_by_sql('SELECT COUNT(*) FROM users WHERE '+SqlHelper.get_sql_like([:groups], "|#{self.id}|"))
 
     childs = get_childs(recursive, false)
     childs.each do |child_id|
-      count = count + Item.count_by_sql("SELECT COUNT(*) FROM users WHERE groups like %|"+child_id+"|%")
+      count = count + Item.count_by_sql('SELECT COUNT(*) FROM users WHERE'+SqlHelper.get_sql_like([:groups], "|#{child_id}|"))
     end
 
     return count

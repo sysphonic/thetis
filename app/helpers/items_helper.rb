@@ -150,6 +150,8 @@ module ItemsHelper
   #
   def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, admin=false, add_con=nil)
 
+    SqlHelper.validate_token([folder_ids, sort_col, sort_type, limit_num])
+
     where = ' where'
 
     if admin
@@ -162,11 +164,10 @@ module ItemsHelper
       end
     end
 
-    unless keyword.nil? or keyword.empty?
+    unless keyword.blank?
       key_array = keyword.split(nil)
       key_array.each do |key| 
-        key = "\'%" + key + "%\'"
-        where << ' and (title like '+key+' or summary like '+key+' or description like '+key+')'
+        where << ' and ' + SqlHelper.get_sql_like([:title, :summary, :description], key)
       end
     end
 
@@ -175,14 +176,14 @@ module ItemsHelper
       restricted = false
       where_read_users = ''
       unless user.nil?
-        where_read_users = '(Folder.read_users like \'%|'+user.id.to_s+'|%\')'
+        where_read_users = SqlHelper.get_sql_like(['Folder.read_users'], "|#{user.id}|")
       end
 
       array = []
       unless user.nil?
         groups = user.get_groups_a
         groups.each do |group_id|
-          array << '(Folder.read_groups like \'%|'+group_id+'|%\')'
+          array << SqlHelper.get_sql_like(['Folder.read_groups'], "|#{group_id}|")
         end
       end
       where_read_groups = array.join(' or ')
@@ -191,7 +192,7 @@ module ItemsHelper
       unless user.nil?
         teams = user.get_teams_a
         teams.each do |team_id|
-          array << '(Folder.read_teams like \'%|'+team_id+'|%\')'
+          array << SqlHelper.get_sql_like(['Folder.read_teams'], "|#{team_id}|")
         end
       end
       where_read_teams = array.join(' or ')
@@ -216,12 +217,8 @@ module ItemsHelper
     unless folder_ids.nil?
       folder_cons = []
 
-      if !folder_ids.instance_of?(Array)
-        folder_ids = [folder_ids]
-      end
-
-      folder_ids.each do |folder_id|
-        folder_cons << '(Item.folder_id = '+folder_id.to_s+')'
+      [folder_ids].flatten.each do |folder_id|
+        folder_cons << "(Item.folder_id=#{folder_id})"
       end
 
       where << ' and (' + folder_cons.join(' or ') + ')'

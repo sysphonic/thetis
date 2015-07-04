@@ -539,29 +539,29 @@ class ResearchesController < ApplicationController
 
     con = []
 
-    if params[:keyword]
+    unless params[:keyword].blank?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = "\'%" + key + "%\'"
-        con << "(name like #{key} or email like #{key} or fullname like #{key} or address like #{key} or organization like #{key})"
+        con << SqlHelper.get_sql_like([:name, :email, :fullname, :address, :organization], key)
       end
     end
 
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     unless @group_id.nil?
-      con << "(groups like '%|#{@group_id}|%')"
+      con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
     end
 
     include_research = false
 
     filter_status = params[:filter_status]
 
-    unless filter_status.nil? or filter_status.empty?
+    unless filter_status.blank?
+      SqlHelper.validate_token([filter_status])
       case filter_status
         when Research::U_STATUS_IN_ACTON.to_s, Research::U_STATUS_COMMITTED.to_s
           con << "((Research.user_id=User.id) and (Research.status=#{filter_status}))"
@@ -591,10 +591,11 @@ class ResearchesController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     sql = 'select distinct User.* from users User'
@@ -693,11 +694,7 @@ class ResearchesController < ApplicationController
       group_cons = []
 
       if @group_id != '0'
-        group_cons << "(User.groups like '%|#{@group_id}|%')"
-
-        # Group.get_childs(@group_id, true, false).each do |g_id|
-        #   group_cons << "(User.groups like '%|#{g_id}|%')"
-        # end
+        group_cons << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
 
         where << ' and (Research.user_id = User.id)'
         where << ' and (' + group_cons.join(' or ') + ')'

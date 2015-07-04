@@ -64,10 +64,12 @@ class MailFilter < ActiveRecord::Base
 
     return [] if mail_account_id.nil?
 
+    SqlHelper.validate_token([mail_account_id, trigger])
+
     con = []
     con << "(mail_account_id=#{mail_account_id})"
     con << "(enabled=#{(enabled)?(1):(0)})" unless enabled.nil?
-    con << "(triggers like '%|#{trigger.to_s}|%')" unless trigger.nil?
+    con << SqlHelper.get_sql_like([:triggers], "|#{trigger}|") unless trigger.nil?
 
     return MailFilter.where(con.join(' and ')).order('(xorder is null) ASC, xorder ASC, id ASC').to_a
   end

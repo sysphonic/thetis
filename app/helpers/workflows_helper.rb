@@ -123,6 +123,8 @@ module WorkflowsHelper
   #
   def self.get_list_sql(user_id, folder_id)
 
+    SqlHelper.validate_token([user_id, folder_id])
+
     sql = 'select distinct Workflow.* from workflows Workflow, items Item'
 
     where = " where (Workflow.user_id = #{user_id})"
@@ -147,23 +149,20 @@ module WorkflowsHelper
   #
   def self.get_tmpl_list_sql(folder_id, group_ids=nil)
 
+    SqlHelper.validate_token([folder_id, group_ids])
+
     sql = 'select distinct Workflow.* from workflows Workflow, items Item'
 
     where = " where (Item.folder_id = #{folder_id})"
     where << ' and (Workflow.item_id = Item.id)'
 
-    unless group_ids.nil? or group_ids.empty?
-
-      unless group_ids.instance_of?(Array)
-        group_ids = [group_ids]
-      end
-
+    unless group_ids.blank?
       scope_con = []
-      group_ids.each do |group_id|
+      [group_ids].flatten.each do |group_id|
         if group_id.to_s == '0'
           scope_con << "(Workflow.groups is null)"
         else
-          scope_con << "(Workflow.groups like '%|#{group_id}|%')"
+          scope_con << SqlHelper.get_sql_like(['Workflow.groups'], "|#{group_id}|")
         end
       end
       unless scope_con.empty?

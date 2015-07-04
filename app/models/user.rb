@@ -298,7 +298,7 @@ class User < ActiveRecord::Base
   def destroy()
 
     # General Folders
-    con = "(read_users like '%|#{self.id}|%') or (write_users like '%|#{self.id}|%')"
+    con = SqlHelper.get_sql_like([:read_users, :write_users], "|#{self.id}|")
     folders = Folder.where(con).to_a
 
     unless folders.nil?
@@ -550,13 +550,13 @@ class User < ActiveRecord::Base
 
     return ['0'] if self.groups.nil? or self.groups.empty?
 
-    array = self.groups.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.groups.split('|')
+    arr.compact!
+    arr.delete('')
 
     if incl_parents
       parent_ids = []
-      array.each do |group_id|
+      arr.each do |group_id|
 
         group = Group.find_with_cache(group_id, group_obj_cache)
 
@@ -564,10 +564,10 @@ class User < ActiveRecord::Base
           parent_ids |= group.get_parents(false, group_obj_cache)
         end
       end
-      array |= parent_ids
+      arr |= parent_ids
     end
 
-    return array.uniq
+    return arr.uniq
   end
 
   #=== get_group_branches
@@ -608,17 +608,17 @@ class User < ActiveRecord::Base
   #
   def get_teams_a
 
-    teams = Team.where("users like '%|#{self.id}|%'").to_a
+    teams = Team.where(SqlHelper.get_sql_like([:users], "|#{self.id}|")).to_a
 
-    array = []
+    arr = []
 
-    return array if teams.nil?
+    return arr if teams.nil?
 
     teams.each do |team|
-      array << team.id.to_s
+      arr << team.id.to_s
     end
 
-    return array
+    return arr
   end
 
   #=== self.get_admins
@@ -640,7 +640,7 @@ class User < ActiveRecord::Base
 
     else
 
-      admins = User.find_all("auth='#{User::AUTH_ALL}' or auth like '%|#{auth}|%'")
+      admins = User.find_all("(auth='#{User::AUTH_ALL}') or " + SqlHelper.get_sql_like([:auth], "|#{auth}|"))
     end
 
     admins = [] if admins.nil?
@@ -688,11 +688,11 @@ class User < ActiveRecord::Base
 
     return [] if self.auth.nil? or self.auth.empty?
 
-    array = self.auth.split('|')
-    array.compact!
-    array.delete('')
+    arr = self.auth.split('|')
+    arr.compact!
+    arr.delete('')
 
-    return array
+    return arr
   end
 
   #=== get_profile_sheet

@@ -69,11 +69,13 @@ class MailAccount < ActiveRecord::Base
   #
   def self.get_using_size(mail_account_id, add_con=nil)
 
+    SqlHelper.validate_token([mail_account_id])
+
     con = []
     con << "(mail_account_id=#{mail_account_id})"
     con << "(#{add_con})" unless add_con.nil? or add_con.empty?
 
-    return Email.count_by_sql("select SUM(size) from emails where #{con.join(' and ')}") || 0
+    return (Email.count_by_sql("select SUM(size) from emails where #{con.join(' and ')}") || 0)
   end
 
   #=== self.get_title
@@ -251,10 +253,12 @@ class MailAccount < ActiveRecord::Base
   #
   def self.get_default_for(user_id, xtype=nil)
 
+    SqlHelper.validate_token([user_id, xtype])
+
     con = []
     con << "(user_id=#{user_id})"
     con << '(is_default=1)'
-    con << "(xtype='#{xtype}')" unless xtype.nil? or xtype.empty?
+    con << "(xtype='#{xtype}')" unless xtype.blank?
 
     where = ''
     unless con.nil? or con.empty?

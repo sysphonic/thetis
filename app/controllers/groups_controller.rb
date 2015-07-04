@@ -263,15 +263,14 @@ class GroupsController < ApplicationController
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"
       else
-        con << "(groups like '%|#{@group_id}|%')"
+        con << ApplicationHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
     end
 
-    if params[:keyword]
+    unless params[:keyword].blank?
       key_array = params[:keyword].split(nil)
       key_array.each do |key| 
-        key = '%' + key + '%'
-        con << "(name like '#{key}' or email like '#{key}' or fullname like '#{key}' or address like '#{key}' or organization like '#{key}' or tel1 like '#{key}' or tel2 like '#{key}' or tel3 like '#{key}' or fax like '#{key}' or url like '#{key}' or postalcode like '#{key}' or title like '#{key}' )"
+        con << SqlHelper.get_sql_like([:name, :email, :fullname, :address, :organization, :tel1, :tel2, :tel3, :fax, :url, :postalcode, :title], key)
       end
     end
 
@@ -284,11 +283,12 @@ class GroupsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
 
+    SqlHelper.validate_token([@sort_col, @sort_type])
     order_by = @sort_col + ' ' + @sort_type
 
     if @sort_col == 'OfficialTitle.xorder'

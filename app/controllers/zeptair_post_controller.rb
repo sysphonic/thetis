@@ -81,12 +81,15 @@ class ZeptairPostController < ApplicationController
 
     target_user = nil
 
+    SqlHelper.validate_token([params[:user_id], params[:zeptair_id], params[:group_id]])
+
     unless params[:user_id].blank?
       target_user = User.find(params[:user_id])
     end
 
     unless params[:zeptair_id].blank?
-      target_user = User.where("zeptair_id=#{params[:zeptair_id]}").first
+      zeptair_id = params[:zeptair_id]
+      target_user = User.where("zeptair_id=#{zeptair_id}").first
     end
 
     if target_user.nil?
@@ -104,7 +107,7 @@ class ZeptairPostController < ApplicationController
 
         groups_con = []
         group_ids.each do |group_id|
-          groups_con << "(User.groups like '%|#{group_id}|%')"
+          groups_con << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
         end
         sql = 'select distinct Item.* from items Item, attachments Attachment, users User'
         sql << " where Item.xtype='#{Item::XTYPE_ZEPTAIR_POST}' and Item.id=Attachment.item_id"

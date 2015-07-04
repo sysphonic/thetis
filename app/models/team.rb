@@ -153,7 +153,7 @@ class Team < ActiveRecord::Base
   #
   def self.get_for(user_id, exclude_deact)
     con = []
-    con << "(users like '%|#{user_id}|%')" unless user_id.nil? or user_id.to_s.empty?
+    con << SqlHelper.get_sql_like([:users], "|#{user_id}|") unless user_id.nil? or user_id.to_s.empty?
     con << "(status != '#{Team::STATUS_DEACTIVATED}')" if exclude_deact
     return Team.where(con.join(' and ')).to_a
   end
@@ -194,7 +194,7 @@ class Team < ActiveRecord::Base
     end
 
     # General Folders
-    con = "(read_teams like '%|#{self.id}|%') or (write_teams like '%|#{self.id}|%')"
+    con = SqlHelper.get_sql_like([:read_teams, :write_teams], "|#{self.id}|")
     folders = Folder.where(con).to_a
 
     unless folders.nil?

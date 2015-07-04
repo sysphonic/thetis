@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -23,6 +23,7 @@ module ApplicationHelper
   #
   #Splits string preserving quotations.
   #
+  #_str_:: Target String.
   #_quot_:: Quotation character.
   #_delim_:: Delimiter.
   #return:: Array of the parts.

@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -195,39 +195,36 @@ module EmailsHelper
   #
   def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil)
 
+    SqlHelper.validate_token([folder_ids, sort_col, sort_type, limit_num])
+
     where = ' where'
     where << " (Email.user_id=#{user.id})"
 
     where << " and ((status is null) or not(status='#{Email::STATUS_TEMPORARY}'))"
 
-    unless keyword.nil? or keyword.empty?
+    unless keyword.blank?
       key_array = keyword.split(nil)
       key_array.each do |key| 
-        key = "\'%" + key + "%\'"
-        where << ' and (subject like '+key+' or from_address like '+key+' or to_addresses like '+key+' or cc_addresses like '+key+' or bcc_addresses like '+key+' or reply_to like '+key+' or message like '+key+')'
+        where << ' and ' + SqlHelper.get_sql_like([:subject, :from_address, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message], key)
       end
     end
 
     unless folder_ids.nil?
       folder_cons = []
 
-      if !folder_ids.instance_of?(Array)
-        folder_ids = [folder_ids]
-      end
-
-      folder_ids.each do |folder_id|
-        folder_cons << '(Email.mail_folder_id = '+folder_id.to_s+')'
+      [folder_ids].flatten.each do |folder_id|
+        folder_cons << "(Email.mail_folder_id=#{folder_id})"
       end
 
       where << ' and (' + folder_cons.join(' or ') + ')'
     end
 
-    unless add_con.nil? or add_con.empty?
+    unless add_con.blank?
       where << ' and (' + add_con + ')'
     end
 
-    sort_col = 'sent_at' if sort_col.nil? or sort_col.empty?
-    sort_type = 'DESC' if sort_type.nil? or sort_type.empty?
+    sort_col = 'sent_at' if sort_col.blank?
+    sort_type = 'DESC' if sort_type.blank?
 
     case sort_col
       when 'has_attach'

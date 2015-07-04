@@ -52,6 +52,8 @@ class OfficialTitle < ActiveRecord::Base
   #
   def self.get_for(group_id, include_parents=false, enabled=nil)
 
+    SqlHelper.validate_token([group_id])
+
     con = []
     #con << "(disabled=#{!enabled})" unless enabled.nil?
 

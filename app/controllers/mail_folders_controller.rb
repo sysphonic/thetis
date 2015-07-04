@@ -33,7 +33,8 @@ class MailFoldersController < ApplicationController
 
     account_xtype = params[:mail_account_xtype]
 
-    unless account_xtype.nil? or account_xtype.empty?
+    unless account_xtype.blank?
+      SqlHelper.validate_token([account_xtype])
       con << "(xtype='#{account_xtype}')"
     end
     @mail_accounts = MailAccount.find_all(con.join(' and '))
@@ -201,7 +202,7 @@ class MailFoldersController < ApplicationController
         new_arrivals_h = {}
 
         mail_account_id = params[:mail_account_id]
-        if mail_account_id.nil? or mail_account_id.empty?
+        if mail_account_id.blank?
           mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
           mail_accounts.each do |mail_account|
             emails = Email.do_pop(mail_account)
@@ -395,6 +396,7 @@ class MailFoldersController < ApplicationController
 
     @folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
+    SqlHelper.validate_token([mail_account_id])
 
     trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 

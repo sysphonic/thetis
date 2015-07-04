@@ -776,7 +776,7 @@ class Schedule < ActiveRecord::Base
   #
   def self.get_equipment_day(equipment_id, date)
 
-    con = ["(equipment like '%|#{equipment_id}|%')"]
+    con = [SqlHelper.get_sql_like([:equipment], "|#{equipment_id}|")]
     _get_by_day(con, date)
   end
 
@@ -791,7 +791,7 @@ class Schedule < ActiveRecord::Base
   #
   def self.get_equipment_week(equipment_id, date, holidays=nil)
 
-    con = ["(equipment like '%|#{equipment_id}|%')"]
+    con = [SqlHelper.get_sql_like([:equipment], "|#{equipment_id}|")]
     _get_by_week(con, date, holidays)
   end
 
@@ -995,13 +995,13 @@ private
     case type
      when :user
       user_exists_cache[member_id.to_s] = false
-      con = "(users like '%|#{member_id}|%')"
+      con = SqlHelper.get_sql_like([:users], "|#{member_id}|")
      when :group
       group_exists_cache[member_id.to_s] = false
-      con = "(groups like '%|#{member_id}|%')"
+      con = SqlHelper.get_sql_like([:groups], "|#{member_id}|")
      when :team
       team_exists_cache[member_id.to_s] = false
-      con = "(teams like '%|#{member_id}|%')"
+      con = SqlHelper.get_sql_like([:teams], "|#{member_id}|")
      else
       return
     end

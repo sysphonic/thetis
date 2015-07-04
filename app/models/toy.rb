@@ -214,7 +214,7 @@ class Toy < ActiveRecord::Base
   #_users_cache_:: Hash to accelerate response. {user_id, user_name}
   #return:: Array of FeedEntry.
   #
-  def self.get_feeds(user, root_url, users_cache = nil)
+  def self.get_feeds(user, root_url, users_cache=nil)
 
     entries = []
 

@@ -47,24 +47,6 @@ class Address < ActiveRecord::Base
     return Address.where(con.join(' and ')).to_a
   end
 
-  #=== self.find_all
-  #
-  #Finds all Addresses in order to display with specified condition.
-  #
-  #_con_:: Condition (String without 'where '). If not required, specify nil.
-  #return:: Array of Addresses.
-  #
-  def self.find_all(con = nil)
-
-    where = ''
-
-    unless con.nil? or con.empty?
-      where = 'where ' + con
-    end
-
-    Address.find_by_sql('select * from addresses ' + where + ' order by xorder ASC, name ASC')
-  end
-
   #=== self.csv_header_cols
   #
   #Gets an Array of CSV header columns.

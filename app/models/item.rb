@@ -575,6 +575,8 @@ class Item < ActiveRecord::Base
   #
   def self.get_order_max(folder_id)
 
+    SqlHelper.validate_token([folder_id])
+
     begin
       max_order = Item.count_by_sql("SELECT MAX(xorder) FROM items where folder_id=#{folder_id}")
     rescue => evar

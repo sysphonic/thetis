@@ -466,6 +466,8 @@ class Timecard < ActiveRecord::Base
   #
   def self.applied_paid_hlds(user_id, start_date, end_date)
 
+    SqlHelper.validate_token([user_id, start_date, end_date])
+
     sql = "SELECT COUNT(*) FROM timecards WHERE user_id = #{user_id} AND date >= '#{start_date}' AND date <= '#{end_date}'"
 
     sum = 0.0

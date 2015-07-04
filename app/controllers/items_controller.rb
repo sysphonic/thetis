@@ -79,7 +79,7 @@ class ItemsController < ApplicationController
       if !@folder_id.nil? and @folder_id.index('+') == 0
         @folder_id[0, 1] = ''
       end
-    elsif params[:folder_id].nil? or params[:folder_id].empty?
+    elsif params[:folder_id].blank?
     else
       @folder_id = params[:folder_id]
     end
@@ -96,7 +96,7 @@ class ItemsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.nil? or @sort_col.empty? or @sort_type.nil? or @sort_type.empty?
+    if @sort_col.blank? or @sort_type.blank?
       @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
     end
 
@@ -606,7 +606,8 @@ class ItemsController < ApplicationController
   def recent_descriptions
     Log.add_info(request, params.inspect)
 
-    sql = "select distinct * from logs where user_id=#{@login_user.id} and (access_path like '%/items/set_description%') and (detail like '%\"id\"=>\"#{params[:id]}\"%') order by updated_at DESC limit 0,10"
+    detail_sql = SqlHelper.get_sql_like([:detail], "\"id\"=>\"#{params[:id]}\"")
+    sql = "select distinct * from logs where user_id=#{@login_user.id} and (access_path like '%/items/set_description%') and #{detail_sql} order by updated_at DESC limit 0,10"
     @logs = Log.find_by_sql(sql)
 
     render(:partial => 'ajax_recent_descriptions', :layout => false)
