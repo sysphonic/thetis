@@ -434,8 +434,9 @@ class ResearchesController < ApplicationController
 
     # Specifying page
     @page = '01'
-    unless params[:page].nil? or params[:page].empty?
+    unless params[:page].blank?
       @page = params[:page]
+      SqlHelper.validate_token([@page])
     end
   end
 
@@ -466,12 +467,14 @@ class ResearchesController < ApplicationController
       end
     end
 
-    if params[:research_id].nil? or params[:research_id].empty?
+    research_id = params[:research_id]
+    SqlHelper.validate_token([research_id])
+    if research_id.blank?
       @research = Research.new(params.require(:research).permit(Research::PERMIT_BASE))
       @research.status = Research::U_STATUS_IN_ACTON
       @research.update_attribute(:user_id, @login_user.id)
     else
-      @research = Research.find(params[:research_id])
+      @research = Research.find(research_id)
       @research.update_attributes(params.require(:research).permit(Research::PERMIT_BASE))
     end
 
@@ -552,6 +555,8 @@ class ResearchesController < ApplicationController
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
+
     unless @group_id.nil?
       con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
     end
@@ -690,6 +695,7 @@ class ResearchesController < ApplicationController
 
     unless params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
+      SqlHelper.validate_token([@group_id])
 
       group_cons = []
 

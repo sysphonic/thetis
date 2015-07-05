@@ -363,9 +363,10 @@ class SendMailsController < ApplicationController
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
 
     submit_url = url_for(:controller => 'send_mails', :action => 'get_group_users')
     render(:partial => 'common/select_users', :layout => false, :locals => {:target_attr => :email, :submit_url => submit_url})
@@ -378,7 +379,7 @@ class SendMailsController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     email = Email.find(params[:id])
 

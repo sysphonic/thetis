@@ -139,6 +139,8 @@ class EquipmentController < ApplicationController
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
+
     unless @group_id.nil?
       if @group_id == '0'
         con << "((groups like '%|0|%') or (groups is null))"

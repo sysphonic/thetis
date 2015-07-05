@@ -162,6 +162,7 @@ class UsersController < ApplicationController
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
 
 # Copy to FEATURE_PAGING_IN_TREE >>>
     con = ['User.id > 0']
@@ -269,6 +270,7 @@ class UsersController < ApplicationController
     unless params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
     end
+    SqlHelper.validate_token([@group_id])
 
     if @group_id.nil?
       @official_titles = OfficialTitle.get_for('0', false, true)
@@ -350,6 +352,8 @@ class UsersController < ApplicationController
   #
   def update_auth
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     auth = nil
 

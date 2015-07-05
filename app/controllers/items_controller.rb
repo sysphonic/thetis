@@ -1217,11 +1217,12 @@ class ItemsController < ApplicationController
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
 
-    @users = Group.get_users @group_id
+    @users = Group.get_users(@group_id)
 
     render(:partial => 'ajax_select_users', :layout => false)
   end
@@ -1234,7 +1235,7 @@ class ItemsController < ApplicationController
   def wf_issue
     Log.add_info(request, params.inspect)
 
-    begin
+   begin
       @item = Item.find(params[:id])
       @workflow = @item.workflow
     rescue => evar
@@ -1258,7 +1259,7 @@ class ItemsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     team_id = params[:team_id]
-    unless team_id.nil? or team_id.empty?
+    unless team_id.blank?
       begin
         @team = Team.find(team_id)
       rescue
@@ -1280,7 +1281,7 @@ class ItemsController < ApplicationController
 
     if team_members.nil? or team_members.empty?
 
-      unless team_id.nil? or team_id.empty?
+      unless team_id.blank?
         # @team must not be nil.
         @team.save if modified = @team.clear_users
       end
@@ -1289,7 +1290,7 @@ class ItemsController < ApplicationController
 
       if team_members != users
 
-        if team_id.nil? or team_id.empty?
+        if team_id.blank?
 
           item = Item.find(params[:id])
 
@@ -1359,6 +1360,8 @@ class ItemsController < ApplicationController
   def change_team_status
     Log.add_info(request, params.inspect)
 
+    SqlHelper.validate_token([params[:status]])
+
     team_id = params[:team_id]
     begin
       team = Team.find(team_id)
@@ -1382,7 +1385,7 @@ class ItemsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Item.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     begin
       owner_id = Item.find(params[:id]).user_id

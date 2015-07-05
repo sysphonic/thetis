@@ -15,19 +15,16 @@ class ChangesForVer110 < ActiveRecord::Migration
       t.timestamps
     end
 
-    teams = Team.all
-    unless teams.nil?
-      teams.each do |team|
-        begin
-          item = Item.find(team.item_id)
-        rescue
-        end
-        next if item.nil?
-
-        attrs = ActionController::Parameters.new({created_at: item.created_at, updated_at: item.updated_at})
-        attrs.permit!
-        team.update_attributes(attrs)
+    Team.find_each do |team|
+      begin
+        item = Item.find(team.item_id)
+      rescue
       end
+      next if item.nil?
+
+      attrs = ActionController::Parameters.new({created_at: item.created_at, updated_at: item.updated_at})
+      attrs.permit!
+      team.update_attributes(attrs)
     end
   end
 

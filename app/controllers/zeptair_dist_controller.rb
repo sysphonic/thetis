@@ -48,6 +48,8 @@ class ZeptairDistController < ApplicationController
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
+
     unless @group_id.nil?
       con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
     end

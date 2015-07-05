@@ -38,6 +38,7 @@ class LocationsController < ApplicationController
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
 
     unless params[:keyword].blank?
       con_prim = []
@@ -142,6 +143,7 @@ class LocationsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     group_id = params[:group_id]
+    SqlHelper.validate_token([group_id])
 
     @office_map = OfficeMap.get_for_group(group_id, true)
 
@@ -163,6 +165,7 @@ class LocationsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     group_id = params[:group_id]
+    SqlHelper.validate_token([group_id])
 
     @office_map = OfficeMap.get_for_group(group_id, false)
 

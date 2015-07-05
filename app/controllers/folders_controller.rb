@@ -35,9 +35,10 @@ class FoldersController < ApplicationController
       @group_id = nil
       if !params[:thetisBoxSelKeeper].nil?
         @group_id = params[:thetisBoxSelKeeper].split(':').last
-      elsif !params[:group_id].nil? and !params[:group_id].empty?
+      elsif !params[:group_id].blank?
         @group_id = params[:group_id]
       end
+      SqlHelper.validate_token([@group_id])
 
       @folder_tree = Folder.get_tree_by_group_for_admin(@group_id || '0')
     else
@@ -506,6 +507,7 @@ class FoldersController < ApplicationController
   def get_group_users
     Log.add_info(request, params.inspect)
 
+    SqlHelper.validate_token([params[:id]])
     begin
       @folder = Folder.find(params[:id])
     rescue => evar
@@ -515,11 +517,12 @@ class FoldersController < ApplicationController
     @group_id = nil
     if !params[:thetisBoxSelKeeper].nil?
       @group_id = params[:thetisBoxSelKeeper].split(':').last
-    elsif !params[:group_id].nil? and !params[:group_id].empty?
+    elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
+    SqlHelper.validate_token([@group_id])
 
-    @users = Group.get_users @group_id
+    @users = Group.get_users(@group_id)
 
     render(:partial => 'ajax_select_users', :layout => false)
   end
