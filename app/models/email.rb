@@ -618,6 +618,9 @@ EOT
   #_max_:: Max number.
   #
   def self.trim(user_id, mail_account_id, max)
+
+    SqlHelper.validate_token([user_id, mail_account_id])
+
     begin
       count = Email.where("mail_account_id=#{mail_account_id}").count
       if count > max
@@ -756,6 +759,8 @@ EOT
   #_add_con_:: Additional condition to query by.
   #
   def self.destroy_by_user(user_id, add_con=nil)
+
+    SqlHelper.validate_token([user_id])
 
     con = "user_id=#{user_id}"
     con << " and (#{add_con})" unless add_con.nil? or add_con.empty?

@@ -641,6 +641,7 @@ class Folder < ActiveRecord::Base
   #
   def self.get_childs(folder_id, conditions, recursive, admin, ret_obj)
 
+    SqlHelper.validate_token([folder_id])
     arr = []
 
     if recursive

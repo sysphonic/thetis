@@ -166,6 +166,8 @@ module TemplatesHelper
   #
   def self.get_tmpl_subfolder(name)
 
+    SqlHelper.validate_token([name])
+
     tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
 
     unless tmpl_folder.nil?
@@ -179,5 +181,4 @@ module TemplatesHelper
 
     return [tmpl_folder, child]
   end
-
 end

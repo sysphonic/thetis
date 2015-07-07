@@ -89,7 +89,7 @@ tabs_send_mail_address.push("users");
                   end
                   disp << "<#{mail_addr}>"
 
-                  user = User.where("email='#{mail_addr}'").first
+                  user = User.where(email: mail_addr).first
                   if user.nil?
                     entry_val = disp
                   else

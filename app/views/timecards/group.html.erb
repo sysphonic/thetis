@@ -1,6 +1,7 @@
 <% HistoryHelper.set_back(request) %>
-
-<% date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil? %>
+<%
+date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
+%>
 
 <%= render(:partial => 'common/jkl_calendar_init') %>
 
@@ -76,7 +77,7 @@ else
   @selected_users.each_with_index do |user, idx|
     bgcolor = (idx % 2 == 1) ? 'gainsboro' : 'white'
 
-    timecard = Timecard.get_for(user.id, @date)
+    timecard = Timecard.get_for(user.id, date_s)
     timecard = Timecard.new if timecard.nil?
 %>
   <tr style="background-color:<%= bgcolor %>;">

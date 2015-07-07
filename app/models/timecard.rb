@@ -422,12 +422,14 @@ class Timecard < ActiveRecord::Base
   #Gets Timecard of the specified User and Date.
   #
   #_user_id_:: Target User-ID.
-  #_date_:: Target Date.
+  #_date_s_:: Target Date string.
   #return:: Timecard for the specified User and Date.
   #
-  def self.get_for(user_id, date)
+  def self.get_for(user_id, date_s)
+
+    SqlHelper.validate_token([user_id, date_s])
     begin
-      con = "(user_id=#{user_id}) and (date='#{date}')"
+      con = "(user_id=#{user_id}) and (date='#{date_s}')"
       return Timecard.where(con).first
     rescue
     end
@@ -444,7 +446,13 @@ class Timecard < ActiveRecord::Base
   #return:: Timecard for the specified User and span.
   #
   def self.find_term(user_id, start_date, end_date)
-    con = "(user_id=#{user_id}) and (date >= '#{start_date}') and (date <= '#{end_date}')"
+
+    SqlHelper.validate_token([user_id])
+
+    start_s = start_date.strftime(Schedule::SYS_DATE_FORM)
+    end_s = end_date.strftime(Schedule::SYS_DATE_FORM)
+
+    con = "(user_id=#{user_id}) and (date >= '#{start_s}') and (date <= '#{end_s}')"
     ary = Timecard.where(con).order('date ASC').to_a
     timecards_h = Hash.new
     unless ary.nil?
@@ -466,9 +474,12 @@ class Timecard < ActiveRecord::Base
   #
   def self.applied_paid_hlds(user_id, start_date, end_date)
 
-    SqlHelper.validate_token([user_id, start_date, end_date])
+    SqlHelper.validate_token([user_id])
 
-    sql = "SELECT COUNT(*) FROM timecards WHERE user_id = #{user_id} AND date >= '#{start_date}' AND date <= '#{end_date}'"
+    start_s = start_date.strftime(Schedule::SYS_DATE_FORM)
+    end_s = end_date.strftime(Schedule::SYS_DATE_FORM)
+
+    sql = "SELECT COUNT(*) FROM timecards WHERE user_id = #{user_id} AND date >= '#{start_s}' AND date <= '#{end_s}'"
 
     sum = 0.0
     self.workcodes.each do |key, params|

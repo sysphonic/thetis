@@ -29,6 +29,9 @@ class PaidHoliday < ActiveRecord::Base
   #return:: PaidHoliday(s) for the specified User.
   #
   def self.get_for(user_id, fiscal_year=nil)
+
+    SqlHelper.validate_token([user_id, fiscal_year])
+
     begin
       con = []
       con << "(user_id=#{user_id})"
@@ -54,8 +57,13 @@ class PaidHoliday < ActiveRecord::Base
   #
   def self.update_for(user_id, fiscal_year, num)
 
+    SqlHelper.validate_token([user_id, fiscal_year])
+
     if num <= 0
-      PaidHoliday.destroy_all(['user_id=? and year=?', user_id, fiscal_year])
+      con = []
+      con << "(user_id=#{user_id})"
+      con << "(year=#{fiscal_year})"
+      PaidHoliday.destroy_all(con.join(' and '))
       return
     end
 
@@ -81,6 +89,8 @@ class PaidHoliday < ActiveRecord::Base
   #return:: Number of carried-over PaidHolidays.
   #
   def self.get_carried_over(user_id, year)
+
+    SqlHelper.validate_token([user_id, year])
 
     yaml = ApplicationHelper.get_config_yaml
     unless yaml[:timecard].nil?
@@ -134,5 +144,4 @@ class PaidHoliday < ActiveRecord::Base
       return 0
     end
   end
-
 end

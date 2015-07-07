@@ -30,6 +30,8 @@ class Setting < ActiveRecord::Base
   #
   def self.get_for(user_id, category=nil)
 
+    SqlHelper.validate_token([user_id, category])
+
     con = []
     con << "(user_id=#{user_id})"
     con << "(category='#{category}')" unless category.nil?
@@ -58,6 +60,8 @@ class Setting < ActiveRecord::Base
   #
   def self.get_value(user_id, category, key)
 
+    SqlHelper.validate_token([user_id, category, key])
+
     con = []
     con << "(user_id=#{user_id})"
     con << "(category='#{category}')"
@@ -80,6 +84,8 @@ class Setting < ActiveRecord::Base
   #_value_:: Value to save.
   #
   def self.save_value(user_id, category, key, value)
+
+    SqlHelper.validate_token([user_id, category, key])
 
     con = []
     con << "(user_id=#{user_id})"
@@ -118,6 +124,8 @@ class Setting < ActiveRecord::Base
   #
   def self.get_for_group(group_id, category=nil)
 
+    SqlHelper.validate_token([group_id, category])
+
     con = []
     con << "(group_id=#{group_id})"
     con << "(category='#{category}')" unless category.nil?
@@ -146,6 +154,8 @@ class Setting < ActiveRecord::Base
   #
   def self.get_group_value(group_id, category, key)
 
+    SqlHelper.validate_token([group_id, category, key])
+
     con = []
     con << "(group_id=#{group_id})"
     con << "(category='#{category}')"
@@ -168,6 +178,8 @@ class Setting < ActiveRecord::Base
   #_value_:: Value to save.
   #
   def self.save_group_value(group_id, category, key, value)
+
+    SqlHelper.validate_token([group_id, category, key])
 
     con = []
     con << "(group_id=#{group_id})"

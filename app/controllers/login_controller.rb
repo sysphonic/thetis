@@ -97,7 +97,7 @@ class LoginController < ApplicationController
     Log.add_info(request, params.inspect)
 
     mail_addr = params[:thetisBoxEdit]
-    SqlHelper.validate_token([mail_addr], ['@-'])
+    SqlHelper.validate_token([mail_addr])
     begin
       users = User.where("email='#{mail_addr}'").to_a
     rescue => evar

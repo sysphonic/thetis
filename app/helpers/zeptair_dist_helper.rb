@@ -61,6 +61,7 @@ module ZeptairDistHelper
   #
   def self.get_comment_of(item_id, user_id)
 
+    SqlHelper.validate_token([item_id, user_id])
     begin
       comment = Comment.where("(user_id=#{user_id}) and (item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").first
     rescue => evar
@@ -143,6 +144,7 @@ module ZeptairDistHelper
   #return:: The number of ACK messages to the specified Distribution Item.
   #
   def self.count_ack_users(item_id)
+    SqlHelper.validate_token([item_id])
     return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").count
   end
 
@@ -154,6 +156,7 @@ module ZeptairDistHelper
   #return:: The number of completed users of the specified Distribution Item.
   #
   def self.count_completed_users(item_id)
+    SqlHelper.validate_token([item_id])
     ack_msg = ZeptairDistHelper.completed_ack_message(item_id)
     return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}') and (message='#{ack_msg}')").count
   end

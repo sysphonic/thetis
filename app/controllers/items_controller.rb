@@ -1272,9 +1272,10 @@ class ItemsController < ApplicationController
       end
 
       users = @team.get_users_a
-    end 
+    end
 
     team_members = params[:team_members]
+    SqlHelper.validate_token([team_members])
 
     created = false
     modified = false
@@ -1305,9 +1306,9 @@ class ItemsController < ApplicationController
           @team.clear_users
         end
 
-        @team.add_users team_members
+        @team.add_users(team_members)
         @team.save
-        @team.remove_application team_members
+        @team.remove_application(team_members)
 
         modified = true 
       end

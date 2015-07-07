@@ -120,7 +120,7 @@ class TimecardsController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
       date_s = @date.strftime(Schedule::SYS_DATE_FORM)
     else

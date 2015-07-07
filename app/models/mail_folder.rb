@@ -148,6 +148,8 @@ class MailFolder < ActiveRecord::Base
       user_id = user.to_s
     end
 
+    SqlHelper.validate_token([user_id, mail_account_id, xtype])
+
     con = []
     con << "(user_id=#{user_id})"
     con << "(mail_account_id=#{mail_account_id})"
@@ -172,6 +174,8 @@ class MailFolder < ActiveRecord::Base
     else
       user_id = user.to_s
     end
+
+    SqlHelper.validate_token([user_id])
 
     con = []
     con << "(user_id=#{user_id})"

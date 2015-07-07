@@ -36,6 +36,8 @@ class Address < ActiveRecord::Base
   #
   def self.get_by_email(mail_addr, user, book=Address::BOOK_BOTH)
 
+    SqlHelper.validate_token([mail_addr])
+
     email_con = []
     email_con.push("(email1='#{mail_addr}')")
     email_con.push("(email2='#{mail_addr}')")

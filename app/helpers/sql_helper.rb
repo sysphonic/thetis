@@ -25,8 +25,12 @@ module SqlHelper
   #
   def self.validate_token(tokens, extra_chars=nil)
 
-    extra_chars = Regexp.escape((extra_chars || []).join())
-    regexp = Regexp.new("^[ ]*[a-zA-Z0-9_.#{extra_chars}]+[ ]*$")
+    if extra_chars.nil?
+      extra_chars = ''
+    else
+      extra_chars = Regexp.escape(extra_chars.join())
+    end
+    regexp = Regexp.new("^[ ]*[a-zA-Z0-9_.@\\-#{extra_chars}]+[ ]*$")
 
     [tokens].flatten.each do |token|
       next if token.blank?

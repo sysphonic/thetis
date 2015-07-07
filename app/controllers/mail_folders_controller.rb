@@ -32,9 +32,9 @@ class MailFoldersController < ApplicationController
     con << "(user_id=#{@login_user.id})"
 
     account_xtype = params[:mail_account_xtype]
+    SqlHelper.validate_token([account_xtype])
 
     unless account_xtype.blank?
-      SqlHelper.validate_token([account_xtype])
       con << "(xtype='#{account_xtype}')"
     end
     @mail_accounts = MailAccount.find_all(con.join(' and '))

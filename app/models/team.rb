@@ -365,6 +365,7 @@ class Team < ActiveRecord::Base
   #
   def self.get_team_folder(team_id)
 
+    SqlHelper.validate_token([team_id])
     begin
       return Folder.where("(owner_id=#{team_id}) and (xtype='#{Folder::XTYPE_TEAM}')").first
     rescue => evar
@@ -397,23 +398,24 @@ class Team < ActiveRecord::Base
   #
   #Removes applications of the specified Users.
   #
-  #_users_:: Array of User-IDs.
+  #_user_ids_:: Array of User-IDs.
   #
-  def remove_application(users)
+  def remove_application(user_ids)
 
-    return if users.nil? or users.empty?
+    return if user_ids.nil? or user_ids.empty?
 
-    array = ["(xtype='#{Comment::XTYPE_APPLY}')"]
-    array << "(item_id=#{self.item_id})"
+    SqlHelper.validate_token([user_ids])
+
+    con = ["(xtype='#{Comment::XTYPE_APPLY}')"]
+    con << "(item_id=#{self.item_id})"
 
     user_con_a = []
-    users.each do |user_id|
+    user_ids.each do |user_id|
       user_con_a << "(user_id=#{user_id})"
     end
 
-    array << '(' + user_con_a.join(' or ') + ')'
+    con << '(' + user_con_a.join(' or ') + ')'
 
-    Comment.destroy_all(array.join(' and '))
+    Comment.destroy_all(con.join(' and '))
  end
-
 end

@@ -81,33 +81,35 @@ class ZeptairPostController < ApplicationController
 
     target_user = nil
 
-    SqlHelper.validate_token([params[:user_id], params[:zeptair_id], params[:group_id]])
+    user_id = params[:user_id]
+    zeptair_id = params[:zeptair_id]
+    group_id = params[:group_id]
+    SqlHelper.validate_token([user_id, zeptair_id, group_id])
 
-    unless params[:user_id].blank?
-      target_user = User.find(params[:user_id])
+    unless user_id.blank?
+      target_user = User.find(user_id)
     end
 
-    unless params[:zeptair_id].blank?
-      zeptair_id = params[:zeptair_id]
+    unless zeptair_id.blank?
       target_user = User.where("zeptair_id=#{zeptair_id}").first
     end
 
     if target_user.nil?
 
-      if params[:group_id].blank?
+      if group_id.blank?
         sql = 'select distinct Item.* from items Item, attachments Attachment'
         sql << " where Item.xtype='#{Item::XTYPE_ZEPTAIR_POST}' and Item.id=Attachment.item_id"
         sql << ' order by Item.user_id ASC'
       else
-        group_ids = [params[:group_id]]
+        group_ids = [group_id]
 
         if params[:recursive] == 'true'
-          group_ids += Group.get_childs(params[:group_id], true, false)
+          group_ids += Group.get_childs(group_id, true, false)
         end
 
         groups_con = []
-        group_ids.each do |group_id|
-          groups_con << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
+        group_ids.each do |grp_id|
+          groups_con << SqlHelper.get_sql_like(['User.groups'], "|#{grp_id}|")
         end
         sql = 'select distinct Item.* from items Item, attachments Attachment, users User'
         sql << " where Item.xtype='#{Item::XTYPE_ZEPTAIR_POST}' and Item.id=Attachment.item_id"
@@ -134,15 +136,20 @@ class ZeptairPostController < ApplicationController
 
     target_user = nil
 
-    unless params[:user_id].blank?
-      if @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id.to_s == params[:user_id].to_s
-        target_user = User.find(params[:user_id])
+    user_id = params[:user_id]
+    zeptair_id = params[:zeptair_id]
+    attachment_id = params[:attachment_id]
+    SqlHelper.validate_token([user_id, zeptair_id, attachment_id])
+
+    unless user_id.blank?
+      if @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id.to_s == user_id.to_s
+        target_user = User.find(user_id)
       end
     end
 
-    unless params[:zeptair_id].blank?
+    unless zeptair_id.blank?
 
-      target_user = User.where("zeptair_id=#{params[:zeptair_id]}").first
+      target_user = User.where("zeptair_id=#{zeptair_id}").first
 
       unless @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id == target_user.id
         target_user = nil
@@ -150,7 +157,7 @@ class ZeptairPostController < ApplicationController
     end
 
     if target_user.nil?
-      if params[:attachment_id].blank?
+      if attachment_id.blank?
 
         query
         unless @post_items.nil?
@@ -163,7 +170,7 @@ class ZeptairPostController < ApplicationController
         end
 
       else
-        attach = Attachment.find(params[:attachment_id])
+        attach = Attachment.find(attachment_id)
 
         item = Item.find(attach.item_id)
 

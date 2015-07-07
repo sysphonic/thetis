@@ -44,6 +44,7 @@ class Location < ActiveRecord::Base
   #
   def self.get_for_group(group_id)
 
+    SqlHelper.validate_token([group_id])
     if group_id.nil?
       con = 'group_id is null'
     else

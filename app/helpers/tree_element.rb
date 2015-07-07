@@ -78,6 +78,8 @@ module TreeElement
   #
   def self.get_childs(klass, node_id, recursive, ret_obj)
 
+    SqlHelper.validate_token([node_id])
+
     array = []
 
     if recursive
@@ -131,6 +133,7 @@ module TreeElement
   #
   def self.get_tree(klass, tree, conditions, node_id, order_by)
 
+    SqlHelper.validate_token([node_id])
     if conditions.nil?
       con = ''
     else

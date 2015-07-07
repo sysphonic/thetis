@@ -275,6 +275,8 @@ class User < ActiveRecord::Base
     name = attrs[:name]
     password = attrs[:password]
 
+    SqlHelper.validate_token([name])
+
     pass_md5 = UsersHelper.generate_digest_pass(name, password)
 
     return User.where("(name='#{name}') and (pass_md5='#{pass_md5}')").first
@@ -529,6 +531,8 @@ class User < ActiveRecord::Base
   #
   def self.get_from_name(user_name)
 
+    SqlHelper.validate_token([user_name])
+
     begin
       user = User.where("name='#{user_name}'").first
     rescue => evar
@@ -775,7 +779,8 @@ class User < ActiveRecord::Base
   #
   def self.get_my_folder(user_id)
 
-    return Folder.where("(owner_id=#{user_id}) and (xtype='#{Folder::XTYPE_USER}')").first
+   SqlHelper.validate_token([user_id])
+   return Folder.where("(owner_id=#{user_id}) and (xtype='#{Folder::XTYPE_USER}')").first
   end
 
   #=== create_my_folder
@@ -1156,6 +1161,7 @@ class User < ActiveRecord::Base
       con = ['title=?', title]
     end
 
+    SqlHelper.validate_token([order])
     User.update_all("xorder=#{order}", con)
   end
 
@@ -1181,6 +1187,8 @@ class User < ActiveRecord::Base
   #return:: Comment if exist, nil otherwise.
   #
   def get_project_application(item_id)
+
+    SqlHelper.validate_token([item_id])
 
     con = "(item_id=#{item_id}) and (user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')"
     begin

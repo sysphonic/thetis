@@ -24,6 +24,9 @@ module ItemsHelper
   #return:: Next revision number.
   #
   def self.get_next_revision(user_id, source_id)
+
+    SqlHelper.validate_token([user_id, source_id])
+
     copied_items = Item.where("user_id=#{user_id} and source_id=#{source_id}").order('created_at DESC').to_a
 
     rev = 0
@@ -35,7 +38,7 @@ module ItemsHelper
       break
     end
 
-    return '#' + sprintf('%03d', rev+1)
+    return ('#' + sprintf('%03d', rev+1))
   end
 
   #=== self.get_copies_folder

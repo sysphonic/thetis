@@ -154,6 +154,8 @@ class MailAccount < ActiveRecord::Base
   #
   def self.destroy_by_user(user_id, add_con=nil)
 
+    SqlHelper.validate_token([user_id])
+
     con = "user_id=#{user_id}"
     con << " and (#{add_con})" unless add_con.nil? or add_con.empty?
     mail_accounts = MailAccount.where(con).to_a
@@ -265,12 +267,12 @@ class MailAccount < ActiveRecord::Base
       where = 'where ' + con.join(' and ')
     end
 
-    account_ary = MailAccount.find_by_sql('select * from mail_accounts ' + where + ' order by xorder ASC, title ASC')
+    mail_accounts = MailAccount.find_by_sql('select * from mail_accounts ' + where + ' order by xorder ASC, title ASC')
 
-    if account_ary.nil? or account_ary.empty?
+    if mail_accounts.nil? or mail_accounts.empty?
       return nil
     else
-      return account_ary.first
+      return mail_accounts.first
     end
   end
 end
