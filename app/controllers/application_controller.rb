@@ -99,7 +99,12 @@ class ApplicationController < ActionController::Base
 
     HistoryHelper.keep_last(request)
 
-    @login_user = User.find(session[:login_user_id])
+    SqlHelper.validate_token([session[:login_user_id]])
+    begin
+      @login_user = User.find(session[:login_user_id])
+    rescue => evar
+      @login_user = nil
+    end
 
     begin
       if @login_user.nil? \
