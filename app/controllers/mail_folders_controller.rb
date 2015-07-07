@@ -302,7 +302,7 @@ class MailFoldersController < ApplicationController
 
     email_id = params[:id]
 
-    email = Email.find_by_id(email_id)
+    email = Email.find(email_id)
     if email.nil? or email.user_id != @login_user.id
       render(:text => '')
       return
@@ -327,14 +327,20 @@ class MailFoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     attached_id = params[:id].to_i
-    mail_attach = MailAttachment.find_by_id(attached_id)
+    begin
+      mail_attach = MailAttachment.find(attached_id)
+    rescue => evar
+    end
 
     if mail_attach.nil?
       redirect_to(THETIS_RELATIVE_URL_ROOT + '/404.html')
       return
     end
 
-    email = Email.find_by_id(mail_attach.email_id)
+    begin
+      email = Email.find(mail_attach.email_id)
+    rescue => evar
+    end
     if email.nil? or email.user_id != @login_user.id
       render(:text => '')
       return
@@ -438,7 +444,10 @@ class MailFoldersController < ApplicationController
       params[:check_mail].each do |email_id, value|
         next if value != '1'
 
-        email = Email.find_by_id(email_id)
+        begin
+          email = Email.find(email_id)
+        rescue => evar
+        end
         next if email.nil? or (email.user_id != @login_user.id)
 
         if trash_folder.nil? \
@@ -473,7 +482,11 @@ class MailFoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
-    mail_folder = MailFolder.find_by_id(folder_id)
+    SqlHelper.validate_token([folder_id])
+    begin
+      mail_folder = MailFolder.find(folder_id)
+    rescue => evar
+    end
 
     if folder_id == '0' \
         or mail_folder.nil? \
@@ -541,15 +554,16 @@ class MailFoldersController < ApplicationController
   def update_folders_order
     Log.add_info(request, params.inspect)
 
-    order_ary = params[:folders_order]
+    order_arr = params[:folders_order]
 
+    SqlHelper.validate_token([params[:id]])
     folders = MailFolder.get_childs(params[:id], false, false)
     # folders must be ordered by xorder ASC.
 
     folders.sort! { |id_a, id_b|
 
-      idx_a = order_ary.index(id_a)
-      idx_b = order_ary.index(id_b)
+      idx_a = order_arr.index(id_a)
+      idx_b = order_arr.index(id_b)
 
       if idx_a.nil? or idx_b.nil?
         idx_a = folders.index(id_a)

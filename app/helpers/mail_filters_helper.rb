@@ -413,8 +413,12 @@ module MailFiltersHelper
   def self.execute_action_move(mail_filter, email, val)
 
     mail_folder_id = val
+    SqlHelper.validate_token([mail_folder_id])
 
-    mail_folder = MailFolder.find_by_id(mail_folder_id)
+    begin
+      mail_folder = MailFolder.find(mail_folder_id)
+    rescue => evar
+    end
     if !mail_folder.nil? and (mail_folder.user_id == email.user_id)
       email.update_attribute(:mail_folder_id, mail_folder_id)
     end

@@ -103,6 +103,7 @@ class WorkflowsController < ApplicationController
 
     unless params[:thetisBoxSelKeeper].nil?
       folder_id = params[:thetisBoxSelKeeper].split(':').last
+      SqlHelper.validate_token([folder_id])
 
       workflow = Workflow.find(params[:id])
 

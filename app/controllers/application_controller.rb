@@ -75,18 +75,18 @@ class ApplicationController < ActionController::Base
   #=== paginate_by_sql
   #
   def paginate_by_sql(model, sql, per_page, options={})
-    if options[:count]
+    if options[:count].blank?
+      total = model.count_by_sql_wrapping_select_query(sql)
+    else
       if options[:count].is_a?(Integer)
         total = options[:count]
-      else
-        total = model.count_by_sql(options[:count])
+      #else
+      #  total = model.count_by_sql(options[:count])
       end
-    else
-      total = model.count_by_sql_wrapping_select_query(sql)
     end
 
+    SqlHelper.validate_token([params['page']])
     object_pages = model.paginate_by_sql(sql, {:page => params['page'], :per_page => per_page})
-    #objects = model.find_by_sql_with_limit(sql, object_pages.current.to_sql[1], per_page)
     return [object_pages, object_pages, total]
   end
 
@@ -99,7 +99,7 @@ class ApplicationController < ActionController::Base
 
     HistoryHelper.keep_last(request)
 
-    @login_user = User.find_by_id(session[:login_user_id])
+    @login_user = User.find(session[:login_user_id])
 
     begin
       if @login_user.nil? \
@@ -118,12 +118,6 @@ end
 
 module ActiveRecord
   class Base
-    def self.find_by_sql_with_limit(sql, offset, limit)
-      sql = sanitize_sql(sql)
-      add_limit!(sql, {:limit => limit, :offset => offset})
-      find_by_sql(sql)
-    end
-
     def self.count_by_sql_wrapping_select_query(sql)
       sql = sanitize_sql(sql)
       count_by_sql("select count(*) from (#{sql}) as my_table")

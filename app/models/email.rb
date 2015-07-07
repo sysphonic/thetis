@@ -53,7 +53,7 @@ class Email < ActiveRecord::Base
 # FEATURE_MAIL_STRICT_CAPACITY >>>
     if (email.status != Email::STATUS_TEMPORARY) \
         and (email.size > org_size)
-      mail_account = MailAccount.find_by_id(email.mail_account_id)
+      mail_account = MailAccount.find(email.mail_account_id)
       max_size = mail_account.get_capacity_mb * 1024 * 1024
       con = "(id != #{email.id})" unless email.id.nil?
       cur_size = MailAccount.get_using_size(mail_account.id, con)

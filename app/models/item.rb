@@ -68,7 +68,11 @@ class Item < ActiveRecord::Base
     return false if self.source_id.nil?
 
     # Exclude those created from system templates.
-    src_item = Item.find_by_id(self.source_id)
+    begin
+      src_item = Item.find(self.source_id)
+    rescue => evar
+      src_item = nil
+    end
     if src_item.nil?
       return true
     else

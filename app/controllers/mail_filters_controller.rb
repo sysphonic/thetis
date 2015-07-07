@@ -108,7 +108,10 @@ class MailFiltersController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    @mail_filter = MailFilter.find_by_id(params[:id])
+    begin
+      @mail_filter = MailFilter.find(params[:id])
+    rescue => evar
+    end
     if @mail_filter.nil?
       render(:text => 'ERROR:' + t('msg.already_deleted', :name => MailFilter.model_name.human))
       return
@@ -225,8 +228,8 @@ class MailFiltersController < ApplicationController
   def do_execute
     Log.add_info(request, params.inspect)
 
-    mail_account = MailAccount.find_by_id(params[:mail_account_id])
-    mail_folder = MailFolder.find_by_id(params[:mail_folder_id])
+    mail_account = MailAccount.find(params[:mail_account_id])
+    mail_folder = MailFolder.find(params[:mail_folder_id])
 
     if mail_account.user_id != @login_user.id \
         or mail_folder.user_id != @login_user.id
@@ -258,8 +261,9 @@ class MailFiltersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     mail_account_id = params[:mail_account_id]
+    SqlHelper.validate_token([mail_account_id])
 
-    @mail_account = MailAccount.find_by_id(mail_account_id)
+    @mail_account = MailAccount.find(mail_account_id)
 
     if @mail_account.user_id != @login_user.id
       flash[:notice] = t('msg.need_to_be_owner')
@@ -285,9 +289,11 @@ class MailFiltersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     mail_account_id = params[:mail_account_id]
-    order_ary = params[:mail_filters_order]
+    order_arr = params[:mail_filters_order]
 
-    @mail_account = MailAccount.find_by_id(mail_account_id)
+    SqlHelper.validate_token([mail_account_id])
+
+    @mail_account = MailAccount.find(mail_account_id)
 
     if @mail_account.user_id != @login_user.id
       render(:text => 'ERROR:' + t('msg.need_to_be_owner'))
@@ -301,8 +307,8 @@ class MailFiltersController < ApplicationController
       id_a = filter_a.id.to_s
       id_b = filter_b.id.to_s
 
-      idx_a = order_ary.index(id_a)
-      idx_b = order_ary.index(id_b)
+      idx_a = order_arr.index(id_a)
+      idx_b = order_arr.index(id_b)
 
       if idx_a.nil? or idx_b.nil?
         idx_a = filters.index(id_a)

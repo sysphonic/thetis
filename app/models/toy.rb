@@ -125,7 +125,7 @@ class Toy < ActiveRecord::Base
     return [] if user.nil?
 
     toys = Toy.where("user_id=#{user.id}").to_a
-    deleted_ary = []
+    deleted_arr = []
 
     return [] if toys.nil?
 
@@ -134,7 +134,7 @@ class Toy < ActiveRecord::Base
         when Toy::XTYPE_ITEM
           item = Item.find_by_id(toy.target_id)
           if item.nil?
-            deleted_ary << toy
+            deleted_arr << toy
             next
           end
           Toy.copy(toy, item)
@@ -142,7 +142,7 @@ class Toy < ActiveRecord::Base
         when Toy::XTYPE_COMMENT
           comment = Comment.find_by_id(toy.target_id)
           if comment.nil?
-            deleted_ary << toy
+            deleted_arr << toy
             next
           end
           Toy.copy(toy, comment)
@@ -150,7 +150,7 @@ class Toy < ActiveRecord::Base
         when Toy::XTYPE_WORKFLOW
           workflow = Workflow.find_by_id(toy.target_id)
           if workflow.nil?
-            deleted_ary << toy
+            deleted_arr << toy
             next
           end
           Toy.copy(toy, workflow)
@@ -158,7 +158,7 @@ class Toy < ActiveRecord::Base
         when Toy::XTYPE_SCHEDULE
           schedule = Schedule.find_by_id(toy.target_id)
           if schedule.nil?
-            deleted_ary << toy
+            deleted_arr << toy
             next
           end
           Toy.copy(toy, schedule)
@@ -166,16 +166,16 @@ class Toy < ActiveRecord::Base
         when Toy::XTYPE_FOLDER
           folder = Folder.find_by_id(toy.target_id)
           if folder.nil?
-            deleted_ary << toy
+            deleted_arr << toy
             next
           end
           Toy.copy(toy, folder)
       end
     end
 
-    deleted_ary.each do |toy|
-      toys.delete toy
-      Toy.destroy toy.id
+    deleted_arr.each do |toy|
+      toys.delete(toy)
+      Toy.destroy(toy.id)
     end
 
     return toys

@@ -210,7 +210,8 @@ class Address < ActiveRecord::Base
   def self.parse_csv_row(row, book, idxs, user)
 
     imp_id = (idxs[0].nil? or row[idxs[0]].nil?)?(nil):(row[idxs[0]].strip)
-    unless imp_id.nil? or imp_id.empty?
+    SqlHelper.validate_token([imp_id])
+    unless imp_id.blank?
       org_address = Address.find_by_id(imp_id)
     end
 
@@ -305,7 +306,11 @@ class Address < ActiveRecord::Base
       if (/^|([0-9]+|)+$/ =~ self.groups) == 0
 
         self.get_groups_a.each do |group_id|
-          group = Group.find_by_id(group_id)
+          begin
+            group = Group.find(group_id)
+          rescue => evar
+            group = nil
+          end
           if group.nil?
             err_msgs << I18n.t('address.import.not_valid_groups') + ': '+group_id.to_s
             break
@@ -322,7 +327,11 @@ class Address < ActiveRecord::Base
       if (/^|([0-9]+|)+$/ =~ self.teams) == 0
 
         self.get_teams_a.each do |team_id|
-          team = Team.find_by_id(team_id)
+          begin
+            team = Team.find(team_id)
+          rescue => evar
+            team = nil
+          end
           if team.nil?
             err_msgs << I18n.t('address.import.not_valid_teams') + ': '+team_id.to_s
             break

@@ -104,8 +104,7 @@ class Comment < ActiveRecord::Base
     rescue => evar
       Log.add_error(nil, evar)
     end
-    attachments = [] if attachments.nil?
-    return attachments
+    return (attachments || [])
   end
 
   #=== self.get_toys
@@ -160,5 +159,4 @@ class Comment < ActiveRecord::Base
     end
     return entries
   end
-
 end
