@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -47,6 +47,8 @@ class UsersController < ApplicationController
   #
   def create
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     attrs = _process_user_attrs(nil, params[:user])
     password = attrs[:password]
@@ -113,6 +115,8 @@ class UsersController < ApplicationController
   #
   def update
     Log.add_info(request, '')   # Not to show passwords.
+
+    return unless request.post?
 
     @user = User.find(params[:id])
 
@@ -235,6 +239,8 @@ class UsersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_user].nil?
       list
       render(:action => 'list')
@@ -244,7 +250,7 @@ class UsersController < ApplicationController
     count = 0
     params[:check_user].each do |user_id, value|
       if value == '1'
-
+        SqlHelper.validate_token([user_id])
         begin
           User.destroy(user_id)
         rescue => evar
@@ -288,6 +294,8 @@ class UsersController < ApplicationController
   def add_official_titles
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @user = User.find(params[:user_id])
 
     unless params[:official_titles].nil?
@@ -313,6 +321,8 @@ class UsersController < ApplicationController
   def remove_official_titles
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @user = User.find(params[:user_id])
 
     unless params[:official_titles].nil?
@@ -334,6 +344,8 @@ class UsersController < ApplicationController
   #
   def notify
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     root_url = ApplicationHelper.root_url(request)
     count = UsersHelper.send_notification(params[:check_user], params[:thetisBoxEdit], root_url)
@@ -370,21 +382,15 @@ class UsersController < ApplicationController
       end
 
       if auth_selected.nil? or !auth_selected.include?(User::AUTH_USER)
-
         user_admin_err = false
-
         user_admins = User.where("auth like '%|#{User::AUTH_USER}|%' or auth='#{User::AUTH_ALL}'").to_a
 
         if user_admins.nil? or user_admins.empty?
-
           user_admin_err = true
-
         elsif user_admins.length == 1
-
           if user_admins.first.id.to_s == params[:id]
             user_admin_err = true
           end
-
         end
 
         if user_admin_err
@@ -392,7 +398,6 @@ class UsersController < ApplicationController
           return
         end
       end
-
     end
 
     begin
@@ -402,16 +407,13 @@ class UsersController < ApplicationController
     end
 
     if user.nil?
-
       render(:text => t('msg.already_deleted', :name => User.model_name.human))
     else
-
       user.update_attribute(:auth, auth)
 
       if user.id == @login_user.id
         @login_user = user
       end
-
       render(:text => '')
     end
   end
@@ -426,7 +428,9 @@ class UsersController < ApplicationController
   def add_to_group
     Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    return unless request.post?
+
+    if params[:thetisBoxSelKeeper].blank?
       render(:partial => 'ajax_groups', :layout => false)
       return
     end
@@ -456,7 +460,7 @@ class UsersController < ApplicationController
       is_modified = false
 
       # Change, not simply Add
-      unless params[:current_id] == nil or params[:current_id].empty?
+      unless params[:current_id].blank?
         if @user.exclude_from(params[:current_id])
           is_modified = true
         end
@@ -465,7 +469,6 @@ class UsersController < ApplicationController
       is_modified = true if @user.add_to(group_id)
 
       if is_modified == true
-#        @user.update_attribute(:groups, @user.groups)
         @user.save!
 
         if @user.id == @login_user.id
@@ -485,7 +488,9 @@ class UsersController < ApplicationController
   def exclude_from_group
     Log.add_info(request, params.inspect)
 
-    if params[:group_id].nil? or params[:group_id].empty?
+    return unless request.post?
+
+    if params[:group_id].blank?
       render(:partial => 'ajax_groups', :layout => false)
       return
     end
@@ -518,6 +523,8 @@ class UsersController < ApplicationController
   def create_profile_sheet
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     user_id = params[:id]
     @user = User.find(user_id)
 
@@ -535,6 +542,8 @@ class UsersController < ApplicationController
   #
   def destroy_profile_sheet
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     user_id = params[:id]
     @user = User.find(user_id)
@@ -572,6 +581,8 @@ class UsersController < ApplicationController
   #
   def import_csv
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     file = params[:imp_file]
     mode = params[:mode]
@@ -634,14 +645,10 @@ class UsersController < ApplicationController
     end
 
     if users.empty?
-
       @imp_errs[0] = [t('user.nothing_to_import')]
     else
-
       if mode == 'update'
-
         if found_update
-
           user_admin = users.find do |user|
             user.admin?(User::AUTH_USER)
           end
@@ -734,10 +741,12 @@ class UsersController < ApplicationController
   #
   def create_title
 
+    return unless request.post?
+
     titles = User.get_config_titles
     titles = [] if titles.nil?
     titles << t('user.new_title')
-    User.save_config_titles titles
+    User.save_config_titles(titles)
 
     render(:partial => 'ajax_title', :layout => false)
   end
@@ -749,6 +758,8 @@ class UsersController < ApplicationController
   #
   def destroy_title
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     title = params[:title]
 
@@ -778,6 +789,8 @@ class UsersController < ApplicationController
   def rename_title
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     org_title = params[:org_title]
     new_title = params[:new_title]
 
@@ -789,15 +802,12 @@ class UsersController < ApplicationController
     titles = User.get_config_titles
     unless titles.nil?
       if titles.include?(new_title)
-
         flash[:notice] = 'ERROR:' + t('user.title_duplicated')
-
       else
-
         idx = titles.index(org_title)
         unless idx.nil?
           titles[idx] = new_title
-          User.save_config_titles titles
+          User.save_config_titles(titles)
 
           User.rename_title(org_title, new_title)
           User.update_xorder(new_title, idx)
@@ -815,6 +825,8 @@ class UsersController < ApplicationController
   #
   def update_titles_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     titles = params[:titles_order]
 
@@ -840,6 +852,8 @@ class UsersController < ApplicationController
   #
   def update_zept_allowed
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     user = User.find(params[:id])
     zept_allowed = params[:zept_allowed]
@@ -884,7 +898,7 @@ class UsersController < ApplicationController
       user_name = attrs[:name]
       user_name ||= user.name unless user.nil?
       password = attrs[:password]
-      if password.nil? or password.empty?
+      if password.blank?
         password = UsersHelper.generate_password
         attrs[:password] = password
       end

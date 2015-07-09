@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -41,6 +41,10 @@ class EquipmentController < ApplicationController
   #
   def create
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
+
+    SqlHelper.validate_token([params[:groups], params[:teams]])
 
     if params[:groups].blank?
       params[:equipment][:groups] = nil
@@ -101,15 +105,19 @@ class EquipmentController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
+    SqlHelper.validate_token([params[:groups], params[:teams]])
+
     @equipment = Equipment.find(params[:id])
 
-    if (params[:groups].nil? or params[:groups].empty?)
+    if params[:groups].blank?
       params[:equipment][:groups] = nil
     else
       params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
     end
 
-    if (params[:teams].nil? or params[:teams].empty?)
+    if params[:teams].blank?
       params[:equipment][:teams] = nil
     else
       params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
@@ -178,6 +186,8 @@ class EquipmentController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_equipment].nil?
       list
       render(:action => 'list')
@@ -186,6 +196,7 @@ class EquipmentController < ApplicationController
 
     count = 0
     params[:check_equipment].each do |equipment_id, value|
+      SqlHelper.validate_token([equipment_id])
       if value == '1'
         Equipment.delete(equipment_id)
 
@@ -205,7 +216,7 @@ class EquipmentController < ApplicationController
     Log.add_info(request, params.inspect)
 
     date_s = params[:date]
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
     else
       @date = Date.parse(date_s)

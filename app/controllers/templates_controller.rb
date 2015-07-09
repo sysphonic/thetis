@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -48,11 +48,14 @@ class TemplatesController < ApplicationController
   def create_workflow
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
     @group_id = params[:group_id]
+    SqlHelper.validate_token([@group_id])
 
-    if @group_id.nil? or @group_id.empty?
+    if @group_id.blank?
       @group_id = '0'   # '0' for ROOT
     elsif @group_id == '0'
       ;
@@ -99,13 +102,16 @@ class TemplatesController < ApplicationController
   def destroy_workflow
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     Item.find(params[:id]).destroy
 
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
     @group_id = params[:group_id]
+    SqlHelper.validate_token([@group_id])
 
-    if @group_id.nil? or @group_id.empty?
+    if @group_id.blank?
       @group_id = '0'   # '0' for ROOT
     end
 
@@ -119,6 +125,8 @@ class TemplatesController < ApplicationController
   #
   def create_local
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @tmpl_folder, @tmpl_local_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_LOCAL)
 
@@ -142,6 +150,8 @@ class TemplatesController < ApplicationController
   def destroy_local
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     begin
       Item.find(params[:id]).destroy
     rescue
@@ -159,6 +169,8 @@ class TemplatesController < ApplicationController
   #
   def copy
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     tmpl_id = params[:thetisBoxSelKeeper].split(':').last
     tmpl_item = Item.find(tmpl_id)

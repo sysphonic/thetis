@@ -58,6 +58,8 @@ class AddressbookController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
+    return unless request.post?
+
     render(:action => 'edit', :layout => (!request.xhr?))
   end
 
@@ -67,6 +69,8 @@ class AddressbookController < ApplicationController
   #
   def create
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @address = Address.new(params.require(:address).permit(Address::PERMIT_BASE))
 
@@ -106,6 +110,7 @@ class AddressbookController < ApplicationController
     begin
       @address = Address.find(address_id)
     rescue => evar
+      @address = nil
       Log.add_error(request, evar)
       redirect_to(:controller => 'login', :action => 'logout')
       return
@@ -141,6 +146,8 @@ class AddressbookController < ApplicationController
   #
   def update
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @address = Address.find(params[:id])
     @address.attributes = params[:address]
@@ -242,6 +249,8 @@ class AddressbookController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_address].nil?
       list
       render(:action => 'list')
@@ -295,6 +304,8 @@ class AddressbookController < ApplicationController
   #
   def import_csv
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     file = params[:imp_file]
     mode = params[:mode]
@@ -436,7 +447,7 @@ class AddressbookController < ApplicationController
   #
   def check_owner
 
-    return if (params[:id].nil? or params[:id].empty? or @login_user.nil?)
+    return if (params[:id].blank? or @login_user.nil?)
 
     address = Address.find(params[:id])
 

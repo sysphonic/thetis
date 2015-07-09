@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2012 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -131,6 +131,8 @@ class MailFiltersController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     attrs = params[:mail_filter]
     if attrs['and_or'] == 'none'
       attrs['and_or'] = nil
@@ -194,6 +196,8 @@ class MailFiltersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_filter].nil?
       list
       render(:action => 'list', :layout => !request.xhr?)
@@ -208,6 +212,7 @@ class MailFiltersController < ApplicationController
           filter = MailFilter.find(filter_id)
           filter.destroy if filter.editable?(@login_user)
         rescue => evar
+          filter = nil
           Log.add_error(request, evar)
         end
 
@@ -227,6 +232,8 @@ class MailFiltersController < ApplicationController
   #
   def do_execute
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     mail_account = MailAccount.find(params[:mail_account_id])
     mail_folder = MailFolder.find(params[:mail_folder_id])
@@ -287,6 +294,8 @@ class MailFiltersController < ApplicationController
   #
   def update_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     mail_account_id = params[:mail_account_id]
     order_arr = params[:mail_filters_order]
@@ -358,7 +367,7 @@ class MailFiltersController < ApplicationController
   #
   def check_owner
 
-    return if (params[:id].nil? or params[:id].empty? or @login_user.nil?)
+    return if (params[:id].blank? or @login_user.nil?)
 
     mail_filter = MailFilter.find(params[:id])
 

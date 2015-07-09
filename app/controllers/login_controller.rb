@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -37,7 +37,7 @@ class LoginController < ApplicationController
 
       flash[:notice] = '<span class=\'font_msg_bold\'>'+t('user.u_name')+'</span>'+t('msg.or')+'<span class=\'font_msg_bold\'>'+t('password.name')+'</span>'+t('msg.is_invalid')
 
-      if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+      if params[:fwd_controller].blank?
 
         redirect_to(:controller => 'login', :action => 'index')
       else
@@ -57,7 +57,7 @@ class LoginController < ApplicationController
 
       @login_user = LoginHelper.on_login(user, session)
 
-      if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+      if params[:fwd_controller].blank?
         prms = ApplicationHelper.get_fwd_params(params)
         prms.delete('user')
         prms[:controller] = 'desktop'

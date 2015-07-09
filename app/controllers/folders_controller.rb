@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -70,6 +70,8 @@ class FoldersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     parent_id = params[:selectedFolderId]
 
     unless Folder.check_user_auth(parent_id, @login_user, 'w', true)
@@ -78,7 +80,7 @@ class FoldersController < ApplicationController
       return
     end
 
-    if params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
+    if params[:thetisBoxEdit].blank?
       @folder = nil
     else
       @folder = Folder.new
@@ -100,6 +102,8 @@ class FoldersController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @folder = Folder.find(params[:id])
 
     unless Folder.check_user_auth(@folder.id, @login_user, 'w', true)
@@ -108,7 +112,7 @@ class FoldersController < ApplicationController
       return
     end
 
-    unless params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
+    unless params[:thetisBoxEdit].blank?
       @folder.name = params[:thetisBoxEdit]
       @folder.save
     end
@@ -122,6 +126,8 @@ class FoldersController < ApplicationController
   #
   def destroy
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -150,6 +156,8 @@ class FoldersController < ApplicationController
   #
   def move
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -198,13 +206,14 @@ class FoldersController < ApplicationController
   def get_path
     Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    if params[:thetisBoxSelKeeper].blank?
       @folder_path = '/' + t('paren.unknown')
       render(:partial => 'ajax_folder_path', :layout => false)
       return
     end
 
     @selected_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([@selected_id])
 
     @folder_path = Folder.get_path(@selected_id)
 
@@ -222,6 +231,7 @@ class FoldersController < ApplicationController
     end
 
     @folder_id = params[:id]
+    SqlHelper.validate_token([@folder_id])
 
     if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
 =begin
@@ -239,6 +249,7 @@ class FoldersController < ApplicationController
       if @sort_col.blank? or @sort_type.blank?
         @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
       end
+      SqlHelper.validate_token([@sort_col, @sort_type])
 
       folder_ids = nil
       add_con = nil
@@ -292,11 +303,13 @@ class FoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @folder_id = params[:id]
+    SqlHelper.validate_token([@folder_id])
 
     if @folder_id != '0'
       begin
         @folder = Folder.find(@folder_id)
       rescue => evar
+        @folder = nil
         Log.add_error(request, evar)
       end
     end
@@ -321,6 +334,8 @@ class FoldersController < ApplicationController
   #
   def update_items_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     folder_id = params[:id]
 
@@ -353,6 +368,7 @@ class FoldersController < ApplicationController
 
     @folder_id = params[:id]
     @group_id = params[:group_id]
+    SqlHelper.validate_token([@folder_id, @group_id])
 
     if @folder_id != '0'
       @folder = Folder.find(@folder_id)
@@ -382,6 +398,8 @@ class FoldersController < ApplicationController
   def update_folders_order
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     order_ary = params[:folders_order]
 
     folders = Folder.get_childs(params[:id], nil, false, true, false)
@@ -407,6 +425,7 @@ class FoldersController < ApplicationController
         folder.update_attribute(:xorder, idx)
         idx += 1
       rescue => evar
+        folder = nil
         Log.add_error(request, evar)
       end
     end
@@ -422,15 +441,18 @@ class FoldersController < ApplicationController
   def get_disp_ctrl
     Log.add_info(request, params.inspect)
 
-    if params[:id] != '0'
+    folder_id = params[:id]
+    SqlHelper.validate_token([folder_id])
+
+    if folder_id != '0'
       begin
-        @folder = Folder.find(params[:id])
+        @folder = Folder.find(folder_id)
       rescue => evar
         @folder = nil
       end
     end
 
-    session[:folder_id] = params[:id]
+    session[:folder_id] = folder_id
 
     render(:partial => 'ajax_disp_ctrl', :layout => false)
   end
@@ -443,7 +465,10 @@ class FoldersController < ApplicationController
   def set_disp_ctrl
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     folder_id = params[:id]
+    SqlHelper.validate_token([folder_id])
 
     if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
@@ -482,15 +507,18 @@ class FoldersController < ApplicationController
   def get_auth_users
     Log.add_info(request, params.inspect)
 
+    folder_id = params[:id]
+    SqlHelper.validate_token([folder_id])
+
     begin
-      @folder = Folder.find(params[:id])
+      @folder = Folder.find(folder_id)
     rescue
       @folder = nil
     end
 
     @users = []
 
-    session[:folder_id] = params[:id]
+    session[:folder_id] = folder_id
 
     if !@login_user.nil? and (@login_user.admin?(User::AUTH_FOLDER) or (!@folder.nil? and @folder.in_my_folder_of?(@login_user.id)))
       render(:partial => 'ajax_auth_users', :layout => false)
@@ -511,6 +539,7 @@ class FoldersController < ApplicationController
     begin
       @folder = Folder.find(params[:id])
     rescue => evar
+      @folder = nil
       Log.add_error(request, evar)
     end
 
@@ -534,6 +563,8 @@ class FoldersController < ApplicationController
   #
   def set_auth_users
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -559,8 +590,8 @@ class FoldersController < ApplicationController
       if !user_id.nil? and (!read_users.include?(user_id.to_s) or !write_users.include?(user_id.to_s))
         flash[:notice] = 'ERROR:' + t('folder.my_folder_without_auth_owner')
       else
-        @folder.set_read_users read_users
-        @folder.set_write_users write_users
+        @folder.set_read_users(read_users)
+        @folder.set_write_users(write_users)
 
         @folder.save
 
@@ -571,7 +602,9 @@ class FoldersController < ApplicationController
     end
 
     @group_id = params[:group_id]
-    if @group_id.nil? or @group_id.empty?
+    SqlHelper.validate_token([@group_id])
+
+    if @group_id.blank?
       @users = []
     else
       @users = Group.get_users(@group_id)
@@ -591,15 +624,18 @@ class FoldersController < ApplicationController
   def get_auth_groups
     Log.add_info(request, params.inspect)
 
+    folder_id = params[:id]
+    SqlHelper.validate_token([folder_id])
+
     begin
-      @folder = Folder.find(params[:id])
+      @folder = Folder.find(folder_id)
     rescue
       @folder = nil
     end
 
     @groups = Group.where(nil).to_a
 
-    session[:folder_id] = params[:id]
+    session[:folder_id] = folder_id
 
     render(:partial => 'ajax_auth_groups', :layout => false)
   end
@@ -611,6 +647,8 @@ class FoldersController < ApplicationController
   #
   def set_auth_groups
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -631,8 +669,8 @@ class FoldersController < ApplicationController
         end
       end
 
-      @folder.set_read_groups read_groups
-      @folder.set_write_groups write_groups
+      @folder.set_read_groups(read_groups)
+      @folder.set_write_groups(write_groups)
 
       @folder.save
 
@@ -657,8 +695,11 @@ class FoldersController < ApplicationController
   def get_auth_teams
     Log.add_info(request, params.inspect)
 
+    folder_id = params[:id]
+    SqlHelper.validate_token([folder_id])
+
     begin
-      @folder = Folder.find(params[:id])
+      @folder = Folder.find(folder_id)
     rescue
       @folder = nil
     end
@@ -666,7 +707,7 @@ class FoldersController < ApplicationController
     target_user_id = (@login_user.admin?(User::AUTH_TEAM))?(nil):(@login_user.id)
     @teams = Team.get_for(target_user_id, true)
 
-    session[:folder_id] = params[:id]
+    session[:folder_id] = folder_id
 
     render(:partial => 'ajax_auth_teams', :layout => false)
   end
@@ -678,6 +719,8 @@ class FoldersController < ApplicationController
   #
   def set_auth_teams
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -698,8 +741,8 @@ class FoldersController < ApplicationController
         end
       end
 
-      @folder.set_read_teams read_teams
-      @folder.set_write_teams write_teams
+      @folder.set_read_teams(read_teams)
+      @folder.set_write_teams(write_teams)
 
       @folder.save
 
@@ -725,8 +768,6 @@ class FoldersController < ApplicationController
   def ajax_delete_items
     Log.add_info(request, params.inspect)
 
-    folder_id = params[:id]
-
     unless params[:check_item].blank?
       is_admin = @login_user.admin?(User::AUTH_ITEM)
 
@@ -741,6 +782,7 @@ class FoldersController < ApplicationController
             item.destroy
 
           rescue => evar
+            item = nil
             Log.add_error(request, evar)
           end
 
@@ -762,6 +804,7 @@ class FoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([folder_id])
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
@@ -783,6 +826,7 @@ class FoldersController < ApplicationController
             item.update_attribute(:folder_id, folder_id)
 
           rescue => evar
+            item = nil
             Log.add_error(request, evar)
           end
 

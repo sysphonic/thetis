@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2013 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -45,6 +45,8 @@ class SchedulesController < ApplicationController
   def add_holidays
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     holidays = params[:thetisBoxEdit]
     unless holidays.nil?
       holidays.split("\n").each do |holiday|
@@ -83,8 +85,11 @@ class SchedulesController < ApplicationController
   def delete_holidays
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     holidays = params[:holidays]
     unless holidays.nil?
+      SqlHelper.validate_token([holidays])
       holidays.each do |schedule_id|
         Schedule.destroy(schedule_id)
       end
@@ -114,6 +119,8 @@ class SchedulesController < ApplicationController
   #
   def save
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     date = Date.parse(params[:date])
 
@@ -149,6 +156,7 @@ class SchedulesController < ApplicationController
       schedule.destroy unless schedule.nil?
     else
       [:users, :groups, :teams, :items].each do |attr|
+        SqlHelper.validate_token([params[attr]])
         if params[attr].blank?
           params[:schedule][attr] = nil
         else
@@ -163,7 +171,11 @@ class SchedulesController < ApplicationController
         params[:schedule][:equipment] = nil
       else
         equipment_ids.each do |equipment_id|
-          equipment = Equipment.find(equipment_id)
+          begin
+            equipment = Equipment.find(equipment_id)
+          rescue => evar
+            equipment = nil
+          end
           if equipment.nil? or !equipment.is_accessible_by(@login_user)
             flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
             redirect_to(:action => 'day', :date => params[:date])
@@ -203,7 +215,7 @@ class SchedulesController < ApplicationController
       if nearest_day.nil?
         check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
         flash[:notice] = 'ERROR:' + t('schedule.no_day_in_rule')
-        if params[:fwd_controller].nil? or params[:fwd_controller].empty?
+        if params[:fwd_controller].blank?
           self.index
         else
           prms = ApplicationHelper.get_fwd_params(params)
@@ -324,6 +336,8 @@ class SchedulesController < ApplicationController
   #
   def destroy
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @date = Date.parse(params[:date])
 
@@ -513,7 +527,7 @@ class SchedulesController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
     else
       @date = Date.parse(date_s)
@@ -530,7 +544,7 @@ class SchedulesController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
     else
       @date = Date.parse(date_s)
@@ -604,13 +618,14 @@ class SchedulesController < ApplicationController
     Log.add_info(request, params.inspect)
 
     date_s = params[:date]
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
     else
       @date = Date.parse(date_s)
     end
 
     @group_id = params[:id]
+    SqlHelper.validate_token([@group_id, params[:id]])
     group_users = Group.get_users(params[:id])
 
     @user_schedule_hash = {}
@@ -632,7 +647,7 @@ class SchedulesController < ApplicationController
     Log.add_info(request, params.inspect)
 
     date_s = params[:date]
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
     else
       @date = Date.parse(date_s)
@@ -737,7 +752,7 @@ class SchedulesController < ApplicationController
   def get_folder_items
     Log.add_info(request, params.inspect)
 
-    unless params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    unless params[:thetisBoxSelKeeper].blank?
       @folder_id = params[:thetisBoxSelKeeper].split(':').last
     end
 

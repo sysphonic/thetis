@@ -142,6 +142,8 @@ class LocationsController < ApplicationController
   def update_map
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     group_id = params[:group_id]
     SqlHelper.validate_token([group_id])
 
@@ -163,6 +165,8 @@ class LocationsController < ApplicationController
   #
   def delete_map
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     group_id = params[:group_id]
     SqlHelper.validate_token([group_id])
@@ -189,6 +193,10 @@ class LocationsController < ApplicationController
   def drop_on_exit
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
+    SqlHelper.validate_token([params[:id]])
+
     unless @login_user.nil?
       Location.destroy(params[:id])
     end
@@ -204,9 +212,12 @@ class LocationsController < ApplicationController
   def on_moved
     Log.add_info(request, params.inspect)
 
-    location_id = params[:id]
+    return unless request.post?
 
-    if location_id.nil? or location_id.empty?
+    location_id = params[:id]
+    SqlHelper.validate_token([location_id])
+
+    if location_id.blank?
       location = Location.get_for(@login_user)
       if location.nil?
         location = Location.new
@@ -216,12 +227,14 @@ class LocationsController < ApplicationController
       begin
         location = Location.find(location_id)
       rescue
+        location = nil
       end
     end
 
     unless location.nil?
       group_id = params[:group_id]
       group_id = nil if group_id.empty?
+      SqlHelper.validate_token([group_id])
       attrs = ActionController::Parameters.new({group_id: group_id, x: params[:x], y: params[:y]})
       location.update_attributes(attrs.permit(Location::PERMIT_BASE))
     end
@@ -235,7 +248,7 @@ class LocationsController < ApplicationController
   #Filter method to check if current User is owner of the specified Location.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     begin
       owner_id = Location.find(params[:id]).user_id

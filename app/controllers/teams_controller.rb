@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -100,6 +100,8 @@ class TeamsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     begin
       team = Team.find(params[:id])
       Item.destroy(team.item_id)
@@ -119,7 +121,7 @@ class TeamsController < ApplicationController
   #
   def check_member
 
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     if Item.find(params[:id]).user_id != @login_user.id
       Log.add_check(request, '[check_member]'+request.to_s)

@@ -68,9 +68,11 @@ class GroupsController < ApplicationController
   #Receives Group name from ThetisBox.
   #
   def create
-     Log.add_info(request, params.inspect)
+    Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
+    return unless request.post?
+
+    if params[:thetisBoxEdit].blank?
       @group = nil
     else
       @group = Group.new
@@ -92,9 +94,11 @@ class GroupsController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @group = Group.find(params[:id])
-    unless params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
-      @group.rename params[:thetisBoxEdit]
+    unless params[:thetisBoxEdit].blank?
+      @group.rename(params[:thetisBoxEdit])
     end
     render(:partial => 'ajax_group_name', :layout => false)
 
@@ -111,6 +115,9 @@ class GroupsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
+    SqlHelper.validate_token([params[:id]])
     begin
       Group.destroy(params[:id])
     rescue => evar
@@ -127,6 +134,8 @@ class GroupsController < ApplicationController
   #
   def move
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @group = Group.find(params[:id])
 
@@ -160,13 +169,14 @@ class GroupsController < ApplicationController
   def get_path
     Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxSelKeeper].nil? or params[:thetisBoxSelKeeper].empty?
+    if params[:thetisBoxSelKeeper].blank?
       @group_path = '/' + t('paren.unknown')
       render(:partial => 'ajax_group_path', :layout => false)
       return
     end
 
     @selected_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([@selected_id])
 
     @group_path = Group.get_path(@selected_id)
 
@@ -181,7 +191,10 @@ class GroupsController < ApplicationController
   def ajax_exclude_users
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     group_id = params[:id]
+    SqlHelper.validate_token([group_id])
 
     unless params[:check_user].blank?
       count = 0
@@ -193,6 +206,7 @@ class GroupsController < ApplicationController
             user.exclude_from(group_id)
             user.save!
           rescue => evar
+            user = nil
             Log.add_error(request, evar)
           end
 
@@ -213,8 +227,11 @@ class GroupsController < ApplicationController
   def ajax_move_users
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     org_group_id = params[:id]
     group_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([org_group_id, group_id])
 
     unless params[:check_user].blank?
 
@@ -228,6 +245,7 @@ class GroupsController < ApplicationController
             user.add_to(group_id)
             user.save!
           rescue => evar
+            user = nil
             Log.add_error(request, evar)
           end
 
@@ -251,6 +269,7 @@ class GroupsController < ApplicationController
     end
 
     @group_id = params[:id]
+    SqlHelper.validate_token([@group_id])
 
 =begin
 #    @users = Group.get_users(params[:id])
@@ -323,6 +342,7 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = params[:id]
+    SqlHelper.validate_token([@group_id])
 
     if @group_id != '0'
       @group = Group.find(@group_id)
@@ -347,6 +367,8 @@ class GroupsController < ApplicationController
   #
   def update_groups_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     order_ary = params[:groups_order]
 
@@ -373,6 +395,7 @@ class GroupsController < ApplicationController
         group.update_attribute(:xorder, idx)
         idx += 1
       rescue => evar
+        group = nil
         Log.add_error(request, evar)
       end
     end
@@ -389,6 +412,7 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = (params[:id] || '0')  # '0' for ROOT
+    SqlHelper.validate_token([@group_id])
 
     session[:group_id] = params[:id]
     session[:group_option] = 'official_title'
@@ -405,6 +429,7 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = (params[:id] || '0')  # '0' for ROOT
+    SqlHelper.validate_token([@group_id])
 
     ary = TemplatesHelper.get_tmpl_folder
 
@@ -427,6 +452,7 @@ class GroupsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = (params[:id] || '0')  # '0' for ROOT
+    SqlHelper.validate_token([@group_id])
 
     @office_map = OfficeMap.get_for_group(@group_id)
 

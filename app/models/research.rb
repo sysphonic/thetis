@@ -241,7 +241,7 @@ class Research < ActiveRecord::Base
     if group_ids.nil?
 
       unless yaml[:statistics].nil?
-        yaml[:statistics].delete :groups
+        yaml[:statistics].delete(:groups)
       end
 
     else
@@ -253,7 +253,7 @@ class Research < ActiveRecord::Base
       yaml[:statistics][:groups] = group_ids.join('|')
     end
 
-    Research.save_config_yaml yaml
+    Research.save_config_yaml(yaml)
 
     return ary
   end
@@ -288,12 +288,12 @@ class Research < ActiveRecord::Base
       ary << group_id
 
       ary.compact!
-      ary.delete ''
+      ary.delete('')
 
       yaml[:statistics][:groups] = ary.join('|')
     end
 
-    Research.save_config_yaml yaml
+    Research.save_config_yaml(yaml)
 
     return ary
   end
@@ -321,11 +321,11 @@ class Research < ActiveRecord::Base
     ary.delete group_id.to_s
 
     ary.compact!
-    ary.delete ''
+    ary.delete('')
 
     yaml[:statistics][:groups] = ary.join('|')
 
-    Research.save_config_yaml yaml
+    Research.save_config_yaml(yaml)
 
     return ary
  end
@@ -406,13 +406,11 @@ class Research < ActiveRecord::Base
         q_code = q_code_a.first
 
         if all.include?(q_code)
-          
           if yaml[q_code].nil?
             q_hash[q_code] = nil
           else
             q_hash[q_code] = Marshal.load(Marshal.dump(yaml[q_code]))
           end
-
         end
       end
     end

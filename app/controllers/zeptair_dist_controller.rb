@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -129,10 +129,12 @@ class ZeptairDistController < ApplicationController
   def reply
     Log.add_info(request, '')   # Not to show passwords.
 
-    unless params[:attach_id].nil? or params[:attach_id].empty?
+    return unless request.post?
+
+    unless params[:attach_id].blank?
       target = Attachment.find(params[:attach_id])
     end
-    unless params[:cmd_id].nil? or params[:cmd_id].empty?
+    unless params[:cmd_id].blank?
       target = ZeptairCommand.find(params[:cmd_id])
     end
     if target.nil? or target.item.nil? \

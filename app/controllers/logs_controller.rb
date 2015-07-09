@@ -112,6 +112,9 @@ class LogsController < ApplicationController
   #Deletes Logs.
   #
   def destroy
+
+    return unless request.post?
+
     if params[:check_log].nil?
       list
       render(:action => 'list')
@@ -136,6 +139,8 @@ class LogsController < ApplicationController
   #Deletes all Logs.
   #
   def destroy_all
+
+    return unless request.post?
 
     Log.delete_all
 

@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2013 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -27,8 +27,9 @@ class OfficialTitlesController < ApplicationController
 
     @group_id = params[:group_id]
     official_title_id = params[:id]
+    SqlHelper.validate_token([@group_id, official_title_id])
 
-    unless official_title_id.nil? or official_title_id.empty?
+    unless official_title_id.blank?
       @official_title = OfficialTitle.find(official_title_id)
     end
 
@@ -44,8 +45,9 @@ class OfficialTitlesController < ApplicationController
 
     @group_id = params[:group_id]
     official_title_id = params[:id]
+    SqlHelper.validate_token([@group_id, official_title_id])
 
-    unless official_title_id.nil? or official_title_id.empty?
+    unless official_title_id.blank?
       @official_title = OfficialTitle.find(official_title_id)
     end
 
@@ -59,8 +61,11 @@ class OfficialTitlesController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @group_id = params[:group_id]
     official_title_id = params[:id]
+    SqlHelper.validate_token([@group_id, official_title_id])
 
     if official_title_id.blank?
       @official_title = OfficialTitle.new(params.require(:official_title).permit(OfficialTitle::PERMIT_BASE))
@@ -85,6 +90,8 @@ class OfficialTitlesController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     begin
       OfficialTitle.destroy(params[:id])
     rescue => evar
@@ -92,8 +99,9 @@ class OfficialTitlesController < ApplicationController
     end
 
     @group_id = params[:group_id]
+    SqlHelper.validate_token([@group_id])
 
-    if @group_id.nil? or @group_id.empty?
+    if @group_id.blank?
       @group_id = '0'   # '0' for ROOT
     end
 
@@ -108,9 +116,13 @@ class OfficialTitlesController < ApplicationController
   def update_order
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     order_ary = params[:official_titles_order]
 
     @group_id = params[:group_id]
+    SqlHelper.validate_token([@group_id])
+
     parent_titles = OfficialTitle.get_for(Group.find(@group_id).parent_id, true, true)
     order_offset = parent_titles.length
 

@@ -28,6 +28,8 @@ module AddressbookHelper
   #
   def self.arrange_per_scope(address, user, scope, group_ids, team_ids)
 
+    SqlHelper.validate_token([group_ids, team_ids])
+
     case scope
      when 'private'
       address.owner_id = user.id

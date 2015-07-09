@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -76,9 +76,11 @@ class MailFoldersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     parent_id = params[:selectedFolderId]
 
-    if params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
+    if params[:thetisBoxEdit].blank?
       @mail_folder = nil
     else
       @mail_folder = MailFolder.new
@@ -100,9 +102,11 @@ class MailFoldersController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @mail_folder = MailFolder.find(params[:id])
 
-    unless params[:thetisBoxEdit].nil? or params[:thetisBoxEdit].empty?
+    unless params[:thetisBoxEdit].blank?
       @mail_folder.name = params[:thetisBoxEdit]
       @mail_folder.save
     end
@@ -117,7 +121,10 @@ class MailFoldersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     mail_account_id = params[:mail_account_id]
+    SqlHelper.validate_token([mail_account_id])
 
     mail_folder = MailFolder.find(params[:id])
     trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
@@ -151,6 +158,8 @@ class MailFoldersController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @mail_folder = MailFolder.find(params[:id])
 
     if params[:thetisBoxSelKeeper].blank?
@@ -161,6 +170,7 @@ class MailFoldersController < ApplicationController
     end
 
     parent_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([parent_id])
 
     if parent_id == '0'   # '0' for ROOT
       flash[:notice] = 'ERROR:' + t('mail_folder.root_cannot_have_folders')
@@ -198,10 +208,13 @@ class MailFoldersController < ApplicationController
     end
 
     if !params[:pop].nil? and params[:pop] == 'true'
+
+      mail_account_id = params[:mail_account_id]
+      SqlHelper.validate_token([mail_account_id])
+
       begin
         new_arrivals_h = {}
 
-        mail_account_id = params[:mail_account_id]
         if mail_account_id.blank?
           mail_accounts = MailAccount.find_all("user_id=#{@login_user.id}")
           mail_accounts.each do |mail_account|
@@ -249,6 +262,8 @@ class MailFoldersController < ApplicationController
     end
 
     @folder_id = params[:id]
+    SqlHelper.validate_token([@folder_id])
+
     if @folder_id == TreeElement::ROOT_ID.to_s
       @emails = nil
     else
@@ -258,13 +273,9 @@ class MailFoldersController < ApplicationController
 # FEATURE_PAGING_IN_TREE >>>
       @sort_col = (params[:sort_col] || 'sent_at')
       @sort_type = (params[:sort_type] || 'DESC')
+      SqlHelper.validate_token([@sort_col, @sort_type])
 
-      folder_ids = nil
-      add_con = nil
-
-      folder_ids = [@folder_id]
-
-      sql = EmailsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, add_con)
+      sql = EmailsHelper.get_list_sql(@login_user, params[:keyword], [@folder_id], @sort_col, @sort_type, 0, nil)
       @email_pages, @emails, @total_num = paginate_by_sql(Email, sql, 10)
 # FEATURE_PAGING_IN_TREE <<<
     end
@@ -282,10 +293,10 @@ class MailFoldersController < ApplicationController
   def get_mail_content
     Log.add_info(request, params.inspect)
 
-    mail_id = params[:id]
+    email_id = params[:id]
 
     begin
-      @email = Email.find(mail_id)
+      @email = Email.find(email_id)
       render(:partial => 'ajax_mail_content', :layout => false)
     rescue => evar
       Log.add_error(nil, evar)
@@ -400,14 +411,16 @@ class MailFoldersController < ApplicationController
   def empty
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
-    SqlHelper.validate_token([mail_account_id])
+    SqlHelper.validate_token([@folder_id, mail_account_id])
 
     trash_folder = MailFolder.get_for(@login_user, mail_account_id, MailFolder::XTYPE_TRASH)
 
     mail_folder = MailFolder.find(@folder_id)
-    emails = MailFolder.get_mails(mail_folder.id, @login_user) || []
+    emails = (MailFolder.get_mails(mail_folder.id, @login_user) || [])
 
     if mail_folder.id == trash_folder.id \
         or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
@@ -433,8 +446,11 @@ class MailFoldersController < ApplicationController
   def ajax_delete_mails
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
+    SqlHelper.validate_token([folder_id, mail_account_id])
 
     unless params[:check_mail].blank?
       mail_folder = MailFolder.find(folder_id)
@@ -480,6 +496,8 @@ class MailFoldersController < ApplicationController
   #
   def ajax_move_mails
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
     SqlHelper.validate_token([folder_id])
@@ -529,6 +547,7 @@ class MailFoldersController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @folder_id = params[:id]
+    SqlHelper.validate_token([@folder_id])
 
     if @folder_id == '0'
       @folders = MailFolder.get_account_roots_for(@login_user)
@@ -540,10 +559,6 @@ class MailFoldersController < ApplicationController
     end
 
     render(:partial => 'ajax_folders_order', :layout => false)
-
-  rescue => evar
-    Log.add_error(request, evar)
-    render(:partial => 'ajax_folders_order', :layout => false)
   end
 
   #=== update_folders_order
@@ -553,6 +568,8 @@ class MailFoldersController < ApplicationController
   #
   def update_folders_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     order_arr = params[:folders_order]
 
@@ -605,6 +622,8 @@ class MailFoldersController < ApplicationController
   def update_mail_unread
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     email_id = params[:email_id]
     unread = (params[:unread] == "1")
 
@@ -653,7 +672,7 @@ class MailFoldersController < ApplicationController
   #Filter method to check if current User is owner of the specified Email.
   #
   def check_mail_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     begin
       owner_id = Email.find(params[:id]).user_id

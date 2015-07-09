@@ -19,6 +19,24 @@ module ApplicationHelper
   require 'uri'     # for URI.extract()
 
 
+  #=== self.stacktrace
+  #
+  #Gets backtrace.
+  #
+  #return:: Backtrace.
+  #
+  def self.stacktrace
+    begin
+      raise('')
+    rescue => evar
+      paths = Rails.root.split('/')
+      paths.delete('')
+      stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}.join("\n")
+      stacktrace.pop  # Remove current stack.
+    end
+    return stacktrace
+  end
+
   #=== self.split_preserving_quot
   #
   #Splits string preserving quotations.

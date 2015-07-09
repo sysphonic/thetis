@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -35,6 +35,8 @@ class DesktopController < ApplicationController
   #
   def drop_file
     Log.add_info(request, '')   # Not to show passwords.
+
+    return unless request.post?
 
     if params[:file].nil? or params[:file].size <= 0
       render(:text => '')
@@ -126,6 +128,8 @@ class DesktopController < ApplicationController
   def update_pref
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     desktop = Desktop.get_for(@login_user, true)
 
     params[:desktop].delete(:user_id)
@@ -145,9 +149,11 @@ class DesktopController < ApplicationController
   def update_config
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @yaml = ApplicationHelper.get_config_yaml
 
-    unless params[:desktop].nil? or params[:desktop].empty?
+    unless params[:desktop].blank?
       @yaml[:desktop] = Hash.new if @yaml[:desktop].nil?
 
       params[:desktop].each do |key, val|
@@ -294,6 +300,8 @@ class DesktopController < ApplicationController
   def drop_on_desktop
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if @login_user.nil?
       t = Time.now
       render(:text => (t.hour.to_s + t.min.to_s + t.sec.to_s))
@@ -319,6 +327,8 @@ class DesktopController < ApplicationController
   def add_toy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if @login_user.nil?
       render(:text => '0')
       return
@@ -343,6 +353,9 @@ class DesktopController < ApplicationController
   def drop_on_recyclebox
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
+    SqlHelper.validate_token([params[:id]])
     unless @login_user.nil?
       Toy.destroy(params[:id])
     end
@@ -358,10 +371,13 @@ class DesktopController < ApplicationController
   def on_toys_moved
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     unless @login_user.nil?
       begin
         toy = Toy.find(params[:id])
       rescue
+        toy = nil
       end
 
       unless toy.nil?
@@ -380,6 +396,8 @@ class DesktopController < ApplicationController
   #
   def create_label
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     if params[:thetisBoxEdit].empty?
       render(:partial => 'ajax_label', :layout => false)
@@ -410,6 +428,8 @@ class DesktopController < ApplicationController
   #
   def update_label
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     msg = params[:thetisBoxEdit]
 
@@ -454,6 +474,8 @@ class DesktopController < ApplicationController
   #
   def post_label
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     if params[:txaPostLabel].empty? or params[:post_to].empty?
       render(:text => '')

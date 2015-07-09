@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -48,6 +48,8 @@ class WorkflowsController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
     tmpl_item = Item.find(params[:select_workflow])
@@ -77,6 +79,8 @@ class WorkflowsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     workflow = Workflow.find(params[:id])
 
     begin
@@ -100,6 +104,8 @@ class WorkflowsController < ApplicationController
   #
   def move
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     unless params[:thetisBoxSelKeeper].nil?
       folder_id = params[:thetisBoxSelKeeper].split(':').last
@@ -132,7 +138,7 @@ class WorkflowsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Workflow.
   #
   def check_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     begin
       owner_id = Workflow.find(params[:id]).user_id

@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -33,6 +33,8 @@ class MailAccountsController < ApplicationController
   #
   def create
     Log.add_info(request, '')   # Not to show passwords.
+
+    return unless request.post?
 
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
       params[:mail_account].delete(:smtp_username)
@@ -90,6 +92,8 @@ class MailAccountsController < ApplicationController
   def update
     Log.add_info(request, '')   # Not to show passwords.
 
+    return unless request.post?
+
     @mail_account = MailAccount.find(params[:id])
 
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
@@ -129,6 +133,7 @@ class MailAccountsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     mail_account_id = params[:id]
+    SqlHelper.validate_token([mail_account_id])
 
     begin
       @mail_account = MailAccount.find(mail_account_id)
@@ -182,7 +187,7 @@ class MailAccountsController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     mail_account = MailAccount.find(params[:id])
 

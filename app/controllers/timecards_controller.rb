@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -55,7 +55,7 @@ class TimecardsController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       date = Date.today
     else
       date_params = date_s.split('-')
@@ -64,7 +64,7 @@ class TimecardsController < ApplicationController
         @month = date_params.last.to_i
         date = TimecardsHelper.get_first_day_in_fiscal_month(@year, @month, month_begins_at)
       else
-        date = Date.parse date_s
+        date = Date.parse(date_s)
       end
     end
 
@@ -152,7 +152,9 @@ class TimecardsController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
+    return unless request.post?
+
+    if params[:id].blank?
       @timecard = Timecard.new
     else
       @timecard = Timecard.find(params[:id])
@@ -165,9 +167,9 @@ class TimecardsController < ApplicationController
       params[:timecard]['options'] = '|' + options.join('|') + '|'
     end
 
-    if params[:user_id].nil? or params[:user_id].empty?
+    if params[:user_id].blank?
       @selected_user = @login_user
-    elsif @login_user.id.to_s == params[:user_id]
+    elsif (@login_user.id.to_s == params[:user_id])
       @selected_user = @login_user
     else
       unless @login_user.admin?(User::AUTH_TIMECARD)
@@ -189,12 +191,12 @@ class TimecardsController < ApplicationController
       unless breaks.empty?
         check_error = false
 
-        unless params[:timecard]['start'].nil? or params[:timecard]['start'].empty?
+        unless params[:timecard]['start'].blank?
           start_t = UtilDateTime.parse(params[:timecard]['start']).to_time
           check_error = true if breaks.first.first < start_t
         end
 
-        unless params[:timecard]['end'].nil? or params[:timecard]['end'].empty?
+        unless params[:timecard]['end'].blank?
           end_t = UtilDateTime.parse(params[:timecard]['end']).to_time
           check_error = true if end_t < breaks.last.last
         end
@@ -236,6 +238,8 @@ class TimecardsController < ApplicationController
   #
   def destroy
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     begin
       timecard = Timecard.find(params[:id])
@@ -282,6 +286,8 @@ class TimecardsController < ApplicationController
   #
   def update_break
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
@@ -348,6 +354,8 @@ class TimecardsController < ApplicationController
   def delete_break
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @timecard = Timecard.find(params[:id])
 
     if params[:org_start].nil?
@@ -380,11 +388,11 @@ class TimecardsController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if date_s.blank?
       @date = Date.today
       date_s = @date.strftime(Schedule::SYS_DATE_FORM)
     else
-      @date = Date.parse date_s
+      @date = Date.parse(date_s)
     end
 
     if params[:display] == 'mine'
@@ -392,6 +400,7 @@ class TimecardsController < ApplicationController
     else
       display_type = params[:display].split('_').first
       display_id = params[:display].split('_').last
+      SqlHelper.validate_token([display_id])
 
       @selected_users = Group.get_users(display_id)
       @group_id = display_id
@@ -510,6 +519,8 @@ class TimecardsController < ApplicationController
   def paidhld_update
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     year = params[:year].to_i
     num = params[:num].to_f
 
@@ -536,11 +547,15 @@ class TimecardsController < ApplicationController
   def paidhld_update_multi
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     year = params[:year].to_i
     num = params[:num].to_f
 
     group_id = params[:group_id]
     users_hash = (params[:check_user] || {})
+    SqlHelper.validate_token([group_id, users_hash.keys])
+
     done = false
     users_hash.each do |user_id, value|
       if value == '1'
@@ -604,9 +619,11 @@ class TimecardsController < ApplicationController
   def update_config
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     yaml = ApplicationHelper.get_config_yaml
 
-    unless params[:timecard].nil? or params[:timecard].empty?
+    unless params[:timecard].blank?
       yaml[:timecard] = Hash.new if yaml[:timecard].nil?
       
       params[:timecard].each do |key, val|
@@ -629,6 +646,8 @@ class TimecardsController < ApplicationController
   #
   def update_default_break
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     start_t = Time.local(2000, 1, 1, params[:start_hour].to_i, params[:start_min].to_i)
     end_t = Time.local(2000, 1, 1, params[:end_hour].to_i, params[:end_min].to_i)
@@ -689,6 +708,8 @@ class TimecardsController < ApplicationController
   #
   def delete_default_break
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     unless params[:org_start].nil?
       org_start = UtilDateTime.parse(params[:org_start]).to_time

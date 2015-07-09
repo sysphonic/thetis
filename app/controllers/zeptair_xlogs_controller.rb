@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -101,6 +101,8 @@ class ZeptairXlogsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_xlog].nil?
       list
       render(:action => 'list')
@@ -108,6 +110,7 @@ class ZeptairXlogsController < ApplicationController
     end
 
     count = 0
+    SqlHelper.validate_token([params[:check_xlog].keys])
     params[:check_xlog].each do |key, value|
       if value == '1'
         ZeptairXlog.delete(key)
@@ -126,6 +129,8 @@ class ZeptairXlogsController < ApplicationController
   #
   def destroy_all
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     ZeptairXlog.delete_all
 

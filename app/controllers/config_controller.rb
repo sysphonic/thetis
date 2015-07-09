@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -39,13 +39,15 @@ class ConfigController < ApplicationController
   def update_by_ajax
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     cat_h = {:desktop => User::AUTH_DESKTOP, :user => User::AUTH_USER, :log => User::AUTH_LOG}
 
     yaml = ApplicationHelper.get_config_yaml
 
     cat_h.keys.each do |cat|
 
-      next if params[cat].nil? or params[cat].empty?
+      next if params[cat].blank?
 
       unless @login_user.admin?(cat_h[cat])
         render(:text => t('msg.need_to_be_admin'))
@@ -70,6 +72,8 @@ class ConfigController < ApplicationController
   #
   def update
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     categories = [:general, :menu, :topic, :note, :smtp, :feed, :user, :log]
 
@@ -149,6 +153,8 @@ class ConfigController < ApplicationController
   def destroy_header_menu
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @yaml = ApplicationHelper.get_config_yaml
 
     unless params[:org_name].nil? or @yaml[:general]['header_menus'].nil?
@@ -171,6 +177,8 @@ class ConfigController < ApplicationController
   #
   def update_header_menu
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @yaml = ApplicationHelper.get_config_yaml
 
@@ -220,6 +228,8 @@ class ConfigController < ApplicationController
   #
   def update_header_menus_order
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     header_menus = params[:header_menus_order]
 

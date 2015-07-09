@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -83,6 +83,7 @@ class ItemsController < ApplicationController
     else
       @folder_id = params[:folder_id]
     end
+    SqlHelper.validate_token([@folder_id])
 
     unless @folder_id.nil?
       session[:folder_id] = @folder_id
@@ -141,7 +142,7 @@ class ItemsController < ApplicationController
   def search
     Log.add_info(request, params.inspect)
 
-    unless params[:select_sorting].nil? or params[:select_sorting].empty?
+    unless params[:select_sorting].blank?
       sort_a = params[:select_sorting].split(' ')
       params[:sort_col] = sort_a.first
       params[:sort_type] = sort_a.last
@@ -149,7 +150,7 @@ class ItemsController < ApplicationController
 
     list
 
-    if params[:keyword].nil? or params[:keyword].empty?
+    if params[:keyword].blank?
       if params[:from_action].nil? or params[:from_action] == 'bbs'
         render(:action => 'bbs')
       else
@@ -166,7 +167,7 @@ class ItemsController < ApplicationController
   def bbs
     Log.add_info(request, params.inspect)
 
-    if !params[:select_sorting].nil?
+    unless params[:select_sorting].nil?
       sort_a = params[:select_sorting].split(' ')
       params[:sort_col] = sort_a.first
       params[:sort_type] = sort_a.last
@@ -218,7 +219,7 @@ class ItemsController < ApplicationController
   def new
 
     @item = Item.new
-    if params[:folder_id].nil? or params[:folder_id].empty?
+    if params[:folder_id].blank?
       my_folder = @login_user.get_my_folder
       if my_folder.nil?
         @item.folder_id = 0
@@ -244,6 +245,7 @@ class ItemsController < ApplicationController
     begin
       @item = Item.find(params[:id])
     rescue => evar
+      @item = nil
       Log.add_error(request, evar)
     end
   end
@@ -255,6 +257,8 @@ class ItemsController < ApplicationController
   #
   def move
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     @item = Item.find(params[:id])
 
@@ -287,6 +291,8 @@ class ItemsController < ApplicationController
   def move_multi
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     if params[:check_item].nil? or params[:thetisBoxSelKeeper].nil?
       list
       render(:action => 'list')
@@ -296,6 +302,7 @@ class ItemsController < ApplicationController
     is_admin = @login_user.admin?(User::AUTH_ITEM)
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
+    SqlHelper.validate_token([folder_id])
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
       flash[:notice] = 'ERROR:' + t('folder.need_auth_to_write_in')
@@ -316,6 +323,7 @@ class ItemsController < ApplicationController
           item.update_attribute(:folder_id, folder_id)
 
         rescue => evar
+          item = nil
           Log.add_error(request, evar)
         end
 
@@ -334,6 +342,8 @@ class ItemsController < ApplicationController
   #
   def destroy
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     begin
       Item.destroy(params[:id])
@@ -359,6 +369,8 @@ class ItemsController < ApplicationController
   #
   def destroy_multi
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     if params[:check_item].nil?
       list
@@ -400,6 +412,8 @@ class ItemsController < ApplicationController
   def duplicate
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     copies_folder = ItemsHelper.get_copies_folder(@login_user.id)
 
     item = Item.find(params[:id])
@@ -429,6 +443,8 @@ class ItemsController < ApplicationController
   def set_workflow
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @item = Item.find(params[:id])
 
     orders_hash = params.dup
@@ -441,8 +457,10 @@ class ItemsController < ApplicationController
 
     orders = []
     orders_hash.each do |key, value|
+      user_ids = value.split(',')
+      SqlHelper.validate_token([user_ids])
 
-      orders << '|' + value.split(',').join('|') + '|'
+      orders << '|' + user_ids.join('|') + '|'
     end
     @item.workflow.update_attribute(:users, orders.join(','))
 
@@ -465,6 +483,8 @@ class ItemsController < ApplicationController
   #
   def set_basic
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
         and !@login_user.admin?(User::AUTH_ZEPTAIR)
@@ -580,7 +600,9 @@ class ItemsController < ApplicationController
   def set_description
     Log.add_info(request, params.inspect)
 
-    if params[:id].nil? or params[:id].empty?
+    return unless request.post?
+
+    if params[:id].blank?
       @item = Item.new_info(0)
       @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
       @item.user_id = @login_user.id
@@ -625,11 +647,13 @@ class ItemsController < ApplicationController
   def set_image
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     created = false
 
-    if params[:id].nil? or params[:id].empty?
+    if params[:id].blank?
       @item = Item.new_info(0)
-      @item.attributes = params[:item]
+      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
       @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
 
@@ -709,6 +733,8 @@ class ItemsController < ApplicationController
   def delete_image
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     begin
       image = Image.find(params[:image_id])
 
@@ -759,6 +785,8 @@ class ItemsController < ApplicationController
   def update_image_info
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     image = Image.find(params[:image_id])
 
     # Getting Item at first for the case of resetting the db connection by an error.
@@ -799,6 +827,8 @@ class ItemsController < ApplicationController
   def update_images_order
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     order_ary = params[:images_order]
 
     item = Item.find(params[:id])
@@ -811,7 +841,7 @@ class ItemsController < ApplicationController
       img.update_attribute(:xorder, order_ary.index(img.id.to_s) + 1)
 
       class << img
-        remove_method :record_timestamps
+        remove_method(:record_timestamps)
       end
     end
 
@@ -834,11 +864,13 @@ class ItemsController < ApplicationController
   def set_attachment
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     created = false
 
-    if params[:id].nil? or params[:id].empty?
+    if params[:id].blank?
       @item = Item.new_info(0)
-      @item.attributes = params[:item]
+      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
       @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
 
@@ -894,7 +926,7 @@ class ItemsController < ApplicationController
       return
     end
 
-    parent_item = attach.item || ((attach.comment.nil?) ? nil : attach.comment.item)
+    parent_item = (attach.item || ((attach.comment.nil?) ? nil : attach.comment.item))
     if parent_item.nil? or !parent_item.check_user_auth(@login_user, 'r', true)
       Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -935,6 +967,8 @@ class ItemsController < ApplicationController
   #
   def delete_attachment
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     begin
       attach = Attachment.find(params[:attachment_id])
@@ -986,6 +1020,8 @@ class ItemsController < ApplicationController
   def update_attachment_info
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     attachment = Attachment.find(params[:attachment_id])
 
     # Getting Item at first for the case of resetting the db connection by an error.
@@ -1026,6 +1062,8 @@ class ItemsController < ApplicationController
   def update_attachments_order
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     order_ary = params[:attachments_order]
 
     item = Item.find(params[:id])
@@ -1038,7 +1076,7 @@ class ItemsController < ApplicationController
       attach.update_attribute(:xorder, order_ary.index(attach.id.to_s) + 1)
 
       class << attach
-        remove_method :record_timestamps
+        remove_method(:record_timestamps)
       end
     end
 
@@ -1060,6 +1098,8 @@ class ItemsController < ApplicationController
   #
   def add_comment
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     unless params[:comment][:file].nil?
       attach_params = { :file => params[:comment][:file] }
@@ -1110,6 +1150,8 @@ class ItemsController < ApplicationController
   def update_comment
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     unless params[:thetisBoxEdit].empty?
       @comment = Comment.find(params[:comment_id])
       if @comment.nil?
@@ -1131,6 +1173,8 @@ class ItemsController < ApplicationController
   #
   def destroy_comment
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     comment = Comment.find(params[:comment_id])
     @item = comment.item
@@ -1168,6 +1212,8 @@ class ItemsController < ApplicationController
   def add_comment_attachment
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     unless params[:comment_file].nil?
       attach_params = { :file => params[:comment_file] }
       params.delete(:comment_file)
@@ -1190,6 +1236,8 @@ class ItemsController < ApplicationController
   #
   def delete_comment_attachment
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     begin
       attachment = Attachment.find(params[:attachment_id])
@@ -1235,7 +1283,9 @@ class ItemsController < ApplicationController
   def wf_issue
     Log.add_info(request, params.inspect)
 
-   begin
+    return unless request.post?
+
+    begin
       @item = Item.find(params[:id])
       @workflow = @item.workflow
     rescue => evar
@@ -1258,17 +1308,18 @@ class ItemsController < ApplicationController
   def team_organize
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     team_id = params[:team_id]
     unless team_id.blank?
       begin
         @team = Team.find(team_id)
       rescue
         @team = nil
-      ensure
-        if @team.nil?
-          flash[:notice] = t('msg.already_deleted', :name => Team.model_name.human)
-          return
-        end
+      end
+      if @team.nil?
+        flash[:notice] = t('msg.already_deleted', :name => Team.model_name.human)
+        return
       end
 
       users = @team.get_users_a
@@ -1284,7 +1335,8 @@ class ItemsController < ApplicationController
 
       unless team_id.blank?
         # @team must not be nil.
-        @team.save if modified = @team.clear_users
+        modified = @team.clear_users
+        @team.save if modified
       end
 
     else
@@ -1300,9 +1352,7 @@ class ItemsController < ApplicationController
           @team.name = item.title
           @team.item_id = params[:id]
           @team.status = Team::STATUS_STANDBY
-
         else
-
           @team.clear_users
         end
 
@@ -1338,6 +1388,8 @@ class ItemsController < ApplicationController
   def move_in_team_folder
     Log.add_info(request, params.inspect)
 
+    return unless request.post?
+
     @item = Item.find(params[:id])
 
     team_folder = @item.team.get_team_folder
@@ -1360,6 +1412,8 @@ class ItemsController < ApplicationController
   #
   def change_team_status
     Log.add_info(request, params.inspect)
+
+    return unless request.post?
 
     SqlHelper.validate_token([params[:status]])
 
