@@ -100,7 +100,7 @@ module TreeElement
 
     else
 
-      nodes = klass.where("parent_id=#{node_id}").order('xorder ASC, id ASC').to_a
+      nodes = klass.where("parent_id=#{node_id.to_i}").order('xorder ASC, id ASC').to_a
       if ret_obj
         array = nodes
       else
@@ -139,7 +139,7 @@ module TreeElement
     else
       con = Marshal.load(Marshal.dump(conditions)) + ' and '
     end
-    con << "(parent_id=#{node_id})"
+    con << "(parent_id=#{node_id.to_i})"
 
     tree[node_id] = klass.where(con).order(order_by).to_a
 

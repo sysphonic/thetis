@@ -11,7 +11,7 @@
             <input type="button" value="<%= t('btn.new') %>" onclick="onCreateGroupClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameGroupClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;"/>
+            <input type="button" value="<%= t('btn.move') %>" onclick="onMoveGroupClicked();" style="width:80px;"/>
           <% else %>
             <%= t('group.only_admin_can_edit_tree') %>
           <% end %>
@@ -279,7 +279,7 @@ function _doDelete(group_id)
         );
 }
 
-function doMove()
+function onMoveGroupClicked()
 {
   if (document.form_group_tree.selKeeper.value == "") {
     msg("<%= t('group.select') %>");
@@ -294,11 +294,24 @@ function doMove()
 
   ThetisBox.openTree("groupTree:"+group_id, true);
 
+  var addParams = new Array();
+  addParams.push("id="+group_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("id="+group_id, "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'groups', :action => 'move') %>", "<%= t('group.select_dest')%>", "");
+  thetisBox.setAdditionalParams(addParams);
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveGroup(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>?id="+group_id, "0");
+}
+
+function doMoveGroup(frmTree)
+{
+  prog("TOP-RIGHT");
+
+  frmTree.method = "post";
+  frmTree.action = "<%= url_for(:controller => 'groups', :action => 'move') %>";
+  frmTree.submit();
 }
 
 function doGetUsers(group_id)

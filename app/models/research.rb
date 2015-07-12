@@ -358,7 +358,7 @@ class Research < ActiveRecord::Base
 
     SqlHelper.validate_token([user_id])
 
-    return Research.where("user_id=#{user_id}").first
+    return Research.where("user_id=#{user_id.to_i}").first
   end
 
   #=== self.get_q_codes

@@ -354,12 +354,8 @@ class ItemsController < ApplicationController
     if params[:from_action].nil?
       render(:text => params[:id])
     else
-      params.delete(:controller)
-      params.delete(:action)
-      params.delete(:id)
       flash[:notice] = t('msg.delete_success')
-      params[:action] = params[:from_action]
-      redirect_to(params)
+      self.send(params[:from_action])
     end
   end
 

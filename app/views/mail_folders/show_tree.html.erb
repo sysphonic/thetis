@@ -88,7 +88,7 @@
                         <a class="context_menu_item" href="javascript:this.onclick()" onclick="onRenameFolderClicked(); return false;">
                           <%= t('btn.rename') %>
                         </a>
-                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doMove(); return false;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="onMoveFolderClicked(); return false;">
                           <%= t('btn.move') %>
                         </a>
                         <a class="context_menu_item" href="javascript:this.onclick()" onclick="doDelete(); return false;">
@@ -650,7 +650,7 @@ function _doDelete(folder_id)
     );
 }
 
-function doMove()
+function onMoveFolderClicked()
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select') %>");
@@ -671,17 +671,27 @@ function doMove()
 
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
-  var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
   var addParams = new Array();
 <% unless params[:mail_account_xtype].nil? %>
   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
 <% end %>
   addParams.push("id="+folder_id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBox = new ThetisBox;
   thetisBox.setAdditionalParams(addParams);
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move') %>", "<%= t('folder.select_dest') %>", "");
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveFolder(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest') %>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
+}
+
+function doMoveFolder(frmTree)
+{
+  prog("TOP-RIGHT");
+
+  frmTree.method = "post";
+  frmTree.action = "<%= url_for(:controller => 'mail_folders', :action => 'move') %>";
+  frmTree.submit();
 }
 
 function doSelectTree(folder_id)
@@ -1008,7 +1018,7 @@ function _doEmpty(folder_id)
   }
 
   invalidateAccountSummary();
-  doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams, folder_id);
+  doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'empty') %>", addParams, folder_id);
 }
 
 

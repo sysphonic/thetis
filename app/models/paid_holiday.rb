@@ -34,11 +34,11 @@ class PaidHoliday < ActiveRecord::Base
 
     begin
       con = []
-      con << "(user_id=#{user_id})"
+      con << "(user_id=#{user_id.to_i})"
       if fiscal_year.nil?
         return PaidHoliday.where(con).order('year ASC').to_a
       else
-        con << "(year=#{fiscal_year})"
+        con << "(year=#{fiscal_year.to_i})"
         return PaidHoliday.where(con.join(' and ')).first
       end
     rescue
@@ -61,8 +61,8 @@ class PaidHoliday < ActiveRecord::Base
 
     if num <= 0
       con = []
-      con << "(user_id=#{user_id})"
-      con << "(year=#{fiscal_year})"
+      con << "(user_id=#{user_id.to_i})"
+      con << "(year=#{fiscal_year.to_i})"
       PaidHoliday.destroy_all(con.join(' and '))
       return
     end
@@ -100,7 +100,7 @@ class PaidHoliday < ActiveRecord::Base
     return 0 if paidhld_carry_over.nil? or paidhld_carry_over.empty? or paidhld_carry_over == PaidHoliday::CARRY_OVER_NONE
 
     begin
-      con = "(user_id=#{user_id}) and (year < #{year})"
+      con = "(user_id=#{user_id.to_i}) and (year < #{year.to_i})"
       paidhlds = PaidHoliday.where(con).order('year ASC').to_a
     rescue
     end

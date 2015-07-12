@@ -431,7 +431,7 @@ de:
     select_dest: "Bitte wählen Sie das Ziel zu verschieben aus."
     delete_info1: "] wird gelöscht."
     delete_info2: "(Falls Gruppenordner ist nicht leer, wird das mit R/W (Lesen u. Schreiben) Befugnisse der Mitgliedern weiterbleiben. Wenn keine Mitgliedern in Gruppe geben und keine andere Befugnisse zu Gruppenordner angegeben werden, wird das Veröffentlicht.)"
-    select_to_show: "(Bitte wählen Sie Gruppe zu zeigen aus.)"
+    select_to_show: "Bitte wählen Sie Gruppe zu zeigen aus."
     select_to_change_to: "Bitte wählen Sie Gruppe zu ersetzen durch aus."
     select_to_add: "Bitte wählen Sie Gruppe hinzuzufügen."
     other_group: "Andere Gruppe"

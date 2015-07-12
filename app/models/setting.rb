@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -33,7 +33,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([user_id, category])
 
     con = []
-    con << "(user_id=#{user_id})"
+    con << "(user_id=#{user_id.to_i})"
     con << "(category='#{category}')" unless category.nil?
 
     settings = Setting.where(con.join(' and ')).to_a
@@ -63,7 +63,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([user_id, category, key])
 
     con = []
-    con << "(user_id=#{user_id})"
+    con << "(user_id=#{user_id.to_i})"
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
@@ -88,7 +88,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([user_id, category, key])
 
     con = []
-    con << "(user_id=#{user_id})"
+    con << "(user_id=#{user_id.to_i})"
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
@@ -127,7 +127,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([group_id, category])
 
     con = []
-    con << "(group_id=#{group_id})"
+    con << "(group_id=#{group_id.to_i})"
     con << "(category='#{category}')" unless category.nil?
 
     settings = Setting.where(con.join(' and ')).to_a
@@ -157,7 +157,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([group_id, category, key])
 
     con = []
-    con << "(group_id=#{group_id})"
+    con << "(group_id=#{group_id.to_i})"
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 
@@ -182,7 +182,7 @@ class Setting < ActiveRecord::Base
     SqlHelper.validate_token([group_id, category, key])
 
     con = []
-    con << "(group_id=#{group_id})"
+    con << "(group_id=#{group_id.to_i})"
     con << "(category='#{category}')"
     con << "(xkey='#{key}')"
 

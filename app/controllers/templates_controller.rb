@@ -170,8 +170,6 @@ class TemplatesController < ApplicationController
   def copy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
-
     tmpl_id = params[:thetisBoxSelKeeper].split(':').last
     tmpl_item = Item.find(tmpl_id)
 

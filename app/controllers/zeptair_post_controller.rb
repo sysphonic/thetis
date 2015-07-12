@@ -93,7 +93,7 @@ class ZeptairPostController < ApplicationController
     end
 
     unless zeptair_id.blank?
-      target_user = User.where("zeptair_id=#{zeptair_id}").first
+      target_user = User.where("zeptair_id=#{zeptair_id.to_i}").first
     end
 
     if target_user.nil?
@@ -153,7 +153,7 @@ class ZeptairPostController < ApplicationController
 
     unless zeptair_id.blank?
 
-      target_user = User.where("zeptair_id=#{zeptair_id}").first
+      target_user = User.where("zeptair_id=#{zeptair_id.to_i}").first
 
       unless @login_user.admin?(User::AUTH_ZEPTAIR) or @login_user.id == target_user.id
         target_user = nil

@@ -27,7 +27,7 @@ module ItemsHelper
 
     SqlHelper.validate_token([user_id, source_id])
 
-    copied_items = Item.where("user_id=#{user_id} and source_id=#{source_id}").order('created_at DESC').to_a
+    copied_items = Item.where("user_id=#{user_id.to_i} and source_id=#{source_id.to_i}").order('created_at DESC').to_a
 
     rev = 0
     copied_items.each do |item|
@@ -54,7 +54,8 @@ module ItemsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = "(parent_id=#{my_folder.id}) and (name='#{Item.copies_folder}')"
+      folder_name_quot = SqlHelper.quote(Item.copies_folder)
+      con = "(parent_id=#{my_folder.id}) and (name=#{folder_name_quot})"
 
       begin
         copies_folder = Folder.where(con).first
@@ -89,7 +90,8 @@ module ItemsHelper
     my_folder = User.get_my_folder(user_id)
 
     unless my_folder.nil?
-      con = "(parent_id=#{my_folder.id}) and (name='#{Item.copies_folder}')"
+      folder_name_quot = SqlHelper.quote(Item.copies_folder)
+      con = "(parent_id=#{my_folder.id}) and (name=#{folder_name_quot})"
 
       begin
         copies_folder = Folder.where(con).first

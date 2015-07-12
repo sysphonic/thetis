@@ -429,7 +429,7 @@ class Timecard < ActiveRecord::Base
 
     SqlHelper.validate_token([user_id, date_s])
     begin
-      con = "(user_id=#{user_id}) and (date='#{date_s}')"
+      con = "(user_id=#{user_id.to_i}) and (date='#{date_s}')"
       return Timecard.where(con).first
     rescue
     end
@@ -452,7 +452,7 @@ class Timecard < ActiveRecord::Base
     start_s = start_date.strftime(Schedule::SYS_DATE_FORM)
     end_s = end_date.strftime(Schedule::SYS_DATE_FORM)
 
-    con = "(user_id=#{user_id}) and (date >= '#{start_s}') and (date <= '#{end_s}')"
+    con = "(user_id=#{user_id.to_i}) and (date >= '#{start_s}') and (date <= '#{end_s}')"
     ary = Timecard.where(con).order('date ASC').to_a
     timecards_h = Hash.new
     unless ary.nil?

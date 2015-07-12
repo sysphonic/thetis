@@ -48,7 +48,7 @@ class Location < ActiveRecord::Base
     if group_id.nil?
       con = 'group_id is null'
     else
-      con = "group_id=#{group_id}"
+      con = "group_id=#{group_id.to_i}"
     end
 
     Location.do_expire(con)

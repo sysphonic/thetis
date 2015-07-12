@@ -67,7 +67,7 @@ class MailFilter < ActiveRecord::Base
     SqlHelper.validate_token([mail_account_id, trigger])
 
     con = []
-    con << "(mail_account_id=#{mail_account_id})"
+    con << "(mail_account_id=#{mail_account_id.to_i})"
     con << "(enabled=#{(enabled)?(1):(0)})" unless enabled.nil?
     con << SqlHelper.get_sql_like([:triggers], "|#{trigger}|") unless trigger.nil?
 

@@ -376,7 +376,7 @@ class Group < ActiveRecord::Base
 
     SqlHelper.validate_token([group_id])
     begin
-      return Folder.where("(owner_id=#{group_id}) and (xtype='#{Folder::XTYPE_GROUP}')").first
+      return Folder.where("(owner_id=#{group_id.to_i}) and (xtype='#{Folder::XTYPE_GROUP}')").first
     rescue => evar
       Log.add_error(nil, evar)
       return nil

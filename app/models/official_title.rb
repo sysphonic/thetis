@@ -70,7 +70,7 @@ class OfficialTitle < ActiveRecord::Base
 
       con << '(' + group_con + ')'
     else
-      con << "(group_id=#{group_id})"
+      con << "(group_id=#{group_id.to_i})"
     end
 
     order_by = 'order by xorder ASC, id ASC'

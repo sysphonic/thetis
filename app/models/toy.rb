@@ -196,7 +196,7 @@ class Toy < ActiveRecord::Base
 
     SqlHelper.validate_token([xtype, target_id])
 
-    con = "(user_id=#{user.id}) and (xtype='#{xtype}') and (target_id=#{target_id})"
+    con = "(user_id=#{user.id}) and (xtype='#{xtype}') and (target_id=#{target_id.to_i})"
 
     begin
       toy = Toy.where(con).first

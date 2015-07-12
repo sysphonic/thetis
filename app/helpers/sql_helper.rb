@@ -51,7 +51,7 @@ module SqlHelper
   #
   def self.get_sql_like(attr_names, keyword)
 
-    key = ActiveRecord::Base.connection.quote("%#{SqlHelper.escape_for_like(keyword)}%")
+    key = SqlHelper.quote("%#{SqlHelper.escape_for_like(keyword)}%")
 
     con = []
     attr_names.each do |attr_name|
@@ -73,5 +73,17 @@ module SqlHelper
 
     return nil if str.nil?
     return str.to_s.gsub(/([%_])/){"\\" + $1}
+  end
+
+  #=== self.quote
+  #
+  #Quotes string.
+  #
+  #_str_:: Target string.
+  #return:: Quoted string.
+  #
+  def self.quote(str)
+
+    return ActiveRecord::Base.connection.quote(str)
   end
 end

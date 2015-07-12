@@ -240,18 +240,18 @@ class Folder < ActiveRecord::Base
     if group_id.to_s == '0'
       sql = 'select distinct * from folders'
 
-      where = " where (parent_id = #{tree_id})"
-      where << " and ((xtype is null) or not(xtype = '#{XTYPE_GROUP}' or xtype = '#{XTYPE_USER}'))"
+      where = " where (parent_id=#{tree_id.to_i})"
+      where << " and ((xtype is null) or not((xtype='#{XTYPE_GROUP}') or (xtype='#{XTYPE_USER}')))"
 
       order_by = ' order by xorder ASC, id ASC'
     else
       sql = 'select distinct Folder.* from folders Folder, users User'
 
-      where = " where (Folder.parent_id = #{tree_id})"
+      where = " where (Folder.parent_id=#{tree_id.to_i})"
       where << ' and ('
-      where <<      "(Folder.xtype = '#{XTYPE_GROUP}' and Folder.owner_id = #{group_id})"
+      where <<      "((Folder.xtype='#{XTYPE_GROUP}') and (Folder.owner_id=#{group_id.to_i}))"
       where <<      ' or '
-      where <<      "(Folder.xtype = '#{XTYPE_USER}' and  Folder.owner_id = User.id and #{SqlHelper.get_sql_like(['User.groups'], "|#{group_id}|")})"
+      where <<      "((Folder.xtype='#{XTYPE_USER}') and (Folder.owner_id=User.id) and #{SqlHelper.get_sql_like(['User.groups'], "|#{group_id}|")})"
       where <<     ' )'
 
       order_by = ' order by Folder.xorder ASC, Folder.id ASC'
@@ -324,7 +324,7 @@ class Folder < ActiveRecord::Base
     else
       con << ' and '
     end
-    con << "parent_id=#{tree_id}"
+    con << "parent_id=#{tree_id.to_i}"
     folder_tree[tree_id] += Folder.where(con).order('xorder ASC, id ASC').to_a
 
     delete_ary = []
@@ -668,7 +668,7 @@ class Folder < ActiveRecord::Base
       else
         con << ' and '
       end
-      con << "parent_id=#{folder_id}"
+      con << "parent_id=#{folder_id.to_i}"
 
       unless admin
         con << " and (xtype is null or not (xtype='#{Folder::XTYPE_SYSTEM}'))"

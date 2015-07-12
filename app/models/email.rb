@@ -622,7 +622,7 @@ EOT
     SqlHelper.validate_token([user_id, mail_account_id])
 
     begin
-      count = Email.where("mail_account_id=#{mail_account_id}").count
+      count = Email.where("mail_account_id=#{mail_account_id.to_i}").count
       if count > max
 #logger.fatal("[INFO] Email.trim(user_id:#{user_id}, mail_account_id:#{mail_account_id}, max:#{max})")
         over_num = count - max
@@ -639,7 +639,7 @@ EOT
         # Now, remove others
         if emails.length < over_num
           over_num -= emails.length
-          emails += Email.where("mail_account_id=#{mail_account_id}").order('updated_at ASC').limit(over_num).to_a
+          emails += Email.where("mail_account_id=#{mail_account_id.to_i}").order('updated_at ASC').limit(over_num).to_a
         end
 
         emails.each do |email|
@@ -686,7 +686,7 @@ EOT
 #
 #      # Now, remove others
 #      if over_size > 0
-#        emails = Email.where("mail_account_id=#{mail_account_id}").order('updated_at ASC').to_a
+#        emails = Email.where("mail_account_id=#{mail_account_id.to_i}").order('updated_at ASC').to_a
 #        emails.each do |email|
 #          next if email.size.nil?
 #
@@ -762,7 +762,7 @@ EOT
 
     SqlHelper.validate_token([user_id])
 
-    con = "user_id=#{user_id}"
+    con = "(user_id=#{user_id.to_i})"
     con << " and (#{add_con})" unless add_con.nil? or add_con.empty?
     emails = Email.where(con).to_a
 

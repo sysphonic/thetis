@@ -780,7 +780,7 @@ class User < ActiveRecord::Base
   def self.get_my_folder(user_id)
 
    SqlHelper.validate_token([user_id])
-   return Folder.where("(owner_id=#{user_id}) and (xtype='#{Folder::XTYPE_USER}')").first
+   return Folder.where("(owner_id=#{user_id.to_i}) and (xtype='#{Folder::XTYPE_USER}')").first
   end
 
   #=== create_my_folder
@@ -1166,7 +1166,7 @@ class User < ActiveRecord::Base
     end
 
     SqlHelper.validate_token([order])
-    User.update_all("xorder=#{order}", con)
+    User.update_all("xorder=#{order.to_i}", con)
   end
 
   #=== rename_title

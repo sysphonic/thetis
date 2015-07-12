@@ -31,7 +31,7 @@ module TemplatesHelper
   def self.setup_tmpl_folder
 
     begin
-      tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
+      tmpl_folder = Folder.where(name: TMPL_ROOT).first
     rescue
     end
     if tmpl_folder.nil?
@@ -117,7 +117,7 @@ module TemplatesHelper
   #
   def self.get_tmpl_folder
 
-    tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
+    tmpl_folder = Folder.where(name: TMPL_ROOT).first
 
     if tmpl_folder.nil?
 
@@ -168,10 +168,11 @@ module TemplatesHelper
 
     SqlHelper.validate_token([name])
 
-    tmpl_folder = Folder.where("folders.name='#{TMPL_ROOT}'").first
+    tmpl_folder = Folder.where(name: TMPL_ROOT).first
 
     unless tmpl_folder.nil?
-      con = "(parent_id=#{tmpl_folder.id}) and (name='#{name}')"
+      name_quot = SqlHelper.quote(name)
+      con = "(parent_id=#{tmpl_folder.id}) and (name=#{name_quot})"
       begin
         child = Folder.where(con).first
       rescue => evar

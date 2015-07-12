@@ -431,7 +431,7 @@ en:
     select_dest: "Please select destination group."
     delete_info1: "] will be deleted."
     delete_info2: "(If Group Folder is not empty, it will remain with members' R/W authorities. When no members in the Group and no other authorities specified to Group Folder, it will be PUBLIC.)"
-    select_to_show: "(Please select a group to show.)"
+    select_to_show: "Please select a group to show."
     select_to_change_to: "Please select group to change to."
     select_to_add: "Please select group to add."
     other_group: "Other Group"

@@ -63,7 +63,7 @@ module ZeptairDistHelper
 
     SqlHelper.validate_token([item_id, user_id])
     begin
-      comment = Comment.where("(user_id=#{user_id}) and (item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").first
+      comment = Comment.where("(user_id=#{user_id.to_i}) and (item_id=#{item_id.to_i}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").first
     rescue => evar
       Log.add_error(nil, evar)
     end
@@ -145,7 +145,7 @@ module ZeptairDistHelper
   #
   def self.count_ack_users(item_id)
     SqlHelper.validate_token([item_id])
-    return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").count
+    return Comment.where("(item_id=#{item_id.to_i}) and (xtype='#{Comment::XTYPE_DIST_ACK}')").count
   end
 
   #=== self.count_completed_users
@@ -158,7 +158,7 @@ module ZeptairDistHelper
   def self.count_completed_users(item_id)
     SqlHelper.validate_token([item_id])
     ack_msg = ZeptairDistHelper.completed_ack_message(item_id)
-    return Comment.where("(item_id=#{item_id}) and (xtype='#{Comment::XTYPE_DIST_ACK}') and (message='#{ack_msg}')").count
+    return Comment.where("(item_id=#{item_id.to_i}) and (xtype='#{Comment::XTYPE_DIST_ACK}') and (message='#{ack_msg}')").count
   end
 
   #=== self.get_feeds

@@ -122,6 +122,8 @@ class MailFolder < ActiveRecord::Base
   #
   def self.get_condtions_for(user, mail_account_ids)
 
+    SqlHelper.validate_token([mail_account_ids])
+
     if mail_account_ids.nil? or mail_account_ids.empty?
       return "(user_id=#{user.id} and (mail_account_id is null))"
     else
@@ -151,8 +153,8 @@ class MailFolder < ActiveRecord::Base
     SqlHelper.validate_token([user_id, mail_account_id, xtype])
 
     con = []
-    con << "(user_id=#{user_id})"
-    con << "(mail_account_id=#{mail_account_id})"
+    con << "(user_id=#{user_id.to_i})"
+    con << "(mail_account_id=#{mail_account_id.to_i})"
     con << "(xtype='#{xtype}')"
 
     return MailFolder.where(con.join(' and ')).first
@@ -178,7 +180,7 @@ class MailFolder < ActiveRecord::Base
     SqlHelper.validate_token([user_id])
 
     con = []
-    con << "(user_id=#{user_id})"
+    con << "(user_id=#{user_id.to_i})"
     con << "(xtype='#{MailFolder::XTYPE_ACCOUNT_ROOT}')"
 
     order_by = 'xorder ASC, id ASC'

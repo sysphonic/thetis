@@ -45,7 +45,7 @@ var modified_teams = 0;
             <input type="button" value="<%= t('btn.new') %>" onclick="onCreateClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameFolderClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
-            <input type="button" value="<%= t('btn.move') %>" onclick="doMove();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.move') %>" onclick="onMoveFolderClicked();" style="width:80px;" />
           </td>
         <% else %>
           <td style="padding:5px 20px; text-align:left;">
@@ -492,7 +492,7 @@ function _doDelete(folder_id)
             );
 }
 
-function doMove()
+function onMoveFolderClicked()
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select') %>");
@@ -514,11 +514,24 @@ function doMove()
 
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
+  var addParams = new Array();
+  addParams.push("id="+folder_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("id="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'folders', :action => 'move') %>", "<%= t('folder.select_dest')%>", "");
+  thetisBox.setAdditionalParams(addParams);
+  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveFolder(this); return false;\">");
+  thetisBox.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
+}
+
+function doMoveFolder(frmTree)
+{
+  prog("TOP-RIGHT");
+
+  frmTree.method = "post";
+  frmTree.action = "<%= url_for(:controller => 'folders', :action => 'move') %>";
+  frmTree.submit();
 }
 
 function selectFolder(folder_id)
@@ -640,7 +653,7 @@ function doApplyAuthUsers(folder_id)
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 
-  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_users') %>", addParams);
+  doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'set_auth_users') %>", addParams);
 }
 
 function selectTabGroups(folder_id)
@@ -669,7 +682,7 @@ function doApplyAuthGroups(folder_id)
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 
-  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_groups') %>", addParams);
+  doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'set_auth_groups') %>", addParams);
 }
 
 function selectTabTeams(folder_id)
@@ -698,7 +711,7 @@ function doApplyAuthTeams(folder_id)
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 
-  doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'set_auth_teams') %>", addParams);
+  doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'set_auth_teams') %>", addParams);
 }
 
 function showGroupTreeToSelect(group_id)

@@ -367,7 +367,7 @@ class Team < ActiveRecord::Base
 
     SqlHelper.validate_token([team_id])
     begin
-      return Folder.where("(owner_id=#{team_id}) and (xtype='#{Folder::XTYPE_TEAM}')").first
+      return Folder.where("(owner_id=#{team_id.to_i}) and (xtype='#{Folder::XTYPE_TEAM}')").first
     rescue => evar
       Log.add_error(nil, evar)
       return nil
@@ -411,7 +411,7 @@ class Team < ActiveRecord::Base
 
     user_con_a = []
     user_ids.each do |user_id|
-      user_con_a << "(user_id=#{user_id})"
+      user_con_a << "(user_id=#{user_id.to_i})"
     end
 
     con << '(' + user_con_a.join(' or ') + ')'
