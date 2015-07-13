@@ -30,12 +30,13 @@ module SqlHelper
     else
       extra_chars = Regexp.escape(extra_chars.join())
     end
-    regexp = Regexp.new("^[ ]*[a-zA-Z0-9_.@\\-#{extra_chars}]+[ ]*$")
+    regexp = Regexp.new("^[ ]*[a-zA-Z0-9_#{extra_chars}]+[ ]*$")
 
     [tokens].flatten.each do |token|
       next if token.blank?
 
-      if token.to_s.match(regexp).nil?
+      if token.to_s.match(regexp).nil? \
+          and token.to_s.match(/^[ ]*\d+-\d+-\d+[ ]*$/).nil?
         raise("[ERROR] SqlHelper.validate_token failed: #{token}")
       end
     end

@@ -534,7 +534,7 @@ class User < ActiveRecord::Base
     SqlHelper.validate_token([user_name])
 
     begin
-      user = User.where("name='#{user_name}'").first
+      user = User.where(name: user_name).first
     rescue => evar
       Log.add_error(nil, evar)
     end

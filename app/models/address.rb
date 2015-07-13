@@ -36,12 +36,12 @@ class Address < ActiveRecord::Base
   #
   def self.get_by_email(mail_addr, user, book=Address::BOOK_BOTH)
 
-    SqlHelper.validate_token([mail_addr])
+    mail_quote = SqlHelper.quote(mail_addr)
 
     email_con = []
-    email_con.push("(email1='#{mail_addr}')")
-    email_con.push("(email2='#{mail_addr}')")
-    email_con.push("(email3='#{mail_addr}')")
+    email_con.push("(email1=#{mail_quote})")
+    email_con.push("(email2=#{mail_quote})")
+    email_con.push("(email3=#{mail_quote})")
     con = []
     con.push('('+email_con.join(' or ')+')')
     con.push(AddressbookHelper.get_scope_condition_for(user, book))
@@ -212,7 +212,11 @@ class Address < ActiveRecord::Base
     imp_id = (idxs[0].nil? or row[idxs[0]].nil?)?(nil):(row[idxs[0]].strip)
     SqlHelper.validate_token([imp_id])
     unless imp_id.blank?
-      org_address = Address.find_by_id(imp_id)
+      begin
+        org_address = Address.find(imp_id)
+      rescue => evar
+        org_address = nil
+      end
     end
 
     if org_address.nil?
