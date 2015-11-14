@@ -1139,9 +1139,9 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     return ThetisBox.buildTree(parentTreeId, array, "document.formThetisBox"+this.id, "thetisBoxTree-"+this.id, "thetisBoxSelKeeper-"+this.id, this.folderImg, open);
   },
-  selectTree: function(menuId)
+  selectTree: function(menuId, forceOpen)
   {
-    ThetisBox.selectTree("thetisBoxSelKeeper-"+this.id, "a_thetisBoxTree-"+this.id+":"+menuId, "document.formThetisBox"+this.id);
+    ThetisBox.selectTree("thetisBoxSelKeeper-"+this.id, "a_thetisBoxTree-"+this.id+":"+menuId, "document.formThetisBox"+this.id, forceOpen);
   },
   getTreeSelect: function()
   {

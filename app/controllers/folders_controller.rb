@@ -249,7 +249,7 @@ class FoldersController < ApplicationController
       if @sort_col.blank? or @sort_type.blank?
         @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
       end
-      SqlHelper.validate_token([@sort_col, @sort_type])
+      SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
 
       folder_ids = nil
       add_con = nil

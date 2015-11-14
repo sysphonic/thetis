@@ -464,7 +464,7 @@ class TimecardsController < ApplicationController
       @sort_col == 'fullname'
     end
 
-    SqlHelper.validate_token([@sort_col, @sort_type])
+    SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
     if @sort_col != 'xorder'

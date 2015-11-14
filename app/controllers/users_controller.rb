@@ -200,7 +200,7 @@ class UsersController < ApplicationController
       @sort_type = 'ASC'
     end
 
-    SqlHelper.validate_token([@sort_col, @sort_type])
+    SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = @sort_col + ' ' + @sort_type
 
     if @sort_col == 'OfficialTitle.xorder'

@@ -276,7 +276,7 @@ EOT
 
     case mail_account.smtp_secure_conn
       when MailAccount::SMTP_SECURE_CONN_STARTTLS
-        context = Net::SMTP. default_ssl_context
+        context = Net::SMTP.default_ssl_context
         context.verify_mode = OpenSSL::SSL::VERIFY_NONE
         smtp.enable_starttls(context)
         # smtp.enable_starttls_auto 

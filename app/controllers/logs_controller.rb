@@ -85,7 +85,7 @@ class LogsController < ApplicationController
       @sort_col = "updated_at"
       @sort_type = "DESC"
     end
-    SqlHelper.validate_token([@sort_col, @sort_type])
+    SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + " " + @sort_type
 
     sql = 'select distinct Log.* from logs Log'

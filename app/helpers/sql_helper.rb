@@ -17,11 +17,10 @@ module SqlHelper
 
   #=== self.validate_token
   #
-  #Gets query condition with like command of specified attributes.
+  #Validates specified tokens.
   #
   #_tokens_:: Target tokens.
   #_extra_chars_:: Extra characters.
-  #return:: Query condition.
   #
   def self.validate_token(tokens, extra_chars=nil)
 

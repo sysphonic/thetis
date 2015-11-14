@@ -92,7 +92,7 @@ class ZeptairDistController < ApplicationController
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
-    SqlHelper.validate_token([@sort_col, @sort_type])
+    SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
 
     fields = ['User.*']
     unless @sort_col.index('Comment.').nil?

@@ -569,6 +569,39 @@ function getListText(list, val)
   return null;
 }
 
+function setListText(list, val)
+{
+  if (!list) {
+    return null;
+  }
+  for (var i=0; i < list.length; i++) {
+    var option = list.options[i];
+    if (option.value == val) {
+      return option.text;
+    }
+  }
+  return null;
+}
+
+function getListOption(list, val, sep)
+{
+  if (!list) {
+    return null;
+  }
+  var sepIdx = (sep)?(val.lastIndexOf(sep)):(-1);
+  val = (sepIdx >= 0)?(val.substring(0, sepIdx)):(val);
+
+  for (var i=0; i < list.length; i++) {
+    var option = list.options[i];
+    var sepIdx = (sep)?(option.value.lastIndexOf(sep)):(-1);
+    var optVal = (sepIdx >= 0)?(option.value.substring(0, sepIdx)):(option.value);
+    if (optVal == val) {
+      return option;
+    }
+  }
+  return null;
+}
+
 function addList(list, text, value, allowDuplex)
 {
   if (!list) {
@@ -585,16 +618,18 @@ function addList(list, text, value, allowDuplex)
   list.options[list.length++] = new Option(text, value);
 }
 
-function deleteList(list)
+function deleteList(list, val)
 {
   var entries = new Array();
   if (!list) {
     return entries;
   }
   for (var i=0; i < list.length; i++) {
-    var option = list.options[i];
-    if (option.selected == true) {
-      entries.push(option.value);
+    var opt = list.options[i];
+    var del = ((val == null) && (opt.selected == true))
+                || ((val != null) && (opt.value == val));
+    if (del) {
+      entries.push(opt.value);
       list.options[i] = null;
       i--;
     }

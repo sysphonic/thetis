@@ -273,7 +273,7 @@ class MailFoldersController < ApplicationController
 # FEATURE_PAGING_IN_TREE >>>
       @sort_col = (params[:sort_col] || 'sent_at')
       @sort_type = (params[:sort_type] || 'DESC')
-      SqlHelper.validate_token([@sort_col, @sort_type])
+      SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
 
       sql = EmailsHelper.get_list_sql(@login_user, params[:keyword], [@folder_id], @sort_col, @sort_type, 0, nil)
       @email_pages, @emails, @total_num = paginate_by_sql(Email, sql, 10)
