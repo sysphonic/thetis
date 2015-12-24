@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.8'
+gem 'rails', '4.2.5'
 gem 'multi_json'
 
 # Bundle edge Rails instead:
@@ -9,7 +9,7 @@ gem 'multi_json'
 gem 'mysql2'
 gem 'zipruby'
 
-gem 'will_paginate', '3.0.3'
+gem 'will_paginate', '3.0.7'
 
 # Gems used only for assets and not required
 # in production environments by default.

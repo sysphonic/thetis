@@ -23,15 +23,23 @@ module ApplicationHelper
   #
   #Gets backtrace.
   #
+  #_evar_:: Error variable.
   #return:: Backtrace.
   #
-  def self.stacktrace
-    begin
-      raise('')
-    rescue => evar
-      paths = Rails.root.split('/')
-      paths.delete('')
-      stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}.join("\n")
+  def self.stacktrace(evar=nil)
+
+    if evar.nil?
+      begin
+        raise('THETIS_EXCEPTION')
+      rescue => evr
+        evar = evr
+      end
+    end
+
+    paths = Rails.root.split('/')
+    paths.delete('')
+    stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}.join("\n")
+    if evar.message == 'THETIS_EXCEPTION'
       stacktrace.pop  # Remove current stack.
     end
     return stacktrace
@@ -447,7 +455,7 @@ module ApplicationHelper
 #    begin
 #      ret = Marshal.load(Marshal.dump(hash))
 #    rescue
-      ret = SymHash.new
+      ret = {}
       hash.each{|key, value|
         begin
           ret[key] = Marshal.load(Marshal.dump(value))
@@ -474,6 +482,8 @@ module ApplicationHelper
     prms = ApplicationHelper.dup_hash(params)
     prms.delete(:controller)
     prms.delete(:action)
+    prms.delete('controller')
+    prms.delete('action')
 
     return prms
   end

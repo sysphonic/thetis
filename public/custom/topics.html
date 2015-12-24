@@ -1,15 +1,11 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <html>
-  <head>
+<head>
   <title>Thetis</title>
-
-  <!------------START-META TAGS--------->
   <META http-equiv=Content-Script-Type content=text/JavaScript>
   <META http-equiv=Content-Type content="text/html; charset=utf-8">
-  <!-------------END-META TAGS--------->
 
 <script language="JavaScript">
-<!--
 
 url_base = "";
 
@@ -28,17 +24,24 @@ function doOnLoad()
     document.getElementById("div_en").style.display = "block";
   }
 }
-//-->
+
 </script>
 </head>
 <body onLoad="doOnLoad();">
-<table cellspacing="0" cellpadding="0" align="center" width="95%">
-  <tr height="15"><td></td></tr>
+<table cellspacing="0" cellpadding="0" align="center" style="width:95%; padding-top:10px;">
+  <tr style="height:90px;">
+    <td>
+      <div id="div_stop_akw" style="color:dimgray; padding:3px; margin-bottom:10px; text-align:center;">
+        <span style="font-size:22pt;">Thetis ver.2.3.0 </span><span style="font-size:18pt;"> (Ruby2.2.4 / Rails4.2.5)</span>
+      </div>
+    </td>
+  </tr>
+  <tr style="height:15px;"><td></td></tr>
   <tr>
     <td style="text-align:center;">
-      <table cellspacing="0" cellpadding="0" width="100%">
+      <table cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-          <td align="left" style="font-size:11pt; color:maroon; border:5px dashed peru; padding:20px;">
+          <td style="text-align:left; font-size:11pt; color:maroon; border:5px dashed peru; padding:20px;">
             <div id="div_en" style="display:none;">
               The contents of "Topic Box (this page)" and "Note" (Header Menu) can be replaced at <br/>
               <span style="padding-left:20px;">Admin Menu - General Configuration</span><br/>

@@ -20,11 +20,10 @@ class ApplicationController < ActionController::Base
   require 'will_paginate'
   require ::Rails.root.to_s+'/lib/iain-http_accept_language/lib/http_accept_language'
 
-# helper :all # include all helpers, all the time
   protect_from_forgery
 
   before_filter :set_locale
-  before_filter :gate_process
+  before_filter :gate_proc
 
   include LoginChecker
 
@@ -50,26 +49,28 @@ class ApplicationController < ActionController::Base
     # logger.fatal "* Locale set to '#{I18n.locale}'"
   end
 
-  #=== render
-  #
-  #Overrides ActionController::Base#render() to force layout XHR response.
-  #
-  #_action_:: Same as the corresponding argument of the super method.
-  #_options_:: Same as the corresponding argument of the super method.
-  #_&blk_:: Same as the corresponding argument of the super method.
-  #
-  def render(action=nil, options={}, &blk)
-    opts = options
-    if opts.empty? and !action.nil? and action.kind_of?(Hash)
-      opts = action
-    end
-    unless opts.nil?
-      if opts[:layout] == false
-        opts[:layout] = 'layouts/xhr'
-      end
-    end
-    super(action, options, &blk)
-  end
+=begin
+#  #=== render
+#  #
+#  #Overrides ActionController::Base#render() to force layout XHR response.
+#  #
+#  #_action_:: Same as the corresponding argument of the super method.
+#  #_options_:: Same as the corresponding argument of the super method.
+#  #_&blk_:: Same as the corresponding argument of the super method.
+#  #
+#  def render(action=nil, options={}, &blk)
+#    opts = options
+#    if opts.empty? and !action.nil? and action.kind_of?(Hash)
+#      opts = action
+#    end
+#    unless opts.nil?
+#      if opts[:layout] == false
+#        opts[:layout] = 'layouts/xhr'
+#      end
+#    end
+#    super(action, options, &blk)
+#  end
+=end
 
  public
   #=== paginate_by_sql
@@ -91,13 +92,21 @@ class ApplicationController < ActionController::Base
   end
 
  protected
-  #=== gate_process
+  #=== gate_proc
   #
-  #Does processes requiered for each access.
+  #Does procedure called by each access.
   #
-  def gate_process
+  def gate_proc
 
     HistoryHelper.keep_last(request)
+
+    if (request.get? and request.xhr?)
+      unless valid_authenticity_token?(session, form_authenticity_param)
+        logger.fatal("[ERROR] CSRF token mismatched: #{form_authenticity_param}")
+        render(:partial => 'common/login_watcher')
+        return
+      end
+    end
 
     SqlHelper.validate_token([session[:login_user_id]])
     begin
@@ -107,11 +116,8 @@ class ApplicationController < ActionController::Base
     end
 
     begin
-      if @login_user.nil? \
-           or @login_user.time_zone.nil? or @login_user.time_zone.empty?
-        unless THETIS_USER_TIMEZONE_DEFAULT.nil? or THETIS_USER_TIMEZONE_DEFAULT.empty?
-          Time.zone = THETIS_USER_TIMEZONE_DEFAULT
-        end
+      if @login_user.nil? or @login_user.time_zone.blank?
+        Time.zone = THETIS_USER_TIMEZONE_DEFAULT unless THETIS_USER_TIMEZONE_DEFAULT.blank?
       else
         Time.zone = @login_user.time_zone
       end

@@ -1519,6 +1519,13 @@ Ajax.Request = Class.create(Ajax.Base, {
       this.method = 'post';
     }
 
+// shin Applied the patch >>>
+    if (this.method === 'get'
+        && (!params.include("authenticity_token"))) {
+      params += (params ? "&" : "") + "authenticity_token=" + encodeURIComponent(getCsrfToken());
+    }
+// shin Applied the patch <<<
+
     if (params && this.method === 'get') {
       this.url += (this.url.include('?') ? '&' : '?') + params;
     }
