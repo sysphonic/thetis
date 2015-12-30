@@ -12,7 +12,7 @@
 @group_obj_cache ||= {}
 %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td nowrap style="width:1%; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
@@ -35,7 +35,7 @@
   </tr>
 </table>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left;" nowrap>
   <% if @folder_id.nil? or @folder_id.empty? %>
@@ -94,7 +94,7 @@
   </tr>
 </table>
 
-<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:7px;">
+<table style="width:100%; padding-bottom:7px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
@@ -122,11 +122,11 @@
 
 <% else %>
 
-<table id="list_items" style="width:100%;" cellpadding="0" cellspacing="0">
+<table id="list_items" style="width:100%;">
 <% @items.each do |item| %>
   <tr>
     <td>
-      <TABLE style="width:100%;" cellpadding="0" cellspacing="0">
+      <TABLE style="width:100%;">
         <TR>
           <TD style="font-size:11pt; line-height:14pt; text-align:left; text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="#" onclick="doShowItem(<%= item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
@@ -224,7 +224,7 @@ attachments_num = item_attachments.length
         <TR>
           <TD>
 <% additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0)) %>
-            <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" cellspacing="0" cellpadding="0" >
+            <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" >
               <tr>
                 <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>; font-size:10.5pt; padding:10px; line-height:15pt;">
 <% unless item.summary.nil? or item.summary.empty? %>
@@ -237,7 +237,7 @@ attachments_num = item_attachments.length
                   <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:orangered; font-size:8pt; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
                   <br/>
                   <% unless item.description.nil? or item.description.empty? %>
-                    <table style="width:100%;" cellpadding="0" cellspacing="2">
+                    <table style="width:100%; border-spacing:2px;">
                       <tr>
                         <td>
                         <script type="text/javascript">
@@ -267,11 +267,11 @@ attachments_num = item_attachments.length
                 </td>
               <% if additionalCol %>
                 <td style="background-color:<%= (item.public)?'#FFF5F0':'lightcyan' %>;">
-                   <table style="margin:0px auto; width:100px;" cellspacing="0" cellpadding="0">
+                   <table style="margin:0px auto; width:100px;">
                 <% if params[:thumbnails]!='false' and images_num > 0 %>
                      <tr>
                        <td>
-                         <table style="margin:0px auto; width:100px;" cellspacing="0" cellpadding="0">
+                         <table style="margin:0px auto; width:100px;">
                   <%
                   item_images.each_with_index do |image, idx|
                     break if idx >= max_bbs_img
@@ -296,7 +296,7 @@ attachments_num = item_attachments.length
                    attach_cnt += 1
                    break if attach_cnt > max_bbs_attach
                   %>
-                         <table cellspacing="1" cellpadding="0" style="width:120px; margin:0px auto; cursor:pointer; border:2px solid white;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+                         <table style="width:120px; margin:0px auto; cursor:pointer; border:2px solid white; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                            <tr>
                              <td class="td_attachment_name" style="text-align:center;">
                                <%= attach.name %>
@@ -330,7 +330,7 @@ attachments_num = item_attachments.length
         </TR>
         <TR>
           <TD style="text-align:center;">
-            <table style="width:90%; margin:0px auto 20px;" cellspacing="0" cellpadding="0">
+            <table style="width:90%; margin:0px auto 20px;">
               <tr>
                 <td style="text-align:center;">
                   <%

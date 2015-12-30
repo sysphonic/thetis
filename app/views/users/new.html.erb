@@ -2,7 +2,7 @@
 
 <%= form_tag({:controller => 'users', :action => 'create'}, :method => 'post', :name => 'form_user') %>
 
-<table style="width:80%; margin:10px auto 0px;" cellspacing="0" cellpadding="0">
+<table style="width:80%; margin:10px auto 0px;">
   <tr>
     <td style="text-align:center; vertical-align:top;">
       <%= render(:partial => 'user_form') %>
@@ -10,7 +10,7 @@
   </tr>
 </table>
 
-<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;">
   <tr>
   <% if params[:from] == 'users_list' %>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">

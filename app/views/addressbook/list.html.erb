@@ -1,10 +1,10 @@
 
 <%= form_tag( {:controller => 'addressbook', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table style="width:100%;" cellspacing="3" cellpadding="0">
+<table style="width:100%; border-spacing:3px;">
   <tr>
     <td>
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <table style="width:100%;">
         <tr>
           <td style="text-align:left; width:1%;" nowrap>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="showAddressNew();">
@@ -38,7 +38,7 @@
   <tr style="height:1px;"><td></td></tr>
   <tr>
     <td style="text-align:right;">
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <table style="width:100%;">
          <tr>
           <td style="text-align:left; padding-bottom:5px; width:120px;">
           </td>
@@ -53,7 +53,7 @@
   </tr>
 </table>
 
-<table style="width:100%; padding-bottom:10px;" cellpadding="0" cellspacing="0">
+<table style="width:100%; padding-bottom:10px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('address', :count => @total_num) %>
@@ -71,7 +71,7 @@
 </table>
 
 <div class="base_list" id="div_addresses">
-<table id="list_addresses" style="width:100%;" cellpadding="0" cellspacing="1">
+<table id="list_addresses" style="width:100%; border-spacing:1px;">
   <tr>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
@@ -329,7 +329,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
 %>
 
 <div id="imp_errs" style="display:none;">
-<table style="text-align:center; width:100%; vertical-align:top;" cellspacing="0" cellpadding="0">
+<table style="text-align:center; width:100%; vertical-align:top;">
   <tr style="height:20px;">
     <td style="text-align:right; color:blueviolet; padding-right:10px; padding-top:10px;">
       <%= t('address.imported', :count => @imp_cnt) %><br/>
@@ -337,7 +337,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
   </tr>
   <tr>
     <td style="padding:10px; vertical-align:top;">
-      <table style="text-align:center; width:100%; vertical-align:top;" cellspacing="0" cellpadding="0" border="1">
+      <table style="width:100%;" border="1">
 <%
 err_cnt = 0
 @imp_errs.each do |address_cnt, errs|

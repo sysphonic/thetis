@@ -1,7 +1,7 @@
 
 <%= form_tag( {:controller => 'zeptair_xlogs', :action => 'search'}, :method => 'get', :name => 'form_list') %>
 
-<table style="width:100%; margin-bottom:5px;" cellspacing="3" cellpadding="0">
+<table style="width:100%; margin-bottom:5px; border-spacing:3px;">
   <tr>
     <td style="text-align:left; width:1%;" nowrap>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" alt="<%= t('btn.export_csv') %>" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
@@ -39,7 +39,7 @@
   </tr>
 </table>
 
-<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('log', :count => @total_num) %>
@@ -57,7 +57,7 @@
 </table>
 
 <div class="base_list" id="div_logs">
-<table id="list_logs" style="width:100%;" cellpadding="0" cellspacing="1">
+<table id="list_logs" style="width:100%; border-spacing:1px;">
   <tr>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('fin_at')"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('req_at')"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>

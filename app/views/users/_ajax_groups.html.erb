@@ -5,7 +5,7 @@ unless @user.nil? or @user.groups.nil?
   @group_obj_cache ||= {}
 %>
 
-  <table cellspacing="0" cellpadding="0" style="width:100%;">
+  <table style="width:100%;">
   <% @user.get_groups_a.each do |group_id| %>
     <tr>
       <td nowrap style="width:20%;">
@@ -14,7 +14,7 @@ unless @user.nil? or @user.groups.nil?
     <% if @login_user.admin?(User::AUTH_USER) %>
       <td style="width:20px;"></td>
       <td>
-        <table cellspacing="0" cellpadding="0" style="margin:0px auto 0px 0px;">
+        <table style="margin:0px auto 0px 0px;">
           <tr>
             <td style="width:10px;"></td>
             <td style="width:15px;">

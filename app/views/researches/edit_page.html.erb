@@ -1,6 +1,6 @@
 <%= form_tag({:controller => 'researches', :action => 'save_page'}, :method => 'post', :name => 'form_research') %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="font-size:11pt; text-align:left;">
 
@@ -9,7 +9,7 @@
     <%= hidden_field_tag('research_id', @research.id) %>
     <%= hidden_field_tag('page', @page) %>
 
-    <table style="margin:10px auto 40px;" cellspacing="0" cellpadding="0">
+    <table style="margin:10px auto 40px;">
       <tr>
       <% if @page.to_i > 1 %>
         <td class="img_button_td" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">

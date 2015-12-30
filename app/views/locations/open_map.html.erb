@@ -15,7 +15,7 @@ else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
 end
 %>
-<table id="div_desktop" cellpadding="0" cellspacing="0" style="width:100%; background-color:white; display:none;">
+<table id="div_desktop" style="width:100%; background-color:white; display:none;">
   <tr class="desktop_tr">
     <td class="desktop_td" style="text-align:center; vertical-align:middle;" >
       <img id="img_map" src="<%= raw(img_url) %>" style="display:none;" />
@@ -28,7 +28,7 @@ end
   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_on.png">
 </span>
 
-<table class="toolbar" id="toolbar" cellpadding="0" cellspacing="0" style="width:70%; z-index:999; position:absolute; display:none; background-color:white; border:inset 1px gray; -webkit-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+<table class="toolbar" id="toolbar" style="width:70%; z-index:999; position:absolute; display:none; background-color:white; border:inset 1px gray; -webkit-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); box-shadow:4px 4px 5px rgba(100, 100, 100, 0.5); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
   <tr>
     <td rowspan="3" style="width:20px; cursor:move; background-color:lime; padding-left:10px;">
       &nbsp;
@@ -56,7 +56,7 @@ end
   </tr>
   <tr>
     <td style="text-align:left; padding:3px 0px;" >
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <table style="width:100%;">
          <tr>
           <td style="text-align:left; width:120px; padding-bottom:5px;" >
   <% if @group_id.nil? %>
@@ -64,7 +64,7 @@ end
               <%= t('btn.select_group') %>
             </div>
   <% else %>
-            <table style="width:100%;" cellpadding="0" cellspacing="0">
+            <table style="width:100%;">
               <tr>
                 <td style="text-align:left;" nowrap>
                   <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>

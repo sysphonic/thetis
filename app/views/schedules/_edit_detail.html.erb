@@ -1,7 +1,7 @@
 
 <% if @schedule.nil? %>
 
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr>
     <td style="text-align:center;">
       <%= t('paren.deleted') %>
@@ -21,7 +21,7 @@ else
   <%= hidden_field_tag('display', params[:display]) %>
   <%= hidden_field('schedule', 'id') %>
 
-  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
+  <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>
       <td class="prim_cap_td" nowrap>
         <label for="schedule_title"><%= Schedule.human_attribute_name('title') %></label><sup style="color:red">*</sup>
@@ -175,10 +175,10 @@ else
             <div style="height:5px"></div>
           </div>
 
-          <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+          <table style="width:100%; padding-bottom:5px;">
             <tr>
               <td style="width:30%; text-align:left;">
-                <table cellspacing="0" cellpadding="0" style="width:100%;">
+                <table style="width:100%;">
                   <tr>
                     <td>
                       <%= t('schedule.cap_rule') %>
@@ -212,7 +212,7 @@ else
                     </td>
                     <td style="width:10px;">&nbsp;</td>
                     <td style="width:70px;">
-                      <table cellspacing="0" cellpadding="0" style="width:100%;">
+                      <table style="width:100%;">
                         <tr>
                           <td style="text-align:center;">
                             <input type="button" value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_z('rule_candidates'), _z('repeat_rules')); setForceTargetAll(); return false;" style="width:80px;">
@@ -252,10 +252,10 @@ else
           <span id="div_cal_repEnd"></span>
           <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
 
-          <table cellspacing="0" cellpadding="0" style="width:100%; padding-top:5px;">
+          <table style="width:100%; padding-top:5px;">
             <tr>
               <td style="width:30%; text-align:left;">
-                <table cellspacing="0" cellpadding="0" style="width:100%;">
+                <table style="width:100%;">
                   <tr>
                     <td colspan="3">
                       <%= t('schedule.cap_except') %>
@@ -274,7 +274,7 @@ else
                     </td>
                     <td style="width:10px;">&nbsp;</td>
                     <td style="vertical-align:top;">
-                      <table cellspacing="0" cellpadding="0" style="width:100%;">
+                      <table style="width:100%;">
                         <tr>
                           <td style="text-align:center;">
                             <input type="button" value="<%= t('btn.add') %>" onclick="addRepeatExcept();" style="width:80px;">
@@ -369,7 +369,7 @@ _z("div_equipment").style.display = "block";
 
       <% end %>
         <div id="div_equipment" style="display:<%= div_equipment_display %>">
-          <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
+          <table style="width:100%; padding:5px 10px;">
             <tr>
               <td>
                 <select id="equipment_selected" name="equipment[]" class="select_multi" size="5" multiple="multiple">
@@ -420,7 +420,7 @@ _z("div_items").style.display = "block";
 
       <% end %>
         <div id="div_items" style="display:<%= div_items_display %>">
-          <table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 10px;">
+          <table style="width:100%; padding:5px 10px;">
             <tr>
               <td>
                 <select id="items_selected" name="items[]" class="select_multi" size="5" multiple="multiple">
@@ -484,7 +484,7 @@ _z("div_items").style.display = "block";
 
   </table>
 
-  <table cellspacing="0" cellpadding="0" style="margin:20px auto 40px;">
+  <table style="margin:20px auto 40px;">
     <tr>
       <td class="img_button_td" onclick="doRegisterSchedule('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
         <%= t('btn.register')%>

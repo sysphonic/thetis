@@ -6,7 +6,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
   <%= hidden_field('mail_account', 'id') %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:10px 15px;">
+<table style="width:100%; padding:10px 15px;">
   <tr>
     <td style="vertical-align:top;">
       <%= render(:partial => 'mail_account_form', :locals => {:form_idx => form_idx}) %>
@@ -16,7 +16,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 </form>
 
-<table cellspacing="0" cellpadding="0" style="margin:0px auto 25px;">
+<table style="margin:0px auto 25px;">
   <tr>
     <td class="img_button_td" onclick="doRegisterAccount();">
       <%= t('btn.update')%>

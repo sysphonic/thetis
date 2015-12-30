@@ -12,7 +12,7 @@
 @group_obj_cache ||= {}
 %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td nowrap style="width:1%; text-align:left;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
@@ -35,7 +35,7 @@
   </tr>
 </table>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left;" nowrap>
   <% if @folder_id.nil? or @folder_id.empty? %>
@@ -88,7 +88,7 @@
   </tr>
 </table>
 
-<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:7px;">
+<table style="width:100%; padding-bottom:7px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
@@ -117,7 +117,7 @@
 
 <% else %>
 
-<table id="list_items" style="width:100%;" cellpadding="0" cellspacing="1">
+<table id="list_items" style="width:100%; border-spacing:1px;">
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
@@ -134,7 +134,7 @@
   <tr style="height:33px;">
     <td nowrap class="<%= td_class %>" style="text-align:right;"><%= item.id %></td>
     <td class="<%= td_class %>">
-      <table cellpadding="0" cellspacing="0" style="width:100%;">
+      <table style="width:100%;">
         <tr>
           <td style="text-align:left; width:100%;">
             <a class="a_underline" href="#" onclick="doShowItem(<%= item.id %>); return false;">

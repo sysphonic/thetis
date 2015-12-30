@@ -1,11 +1,11 @@
 
 <%= form_tag( {:controller => 'workflows', :action => 'create' }, :name => 'form_workflow', :method => 'post') %>
 
-<table id="div_workflow_list" cellspacing="0" cellpadding="0" style="width:100%; background-color:wheat; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<table id="div_workflow_list" style="width:100%; background-color:wheat; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
   <tr>
     <td style="width:50%; padding:5px; vertical-align:top;"  >
 
-        <table style="width:100%;" cellpadding="0" cellspacing="0">
+        <table style="width:100%;">
           <tr>
             <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('btn.create') %>
@@ -65,7 +65,7 @@
     </td>
     <td style="width:50%; padding:5px; vertical-align:top;">
 
-        <table style="width:100%;" cellpadding="0" cellspacing="0">
+        <table style="width:100%;">
           <tr>
             <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('workflow.received_list') %>&nbsp;
@@ -84,7 +84,7 @@
           <tr style="height:5px;"><td></td></tr>
           <tr>
             <td style="text-align:center;">
-              <table cellspacing="0" cellpadding="0" onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
+              <table onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
                 <tr style="height:35px;">
                   <td style="width:15px;"></td>
                   <td style="width:20px; text-align:center;" >

@@ -7,7 +7,7 @@ val = params[:val]
 
 <%= form_tag({:controller => 'mail_filters', :action => 'update_action', :id => (@mail_filter.nil?)?(nil):(@mail_filter.id)}, :method => 'post', :name => 'form_filter_action'+form_idx) %>
 
-<table style="width:90%; margin:15px auto;" cellpadding="0" cellspacing="2">
+<table style="width:90%; margin:15px auto; border-spacing:2px;">
   <tr>
     <td class="item_value_td" style="width:40%">
       <%
@@ -36,7 +36,7 @@ val = params[:val]
 
 </form>
 
-<table cellspacing="0" cellpadding="0" style="margin:0px auto 20px;">
+<table style="margin:0px auto 20px;">
   <tr>
     <td style="text-align:center;">
       <input type="button" id="btn_filter_action_ok" value="<%= t('btn.ok')%>" style="width:90px; height:25px;" onclick="onFilterActionOkClicked(this);" />

@@ -3,11 +3,11 @@
 
   <% if @items.nil? or @items.empty? %>
 
-    <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:honeydew; height:100%;">
       <tr>
         <td style="vertical-align:top;">
           <br/><br/><br/>
-          <table style="width:80%; margin:0px auto;" cellpadding="0" cellspacing="0">
+          <table style="width:80%; margin:0px auto;">
             <tr>
               <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
                 <%= t('paren.no_items') %>
@@ -20,7 +20,7 @@
 
   <% else %>
 
-    <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
+    <table style="width:100%; background-color:honeydew; height:100%;">
       <tr>
         <td id="sortable_items" style="vertical-align:top;">
         <%
@@ -35,7 +35,7 @@
           end
           %>
           <div id="item_<%= item.id %>" class="<%= td_class %>" style="padding:0px;">
-            <table style="width:100%;" cellpadding="0" cellspacing="0">
+            <table style="width:100%;">
               <tr>
                 <td nowrap style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
                   <%
@@ -96,11 +96,11 @@ Sortable.create(
 
 <% else %>
 
-  <table style="width:100%; background-color:honeydew; height:100%;" cellpadding="0" cellspacing="0">
+  <table style="width:100%; background-color:honeydew; height:100%;">
     <tr>
       <td style="vertical-align:top;">
         <br/><br/><br/>
-        <table style="margin:0px auto; width:80%;" cellpadding="0" cellspacing="0">
+        <table style="margin:0px auto; width:80%;">
           <tr>
             <td style="vertical-align:top; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
               <%= t('folder.need_auth_to_modify') %>

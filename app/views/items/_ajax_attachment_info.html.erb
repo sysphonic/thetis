@@ -1,9 +1,9 @@
 
 <%= form_tag( {:controller => 'items', :action => 'update_attachment_info', :id => @attachment.item_id }, :id => 'form_attachment_info', :name => 'form_attachment_info', :method => 'post', :enctype => 'multipart/form-data') %>
-<table style="width:100%;" cellpadding="0" cellspacing="0">
+<table style="width:100%;">
   <tr>
     <td style="text-align:right;">
-      <table style="width:100%; margin-top:5px;" cellpadding="0" cellspacing="1">
+      <table style="width:100%; margin-top:5px; border-spacing:1px;">
         <tr>
           <td colspan="2" style="text-align:center;">
             <%= @attachment.name %>
@@ -51,7 +51,7 @@
         <tr style="height:10px;"><td></td></tr>
         <tr>
           <td colspan="2">
-            <table style="width:100%;" cellpadding="0" cellspacing="0">
+            <table style="width:100%;">
               <tr>
                 <td style="text-align:center;">
                   <input id="attachment_info_ok" type="button" value="<%= t('btn.register') %>" onclick="onAttachInfoOK()" style="width:80px;">

@@ -9,7 +9,7 @@ rows = 5
 @equipment = Group.get_equipment(@group_id)
 %>
 
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr>
     <td style="width:130px;">
       <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelectEquipment('<%= (@group_id.nil?)?'':@group_id %>', this);">

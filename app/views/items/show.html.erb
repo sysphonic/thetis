@@ -18,7 +18,7 @@ end
 
 <%= render(:partial => 'common/dojo_init') %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="text-align:left; padding-left:20px; vertical-align:top;" >
 <%
@@ -39,10 +39,10 @@ unless @for_print
 <% end %>
     </td>
     <td>
-      <table style="width:100%;" cellpadding="0" cellspacing="0">
+      <table style="width:100%;">
         <tr>
           <td>
-            <table style="margin:0px 0px 0px auto; width:40%;"  cellpadding="0" cellspacing="1">
+            <table style="margin:0px 0px 0px auto; width:40%; border-spacing:1px;">
               <tr style="height:18px;">
               <% if @item.xtype == Item::XTYPE_PROJECT %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
@@ -93,7 +93,7 @@ unless @for_print
     <% if @item.is_a_copy? %>
         <tr>
           <td style="padding-bottom:10px;">
-            <table style="margin:0px 0px 0px auto; width:40%;" cellpadding="0" cellspacing="0">
+            <table style="margin:0px 0px 0px auto; width:40%;">
               <tr>
                 <td nowrap style="width:20%; background-color:orange; padding:0px 5px;">
                   <%= t('cap.original') %><%= t('cap.suffix') %>
@@ -122,7 +122,7 @@ unless @for_print
   </tr>
   <tr>
     <td colspan="2" style="text-align:center; vertical-align:bottom;">
-      <table style="margin:0px auto; width:95%;"  cellpadding="0" cellspacing="2">
+      <table style="margin:0px auto; width:95%; border-spacing:2px;">
         <tr>
           <td style="width:50%; text-align:left; color:navy; font-size:14pt; line-height:1.0;  word-break:break-all;">
             <%= raw(t('paren.aquo_b.right')) %> <%= @item.title %>
@@ -161,7 +161,7 @@ end
 
 <% unless @for_print %>
 
-<table cellspacing="0" cellpadding="0" style="margin:20px auto 5px;">
+<table style="margin:20px auto 5px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
@@ -253,7 +253,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
 
   <div id="div_workflow" style="padding-top:15px;">
     <input type="hidden" name="item_id" value="<%= @item.id %>" />
-    <table cellspacing="0" cellpadding="0" style="width:90%; margin:0px auto; padding:15px 0px; background-color:#e0f7ff;">
+    <table style="width:90%; margin:0px auto; padding:15px 0px; background-color:#e0f7ff;">
       <tr>
         <td style="padding-left:20px;">
           <div id="div_wf_ajax">
@@ -268,7 +268,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
       <% if @orders.empty? %>
       <tr style="height:20px;">
         <td>
-          <table id="issue_button" cellspacing="0" cellpadding="0" style="margin:0px auto; padding-top:10px;">
+          <table id="issue_button" style="margin:0px auto; padding-top:10px;">
             <tr>
               <td>
                 <%= t('workflow.issue_button_info') %>
@@ -280,7 +280,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
       <% else %>
       <tr style="height:20px;">
         <td>
-          <table id="issue_button" cellspacing="0" cellpadding="0" style="margin:0px auto; padding-top:10px;">
+          <table id="issue_button" style="margin:0px auto; padding-top:10px;">
             <tr>
               <td class="img_button_td" onclick="doWfIssue();">
                 <%= t('btn.issue') %>
@@ -361,7 +361,7 @@ function _doWfIssue()
 <% if @item.xtype == Item::XTYPE_PROJECT %>
 <a name="team_apply"></a>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="padding:20px 0px 20px;">
       <%= render(:partial => 'caption', :locals => {:title => Team.model_name.human, :div_name => 'div_team'}) %>
@@ -412,10 +412,10 @@ function _doWfIssue()
 
     <%= form_tag( {:controller => 'items', :action => 'team_organize', :id => @item.id}, :name => 'form_team', :method => 'post') %>
       <input type="hidden" id="team_id" name="team_id" value="<%= (@team.nil?)?'':@team.id %>" />
-      <table cellspacing="0" cellpadding="0" style="width:90%; background-color:lightcyan; margin:20px auto;">
+      <table style="width:90%; background-color:lightcyan; margin:20px auto;">
         <tr>
           <td style="padding-left:20px;">
-            <table cellspacing="0" cellpadding="0" align="left" style="width:450px;">
+            <table align="left" style="width:450px;">
               <tr>
                 <td style="text-align:left;">
                   <%= t('team.cap.applicants') %><br/>
@@ -444,7 +444,7 @@ function _doWfIssue()
               <tr style="height:5px;"><td></td></tr>
               <tr>
                 <td>
-                  <table cellspacing="0" cellpadding="0" style="width:100%;">
+                  <table style="width:100%;">
                     <tr>
                       <td style="width:33%; text-align:left; vertical-align:bottom;">
                         <%= t('cap.members') %>
@@ -473,7 +473,7 @@ function _doWfIssue()
         </tr>
         <tr style="height:20px;">
           <td>
-            <table style="margin:20px auto 0px;" cellspacing="0" cellpadding="0">
+            <table style="margin:20px auto 0px;">
               <tr>
                 <td class="img_button_td" onclick="selectListAll(_z('team_members')); doOrganizeTeam(document.form_team);">
                   <%= t('btn.register') %>
@@ -506,7 +506,7 @@ else
 
     <% if @login_user.nil? %>
 
-    <table cellspacing="0" cellpadding="0" style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
+    <table style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
       <tr><td style="text-align:center;"><%= t('team.application_info') %></td></tr>
     </table>
 
@@ -515,7 +515,7 @@ else
       if @comment.nil?
         if !@team.nil? and @team.get_users_a.include?(@login_user.id.to_s)
     %>
-        <table cellspacing="0" cellpadding="0" style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
+        <table style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
           <tr>
             <td style="text-align:center;">
               <%= t('team.is_member') %>
@@ -552,7 +552,7 @@ end
 <!-- Response for Zeptair Distribution Package -->
 <% if @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
 <a name="zeptair_dist_res"></a>
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="padding-top:20px;">
 
@@ -560,7 +560,7 @@ end
 
     <div id="div_zeptair_dist_res">
   <% if @login_user.nil? %>
-      <table style="width:50%; margin:15px auto;" cellspacing="0" cellpadding="0">
+      <table style="width:50%; margin:15px auto;">
         <tr>
           <td style="text-align:center;" nowrap>
             <%= t('msg.please_login') %>
@@ -583,10 +583,10 @@ end
         </tr>
       </table>
 
-      <table style="width:80%; margin:10px auto 15px;" cellspacing="0" cellpadding="0">
+      <table style="width:80%; margin:10px auto 15px;">
         <tr>
           <td style="text-align:center;">
-            <table style="width:100%;" cellspacing="1" cellpadding="0">
+            <table style="width:100%; border-spacing:1px;">
               <tr>
                 <th class="list_th" style="width:22%;" nowrap><%= t('user.u_name') %></th>
                 <th class="list_th" style="width:25%;" nowrap><%= t('activerecord.attributes.updated_at') %></th>
@@ -652,10 +652,10 @@ end
         </tr>
       </table>
 
-      <table style="margin:15px auto 20px; width:60%;" cellspacing="0" cellpadding="0">
+      <table style="margin:15px auto 20px; width:60%;">
         <tr>
           <td style="text-align:center;">
-            <table cellspacing="2" cellpadding="0" style="width:100%; border:solid 1px pink;">
+            <table style="width:100%; border:solid 1px pink; border-spacing:2px;">
               <tr>
                 <td class="item_cap_td" style="width:40%;">
                   <%= t('zeptair.dist.response') %>
@@ -686,7 +686,7 @@ end
         </tr>
       </table>
 
-      <table cellspacing="0" cellpadding="0" onclick="showZeptairDistUsers()" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') center no-repeat; cursor:pointer;">
+      <table onclick="showZeptairDistUsers()" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') center no-repeat; cursor:pointer;">
         <tr style="height:35px;">
           <td style="text-align:center;">
             <%= t('msg.show_list') %>
@@ -743,7 +743,7 @@ function showZeptairDistUsers()
     style_display = ''
     style_display = 'display:none;' if @item.comments.nil? or @item.comments.empty?
     %>
-    <table id="comments_table" cellspacing="0" cellpadding="0" style="width:90%; margin:0px auto; <%= style_display %> background-color:white;">
+    <table id="comments_table" style="width:90%; margin:0px auto; <%= style_display %> background-color:white;">
       <tr>
         <td>
           <div id="div_comments">
@@ -765,14 +765,14 @@ function showZeptairDistUsers()
       <%= hidden_field('comment', 'item_id', :value => @item.id) %>
       <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
       <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_MSG) %>
-    <table class="comment_body_td" cellspacing="0" cellpadding="0" style="width:90%; margin:0px auto; padding:0; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+    <table class="comment_body_td" style="width:90%; margin:0px auto; padding:0; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
       <tr>
         <td class="comment_tab_td" style="padding:0; height:10px;">
         </td>
       </tr>
       <tr>
         <td style="padding:20px 15px 15px;">
-          <table cellspacing="0" cellpadding="0" style="width:85%; margin:0px auto;">
+          <table style="width:85%; margin:0px auto;">
             <tr>
               <td>
                 <textarea id="comment_message" name="comment[message]" rows="4" wrap="off" style="width:100%"></textarea>
@@ -781,7 +781,7 @@ function showZeptairDistUsers()
             <tr style="height:10px;"><td></td></tr>
             <tr>
               <td>
-                <table cellspacing="0" cellpadding="0" style="width:100%;">
+                <table style="width:100%;">
                   <tr>
                     <td nowrap style="width:80px; text-align:left; vertical-align:middle; padding-left:10px; font-size:10pt;">
                       <%= t('item.file') %> :

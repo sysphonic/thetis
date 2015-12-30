@@ -1,11 +1,11 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @mail_account}) %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" style="width:100%;">
+      <table style="width:100%; border-spacing:2px;">
         <tr>
           <td id="tab_basic" class="td_item_tab" nowrap onclick="showAddressTab('basic');">
             <%= t('cap.basic_info') %>
@@ -26,10 +26,10 @@
     <td style="text-align:center;">
 
       <div id="tab_div_basic" style="width:100%; text-align:center;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
+        <table style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_title"><%= MailAccount.human_attribute_name('title') %></label>
@@ -124,10 +124,10 @@
       </div>
 
       <div id="tab_div_receive" style="display:none; width:100%; text-align:center;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
+        <table style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label>
@@ -200,10 +200,10 @@
       </div>
 
       <div id="tab_div_send" style="display:none; width:100%; text-align:center;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px blueviolet;">
+        <table style="width:100%; border:outset 3px blueviolet;">
           <tr>
             <td style="text-align:center; padding:10px 0px 15px;">
-              <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                     <label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label>
@@ -249,7 +249,7 @@
                         <%= radio_button('mail_account', 'smtp_auth_method', 'cram_md5') %><label for="mail_account_smtp_auth_method_cram_md5">CRAM MD5</label>
                       </div>
 
-                      <table style="width:100%;" cellpadding="0" cellspacing="2">
+                      <table style="width:100%; border-spacing:2px;">
                         <tr>
                           <td class="prim_cap_td" style="background-color:#C1BFFF;" nowrap>
                             <label for="mail_account_smtp_username"><%= t('user.u_name') %></label>

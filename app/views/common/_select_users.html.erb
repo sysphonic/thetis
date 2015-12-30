@@ -18,7 +18,7 @@ end
 @users = Group.get_users(@group_id)
 %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:1px;">
+<table style="width:100%; padding-bottom:1px;">
   <tr>
     <td style="width:130px;">
       <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelectUsers('<%= (@group_id.nil?)?'':@group_id %>', this);">
@@ -39,7 +39,7 @@ if target_attr.to_s == 'email'
   email_type = params[:email_type]
   email_sub_type = (email_type == 'main') ? nil : email_type
 %>
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:3px;">
+<table style="width:100%; padding-bottom:3px;">
   <tr>
     <td style="text-align:left;">
       <%

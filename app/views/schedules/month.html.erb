@@ -6,11 +6,11 @@
 <%= form_tag( {:controller => 'schedules', :action => 'index'}, :method => 'get', :name => 'form_schedule') %>
 
 <% if params[:user_id].nil? %>
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr>
     <td style="text-align:left; width:30%;">
     <% unless @login_user.nil? %>
-      <table style="margin:0px auto 0px 0px; width:65px;" cellspacing="0" cellpadding="0">
+      <table style="margin:0px auto 0px 0px; width:65px;">
         <tr>
           <td nowrap style="text-align:left; width:30px;">
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
@@ -53,7 +53,7 @@
 </table>
 <% end %>
 
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr style="height:25px;">
     <td style="width:25%;">
     </td>
@@ -75,7 +75,7 @@
   </tr>
 </table>
 
-<table id="div_calendar" cellspacing="5" cellpadding="3" style="width:100%; overflow:auto; background-color:white">
+<table id="div_calendar" style="width:100%; overflow:auto; background-color:white; border-spacing:5px;">
   <tr style="height:20px;">
   <%
   ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].each_with_index do |wday_name, idx|

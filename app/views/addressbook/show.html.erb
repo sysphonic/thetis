@@ -9,7 +9,7 @@
 </div>
 <div style="padding:0px 15px;">
 
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table style="width:100%;">
     <tr>
       <td class="info_section_header">
         <%= t('cap.basic_info') %>
@@ -17,7 +17,7 @@
     </tr>
   </table>
 
-  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
+  <table style="width:95%; margin:10px auto; border-spacing:2px;">
   <% unless @address.name.nil? or @address.name.empty? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
@@ -28,7 +28,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.email1.nil? or @address.email1.empty? %>
+  <% unless @address.email1.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_email1"><%= Address.human_attribute_name('email1') %></label>
@@ -38,7 +38,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.email2.nil? or @address.email2.empty? %>
+  <% unless @address.email2.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_email2"><%= Address.human_attribute_name('email2') %></label>
@@ -48,7 +48,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.email3.nil? or @address.email3.empty? %>
+  <% unless @address.email3.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_email3"><%= Address.human_attribute_name('email3') %></label>
@@ -58,7 +58,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.tel1.nil? or @address.tel1.empty? %>
+  <% unless @address.tel1.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label>
@@ -68,7 +68,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.tel2.nil? or @address.tel2.empty? %>
+  <% unless @address.tel2.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label>
@@ -78,7 +78,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.tel3.nil? or @address.tel3.empty? %>
+  <% unless @address.tel3.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label>
@@ -88,7 +88,7 @@
       </td>
     </tr>
   <% end %>
-  <% unless @address.fax.nil? or @address.fax.empty? %>
+  <% unless @address.fax.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_fax"><%= Address.human_attribute_name('fax') %></label>
@@ -109,7 +109,7 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
    or (!@address.organization.nil? and !@address.organization.empty?) \
    or (!@address.title.nil? and !@address.title.empty?)
 %>
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table style="width:100%;">
     <tr>
       <td class="info_section_header">
         <%= Address.human_attribute_name('address') %>
@@ -117,8 +117,8 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
     </tr>
   </table>
 
-  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
-  <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
+  <table style="width:95%; margin:10px auto; border-spacing:2px;">
+  <% unless @address.postalcode.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
@@ -128,7 +128,7 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
       </td>
     </tr>
   <% end %>
-  <% unless @address.address.nil? or @address.address.empty? %>
+  <% unless @address.address.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_address"><%= Address.human_attribute_name('address') %></label>
@@ -138,7 +138,7 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
       </td>
     </tr>
   <% end %>
-  <% unless @address.url.nil? or @address.url.empty? %>
+  <% unless @address.url.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_url"><%= Address.human_attribute_name('url') %></label>
@@ -157,7 +157,7 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
       </td>
     </tr>
   <% end %>
-  <% unless @address.organization.nil? or @address.organization.empty? %>
+  <% unless @address.organization.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
@@ -167,7 +167,7 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
       </td>
     </tr>
   <% end %>
-  <% unless @address.title.nil? or @address.title.empty? %>
+  <% unless @address.title.blank? %>
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_title"><%= Address.human_attribute_name('title') %></label>
@@ -181,9 +181,9 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
 <% end %>
 
 <%
-if (!@address.memo.nil? and !@address.memo.empty?)
+unless @address.memo.blank?
 %>
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table style="width:100%;">
     <tr>
       <td class="info_section_header">
         <%= Address.human_attribute_name('memo') %>
@@ -191,8 +191,7 @@ if (!@address.memo.nil? and !@address.memo.empty?)
     </tr>
   </table>
 
-  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
-  <% unless @address.memo.nil? or @address.memo.empty? %>
+  <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>
       <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
         <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
@@ -201,11 +200,10 @@ if (!@address.memo.nil? and !@address.memo.empty?)
         <%= @address.memo %>
       </td>
     </tr>
-  <% end %>
   </table>
 <% end %>
 
-  <table style="width:100%;" cellspacing="0" cellpadding="0">
+  <table style="width:100%;">
     <tr>
       <td class="info_section_header">
         <%= t('schedule.scope') %>
@@ -213,7 +211,7 @@ if (!@address.memo.nil? and !@address.memo.empty?)
     </tr>
   </table>
 
-  <table cellpadding="0" cellspacing="2" style="width:95%; margin:10px auto;">
+  <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>
       <td style="text-align:left;">
         <%

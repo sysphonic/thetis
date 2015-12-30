@@ -5,7 +5,7 @@
 <%= form_tag( {:controller => 'users', :action => 'add_official_titles'}, :name => 'form_user_titles', :id => 'form_user_titles', :method => 'post') %>
 
   <div id="div_select_official_titles">
-    <table style="width:100%;" cellspacing="0" cellpadding="0">
+    <table style="width:100%;">
       <tr>
         <td style="width:130px;">
           <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= (@group_id.nil?)?'':@group_id %>');">

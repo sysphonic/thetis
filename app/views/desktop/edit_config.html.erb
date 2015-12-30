@@ -8,11 +8,11 @@ is_admin = @login_user.admin?(User::AUTH_DESKTOP)
 tabs = new Array("basic", "admin");
 </script>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:10px 15px 20px;">
+<table style="width:100%; padding:10px 15px 20px;">
   <tr>
     <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" style="width:100%;">
+      <table style="width:100%; border-spacing:2px;">
         <tr>
           <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
             <%= t('cap.basic_info') %>
@@ -32,13 +32,13 @@ tabs = new Array("basic", "admin");
     <td style="text-align:center;">
 
       <div id="tab_div_basic" style="text-align:center;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkseagreen;">
+        <table style="width:100%; border:outset 3px darkseagreen;">
           <tr>
             <td style="text-align:center; padding:20px 0px;" >
 
               <%= form_tag( {:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
 
-                <table style="margin:0px auto; width:90%;" cellpadding="0" cellspacing="2">
+                <table style="margin:0px auto; width:90%; border-spacing:2px;">
                   <tr>
                     <td class="prim_cap_td" style="background-color:#A2F3A2;" nowrap>
                       <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
@@ -58,7 +58,7 @@ tabs = new Array("basic", "admin");
                     </td>
                     <td class="item_value_td">
 
-                      <table style="margin:0px auto 0px 0px;" cellpadding="0" cellspacing="5">
+                      <table style="margin:0px auto 0px 0px; border-spacing:5px;">
                         <tr style="height:40px;">
                           <td id="td_bgcolor_blue" onclick="selectBgColor('<%= Desktop::BGCOLOR_BLUE %>');" style="width:50px; background-color:<%= Desktop.background_color(Desktop::BGCOLOR_BLUE) %>; cursor:pointer; border:solid 3px dimgray;">
                             &nbsp;
@@ -111,7 +111,7 @@ tabs = new Array("basic", "admin");
 
               </form>
 
-              <table cellspacing="0" cellpadding="0" style="margin:10px auto 0px;">
+              <table style="margin:10px auto 0px;">
                 <tr>
                   <td class="img_button_td" onclick="doUpdatePref();">
                     <%= t('btn.update')%>
@@ -126,7 +126,7 @@ tabs = new Array("basic", "admin");
 
     <% if is_admin %>
       <div id="tab_div_admin" style="display:none; width:100%; text-align:center;" >
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkseagreen;">
+        <table style="width:100%; border:outset 3px darkseagreen;">
           <tr>
             <td style="text-align:left; padding:20px 10px;">
 

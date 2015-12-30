@@ -1,4 +1,4 @@
-<table cellspacing="2" cellpadding="0" style="width:100%;">
+<table style="width:100%; border-spacing:2px;">
   <tr>
     <td class="td_show_cap_bar" nowrap>
       <%= t('attachment.plural_full') %>
@@ -10,7 +10,7 @@
     @attachments = @item.attachments_without_content
     @attachments.each do |attach|
     %>
-      <table cellspacing="1" cellpadding="0" style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+      <table style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
         <tr>
           <td class="td_attachment_name" nowrap style="text-align:center;">
             <%= attach.name %>

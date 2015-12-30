@@ -2,12 +2,12 @@
 
 <%= form_tag( {:controller => 'config', :action => 'update_by_ajax'}, :name => 'form_log_config', :method => 'post') %>
 
-<table style="width:100%; margin-top:10px;" cellspacing="0" cellpadding="0">
+<table style="width:100%; margin-top:10px;">
   <tr>
     <td style="width:49%; vertical-align:top;" >
 
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;" >
-        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
               <%= t('menu.settings') %>
@@ -41,7 +41,7 @@
 
 </form>
 
-<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>

@@ -8,7 +8,7 @@
 
 <% unless @comment.nil? %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:20px 20px 0px;">
+<table style="width:100%; padding:20px 20px 0px;">
   <tr>
   <%
   body_class = (@comment.user_id == 0)?'comment_sys_body_td':'comment_body_td'
@@ -37,7 +37,7 @@
           or @login_user.id == @item.user_id \
           or @login_user.admin?(User::AUTH_ITEM)
     %>
-      <table cellspacing="0" cellpadding="0" style="width:75px; margin:0px auto 0px 0px;">
+      <table style="width:75px; margin:0px auto 0px 0px;">
         <tr>
         <% if @login_user.id == @comment.user_id %>
           <td>

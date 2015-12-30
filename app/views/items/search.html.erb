@@ -7,7 +7,7 @@
 @folder_obj_cache ||= {}
 %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
@@ -23,7 +23,7 @@
   </tr>
 </table>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left; color:sienna" nowrap >
     <%
@@ -62,7 +62,7 @@
 
 </form>
 
-<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:10px;">
+<table style="width:100%; padding-bottom:10px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
@@ -88,11 +88,11 @@
 %>
 
 <div class="base_list" id="div_list">
-<table cellpadding="0" cellspacing="0" style="width:100%; background-color:white;">
+<table style="width:100%; background-color:white;">
 <% @items.each do |item| %>
   <tr>
     <td>
-      <table style="width:100%;" cellpadding="0" cellspacing="0">
+      <table style="width:100%;">
         <tr>
           <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp;

@@ -657,7 +657,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     }
     content += "  <tr>";
     content += "    <td style='text-align:center; cursor:default;'>";
-    content += "      <table align='center' cellpadding='0' cellspacing='2' style='border:solid limegreen 1px; padding:0px; background-color:#fff'>";
+    content += "      <table style='border:solid limegreen 1px; margin:0px auto; background-color:#fff; border-spacing:2px;'>";
     content += "        <tr>";
     for (i=1; i<=20; i++) {
       content += "          <td style='min-width:10px; width:10px; height:20px;' id='thetisBoxProgress-"+this.id+"_"+i+"'></td>";

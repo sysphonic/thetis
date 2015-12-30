@@ -11,7 +11,7 @@ if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
 end
 %>
 
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr>
     <td style="width:130px;">
       <div class="button_gray" style="float:left;" onclick="showFolderTreeToSelectItems('<%= (@folder_id.nil?)?'':@folder_id %>', this);">

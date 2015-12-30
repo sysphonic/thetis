@@ -37,7 +37,7 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 
 <% unless @schedules.nil? %>
 <div style="padding-bottom:10px;">
-  <table style="margin:0px auto; width:98%; border:1px outset lightgrey; background-color:#eee;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;" cellspacing="0" cellpadding="0" >
+  <table style="margin:0px auto; width:98%; border:1px outset lightgrey; background-color:#eee;  -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;" >
     <tr>
       <td style="padding:10px; vertical-align:top;">
         <div id="div_timetable" style="background-color:white;">
@@ -56,7 +56,7 @@ calDisp.setStyle( "frame_color", "#3333CC" );
 <div class="info_area" style="width:98%; margin:0px 1%; padding-top:10px; padding-bottom:10px; background-color:lightcyan; text-align:center;">
 
 <%= form_tag( {:controller => 'timecards', :action => 'edit', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
-  <table style="width:100%; padding-bottom:10px;" cellspacing="0" cellpadding="0">
+  <table style="width:100%; padding-bottom:10px;">
     <tr>
       <td style="text-align:center;">
 <%
@@ -75,7 +75,7 @@ next_week = @date + 7
   </table>
 </form>
 
-<table style="margin:0px auto; width:95%;" cellspacing="0" cellpadding="0">
+<table style="margin:0px auto; width:95%;">
   <tr>
     <td style="text-align:center;">
       <%= render :partial => 'user_profile'%>
@@ -91,7 +91,7 @@ end
 %>
 
 <%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
-  <table class="timecard" cellpadding="0" cellspacing="0" style="width:95%; margin:0px auto;">
+  <table class="timecard" style="width:95%; margin:0px auto;">
     <tr>
       <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
         <%= t('cap.classification') %>
@@ -215,7 +215,7 @@ end
       </td>
       <td class="item_value_td">
       <% if editable %>
-        <table cellpadding="0" cellspacing="0" style="width:100%;">
+        <table style="width:100%;">
           <tr>
             <td style="border:none;">
               <%= text_area('timecard', 'comment', :rows => 3, :style => 'width:100%;') %>
@@ -239,7 +239,7 @@ end
     display_without_clear = ''
   end
   %>
-  <table id="buttons_with_clear" cellpadding="0" cellspacing="0" style="margin:0px auto; padding:10px; display:<%= display_with_clear %>;">
+  <table id="buttons_with_clear" style="margin:0px auto; padding:10px; display:<%= display_with_clear %>;">
     <tr>
       <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>
@@ -256,7 +256,7 @@ end
     <% end %>
     </tr>
   </table>
-  <table id="buttons_without_clear" cellpadding="0" cellspacing="0" style="margin:0px auto; padding:10px; display:<%= display_without_clear %>;">
+  <table id="buttons_without_clear" style="margin:0px auto; padding:10px; display:<%= display_without_clear %>;">
     <tr>
       <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>

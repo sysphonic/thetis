@@ -9,11 +9,11 @@ var modified_teams = 0;
 @group_obj_cache ||= {}
 %>
 
-<table id="tree_main" cellpadding="0" cellspacing="0" style="width:100%; background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<table id="tree_main" style="width:100%; background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
 <% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
   <tr>
     <td style="padding:5px 5px 2px; text-align:right;">
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <table style="width:100%;">
          <tr>
             <td style="text-align:left; background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
             <% if @group_id.nil? or @group_id.empty? %>
@@ -21,7 +21,7 @@ var modified_teams = 0;
                 <%= t('btn.select_group') %>
               </div>
             <% else %>
-              <table style="width:100%;" cellpadding="0" cellspacing="0">
+              <table style="width:100%;">
                 <tr>
                   <td nowrap style="text-indent:10px; text-align:left;">
                     <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></span></a>
@@ -38,7 +38,7 @@ var modified_teams = 0;
 <% end %>
   <tr>
     <td>
-      <table style="width:100%;" cellspacing="0" cellpadding="0">
+      <table style="width:100%;">
         <tr>
         <% if !@login_user.nil? %>
           <td nowrap style="padding:5px 20px; text-align:left;">
@@ -72,7 +72,7 @@ var modified_teams = 0;
   <tr style="height:100%;">
     <td style="padding-bottom:7px; text-align:center;">
 
-      <table cellspacing="0" cellpadding="0" style="background-color:white; width:100%;">
+      <table style="background-color:white; width:100%;">
         <tr>
           <td id="td_tree" style="border:inset 2px silver; padding:0px; text-align:left; vertical-align:top;">
             <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>

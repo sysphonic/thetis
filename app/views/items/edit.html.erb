@@ -16,7 +16,7 @@ var users_cache = new Array();
 <%= hidden_field_tag('item_id', @item.id) %>
 <%= hidden_field_tag('folder_id', @item.folder_id) %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr style="height:5px;">
     <td></td>
     <td rowspan="2">
@@ -30,7 +30,7 @@ var users_cache = new Array();
   <tr>
     <td style="text-align:center;">
 
-    <table cellspacing="2" cellpadding="0" style="width:100%;">
+    <table style="width:100%; border-spacing:2px;">
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
@@ -62,7 +62,7 @@ var users_cache = new Array();
     <% if @item.xtype == Item::XTYPE_WORKFLOW %>
       <div id="tab_div_workflow">
         <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
-        <table cellspacing="0" cellpadding="0" style="width:100%; background-color:#FFF8D7; border:solid 5px gold; padding-bottom:15px;">
+        <table style="width:100%; background-color:#FFF8D7; border:solid 5px gold; padding-bottom:15px;">
           <tr>
             <td>
               <div id="div_item_workflow" style="overflow:auto;">
@@ -73,7 +73,7 @@ var users_cache = new Array();
           <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
-              <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+              <table style="margin:0px auto;">
                 <tr>
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
@@ -97,7 +97,7 @@ var users_cache = new Array();
 
       <div id="tab_div_basic">
         <%= form_tag( {:controller => 'items', :action => 'set_basic', :id => @item }, :id => 'form_basic', :method => 'post') %>
-        <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:aliceblue; border:solid 5px cornflowerblue;">
+        <table style="width:100%; padding-bottom:15px; background-color:aliceblue; border:solid 5px cornflowerblue;">
           <tr>
             <td>
               <div id="div_item_basic" style="overflow:auto;">
@@ -108,7 +108,7 @@ var users_cache = new Array();
           <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
-              <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+              <table style="margin:0px auto;">
                 <tr>
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
@@ -131,7 +131,7 @@ var users_cache = new Array();
 
       <div id="tab_div_description" style="display:none;">
       <%= form_tag( {:controller => 'items', :action => 'set_description', :id => @item }, :id => 'form_description', :method => 'post') %>
-      <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:honeydew; border:solid 5px yellowgreen;">
+      <table style="width:100%; padding-bottom:15px; background-color:honeydew; border:solid 5px yellowgreen;">
         <tr>
           <td>
             <div id="div_item_description" style="overflow:auto;">
@@ -142,7 +142,7 @@ var users_cache = new Array();
         <tr style="height:20px;"><td></td></tr>
         <tr>
           <td>
-            <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+            <table style="margin:0px auto;">
               <tr>
                 <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                   <%= t('btn.back') %>
@@ -173,7 +173,7 @@ var users_cache = new Array();
 
        <%= form_tag( {:controller => 'items', :action => 'set_image', :id => @item }, :id => 'form_image', :name => 'form_image', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:15px; background-color:#FFEEED; border:solid 5px salmon;">
+        <table style="width:100%; padding-bottom:15px; background-color:#FFEEED; border:solid 5px salmon;">
           <tr>
             <td>
               <div id="div_item_image" style="overflow:auto;">
@@ -184,7 +184,7 @@ var users_cache = new Array();
           <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
-              <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+              <table style="margin:0px auto;">
                 <tr>
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
@@ -210,7 +210,7 @@ var users_cache = new Array();
 
        <%= form_tag( {:controller => 'items', :action => 'set_attachment', :id => @item }, :id => 'form_attachment', :name => 'form_attachment', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table cellspacing="0" cellpadding="0" style="width:100%; background-color:#FFF6DD; padding-bottom:15px; border:solid 5px tan;">
+        <table style="width:100%; background-color:#FFF6DD; padding-bottom:15px; border:solid 5px tan;">
           <tr>
             <td>
               <div id="div_item_attachment" style="overflow:auto;">
@@ -221,7 +221,7 @@ var users_cache = new Array();
           <tr style="height:20px;"><td></td></tr>
           <tr>
             <td>
-              <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+              <table style="margin:0px auto;">
                 <tr>
                   <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>

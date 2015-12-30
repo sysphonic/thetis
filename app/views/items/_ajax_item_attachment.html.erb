@@ -1,16 +1,16 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @attachment}) %>
 
-<table style="width:90%; margin:20px auto 0px;" cellpadding="0" cellspacing="2">
+<table style="width:90%; margin:20px auto 0px; border-spacing:2px;">
   <tr>
     <td style="vertical-align:top;">
-      <table cellspacing="0" cellpadding="0" style="width:100%;">
+      <table style="width:100%;">
         <tr>
           <td class="item_cap_td" style="width:100%; background-color:#E5C27F;"><%= t('item.add_attachment') %></td>
         </tr>
         <tr>
           <td class="item_value_td" style="width:80%;">
-            <table style="width:100%;" cellpadding="0" cellspacing="2">
+            <table style="width:100%; border-spacing:2px;">
               <tr>
                 <td rowspan="<%= (THETIS_ATTACHMENT_LOCATION_SELECTABLE)?4:3 %>" style="width:20px; background-color:goldenrod; text-align:center;" >A</td>
                 <td class="item_cap_td" style="background-color:navajowhite"><%= t('item.file') %></td>
@@ -91,7 +91,7 @@
     item_attachments.each do |attach|
     %>
       <div id="item_<%= attach.id %>" style="width:100%;">
-        <table cellspacing="0" cellpadding="0" style="width:100%; margin-bottom:10px;">
+        <table style="width:100%; margin-bottom:10px;">
           <tr>
             <td style="text-align:right; vertical-align:middle; cursor:move;" >
             <% if item_attachments.length > 1 %>
@@ -99,7 +99,7 @@
             <% end %>
             </td>
             <td class="img_td" style="text-align:center; padding-left:5px; padding-right:5px; cursor:move;">
-              <table style="width:100%;" cellpadding="0" cellspacing="0">
+              <table style="width:100%;">
                 <tr>
                   <td style="text-align:center;">
                     <%= truncate(attach.name, :length => 20) %>
@@ -115,7 +115,7 @@
               </table>
             </td>
             <td style="vertical-align:middle;">
-              <table style="width:100%;" cellpadding="0" cellspacing="0">
+              <table style="width:100%;">
                 <tr>
                   <td>
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>');" />

@@ -2,12 +2,12 @@
 
 <%= form_tag( {:controller => 'timecards', :action => 'update_config'}, :name => 'form_config', :method => 'post') %>
 
-<table style="width:100%; padding-top:15px;" cellspacing="0" cellpadding="0">
+<table style="width:100%; padding-top:15px;">
   <tr>
     <td style="width:45%; vertical-align:top;">
 
       <div class="info_area" style="width:100%; padding:20px 0px 10px; text-align:center;" >
-        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('config.general_settings') %>
@@ -67,7 +67,7 @@
       </div>
 
       <div class="info_area" style="width:100%; padding:20px 0px; text-align:center;" >
-        <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('menu.paid_holidays') %>
@@ -111,7 +111,7 @@
     <td style="width:54%; vertical-align:top;">
 
       <div class="info_area" style="width:100%; padding:10px 0px 20px; text-align:center;">
-        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
               <%= t('timecard.working_rules') %>
@@ -524,7 +524,7 @@
   <input type="hidden" id="midnight_span" name="timecard[midnight_span]" value="" />
 </form>
 
-<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>

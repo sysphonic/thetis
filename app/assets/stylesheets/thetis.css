@@ -93,8 +93,8 @@ table.timecard td{padding:2px 5px;}
 
 h2 {line-height:20pt;}
 
-body, ol, ul, td, li, textarea {font-family:verdana,arial,helvetica,sans-serif; font-size:10.5pt; line-height:1.7; margin:0px;}
-table {padding:0px; border-width:0px;}
+body, ol, ul, td, li, textarea {font-family:verdana,arial,helvetica,sans-serif; font-size:10.5pt; line-height:1.7; margin:0px; padding:0px;}
+table {padding:0px; border-width:0px; border-spacing:0px;}
 form {display:inline;}
 textarea {font-family:verdana,arial,helvetica,sans-serif; font-size:10.5pt; line-height:1.7; margin:0px;}
 pre {font-family:verdana,arial,helvetica,sans-serif; font-size:10.5pt; line-height:1.7; margin:0px;}

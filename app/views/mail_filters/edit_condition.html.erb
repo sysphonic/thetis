@@ -8,24 +8,24 @@ val = params[:val]
 
 <%= form_tag({:controller => 'mail_filters', :action => 'update_condition', :id => (@mail_filter.nil?)?(nil):(@mail_filter.id)}, :method => 'post', :name => 'form_filter_condition'+form_idx) %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 15px;">
+<table style="width:100%; padding:5px 15px;">
   <tr>
     <td style="vertical-align:top;">
-      <table style="width:90%; margin:10px auto;" cellpadding="0" cellspacing="2">
+      <table style="width:90%; margin:10px auto; border-spacing:2px;">
         <tr>
-          <td class="item_value_td" style="width:33%">
+          <td class="item_value_td" style="width:33%;">
             <%
             opts = MailFiltersHelper.opts_condition_point(true)
             %>
             <%= select_tag('filter_condition_point', options_for_select(opts, point), :style => 'min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
           </td>
-          <td class="item_value_td" style="width:33%">
+          <td class="item_value_td" style="width:33%;">
             <%
             opts = MailFiltersHelper.opts_condition_compare(true)
             %>
             <%= select_tag('filter_condition_compare', options_for_select(opts, compare), :style => 'display:none; min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
           </td>
-          <td class="item_value_td" style="width:33%">
+          <td class="item_value_td" style="width:33%;">
             <input type="text" id="filter_condition_text" name="filter_condition_text" value="<%= val %>" style="display:none; width:100%;" />
 
             <%
@@ -49,7 +49,7 @@ val = params[:val]
 
 </form>
 
-<table cellspacing="0" cellpadding="0" style="margin:0px auto 20px;">
+<table style="margin:0px auto 20px;">
   <tr>
     <td style="text-align:center;">
       <input type="button" id="btn_filter_condition_ok" value="<%= t('btn.ok')%>" style="width:90px; height:25px;" onclick="onFilterConditionOkClicked(this);" />

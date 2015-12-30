@@ -8,7 +8,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 <%= form_tag({:controller => 'mail_filters', :action => 'update', :id => @mail_filter.id}, :method => 'post', :name => 'form_mail_filter'+form_idx) %>
 <% end %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding:5px 15px;">
+<table style="width:100%; padding:5px 15px;">
   <tr>
     <td style="vertical-align:top;">
       <%= render(:partial => 'mail_filter_form') %>
@@ -18,7 +18,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 </form>
 
-<table cellspacing="0" cellpadding="0" style="margin:0px auto 20px;">
+<table style="margin:0px auto 20px;">
   <tr>
     <td class="img_button_td nodrag" onclick="onRegisterFilterClicked();">
     <% if @mail_filter.nil? or @mail_filter.id.nil? %>

@@ -2,7 +2,7 @@
 <%= form_tag( {:controller => 'users', :action => 'update_auth', :id => @user.id }, :name => 'form_ajax_userAuth', :method => 'post') %>
 
 <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
-  <table style="margin:0px auto; width:95%;" cellpadding="0" cellspacing="2">
+  <table style="margin:0px auto; width:95%; border-spacing:2px;">
     <tr>
       <td class="item_cap_td" nowrap style="width:100%">
         <span nowrap><%= t('cap.admin_authorities') %></span>
@@ -19,7 +19,7 @@
     <tr>
       <td>
 
-        <table class="info_area" cellspacing="0" cellpadding="0" style="width:100%;">
+        <table class="info_area" style="width:100%;">
           <tr>
             <td style="width:45%;">
               <select id="auth_candidates" <%= (check_all)?'disabled':'' %> class="select_multi" size="5" style="width:100%;" multiple>
@@ -47,7 +47,7 @@
             </td>
             <td style="min-width:10px; width:10px;"></td>
             <td style="width:70px;">
-              <table cellspacing="0" cellpadding="0" style="width:100%;">
+              <table style="width:100%;">
                 <tr>
                   <td style="text-align:center;">
                     <input type="button" id="btn_add" <%= (check_all)?'disabled':'' %> value="<%= t('btn.add') %><%= raw(t('arrow.right')) %>" onclick="moveList(_z('auth_candidates'), _z('auth_selected')); return false;" style="width:80px;">

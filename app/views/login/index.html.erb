@@ -1,7 +1,7 @@
 <%= form_tag({:action => 'login'}, :name => 'form_login') %>
 
 <div id="div_login" style="vertical-align:middle; overflow:hidden;">
-  <table cellspacing="5" cellpadding="3" style="width:85%; height:100%; padding:3% 0; margin:0px auto;">
+  <table style="width:85%; height:100%; padding:3% 0; margin:0px auto; border-spacing:5px;">
     <tr style="height:20%;">
       <td class="login_title">
         <%= $thetis_config[:general]['app_title'] %>
@@ -10,10 +10,10 @@
     <tr>
       <td style="text-align:center; height:40%;">
 
-        <table cellspacing="5" cellpadding="3" style="width:70%; height:100%; margin:0px auto; border:solid 1px blue; background-color:#A8F3F4; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
+        <table style="width:70%; height:100%; margin:0px auto; border:solid 1px blue; background-color:#A8F3F4; border-radius:7px; border-spacing:5px;">
           <tr style="height:90%;">
             <td style="text-align:left;">
-              <table cellspacing="5" style="margin:0px auto;">
+              <table style="margin:0px auto; border-spacing:5px;">
                 <tr>
                   <td style="text-align:right; font-size:12pt; padding:5px; line-height:17pt;" nowrap>
                     <label for="user_name"><%= t('user.u_name') %><%= t('msg.colon') %></label>

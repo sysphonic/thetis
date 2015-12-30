@@ -1,7 +1,7 @@
 
 <%= form_tag( {:controller => 'teams', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table style="margin:0px auto; width:95%;" cellspacing="3" cellpadding="0">
+<table style="margin:0px auto; width:95%; border-spacing:3px;">
   <tr>
     <td style="text-align:center; width:30%;" rowspan="3">
 
@@ -30,7 +30,7 @@
   </tr>
 </table>
 
-<table style="width:100%; margin-bottom:10px;" cellpadding="0" cellspacing="0">
+<table style="width:100%; margin-bottom:10px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('team', :count => @total_num) %>
@@ -47,7 +47,7 @@
 </table>
 
 <div class="base_list" id="div_teams">
-<table id="list_teams" style="width:100%;" cellpadding="0" cellspacing="1">
+<table id="list_teams" style="width:100%; border-spacing:1px;">
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('teams.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('teams.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:30%;" nowrap onclick="sortList('name')"><%= Team.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>

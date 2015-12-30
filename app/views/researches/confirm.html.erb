@@ -1,10 +1,10 @@
 <%= form_tag({:controller => 'researches', :action => 'do_confirm'}, :method => 'post', :name => 'form_research') %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="font-size:11pt; text-align:left;">
 
-    <table cellspacing="5" cellpadding="0" style="width:100%; font-size:10pt; padding:5px; line-height:2.0;">
+    <table style="width:100%; font-size:10pt; padding:5px; line-height:2.0; border-spacing:5px;">
       <tr>
         <td colspan="6" style="padding-left:20px;"><%= t('research.confirm_answer') %></td>
       </tr>
@@ -42,7 +42,7 @@
     <%= hidden_field_tag('research_id', @research.id) %>
     <%= hidden_field_tag('page', @page) %>
 
-    <table style="margin:10px auto 40px; vertical-align:top;" cellspacing="0" cellpadding="0">
+    <table style="margin:10px auto 40px; vertical-align:top;">
       <tr>
       <td class="img_button_td" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
         <%= raw(t('btn.page_back')) %>

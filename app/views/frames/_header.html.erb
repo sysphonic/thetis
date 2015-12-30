@@ -1,16 +1,16 @@
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr style="height:7px;">
     <td style="width:100%; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_corner.png'); background-repeat:no-repeat; background-position:top right;">
     </td>
     <td style="width:20%; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png') repeat-x;">
     </td>
     <td rowspan="2" style="background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/woody_light.png') repeat-x;">
-      <table cellspacing="0" cellpadding="0" style="width:100%;">
+      <table style="width:100%;">
         <tr>
           <td style="padding-left:5px; text-align:center;">
             <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= url_for(:controller => 'users', :action => 'edit') %>', 'groupware'); return false;" style="color:navy;">
-              <table id="table_login_user" cellspacing="0" cellpadding="0" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
+              <table id="table_login_user" style="cursor:pointer; display:none; background-color:lightcyan; border:1px solid silver; border-right:1px solid black; border-bottom:1px solid black;">
                 <tr>
                   <td nowrap style="text-align:center; padding:5px 10px; line-height:1.0;">
                     <%= t('cap.login') %> 
@@ -24,13 +24,7 @@
           <td style="width:10px;"></td>
           <td style="text-align:center; vertical-align:middle;">
             <a href="javascript:this.onclick()" onclick="window.open('<%= ApplicationHelper.url_for(:controller => 'feeds', :action => 'index', :feed => 'all') %>', 'thetis_feeds'); return false;">
-              <table cellspacing="0" cellpadding="0" style="width:36px; padding:0px; cursor:pointer;">
-                <tr>
-                  <td style="text-align:center; vertical-align:bottom;">
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/feed_icon.png" title="<%= t('feed.cap') %>" />
-                  </td>
-                </tr>
-              </table>
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/feed_icon.png" title="<%= t('feed.cap') %>" style="cursor:pointer;" />
             </a>
           </td>
         <% end %>
@@ -40,19 +34,18 @@
   </tr>
   <tr style="height:21px;">
     <td colspan="2" style="border-top:1px solid white; background-image:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/header_menu.png'); background-repeat:repeat-x; background-color:#BA6F18;">
-
-      <table cellspacing="0" cellpadding="0" style="width:100%;">
+      <table style="width:100%;">
         <tr>
           <td style="padding-left:10px;">
-            <table cellspacing="0" cellpadding="0">
+            <table>
               <tr>
-                <td onclick="onBtnModeBusinessClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:100%; font-size:10pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
+                <td onclick="onBtnModeBusinessClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:9pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
                   <img id="sign_mode_business" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/selected_blue.png" style="padding-bottom:2px; display:none;" />
                   <%= t('mode.business') %>
                 </td>
                 <td style="min-width:5px; width:5px;">
                 </td>
-                <td onclick="onBtnModeGroupwareClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:100%; font-size:10pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
+                <td onclick="onBtnModeGroupwareClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:9pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle;">
                   <img id="sign_mode_groupware" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/selected_red.png" style="padding-bottom:2px; display:none;" />
                   <%= t('mode.groupware') %>
                 </td>

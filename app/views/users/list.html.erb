@@ -8,7 +8,7 @@ official_title_obj_cache = {}
 
 <%= form_tag( {:controller => 'users', :action => 'list'}, :method => 'get', :name => 'form_list') %>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
   <% if @login_user.admin?(User::AUTH_USER) %>
     <td style="text-align:left; width:1%;" nowrap>
@@ -35,7 +35,7 @@ official_title_obj_cache = {}
   </tr>
 </table>
 
-<table cellspacing="0" cellpadding="0" style="width:100%; padding-bottom:5px;">
+<table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left;" nowrap>
 <% if @group_id.nil? or @group_id.empty? %>
@@ -60,7 +60,7 @@ official_title_obj_cache = {}
   </tr>
 </table>
 
-<table cellpadding="0" cellspacing="0" style="width:100%; padding-bottom:7px;">
+<table style="width:100%; padding-bottom:7px;">
   <tr>
     <td class="pagination_td" style="text-align:center;">
       <%= t('cap.total') %><%= t('user', :count => @total_num) %>
@@ -78,7 +78,7 @@ official_title_obj_cache = {}
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" style="width:100%;" cellpadding="0" cellspacing="1">
+<table id="list_users" style="width:100%; border-spacing:1px;">
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:16%;" nowrap onclick="sortList('User.name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.name', @sort_col, @sort_type)) %></span></th>
@@ -460,7 +460,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
 %>
 
 <div id="imp_errs" style="display:none;">
-<table style="width:100%;" cellspacing="0" cellpadding="0">
+<table style="width:100%;">
   <tr style="height:20px;">
     <td style="text-align:right; color:blueviolet; padding-right:10px; padding-top:10px;">
       <%= @imp_cnt.to_s + t('user.imported') %><br/>
@@ -468,7 +468,7 @@ unless @imp_errs.nil? or @imp_errs.empty?
   </tr>
   <tr>
     <td style="vertical-align:top; padding:10px;">
-      <table style="width:100%;" cellspacing="0" cellpadding="0" border="1">
+      <table style="width:100%;" border="1">
 <%
 err_cnt = 0
 @imp_errs.each do |user_cnt, errs|

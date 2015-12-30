@@ -1,7 +1,7 @@
 
 <div class="info_area" style="width:90%; padding:15px 0px; background-color:#FFEBCB; text-align:center;" >
   <%= form_tag( {:controller => 'items', :action => 'destroy_comment', :id => '', :comment_id => @comment.id }, :name => 'form_team_cancel', :method => 'post') %>
-    <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+    <table style="margin:0px auto;">
       <tr>
         <td>
           <%= t('team.now_applying') %>
@@ -9,7 +9,7 @@
       </tr>
       <tr>
         <td style="padding-top:10px; text-align:center;">
-          <table style="margin:0px auto;" cellspacing="0" cellpadding="0">
+          <table style="margin:0px auto;">
             <tr>
               <td class="img_button_td" onclick="doTeamCancel();">
                 <%= t('btn.cancel') %>

@@ -2,13 +2,13 @@
 
 <%= render(:partial => 'common/error', :locals => {:obj => @user}) %>
 
-<table style="width:100%; padding-top:15px;" cellspacing="0" cellpadding="0">
+<table style="width:100%; padding-top:15px;">
   <tr>
     <td style="width:54%; vertical-align:top;">
 
       <!-- Basic Information -->
       <div class="info_area" style="width:100%; padding-top:15px; padding-bottom:15px; text-align:center;">
-        <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
+        <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="prim_cap_td" nowrap>
               <label for="user_name"><%= t('user.u_name') %></label>
@@ -172,7 +172,7 @@
 </table>
 
 
-<table style="margin:20px auto 10px;" cellspacing="0" cellpadding="0">
+<table style="margin:20px auto 10px;">
   <tr>
     <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>

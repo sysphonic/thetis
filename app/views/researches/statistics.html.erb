@@ -1,6 +1,6 @@
 <% HistoryHelper.set_back(request) %>
 
-<table cellspacing="2" cellpadding="0" style="margin:2px auto 0px 0px;">
+<table style="margin:2px auto 0px 0px; border-spacing:2px;">
   <tr>
     <td id="tab_statistics" class="td_item_tab" nowrap style="width:180px;" onclick="showResearchTab('statistics', 'brown');">
       <%= t('menu.statistics') %>
@@ -12,13 +12,13 @@
 </table>
 
 <div id="tab_div_statistics">
-  <table cellspacing="0" cellpadding="0" style="width:100%; margin-bottom:15px; border:solid 5px peru;">
+  <table style="width:100%; margin-bottom:15px; border:solid 5px peru;">
     <tr>
       <td>
         <div id="div_research_lists" style="overflow:auto;">
       <% if @ans_hash.nil? or @ans_hash.empty? %>
 
-        <table cellspacing="0" cellpadding="0" style="width:100%; height:80%;">
+        <table style="width:100%; height:80%;">
           <tr style="height:20%;"><td>&nbsp;</td></tr>
           <tr style="height:60%;">
             <td style="vertical-align:middle; text-align:center;" >
@@ -29,7 +29,7 @@
         </table>
 
       <% else %>
-          <table style="width:95%; margin:10px auto 0px; font-size:10pt; padding:5px; line-height:2.0;" cellspacing="5" cellpadding="0">
+          <table style="width:95%; margin:10px auto 0px; font-size:10pt; padding:5px; line-height:2.0; border-spacing:5px;">
 <%
 groups_cache = Hash.new
 @sum_groups.each do |group_id|
@@ -145,7 +145,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
     <tr style="height:20px;"><td></td></tr>
     <tr>
       <td>
-        <table style="margin:0px auto 10px;" cellspacing="0" cellpadding="0">
+        <table style="margin:0px auto 10px;">
           <tr>
             <td class="img_button_td" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>
@@ -158,7 +158,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
 </div>
 
 <div id="tab_div_all" style="display:none;">
-  <table cellspacing="0" cellpadding="0" style="width:100%; margin-bottom:15px; border:solid 5px cornflowerblue;">
+  <table style="width:100%; margin-bottom:15px; border:solid 5px cornflowerblue;">
     <tr>
       <td>
         <div id="div_research_records" style="overflow:auto;">
@@ -169,7 +169,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
     <tr style="height:20px;"><td></td></tr>
     <tr>
       <td>
-        <table style="margin:0px auto 10px;" cellspacing="0" cellpadding="0">
+        <table style="margin:0px auto 10px;">
           <tr>
             <td class="img_button_td" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>

@@ -5,11 +5,11 @@
 tabs = new Array("basic", "address", "memo", "scope");
 </script>
 
-<table cellspacing="0" cellpadding="0" style="width:100%;">
+<table style="width:100%;">
   <tr>
     <td style="text-align:center;">
 
-      <table cellspacing="2" cellpadding="0" style="width:100%;">
+      <table style="width:100%; border-spacing:2px;">
         <tr>
           <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'sienna');">
             <%= t('cap.basic_info') %>
@@ -35,10 +35,10 @@ tabs = new Array("basic", "address", "memo", "scope");
       <%= hidden_field('address', 'id') %>
 
       <div id="tab_div_basic">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap><label for="address_name">
                     <%= Address.human_attribute_name('name') %></label>
@@ -110,10 +110,10 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_address" style="display:none;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table style="margin:0px auto; width:85%;"  cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
@@ -161,10 +161,10 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_memo" style="display:none;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:center; padding:10px 0px;">
-              <table style="margin:0px auto; width:85%;" cellpadding="0" cellspacing="2">
+              <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
                   <td class="prim_cap_td" style="background-color:#FFE033;" nowrap>
                     <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
@@ -180,7 +180,7 @@ tabs = new Array("basic", "address", "memo", "scope");
       </div>
 
       <div id="tab_div_scope" style="display:none;">
-        <table cellpadding="0" cellspacing="0" style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
+        <table style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">
           <tr>
             <td style="text-align:left; padding:20px 10px;">
             <% if (@login_user.nil? or !@login_user.admin?(User::AUTH_ADDRESSBOOK)) %>
