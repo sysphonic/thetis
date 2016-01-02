@@ -140,9 +140,9 @@ getToAddrEditor = function(onOk, onCancel)
   addrBare = addrBare.replace(/<%= Email::ADDR_ORDER_SEPARATOR %>\d+$/, "");
 
   content = "<form name='form_to_addr'>";
-  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px'>";
   content += "  <tr style='height:70px;'>";
-  content += "    <td align='center' valign='middle' nowrap>";
+  content += "    <td style='text-align:center; vertical-align:middle;' nowrap>";
 
   content += "      <select id='to_addr_prefix'>";
   var selected = "";
@@ -166,13 +166,10 @@ getToAddrEditor = function(onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td align='center' valign='top'>";
+  content += "    <td style='text-align:center; vertical-align:top;'>";
   content += "      <input type='button' value='<%= t('btn.ok') %>' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='<%= t('btn.cancel') %>' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr height='100%'>";
-  content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";
   content += "</form>";

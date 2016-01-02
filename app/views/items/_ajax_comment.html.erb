@@ -104,9 +104,9 @@ if @for_print.nil? or @for_print == false
 %>
   <tr>
     <td colspan="2" style="text-align:right;">
-      <a class="a_underline" href="#" onclick="var thetisBox=new ThetisBox; thetisBox.title='<%= t('item.profile_sheet') %> - <%= ApplicationHelper.h_s_quote(user_name) %>'; thetisBox.show('CENTER', (mainWidth*8/10)+','+(mainHeight*8/10), 'IFRAME', '', '', '<%= url_for(:controller => 'items', :action => 'show_for_print', :id => profile_sheet.id) %>'); return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="onShowProfileSheetClicked('<%= profile_sheet.id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>'); return false;">
         <%= t('item.profile_sheet') %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('item.show_profile_sheet') %>" title="<%= t('item.show_profile_sheet') %>" />
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('item.show_profile_sheet') %>" />
       </a>
     </td>
   </tr>

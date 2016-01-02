@@ -14,8 +14,7 @@ else
 end
 %>
   content = "<form name='form_enc' enctype='multipart/form-data'>";
-  content += "<table align='center' style='width:80%;' cellspacing='0' cellpadding='0'>";
-  content += "  <tr style='height:20px;'><td></td></tr>";
+  content += "<table style='width:80%; margin:20px auto 0px;'>";
   if (type == "import") {
     content += "  <tr style='height:40px;'>";
     content += "    <td>";
@@ -69,9 +68,7 @@ opts << [t('msg.enc_sjis'), 'CP932']
 opts << [t('msg.enc_iso8859_1'), 'ISO-8859-1']
 %>
   content = "<form name='form_enc'>";
-  content += "<table align='center' width='80%' cellspacing='0' cellpadding='0'>";
-  content += "  <tr style='height:10px;'><td></td></tr>";
-
+  content += "<table style='width:80%; margin:10px auto 0px;'>";
   content += "  <tr style='height:30px;'>";
   content += "    <td style='text-align:center;'>";
   content += "      <select name='enc'>";

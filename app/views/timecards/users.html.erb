@@ -275,13 +275,13 @@ function onUpdateMultiCancel()
 function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
 {
   content = "<form name='form_update_multi'>";
-  content += "<table style='width:100%; height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px'>";
   content += "  <tr style='height:70px;'>";
   content += "    <td style='text-align:center; padding:15px 0px;'>";
 
-  content += "<table align='center' style='width:95%;' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:95%; margin:0px auto;'>";
   content += "  <tr>";
-  content += "    <td colspan='2' style=\"text-align:left;\">";
+  content += "    <td colspan='2' style='text-align:left;'>";
   content += "      <%= t('timecard.updating_paid_holidays') %>";
   content += "    </td>";
   content += "  </tr>";
@@ -289,12 +289,12 @@ function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
   content += "    <td nowrap style='width:40%; text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.fiscal_year') %>";
   content += "    </td>";
-  content += "    <td style=\"text-align:left;\">";
+  content += "    <td style='text-align:left;'>";
   content += "      <input type='text' name='year' value='"+defYear+"' style='ime-mode:disabled; width:60px;' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td colspan='2' style=\"text-align:left;\">";
+  content += "    <td colspan='2' style='text-align:left;'>";
   content += "      <%= t('timecard.uniformly_to') %>";
   content += "    </td>";
   content += "  </tr>";
@@ -302,7 +302,7 @@ function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
   content += "    <td nowrap style='text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.days') %>";
   content += "    </td>";
-  content += "    <td style=\"text-align:left;\">";
+  content += "    <td style='text-align:left;'>";
   content += "      <input type='text' name='num' value='"+defNum+"' style='ime-mode:disabled; width:60px;' />";
   content += "    </td>";
   content += "  </tr>";
@@ -311,13 +311,10 @@ function getUpdateMultiDialog(defYear, defNum, onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td style=\"text-align:center; vertical-align:top;\">";
+  content += "    <td style='text-align:center; vertical-align:top;'>";
   content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr style=\"100%\">";
-  content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";
   content += "</form>";
@@ -436,11 +433,11 @@ function onUpdateGivenDaysCancel()
 function getUpdateGivenDaysDialog(defYear, defNum, onOk, onCancel)
 {
   content = "<form name='form_given_days'>";
-  content += "<table align='center' valign='top' width='100%' style='height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px'>";
   content += "  <tr style='height:70px;'>";
   content += "    <td style='text-align:center; padding:15px 0px;'>";
 
-  content += "<table align='center' width='95%' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:95%; margin:0px auto;'>";
   content += "  <tr>";
   content += "    <td nowrap style='width:50%; text-align:left; padding:5px 0px; text-indent:20px;'>";
   content += "      <%= t('cap.fiscal_year') %>";
@@ -463,13 +460,10 @@ function getUpdateGivenDaysDialog(defYear, defNum, onOk, onCancel)
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
-  content += "    <td style=\"text-align:center; vertical-align:top;\">";
+  content += "    <td style='text-align:center; vertical-align:top;'>";
   content += "      <input type='button' value='"+__thetisbox_OK+"' onclick='"+onOk+"' style='width:80px' />";
   content += "      &nbsp;<input type='button' value='"+__thetisbox_Cancel+"' onclick='"+onCancel+"' style='width:80px' />";
   content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr style=\"height:100%;\">";
-  content += "    <td></td>";
   content += "  </tr>";
   content += "</table>";
   content += "</form>";

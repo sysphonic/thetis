@@ -3,11 +3,11 @@
 function showConfirmSaveChange(onYes, onNo)
 {
   var content = "";
-  content += "<table align='center' cellspacing='0' cellpadding='0' style='padding:20px 0px;'>";
+  content += "<table style='margin:20px auto;'>";
   content += "  <tr><td><%= t('msg.confirm_to_save_change') %></td></tr>";
   content += "  <tr height='20'><td></td></tr>";
   content += "  <tr>";
-  content += "    <td align='center' nowrap>";
+  content += "    <td style='text-align:center;' nowrap>";
   content += "      <input type='button' value='<%= t('btn.btn_yes') %>' onclick='ThetisBox.getContainer(this).remove(); "+onYes+"' style='width:80px;' />";
   content += "      <input type='button' value='<%= t('btn.btn_no') %>' onclick='ThetisBox.getContainer(this).remove(); "+onNo+"' style='width:80px; margin:0px 10px;' />";
   content += "      <input type='button' value='<%= t('btn.cancel') %>' onclick='ThetisBox.getContainer(this).remove();' style='width:80px;' />";

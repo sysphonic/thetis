@@ -58,8 +58,6 @@ class AddressbookController < ApplicationController
       Log.add_info(request, params.inspect)
     end
 
-    return unless request.post?
-
     render(:action => 'edit', :layout => (!request.xhr?))
   end
 

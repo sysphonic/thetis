@@ -318,7 +318,7 @@ _onUploadCompletedForOpera = function(target_id) {
 function getFileSelector(onOk, onCancel, btnOk, btnCancel, authToken, input_name)
 {
   content = "<form name='form_file' method='post' enctype='multipart/form-data'>";
-  content += "<table style='width:100%; height:180px' cellspacing='0' cellpadding='0'>";
+  content += "<table style='width:100%; height:180px'>";
   content += "  <tr style='height:70px;'>";
   content += "    <td style='text-align:center; vertical-align:middle;'>";
   content += "      <input type='file' name='"+input_name+"' size='46' style='width:90%;' />";
