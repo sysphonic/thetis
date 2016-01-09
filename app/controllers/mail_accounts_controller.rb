@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -34,7 +34,7 @@ class MailAccountsController < ApplicationController
   def create
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
       params[:mail_account].delete(:smtp_username)
@@ -92,7 +92,7 @@ class MailAccountsController < ApplicationController
   def update
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @mail_account = MailAccount.find(params[:id])
 

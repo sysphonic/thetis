@@ -392,22 +392,39 @@ user_param += @login_user.id.to_s unless @login_user.nil?
           );
 }
 
-doUpdateLabel = function(frm, toy_id)
+doUpdateLabel = function(thetisBoxId, toy_id)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      _z(toy_id).parentNode,
-      "<%= url_for(:controller => 'desktop', :action => 'update_label') %>",
-      {
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    // for users without LOGIN
+    var axis = getAxis(_z("div_desktop"), toy_id);
+
+    var addParams = [];
+    addParams.push("id="+toy_id.split("_")[1]);
+    addParams.push("x="+axis[0]);
+    addParams.push("y="+axis[1]);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    new Ajax.Updater(
+        _z(toy_id).parentNode,
+        "<%= url_for(:controller => 'desktop', :action => 'update_label') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 editLabel = function(toy_id)
@@ -417,34 +434,37 @@ editLabel = function(toy_id)
   var thetisBox = new ThetisBox;
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
-
-  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doUpdateLabel(this, "+toy_id+"); return false;\">";
-  thetisBox.setFormTag(formTag);
-
-  // for users without LOGIN
-  var axis = getAxis(_z("div_desktop"), toy_id);
-
-  thetisBox.setAdditionalParams(new Array("id="+toy_id.split("_")[1], "x="+axis[0], "y="+axis[1], "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
+  thetisBox.show("CENTER", "540,320", "TEXTAREA", "doUpdateLabel("+thetisBox.id+", '"+toy_id+"')", "<%= t('cap.edit_message') %>", restoreHTML(_z(toy_id+"_msg").innerHTML));
 }
 
-doCeateLabel = function(frm)
+doCeateLabel = function(thetisBoxId)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      _z("div_desktop").parentNode,
-      "<%= url_for(:controller => 'desktop', :action => 'create_label') %>",
-      {
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        insertion:Insertion.Bottom,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    var addParams = [];
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    new Ajax.Updater(
+        _z("div_desktop").parentNode,
+        "<%= url_for(:controller => 'desktop', :action => 'create_label') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          insertion:Insertion.Bottom,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    ); 
+      ); 
+  }
 }
 
 createLabel = function()
@@ -453,10 +473,7 @@ createLabel = function()
   thetisBox.bgcolor_title = "darkorange";
   thetisBox.bgcolor_body = "peachpuff";
 
-  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doCeateLabel(this); return false;\">";
-  thetisBox.setFormTag(formTag);
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "540,320", "TEXTAREA", "", "<%= t('cap.edit_new_label') %>", "");
+  thetisBox.show("CENTER", "540,320", "TEXTAREA", "doCeateLabel("+thetisBox.id+")", "<%= t('cap.edit_new_label') %>", "");
 }
 
 //////////////////////////

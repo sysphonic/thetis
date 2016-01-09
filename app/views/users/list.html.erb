@@ -44,7 +44,7 @@ official_title_obj_cache = {}
       </div>
 <% else %>
       <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-      &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+      &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
 <% end %>
     </td>
     <td style="text-align:right;" nowrap>
@@ -52,7 +52,7 @@ official_title_obj_cache = {}
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
       <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
-      <input type="button" value="<%= t('btn.send_notification')%>" onclick="doNotify();">
+      <input type="button" value="<%= t('btn.send_notification')%>" onclick="onNotifyClicked();">
 <% else %>
       &nbsp;
 <% end %>
@@ -394,40 +394,64 @@ function _doDelete()
   prog("TOP-RIGHT");
 }
 
-function doNotify()
+function getCheckedUsersParam()
 {
-  var additionalParams = new Array("authenticity_token=<%= form_authenticity_token %>");
+  var addParams = [];
 
   var elems = document.getElementsByClassName("check_user", document.form_list);
-  var count=0;
-  for (var i=0; elems!=null && i<elems.length; i++) {
+  for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
       var user_id = elems[i].id.split("_")[2];
-      additionalParams.push("check_user["+user_id+"]=1");
-      count++;
+      addParams.push("check_user["+user_id+"]=1");
     }
   }
+  return addParams;
+}
+
+function onNotifyClicked()
+{
+  var addParams = getCheckedUsersParam();
+  var count = addParams.length;
+
   if (count <= 0) {
     msg("<%= t('msg.select_users_to_notify') %>");
     return false;
   }
 
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(additionalParams);
-  thetisBox.progress = true;
   thetisBox.show(
                 "CENTER", "540,200", "TEXTAREA",
-                "<%= url_for(:controller => 'users', :action => 'notify') %>",
+                "doNotify("+thetisBox.id+")",
                 "<%= t('msg.notify_info1') %>"+count+"<%= t('msg.notify_info2') %><br/><%= t('msg.notify_info3') %>",
                 ""
               );
 }
 
+function doNotify(thetisBoxId)
+{
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = getCheckedUsersParam();
+    var count = addParams.length;
+    if (count <= 0) {
+      return false;
+    }
+    prog("TOP-RIGHT");
+    var frm = createPostForm("<%= url_for(:controller => 'users', :action => 'notify') %>", addParams);
+    addInputHidden(frm, null, "thetisBoxEdit", val, null);
+    frm.submit();
+  }
+  return true;
+}
+
 function clearGroup()
 {
+  prog("TOP-RIGHT");
   document.form_list.group_id.value = "";
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 function sortList(col)
@@ -438,19 +462,32 @@ function sortList(col)
     type = (type == "ASC") ? "DESC" : "ASC";
   }
 
+  prog("TOP-RIGHT");
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'users', :action => 'list') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onGroupTreeNodeSelected("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onGroupTreeNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var addParams = [
+      "thetisBoxSelKeeper="+val
+    ];
+    location.href = "<%= url_for(:controller => 'users', :action => 'list') %>?"+addParams.join("&");
+  }
 }
 
 </script>

@@ -117,35 +117,43 @@ modified_users = 0;
 modified_groups = 0;
 modified_teams = 0;
 
-doSelectGroup = function(frm)
+doSelectGroup = function(thetisBoxId)
 {
-  var addParams = new Array();
-  addParams.push(Form.serialize(frm));
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      "div_selectUsers",
-      "<%= url_for(:controller => 'folders', :action => 'get_group_users', :id => @folder.id) %>",
-      {
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("id=<%= @folder.id %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_selectUsers",
+        "<%= url_for(:controller => 'folders', :action => 'get_group_users') %>",
+        {
+          method:"get",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 showGroupTreeToSelect = function(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doSelectGroup(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroup("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
+
 </script>
 
 <% end %>

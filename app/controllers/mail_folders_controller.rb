@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -76,7 +76,7 @@ class MailFoldersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     parent_id = params[:selectedFolderId]
 
@@ -102,7 +102,7 @@ class MailFoldersController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @mail_folder = MailFolder.find(params[:id])
 
@@ -121,7 +121,7 @@ class MailFoldersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     mail_account_id = params[:mail_account_id]
     SqlHelper.validate_token([mail_account_id])
@@ -158,7 +158,7 @@ class MailFoldersController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @mail_folder = MailFolder.find(params[:id])
 
@@ -411,7 +411,7 @@ class MailFoldersController < ApplicationController
   def empty
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
@@ -446,7 +446,7 @@ class MailFoldersController < ApplicationController
   def ajax_delete_mails
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     folder_id = params[:id]
     mail_account_id = params[:mail_account_id]
@@ -497,7 +497,7 @@ class MailFoldersController < ApplicationController
   def ajax_move_mails
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     folder_id = params[:thetisBoxSelKeeper].split(':').last
     SqlHelper.validate_token([folder_id])
@@ -569,7 +569,7 @@ class MailFoldersController < ApplicationController
   def update_folders_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_arr = params[:folders_order]
 
@@ -622,7 +622,7 @@ class MailFoldersController < ApplicationController
   def update_mail_unread
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     email_id = params[:email_id]
     unread = (params[:unread] == "1")

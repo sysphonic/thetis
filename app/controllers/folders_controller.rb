@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -70,7 +70,7 @@ class FoldersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     parent_id = params[:selectedFolderId]
 
@@ -102,7 +102,7 @@ class FoldersController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -127,7 +127,7 @@ class FoldersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -157,7 +157,7 @@ class FoldersController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -335,7 +335,7 @@ class FoldersController < ApplicationController
   def update_items_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     folder_id = params[:id]
 
@@ -398,7 +398,7 @@ class FoldersController < ApplicationController
   def update_folders_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_ary = params[:folders_order]
 
@@ -465,7 +465,7 @@ class FoldersController < ApplicationController
   def set_disp_ctrl
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     folder_id = params[:id]
     SqlHelper.validate_token([folder_id])
@@ -564,7 +564,7 @@ class FoldersController < ApplicationController
   def set_auth_users
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -648,7 +648,7 @@ class FoldersController < ApplicationController
   def set_auth_groups
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 
@@ -720,7 +720,7 @@ class FoldersController < ApplicationController
   def set_auth_teams
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @folder = Folder.find(params[:id])
 

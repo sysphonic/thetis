@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -152,7 +152,7 @@ class TimecardsController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:id].blank?
       @timecard = Timecard.new
@@ -239,7 +239,7 @@ class TimecardsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       timecard = Timecard.find(params[:id])
@@ -287,7 +287,7 @@ class TimecardsController < ApplicationController
   def update_break
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
@@ -354,7 +354,7 @@ class TimecardsController < ApplicationController
   def delete_break
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @timecard = Timecard.find(params[:id])
 
@@ -519,7 +519,7 @@ class TimecardsController < ApplicationController
   def paidhld_update
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     year = params[:year].to_i
     num = params[:num].to_f
@@ -547,7 +547,7 @@ class TimecardsController < ApplicationController
   def paidhld_update_multi
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     year = params[:year].to_i
     num = params[:num].to_f
@@ -619,7 +619,7 @@ class TimecardsController < ApplicationController
   def update_config
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     yaml = ApplicationHelper.get_config_yaml
 
@@ -647,7 +647,7 @@ class TimecardsController < ApplicationController
   def update_default_break
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     start_t = Time.local(2000, 1, 1, params[:start_hour].to_i, params[:start_min].to_i)
     end_t = Time.local(2000, 1, 1, params[:end_hour].to_i, params[:end_min].to_i)
@@ -709,7 +709,7 @@ class TimecardsController < ApplicationController
   def delete_default_break
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:org_start].nil?
       org_start = UtilDateTime.parse(params[:org_start]).to_time

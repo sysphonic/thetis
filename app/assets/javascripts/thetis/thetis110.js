@@ -37,18 +37,6 @@ toSysDateForm = function(date)
 //  return replaceAll(date, "/", "-");
 }
 
-getCsrfToken = function()
-{
-  var metas = document.getElementsByTagName("meta");
-  for (var i=0; i < metas.length; i++) {
-    var meta = metas[i];
-    if (meta.name == "csrf-token") {
-      return meta.content;
-    }
-  }
-  return null;
-}
-
 removeOptionNotSelected = function(elem)
 {
   if (!elem || !elem.options) {

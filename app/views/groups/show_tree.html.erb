@@ -162,23 +162,35 @@ function onLoadSub()
 <% end %>
 }
 
-function doCreateGroup(frm, group_id)
+function doCreateGroup(thetisBoxId, group_id)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      "groupTree:"+group_id,
-      "<%= url_for(:controller => 'groups', :action => 'create') %>",
-      {
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        insertion:Insertion.Bottom,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("selectedGroupId="+group_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "groupTree:"+group_id,
+        "<%= url_for(:controller => 'groups', :action => 'create') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          insertion:Insertion.Bottom,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function onCreateGroupClicked(pos)
@@ -192,31 +204,37 @@ function onCreateGroupClicked(pos)
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doCreateGroup(this, "+group_id+"); return false;\">");
-  thetisBox.setAdditionalParams(new Array("selectedGroupId="+group_id, "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", "");
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doCreateGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.specify_name') %>", "");
 }
 
-function doRenameGroup(frm, group_id)
+function doRenameGroup(thetisBoxId, group_id)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var addParams = new Array();
-  addParams.push("id="+group_id);
-  addParams.push(Form.serialize(frm));
+    var thetisBoxProgress = prog("TOP-RIGHT");
 
-  new Ajax.Updater(
-      "a_groupTree:"+group_id,
-      "<%= url_for(:controller => 'groups', :action => 'rename') %>",
-      {
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("id="+group_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    new Ajax.Updater(
+        "a_groupTree:"+group_id,
+        "<%= url_for(:controller => 'groups', :action => 'rename') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function onRenameGroupClicked(pos)
@@ -235,10 +253,8 @@ function onRenameGroupClicked(pos)
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doRenameGroup(this, "+group_id+"); return false;\">");
-  thetisBox.setAdditionalParams(new Array('selectedGroupId='+group_id, "authenticity_token=<%= form_authenticity_token %>"));
-  var name = trim(_z("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
-  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('group.specify_name') %>", name);
+  var name = trim(restoreHTML(_z("groupTree:"+group_id+"_name").innerHTML).replace("/", ""));
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doRenameGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.specify_name') %>", name);
 }
 
 function doDelete()
@@ -294,24 +310,26 @@ function onMoveGroupClicked()
 
   ThetisBox.openTree("groupTree:"+group_id, true);
 
-  var addParams = new Array();
-  addParams.push("id="+group_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveGroup(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_dest')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doMoveGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>?id="+group_id, "0");
 }
 
-function doMoveGroup(frmTree)
+function doMoveGroup(thetisBoxId, group_id)
 {
-  prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  frmTree.method = "post";
-  frmTree.action = "<%= url_for(:controller => 'groups', :action => 'move') %>";
-  frmTree.submit();
+    var addParams = [];
+    addParams.push("id="+group_id);
+    addParams.push("thetisBoxSelKeeper="+val);
+
+    prog("TOP-RIGHT");
+    var frm = createPostForm("<%= url_for(:controller => 'groups', :action => 'move') %>", addParams);
+    frm.submit();
+  }
 }
 
 function doGetUsers(group_id)

@@ -1,5 +1,5 @@
 
-<table id="div_desktop" style="width:100%; height:100%; border-spacing:0px;">
+<table id="div_desktop" style="width:100%; height:100%;">
   <tr>
     <td>
     </td>
@@ -212,40 +212,44 @@ function showToolBiorhythm(sw)
 function requestBirthday()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"saveBirthday(thetisBoxEdit.value); return false;\">");
   thetisBox.show(
             "CENTER",
             "",
             "INPUT",
-            "",
+            "saveBirthday("+thetisBox.id+")",
             "<%= t('msg.specify_birthday') %><br/>&nbsp;&nbsp;&nbsp;<%= t('msg.ex_birthday') %><br/><%= t('msg.howto_change_birthday') %>",
             ""
           );
 }
 
 <% unless @login_user.nil? %>
-function saveBirthday(birthday)
+function saveBirthday(thetisBoxId)
 {
-  var thetisBoxProgress = prog("CENTER");
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var birthday = thetisBoxEdit.value;
 
-  var addParams = new Array();
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  addParams.push("id=<%= @login_user.id %>");
-  addParams.push("user[birthday]="+birthday);
+    var thetisBoxProgress = prog("CENTER");
 
-  new Ajax.Request(
-      "<%= url_for(:controller => 'users', :action => 'update') %>",
-      {
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-            setTimeout("showBiorhythm()", 10);
-            thetisBoxProgress.remove();
-            _z("biorhythm_req_birth").value = "false";
-          }
-      }
-    );
+    var addParams = [];
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+    addParams.push("id=<%= @login_user.id %>");
+    addParams.push("user[birthday]="+birthday);
+
+    new Ajax.Request(
+        "<%= url_for(:controller => 'users', :action => 'update') %>",
+        {
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+              setTimeout("showBiorhythm()", 10);
+              thetisBoxProgress.remove();
+              _z("biorhythm_req_birth").value = "false";
+            }
+        }
+      );
+  }
 }
 <% end %>
 

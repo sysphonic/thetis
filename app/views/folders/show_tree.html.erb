@@ -42,7 +42,7 @@ var modified_teams = 0;
         <tr>
         <% if !@login_user.nil? %>
           <td nowrap style="padding:5px 20px; text-align:left;">
-            <input type="button" value="<%= t('btn.new') %>" onclick="onCreateClicked(getPos(this));" style="width:80px;" />
+            <input type="button" value="<%= t('btn.new') %>" onclick="onCreateFolderClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameFolderClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onclick="onMoveFolderClicked();" style="width:80px;" />
@@ -347,7 +347,7 @@ function checkTeamFolder(folder_id)
   return true;
 }
 
-function onCreateClicked(pos)
+function onCreateFolderClicked(pos)
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select_parent') %>");
@@ -362,59 +362,76 @@ function onCreateClicked(pos)
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doCreate(this, '"+folder_id+"'); return false;\">");
-  thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doCreateFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", "");
 }
 
-function doCreate(frm, folder_id)
+function doCreateFolder(thetisBoxId, folder_id)
 {
-  if (!checkName(frm.thetisBoxEdit.value)) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    if (!checkName(val)) {
+      return false;
+    }
 
-  new Ajax.Updater(
-      "folderTree:"+folder_id,
-      "<%= url_for(:controller => 'folders', :action => 'create') %>",
-      {
-        method:"post",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        insertion:Insertion.Bottom,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("selectedFolderId="+folder_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "folderTree:"+folder_id,
+        "<%= url_for(:controller => 'folders', :action => 'create') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          insertion:Insertion.Bottom,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
-function doRenameFolder(frm, folder_id)
+function doRenameFolder(thetisBoxId, folder_id)
 {
-  if (!checkName(frm.thetisBoxEdit.value)) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    if (!checkName(val)) {
+      return false;
+    }
 
-  var addParams = new Array();
-  addParams.push(Form.serialize(frm));
-  addParams.push("id="+folder_id);
+    var thetisBoxProgress = prog("TOP-RIGHT");
 
-  new Ajax.Updater(
-      "a_folderTree:"+folder_id,
-      "<%= url_for(:controller => 'folders', :action => 'rename') %>",
-      {
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("id="+folder_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    new Ajax.Updater(
+        "a_folderTree:"+folder_id,
+        "<%= url_for(:controller => 'folders', :action => 'rename') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
   return true;
 }
 
@@ -439,10 +456,8 @@ function onRenameFolderClicked(pos)
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doRenameFolder(this, "+folder_id+"); return false;\">");
-  thetisBox.setAdditionalParams(new Array("selectedFolderId="+folder_id, "authenticity_token=<%= form_authenticity_token %>"));
-  var name = trim(_z("folderTree:"+folder_id+"_name").innerHTML);
-  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
+  var name = trim(restoreHTML(_z("folderTree:"+folder_id+"_name").innerHTML));
+  thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doRenameFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", name);
 }
 
 function doDelete()
@@ -514,24 +529,26 @@ function onMoveFolderClicked()
 
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
-  var addParams = new Array();
-  addParams.push("id="+folder_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveFolder(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doMoveFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.select_dest')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
-function doMoveFolder(frmTree)
+function doMoveFolder(thetisBoxId, folder_id)
 {
-  prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  frmTree.method = "post";
-  frmTree.action = "<%= url_for(:controller => 'folders', :action => 'move') %>";
-  frmTree.submit();
+    var addParams = [];
+    addParams.push("id="+folder_id);
+    addParams.push("thetisBoxSelKeeper="+val);
+
+    prog("TOP-RIGHT");
+    var frm = createPostForm("<%= url_for(:controller => 'folders', :action => 'move') %>", addParams);
+    frm.submit();
+  }
 }
 
 function selectFolder(folder_id)
@@ -717,10 +734,20 @@ function doApplyAuthTeams(folder_id)
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'folders', :action => 'show_tree') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onGroupNodeSelected("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onGroupNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>?thetisBoxSelKeeper="+val;
+  }
 }
 
 function clearGroup()

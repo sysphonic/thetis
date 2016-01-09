@@ -53,17 +53,12 @@
 
 <script type="text/javascript">
 
-function doSelectGroup(frm)
+function doSelectGroup(thetisBoxId)
 {
-  var boxInstance = ThetisBox.getInstanceForElem(frm);
-  if (!boxInstance) {
-    return false;
-  }
-
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   var display = _z("display");
-  display.options[display.selectedIndex].value = "group_" + ThetisBox.getTreeSelect(boxInstance.id);
+  display.options[display.selectedIndex].value = "group_" + ThetisBox.getTreeSelect(thetisBoxId);
 
   document.form_display.submit()
 }
@@ -71,8 +66,7 @@ function doSelectGroup(frm)
 function showGroupTree()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'timecards', :action => 'group') %>\" onsubmit=\"doSelectGroup(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroup("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", "");
 }
 

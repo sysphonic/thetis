@@ -31,12 +31,12 @@
       <table style="width:100%;">
         <tr>
           <td nowrap style="text-align:left; padding-bottom:5px;">
-  <% if @group_id.nil? or @group_id.empty? %>
+  <% if @group_id.blank? %>
             <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
   <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
   <% end %>
           </td>
@@ -181,10 +181,23 @@ function sortList(col)
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'timecards', :action => 'users') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onGroupTreeNodeSelected("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onGroupTreeNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var addParams = [
+      "thetisBoxSelKeeper="+val
+    ];
+    location.href = "<%= url_for(:controller => 'timecards', :action => 'users') %>?"+addParams.join("&");
+  }
 }
 
 var thetisBox = null;

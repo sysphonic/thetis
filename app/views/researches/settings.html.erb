@@ -448,23 +448,37 @@ function _doResetCtrl()
             );
 }
 
-function doSelectGroup(frm)
+function doSelectGroup(thetisBoxId, current_id)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
 
-  new Ajax.Updater(
-      "div_statistics_groups",
-      "<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>",
-      {
-        method:"post",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+    if (current_id) {
+      addParams.push("current_id="+current_id);
+    }
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_statistics_groups",
+        "<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function showGroupTreeToSelect(group_id, do_change)
@@ -477,13 +491,7 @@ function showGroupTreeToSelect(group_id, do_change)
   }
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doSelectGroup(this); return false;\">");
-  var params = new Array("authenticity_token=<%= form_authenticity_token %>");
-  if (do_change == true) {
-    params.push("current_id="+group_id);
-  }
-  thetisBox.setAdditionalParams(params);
-  thetisBox.show("CENTER", "", "TREE", "", caption, "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroup("+thetisBox.id+", "+((do_change == true)?("'"+group_id+"'"):"null")+")", caption, "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
@@ -497,15 +505,16 @@ function _doRemoveGroup(group_id)
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-        "div_statistics_groups",
-        "<%= url_for(:controller => 'researches', :action => 'delete_statistics_group') %>?group_id=" + group_id,
-        {
-          parameters:"authenticity_token=<%= form_authenticity_token %>",
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request){ thetisBox.remove() }
-        }
-     );
+      "div_statistics_groups",
+      "<%= url_for(:controller => 'researches', :action => 'delete_statistics_group') %>?group_id=" + group_id,
+      {
+      method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove() }
+      }
+    );
 }
 
 </script>

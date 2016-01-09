@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2014, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. All rights reserved.
  http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -54,6 +54,34 @@ function getUserAgentName()
   } else {
     return "unknown";
   }
+}
+
+function getCsrfToken()
+{
+  var metas = document.getElementsByTagName("meta");
+  for (var i=0; i < metas.length; i++) {
+    var meta = metas[i];
+    if (meta.name == "csrf-token") {
+      return meta.content;
+    }
+  }
+  return null;
+}
+
+function createPostForm(action, addParams)
+{
+  addParams = (addParams || []);
+
+  var frm = document.createElement("form");
+  frm.method = "post";
+  frm.action = action;
+  document.body.appendChild(frm);
+  for (var i=0; i < addParams.length; i++) {
+    var arr = addParams[i].split("=");
+    addInputHidden(frm, null, arr[0], arr[1], null);
+  }
+  addInputHidden(frm, null, "authenticity_token", getCsrfToken(), null);
+  return frm;
 }
 
 function focusFirstElem(frm)

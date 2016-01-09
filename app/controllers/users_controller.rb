@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     attrs = _process_user_attrs(nil, params[:user])
     password = attrs[:password]
@@ -116,7 +116,7 @@ class UsersController < ApplicationController
   def update
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @user = User.find(params[:id])
 
@@ -239,7 +239,7 @@ class UsersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_user].nil?
       list
@@ -294,7 +294,7 @@ class UsersController < ApplicationController
   def add_official_titles
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @user = User.find(params[:user_id])
 
@@ -321,7 +321,7 @@ class UsersController < ApplicationController
   def remove_official_titles
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @user = User.find(params[:user_id])
 
@@ -345,7 +345,7 @@ class UsersController < ApplicationController
   def notify
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     root_url = ApplicationHelper.root_url(request)
     count = UsersHelper.send_notification(params[:check_user], params[:thetisBoxEdit], root_url)
@@ -365,7 +365,7 @@ class UsersController < ApplicationController
   def update_auth
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     auth = nil
 
@@ -428,7 +428,7 @@ class UsersController < ApplicationController
   def add_to_group
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:thetisBoxSelKeeper].blank?
       render(:partial => 'ajax_groups', :layout => false)
@@ -488,7 +488,7 @@ class UsersController < ApplicationController
   def exclude_from_group
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:group_id].blank?
       render(:partial => 'ajax_groups', :layout => false)
@@ -523,7 +523,7 @@ class UsersController < ApplicationController
   def create_profile_sheet
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     user_id = params[:id]
     @user = User.find(user_id)
@@ -543,7 +543,7 @@ class UsersController < ApplicationController
   def destroy_profile_sheet
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     user_id = params[:id]
     @user = User.find(user_id)
@@ -582,7 +582,7 @@ class UsersController < ApplicationController
   def import_csv
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     file = params[:imp_file]
     mode = params[:mode]
@@ -741,7 +741,7 @@ class UsersController < ApplicationController
   #
   def create_title
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     titles = User.get_config_titles
     titles = [] if titles.nil?
@@ -759,7 +759,7 @@ class UsersController < ApplicationController
   def destroy_title
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     title = params[:title]
 
@@ -789,7 +789,7 @@ class UsersController < ApplicationController
   def rename_title
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     org_title = params[:org_title]
     new_title = params[:new_title]
@@ -826,7 +826,7 @@ class UsersController < ApplicationController
   def update_titles_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     titles = params[:titles_order]
 
@@ -853,7 +853,7 @@ class UsersController < ApplicationController
   def update_zept_allowed
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     user = User.find(params[:id])
     zept_allowed = params[:zept_allowed]

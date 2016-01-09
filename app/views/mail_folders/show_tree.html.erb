@@ -477,28 +477,46 @@ function checkName(val)
   return true;
 }
 
-function doCreateFolder(frm, folder_id)
+function doCreateFolder(thetisBoxId, folder_id)
 {
-  if (!checkName(frm.thetisBoxEdit.value)) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    if (!checkName(val)) {
+      return false;
+    }
 
-  new Ajax.Updater(
-      "mailTree:"+folder_id,
-      "<%= url_for(:controller => 'mail_folders', :action => 'create') %>",
-      {
-        method:"post",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        insertion:Insertion.Bottom,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+  <% unless params[:mail_account_xtype].nil? %>
+    addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+  <% end %>
+    var mail_account_id = getMailAccountId(folder_id);
+    if (mail_account_id) {
+      addParams.push("mail_account_id="+mail_account_id);
+    }
+    addParams.push("selectedFolderId="+folder_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "mailTree:"+folder_id,
+        "<%= url_for(:controller => 'mail_folders', :action => 'create') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          insertion:Insertion.Bottom,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function onCreateFolderClicked()
@@ -517,46 +535,44 @@ function onCreateFolderClicked()
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doCreateFolder(this, "+folder_id+"); return false;\">");
-  var addParams = new Array();
-<% unless params[:mail_account_xtype].nil? %>
-  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
-<% end %>
-  var mail_account_id = getMailAccountId(folder_id);
-  if (mail_account_id) {
-    addParams.push("mail_account_id="+mail_account_id);
-  }
-  addParams.push("selectedFolderId="+folder_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.show("CENTER", "", "INPUT", "", "<%= t('folder.specify_name') %>", "");
+  thetisBox.show("CENTER", "", "INPUT", "doCreateFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", "");
 }
 
-function doRenameFolder(frm, folder_id)
+function doRenameFolder(thetisBoxId, folder_id)
 {
-  if (!checkName(frm.thetisBoxEdit.value)) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var addParams = new Array();
-  addParams.push("id="+folder_id);
-  addParams.push(Form.serialize(frm));
+    if (!checkName(val)) {
+      return false;
+    }
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    var addParams = [];
+    addParams.push("id="+folder_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+  <% unless params[:mail_account_xtype].nil? %>
+    addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+  <% end %>
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  new Ajax.Updater(
-      "a_mailTree:"+folder_id,
-      "<%= url_for(:controller => 'mail_folders', :action => 'rename') %>",
-      {
-        method:"post",
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "a_mailTree:"+folder_id,
+        "<%= url_for(:controller => 'mail_folders', :action => 'rename') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function onRenameFolderClicked()
@@ -580,16 +596,8 @@ function onRenameFolderClicked()
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doRenameFolder(this, "+folder_id+"); return false;\">");
-  var addParams = new Array();
-<% unless params[:mail_account_xtype].nil? %>
-  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
-<% end %>
-  addParams.push("selectedFolderId="+folder_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  thetisBox.setAdditionalParams(addParams);
-  var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
-  thetisBox.show("CENTER", "", "INPUT", "", "<%= t('folder.specify_name') %>", name);
+  var name = trim(restoreHTML(_z("mailTree:"+folder_id+"_name").innerHTML));
+  thetisBox.show("CENTER", "", "INPUT", "doRenameFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", name);
 }
 
 function doDelete()
@@ -671,27 +679,31 @@ function onMoveFolderClicked()
 
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
-  var addParams = new Array();
-<% unless params[:mail_account_xtype].nil? %>
-  addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
-<% end %>
-  addParams.push("id="+folder_id);
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doMoveFolder(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest') %>", "");
+  thetisBox.show("CENTER", "", "TREE", "doMoveFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.select_dest') %>", "");
   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
 }
 
-function doMoveFolder(frmTree)
+function doMoveFolder(thetisBoxId, folder_id)
 {
-  prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  frmTree.method = "post";
-  frmTree.action = "<%= url_for(:controller => 'mail_folders', :action => 'move') %>";
-  frmTree.submit();
+    var addParams = [];
+  <% unless params[:mail_account_xtype].nil? %>
+    addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
+  <% end %>
+    addParams.push("id="+folder_id);
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    prog("TOP-RIGHT");
+
+    var frm = createPostForm("<%= url_for(:controller => 'mail_folders', :action => 'move') %>", addParams);
+    frm.submit();
+  }
 }
 
 function doSelectTree(folder_id)
@@ -715,7 +727,7 @@ function doUpdateMails(folder_id, do_pop, addParams)
   }
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   addParams.push("id="+folder_id);
 
@@ -916,75 +928,6 @@ function getSelectedRow()
   }
   return _z("selected_row").value;
 }
-
-<%
-=begin
-%>
-# function doDeleteMail()
-# {
-#   var folder_id = getCurrentFolderId();
-# 
-#   var sel_tr = getSelectedRow();
-#   if (!sel_tr)
-#     return;
-# 
-#   var email_id = sel_tr.split("_")[1];
-# 
-#   var title = "";
-# 
-#   var cnt = _z(sel_tr).childNodes.length;
-# 
-#   for (var i=0; i < cnt; i++) {
-#     if (_z(sel_tr).childNodes[i].title != null) {
-#       title = _z(sel_tr).childNodes[i].title;
-#       if (title.length <= 0) {
-#         title = "<%= t('cap.subject') %><%= t('paren.not_specified') %>";
-#       }
-#       break;
-#     }
-#   }
-# 
-#   confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteMail("+email_id+", "+folder_id+")");
-# }
-# 
-# function _doDeleteMail(email_id, folder_id)
-# {
-#   var addParams = new Array();
-#   addParams.push("id="+email_id);
-#   addParams.push("folder_id="+folder_id);
-# 
-#   var mail_account_id = getMailAccountId(folder_id);
-#   if (mail_account_id) {
-#     addParams.push("mail_account_id="+mail_account_id);
-#   }
-# 
-#   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_delete_mail') %>", addParams, folder_id);
-# }
-# 
-# function doMoveMail()
-# {
-#   var sel_tr = getSelectedRow();
-#   if (!sel_tr)
-#     return;
-# 
-#   var email_id = sel_tr.split("_")[1];
-#   var folder_id = getCurrentFolderId();
-# 
-#   var thetisBox = new ThetisBox;
-#   thetisBox.progress = true;
-#   var addParams = new Array();
-# <% unless params[:mail_account_xtype].nil? %>
-#   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
-# <% end %>
-#   addParams.push("id="+email_id);
-#   addParams.push("authenticity_token=<%= form_authenticity_token %>");
-#   thetisBox.setAdditionalParams(addParams);
-#   thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'mail_folders', :action => 'move_mail') %>", "<%= t('folder.select_dest')%>", "");
-#   thetisBox.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>?id="+folder_id, "0");
-# }
-<%
-=end
-%>
 
 function doEmpty()
 {

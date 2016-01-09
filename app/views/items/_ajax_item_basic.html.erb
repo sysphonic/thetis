@@ -288,30 +288,38 @@ onItemXtypeClicked = function(elem)
   }
 }
 
-function doSelectFolder(frm)
+function doSelectFolder(thetisBoxId)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      "div_folderPath",
-      "<%= url_for(:controller => 'folders', :action => 'get_path') %>",
-      {
-        method:"get",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_folderPath",
+        "<%= url_for(:controller => 'folders', :action => 'get_path') %>",
+        {
+          method:"get",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function showFolderTreeToSelect(folder_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" onsubmit=\"doSelectFolder(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('msg.select_folder_to_save_in')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectFolder("+thetisBox.id+")", "<%= t('msg.select_folder_to_save_in')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 </script>

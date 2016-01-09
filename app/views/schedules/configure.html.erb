@@ -61,44 +61,44 @@
 
 <script type="text/javascript">
 
-function doAddHolidays(frm)
+function doAddHolidays(thetisBoxId)
 {
-  var ret = _addHolidays(frm.thetisBoxEdit.value);
-  if (!ret) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    if (!_addHolidays(val)) {
+      return false;
+    }
+    var addParams = [];
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  new Ajax.Updater(
-      "div_holidays",
-      "<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>",
-      {
-        method:"post",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
-          thetisBoxProgress.remove();
+    var thetisBoxProgress = prog("TOP-RIGHT");
 
-          var boxInstance = ThetisBox.getInstanceForElem(frm);
-          if (boxInstance) {
-            boxInstance.remove();
+    new Ajax.Updater(
+        "div_holidays",
+        "<%= url_for(:controller => 'schedules', :action => 'add_holidays') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request){
+            thetisBoxProgress.remove();
           }
         }
-      }
-    );
+      );
+  }
 }
 
 function addHolidays()
 {
   var thetisBox = new ThetisBox;
-  var formTag = "<form action=\"\" onsubmit=\"doAddHolidays(this); return false;\">";
-  thetisBox.setFormTag(formTag);
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
   var cap = "<%= t('schedule.specify_holidays_info1') %><br/>"
             + "<div style='text-indent:20px'><%= t('schedule.specify_holidays_info2') %></div>"
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", cap, "");
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "doAddHolidays("+thetisBox.id+")", cap, "");
 }
 
 function _addHolidays(val)
@@ -112,7 +112,7 @@ function _addHolidays(val)
   }
 
   var list = _z("holidays");
-  var holidays = new Array();
+  var holidays = [];
 
   for (var i=0; i < lines.length; i++) {
     lines[i] = trim(removeCtrlChar(lines[i]));
@@ -138,7 +138,7 @@ function _addHolidays(val)
       return false;
     }
     date = getDateString(date);
-    holidays.push(new Array(date, name));
+    holidays.push([date, name]);
   }
   return true;
 }
@@ -157,18 +157,19 @@ function _removeHolidays()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_holidays",
-          document.form_holidays.action,
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_holidays)+"&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              request.responseText.evalScripts();
-            }
-          }
-        );
+      "div_holidays",
+      document.form_holidays.action,
+      {
+        method:"post",
+        asynchronous:true,
+        evalScripts:false,
+        parameters:Form.serialize(document.form_holidays)+"&authenticity_token=<%= form_authenticity_token %>",
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 </script>

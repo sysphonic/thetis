@@ -463,10 +463,24 @@ function showTips()
 function showFolderTreeToSelect(folder_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("thumbnails=<%= params[:thumbnails] %>", "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'items', :action => 'bbs') %>", "<%= t('msg.select_folder_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onFolderNodeSelected("+thetisBox.id+")", "<%= t('msg.select_folder_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
+}
+
+function onFolderNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [
+      "thetisBoxSelKeeper="+val,
+      "thumbnails=<%= params[:thumbnails] %>"
+    ];
+    prog("TOP-RIGHT");
+    location.href = "<%= url_for(:controller => 'items', :action => 'bbs') %>?"+addParams.join("&");
+  }
 }
 
 <% if !params[:folderTree].nil? and @folder_id.nil? %>

@@ -83,18 +83,23 @@ doMoveMulti = function()
   showGroupTreeToMove(<%= @group_id %>);
 }
 
-doMoveUsers = function(frmTree)
+doMoveUsers = function(thetisBoxId)
 {
-  var addParams = getCheckedUsersParam();
-  addParams.push(Form.serialize(document.form_list));
-  addParams.push(Form.serialize(frmTree));
+  var container = ThetisBox.getContainer(thetisBoxId);
+  if (container) {
+    ThetisBox.remove(thetisBoxId);
 
-  doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>", addParams);
+    var addParams = getCheckedUsersParam();
+    addParams.push(Form.serialize(document.form_list));
+    addParams.push(Form.serialize(container));
+
+    doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>", addParams);
+  }
 }
 
 getCheckedUsersParam = function()
 {
-  var params = new Array();
+  var params = [];
 
   var elems = document.getElementsByClassName("check_user");
   for (var i=0; elems != null && i < elems.length; i++) {
@@ -108,14 +113,8 @@ getCheckedUsersParam = function()
 
 showGroupTreeToMove = function(group_id)
 {
-  var addParams = getCheckedUsersParam();
-
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.setFormTag("<form action=\"<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>\" method=\"post\" onsubmit=\"doMoveUsers(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('user.select_group_to_move_to')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doMoveUsers("+thetisBox.id+")", "<%= t('user.select_group_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 

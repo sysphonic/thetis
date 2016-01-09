@@ -60,29 +60,38 @@
 showGroupTreeToSelect = function(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setAdditionalParams(new Array("user_id=<%= @user.id %>"));
-  thetisBox.setFormTag("<form action=\"\" onsubmit=\"onGroupSelectedToShow(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroupOfficialTitles("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-onGroupSelectedToShow = function(frm)
+doSelectGroupOfficialTitles = function(thetisBoxId)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
 
-  new Ajax.Updater(
-      "div_select_official_titles",
-      "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
-      {
-        method:"get",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("user_id=<%= @user.id %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_select_official_titles",
+        "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+        {
+          method:"get",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 doClearGroup = function()

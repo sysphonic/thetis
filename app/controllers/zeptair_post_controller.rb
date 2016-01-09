@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -27,7 +27,7 @@ class ZeptairPostController < ApplicationController
   def upload
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:file].nil? or params[:file].size <= 0
       render(:text => '')
@@ -136,7 +136,7 @@ class ZeptairPostController < ApplicationController
   def delete_attachment
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     target_user = nil
 

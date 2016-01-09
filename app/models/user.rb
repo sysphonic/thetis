@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -1166,7 +1166,7 @@ class User < ActiveRecord::Base
     end
 
     SqlHelper.validate_token([order])
-    User.update_all("xorder=#{order.to_i}", con)
+    User.where(con).update_all(xorder: order.to_i)
   end
 
   #=== rename_title
@@ -1180,7 +1180,7 @@ class User < ActiveRecord::Base
 
     con = ['title=?', org_title]
 
-    User.update_all("title='#{new_title.gsub("'"){"\\'"}}'", con)
+    User.where(con).update_all(title: new_title.gsub("'"){"\\'"})
   end
 
   #=== get_project_application

@@ -92,23 +92,23 @@ function doUpdateConfig()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Request(
-              document.form_user_config.action,
-              {
-                asynchronous:true,
-                evalScripts:true,
-                parameters:Form.serialize(document.form_user_config),
-                onComplete:function(request) {
+      document.form_user_config.action,
+      {
+        asynchronous:true,
+        evalScripts:true,
+        parameters:Form.serialize(document.form_user_config),
+        onComplete:function(request) {
 
-                  thetisBox.remove();
+          thetisBox.remove();
 
-                  if (request.responseText == "") {
-                    tips("<%= t('msg.update_success')%>");
-                  } else {
-                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                  }
-                }
-              }
-            );
+          if (request.responseText == "") {
+            tips("<%= t('msg.update_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
+          }
+        }
+      }
+    );
   return true;
 }
 
@@ -117,65 +117,84 @@ function doCreateTitle()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_ajax_title",
-              "<%= url_for(:controller => 'users', :action => 'create_title') %>",
-              {
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                }
-              }
-            );
+      "div_ajax_title",
+      "<%= url_for(:controller => 'users', :action => 'create_title') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
+        }
+      }
+    );
   return true;
+}
+
+function onDeleteTitleClicked(title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteTitle('"+esc_quotes(title)+"')");
 }
 
 function doDeleteTitle(title)
 {
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteTitle('"+esc_quotes(title)+"')");
-}
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
-function _doDeleteTitle(title)
-{
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("title=" + encodeURIComponent(title));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Updater(
       "div_ajax_title",
       "<%= url_for(:controller => 'users', :action => 'destroy_title') %>",
       {
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); },
-        parameters:"title=" + encodeURIComponent(title)+"&authenticity_token=<%= form_authenticity_token %>"
-      }
-    );
-}
-
-function doRenameTitle(org)
-{
-  var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"_doRenameTitle('"+esc_quotes(org)+"', thetisBoxEdit.value); return false;\">");
-  thetisBox.show("CENTER", "", "INPUT", "", "<%= t('user.specify_title_name') %>", org);
-}
-
-function _doRenameTitle(org, title)
-{
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-      "div_ajax_title",
-      "<%= url_for(:controller => 'users', :action => 'rename_title') %>",
-      {
+        method:"post",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
-          thetisBox.remove();
-          _z("item_" + org).id = "item_" + title;
-        },
-        parameters:"org_title=" + encodeURIComponent(org) + "&new_title=" + encodeURIComponent(title)+"&authenticity_token=<%= form_authenticity_token %>"
+          thetisBoxProgress.remove();
+        }
       }
     );
+}
+
+function onRenameTitleClicked(org)
+{
+  var thetisBox = new ThetisBox;
+  thetisBox.show("CENTER", "", "INPUT", "doRenameTitle("+thetisBox.id+", '"+esc_quotes(org)+"')", "<%= t('user.specify_title_name') %>", org);
+}
+
+function doRenameTitle(thetisBoxId, org)
+{
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    var addParams = [];
+    addParams.push("org_title=" + encodeURIComponent(org));
+    addParams.push("new_title=" + encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    new Ajax.Updater(
+        "div_ajax_title",
+        "<%= url_for(:controller => 'users', :action => 'rename_title') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request){
+            thetisBoxProgress.remove();
+            _z("item_" + org).id = "item_" + title;
+          }
+        }
+      );
+  }
 }
 
 </script>

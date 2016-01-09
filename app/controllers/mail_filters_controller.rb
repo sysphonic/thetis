@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -131,7 +131,7 @@ class MailFiltersController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     attrs = params[:mail_filter]
     if attrs['and_or'] == 'none'
@@ -196,7 +196,7 @@ class MailFiltersController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_filter].nil?
       list
@@ -233,7 +233,7 @@ class MailFiltersController < ApplicationController
   def do_execute
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     mail_account = MailAccount.find(params[:mail_account_id])
     mail_folder = MailFolder.find(params[:mail_folder_id])
@@ -295,7 +295,7 @@ class MailFiltersController < ApplicationController
   def update_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     mail_account_id = params[:mail_account_id]
     order_arr = params[:mail_filters_order]

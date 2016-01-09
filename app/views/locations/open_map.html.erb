@@ -386,9 +386,23 @@ tipsExit = function()
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'locations', :action => 'open_map') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onGroupTreeNodeSelected("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onGroupTreeNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var addParams = [
+      "thetisBoxSelKeeper="+val
+    ];
+    location.href = "<%= url_for(:controller => 'locations', :action => 'open_map') %>?"+addParams.join("&");
+  }
 }
 
 function clearGroup()

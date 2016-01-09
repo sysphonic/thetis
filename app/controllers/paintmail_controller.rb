@@ -33,7 +33,7 @@ class PaintmailController < ApplicationController
   def save_conf
     Log.add_info(request, '')   # Not to show passwords.
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless @login_user.nil?
 

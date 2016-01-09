@@ -1,6 +1,7 @@
 require File.expand_path('../boot', __FILE__)
 
 require File.join(File.dirname(__FILE__), '../lib/util/feed_entry')
+require File.join(File.dirname(__FILE__), '../lib/util/request_post_only_exception')
 require File.join(File.dirname(__FILE__), '../lib/ya2yaml/lib/ya2yaml')
 
 # Pick the frameworks you want:

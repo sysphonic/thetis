@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -48,7 +48,7 @@ class TemplatesController < ApplicationController
   def create_workflow
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @tmpl_folder, @tmpl_workflows_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_WORKFLOWS)
 
@@ -102,7 +102,7 @@ class TemplatesController < ApplicationController
   def destroy_workflow
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     Item.find(params[:id]).destroy
 
@@ -126,7 +126,7 @@ class TemplatesController < ApplicationController
   def create_local
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @tmpl_folder, @tmpl_local_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_LOCAL)
 
@@ -150,7 +150,7 @@ class TemplatesController < ApplicationController
   def destroy_local
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       Item.find(params[:id]).destroy

@@ -119,26 +119,8 @@ else
         </tr>
       <% if !@login_user.nil? and (@login_user.admin?(User::AUTH_FOLDER) or @folder.in_my_folder_of?(@login_user.id)) %>
         <tr>
-          <td>
-            <table style="margin:25px auto 0px;">
-              <tr>
-                <td>
-                <input type="button" value="<%= t('btn.apply') %>" style="width:100px;"  onclick="
-                      var thetisBox = prog('TOP-RIGHT');
-                      new Ajax.Updater(
-                                'div_view',
-                                document.form_folder_disp.action,
-                                {
-                                  asynchronous:true,
-                                  evalScripts:true,
-                                  onComplete:function(request){ thetisBox.remove(); },
-                                  parameters:Form.serialize(document.form_folder_disp)
-                                }
-                              );
-                    ">
-                </td>
-              </tr>
-            </table>
+          <td style="text-align:center; padding-top:25px;">
+            <input type="button" value="<%= t('btn.apply') %>" style="width:100px;" onclick="onApplyFolderDispCtrlClicked();">
           </td>
         </tr>
       <% end %>
@@ -151,4 +133,28 @@ else
 
 <%= render(:partial => 'common/flash_notice') %>
 
+
+<script type="text/javascript">
+
+onApplyFolderDispCtrlClicked = function()
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+  new Ajax.Updater(
+      "div_view",
+      document.form_folder_disp.action,
+      {
+        method:"post",
+        parameters:Form.serialize(document.form_folder_disp),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+</script>
+
 <% end %>
+

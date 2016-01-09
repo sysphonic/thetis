@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -258,7 +258,7 @@ class ItemsController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @item = Item.find(params[:id])
 
@@ -291,7 +291,7 @@ class ItemsController < ApplicationController
   def move_multi
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_item].nil? or params[:thetisBoxSelKeeper].nil?
       list
@@ -343,7 +343,7 @@ class ItemsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       Item.destroy(params[:id])
@@ -366,7 +366,7 @@ class ItemsController < ApplicationController
   def destroy_multi
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_item].nil?
       list
@@ -408,7 +408,7 @@ class ItemsController < ApplicationController
   def duplicate
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     copies_folder = ItemsHelper.get_copies_folder(@login_user.id)
 
@@ -439,7 +439,7 @@ class ItemsController < ApplicationController
   def set_workflow
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @item = Item.find(params[:id])
 
@@ -480,7 +480,7 @@ class ItemsController < ApplicationController
   def set_basic
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
         and !@login_user.admin?(User::AUTH_ZEPTAIR)
@@ -596,7 +596,7 @@ class ItemsController < ApplicationController
   def set_description
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:id].blank?
       @item = Item.new_info(0)
@@ -643,7 +643,7 @@ class ItemsController < ApplicationController
   def set_image
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     created = false
 
@@ -729,7 +729,7 @@ class ItemsController < ApplicationController
   def delete_image
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       image = Image.find(params[:image_id])
@@ -781,7 +781,7 @@ class ItemsController < ApplicationController
   def update_image_info
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     image = Image.find(params[:image_id])
 
@@ -823,7 +823,7 @@ class ItemsController < ApplicationController
   def update_images_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_ary = params[:images_order]
 
@@ -860,7 +860,7 @@ class ItemsController < ApplicationController
   def set_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     created = false
 
@@ -964,7 +964,7 @@ class ItemsController < ApplicationController
   def delete_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       attach = Attachment.find(params[:attachment_id])
@@ -1016,7 +1016,7 @@ class ItemsController < ApplicationController
   def update_attachment_info
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     attachment = Attachment.find(params[:attachment_id])
 
@@ -1058,7 +1058,7 @@ class ItemsController < ApplicationController
   def update_attachments_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_ary = params[:attachments_order]
 
@@ -1095,7 +1095,7 @@ class ItemsController < ApplicationController
   def add_comment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:comment][:file].nil?
       attach_params = { :file => params[:comment][:file] }
@@ -1146,7 +1146,7 @@ class ItemsController < ApplicationController
   def update_comment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:thetisBoxEdit].empty?
       @comment = Comment.find(params[:comment_id])
@@ -1170,7 +1170,7 @@ class ItemsController < ApplicationController
   def destroy_comment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     comment = Comment.find(params[:comment_id])
     @item = comment.item
@@ -1208,7 +1208,7 @@ class ItemsController < ApplicationController
   def add_comment_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:comment_file].nil?
       attach_params = { :file => params[:comment_file] }
@@ -1233,7 +1233,7 @@ class ItemsController < ApplicationController
   def delete_comment_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       attachment = Attachment.find(params[:attachment_id])
@@ -1279,7 +1279,7 @@ class ItemsController < ApplicationController
   def wf_issue
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       @item = Item.find(params[:id])
@@ -1304,7 +1304,7 @@ class ItemsController < ApplicationController
   def team_organize
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     team_id = params[:team_id]
     unless team_id.blank?
@@ -1384,7 +1384,7 @@ class ItemsController < ApplicationController
   def move_in_team_folder
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @item = Item.find(params[:id])
 
@@ -1409,7 +1409,7 @@ class ItemsController < ApplicationController
   def change_team_status
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     SqlHelper.validate_token([params[:status]])
 

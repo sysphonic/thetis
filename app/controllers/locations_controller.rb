@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -142,7 +142,7 @@ class LocationsController < ApplicationController
   def update_map
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     group_id = params[:group_id]
     SqlHelper.validate_token([group_id])
@@ -166,7 +166,7 @@ class LocationsController < ApplicationController
   def delete_map
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     group_id = params[:group_id]
     SqlHelper.validate_token([group_id])
@@ -193,7 +193,7 @@ class LocationsController < ApplicationController
   def drop_on_exit
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     SqlHelper.validate_token([params[:id]])
 
@@ -212,7 +212,7 @@ class LocationsController < ApplicationController
   def on_moved
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     location_id = params[:id]
     SqlHelper.validate_token([location_id])

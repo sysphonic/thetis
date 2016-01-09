@@ -113,7 +113,7 @@ class LogsController < ApplicationController
   #
   def destroy
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_log].nil?
       list
@@ -140,7 +140,7 @@ class LogsController < ApplicationController
   #
   def destroy_all
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     Log.delete_all
 

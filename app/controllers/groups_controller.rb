@@ -70,7 +70,7 @@ class GroupsController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:thetisBoxEdit].blank?
       @group = nil
@@ -94,7 +94,7 @@ class GroupsController < ApplicationController
   def rename
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @group = Group.find(params[:id])
     unless params[:thetisBoxEdit].blank?
@@ -115,7 +115,7 @@ class GroupsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     SqlHelper.validate_token([params[:id]])
     begin
@@ -135,7 +135,7 @@ class GroupsController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @group = Group.find(params[:id])
 
@@ -191,7 +191,7 @@ class GroupsController < ApplicationController
   def ajax_exclude_users
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     group_id = params[:id]
     SqlHelper.validate_token([group_id])
@@ -227,7 +227,7 @@ class GroupsController < ApplicationController
   def ajax_move_users
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     org_group_id = params[:id]
     group_id = params[:thetisBoxSelKeeper].split(':').last
@@ -368,7 +368,7 @@ class GroupsController < ApplicationController
   def update_groups_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_ary = params[:groups_order]
 

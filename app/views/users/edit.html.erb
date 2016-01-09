@@ -310,35 +310,42 @@ _doDelete = function(user_id)
       );
 }
 
-doSelectGroup = function(frm)
+doSelectGroup = function(thetisBoxId, current_id)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
 
-  new Ajax.Updater(
-      "div_user_groups",
-      "<%= url_for(:controller => 'users', :action => 'add_to_group') %>",
-      {
-        method:"post",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("user_id=<%= @user.id %>");
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+    if (current_id) {
+      addParams.push("current_id="+current_id);
+    }
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_user_groups",
+        "<%= url_for(:controller => 'users', :action => 'add_to_group') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 showGroupTreeToSelect = function(group_id, do_change)
 {
-  var additionalParams = new Array(
-                            "authenticity_token=<%= form_authenticity_token %>",
-                            "user_id=<%= @user.id %>"
-                          );
-  if (do_change == true) {
-    additionalParams.push("current_id="+group_id);
-  }
-
   var caption = "";
   if (do_change == true) {
     caption = "<%= t('group.select_to_change_to')%>";
@@ -347,9 +354,7 @@ showGroupTreeToSelect = function(group_id, do_change)
   }
 
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" method=\"post\" onsubmit=\"doSelectGroup(this); return false;\">");
-  thetisBox.setAdditionalParams(additionalParams);
-  thetisBox.show("CENTER", "", "TREE", "", caption, "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroup("+thetisBox.id+", "+((do_change == true)?("'"+group_id+"'"):"null")+")", caption, "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 

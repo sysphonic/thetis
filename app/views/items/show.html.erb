@@ -190,31 +190,34 @@ end
 
 <script type="text/javascript">
 
-function doSelectFolder(frm, item_id)
+function doSelectFolder(thetisBoxId, item_id)
 {
-  var boxInstance = ThetisBox.getInstanceForElem(frm);
-  if (boxInstance) {
-    boxInstance.hide();
-  }
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  var addParams = new Array();
-  addParams.push("id="+item_id);
-  addParams.push(Form.serialize(frm));
+    var addParams = [];
+    addParams.push("id="+item_id);
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    var thetisBoxProgress = prog("TOP-RIGHT");
 
-  new Ajax.Updater(
-      "folder_path",
-      "<%= url_for(:controller => 'items', :action => 'move') %>",
-      {
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
-          thetisBoxProgress.remove();
+    new Ajax.Updater(
+        "folder_path",
+        "<%= url_for(:controller => 'items', :action => 'move') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request){
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function showFolderTreeToSelect(folder_id, item_id, title)
@@ -224,10 +227,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   }
   var thetisBox = new ThetisBox;
   thetisBox.title = title;
-  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doSelectFolder(this, "+item_id+"); return false;\">";
-  thetisBox.setFormTag(formTag);
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectFolder("+thetisBox.id+", '"+item_id+"')", "<%= t('item.select_folder_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 
@@ -904,7 +904,7 @@ function doRegisterComment(frm)
 {
   var txaComment = _z("comment_message");
 
-  if (!_checkComment(txaComment)) {
+  if (!_checkComment(txaComment.value)) {
     return false;
   }
 
@@ -929,48 +929,51 @@ function doRegisterComment(frm)
         );
 }
 
-function doUpdateComment(frm, comment_id)
+function doUpdateComment(thetisBoxId, comment_id)
 {
-  if (!_checkComment(frm.thetisBoxEdit)) {
-    return false;
-  }
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
 
-  var boxInstance = ThetisBox.getInstanceForElem(frm);
-  if (boxInstance) {
-    boxInstance.hide();
-  }
+    if (!_checkComment(val)) {
+      return false;
+    }
+    ThetisBox.remove(thetisBoxId);
 
-  var thetisBoxProgress = prog("TOP-RIGHT");
+    var addParams = [];
+    addParams.push("comment_id="+comment_id);
+    addParams.push("thetisBoxEdit="+encodeURIComponent(val));
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  new Ajax.Updater(
-      "div_comment_"+comment_id,
-      "<%= url_for(:controller => 'items', :action => 'update_comment') %>",
-      {
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_comment_"+comment_id,
+        "<%= url_for(:controller => 'items', :action => 'update_comment') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function editComment(comment_id)
 {
   var thetisBox = new ThetisBox;
-  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doUpdateComment(this, "+comment_id+"); return false;\">";
-  thetisBox.setFormTag(formTag);
-  thetisBox.setAdditionalParams(new Array("comment_id="+comment_id, "authenticity_token=<%= form_authenticity_token %>"));
-
   // GREP WITH ~.gsub('  ', '&nbsp; ')
   // Corresponds to ~.gsub(/&nbsp;/, " ") in the following line.
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "", "", restoreHTML(_z("comment_body" + comment_id).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "doUpdateComment("+thetisBox.id+", '"+comment_id+"')", "", restoreHTML(_z("comment_body" + comment_id).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
 }
 
-function _checkComment(txaComment)
+function _checkComment(val)
 {
-  if (trim(txaComment.value, true).length <= 0) {
+  if (trim(val, true).length <= 0) {
     return false;
   }
   return true;

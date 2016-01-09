@@ -123,18 +123,13 @@ showFolderTreeToSelect = function(folder_id)
     thetisBoxFilterAction.addChildBox(thetisBoxFilterActionFolderTree);
   }
 
-  var addParams = new Array();
-
-  thetisBoxFilterActionFolderTree.setAdditionalParams(addParams);
-  thetisBoxFilterActionFolderTree.setFormTag("<form action=\"\" method=\"get\" onsubmit=\"onFilterActionTreeDestSelected(this); return false;\">");
-  thetisBoxFilterActionFolderTree.show("CENTER", "", "TREE", "", "<%= t('folder.select_dest') %>", "");
+  thetisBoxFilterActionFolderTree.show("CENTER", "", "TREE", "onFilterActionTreeDestSelected("+thetisBoxFilterActionFolderTree.id+")", "<%= t('folder.select_dest') %>", "");
   thetisBoxFilterActionFolderTree.setTree("<%= url_for(:controller => 'mail_folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 
-onFilterActionTreeDestSelected = function(frmTree)
+onFilterActionTreeDestSelected = function(thetisBoxId)
 {
   var folder_id = thetisBoxFilterActionFolderTree.getTreeSelect();
-
   if (folder_id == "<%= TreeElement::ROOT_ID %>") {
     msg("<%= t('msg.cannot_save_in_folder') %>");
     return;
@@ -147,6 +142,8 @@ onFilterActionTreeDestSelected = function(frmTree)
   var filter_action_dest_path = _z("filter_action_dest_path");
   filter_action_dest_path.innerHTML = fullPath;
   filter_action_dest_folder_id.value = folder_id;
+
+  ThetisBox.remove(thetisBoxId);
 }
 
 checkIndispensablesFilterAction = function()

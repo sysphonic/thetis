@@ -150,9 +150,20 @@ function sortList(col)
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'equipment', :action => 'list') %>", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onGroupNodeSelected("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
+}
+
+function onGroupNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    location.href = "<%= url_for(:controller => 'equipment', :action => 'list') %>?thetisBoxSelKeeper="+val;
+  }
 }
 
 function selectAll()

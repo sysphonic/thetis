@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -68,7 +68,7 @@ class AddressbookController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @address = Address.new(params.require(:address).permit(Address::PERMIT_BASE))
 
@@ -145,7 +145,7 @@ class AddressbookController < ApplicationController
   def update
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @address = Address.find(params[:id])
     @address.attributes = params[:address]
@@ -247,7 +247,7 @@ class AddressbookController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     if params[:check_address].nil?
       list
@@ -303,7 +303,7 @@ class AddressbookController < ApplicationController
   def import_csv
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     file = params[:imp_file]
     mode = params[:mode]

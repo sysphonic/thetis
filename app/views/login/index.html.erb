@@ -94,9 +94,21 @@ function onLoadSub()
 function showSendPassword()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("TOP-RIGHT", "", "INPUT", "<%= url_for(:controller => 'login', :action => 'send_password') %>", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
+  thetisBox.show("TOP-RIGHT", "", "INPUT", "doSendPassword("+thetisBox.id+")", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
+}
+
+function doSendPassword(thetisBoxId)
+{
+  var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
+  if (thetisBoxEdit && thetisBoxEdit.value) {
+    var val = thetisBoxEdit.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var frm = createPostForm("<%= url_for(:controller => 'login', :action => 'send_password') %>", null);
+    addInputHidden(frm, null, "thetisBoxEdit", val, null);
+    frm.submit();
+  }
 }
 
 </script>

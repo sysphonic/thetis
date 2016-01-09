@@ -156,61 +156,47 @@ function doCreate()
     return;
   }
 
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-          "div_ajax_workflow",
-          document.form_workflow.action,
-          {
-            method: "post",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){ thetisBox.remove(); },
-            parameters:Form.serialize(document.form_workflow)
-          }
-       );
-}
-
-function doDelete(workflow_id, title)
-{
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDelete("+workflow_id+")");
-}
-
-function _doDelete(workflow_id)
-{
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-        "div_ajax_workflow",
-        "<%= url_for(:controller => 'workflows', :action => 'destroy') %>?id=" + workflow_id,
-        {
-          method: "post",
-          parameters:"authenticity_token=<%= form_authenticity_token %>",
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request){ thetisBox.remove(); }
-        }
-      );
-}
-
-function doSelectFolder(frm, workflow_id)
-{
-  var boxInstance = ThetisBox.getInstanceForElem(frm);
-  if (boxInstance) {
-    boxInstance.hide();
-  }
-
-  var addParams = new Array();
-  addParams.push("id="+workflow_id);
-  addParams.push(Form.serialize(frm));
-
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
+        "div_ajax_workflow",
+        document.form_workflow.action,
+        {
+          method: "post",
+          parameters:Form.serialize(document.form_workflow),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
+        }
+     );
+}
+
+function onEditWorkflowClicked(item_id)
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'items', :action => 'edit') %>?id="+item_id;
+}
+
+function onDeleteWorkflowClicked(workflow_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDelete("+workflow_id+")");
+}
+
+function doDelete(workflow_id)
+{
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  var addParams = [];
+  addParams.push("id="+workflow_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  new Ajax.Updater(
       "div_ajax_workflow",
-      "<%= url_for(:controller => 'workflows', :action => 'move') %>",
+      "<%= url_for(:controller => 'workflows', :action => 'destroy') %>",
       {
-        method:"post",
+        method: "post",
         parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
@@ -221,14 +207,42 @@ function doSelectFolder(frm, workflow_id)
     );
 }
 
+function doSelectFolder(thetisBoxId, workflow_id)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [];
+    addParams.push("id="+workflow_id);
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_ajax_workflow",
+        "<%= url_for(:controller => 'workflows', :action => 'move') %>",
+        {
+          method:"post",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
+        }
+      );
+  }
+}
+
 function showFolderTreeToSelect(folder_id, workflow_id, title)
 {
   var thetisBox = new ThetisBox;
   thetisBox.title = title;
-  var formTag = "<form action=\"\" method=\"post\" onsubmit=\"doSelectFolder(this, "+workflow_id+"); return false;\">";
-  thetisBox.setFormTag(formTag);
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectFolder("+thetisBox.id+", '"+workflow_id+"')", "<%= t('item.select_folder_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
 }
 

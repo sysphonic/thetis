@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -48,7 +48,7 @@ class WorkflowsController < ApplicationController
   def create
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     my_wf_folder = WorkflowsHelper.get_my_wf_folder(@login_user.id)
 
@@ -79,7 +79,7 @@ class WorkflowsController < ApplicationController
   def destroy
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     workflow = Workflow.find(params[:id])
 
@@ -105,7 +105,7 @@ class WorkflowsController < ApplicationController
   def move
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:thetisBoxSelKeeper].nil?
       folder_id = params[:thetisBoxSelKeeper].split(':').last

@@ -1,6 +1,6 @@
 /**-----------------**-----------------**-----------------**
-   ThetisBox ver.1.1.0
-     Copyright (c) 2007-2015, MORITA Shintaro, Sysphonic. All rights reserved.
+   ThetisBox ver.2.0.0
+     Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. All rights reserved.
      http://sysphonic.com/
 
  This module is released under New BSD License.
@@ -224,16 +224,23 @@ ThetisBox.resizeByRightHandle = function(x, y, draggable, thetisBox, evt)
 
 ThetisBox.getContainer = function(elem)
 {
-  while (elem && elem.tagName.toLowerCase() != "html") {
-    if (elem.id != null && elem.id.indexOf("divThetisBox-") >= 0) {
-      return elem;
+  if (typeof(elem) == "number") {
+    var thetisBox = ThetisBox.getInstance(elem);
+    if (thetisBox) {
+      return thetisBox.getContainer();
     }
-    elem = elem.parentNode;
+  } else {
+    while (elem && elem.tagName.toLowerCase() != "html") {
+      if (elem.id != null && elem.id.indexOf("divThetisBox-") >= 0) {
+        return elem;
+      }
+      elem = elem.parentNode;
+    }
   }
   return null;
 }
 
-ThetisBox.array = new Array();
+ThetisBox.array = [];
 
 Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   initialize: function(element) {
@@ -246,25 +253,8 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   // INPUT
   drawInput: function(action, hasTitlebar, allowEmpty, cap)
   {
-    avoidEmpty = "";
-    if (!allowEmpty) {
-      avoidEmpty = 'if (document.formThetisBox'+this.id+'.thetisBoxEdit.value == \'\') {return false};';
-    }
     var content = "";
     content += "<div class='thetisbox input' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:"+this.z_index+"; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    var prog = "";
-    if (this.progress) {
-      prog = " var __thetisBoxProgress=new ThetisBox; __thetisBoxProgress.show('TOP-RIGHT', '', 'PROGRESS', '', '', '');";
-    }
-    if (this.form_tag.length > 0) {
-      var f = this.form_tag;
-      f = f.replace("<form", "<form name='formThetisBox"+this.id+"'");
-      reObj = new RegExp("onsubmit=\"(.*)( return false;)\"", "i");
-      f = f.replace(reObj, "onsubmit=\""+avoidEmpty+" $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
-      content += f;
-    } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
-    }
     content += "<table class='thetisbox_input_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";'>";
     if (hasTitlebar) {
       content += "  <tr style='height:25px;'>";
@@ -294,7 +284,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "      <table style='width:100%; height:100%;'>";
     content += "        <tr>";
     content += "          <td>";
-    content += "            <input type='submit' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' tabindex='2' style='width:90px; height:25px'>";
+    content += "            <input type='button' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' onclick=\""+action+"\" tabindex='2' style='width:90px; height:25px'>";
     content += "          </td>";
     content += "        </tr>";
     content += "        <tr>";
@@ -317,7 +307,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       var val = this.additionalParams[i].substring(eqidx+1);
       content += "<input type='hidden' name='"+param[0]+"' value='"+val+"'>";
     }
-    content += "</form>";
     content += "</div>";
     var d = document.createElement("div");
     d.innerHTML = content;
@@ -326,25 +315,8 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   // TEXTAREA
   drawTextArea: function(action, hasTitlebar, allowEmpty, cap)
   {
-    avoidEmpty = "";
-    if (!allowEmpty) {
-      avoidEmpty = 'if (ThetisBox.trim(document.formThetisBox'+this.id+'.thetisBoxEdit.value, true).length <= 0) {return false};';
-    }
     var content = "";
     content += "<div class='thetisbox textarea' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:"+this.z_index+"; display:none;'>";
-    var prog = "";
-    if (this.progress) {
-      prog = " var __thetisBoxProgress=new ThetisBox; __thetisBoxProgress.show('TOP-RIGHT', '', 'PROGRESS', '', '', '');";
-    }
-    if (this.form_tag.length > 0) {
-      var f = this.form_tag;
-      f = f.replace("<form", "<form name='formThetisBox"+this.id+"'");
-      reObj = new RegExp("onsubmit=\"(.*)( return false;)\"", "i");
-      f = f.replace(reObj, "onsubmit=\""+avoidEmpty+" $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
-      content += f;
-    } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\""+avoidEmpty+prog+" ThetisBox.hide('"+this.id+"'); \">";
-    }
     content += "<table class='thetisbox_textarea_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";'>";
     if (hasTitlebar) {
       content += "  <tr style='height:25px;'>";
@@ -383,7 +355,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "      <table style='width:10%; margin:0px auto; border:none;'>";
     content += "        <tr>";
     content += "          <td>";
-    content += "            <input type='submit' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' tabindex='2' style='width:90px; height:25px'>";
+    content += "            <input type='button' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' onclick=\""+action+"\" tabindex='2' style='width:90px; height:25px'>";
     content += "          </td>";
     content += "          <td style='min-width:15px; width:15px;'></td>";
     content += "          <td>";
@@ -400,7 +372,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       var val = this.additionalParams[i].substring(eqidx+1);
       content += "<input type='hidden' name='"+param[0]+"' value='"+val+"'>";
     }
-    content += "</form>";
     content += "</div>";
     var d = document.createElement("div");
     d.innerHTML = content;
@@ -411,19 +382,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     var content = "";
     content += "<div class='thetisbox tree' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:"+this.z_index+"; display:none;'>";
-    var prog = "";
-    if (this.progress) {
-      prog = " var __thetisBoxProgress=new ThetisBox; __thetisBoxProgress.show('TOP-RIGHT', '', 'PROGRESS', '', '', '');";
-    }
-    if (this.form_tag.length > 0) {
-      var f = this.form_tag;
-      f = f.replace("<form", "<form name='formThetisBox"+this.id+"'");
-      reObj = new RegExp("onsubmit=\"(.*)( return false;)\"", "i");
-      f = f.replace(reObj, "onsubmit=\"if(this.thetisBoxSelKeeper.value.length <= 0 || this.action.length <= 0) { return false }; $1 ThetisBox.remove('"+this.id+"'); "+prog+" $2\"");
-      content += f;
-    } else {
-      content += "<form name=\"formThetisBox"+this.id+"\" method=\"get\" action=\""+action+"\" onsubmit=\"if (this.thetisBoxSelKeeper.value.length <= 0){return false;}"+prog+" ThetisBox.hide('"+this.id+"'); \">";
-    }
     content += "<table class='thetisbox_tree_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";'>";
     if (hasTitlebar) {
       content += "  <tr style='height:25px;'>";
@@ -462,7 +420,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "      <table style='width:10%; margin:0px auto; border:none;'>";
     content += "        <tr>";
     content += "          <td>";
-    content += "            <input type='submit' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' tabindex='2' style='width:90px; height:25px'>";
+    content += "            <input type='button' id='thetisBoxOK-"+this.id+"' value='"+this.button_ok+"' onclick=\""+action+"\" tabindex='2' style='width:90px; height:25px'>";
     content += "          </td>";
     content += "          <td style='min-width:15px; width:15px;'></td>";
     content += "          <td>";
@@ -480,7 +438,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       var val = this.additionalParams[i].substring(eqidx+1);
       content += "<input type='hidden' name='"+param[0]+"' value='"+val+"'>";
     }
-    content += "</form>";
 
     if (this.resizable == "right") {
       content += "  <div class=\"thetisbox_resize_handle_r\" id=\"thetisBoxResizeHandle-"+this.id+"\" style=\"position:absolute; width:20px; height:20px; cursor:move;\"></div>";
@@ -1124,11 +1081,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     ThetisBox.hide(this.id);
   },
-  // Form Tag
-  setFormTag: function(f)
-  {
-    this.form_tag = f;
-  },
   // Additional Parameters
   setAdditionalParams: function(params)
   {
@@ -1279,13 +1231,11 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   button_cancel: null,
   button_close: null,
   button_close_img: null,
-  form_tag: "",
   bgcolor_title: null,
   bgcolor_body: null,
   bgcolor_content: null,
   border_content: null,
   resizable: null,
-  progress: false,
   z_index: 10000,
   overflow: "auto",
   parent_elem: null,
@@ -1390,20 +1340,20 @@ ThetisBox.remove = function(id)
     }
   }
 
-  var ary = ThetisBoxEventHandlers;
+  var arr = ThetisBoxEventHandlers;
   var onClose = null;
-  for (var i=0; i < ary.length; i++) {
-    if (ary[i][0] == id) {
-      onClose = ary[i][1];
-      ary.splice(i, 1);
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i][0] == id) {
+      onClose = arr[i][1];
+      arr.splice(i, 1);
       break;
     }
   }
 
-  ary = ThetisBoxProgressors;
-  for (var i=0; i < ary.length; i++) {
-    if (ary[i].id == id) {
-      ary.splice(i, 1);
+  arr = ThetisBoxProgressors;
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i].id == id) {
+      arr.splice(i, 1);
       break;
     }
   }
@@ -1451,14 +1401,14 @@ ThetisBox.removeLastProgressBar = function()
 
 ThetisBox.setOnClose = function(id, func)
 {
-  var ary = ThetisBoxEventHandlers;
-  for (var i=0; i < ary.length; i++) {
-    if (ary[i][0] == id) {
-      ary.splice(i, 1);
+  var arr = ThetisBoxEventHandlers;
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i][0] == id) {
+      arr.splice(i, 1);
     }
   }
   if (func != null) {
-    ary.push(new Array(id, func));
+    arr.push(new Array(id, func));
   }
 }
 

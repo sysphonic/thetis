@@ -102,17 +102,17 @@ p {font-family:verdana,arial,helvetica,sans-serif; margin:0px;}
 img {border:0px; vertical-align:middle;}
 
 a:link {text-decoration:none; color:navy }
-a:visited {text-decoration:none; color:navy }
+a:visited {color:navy }
 a:active {text-decoration:none; color:blue }
 a:hover  {text-decoration:none; color:limegreen }
 
 .a_underline:link {text-decoration:underline; color:navy }
-.a_underline:visited {text-decoration:underline; color:navy }
+.a_underline:visited {color:navy }
 .a_underline:active {text-decoration:underline; color:blue }
 .a_underline:hover{text-decoration:underline; color:limegreen }
 
 .a_pagination:link {text-decoration:underline; color:red }
-.a_pagination:visited {text-decoration:underline; color:red }
+.a_pagination:visited {color:red }
 .a_pagination:active {text-decoration:underline; color:orange }
 .a_pagination:hover{text-decoration:underline; color:limegreen }
 

@@ -313,48 +313,57 @@ function getCheckedItemsParam()
 
 function showFolderTreeToMove(folder_id)
 {
-  var addParams = getCheckedItemsParam();
-
-  addParams.push("thumbnails=<%= params[:thumbnails] %>");
-  addParams.push("authenticity_token=<%= form_authenticity_token %>");
-
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(addParams);
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'items', :action => 'move_multi') %>", "<%= t('item.select_folder_to_move_to')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onFolderTreeNodeToMoveSelected("+thetisBox.id+")", "<%= t('item.select_folder_to_move_to')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
+}
+
+function onFolderTreeNodeToMoveSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var addParams = getCheckedItemsParam();
+    addParams.push("thetisBoxSelKeeper="+val);
+    addParams.push("thumbnails=<%= params[:thumbnails] %>");
+    var frm = createPostForm("<%= url_for(:controller => 'items', :action => 'move_multi') %>", addParams);
+    frm.submit();
+  }
 }
 
 function showURL()
 {
   new Ajax.Request(
-          "<%= url_for(:controller => 'frames', :action => 'show_url') %>?disp[ctrl]=items&disp[act]=list&disp[folder_id]=<%= @folder_id %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                var thetisBox = new ThetisBox;
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth/10*8)+",320",
-                          "TRAY",
-                          "",
-                          "<%= t('cap.url_to_this_page') %>",
-                          request.responseText
-                        );
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'frames', :action => 'show_url') %>?disp[ctrl]=items&disp[act]=list&disp[folder_id]=<%= @folder_id %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            var thetisBox = new ThetisBox;
+            thetisBox.show(
+                      "CENTER",
+                      (mainWidth/10*8)+",320",
+                      "TRAY",
+                      "",
+                      "<%= t('cap.url_to_this_page') %>",
+                      request.responseText
+                    );
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
 function clearFolder()
 {
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'items', :action => 'list') %>";
   document.form_list.folder_id.value = "";
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 function addToDesktop(xtype, target_id, title)
@@ -367,23 +376,23 @@ function _addToDesktop(xtype, target_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'add_toy') %>?xtype="+xtype+"&target_id="+target_id,
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
-                var button = _z("add_to_desktop");
-                removeElem(button);
+      "<%= url_for(:controller => 'desktop', :action => 'add_toy') %>?xtype="+xtype+"&target_id="+target_id,
+      {
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+            var button = _z("add_to_desktop");
+            removeElem(button);
 
-                thetisBoxProgress.remove();
+            thetisBoxProgress.remove();
 
-                if (Number(request.responseText) > 0) {
-                  tips("<%= t('msg.add_to_desktop_success')%>");
-                }
-              }
+            if (Number(request.responseText) > 0) {
+              tips("<%= t('msg.add_to_desktop_success')%>");
+            }
           }
-        );
+      }
+    );
 }
 
 function sortList(col)
@@ -411,10 +420,24 @@ function showTips()
 function showFolderTreeToSelect(folder_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("thumbnails=<%= params[:thumbnails] %>", "authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'items', :action => 'list') %>", "<%= t('msg.select_folder_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onFolderTreeNodeSelected("+thetisBox.id+")", "<%= t('msg.select_folder_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'folders', :action => 'ajax_get_tree') %>", folder_id);
+}
+
+function onFolderTreeNodeSelected(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
+
+    prog("TOP-RIGHT");
+    var addParams = [
+      "thetisBoxSelKeeper="+val,
+      "thumbnails=<%= params[:thumbnails] %>"
+    ];
+    location.href = "<%= url_for(:controller => 'items', :action => 'list') %>?"+addParams.join("&");
+  }
 }
 
 <% if !params[:folderTree].nil? and @folder_id.nil? %>

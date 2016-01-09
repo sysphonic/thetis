@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -172,7 +172,7 @@ class SendMailsController < ApplicationController
   def do_send
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       email = Email.find(params[:id])
@@ -210,7 +210,7 @@ class SendMailsController < ApplicationController
   def save
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:attach_file].nil?
       attach_attrs = { :file => params[:attach_file] }
@@ -263,7 +263,7 @@ class SendMailsController < ApplicationController
   def add_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     unless params[:attach_file].nil?
       attach_attrs = ActionController::Parameters.new({file: params[:attach_file]})
@@ -339,7 +339,7 @@ class SendMailsController < ApplicationController
   def delete_attachment
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       attachment = MailAttachment.find(params[:attachment_id])

@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -96,7 +96,7 @@ class ResearchesController < ApplicationController
   def create_q_page
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @tmpl_folder, @tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
@@ -132,7 +132,7 @@ class ResearchesController < ApplicationController
   def destroy_q_page
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     begin
       Item.find(params[:id]).destroy
@@ -155,7 +155,7 @@ class ResearchesController < ApplicationController
   def update_q_ctrl
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     item_id = params[:item_id]
     q_code = params[:q_code]
@@ -186,7 +186,7 @@ class ResearchesController < ApplicationController
   def reset_q_ctrl
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     Research.trim_config_yaml nil
 
@@ -224,7 +224,7 @@ class ResearchesController < ApplicationController
   def add_statistics_group
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     current_id = params[:current_id]
 
@@ -256,7 +256,7 @@ class ResearchesController < ApplicationController
   def delete_statistics_group
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     group_id = params[:group_id]
     SqlHelper.validate_token([group_id])
@@ -280,7 +280,7 @@ class ResearchesController < ApplicationController
   def update_groups_order
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     order_ary = params[:groups_order]
 
@@ -297,7 +297,7 @@ class ResearchesController < ApplicationController
   def start
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     tmpl_folder, tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
@@ -363,7 +363,7 @@ class ResearchesController < ApplicationController
   def stop
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     ApplicationHelper.delete_file_safe(Research.get_pages)
     render(:text => '')
@@ -381,7 +381,7 @@ class ResearchesController < ApplicationController
   def reset
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     Research.delete_all
 
@@ -399,7 +399,7 @@ class ResearchesController < ApplicationController
   def reset_users
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     count = 0
 
@@ -472,7 +472,7 @@ class ResearchesController < ApplicationController
   def save_page
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     # Next page
     pave_val = params[:page].to_i + 1
@@ -550,7 +550,7 @@ class ResearchesController < ApplicationController
   def do_confirm
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     @research = Research.find(params[:research_id])
     @research.update_attribute(:status, Research::U_STATUS_COMMITTED)
@@ -587,7 +587,11 @@ class ResearchesController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
+      if @group_id == '0'
+        con << "((groups like '%|0|%') or (groups is null))"
+      else
+        con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
+      end
     end
 
     include_research = false
@@ -648,7 +652,7 @@ class ResearchesController < ApplicationController
   def notify
     Log.add_info(request, params.inspect)
 
-    return unless request.post?
+    raise(RequestPostOnlyException) unless request.post?
 
     root_url = ApplicationHelper.root_url(request)
     count = UsersHelper.send_notification(params[:check_user], params[:thetisBoxEdit], root_url)

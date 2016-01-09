@@ -672,9 +672,7 @@ function _doShow()
 function showTemplateTreeToSelect()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.progress = true;
-  thetisBox.setAdditionalParams(new Array("authenticity_token=<%= form_authenticity_token %>"));
-  thetisBox.show("CENTER", "", "TREE", "<%= url_for(:controller => 'templates', :action => 'copy') %>", "<%= t('item.select_template')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "onTemplateTreeNodeSelected("+thetisBox.id+")", "<%= t('item.select_template')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'templates', :action => 'ajax_get_tree') %>", 0);
 
   if (isModifiedBasic() || isModifiedDescription()) {
@@ -682,30 +680,56 @@ function showTemplateTreeToSelect()
   }
 }
 
-function doSelectGroup(frm)
+function onTemplateTreeNodeSelected(thetisBoxId)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+    ThetisBox.remove(thetisBoxId);
 
-  new Ajax.Updater(
-      "div_selectUsers",
-      "<%= url_for(:controller => 'items', :action => 'get_group_users') %>",
-      {
-        method:"get",
-        parameters:Form.serialize(frm),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request) {
-          thetisBoxProgress.remove();
+    prog("TOP-RIGHT");
+
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+
+    var frm = createPostForm("<%= url_for(:controller => 'templates', :action => 'copy') %>", addParams);
+    frm.submit();
+  }
+}
+
+function doSelectGroup(thetisBoxId)
+{
+  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
+  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
+    var val = thetisBoxSelKeeper.value;
+
+    ThetisBox.remove(thetisBoxId);
+
+    var addParams = [];
+    addParams.push("thetisBoxSelKeeper="+val);
+
+    var thetisBoxProgress = prog("TOP-RIGHT");
+
+    new Ajax.Updater(
+        "div_selectUsers",
+        "<%= url_for(:controller => 'items', :action => 'get_group_users') %>",
+        {
+          method:"get",
+          parameters:addParams.join("&"),
+          asynchronous:true,
+          evalScripts:true,
+          onComplete:function(request) {
+            thetisBoxProgress.remove();
+          }
         }
-      }
-    );
+      );
+  }
 }
 
 function showGroupTreeToSelect(group_id)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.setFormTag("<form action=\"\" onsubmit=\"doSelectGroup(this); return false;\">");
-  thetisBox.show("CENTER", "", "TREE", "", "<%= t('group.select_to_show')%>", "");
+  thetisBox.show("CENTER", "", "TREE", "doSelectGroup("+thetisBox.id+")", "<%= t('group.select_to_show')%>", "");
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
