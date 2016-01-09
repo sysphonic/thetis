@@ -33,9 +33,9 @@ unless @for_print
   end
   if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
 %>
-      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" alt="<%= t('btn.add_to_desktop') %>" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
   <% end %>
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" alt="<%= t('item.show_url') %>" title="<%= t('item.show_url') %>" onclick="showURL();">
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" title="<%= t('item.show_url') %>" onclick="showURL();">
 <% end %>
     </td>
     <td>
@@ -46,11 +46,11 @@ unless @for_print
               <tr style="height:18px;">
               <% if @item.xtype == Item::XTYPE_PROJECT %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" alt="<%= t('item.project') %>" />
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" />
                 </td>
               <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" alt="<%= t('item.type.zeptair_dist') %>" />
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" />
                 </td>
               <% end %>
                 <td class="td_entry_info_cap" nowrap><%= t('item.registered_by') %></td>
@@ -179,13 +179,13 @@ end
   <% if !@login_user.nil? and @item.editable?(@login_user) %>
     <td style="width:10px;"></td>
     <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
     </td>
   <% end %>
   <% if !@login_user.nil? and @item.movable?(@login_user) %>
     <td style="width:10px;"></td>
     <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" alt="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" title="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
     </td>
 
 <script type="text/javascript">
@@ -236,7 +236,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   <% if !@login_user.nil? and @item.deletable?(@login_user) %>
     <td style="width:10px;"></td>
     <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
     </td>
   <% end %>
   </tr>

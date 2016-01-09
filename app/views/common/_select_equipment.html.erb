@@ -19,7 +19,7 @@ rows = 5
     <td style="text-align:left; color:blue;">
       <% unless @group_id.nil? %>
         <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectEquipment();" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroupToSelectEquipment();" title="<%= t('btn.clear') %>">
       <% end %>
     </td>
   </tr>

@@ -35,7 +35,7 @@ end
     </td>
     <td style="text-align:center; vertical-align:middle; width:8%; padding:3px 20px;"  rowspan="3">
       <div id="exit" style="height:100%;" onclick="tipsExit()" title="<%= t('office_map.drop_to_remove') %>">
-        <img id="exit_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png" alt="<%= t('office_map.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
+        <img id="exit_img" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/location/exit_off.png" title="<%= t('office_map.drop_to_remove') %>"></div><!-- Don't divide the line (for browsers without transparent PNG supporting. ) -->
     </td>
     <td style="width:90%; text-align:left;" >
     <%
@@ -68,7 +68,7 @@ end
               <tr>
                 <td style="text-align:left;" nowrap>
                   <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                 </td>
               </tr>
             </table>
@@ -81,7 +81,7 @@ end
   <tr>
     <td style="text-align:left; padding:3px 0px;">
       <%= form_tag( {:controller => 'locations', :action => 'open_map'}, :method => 'get', :name => 'form_map') %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">
         <%= text_field_tag('keyword', params[:keyword]) %>
         <input type="button" value="<%= t('btn.search') %>" onclick="form_map.submit(); prog('TOP-RIGHT');"/>
         <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'locations', :action => 'open_map') %>';"/>

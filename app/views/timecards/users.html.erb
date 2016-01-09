@@ -13,11 +13,11 @@
         <tr>
         <% if @login_user.admin?(User::AUTH_TIMECARD) %>
           <td nowrap style="width:1%; text-align:left;">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>';">
           </td>
         <% end %>
           <td style="text-align:right;" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
             <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'timecards', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
             <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'timecards', :action => 'users') %>'; prog('TOP-RIGHT');"/>
           </td>
@@ -37,7 +37,7 @@
             </div>
   <% else %>
             <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
   <% end %>
           </td>
           <td style="text-align:right;">
@@ -123,7 +123,7 @@ year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_fr
     </td>
   <% if @login_user.admin?(User::AUTH_TIMECARD) %>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= user.id %>, '<%= ApplicationHelper.h_s_quote(user.get_name_for_timecard(yaml)) %>');" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= user.id %>, '<%= ApplicationHelper.h_s_quote(user.get_name_for_timecard(yaml)) %>');" />
     </td>
     <td class="<%= td_class %>" style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>

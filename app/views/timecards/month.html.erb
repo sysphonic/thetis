@@ -129,12 +129,12 @@ days.times do
     <td style="text-align:center;" nowrap>
     <% unless timecard.workcode.nil? %>
       <% alt = h(timecard.workcode_name) %>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" alt="<%= alt %>" title="<%= alt %>">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" title="<%= alt %>">
     <% end %>
     </td>
     <td style="text-align:center;" nowrap>
       <% if !timecard.start.nil? and timecard.end.nil? %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" alt="<%= t('msg.not_fulfilled') %>" title="<%= t('msg.not_fulfilled') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" title="<%= t('msg.not_fulfilled') %>">
       <%
       elsif !timecard.start.nil?
         check_ok = true
@@ -142,19 +142,19 @@ days.times do
           lateness_days += 1
           check_ok = false
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" alt="<%= t('timecard.lateness') %>" title="<%= t('timecard.lateness') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" title="<%= t('timecard.lateness') %>">
         <%
         end
         if timecard.leaving_early?
           leaving_early_days += 1
           check_ok = false
         %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" alt="<%= t('timecard.leaving_early') %>" title="<%= t('timecard.leaving_early') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" title="<%= t('timecard.leaving_early') %>">
       <%
         end
         if check_ok
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%= t('btn.ok') %>" title="<%= t('btn.ok') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" title="<%= t('btn.ok') %>">
       <%
         end
       end
@@ -165,7 +165,7 @@ days.times do
       options = ''
       if timecard.business_trip?
         business_trip_days += 1
-        options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" alt="'+t('timecard.business_trip')+'" title="'+t('timecard.business_trip')+'">'
+        options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" title="'+t('timecard.business_trip')+'">'
       end
       %>
       <%= options %>
@@ -331,7 +331,7 @@ end
             %>
             <%= (given_num + carried_over - @applied_paid_hlds - paid_holidays) %>
           <% if @login_user.id == @selected_user.id or @login_user.admin?(User::AUTH_TIMECARD) %>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" alt="<%= t('btn.detail') %>" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= @selected_user.id %>, '<%= ApplicationHelper.h_s_quote(@selected_user.get_name_for_timecard) %>');" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= @selected_user.id %>, '<%= ApplicationHelper.h_s_quote(@selected_user.get_name_for_timecard) %>');" />
           <% end %>
           </td>
         </tr>

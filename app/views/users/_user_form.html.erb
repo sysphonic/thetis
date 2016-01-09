@@ -160,9 +160,9 @@ end
         <label for="user_figure"><%= User.human_attribute_name('figure') %></label>
       </td>
       <td class="item_value_td">
-        <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy_green.png" title="Boy green" alt="Boy green" /></label>
+        <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/boy_green.png" title="Boy green" /></label>
         &nbsp;&nbsp;
-        <%= radio_button('user', 'figure', 'girl_pink') %><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" alt="Girl pink" /></label>
+        <%= radio_button('user', 'figure', 'girl_pink') %><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/girl_pink.png" title="Girl pink" /></label>
       </td>
     </tr>
   <% if params[:action] == 'edit' and @login_user.id == @user.id %>

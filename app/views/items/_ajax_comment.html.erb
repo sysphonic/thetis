@@ -41,14 +41,14 @@
         <tr>
         <% if @login_user.id == @comment.user_id %>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
           </td>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" alt="<%= t('item.attach_file') %>" title="<%= t('item.attach_file') %>" onclick="attachFile(<%= @comment.id %>);" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" title="<%= t('item.attach_file') %>" onclick="attachFile(<%= @comment.id %>);" />
           </td>
         <% end %>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteComment(<%= @comment.id %>); return false;" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteComment(<%= @comment.id %>); return false;" />
           </td>
         </tr>
       </table>
@@ -75,7 +75,7 @@ unless comment_attachments.nil? or comment_attachments.empty?
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
         </a>
       <% if params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteCommentAttachment('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteCommentAttachment('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
       <% end %>
       </div>
     <% end %>

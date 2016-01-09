@@ -44,7 +44,7 @@
                     updated_at = '( ' + item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') + ' )'
                   end
                   %>
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" alt="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
                   <%
                   if item.public
                     scope = '<span style="color:orangered;">' + t('schedule.public') + "</span>"

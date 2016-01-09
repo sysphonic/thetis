@@ -244,13 +244,13 @@ else
           <%= t('schedule.cap_term') %><br/>
           <input type="text" id="schedule_repeat_start" name="schedule[repeat_start]" readonly value="<%= @schedule.repeat_start.strftime(THETIS_DATE_FORMAT_YMD) unless @schedule.repeat_start.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermStart();" />
           <span id="div_cal_repStart"></span>
-          <img class="img_btn" onclick="_z('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+          <img class="img_btn" onclick="_z('schedule_repeat_start').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>">
 
           &nbsp;<span style="color:firebrick">-</span>&nbsp;
 
           <input type="text" id="schedule_repeat_end" name="schedule[repeat_end]" readonly value="<%= @schedule.repeat_end.strftime(THETIS_DATE_FORMAT_YMD) unless @schedule.repeat_end.nil? %>" style="width:90px; cursor:pointer;" onclick="showCalTermEnd();" />
           <span id="div_cal_repEnd"></span>
-          <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>">
+          <img class="img_btn" onclick="_z('schedule_repeat_end').value='';" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>">
 
           <table style="width:100%; padding-top:5px;">
             <tr>
@@ -356,7 +356,7 @@ else
       <div id="div_equipment_empty">
         <%= t('paren.not_specified') %>
         &nbsp;
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editEquipment();" />
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editEquipment();" />
       </div>
 
 <script type="text/javascript">
@@ -407,7 +407,7 @@ _z("div_equipment").style.display = "block";
       <div id="div_items_empty">
         <%= t('paren.not_specified') %>
         &nbsp;
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editItems();" />
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editItems();" />
       </div>
 
 <script type="text/javascript">

@@ -11,7 +11,7 @@ zept_cmd = @item.zeptair_command
 <table style="width:100%; border-spacing:3px;">
   <tr>
     <td style="text-align:right;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" alt="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
       <%= t('cap.status') %><%= select_tag 'filter_status',
                                options_for_select([[h(t('msg.all')), ''],
                                                   [h(t('zeptair.no_reply')), ZeptairDistHelper::STATUS_NO_REPLY],
@@ -34,7 +34,7 @@ zept_cmd = @item.zeptair_command
         <tr>
           <td style="text-align:left;" nowrap>
             <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
           </td>
         </tr>
       </table>

@@ -24,7 +24,7 @@ end
 
         if status_ary.empty?
       %>
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" alt="<%= t('btn.ok') %>" title="<%= t('btn.ok') %>">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" title="<%= t('btn.ok') %>">
         <% else %>
           <span style="color:crimson;"><%= raw(status_ary.join(' / ')) %></span>
       <%
@@ -119,8 +119,8 @@ end
         )
       </span>
   <% if editable %>
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
   <% end %>
       <br/>
       <% end %>

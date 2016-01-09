@@ -12,8 +12,8 @@
           <a class="a_underline" href="#" onclick="showOfficialTitle(<%= official_title.id %>); return false;">
             <%= truncate(official_title.name, :length => 20) %>
           </a>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteOfficialTitle(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" />
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteOfficialTitle(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" />
         </div>
       <%
         end

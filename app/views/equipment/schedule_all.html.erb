@@ -25,12 +25,12 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
       <table style="width:65px; margin: 0px auto 0px 0px;">
         <tr>
           <td style="text-align:left; width:30px;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_s, :showNew => 'true') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :id => date_s, :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin? User::AUTH_EQUIPMENT %>
           <td style="width:5px;"></td>
           <td style="text-align:left; width:30px;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" alt="<%= t('btn.config') %>" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png" title="<%= t('btn.config') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>';">
           </td>
           <% end %>
         </tr>
@@ -133,55 +133,6 @@ next_week = @date + 7
 
 <script type="text/javascript">
 
-/*
-function showDetail(schedule_id, title)
-{
-  var thetisBoxProgress = prog("CENTER");
-
-  var thetisBox = new ThetisBox;
-  thetisBox.resizable = true;
-  thetisBox.title = "<%= Schedule.model_name.human %>";
-  thetisBox.bgcolor_title = "limegreen";
-  thetisBox.bgcolor_body = "lightcyan";
-  new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'show') %>?id=" + schedule_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*80/100,
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
-}
-
-function editDetail(date, id)
-{
-  prog("TOP-RIGHT");
-  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&edit_id="+id;
-}
-
-function doDelete(date, id, title)
-{
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('equipment.confirm_to_delete_related') %>", "_doDelete('"+date+"', '"+id+"')");
-}
-
-function _doDelete(date, id)
-{
-  prog("TOP-RIGHT");
-  location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?id="+date+"&doDelete="+id;
-}
-*/
 function showEquipment(equipment_id, name)
 {
   var thetisBox = new ThetisBox;

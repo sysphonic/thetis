@@ -118,13 +118,13 @@
               <table style="width:100%;">
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>');" />
                   </td>
                 </tr>
                 <tr style="height:5px;"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" alt="<%= t('btn.delete') %>" title="<%= t('btn.delete') %>" onclick="doDeleteAttach(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteAttach(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
                   </td>
                 </tr>
               </table>

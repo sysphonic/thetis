@@ -9,7 +9,7 @@
 <table style="width:100%; border-spacing:3px;">
   <tr>
     <td style="text-align:left;">
-      <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" alt="<%= t('btn.create') %>" title="<%= t('btn.create') %>"></a>
+      <a href="<%= url_for(:controller => 'equipment', :action => 'new') %>"><img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/equipment_add.gif" style="vertical-align:middle;" title="<%= t('btn.create') %>"></a>
     </td>
   </tr>
   <tr style="height:1px;"><td></td></tr>
@@ -23,14 +23,14 @@
               <%= t('btn.select_group') %>
             </div>
     <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" alt="<%= t('btn.clear') %>" title="<%= t('btn.clear') %>" onclick="clearGroup();" />
+            <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup();" style="margin-left:10px;" />
     <% end %>
           </td>
           <td style="text-align:right;" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <span style="color:silver;">|</span>
-            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteEquipmentClicked(); return false;">
           </td>
         </tr>
       </table>
@@ -71,7 +71,7 @@ users_cache = {}
   <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= equipment.id %></td>
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'show', :id => equipment.id) %>'; return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="onShowEquipmentClicked('<%= equipment.id %>'); return false;">
         <%= truncate(equipment.name, :length => 20) %>
       </a>
     </td>
@@ -106,7 +106,7 @@ users_cache = {}
       <% end %>
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" alt="<%= t('btn.edit') %>" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'edit', :id => equipment) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onEditEquipmentClicked('<%= equipment.id %>');">
     </td>
     <td class="<%= td_class %>" nowrap style="text-align:center;">
       <%= check_box(:check_equipment, equipment.id, :class => 'check_equipment') %>
@@ -123,6 +123,18 @@ users_cache = {}
 </form>
 
 <script type="text/javascript">
+
+function onShowEquipmentClicked(equipment_id)
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'equipment', :action => 'show') %>?id="+equipment_id;
+}
+
+function onEditEquipmentClicked(equipment_id)
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'equipment', :action => 'edit') %>?id="+equipment_id;
+}
 
 function clearGroup()
 {
@@ -182,7 +194,7 @@ function selectAll()
   }
 }
 
-function doDelete()
+function onDeleteEquipmentClicked()
 {
   var elems = document.getElementsByClassName("check_equipment", document.form_list);
   var count=0;
@@ -193,10 +205,10 @@ function doDelete()
   }
   if (count <= 0) return;
 
-  confm(count+"<%= t('equipment.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('equipment.confirm_to_delete') %>", "doDelete()");
 }
 
-function _doDelete()
+function doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'equipment', :action => 'destroy') %>";
   document.form_list.method = "post";
