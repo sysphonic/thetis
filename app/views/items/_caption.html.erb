@@ -1,4 +1,3 @@
-
 <%
 title ||= ''
 div_name ||= ''
@@ -14,7 +13,7 @@ div_name ||= ''
       <div style="display:inline-block; float:right; font-size:11pt; padding-right:10px; line-height:14pt;">
         <span style="background-color:whitesmoke;">&nbsp;<a href="#top"><%= t('btn.top') %></a>&nbsp;</span>
         &nbsp;
-        <span style="background-color:whitesmoke;">&nbsp;<a href="#" onclick="var targetDiv=_z('<%= div_name %>'); if (targetDiv.style.display=='none') {targetDiv.style.display='block'; this.innerHTML='<%= raw(t('arrow.up')) %><%= t('btn.close') %>';} else {targetDiv.style.display='none'; this.innerHTML='<%= raw(t('arrow.down')) %><%= t('btn.open') %>';} return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
+        <span style="background-color:whitesmoke;">&nbsp;<a href="javascript:this.onclick()" onclick="onToggleColumnClicked(this, '<%= div_name %>'); return false;"><%= raw(t('arrow.up')) %><%= t('btn.close') %></a>&nbsp;</span>
       </div>
     </td>
   </tr>

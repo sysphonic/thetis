@@ -49,7 +49,7 @@
       </select>
       &nbsp;&nbsp;
 
-      <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%= t('btn.arrow_back') %></a>
+      <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%= t('btn.arrow_back') %></a>
     </td>
   </tr>
 </table>
@@ -96,7 +96,7 @@
         <tr>
           <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp;
-            <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
+            <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
               <%= truncate(item.title, :length => 20) %>
             </a>
             <% if !item.workflow.nil? and item.workflow.decided? %>
@@ -104,7 +104,7 @@
             <% end %>
             &nbsp;&nbsp;
           <% unless item.folder_id.nil? %>
-            <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
+            <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
               <span style="color:red;"><%= item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
             </a>
           <% end %>
@@ -127,7 +127,7 @@
             user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             unless u_groups.empty?
             %>
-            <a href="#" onclick="showUserGroups('<%= item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+            <a href="javascript:this.onclick()" onclick="showUserGroups('<%= item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
             <% end %>
               <span style="color:green;">by <%= item.disp_registered_by(@users_cache, @user_obj_cache) %></span>
             <% unless u_groups.empty? %>

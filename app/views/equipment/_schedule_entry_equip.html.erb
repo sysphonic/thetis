@@ -29,7 +29,7 @@ end
   <% elsif @schedule.allday %>
     &bull;
     <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
-    <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
+    <% if auth_read %><a class="a_underline" href="javascript:this.onclick()" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
       <%= @schedule.title %>
     <% if auth_read %></a><% end %>
     <!-- <%= raw(scope) %> -->
@@ -57,7 +57,7 @@ end
       -->
     <% end %>
     <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
-    <% if auth_read %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
+    <% if auth_read %><a class="a_underline" href="javascript:this.onclick()" onclick="showScheduleDetail('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(@schedule.title) %>'); return false;"><% end %>
       <%= @schedule.title %>
     <% if auth_read %></a><% end %>
     <!-- <%= raw(scope) %> -->

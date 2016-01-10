@@ -3,7 +3,7 @@
 #
 #Original by::   Sysphonic
 #Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -85,9 +85,9 @@ class FramesController < ApplicationController
 
     url_h = ApplicationHelper.dup_hash(params[:disp])
 
-    url_h = url_h.update({:controller => url_h[:ctrl], :action => url_h[:act]})
-    url_h.delete(:ctrl)
-    url_h.delete(:act)
+    url_h = url_h.update({:controller => url_h['ctrl'], :action => url_h['act']})
+    url_h.delete('ctrl')
+    url_h.delete('act')
 
     @def_page = ApplicationHelper.url_for(url_h)
     @def_page = @def_page.gsub(@root_url, '')

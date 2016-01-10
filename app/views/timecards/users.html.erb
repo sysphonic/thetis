@@ -97,7 +97,7 @@ year_start, year_end = TimecardsHelper.get_year_span(fiscal_year, year_begins_fr
       <%= user.id %>
     </td>
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.get_name_for_timecard(yaml), :length => 20) %>
       </a>
     </td>

@@ -62,7 +62,7 @@ mode = 'groupware'
       %>
         <tr style="height:28px;">
           <td class="menu_td" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
-            <a id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:inherit;"><%= menu_attrs[:disp] %></a>
+            <a id="menu_<%= menu_name %>" href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= menu_attrs[:disp] %></a>
           </td>
         </tr>
         <tr style="height:3px;"><td></td></tr>
@@ -107,13 +107,13 @@ mode = 'groupware'
       <table style="width:150px; margin:0px auto; border-spacing:1px;">
         <tr style="height:28px;">
           <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
-            <a href="#" onclick="return false;" style="color:inherit;"><%= t('menu.admin_menu') %></a>
+            <a href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= t('menu.admin_menu') %></a>
           </td>
         </tr>
         <tr style="height:3px;"><td></td></tr>
         <tr style="height:28px;">
           <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
-            <a href="#" onclick="return false;" style="color:inherit;"><%= t('menu.access_logs') %></a>
+            <a href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= t('menu.access_logs') %></a>
           </td>
         </tr>
       </table>

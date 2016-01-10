@@ -14,7 +14,7 @@
       <table>
         <tr>
           <td style="text-align:left;" nowrap>
-            <%= t('cap.group') %> <a class="a_underline" href="#" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <%= t('cap.group') %> <a class="a_underline" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
           </td>
         </tr>
       </table>

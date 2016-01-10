@@ -81,7 +81,7 @@
   <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
   <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="showAddress(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>'); return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="showAddress(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>'); return false;">
         <%= truncate(address.name, :length => 30) %>
       </a>
     </td>

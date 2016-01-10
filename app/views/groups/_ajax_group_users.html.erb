@@ -193,7 +193,7 @@ official_title_obj_cache = {}
   <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
     <td class="<%= td_class %>">
-      <a class="a_underline" nowrap href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;" >
+      <a class="a_underline" nowrap href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;" >
         <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>

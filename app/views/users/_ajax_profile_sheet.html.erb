@@ -3,7 +3,7 @@
 if @item.nil?
   if !@login_user.nil? and @login_user.id == @user.id
 %>
-    <a class="a_underline" href="#" onclick="var thetisBox=prog('TOP-RIGHT'); new Ajax.Updater('div_ajax_userItem', '<%= url_for(:controller => 'users', :action => 'create_profile_sheet', :id => @user.id) %>', {asynchronous:true, evalScripts:true, onComplete:function(request){thetisBox.remove();}, parameters:Form.serialize(document.form_ajax_userItem)}); return false;">
+    <a class="a_underline" href="javascript:this.onclick()" onclick="var thetisBox=prog('TOP-RIGHT'); new Ajax.Updater('div_ajax_userItem', '<%= url_for(:controller => 'users', :action => 'create_profile_sheet', :id => @user.id) %>', {asynchronous:true, evalScripts:true, onComplete:function(request){thetisBox.remove();}, parameters:Form.serialize(document.form_ajax_userItem)}); return false;">
       <%= t('btn.create') %>
     </a>
   <% else %>
@@ -12,7 +12,7 @@ if @item.nil?
   end
 else
 %>
-    <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => @item.id) %>'; return false;">
+    <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => @item.id) %>'; return false;">
       <%= truncate(@item.title, :length => 20) %>
     </a>
   <% if !@login_user.nil? and @item.editable?(@login_user.id) %>

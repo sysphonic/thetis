@@ -47,7 +47,7 @@ if @schedules.length > 0
     <td colspan="<%= THETIS_HOURS.to_a.size * THETIS_DIV_IN_HOUR %>" style="text-align:center; color:navy;">
       &bull;
       <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>
-      <a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;">
         <%= schedule.title %>
       </a>
       <% unless brief_view %><%= raw(scope) %><% end %>
@@ -91,7 +91,7 @@ if @schedules.length > 0
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= schedule.id %>'); return false;">
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(schedule.title, :length => 20)) %>'); return false;" /><br/>
       <% end %>
-      <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<% end %><a class="a_underline" href="#" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;"><%= schedule.title %></a>
+      <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<% end %><a class="a_underline" href="javascript:this.onclick()" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;"><%= schedule.title %></a>
       <% unless brief_view %><%= raw(scope) %><% end %>
     </td>
 

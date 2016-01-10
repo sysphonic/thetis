@@ -25,28 +25,28 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
           <td style="text-align:left; vertical-align:top;" >
             <ul style="padding-left:200px;">
             <% if @login_user.admin?(User::AUTH_ALL) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'config', :action => 'edit') %>'; return false;"><%= t('menu.general_conf') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'config', :action => 'edit') %>'; return false;"><%= t('menu.general_conf') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_USER) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; return false;"><%= t('menu.users_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; return false;"><%= t('menu.users_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_GROUP) or @login_user.admin?(User::AUTH_WORKFLOW) or @login_user.admin?(User::AUTH_LOCATION) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'groups', :action => 'show_tree') %>'; return false;"><%= t('menu.groups_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'groups', :action => 'show_tree') %>'; return false;"><%= t('menu.groups_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_TEAM) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>'; return false;"><%= t('menu.teams_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'teams', :action => 'list') %>'; return false;"><%= t('menu.teams_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_SCHEDULE) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>'; return false;"><%= t('menu.schedules_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'configure') %>'; return false;"><%= t('menu.schedules_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_EQUIPMENT) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>'; return false;"><%= t('menu.equipment_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'equipment', :action => 'list') %>'; return false;"><%= t('menu.equipment_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_ADDRESSBOOK) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'addressbook', :action => 'list', :admin => 'true') %>'; return false;"><%= t('menu.addressbook_manage') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'addressbook', :action => 'list', :admin => 'true') %>'; return false;"><%= t('menu.addressbook_manage') %></a></li>
             <% end %>
             <% if @login_user.admin?(User::AUTH_ITEM) %>
-              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'templates', :action => 'list') %>'; return false;"><%= t('menu.templates') %></a></li>
+              <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'templates', :action => 'list') %>'; return false;"><%= t('menu.templates') %></a></li>
             <% end %>
             </ul>
 
@@ -63,9 +63,9 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
                 </tr>
               </table>
               <ul style="padding-top:5px; padding-left:40px;">
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'settings') %>'; return false;"><%= t('menu.settings') %></a>
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'users') %>'; return false;"><%= t('menu.users_and_status') %></a>
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'statistics') %>'; return false;"><%= t('menu.statistics') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'settings') %>'; return false;"><%= t('menu.settings') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'users') %>'; return false;"><%= t('menu.users_and_status') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'statistics') %>'; return false;"><%= t('menu.statistics') %></a>
               </ul>
             </div>
           <% end %>
@@ -82,8 +82,8 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
                 </tr>
               </table>
               <ul style="padding-top:5px; padding-left:40px;">
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>'; return false;"><%= t('menu.settings') %></a>
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'users') %>'; return false;"><%= t('menu.paid_holidays') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'configure') %>'; return false;"><%= t('menu.settings') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'users') %>'; return false;"><%= t('menu.paid_holidays') %></a>
               </ul>
             </div>
           <% end %>
@@ -100,7 +100,7 @@ setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1)
                 </tr>
               </table>
               <ul style="padding-top:5px; padding-left:40px;">
-                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_xlogs', :action => 'list') %>'; return false;"><%= t('zeptair.network_logs') %></a>
+                <li style="list-style:square; font-size:13pt; line-height:1.9;"><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_xlogs', :action => 'list') %>'; return false;"><%= t('zeptair.network_logs') %></a>
               </ul>
             </div>
           <% end %>

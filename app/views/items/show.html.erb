@@ -66,7 +66,7 @@ unless @for_print
                   user_name, u_groups, figure = UsersHelper.get_groups_info(@item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
                   unless u_groups.empty?
                   %>
-                  <a href="#" onclick="showUserGroups('<%= @item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
+                  <a href="javascript:this.onclick()" onclick="showUserGroups('<%= @item.get_registrant_id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>', '<%= u_groups.join(',') %>', '<%= figure %>'); return false;">
                   <% end %>
                     <%= @item.disp_registered_by(@users_cache, @user_obj_cache) %>
                   <% unless u_groups.empty? %>
@@ -105,7 +105,7 @@ unless @for_print
                   %>
                     <%= t('paren.deleted') %>
                   <% elsif source_item.check_user_auth(@login_user, 'r', true) %>
-                    <a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => source_item.id) %>'; return false;">
+                    <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => source_item.id) %>'; return false;">
                       <u><%= source_item.title %></u>
                     </a>
                   <% else %>
@@ -133,7 +133,7 @@ unless @for_print
             <%
             in_system_folder = @item.in_system_folder?(@folder_obj_cache)
             %>
-            <% unless in_system_folder %><a href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';"><% end %>
+            <% unless in_system_folder %><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';"><% end %>
               <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
             <% unless in_system_folder %></a><% end %>
           </td>
@@ -821,6 +821,18 @@ function onLoadSub()
 }
 <% end %>
 
+function onToggleColumnClicked(elem, divName)
+{
+  var targetDiv = _z(divName);
+  if (targetDiv.style.display == "none") {
+    targetDiv.style.display = "block";
+    elem.innerHTML = "<%= raw(t('arrow.up')) %><%= t('btn.close') %>";
+  } else {
+    targetDiv.style.display = "none";
+    elem.innerHTML = "<%= raw(t('arrow.down')) %><%= t('btn.open') %>";
+  }
+}
+
 function doDelete(id, title)
 {
 <% if @team.nil? %>
@@ -848,18 +860,18 @@ function _doDuplicate()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'items', :action => 'duplicate', :id => @item.id) %>",
-          {
-            method:"post",
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              request.responseText.evalScripts();
-            }
-          }
-        );
+      "<%= url_for(:controller => 'items', :action => 'duplicate', :id => @item.id) %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function _doDelete(id)
@@ -867,20 +879,20 @@ function _doDelete(id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+id,
-          {
-            method:"post",
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
-                //thetisBoxProgress.remove();
-                var avoid_0 = encodeURIComponent('items/show');
-                var avoid_1 = encodeURIComponent('items/edit');
-                location.href = "<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]="+avoid_0+"&avoid[]="+avoid_1;
-            }
-          }
-        );
+      "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+id,
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+            //thetisBoxProgress.remove();
+            var avoid_0 = encodeURIComponent('items/show');
+            var avoid_1 = encodeURIComponent('items/edit');
+            location.href = "<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]="+avoid_0+"&avoid[]="+avoid_1;
+        }
+      }
+    );
 }
 
 function doOrganizeTeam(frm)
@@ -888,16 +900,16 @@ function doOrganizeTeam(frm)
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-            "div_team_info",
-            frm.action,
-            {
-              method:"post",
-              parameters:Form.serialize(frm),
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){ thetisBox.remove(); }
-            }
-          );
+      "div_team_info",
+      frm.action,
+      {
+        method:"post",
+        parameters:Form.serialize(frm),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){ thetisBox.remove(); }
+      }
+    );
 }
 
 function doRegisterComment(frm)
@@ -911,22 +923,22 @@ function doRegisterComment(frm)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   ajaxUploadFile(
-          frm,
-          frm.action,
-          "div_comments",
-          function(){
-            var comments_table = _z("comments_table");
-            if (comments_table.style.display == "none") {
-              comments_table.style.display = "block";
-            }
-            frm.reset();
-            thetisBoxProgress.remove();
-          },
-          function(){
-            thetisBoxProgress.remove();
-            msg("<%= t('msg.system_error')%>");
-          }
-        );
+      frm,
+      frm.action,
+      "div_comments",
+      function(){
+        var comments_table = _z("comments_table");
+        if (comments_table.style.display == "none") {
+          comments_table.style.display = "block";
+        }
+        frm.reset();
+        thetisBoxProgress.remove();
+      },
+      function(){
+        thetisBoxProgress.remove();
+        msg("<%= t('msg.system_error')%>");
+      }
+    );
 }
 
 function doUpdateComment(thetisBoxId, comment_id)
@@ -989,18 +1001,18 @@ function _doDeleteComment(comment_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-        "div_comment_"+comment_id,
-        "<%= url_for(:controller => 'items', :action => 'destroy_comment') %>",
-        {
-          method:"post",
-          parameters:"comment_id="+comment_id+"&authenticity_token=<%= form_authenticity_token %>",
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
-          }
+      "div_comment_"+comment_id,
+      "<%= url_for(:controller => 'items', :action => 'destroy_comment') %>",
+      {
+        method:"post",
+        parameters:"comment_id="+comment_id+"&authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
         }
-     );
+      }
+   );
 }
 
 function doDeleteCommentAttachment(div_id, comment_id, attach_id, title)
@@ -1013,43 +1025,43 @@ function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-        "div_comment_"+comment_id,
-        "<%= url_for(:controller => 'items', :action => 'delete_comment_attachment') %>",
-        {
-          method:"post",
-          parameters:"comment_id="+comment_id+"&attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
-            removeElem(_z(div_id));
-          }
+      "div_comment_"+comment_id,
+      "<%= url_for(:controller => 'items', :action => 'delete_comment_attachment') %>",
+      {
+        method:"post",
+        parameters:"comment_id="+comment_id+"&attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          removeElem(_z(div_id));
         }
-     );
+      }
+   );
 }
 
 function showURL()
 {
   new Ajax.Request(
-          "<%= url_for(:controller => 'frames', :action => 'show_url') %>?disp[ctrl]=items&disp[act]=show&disp[id]=<%= @item.id %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                var thetisBox = new ThetisBox;
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth/10*8)+",320",
-                          "TRAY",
-                          "",
-                          "<%= t('cap.url_to_this_page') %>",
-                          request.responseText
-                        );
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'frames', :action => 'show_url') %>?disp[ctrl]=items&disp[act]=show&disp[id]=<%= @item.id %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            var thetisBox = new ThetisBox;
+            thetisBox.show(
+                      "CENTER",
+                      (mainWidth/10*8)+",320",
+                      "TRAY",
+                      "",
+                      "<%= t('cap.url_to_this_page') %>",
+                      request.responseText
+                    );
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
 function addToDesktop()
@@ -1062,23 +1074,23 @@ function _addToDesktop()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
-                var button = _z("add_to_desktop");
-                removeElem(button);
+      "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
+      {
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+            var button = _z("add_to_desktop");
+            removeElem(button);
 
-                thetisBoxProgress.remove();
+            thetisBoxProgress.remove();
 
-                if (Number(request.responseText) > 0) {
-                  tips("<%= t('msg.add_to_desktop_success')%>");
-                }
-              }
+            if (Number(request.responseText) > 0) {
+              tips("<%= t('msg.add_to_desktop_success')%>");
+            }
           }
-        );
+      }
+    );
 }
 
 var thetisBoxAttachFile = null;
@@ -1103,27 +1115,27 @@ function onFileSelectOK(comment_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   ajaxUploadFile(
-          document.form_file,
-          "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>?comment_id=" + comment_id,
-          "div_comment_" + comment_id,
-          function(){
-            var comments_table = _z("comments_table");
-            if (comments_table.style.display == "none") {
-              comments_table.style.display = "block";
-            }
-            thetisBoxProgress.remove();
+      document.form_file,
+      "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>?comment_id=" + comment_id,
+      "div_comment_" + comment_id,
+      function(){
+        var comments_table = _z("comments_table");
+        if (comments_table.style.display == "none") {
+          comments_table.style.display = "block";
+        }
+        thetisBoxProgress.remove();
 
-            thetisBoxAttachFile.remove();
-            thetisBoxAttachFile = null;
-          },
-          function(){
-            thetisBoxProgress.remove();
-            msg("<%= t('msg.system_error')%>");
+        thetisBoxAttachFile.remove();
+        thetisBoxAttachFile = null;
+      },
+      function(){
+        thetisBoxProgress.remove();
+        msg("<%= t('msg.system_error')%>");
 
-            thetisBoxAttachFile.remove();
-            thetisBoxAttachFile = null;
-          }
-        );
+        thetisBoxAttachFile.remove();
+        thetisBoxAttachFile = null;
+      }
+    );
 }
 
 function onFileSelectCancel()

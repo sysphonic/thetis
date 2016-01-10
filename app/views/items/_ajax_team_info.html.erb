@@ -42,7 +42,7 @@
         end
         belongs_to = user_name + ' @ <br/>&nbsp;&nbsp;' + group_names.join('<br/>&nbsp;&nbsp;')
     %>
-        <% unless @login_user.nil? %><a class="a_underline" href="#" onclick="msg('<%= ApplicationHelper.h_s_quote(belongs_to) %>'); return false;"><% end %>
+        <% unless @login_user.nil? %><a class="a_underline" href="javascript:this.onclick()" onclick="msg('<%= ApplicationHelper.h_s_quote(belongs_to) %>'); return false;"><% end %>
           <%= user_name %>
         <% unless @login_user.nil? %></a><% end %>
         <br/>
@@ -66,7 +66,7 @@
           path = team_folder.get_path(@folders_cache, @folder_obj_cache)
     %>
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="" />
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
         <%= path %>
       </a>
       <% else %>

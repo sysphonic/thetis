@@ -8,7 +8,7 @@
         @workflows.each do |workflow|
           item = workflow.item
       %>
-        <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;" style="line-height:2.0;">
+        <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;" style="line-height:2.0;">
           <%= truncate(item.title, :length => 30) %>
         </a>
         <span style="color:red;">&lt;<%= workflow.get_status_name %>&gt;</span>

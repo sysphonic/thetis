@@ -63,7 +63,7 @@ users_cache = {}
   <tr style="height:33px;">
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= team.id %></td>
     <td style="text-align:left;" nowrap class="<%= td_class %>">
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => team.item_id) %>#team'; return false;">
     <% if team.need_req_to_del?(true) %>
         <span style="color:red;">
           <%= truncate(team.name, :length => 20) %>

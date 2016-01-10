@@ -703,7 +703,7 @@ module ApplicationHelper
       pagination = pagination.gsub(' Previous', I18n.t('btn.prev_page'))
       pagination = pagination.gsub('Next ', I18n.t('btn.next_page'))
       pagination = pagination.gsub('<a ', '<a class="a_pagination" ')
-      pagination = pagination.gsub(/href="([^"]+)"/, 'href="#" onclick="prog(\'TOP-RIGHT\'); location.href=\'\1\'; return false;"')
+      pagination = pagination.gsub(/href="([^"]+)"/, 'href="javascript:this.onclick()" onclick="prog(\'TOP-RIGHT\'); location.href=\'\1\'; return false;"')
     end
     return pagination
   end
@@ -722,7 +722,7 @@ module ApplicationHelper
       pagination = pagination.gsub(' Previous', I18n.t('btn.prev_page'))
       pagination = pagination.gsub('Next ', I18n.t('btn.next_page'))
       pagination = pagination.gsub('<a ', '<a class="a_pagination" ')
-      pagination = pagination.gsub(/href="([^"]+)"/, 'href="#" onclick="'+func_name+'(\'\1\'); return false;"')
+      pagination = pagination.gsub(/href="([^"]+)"/, 'href="javascript:this.onclick()" onclick="'+func_name+'(\'\1\'); return false;"')
     end
     return pagination
   end

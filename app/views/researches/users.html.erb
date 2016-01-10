@@ -41,7 +41,7 @@ end
               <%= t('btn.select_group') %>
             </div>
         <% else %>
-            <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
             &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
         <% end %>
           </td>
@@ -90,7 +90,7 @@ end
     <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
     <td class="<%= td_class %>" nowrap>
-      <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
+      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.name, :length => 20) %>
       </a>
     </td>

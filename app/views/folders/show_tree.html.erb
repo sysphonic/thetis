@@ -24,7 +24,7 @@ var modified_teams = 0;
               <table style="width:100%;">
                 <tr>
                   <td nowrap style="text-indent:10px; text-align:left;">
-                    <%= t('cap.group') %> <a href="#" onclick="showGroupTreeToSelect('<%= @group_id %>');" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></span></a>
+                    <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><span style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></span></a>
                     &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
                   </td>
                 </tr>

@@ -123,7 +123,7 @@
               item = @user.get_profile_sheet
               if !item.nil? and item.public
               %>
-              <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
+              <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
                 <%= truncate(item.title, :length => 20) %>
               </a>
               <% else %>

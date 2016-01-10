@@ -15,7 +15,7 @@ menus.each do |menu_name, menu_attrs|
 %>
   <tr style="height:31px;">
     <td class="menu_item" onclick="<%= raw(menu_attrs[:action]) %> return false;">
-      <a id="menu_<%= menu_name %>" href="#" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></a>
+      <a id="menu_<%= menu_name %>" href="javascript:this.onclick()" onclick="return false;" style="color:black"><%= menu_attrs[:disp] %></a>
     </td>
   </tr>
 <% end %>

@@ -65,11 +65,11 @@ tomorrow = @date + 1
 last_week = @date - 7
 next_week = @date + 7
 %>
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
+        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
         <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
+        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
     </tr>
   </table>

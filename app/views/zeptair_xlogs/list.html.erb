@@ -100,7 +100,7 @@ exist_cache = {}
     <% else %>
       <% if @login_user.admin?(User::AUTH_USER) %>
         <td class="<%= td_class %>">
-          <a class="a_underline" href="#" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => xlog.user_id) %>'; return false;">
+          <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => xlog.user_id) %>'; return false;">
             <%= truncate(user_name, :length => 20) %>
           </a>
         </td>
