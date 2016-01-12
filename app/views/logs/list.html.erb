@@ -38,10 +38,10 @@ unless @login_user.nil?
   <tr style="height:5px;"><td></td></tr>
   <tr>
     <td colspan="2" style="text-align:right;" nowrap>
-        <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
+        <input type="button" value="<%= t('btn.delete_all')%>" onclick="onClearLogClicked(); return false;">&nbsp;&nbsp;
         <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
         <span style="color:silver;">|</span>
-        <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+        <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteLogClicked(); return false;">
     </td>
   </tr>
 </table>
@@ -139,11 +139,11 @@ function sortList(col)
     type = (type == "ASC") ? "DESC" : "ASC";
   }
 
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'list') %>";
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 function selectAll()
@@ -161,7 +161,7 @@ function selectAll()
   }
 }
 
-function doDelete()
+function onDeleteLogClicked()
 {
   var elems = document.getElementsByClassName("check_log", document.form_list);
   var count=0;
@@ -172,29 +172,30 @@ function doDelete()
   }
   if (count <= 0) return;
 
-  confm(count+"<%= t('log.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('log.confirm_to_delete') %>", "doDelete()");
 }
 
-function _doDelete()
+function doDelete()
 {
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'destroy') %>";
   document.form_list.method = "post";
+  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.submit();
-  prog("TOP-RIGHT");
+}
+
+function onClearLogClicked()
+{
+  confm("<%= t('log.confirm_to_delete_all') %>", "doDeleteAll()");
 }
 
 function doDeleteAll()
 {
-  confm("<%= t('log.confirm_to_delete_all') %>", "_doDeleteAll()");
-}
-
-function _doDeleteAll()
-{
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'logs', :action => 'destroy_all') %>";
   document.form_list.method = "post";
   addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 </script>

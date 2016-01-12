@@ -45,7 +45,7 @@
           <td style="text-align:right;" nowrap>
             <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
             <span style="color:silver;">|</span>
-            <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
+            <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteClicked();">
           </td>
          </tr>
       </table>
@@ -197,7 +197,7 @@ function doExportCsv(book)
   thetisBoxExpImp.remove();
   thetisBoxExpImp = null;
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("enc="+enc);
   if (book) {
     addParams.push("filter_book="+book);
@@ -276,7 +276,7 @@ function doImportCsv(book)
   thetisBoxExpImp.hide();
 }
 
-function doDelete()
+function onDeleteClicked()
 {
   var elems = document.getElementsByClassName("check_address", document.form_list);
   var count=0;
@@ -288,10 +288,10 @@ function doDelete()
   if (count <= 0) {
     return;
   }
-  confm(count+"<%= t('address.confirm_delete') %>", "_doDelete()");
+  confm(count+"<%= t('address.confirm_delete') %>", "doDelete()");
 }
 
-function _doDelete()
+function doDelete()
 {
   addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
   document.form_list.action = "<%= url_for(:controller => 'addressbook', :action => 'destroy') %>";

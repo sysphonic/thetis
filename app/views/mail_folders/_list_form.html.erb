@@ -42,7 +42,7 @@ initFormListParams();
 
 onSearchClicked = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
@@ -52,7 +52,7 @@ onResetClicked = function()
 {
   document.form_list.keyword.value = "";
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");
@@ -62,7 +62,7 @@ onDeleteMailsClicked = function()
 {
   var elems = document.getElementsByClassName("check_mail");
   var count = 0;
-  var teams = new Array();
+  var teams = [];
   for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
       count++;
@@ -132,7 +132,7 @@ countCheckedMails = function()
 
 getCheckedMailsParam = function()
 {
-  var params = new Array();
+  var params = [];
 
   var elems = document.getElementsByClassName("check_mail");
   for (var i=0; elems != null && i < elems.length; i++) {
@@ -162,7 +162,7 @@ sortList = function(col)
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateViewMails("get", "<%= url_for(:controller => 'mail_folders', :action => 'get_mails') %>", addParams, "<%= @folder_id %>");

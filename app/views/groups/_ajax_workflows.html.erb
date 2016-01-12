@@ -20,40 +20,49 @@
 
 doCreateWorkflow = function()
 {
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-              "div_ajax_workflows",
-              "<%= url_for(:controller => 'templates', :action => 'create_workflow', :group_id => @group_id) %>",
-              {
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                }
-              }
-            );
-  return true;
-}
-
-doDeleteWorkflow = function(item_id, title)
-{
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteWorkflow("+item_id+")");
-}
-
-_doDeleteWorkflow = function(item_id)
-{
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_ajax_workflows",
-      "<%= url_for(:controller => 'templates', :action => 'destroy_workflow') %>?id=" + item_id,
+      "<%= url_for(:controller => 'templates', :action => 'create_workflow', :group_id => @group_id) %>",
       {
-        parameters:"group_id=<%= @group_id %>&authenticity_token=<%= form_authenticity_token %>",
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); }
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+  return true;
+}
+
+onDeleteWorkflowClicked = function(item_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteWorkflow("+item_id+")");
+}
+
+doDeleteWorkflow = function(item_id)
+{
+  var addParams = [];
+  addParams.push("id=" + item_id);
+  addParams.push("group_id=<%= @group_id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_workflows",
+      "<%= url_for(:controller => 'templates', :action => 'destroy_workflow') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+        }
       }
     );
 }

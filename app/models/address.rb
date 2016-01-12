@@ -57,34 +57,34 @@ class Address < ActiveRecord::Base
   #return:: Array of CSV header columns.
   #
   def self.csv_header_cols(book)
-    ary = []
-    ary << I18n.t('activerecord.attributes.id')
-    ary << Address.human_attribute_name('name')
-    ary << Address.human_attribute_name('name_ruby')
-    ary << Address.human_attribute_name('nickname')
-    ary << Address.human_attribute_name('screenname')
-    ary << Address.human_attribute_name('email1')
-    ary << Address.human_attribute_name('email2')
-    ary << Address.human_attribute_name('email3')
-    ary << Address.human_attribute_name('postalcode')
-    ary << Address.human_attribute_name('address')
-    ary << Address.human_attribute_name('tel1_note')
-    ary << Address.human_attribute_name('tel1')
-    ary << Address.human_attribute_name('tel2_note')
-    ary << Address.human_attribute_name('tel2')
-    ary << Address.human_attribute_name('tel3_note')
-    ary << Address.human_attribute_name('tel3')
-    ary << Address.human_attribute_name('fax')
-    ary << Address.human_attribute_name('url')
-    ary << Address.human_attribute_name('organization')
-    ary << Address.human_attribute_name('title')
-    ary << Address.human_attribute_name('memo')
-    ary << Address.human_attribute_name('xorder')
+    arr = []
+    arr << I18n.t('activerecord.attributes.id')
+    arr << Address.human_attribute_name('name')
+    arr << Address.human_attribute_name('name_ruby')
+    arr << Address.human_attribute_name('nickname')
+    arr << Address.human_attribute_name('screenname')
+    arr << Address.human_attribute_name('email1')
+    arr << Address.human_attribute_name('email2')
+    arr << Address.human_attribute_name('email3')
+    arr << Address.human_attribute_name('postalcode')
+    arr << Address.human_attribute_name('address')
+    arr << Address.human_attribute_name('tel1_note')
+    arr << Address.human_attribute_name('tel1')
+    arr << Address.human_attribute_name('tel2_note')
+    arr << Address.human_attribute_name('tel2')
+    arr << Address.human_attribute_name('tel3_note')
+    arr << Address.human_attribute_name('tel3')
+    arr << Address.human_attribute_name('fax')
+    arr << Address.human_attribute_name('url')
+    arr << Address.human_attribute_name('organization')
+    arr << Address.human_attribute_name('title')
+    arr << Address.human_attribute_name('memo')
+    arr << Address.human_attribute_name('xorder')
     if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
-      ary << I18n.t('schedule.scope') + I18n.t('cap.suffix') + User.human_attribute_name('groups')
-      ary << I18n.t('schedule.scope') + I18n.t('cap.suffix') + I18n.t('team.plural')
+      arr << I18n.t('schedule.scope') + I18n.t('cap.suffix') + User.human_attribute_name('groups')
+      arr << I18n.t('schedule.scope') + I18n.t('cap.suffix') + I18n.t('team.plural')
     end
-    return ary
+    return arr
   end
 
   #=== self.export_csv
@@ -139,45 +139,45 @@ class Address < ActiveRecord::Base
     csv_line << CSV.generate(opt) do |csv|
 
       # Header
-      ary = Address.csv_header_cols(book)
+      arr = Address.csv_header_cols(book)
 
-      csv << ary
+      csv << arr
 
       # Addresses
       addresses.each do |address|
-        ary = []
-        ary << address.id
-        ary << address.name
-        ary << address.name_ruby
-        ary << address.nickname
-        ary << address.screenname
-        ary << address.email1
-        ary << address.email2
-        ary << address.email3
-        ary << address.postalcode
-        ary << address.address
-        ary << address.tel1_note
-        ary << address.tel1
-        ary << address.tel2_note
-        ary << address.tel2
-        ary << address.tel3_note
-        ary << address.tel3
-        ary << address.fax
-        ary << address.url
-        ary << address.organization
-        ary << address.title
-        ary << address.memo
-        ary << address.xorder
+        arr = []
+        arr << address.id
+        arr << address.name
+        arr << address.name_ruby
+        arr << address.nickname
+        arr << address.screenname
+        arr << address.email1
+        arr << address.email2
+        arr << address.email3
+        arr << address.postalcode
+        arr << address.address
+        arr << address.tel1_note
+        arr << address.tel1
+        arr << address.tel2_note
+        arr << address.tel2
+        arr << address.tel3_note
+        arr << address.tel3
+        arr << address.fax
+        arr << address.url
+        arr << address.organization
+        arr << address.title
+        arr << address.memo
+        arr << address.xorder
         if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
           if address.for_all?
-            ary << Address::EXP_IMP_FOR_ALL
+            arr << Address::EXP_IMP_FOR_ALL
           else
-            ary << address.groups
+            arr << address.groups
           end
-          ary << address.teams
+          arr << address.teams
         end
 
-        csv << ary
+        csv << arr
       end
     end
 

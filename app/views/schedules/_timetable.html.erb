@@ -53,7 +53,7 @@ if @schedules.length > 0
       <% unless brief_view %><%= raw(scope) %><% end %>
       <% if auth_write and !read_only and !brief_view %>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= schedule.id %>');" />
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(schedule.title, :length => 20)) %>');" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(schedule.title, :length => 20)) %>');" />
       <% end %>
     </td>
     <%
@@ -89,7 +89,7 @@ if @schedules.length > 0
       <% end %>
       <% if auth_write and !read_only and !brief_view %>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= schedule.id %>'); return false;">
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doScheduleDelete('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(schedule.title, :length => 20)) %>'); return false;" /><br/>
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(schedule.title, :length => 20)) %>'); return false;" /><br/>
       <% end %>
       <% if schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<% end %><a class="a_underline" href="javascript:this.onclick()" onclick="showScheduleDetail('<%= date_s %>', '<%= schedule.id %>', '<%= ApplicationHelper.h_s_quote(schedule.title) %>'); return false;"><%= schedule.title %></a>
       <% unless brief_view %><%= raw(scope) %><% end %>

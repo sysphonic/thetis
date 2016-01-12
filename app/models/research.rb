@@ -230,7 +230,6 @@ class Research < ActiveRecord::Base
   #Sets Group-IDs for statistics.
   #
   #_group_ids_:: Group-IDs.
-  #return:: Array of Group-IDs for statistics.
   #
   def self.set_statistics_groups(group_ids)
 
@@ -254,8 +253,6 @@ class Research < ActiveRecord::Base
     end
 
     Research.save_config_yaml(yaml)
-
-    return ary
   end
 
   #=== self.add_statistics_group
@@ -280,22 +277,22 @@ class Research < ActiveRecord::Base
     if groups.nil?
 
       yaml[:statistics][:groups] = group_id
-      ary = [group_id.to_s]
+      arr = [group_id.to_s]
 
     else
 
-      ary = groups.split('|')
-      ary << group_id
+      arr = groups.split('|')
+      arr << group_id
 
-      ary.compact!
-      ary.delete('')
+      arr.compact!
+      arr.delete('')
 
-      yaml[:statistics][:groups] = ary.join('|')
+      yaml[:statistics][:groups] = arr.join('|')
     end
 
     Research.save_config_yaml(yaml)
 
-    return ary
+    return arr
   end
 
   #=== self.delete_statistics_group
@@ -317,17 +314,17 @@ class Research < ActiveRecord::Base
 
     return [] if groups.nil?
 
-    ary = groups.split('|')
-    ary.delete group_id.to_s
+    arr = groups.split('|')
+    arr.delete group_id.to_s
 
-    ary.compact!
-    ary.delete('')
+    arr.compact!
+    arr.delete('')
 
-    yaml[:statistics][:groups] = ary.join('|')
+    yaml[:statistics][:groups] = arr.join('|')
 
     Research.save_config_yaml(yaml)
 
-    return ary
+    return arr
  end
 
   #=== self.get_status
@@ -369,15 +366,15 @@ class Research < ActiveRecord::Base
   #
   def self.get_q_codes
 
-    ary = []
+    arr = []
 
     (1..ResearchesHelper::MAX_PAGES).each do |page|
       (1..ResearchesHelper::MAX_Q_BY_PAGE).each do |q|
-        ary << sprintf('q%02d_%02d', page, q)
+        arr << sprintf('q%02d_%02d', page, q)
       end
     end
 
-    return ary
+    return arr
   end
 
   #=== self.find_q_codes

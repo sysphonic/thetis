@@ -117,7 +117,7 @@
             del_type = 'null'
             del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
           %>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDelete(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteItemClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
           <% end %>
           </td>
         </tr>
@@ -170,16 +170,16 @@
 
 <script type="text/javascript">
 
-function doDelete(item_id, title, del_type)
+function onDeleteItemClicked(item_id, title, del_type)
 {
   if (del_type == "<%= Item::XTYPE_PROJECT %>") {
-    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+item_id+")");
+    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "doDelete("+item_id+")");
   } else {
-    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+item_id+")");
+    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDelete("+item_id+")");
   }
 }
 
-function _doDelete(item_id)
+function doDelete(item_id)
 {
   prog("TOP-RIGHT");
   addInputHidden(document.form_search, null, "authenticity_token", "<%= form_authenticity_token %>");

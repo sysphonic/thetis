@@ -203,7 +203,7 @@ onUserEmailTypeChanged = function()
 
 doUpdateUserEmails = function(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   if (group_id) {
     addParams.push("group_id="+group_id);
   }
@@ -280,7 +280,7 @@ onGroupTreeSelected = function(evt)
   if (!thetisBoxGroupTreeSelUsers) {
     return;
   }
-  var addParams = new Array();
+  var addParams = [];
   var email_type = _z("email_type");
   if (email_type) {
     addParams.push("email_type="+email_type.value);

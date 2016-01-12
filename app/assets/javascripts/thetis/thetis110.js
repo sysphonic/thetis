@@ -74,7 +74,7 @@ isModelErrorContained = function(resText)
 doUpdateView = function(method, action, addParams)
 {
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   if (method == "post") {
     addParams.push("authenticity_token="+getCsrfToken());

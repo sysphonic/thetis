@@ -9,7 +9,7 @@ tabs = new Array("workflow", "basic", "description", "image", "attachment");
 
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
 <script type="text/javascript">
-var users_cache = new Array();
+var users_cache = [];
 </script>
 <% end %>
 
@@ -83,7 +83,7 @@ var users_cache = new Array();
                     <%= t('btn.save') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doShow();">
+                  <td class="img_button_td" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -118,7 +118,7 @@ var users_cache = new Array();
                     <%= t('btn.save') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doShow();">
+                  <td class="img_button_td" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -158,7 +158,7 @@ var users_cache = new Array();
                   <%= t('btn.save') %>
                 </td>
                 <td style="width:15px;"></td>
-                <td class="img_button_td" onclick="doShow();">
+                <td class="img_button_td" onclick="onShowItemClicked();">
                   <%= t('btn.show') %>
                 </td>
               </tr>
@@ -194,7 +194,7 @@ var users_cache = new Array();
                     <%= t('btn.register') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doShow();">
+                  <td class="img_button_td" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -231,7 +231,7 @@ var users_cache = new Array();
                     <%= t('btn.register') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doShow();">
+                  <td class="img_button_td" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -505,7 +505,7 @@ function doSave()
     return false;
   }
 
-  saveFuncs = new Array();
+  saveFuncs = [];
 
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
   // Workflow
@@ -624,7 +624,7 @@ function onSaveComplete(tabName)
     saveFuncsIdx = 0;
     thetisBoxProgress.remove();
     if (move_to_show) {
-      _doShow();
+      doShow();
     } else {
       tips("<%= t('msg.save_success') %>");
     }
@@ -650,20 +650,20 @@ function onSaveError(tabName)
 
 var move_to_show = false;
 
-function doShow()
+function onShowItemClicked()
 {
   if (_z("item_id").value=="") {
     msg("<%= t('item.register_first') %>");
     return;
   }
   if (isModifiedWorkflow() || isModifiedBasic() || isModifiedDescription() || isModifiedImage() || isModifiedAttachment()) {
-    showConfirmSaveChange("move_to_show=true; doSave();", "_doShow();");
+    showConfirmSaveChange("move_to_show=true; doSave();", "doShow();");
   } else {
-    _doShow();
+    doShow();
   }
 }
 
-function _doShow()
+function doShow()
 {
   prog("TOP-RIGHT");
   location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id="+_z("item_id").value;

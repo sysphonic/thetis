@@ -22,8 +22,8 @@
     <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteMulti();">
-      <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteMultiClicked();">
+      <input type="button" value="<%= t('btn.move')%>" onclick="onMoveMultiClicked();">
     </td>
   </tr>
 </table>
@@ -37,7 +37,7 @@
 
 onSearchClicked = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
@@ -47,17 +47,17 @@ onResetClicked = function()
 {
   document.form_list.keyword.value = "";
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
 }
 
-doDeleteMulti = function()
+onDeleteMultiClicked = function()
 {
   var elems = document.getElementsByClassName("check_item");
   var count = 0;
-  var teams = new Array();
+  var teams = [];
   for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
       var item_id = elems[i].id.split("_")[2];
@@ -82,10 +82,10 @@ doDeleteMulti = function()
     }
     msg += "</ul>";
   }
-  confm(msg, "_doDeleteMulti()");
+  confm(msg, "doDeleteMulti()");
 }
 
-_doDeleteMulti = function()
+doDeleteMulti = function()
 {
   var addParams = getCheckedItemsParam();
   addParams.push(Form.serialize(document.form_list));
@@ -93,7 +93,7 @@ _doDeleteMulti = function()
   doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'ajax_delete_items') %>", addParams);
 }
 
-doMoveMulti = function()
+onMoveMultiClicked = function()
 {
   var elems = document.getElementsByClassName("check_item");
   var count = 0;
@@ -154,7 +154,7 @@ sortList = function(col)
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);

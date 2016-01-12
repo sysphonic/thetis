@@ -12,7 +12,7 @@
     </div>
     <table style="margin:0px auto;">
       <tr>
-        <td class="img_button_td" onclick="doTeamApply();">
+        <td class="img_button_td" onclick="onTeamApplyClicked();">
           <%= t('btn.apply_for') %>
         </td>
       </tr>
@@ -29,26 +29,27 @@
 
 <script type="text/javascript">
 
-doTeamApply = function()
+onTeamApplyClicked = function()
 {
-  confm("<%= t('team.confirm_apply_for') %>", "_doTeamApply()");
+  confm("<%= t('team.confirm_apply_for') %>", "doTeamApply()");
 }
 
-_doTeamApply = function()
+doTeamApply = function()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-                "div_team_apply",
-                document.form_team_apply.action,
-                {
-                  asynchronous:true,
-                  evalScripts:true,
-                  onComplete:function(request) {
-                      thetisBox.remove();
-                  },
-                  parameters: Form.serialize(document.form_team_apply)
-                }
-              );
+      "div_team_apply",
+      document.form_team_apply.action,
+      {
+        method:"post",
+        parameters: Form.serialize(document.form_team_apply),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 </script>

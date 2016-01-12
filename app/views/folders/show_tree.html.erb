@@ -44,7 +44,7 @@ var modified_teams = 0;
           <td nowrap style="padding:5px 20px; text-align:left;">
             <input type="button" value="<%= t('btn.new') %>" onclick="onCreateFolderClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameFolderClicked(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onclick="onDeleteFolderClicked();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onclick="onMoveFolderClicked();" style="width:80px;" />
           </td>
         <% else %>
@@ -460,7 +460,7 @@ function onRenameFolderClicked(pos)
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doRenameFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", name);
 }
 
-function doDelete()
+function onDeleteFolderClicked()
 {
   if (document.form_folder_tree.selKeeper.value == '') {
     msg("<%= t('folder.select') %>");
@@ -483,28 +483,34 @@ function doDelete()
   ThetisBox.openTree("folderTree:"+folder_id, true);
 
   var name = trim(_z("folderTree:"+folder_id+"_name").innerHTML);
-  confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
+  confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "doDelete("+folder_id+")");
 }
 
-function _doDelete(folder_id)
+function doDelete(folder_id)
 {
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_folder_tree));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBox = prog("TOP-RIGHT");
+
   new Ajax.Request(
-              "<%= url_for(:controller => 'folders', :action => 'destroy') %>?id="+folder_id,
-              {
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                  if (request.responseText == "") {
-                    removeElem(_z("base_folderTree:"+folder_id));
-                    document.form_folder_tree.selKeeper.value = "";
-                  }
-                  request.responseText.evalScripts();
-                },
-                parameters:Form.serialize(document.form_folder_tree)+"&authenticity_token=<%= form_authenticity_token %>"
-              }
-            );
+      "<%= url_for(:controller => 'folders', :action => 'destroy') %>?id="+folder_id,
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
+          if (request.responseText == "") {
+            removeElem(_z("base_folderTree:"+folder_id));
+            document.form_folder_tree.selKeeper.value = "";
+          }
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function onMoveFolderClicked()
@@ -587,7 +593,7 @@ function changeOption(val)
 
 function doGetItems(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items') %>", addParams);
@@ -595,7 +601,7 @@ function doGetItems(folder_id)
 
 function doGetItemsOrder(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_items_order') %>", addParams);
@@ -603,7 +609,7 @@ function doGetItemsOrder(folder_id)
 
 function doGetFoldersOrder(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 <% unless @group_id.nil? %>
   addParams.push("group_id=<%= @group_id %>");
@@ -614,7 +620,7 @@ function doGetFoldersOrder(folder_id)
 
 function doGetAuth(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>", addParams);
@@ -622,7 +628,7 @@ function doGetAuth(folder_id)
 
 function doGetDispCtrl(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_disp_ctrl') %>", addParams);
@@ -656,7 +662,7 @@ function selectTabUsers(folder_id)
 
 function _selectTabUsers(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_users') %>", addParams);
@@ -666,7 +672,7 @@ function doApplyAuthUsers(folder_id)
 {
   selectListAll(_z("users_auth"));
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 
@@ -685,7 +691,7 @@ function selectTabGroups(folder_id)
 
 function _selectTabGroups(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_groups') %>", addParams);
@@ -695,7 +701,7 @@ function doApplyAuthGroups(folder_id)
 {
   selectListAll(_z("groups_auth"));
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 
@@ -714,7 +720,7 @@ function selectTabTeams(folder_id)
 
 function _selectTabTeams(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
 
   doUpdateView("get", "<%= url_for(:controller => 'folders', :action => 'get_auth_teams') %>", addParams);
@@ -724,7 +730,7 @@ function doApplyAuthTeams(folder_id)
 {
   selectListAll(_z("teams_auth"));
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=" + folder_id);
   addParams.push(Form.serialize(document.form_folder_auth));
 

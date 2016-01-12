@@ -14,7 +14,7 @@
             <%= truncate(item.title, :length => 20) %>
           </a>
           &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteLocal(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>'); return false;" />
+          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteLocalClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>'); return false;" />
         </div>
       <%
         end
@@ -28,7 +28,7 @@
 
 onItemsOrderUpdated = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=<%= @tmpl_local_folder.id %>");
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
@@ -43,7 +43,6 @@ onItemsOrderUpdated = function()
     );
 }
 
-//<![CDATA[
 Sortable.create(
       "sortable_wfs",
       {
@@ -51,7 +50,7 @@ Sortable.create(
         tag:"div"
       }
     );
-//]]>
+
 </script>
 
 <% end %>

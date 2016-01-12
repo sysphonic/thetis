@@ -16,8 +16,8 @@
           <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
             <%= truncate(item.title, :length => 20) %>
           </a>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteWorkflow(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>'); return false;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" style="margin-left:10px;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteWorkflowClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>'); return false;" style="margin-left:5px;" />
         </div>
       <%
         end
@@ -31,22 +31,22 @@
 
 onItemsOrderUpdated = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=<%= @tmpl_workflows_folder.id %>");
+  addParams.push(Sortable.serialize("sortable_items", { name: "items_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'folders', :action => 'update_items_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_items", { name: "items_order" }) + "&" + addParams.join("&"),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true
       }
     );
 }
 
-//<![CDATA[
 Sortable.create(
       "sortable_items",
       {
@@ -54,7 +54,7 @@ Sortable.create(
         tag:"div"
       }
     );
-//]]>
+
 </script>
 
 <% end %>

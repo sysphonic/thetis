@@ -82,8 +82,8 @@
 
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="doDeleteMulti();">
-      <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteMultiClicked();">
+      <input type="button" value="<%= t('btn.move')%>" onclick="onMoveMultiClicked();">
     </td>
   </tr>
 </table>
@@ -241,11 +241,11 @@ function doShowItem(item_id)
   location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id=" + item_id + "&" + params;
 }
 
-function doDeleteMulti()
+function onDeleteMultiClicked()
 {
   var elems = document.getElementsByClassName("check_item", document.form_list);
   var count = 0;
-  var teams = new Array();
+  var teams = [];
   for (var i=0; elems!=null && i<elems.length; i++) {
     if (elems[i].checked) {
       var item_id = elems[i].id.split("_")[2];
@@ -270,10 +270,10 @@ function doDeleteMulti()
     }
     msg += "</ul>";
   }
-  confm(msg, "_doDeleteMulti()");
+  confm(msg, "doDeleteMulti()");
 }
 
-function _doDeleteMulti()
+function doDeleteMulti()
 {
   prog("TOP-RIGHT");
   addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
@@ -282,7 +282,7 @@ function _doDeleteMulti()
   document.form_list.submit();
 }
 
-function doMoveMulti()
+function onMoveMultiClicked()
 {
   var elems = document.getElementsByClassName("check_item", document.form_list);
   var count = 0;

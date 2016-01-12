@@ -54,45 +54,45 @@ class ZeptairXlog < ActiveRecord::Base
     csv_line << CSV.generate(opt) do |csv|
 
       # Header
-      ary = []
-      ary << I18n.t('activerecord.attributes.id')
-      ary << ZeptairXlog.human_attribute_name('fin_at')
-      ary << ZeptairXlog.human_attribute_name('req_at')
-      ary << ZeptairXlog.human_attribute_name('time_taken')
-      ary << User.model_name.human
-      ary << I18n.t('zeptair.id')
-      ary << ZeptairXlog.human_attribute_name('c_addr')
-      ary << ZeptairXlog.human_attribute_name('c_port')
-      ary << ZeptairXlog.human_attribute_name('s_addr')
-      ary << ZeptairXlog.human_attribute_name('s_port')
-      ary << ZeptairXlog.human_attribute_name('cs_protocol')
-      ary << ZeptairXlog.human_attribute_name('cs_operation')
-      ary << ZeptairXlog.human_attribute_name('cs_uri')
-      ary << ZeptairXlog.human_attribute_name('c_agent')
-      ary << ZeptairXlog.human_attribute_name('sc_status')
+      arr = []
+      arr << I18n.t('activerecord.attributes.id')
+      arr << ZeptairXlog.human_attribute_name('fin_at')
+      arr << ZeptairXlog.human_attribute_name('req_at')
+      arr << ZeptairXlog.human_attribute_name('time_taken')
+      arr << User.model_name.human
+      arr << I18n.t('zeptair.id')
+      arr << ZeptairXlog.human_attribute_name('c_addr')
+      arr << ZeptairXlog.human_attribute_name('c_port')
+      arr << ZeptairXlog.human_attribute_name('s_addr')
+      arr << ZeptairXlog.human_attribute_name('s_port')
+      arr << ZeptairXlog.human_attribute_name('cs_protocol')
+      arr << ZeptairXlog.human_attribute_name('cs_operation')
+      arr << ZeptairXlog.human_attribute_name('cs_uri')
+      arr << ZeptairXlog.human_attribute_name('c_agent')
+      arr << ZeptairXlog.human_attribute_name('sc_status')
 
-      csv << ary
+      csv << arr
 
       # Records
       xlogs.each do |xlog|
-        ary = []
-        ary << xlog.id
-        ary << xlog.fin_at
-        ary << xlog.req_at
-        ary << xlog.time_taken
-        ary << xlog.user_id
-        ary << xlog.zeptair_id
-        ary << xlog.c_addr
-        ary << xlog.c_port
-        ary << xlog.s_addr
-        ary << xlog.s_port
-        ary << xlog.cs_protocol
-        ary << xlog.cs_operation
-        ary << xlog.cs_uri
-        ary << xlog.c_agent
-        ary << xlog.sc_status
+        arr = []
+        arr << xlog.id
+        arr << xlog.fin_at
+        arr << xlog.req_at
+        arr << xlog.time_taken
+        arr << xlog.user_id
+        arr << xlog.zeptair_id
+        arr << xlog.c_addr
+        arr << xlog.c_port
+        arr << xlog.s_addr
+        arr << xlog.s_port
+        arr << xlog.cs_protocol
+        arr << xlog.cs_operation
+        arr << xlog.cs_uri
+        arr << xlog.c_agent
+        arr << xlog.sc_status
 
-        csv << ary
+        csv << arr
       end
     end
 

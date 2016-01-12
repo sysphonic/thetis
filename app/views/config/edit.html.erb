@@ -424,12 +424,12 @@ function doEditHeaderMenu(org_name)
   return true;
 }
 
-function doDeleteHeaderMenu(name)
+function onDeleteHeaderMenuClicked(name)
 {
-  confm("<%= t('paren.square.left') %>" + esc_w_quotes(name) + "<%= t('msg.confirm_to_delete') %>", "_doDeleteHeaderMenu('"+esc_quotes(name)+"')");
+  confm("<%= t('paren.square.left') %>" + esc_w_quotes(name) + "<%= t('msg.confirm_to_delete') %>", "doDeleteHeaderMenu('"+esc_quotes(name)+"')");
 }
 
-function _doDeleteHeaderMenu(name)
+function doDeleteHeaderMenu(name)
 {
   var thetisBox = prog("TOP-RIGHT");
 
@@ -437,6 +437,7 @@ function _doDeleteHeaderMenu(name)
       "div_ajax_header_menu",
       "<%= url_for(:controller => 'config', :action => 'destroy_header_menu') %>",
       {
+        method:"post",
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){ thetisBox.remove(); },
@@ -447,7 +448,7 @@ function _doDeleteHeaderMenu(name)
 
 function doRegister()
 {
-  var check_ary = new Array("general_default_page", "smtp_from_address", "smtp_server", "smtp_port");
+  var check_ary = ["general_default_page", "smtp_from_address", "smtp_server", "smtp_port"];
 
   if (_z("smtp_auth_enabled").checked) {
     check_ary.push("smtp_user_name");

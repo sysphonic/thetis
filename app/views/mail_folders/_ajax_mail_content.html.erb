@@ -80,7 +80,7 @@ onGetAllAttachmentsClicked = function(elem)
 
 doGetAllAttachments = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=<%= @email.id %>");
   addParams.push("enc=" + form_enc.enc.value);
   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");

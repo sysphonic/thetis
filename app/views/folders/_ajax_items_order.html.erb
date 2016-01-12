@@ -66,7 +66,7 @@
 
 onItemsOrderUpdated = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id=<%= @items.first.folder_id %>");
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 

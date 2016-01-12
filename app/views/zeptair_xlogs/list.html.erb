@@ -31,10 +31,10 @@
   <tr style="height:5px;"><td></td></tr>
   <tr>
     <td colspan="2" style="text-align:right;" nowrap>
-      <input type="button" value="<%= t('btn.delete_all')%>" onclick="doDeleteAll(); return false;">&nbsp;&nbsp;
+      <input type="button" value="<%= t('btn.delete_all')%>" onclick="onClearXLogClicked(); return false;">&nbsp;&nbsp;
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete(); return false;">
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteXLogClicked(); return false;">
     </td>
   </tr>
 </table>
@@ -179,7 +179,7 @@ function selectAll()
   }
 }
 
-function doDelete()
+function onDeleteXLogClicked()
 {
   var elems = document.getElementsByClassName("check_xlog", document.form_list);
   var count=0;
@@ -190,28 +190,28 @@ function doDelete()
   }
   if (count <= 0) return;
 
-  confm(count+"<%= t('log.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('log.confirm_to_delete') %>", "doDelete()");
 }
 
-function _doDelete()
+function doDelete()
 {
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'zeptair_xlogs', :action => 'destroy') %>";
   document.form_list.method = "post";
   document.form_list.submit();
-  prog("TOP-RIGHT");
+}
+
+function onClearXLogClicked()
+{
+  confm("<%= t('log.confirm_to_delete_all') %>", "doDeleteAll()");
 }
 
 function doDeleteAll()
 {
-  confm("<%= t('log.confirm_to_delete_all') %>", "_doDeleteAll()");
-}
-
-function _doDeleteAll()
-{
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'zeptair_xlogs', :action => 'destroy_all') %>";
   document.form_list.method = "post";
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 var thetisBoxExport = null;

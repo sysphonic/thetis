@@ -723,23 +723,29 @@ function inputBreak(org_start, org_end)
 
 function onBreakOK()
 {
+  var addParams = [];
+  addParams.push("id=<%= (@timecard.nil?)?'':(@timecard.id) %>");
+  addParams.push(Form.serialize(document.form_span));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'update_default_break', :id => (@timecard.nil?)?'':@timecard.id) %>",
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_span)+"&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBox.remove();
+      "div_break",
+      "<%= url_for(:controller => 'timecards', :action => 'update_default_break') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBox.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function onBreakCancel()
@@ -748,30 +754,37 @@ function onBreakCancel()
   thetisBox = null;
 }
 
-function doDeleteBreak(org_start, org_end)
+function onDeleteBreakClicked(org_start, org_end)
 {
-  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
+  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "doDeleteBreak('"+org_start+"', '"+org_end+"')");
 }
 
-function _doDeleteBreak(org_start, org_end)
+function doDeleteBreak(org_start, org_end)
 {
+  var addParams = [];
+  addParams.push("id=<%= (@timecard.nil?)?'':(@timecard.id) %>");
+  addParams.push("org_start=" + encodeURIComponent(org_start));
+  addParams.push("org_end=" + encodeURIComponent(org_end));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'delete_default_break', :id => (@timecard.nil?)?'':@timecard.id) %>",
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:"org_start=" + encodeURIComponent(org_start) + "&org_end=" + encodeURIComponent(org_end)+"&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBox.remove();
+      "div_break",
+      "<%= url_for(:controller => 'timecards', :action => 'delete_default_break') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBox.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 </script>

@@ -20,7 +20,7 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
   thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   addParams.push("id="+schedule_id);
   addParams.push("date="+date);
@@ -53,12 +53,12 @@ showScheduleDetail = function(date, schedule_id, title, addParams)
         );
 }
 
-doScheduleDelete = function(date, id, title)
+onDeleteScheduleClicked = function(date, id, title)
 {
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('schedule.confirm_to_delete') %>", "_doScheduleDelete('"+date+"', '"+id+"')");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('schedule.confirm_to_delete') %>", "doScheduleDelete('"+date+"', '"+id+"')");
 }
 
-_doScheduleDelete = function(date, id)
+doScheduleDelete = function(date, id)
 {
   prog("TOP-RIGHT");
   location.href="<%= url_for(:controller => 'schedules', :action => 'day') %>?date="+date+"&doDelete="+id;
@@ -76,7 +76,7 @@ newScheduleDetail = function(date, addParams, title)
   thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   addParams.push("date=" + date);
 <% unless from.nil? %>
@@ -129,7 +129,7 @@ editScheduleDetail = function(date, id, title, addParams)
   thetisBoxScheduleDetail.bgcolor_body = "lightcyan";
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   addParams.push("id="+id);
   addParams.push("date="+date);

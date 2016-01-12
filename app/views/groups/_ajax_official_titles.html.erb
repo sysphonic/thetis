@@ -22,27 +22,27 @@ showOfficialTitle = function(official_title_id)
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var add_params = new Array();
-  add_params.push("id=" + official_title_id);
-  add_params.push("group_id=<%= @group_id %>");
+  var addParams = [];
+  addParams.push("id=" + official_title_id);
+  addParams.push("group_id=<%= @group_id %>");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'official_titles', :action => 'show') %>",
-          {
-            method:"get",
-            parameters:add_params.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'official_titles', :action => 'show') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
 
-              var thetisBox = new ThetisBox;
-              thetisBox.title = "<%= OfficialTitle.model_name.human %>";
-              thetisBox.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          var thetisBox = new ThetisBox;
+          thetisBox.title = "<%= OfficialTitle.model_name.human %>";
+          thetisBox.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 var thetisBoxOfficialTitle = null;
@@ -57,21 +57,21 @@ onOfficialTitleOK = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Updater(
-          _z("div_ajax_official_titles"),
-          document.form_official_title.action,
-          {
-            method:"post",
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_official_title),
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBoxOfficialTitle.remove();
+      _z("div_ajax_official_titles"),
+      document.form_official_title.action,
+      {
+        method:"post",
+        parameters:Form.serialize(document.form_official_title),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBoxOfficialTitle.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 onOfficialTitleCancel = function()
@@ -87,39 +87,39 @@ doEditOfficialTitle = function(official_title_id)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var add_params = new Array();
+  var addParams = [];
   if (official_title_id) {
-    add_params.push("id=" + official_title_id);
+    addParams.push("id=" + official_title_id);
   }
-  add_params.push("group_id=<%= @group_id %>");
+  addParams.push("group_id=<%= @group_id %>");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'official_titles', :action => 'edit') %>",
-          {
-            method:"get",
-            parameters:add_params.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'official_titles', :action => 'edit') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
 
-              thetisBoxOfficialTitle = new ThetisBox;
-              thetisBoxOfficialTitle.setOnClose(function(){ thetisBoxOfficialTitle = null; });
-              thetisBoxOfficialTitle.title = "<%= OfficialTitle.model_name.human %>";
-              thetisBoxOfficialTitle.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          thetisBoxOfficialTitle = new ThetisBox;
+          thetisBoxOfficialTitle.setOnClose(function(){ thetisBoxOfficialTitle = null; });
+          thetisBoxOfficialTitle.title = "<%= OfficialTitle.model_name.human %>";
+          thetisBoxOfficialTitle.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 
-doDeleteOfficialTitle = function(official_title_id, official_title_disp)
+onDeleteOfficialTitleClicked = function(official_title_id, official_title_disp)
 {
-  confm("<%= t('paren.square.left') %>" + esc_w_quotes(official_title_disp) + "<%= t('msg.confirm_to_delete') %>", "_doDeleteOfficialTitle("+official_title_id+")");
+  confm("<%= t('paren.square.left') %>" + esc_w_quotes(official_title_disp) + "<%= t('msg.confirm_to_delete') %>", "doDeleteOfficialTitle("+official_title_id+")");
 }
 
-_doDeleteOfficialTitle = function(official_title_id)
+doDeleteOfficialTitle = function(official_title_id)
 {
   if (thetisBoxOfficialTitle != null) {
     thetisBoxOfficialTitle.remove();
@@ -127,18 +127,18 @@ _doDeleteOfficialTitle = function(official_title_id)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var add_params = new Array();
-  add_params.push("authenticity_token=<%= form_authenticity_token %>");
-  add_params.push("group_id=<%= @group_id %>");
-  add_params.push("id=" + official_title_id);
+  var addParams = [];
+  addParams.push("id=" + official_title_id);
+  addParams.push("group_id=<%= @group_id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Updater(
       _z("div_ajax_official_titles"),
       "<%= url_for(:controller => 'official_titles', :action => 'destroy') %>",
       {
         method:"post",
+        parameters:addParams.join("&"),
         asynchronous:true,
-        parameters:add_params.join("&"),
         evalScripts:true,
         onComplete:function(request){
             thetisBoxProgress.remove();

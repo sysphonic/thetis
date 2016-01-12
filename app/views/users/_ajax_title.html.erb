@@ -25,7 +25,7 @@
 
 onTitlesOrderUpdated = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
@@ -39,7 +39,6 @@ onTitlesOrderUpdated = function()
     );
 }
 
-//<![CDATA[
 Sortable.create(
       "sortable_titles",
       {
@@ -47,7 +46,7 @@ Sortable.create(
         tag:"div"
       }
     );
-//]]>
+
 </script>
 
 <%= render(:partial => 'common/flash_notice') %>

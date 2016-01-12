@@ -59,7 +59,7 @@ if ($thetis_config[:menu]['disp_user_list'] == '1') \
 <% if $thetis_config[:menu]['disp_user_list'] == '1' %>
 onSendMailUserGroupsClicked = function(elem, user_id)
 {
-  var addParams = new Array();
+  var addParams = [];
 <% unless mail_account.nil? %>
   addParams.push("mail_account_id=<%= mail_account.id %>");
 <% end %>

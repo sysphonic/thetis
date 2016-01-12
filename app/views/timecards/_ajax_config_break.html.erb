@@ -15,7 +15,7 @@ unless @yaml_timecard['default_breaks'].nil?
   )
 </span>
 &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteBreakClicked('<%= org_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= org_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
 </div>
 <%
   end

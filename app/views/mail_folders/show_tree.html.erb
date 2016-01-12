@@ -91,12 +91,12 @@
                         <a class="context_menu_item" href="javascript:this.onclick()" onclick="onMoveFolderClicked(); return false;">
                           <%= t('btn.move') %>
                         </a>
-                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doDelete(); return false;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="onDeleteFolderClicked(); return false;">
                           <%= t('btn.delete') %>
                         </a>
                       </div>
                       <div style="text-align:center; padding:0px; border-bottom:solid 1px gray;">
-                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="doEmpty(); return false;">
+                        <a class="context_menu_item" href="javascript:this.onclick()" onclick="onEmptyFolderClicked(); return false;">
                           <%= t('btn.empty') %>
                         </a>
                       </div>
@@ -429,7 +429,7 @@ function onLoadSub()
 
 function doUpdatePage()
 {
-  var addParams = new Array();
+  var addParams = [];
 <% unless params[:mail_account_xtype].nil? %>
   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
 <% end %>
@@ -600,7 +600,7 @@ function onRenameFolderClicked()
   thetisBox.show("CENTER", "", "INPUT", "doRenameFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", name);
 }
 
-function doDelete()
+function onDeleteFolderClicked()
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select') %>");
@@ -621,12 +621,12 @@ function doDelete()
   ThetisBox.openTree("mailTree:"+folder_id, true);
 
   var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
-  confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+folder_id+")");
+  confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "doDelete("+folder_id+")");
 }
 
-function _doDelete(folder_id)
+function doDelete(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+folder_id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 <% unless params[:mail_account_xtype].nil? %>
@@ -637,7 +637,8 @@ function _doDelete(folder_id)
     addParams.push("mail_account_id="+mail_account_id);
   }
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Request(
       "<%= url_for(:controller => 'mail_folders', :action => 'destroy') %>",
       {
@@ -645,8 +646,8 @@ function _doDelete(folder_id)
         parameters:Form.serialize(document.form_folder_tree)+"&"+addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
-          thetisBox.remove();
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
           if (request.responseText == "") {
             removeElem(_z("base_mailTree:"+folder_id));
             document.form_folder_tree.selKeeper.value = "";
@@ -744,7 +745,7 @@ function doUpdateMails(folder_id, do_pop, addParams)
 
 function showMail(email_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+email_id);
 
   doUpdateViewMailContent("<%= url_for(:controller => 'mail_folders', :action => 'get_mail_content') %>", addParams);
@@ -753,18 +754,22 @@ function showMail(email_id)
 function doUpdateViewMailContent(action, addParams)
 {
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
-  var thetisBox = prog("TOP-RIGHT");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Updater(
       "div_mail_content",
       action,
       {
         method: "get",
+        parameters: addParams.join("&"),
         asynchronous: true,
         evalScripts: true,
-        onComplete: function(request){ thetisBox.remove(); },
-        parameters: addParams.join("&")
+        onComplete: function(request) {
+          thetisBoxProgress.remove();
+        }
       }
     );
 }
@@ -802,7 +807,7 @@ var lastMailAccountSummary = null;
 function showMailAccountSummary(mail_account_id)
 {
   if (mail_account_id) {
-    var addParams = new Array();
+    var addParams = [];
     addParams.push("id="+mail_account_id);
 
     // var thetisBox = prog("TOP-RIGHT");
@@ -815,11 +820,11 @@ function showMailAccountSummary(mail_account_id)
           asynchronous: true,
           evalScripts: true,
           onComplete: function(request) {
-              // thetisBox.remove();
-              curSummaryAccountId = mail_account_id;
+            // thetisBox.remove();
+            curSummaryAccountId = mail_account_id;
 
-              lastMailAccountSummary = request.responseText;
-            },
+            lastMailAccountSummary = request.responseText;
+          }
         }
       );
   } else {
@@ -850,7 +855,7 @@ function doUpdateViewMails(method, action, addParams, folder_id)
   }
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   if (method == "post") {
     addParams.push("authenticity_token=<%= form_authenticity_token %>");
@@ -858,26 +863,26 @@ function doUpdateViewMails(method, action, addParams, folder_id)
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-        "div_mails",
-        action,
-        {
-          method: method,
-          parameters: addParams.join("&"),
-          asynchronous: true,
-          evalScripts: true,
-          onComplete: function(request){
-            thetisBox.remove();
-            if (mail_account_id && mail_account_id != curSummaryAccountId) {
-              showMailAccountSummary(mail_account_id);
-            }
+      "div_mails",
+      action,
+      {
+        method: method,
+        parameters: addParams.join("&"),
+        asynchronous: true,
+        evalScripts: true,
+        onComplete: function(request) {
+          thetisBox.remove();
+          if (mail_account_id && mail_account_id != curSummaryAccountId) {
+            showMailAccountSummary(mail_account_id);
           }
         }
-      );
+      }
+    );
 }
 
 function doCreateMail()
 {
-  var addParams = new Array();
+  var addParams = [];
 
   var folder_id = getCurrentFolderId();
   var mail_account_id = getMailAccountId(folder_id);
@@ -895,7 +900,7 @@ function doEditMail(mode)
     return;
   }
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("mode="+mode);
 
   var folder_id = getCurrentFolderId();
@@ -929,7 +934,7 @@ function getSelectedRow()
   return _z("selected_row").value;
 }
 
-function doEmpty()
+function onEmptyFolderClicked()
 {
   if (document.form_folder_tree.selKeeper.value == "") {
     msg("<%= t('folder.select') %>");
@@ -947,12 +952,12 @@ function doEmpty()
     return;
   }
 
-  confm("<%= t('mail.confirm_to_empty') %>", "_doEmpty("+folder_id+")");
+  confm("<%= t('mail.confirm_to_empty') %>", "doEmpty("+folder_id+")");
 }
 
-function _doEmpty(folder_id)
+function doEmpty(folder_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+folder_id);
 
   var mail_account_id = getMailAccountId(folder_id);
@@ -980,7 +985,7 @@ function onOrderFoldersClicked()
   }
   thetisBoxFoldersOrder = new ThetisBox;
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+folder_id);
 
   var thetisBoxProgress = prog("TOP-RIGHT");
@@ -988,10 +993,10 @@ function onOrderFoldersClicked()
       "<%= url_for(:controller => 'mail_folders', :action => 'get_folders_order') %>",
       {
         method:"get",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        parameters:addParams.join("&"),
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           thetisBoxFoldersOrder.title = "<%= t('btn.order') %>";
@@ -1054,7 +1059,7 @@ function showFilters()
   thetisBoxFilters.bgcolor_title = "#8486e0";
   thetisBoxFilters.bgcolor_body = "#a5baff";
 
-  var addParams = new Array();
+  var addParams = [];
   var folder_id = getCurrentFolderId();
   var mail_account_id = getMailAccountId(folder_id);
   if (mail_account_id) {
@@ -1069,17 +1074,17 @@ function showFilters()
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
-            thetisBoxFilters.show(
-                      "CENTER",
-                      "520,360",
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBoxFilters.show(
+                    "CENTER",
+                    "520,360",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -1109,7 +1114,7 @@ function showAccountSetting(isNew)
   thetisBoxAccount.resizable = true;
   thetisBoxAccount.title = "<%= t('btn.account_setting') %>";
 
-  var addParams = new Array();
+  var addParams = [];
 <% unless params[:mail_account_xtype].nil? %>
   addParams.push("mail_account_xtype=<%= params[:mail_account_xtype] %>");
 <% end %>
@@ -1131,17 +1136,17 @@ function showAccountSetting(isNew)
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
-            thetisBoxAccount.show(
-                      "CENTER",
-                      "540," + mainHeight*90/100,
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBoxAccount.show(
+                    "CENTER",
+                    "540," + mainHeight*90/100,
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -1177,7 +1182,7 @@ function onEmailUnreadClicked(elem, email_id)
     window.event.cancelBubble = true;
   }
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("email_id="+email_id);
   addParams.push("unread="+((elem.checked)?"1":"0"));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
@@ -1192,12 +1197,12 @@ function onEmailUnreadClicked(elem, email_id)
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
 
-            var div_mail_subject = _z("mail_subject_"+email_id);
-            appendClassName(div_mail_subject, "email_subject_unread");
-          }
+          var div_mail_subject = _z("mail_subject_"+email_id);
+          appendClassName(div_mail_subject, "email_subject_unread");
+        }
       }
     );
   return true;
@@ -1205,7 +1210,7 @@ function onEmailUnreadClicked(elem, email_id)
 
 function doRegisterAddress(frm)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(frm));
 
   var thetisBoxProgress = prog("TOP-RIGHT");

@@ -71,7 +71,7 @@ var _compareOptions = null;
 setFilterConditionCompareOptions = function(ctrl, vals)
 {
   if (!_compareOptions) {
-    _compareOptions = new Array();
+    _compareOptions = [];
 <%
 opts_compare = MailFiltersHelper.opts_condition_compare(false)
 opts_compare.each do |opt|

@@ -53,7 +53,7 @@ val = params[:val]
 
 initFilterActionVerbOpts = function()
 {
-  var avoidVerbs = new Array();
+  var avoidVerbs = [];
   var filter_action_inputs = document.getElementsByClassName("filter_action_input");
   for (var i=0; i < filter_action_inputs.length; i++) {
     var verb = filter_action_inputs[i].value.split(/\r?\n/)[0];
@@ -61,7 +61,7 @@ initFilterActionVerbOpts = function()
       avoidVerbs.push(verb);
     }
   }
-  var validOpts = new Array();
+  var validOpts = [];
   var filter_action_verb = _z("filter_action_verb");
   for (var i=0; i < filter_action_verb.options.length; i++) {
     var verb = filter_action_verb.options[i].value;

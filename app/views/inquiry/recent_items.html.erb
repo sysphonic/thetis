@@ -12,19 +12,19 @@ unless @items.nil?
   csv_lines << CSV.generate(opt) do |csv|
 
     @items.each do |item|
-      ary = []
-      ary << item.id
-      ary << item.title
-      ary << User.get_name(item.user_id, users_cache)
-      ary << item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+      arr = []
+      arr << item.id
+      arr << item.title
+      arr << User.get_name(item.user_id, users_cache)
+      arr << item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
 
       attach_ids = []
       item.attachments_without_content.each do |attach|
         attach_ids << attach.id.to_s
       end
-      ary << attach_ids.join('|')
+      arr << attach_ids.join('|')
 
-      csv << ary
+      csv << arr
     end
   end
 %>

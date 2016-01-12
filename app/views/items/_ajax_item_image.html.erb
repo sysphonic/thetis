@@ -98,7 +98,7 @@
                 <tr style="height:5px;"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteImage(<%= img.id %>, '<%= ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteImageClicked(<%= img.id %>, '<%= ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
                   </td>
                 </tr>
               </table>
@@ -136,19 +136,19 @@ editImageInfo = function(img_id, img_name)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'items', :action => 'edit_image_info') %>?image_id="+img_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxImageInfo.title = img_name;
-                thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'items', :action => 'edit_image_info') %>?image_id="+img_id,
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxImageInfo.title = img_name;
+            thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
 onImageInfoOK = function()
@@ -190,27 +190,32 @@ onImageInfoCancel = function()
   }
 }
 
-doDeleteImage = function(img_id, title)
+onDeleteImageClicked = function(img_id, title)
 {
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteImage("+img_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDeleteImage("+img_id+")");
 }
 
-_doDeleteImage = function(img_id)
+doDeleteImage = function(img_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("image_id="+img_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_item_image",
-              "<%= url_for(:controller => 'items', :action => 'delete_image') %>",
-              {
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                },
-                parameters: "image_id="+img_id+"&authenticity_token=<%= form_authenticity_token %>"
-              }
-            );
+      "div_item_image",
+      "<%= url_for(:controller => 'items', :action => 'delete_image') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 </script>

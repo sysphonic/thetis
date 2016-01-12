@@ -48,7 +48,7 @@
           </td>
         <% end %>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteComment(<%= @comment.id %>); return false;" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteCommentClicked(<%= @comment.id %>); return false;" />
           </td>
         </tr>
       </table>
@@ -75,7 +75,7 @@ unless comment_attachments.nil? or comment_attachments.empty?
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
         </a>
       <% if params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteCommentAttachment('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteCommentAttachmentClicked('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
       <% end %>
       </div>
     <% end %>

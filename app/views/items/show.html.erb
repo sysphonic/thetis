@@ -172,7 +172,7 @@ end
     </td>
   <% unless @login_user.nil? or @item.is_a_copy? %>
     <td style="width:10px;"></td>
-    <td class="img_button_td" onclick="doDuplicate();">
+    <td class="img_button_td" onclick="onDuplicateItemClicked();">
       <%= t('btn.duplicate') %>
     </td>
   <% end %>
@@ -235,7 +235,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   <% end %>
   <% if !@login_user.nil? and @item.deletable?(@login_user) %>
     <td style="width:10px;"></td>
-    <td id="delete_button" class="img_button_td" onclick="doDelete(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
+    <td id="delete_button" class="img_button_td" onclick="onDeleteItemClicked(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
     </td>
   <% end %>
@@ -282,7 +282,7 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
         <td>
           <table id="issue_button" style="margin:0px auto; padding-top:10px;">
             <tr>
-              <td class="img_button_td" onclick="doWfIssue();">
+              <td class="img_button_td" onclick="onWorkflowIssueClicked();">
                 <%= t('btn.issue') %>
               </td>
             </tr>
@@ -298,59 +298,63 @@ if @item.xtype == Item::XTYPE_WORKFLOW and !@workflow.nil? %>
 
 <script type="text/javascript">
 
-function doWfRespond()
+function onWorkflowRespondClicked()
 {
   if (!_z("xtype_ack").checked && !_z("xtype_nak").checked) {
     msg("<%= t('workflow.select_response_status') %>");
     return;
   }
-  confm("<%= t('workflow.confirm_to_respond') %>", "_doWfRespond()");
+  confm("<%= t('workflow.confirm_to_respond') %>", "doWorkflowRespond()");
 }
 
-function _doWfRespond()
+function doWorkflowRespond()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_wf_ajax",
-              document.form_wf_respond.action,
-              {
-                method:"post",
-                parameters:Form.serialize(document.form_wf_respond),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                }
-              }
-            );
+      "div_wf_ajax",
+      document.form_wf_respond.action,
+      {
+        method:"post",
+        parameters:Form.serialize(document.form_wf_respond),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
-function doWfIssue()
+function onWorkflowIssueClicked()
 {
-  confm("<%= t('workflow.confirm_to_issue') %>", "_doWfIssue()");
+  confm("<%= t('workflow.confirm_to_issue') %>", "doWorkflowIssue()");
 }
 
-function _doWfIssue()
+function doWorkflowIssue()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("id=<%= @item.id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_wf_ajax",
-              "<%= url_for(:controller => 'items', :action => 'wf_issue', :id => @item.id) %>",
-              {
-                method:"post",
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                    removeElem(_z("issue_button"));
-                    removeElem(_z("edit_button"));
-                    removeElem(_z("delete_button"));
-                    thetisBox.remove();
-                }
-              }
-            );
+      "div_wf_ajax",
+      "<%= url_for(:controller => 'items', :action => 'wf_issue') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            removeElem(_z("issue_button"));
+            removeElem(_z("edit_button"));
+            removeElem(_z("delete_button"));
+            thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 </script>
@@ -833,7 +837,7 @@ function onToggleColumnClicked(elem, divName)
   }
 }
 
-function doDelete(id, title)
+function onDeleteItemClicked(id, title)
 {
 <% if @team.nil? %>
   var team_id = null;
@@ -841,29 +845,33 @@ function doDelete(id, title)
     team_id = _z("team_id").value;
   }
   if (team_id == null || team_id.length <= 0) {
-    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDelete("+id+")");
+    confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDelete("+id+")");
   } else {
 <% end %>
-    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+id+")");
+    confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+title+"<%= t('folder.delete_team_folder_info1') %></div><div style='padding-bottom:10px;'><%= t('folder.delete_team_folder_info2') %></div><%= t('msg.confirm_sure') %>", "doDelete("+id+")");
 <% if @team.nil? %>
   }
 <% end %>
 }
 
-function doDuplicate()
+function onDuplicateItemClicked()
 {
-  confm("<%= t('item.confirm_to_duplicate') %>\n&nbsp;&nbsp;/<%= t('folder.my_folder') %>/<%= Item.copies_folder %>", "_doDuplicate()");
+  confm("<%= t('item.confirm_to_duplicate') %>\n&nbsp;&nbsp;/<%= t('folder.my_folder') %>/<%= Item.copies_folder %>", "doDuplicate()");
 }
 
-function _doDuplicate()
+function doDuplicate()
 {
+  var addParams = [];
+  addParams.push("id=<%= @item.id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-      "<%= url_for(:controller => 'items', :action => 'duplicate', :id => @item.id) %>",
+      "<%= url_for(:controller => 'items', :action => 'duplicate') %>",
       {
         method:"post",
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
@@ -874,15 +882,19 @@ function _doDuplicate()
     );
 }
 
-function _doDelete(id)
+function doDelete(id)
 {
+  var addParams = [];
+  addParams.push("id="+id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-      "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+id,
+      "<%= url_for(:controller => 'items', :action => 'destroy') %>",
       {
         method:"post",
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
@@ -897,7 +909,7 @@ function _doDelete(id)
 
 function doOrganizeTeam(frm)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_team_info",
@@ -907,7 +919,9 @@ function doOrganizeTeam(frm)
         parameters:Form.serialize(frm),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); }
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
       }
     );
 }
@@ -991,12 +1005,12 @@ function _checkComment(val)
   return true;
 }
 
-function doDeleteComment(comment_id)
+function onDeleteCommentClicked(comment_id)
 {
-  confm("<%= t('item.confirm_to_delete_message') %>", "_doDeleteComment("+comment_id+")");
+  confm("<%= t('item.confirm_to_delete_message') %>", "doDeleteComment("+comment_id+")");
 }
 
-function _doDeleteComment(comment_id)
+function doDeleteComment(comment_id)
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
@@ -1015,13 +1029,18 @@ function _doDeleteComment(comment_id)
    );
 }
 
-function doDeleteCommentAttachment(div_id, comment_id, attach_id, title)
+function onDeleteCommentAttachmentClicked(div_id, comment_id, attach_id, title)
 {
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteCommentAttachment('"+div_id+"', "+comment_id+", "+attach_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDeleteCommentAttachment('"+div_id+"', "+comment_id+", "+attach_id+")");
 }
 
-function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
+function doDeleteCommentAttachment(div_id, comment_id, attach_id)
 {
+  var addParams = [];
+  addParams.push("comment_id="+comment_id);
+  addParams.push("attachment_id="+attach_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
@@ -1029,7 +1048,7 @@ function _doDeleteCommentAttachment(div_id, comment_id, attach_id)
       "<%= url_for(:controller => 'items', :action => 'delete_comment_attachment') %>",
       {
         method:"post",
-        parameters:"comment_id="+comment_id+"&attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {

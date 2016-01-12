@@ -50,7 +50,7 @@ end
             <input type="button" value="<%= t('research.select_not_committed')%>" onclick="selectNotCommitted();">
             <span style="color:silver;">|</span>
             <input type="button" value="<%= t('btn.send_notification')%>" onclick="onNotifyClicked();">
-            <input type="button" value="<%= t('btn.reset_status')%>" onclick="doResetSatus();">
+            <input type="button" value="<%= t('btn.reset_status')%>" onclick="onResetSatusClicked();">
           </td>
         </tr>
       </table>
@@ -268,7 +268,7 @@ function onGroupTreeNodeSelected(thetisBoxId)
   }
 }
 
-function doResetSatus()
+function onResetSatusClicked()
 {
   var count = getCheckedUsersParam().length;
 
@@ -277,10 +277,10 @@ function doResetSatus()
     return false;
   }
 
-  confm("<%= t('research.confirm_to_reset_status1') %>" + count + "<%= t('research.confirm_to_reset_status2') %>", "_doResetSatus()");
+  confm("<%= t('research.confirm_to_reset_status1') %>" + count + "<%= t('research.confirm_to_reset_status2') %>", "doResetSatus()");
 }
 
-function _doResetSatus()
+function doResetSatus()
 {
   var addParams = getCheckedUsersParam();
 

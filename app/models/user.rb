@@ -930,59 +930,59 @@ class User < ActiveRecord::Base
     csv_line << CSV.generate(opt) do |csv|
 
       # Header
-      ary = []
-      ary << I18n.t('activerecord.attributes.id')
-      ary << User.human_attribute_name('name')
-      ary << I18n.t('password.name')
-      ary << User.human_attribute_name('fullname')
-      ary << User.human_attribute_name('address')
-      ary << User.human_attribute_name('organization')
-      ary << User.human_attribute_name('email')
-      ary << User.human_attribute_name('tel1_note')
-      ary << User.human_attribute_name('tel1')
-      ary << User.human_attribute_name('tel2_note')
-      ary << User.human_attribute_name('tel2')
-      ary << User.human_attribute_name('tel3_note')
-      ary << User.human_attribute_name('tel3')
-      ary << User.human_attribute_name('fax')
-      ary << User.human_attribute_name('url')
-      ary << User.human_attribute_name('postalcode')
-      ary << User.human_attribute_name('auth')
-      ary << User.human_attribute_name('groups')
-      ary << User.human_attribute_name('title')
-      ary << User.human_attribute_name('time_zone')
-      ary << I18n.t('zeptair.id')
-      ary << User.human_attribute_name('figure')
+      arr = []
+      arr << I18n.t('activerecord.attributes.id')
+      arr << User.human_attribute_name('name')
+      arr << I18n.t('password.name')
+      arr << User.human_attribute_name('fullname')
+      arr << User.human_attribute_name('address')
+      arr << User.human_attribute_name('organization')
+      arr << User.human_attribute_name('email')
+      arr << User.human_attribute_name('tel1_note')
+      arr << User.human_attribute_name('tel1')
+      arr << User.human_attribute_name('tel2_note')
+      arr << User.human_attribute_name('tel2')
+      arr << User.human_attribute_name('tel3_note')
+      arr << User.human_attribute_name('tel3')
+      arr << User.human_attribute_name('fax')
+      arr << User.human_attribute_name('url')
+      arr << User.human_attribute_name('postalcode')
+      arr << User.human_attribute_name('auth')
+      arr << User.human_attribute_name('groups')
+      arr << User.human_attribute_name('title')
+      arr << User.human_attribute_name('time_zone')
+      arr << I18n.t('zeptair.id')
+      arr << User.human_attribute_name('figure')
 
-      csv << ary
+      csv << arr
 
       # Users
       users.each do |user|
-        ary = []
-        ary << user.id
-        ary << user.name
-        ary << ''   # Password
-        ary << user.fullname
-        ary << user.address
-        ary << user.organization
-        ary << user.email
-        ary << user.tel1_note
-        ary << user.tel1
-        ary << user.tel2_note
-        ary << user.tel2
-        ary << user.tel3_note
-        ary << user.tel3
-        ary << user.fax
-        ary << user.url
-        ary << user.postalcode
-        ary << user.auth
-        ary << user.groups
-        ary << user.title
-        ary << user.time_zone
-        ary << user.zeptair_id
-        ary << user.figure
+        arr = []
+        arr << user.id
+        arr << user.name
+        arr << ''   # Password
+        arr << user.fullname
+        arr << user.address
+        arr << user.organization
+        arr << user.email
+        arr << user.tel1_note
+        arr << user.tel1
+        arr << user.tel2_note
+        arr << user.tel2
+        arr << user.tel3_note
+        arr << user.tel3
+        arr << user.fax
+        arr << user.url
+        arr << user.postalcode
+        arr << user.auth
+        arr << user.groups
+        arr << user.title
+        arr << user.time_zone
+        arr << user.zeptair_id
+        arr << user.figure
 
-        csv << ary
+        csv << arr
       end
     end
 

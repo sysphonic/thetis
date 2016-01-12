@@ -21,7 +21,7 @@ var folderImgs = new Array(
                       new Array("<%= mail_user_open %>", "<%= mail_user_close %>")
                     );
 
-var array = new Array();
+var array = [];
 array.push(new Array("0", " <%= @login_user.get_name %>", "", "", 6 /* img_idx */));
 
 var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);

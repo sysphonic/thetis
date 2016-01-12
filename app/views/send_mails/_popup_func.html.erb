@@ -46,30 +46,30 @@ showMailForm = function(isNew, addParams)
   }
 
   if (!addParams) {
-    addParams = new Array();
+    addParams = [];
   }
   new Ajax.Request(
-          action,
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxMailForm.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*90/100,
-                          "TRAY",
-                          "",
-                          "<input class='nodrag' type='button' value='<%= t('mail.send') %>' style='width:80px; height:24px;' onclick='doSend();'/>"
-                            +"&nbsp;<input class='nodrag' type='button' value='<%= t('btn.save') %>' style='width:80px; height:24px;' onclick='doSave(false);'/>",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      action,
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxMailForm.show(
+                    "CENTER",
+                    mainWidth*80/100+"," + mainHeight*90/100,
+                    "TRAY",
+                    "",
+                    "<input class='nodrag' type='button' value='<%= t('mail.send') %>' style='width:80px; height:24px;' onclick='onSendMailClicked();'/>"
+                      +"&nbsp;<input class='nodrag' type='button' value='<%= t('btn.save') %>' style='width:80px; height:24px;' onclick='doSave(false);'/>",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 <% end %>
 }
 </script>

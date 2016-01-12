@@ -41,7 +41,7 @@
             </td>
             <td class="item_value_td">
               <input type="button" id="button_start" style="display:<%= disp_button_start %>; width:100px;" value="<%= t('btn.start') %>" onclick="doStart()">
-              <input type="button" id="button_stop" style="display:<%= disp_button_stop %>; width:100px;" value="<%= t('btn.stop') %>" onclick="doStop()">
+              <input type="button" id="button_stop" style="display:<%= disp_button_stop %>; width:100px;" value="<%= t('btn.stop') %>" onclick="onStopResearchClicked()">
             </td>
           </tr>
           <tr>
@@ -49,7 +49,7 @@
               <%= t('btn.reset_all_users') %>
             </td>
             <td class="item_value_td">
-              <input type="button" value="<%= t('btn.reset') %>" onclick="doReset()" style="width:100px;">
+              <input type="button" value="<%= t('btn.reset') %>" onclick="onResetResearchClicked()" style="width:100px;">
             </td>
           </tr>
         </table>
@@ -68,12 +68,9 @@
           </tr>
           <tr>
             <td class="item_value_td">
-              <%= form_tag( {:controller => 'researches', :action => 'destroy_q_page', :id => '' }, :name => 'form_ajax_page', :method => 'post') %>
-                <div id="div_ajax_page">
-                  <%= render(:partial => 'ajax_q_page') %>
-                </div>
-              </form>
-
+              <div id="div_ajax_page">
+                <%= render(:partial => 'ajax_q_page') %>
+              </div>
               <div class="button_gray" style="float:right; margin-top:3px;" onclick="doCreatePage();">
                 <%= t('btn.create') %>
               </div>
@@ -150,125 +147,135 @@ function doStart()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'researches', :action => 'start') %>",
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
+      "<%= url_for(:controller => 'researches', :action => 'start') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
 
-                thetisBoxProgress.remove();
+          thetisBoxProgress.remove();
 
-                if (request.responseText == "") {
-                  changeStatus(true);
-                  tips("<%= t('msg.start_success')%>");
-                } else {
-                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                }
-              }
+          if (request.responseText == "") {
+            changeStatus(true);
+            tips("<%= t('msg.start_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
-        );
+        }
+      }
+    );
+}
+
+function onStopResearchClicked()
+{
+  confm("<%= t('research.confirm_to_stop') %>", "doStop()");
 }
 
 function doStop()
 {
-  confm("<%= t('research.confirm_to_stop') %>", "_doStop()");
-}
-
-function _doStop()
-{
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'researches', :action => 'stop') %>",
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
+      "<%= url_for(:controller => 'researches', :action => 'stop') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
 
-                thetisBoxProgress.remove();
+          thetisBoxProgress.remove();
 
-                if (request.responseText == "") {
-                  changeStatus(false);
-                  tips("<%= t('msg.stop_success')%>");
-                } else {
-                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                }
-              }
+          if (request.responseText == "") {
+            changeStatus(false);
+            tips("<%= t('msg.stop_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
-        );
+        }
+      }
+    );
+}
+
+function onResetResearchClicked()
+{
+  confm("<%= t('research.confirm_to_reset_users') %>", "doReset()");
 }
 
 function doReset()
 {
-  confm("<%= t('research.confirm_to_reset_users') %>", "_doReset()");
-}
-
-function _doReset()
-{
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'researches', :action => 'reset') %>",
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:false,
-            onComplete:function(request) {
+      "<%= url_for(:controller => 'researches', :action => 'reset') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
 
-                thetisBoxProgress.remove();
+          thetisBoxProgress.remove();
 
-                if (request.responseText == "") {
-                  changeStatus(false);
-                  tips("<%= t('msg.reset_success')%>");
-                } else {
-                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                }
-              }
+          if (request.responseText == "") {
+            changeStatus(false);
+            tips("<%= t('msg.reset_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
-        );
+        }
+      }
+    );
 }
 
 function doCreatePage()
 {
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-              "div_ajax_page",
-              "<%= url_for(:controller => 'researches', :action => 'create_q_page') %>",
-              {
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                }
-              }
-            );
-  return true;
-}
-
-function doDeletePage(item_id, title)
-{
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeletePage("+item_id+")");
-}
-
-function _doDeletePage(item_id)
-{
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_ajax_page",
-      document.form_ajax_page.action + item_id,
+      "<%= url_for(:controller => 'researches', :action => 'create_q_page') %>",
       {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
-          thetisBox.remove();
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+
+  return true;
+}
+
+function onDeleteQPageClicked(item_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeletePage("+item_id+")");
+}
+
+function doDeletePage(item_id)
+{
+  var addParams = [];
+  addParams.push("id="+item_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_page",
+      "<%= url_for(:controller => 'researches', :action => 'destroy_q_page') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
           renewCtrls();
-        },
-        parameters:Form.serialize(document.form_ajax_page)
+        }
       }
     );
 }
@@ -278,17 +285,18 @@ function renewCtrls()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_choices",
-              "<%= url_for(:controller => 'researches', :action => 'renew_q_ctrl') %>",
-              {
-               parameters:"authenticity_token=<%= form_authenticity_token %>",
-               asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBoxProgress.remove();
-                }
-              }
-            );
+      "div_choices",
+      "<%= url_for(:controller => 'researches', :action => 'renew_q_ctrl') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 function onSelectQCodes(q_id)
@@ -395,7 +403,7 @@ function doApplyCtrl()
   _z(q_id + "_cap").innerHTML = cap
 
   var f = document.createElement("form");
-  f.method = "POST";
+  f.method = "post";
   var ta = document.createElement("textarea");
   ta.name = "q_param";
   ta.value = q_param;
@@ -405,47 +413,49 @@ function doApplyCtrl()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'researches', :action => 'update_q_ctrl') %>?item_id="+item_id+"&q_code="+q_code+"&caption="+encodeURIComponent(cap),
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(f)+"&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
+      "<%= url_for(:controller => 'researches', :action => 'update_q_ctrl') %>?item_id="+item_id+"&q_code="+q_code+"&caption="+encodeURIComponent(cap),
+      {
+        method:"post",
+        asynchronous:true,
+        evalScripts:false,
+        parameters:Form.serialize(f)+"&authenticity_token=<%= form_authenticity_token %>",
+        onComplete:function(request) {
 
-                thetisBoxProgress.remove();
-                removeElem(f);
+          thetisBoxProgress.remove();
+          removeElem(f);
 
-                if (request.responseText == "") {
-                  tips("<%= t('msg.update_success')%>");
-                } else {
-                  msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                }
-              }
+          if (request.responseText == "") {
+            tips("<%= t('msg.update_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
-        );
+        }
+      }
+    );
+}
+
+function onResetCtrlClicked()
+{
+  confm("<%= t('research.confirm_to_reset_choices') %>", "doResetCtrl()");
 }
 
 function doResetCtrl()
 {
-  confm("<%= t('research.confirm_to_reset_choices') %>", "_doResetCtrl()");
-}
-
-function _doResetCtrl()
-{
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_choices",
-              "<%= url_for(:controller => 'researches', :action => 'reset_q_ctrl') %>",
-              {
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBoxProgress.remove();
-                }
-              }
-            );
+      "div_choices",
+      "<%= url_for(:controller => 'researches', :action => 'reset_q_ctrl') %>",
+      {
+        method:"post",
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 function doSelectGroup(thetisBoxId, current_id)
@@ -495,24 +505,30 @@ function showGroupTreeToSelect(group_id, do_change)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-function doRemoveGroup(group_id, path)
+function onRemoveGroupClicked(group_id, path)
 {
-  confm("<%= t('paren.square.left') %>" + path + "<%= t('msg.confirm_to_except') %>", "_doRemoveGroup("+group_id+")");
+  confm("<%= t('paren.square.left') %>" + path + "<%= t('msg.confirm_to_except') %>", "doRemoveGroup("+group_id+")");
 }
 
-function _doRemoveGroup(group_id)
+function doRemoveGroup(group_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("group_id="+group_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_statistics_groups",
-      "<%= url_for(:controller => 'researches', :action => 'delete_statistics_group') %>?group_id=" + group_id,
+      "<%= url_for(:controller => 'researches', :action => 'delete_statistics_group') %>",
       {
-      method:"post",
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        method:"post",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove() }
+        onComplete:function(request) {
+          thetisBoxProgress.remove()
+        }
       }
     );
 }

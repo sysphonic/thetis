@@ -120,7 +120,7 @@ end
       </span>
   <% if editable %>
       &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="inputBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteBreak('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteBreakClicked('<%= break_start.strftime(Schedule::SYS_DATETIME_FORM) %>', '<%= break_end.strftime(Schedule::SYS_DATETIME_FORM) %>'); return false;" />
   <% end %>
       <br/>
       <% end %>

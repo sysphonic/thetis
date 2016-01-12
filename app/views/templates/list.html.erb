@@ -63,40 +63,48 @@
 
 function doCreateLocal()
 {
-  var thetisBox = prog("TOP-RIGHT");
-
-  new Ajax.Updater(
-              "div_ajax_local",
-              "<%= url_for(:controller => 'templates', :action => 'create_local') %>",
-              {
-                parameters:"authenticity_token=<%= form_authenticity_token %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                }
-              }
-            );
-  return true;
-}
-
-function doDeleteLocal(item_id, title)
-{
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDeleteLocal("+item_id+")");
-}
-
-function _doDeleteLocal(item_id)
-{
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_ajax_local",
-      "<%= url_for(:controller => 'templates', :action => 'destroy_local') %>?id=" + item_id,
+      "<%= url_for(:controller => 'templates', :action => 'create_local') %>",
       {
+        method:"post",
         parameters:"authenticity_token=<%= form_authenticity_token %>",
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); }
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+  return true;
+}
+
+function onDeleteLocalClicked(item_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteLocal("+item_id+")");
+}
+
+function doDeleteLocal(item_id)
+{
+  var addParams = [];
+  addParams.push("id="+item_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_local",
+      "<%= url_for(:controller => 'templates', :action => 'destroy_local') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
       }
     );
 }

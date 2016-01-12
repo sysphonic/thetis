@@ -12,8 +12,8 @@
           <a class="a_underline" href="javascript:this.onclick()" onclick="showOfficialTitle(<%= official_title.id %>); return false;">
             <%= truncate(official_title.name, :length => 20) %>
           </a>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" />
-          &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteOfficialTitle(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" style="margin-left:10px;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteOfficialTitleClicked(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" style="margin-left:5px;" />
         </div>
       <%
         end
@@ -29,13 +29,14 @@ onOfficialTitlesOrderUpdated = function()
 {
   var addParams = [];
   addParams.push("group_id=<%= @group_id %>");
+  addParams.push(Sortable.serialize("sortable_items", {name:"official_titles_order"}));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'official_titles', :action => 'update_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_items", {name:"official_titles_order"}) + "&" + addParams.join("&"),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true
       }

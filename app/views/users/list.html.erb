@@ -51,7 +51,7 @@ official_title_obj_cache = {}
 <% if @login_user.admin?(User::AUTH_USER) %>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.delete')%>" onclick="doDelete();">
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteUserClicked();">
       <input type="button" value="<%= t('btn.send_notification')%>" onclick="onNotifyClicked();">
 <% else %>
       &nbsp;
@@ -154,7 +154,7 @@ function doEditUser(user_id)
 {
   prog("TOP-RIGHT");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("from=users_list");
 
   if (user_id) {
@@ -175,7 +175,7 @@ function doEditUser(user_id)
 
   var thetisBoxProgress = prog("CENTER");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("from=users_list");
 
   var action = null;
@@ -220,7 +220,7 @@ function showUser(user_id)
 {
   prog("TOP-RIGHT");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+user_id);
 
   location.href = "<%= url_for(:controller => 'users', :action => 'show') %>?" + addParams.join("&");
@@ -232,7 +232,7 @@ function showUser(user_id)
 
   var thetisBoxProgress = prog("CENTER");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+user_id);
 
   new Ajax.Request(
@@ -364,7 +364,7 @@ function doImportCsv()
   thetisBox.hide();
 }
 
-function doDelete()
+function onDeleteUserClicked()
 {
   var elems = document.getElementsByClassName("check_user", document.form_list);
   var count=0;
@@ -381,10 +381,10 @@ function doDelete()
   if (count <= 0) {
     return;
   }
-  confm(count+"<%= t('user.confirm_to_delete') %>", "_doDelete()");
+  confm(count+"<%= t('user.confirm_to_delete') %>", "doDelete()");
 }
 
-function _doDelete()
+function doDelete()
 {
   document.form_list.action = "<%= url_for(:controller => 'users', :action => 'destroy') %>";
   document.form_list.method = "post";

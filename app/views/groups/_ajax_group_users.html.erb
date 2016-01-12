@@ -12,7 +12,7 @@
     <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
-      <input type="button" value="<%= t('btn.exclude_from_group')%>" onclick="doExcludeMulti();">
+      <input type="button" value="<%= t('btn.exclude_from_group')%>" onclick="onExcludeMultiClicked();">
       <input type="button" value="<%= t('btn.move')%>" onclick="doMoveMulti();">
     </td>
   </tr>
@@ -27,7 +27,7 @@
 
 onSearchClicked = function()
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
@@ -37,17 +37,17 @@ onResetClicked = function()
 {
   document.form_list.keyword.value = "";
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
 }
 
-doExcludeMulti = function()
+onExcludeMultiClicked = function()
 {
   var elems = document.getElementsByClassName("check_user");
   var count = 0;
-  var teams = new Array();
+  var teams = [];
   for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
       count++;
@@ -57,10 +57,10 @@ doExcludeMulti = function()
     return;
   }
   var msg = count + "<%= t('user.confirm_to_exclude_from_group') %>";
-  confm(msg, "_doExcludeMulti()");
+  confm(msg, "doExcludeMulti()");
 }
 
-_doExcludeMulti = function()
+doExcludeMulti = function()
 {
   var addParams = getCheckedUsersParam();
   addParams.push(Form.serialize(document.form_list));
@@ -129,7 +129,7 @@ sortList = function(col)
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_list));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);

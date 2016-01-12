@@ -259,7 +259,7 @@ Droppables.add(
           },
           onDrop:function(element)
           {
-            doRemoveToy(element.id);
+            onRemoveToyClicked(element.id);
           }
         }
       )
@@ -313,60 +313,60 @@ editConfig = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'edit_config') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
-                thetisBoxConfig.show(
-                          "CENTER",
-                          "580,"+(mainHeight*85/100),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'desktop', :action => 'edit_config') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
+            thetisBoxConfig.show(
+                      "CENTER",
+                      "580,"+(mainHeight*85/100),
+                      "TRAY",
+                      "",
+                      "",
+                      request.responseText.stripScripts()
+                    );
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
-doRemoveToy = function(element_id)
+onRemoveToyClicked = function(element_id)
 {
   var xtype = _z(element_id+"_type").innerHTML;
   var disp_type = (xtype == "<%= Toy::XTYPE_LABEL %>" || xtype == "<%= Toy::XTYPE_POSTLABEL %>")?"<%= t('desktop.label.confirm_to_delete') %>":"<%= t('desktop.shortcut.confirm_to_delete') %>";
 
-  confm(disp_type, "_doRemoveToy('"+element_id+"')");
+  confm(disp_type, "doRemoveToy('"+element_id+"')");
 }
 
-_doRemoveToy = function(element_id)
+doRemoveToy = function(element_id)
 {
   var id = element_id.split("_")[1];
 
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'drop_on_recyclebox') %>?id="+id,
-          {
-            parameters:"authenticity_token=<%= form_authenticity_token %>",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
-              setTimeout(
-                  function(){
-                    var toy = _z(element_id);
-                    removeElem(toy);
-                  },
-                  100
-                );
-            }
-          }
-        );
+      "<%= url_for(:controller => 'desktop', :action => 'drop_on_recyclebox') %>?id="+id,
+      {
+        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+          setTimeout(
+              function(){
+                var toy = _z(element_id);
+                removeElem(toy);
+              },
+              100
+            );
+        }
+      }
+    );
 }
 
 showCalendar = function()

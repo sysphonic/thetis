@@ -11,7 +11,7 @@ showAddress = function(address_id, address_name)
   thetisBox.bgcolor_title = "#FF9D11";
   thetisBox.bgcolor_body = "#FFDA8B";
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+address_id);
 <% unless from.nil? %>
   addParams.push("from=<%= from %>");
@@ -53,7 +53,7 @@ showAddressNew = function()
     thetisBoxAddressEdit = null;
   }
 
-  var addParams = new Array();
+  var addParams = [];
 <% unless from.nil? %>
   addParams.push("from=<%= from %>");
 <% end %>
@@ -102,7 +102,7 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
     thetisBoxAddressEdit = null;
   }
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+address_id);
   if (admin != null) {
     addParams.push("admin=" + admin);
@@ -144,7 +144,7 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
 
 queryAddressEmail = function(email, dispName)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("disp_name="+encodeURIComponent(restoreHTML(dispName).replace(/&quot;/g, "\"")));
   addParams.push("email="+encodeURIComponent(restoreHTML(email).replace(/&quot;/g, "\"")));
 <% unless from.nil? %>

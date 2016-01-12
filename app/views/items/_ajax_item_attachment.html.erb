@@ -118,13 +118,13 @@
               <table style="width:100%;">
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editAttachInfo(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onEditAttachmentClicked(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>');" />
                   </td>
                 </tr>
                 <tr style="height:5px;"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteAttach(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteAttachmentClicked(<%= attach.id %>, '<%= ApplicationHelper.h_s_quote((attach.title.nil? or attach.title.empty?)?(attach.name):(attach.title)) %>');" />
                   </td>
                 </tr>
               </table>
@@ -154,7 +154,7 @@ setTimeout(setSortableAttach, 100);
 
 var thetisBoxAttachInfo = null;
 
-editAttachInfo = function(attach_id, attach_name)
+onEditAttachmentClicked = function(attach_id, attach_name)
 {
   if (thetisBoxAttachInfo != null) {
     return;
@@ -165,22 +165,22 @@ editAttachInfo = function(attach_id, attach_name)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'items', :action => 'edit_attachment_info') %>?attachment_id="+attach_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAttachInfo.title = attach_name;
-                thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'items', :action => 'edit_attachment_info') %>?attachment_id="+attach_id,
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+            thetisBoxAttachInfo.title = attach_name;
+            thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
+            thetisBoxProgress.remove();
+            request.responseText.evalScripts();
           }
-        );
+      }
+    );
 }
 
-onAttachInfoOK = function()
+onAttachInfoOk = function()
 {
   var btnOk = _z("attachment_info_ok");
   btnOk.disabled = true;
@@ -219,27 +219,32 @@ onAttachInfoCancel = function()
   }
 }
 
-doDeleteAttach = function(attach_id, title)
+onDeleteAttachmentClicked = function(attach_id, title)
 {
-  confm('<%= t('paren.square.left') %>'+title+'<%= t('msg.confirm_to_delete') %>', "_doDeleteAttach("+attach_id+")");
+  confm('<%= t('paren.square.left') %>'+title+'<%= t('msg.confirm_to_delete') %>', "doDeleteAttachment("+attach_id+")");
 }
 
-_doDeleteAttach = function(attach_id)
+doDeleteAttachment = function(attach_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("attachment_id="+attach_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_item_attachment",
-              "<%= url_for(:controller => 'items', :action => 'delete_attachment') %>",
-              {
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                },
-                parameters: "attachment_id="+attach_id+"&authenticity_token=<%= form_authenticity_token %>"
-              }
-            );
+      "div_item_attachment",
+      "<%= url_for(:controller => 'items', :action => 'delete_attachment') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 </script>

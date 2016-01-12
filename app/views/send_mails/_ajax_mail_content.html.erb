@@ -231,7 +231,7 @@ onShowPanelSendToClicked = function()
   thetisBoxSendTo.bgcolor_content = "aliceblue";
   thetisBoxSendTo.border_content = "";
 
-  var addParams = new Array();
+  var addParams = [];
 <% unless @mail_account.nil? %>
   addParams.push("mail_account_xtype=<%= @mail_account.xtype %>");
 <% end %>
@@ -267,7 +267,7 @@ onShowPanelSendToClicked = function()
 
 _prepareMoveListItems = function(list)
 {
-  var selOptions = new Array();
+  var selOptions = [];
   var firstIdx = -1;
 
   for (var i=0; i < list.options.length; i++) {

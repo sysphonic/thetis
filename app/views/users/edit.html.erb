@@ -14,11 +14,9 @@
               <%= t('item.profile_sheet') %>
             </td>
             <td class="item_value_td">
-              <%= form_tag({:controller => 'items', :action => 'create_profile_sheet', :id => @user.id}, :name => 'form_ajax_userItem', :method => 'post') %>
-                <div id="div_ajax_userItem" style="padding-left:10px;">
-                  <%= render(:partial => 'ajax_profile_sheet') %>
-                </div>
-              </form>
+              <div id="div_ajax_userItem" style="padding-left:10px;">
+                <%= render(:partial => 'ajax_profile_sheet') %>
+              </div>
             </td>
           </tr>
         </table>
@@ -180,27 +178,27 @@ onUserTitlesAddClicked = function()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("user_id=<%= @user.id %>");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
 
-              thetisBoxUserTitles = new ThetisBox;
-              thetisBoxUserTitles.setOnClose(function(){ thetisBoxUserTitles = null; });
-              thetisBoxUserTitles.title = "<%= OfficialTitle.model_name.human %>";
-              thetisBoxUserTitles.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          thetisBoxUserTitles = new ThetisBox;
+          thetisBoxUserTitles.setOnClose(function(){ thetisBoxUserTitles = null; });
+          thetisBoxUserTitles.title = "<%= OfficialTitle.model_name.human %>";
+          thetisBoxUserTitles.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 
@@ -220,24 +218,24 @@ onUserTitlesOK = function()
   var frm = _z("form_user_titles");
 
   new Ajax.Updater(
-          "div_ajax_user_titles",
-          frm.action,
-          {
-            method:"post",
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(frm),
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBoxUserTitles.remove();
-              if (setUserModified) {
-                setUserModified();
-              }
-
-              request.responseText.evalScripts();
-            }
+      "div_ajax_user_titles",
+      frm.action,
+      {
+        method:"post",
+        asynchronous:true,
+        evalScripts:false,
+        parameters:Form.serialize(frm),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBoxUserTitles.remove();
+          if (setUserModified) {
+            setUserModified();
           }
-        );
+
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 onUserTitlesCancel = function()
@@ -247,67 +245,97 @@ onUserTitlesCancel = function()
 
 onUserTitlesRemoveClicked = function()
 {
-  var selAry = getListSelected(_z("official_titles"));
-  if (selAry.length <= 0) {
+  var arr = getListSelected(_z("official_titles"));
+  if (arr.length <= 0) {
     return;
   }
 
-  confm(selAry.length+"<%= t('official_title.confirm_remove_from_user') %>", "_onUserTitlesRemoveClicked()");
+  confm(arr.length+"<%= t('official_title.confirm_remove_from_user') %>", "_onUserTitlesRemoveClicked()");
 }
 
 _onUserTitlesRemoveClicked = function()
 {
   var thetisBoxProgress = prog("CENTER");
 
-  var add_params = new Array();
-  add_params.push("user_id=<%= @user.id %>");
+  var addParams = [];
+  addParams.push("user_id=<%= @user.id %>");
 
-  var selAry = getListSelected(_z("official_titles"));
-  for (var i=0; i < selAry.length; i++) {
-    add_params.push("official_titles[]="+selAry[i]);
+  var arr = getListSelected(_z("official_titles"));
+  for (var i=0; i < arr.length; i++) {
+    addParams.push("official_titles[]="+arr[i]);
   }
-  add_params.push("authenticity_token=<%= form_authenticity_token %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Updater(
-          "div_ajax_user_titles",
-          "<%= url_for(:controller => 'users', :action => 'remove_official_titles') %>",
-          {
-            method:"post",
-            asynchronous:true,
-            evalScripts:false,
-            parameters:add_params.join("&"),
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBoxUserTitles.remove();
-              if (setUserModified) {
-                setUserModified();
-              }
-
-              request.responseText.evalScripts();
-            }
+      "div_ajax_user_titles",
+      "<%= url_for(:controller => 'users', :action => 'remove_official_titles') %>",
+      {
+        method:"post",
+        asynchronous:true,
+        evalScripts:false,
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBoxUserTitles.remove();
+          if (setUserModified) {
+            setUserModified();
           }
-        );
+
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
-doDelete = function(user_id, title)
+doCreateProfileSheet = function(user_id)
 {
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "_doDelete("+user_id+")");
-}
+  var addParams = [];
+  addParams.push("id="+user_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-_doDelete = function(user_id)
-{
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_ajax_userItem",
-          "<%= url_for(:controller => 'users', :action => 'destroy_profile_sheet') %>?id=" + user_id,
-          {
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){ thetisBox.remove(); },
-            parameters:Form.serialize(document.form_ajax_userItem)
-          }
-      );
+      "div_ajax_userItem",
+      "<%= url_for(:controller => 'users', :action => 'create_profile_sheet') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
+}
+
+onDeleteProfileSheetClicked = function(user_id, title)
+{
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteProfileSheet("+user_id+")");
+}
+
+doDeleteProfileSheet = function(user_id)
+{
+  var addParams = [];
+  addParams.push("id="+user_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_ajax_userItem",
+      "<%= url_for(:controller => 'users', :action => 'destroy_profile_sheet') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 doSelectGroup = function(thetisBoxId, current_id)
@@ -358,24 +386,31 @@ showGroupTreeToSelect = function(group_id, do_change)
   thetisBox.setTree("<%= url_for(:controller => 'groups', :action => 'ajax_get_tree') %>", group_id);
 }
 
-doRemoveGroup = function(group_id, path, user_id)
+onRemoveGroupClicked = function(group_id, path, user_id)
 {
-  confm("<%= t('user.confirm_to_excluded_from1') %>" + path + "<%= t('user.confirm_to_excluded_from2') %>", "_doRemoveGroup("+group_id+", "+user_id+")");
+  confm("<%= t('user.confirm_to_excluded_from1') %>" + path + "<%= t('user.confirm_to_excluded_from2') %>", "doRemoveGroup("+group_id+", "+user_id+")");
 }
 
-_doRemoveGroup = function(group_id, user_id)
+doRemoveGroup = function(group_id, user_id)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("id="+user_id);
+  addParams.push("group_id="+group_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_user_groups",
-      "<%= url_for(:controller => 'users', :action => 'exclude_from_group') %>?id=" + user_id + "&group_id=" + group_id,
+      "<%= url_for(:controller => 'users', :action => 'exclude_from_group') %>",
       {
         method:"post",
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove() }
+        onComplete:function(request) {
+          thetisBoxProgress.remove()
+        }
       }
     );
 }
@@ -396,24 +431,29 @@ doUpdateZeptAllowed = function()
   if (!zept_allowed)
     return;
 
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("id=<%= @user.id %>");
+  addParams.push("zept_allowed="+zept_allowed);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Request(
-              "<%= url_for(:controller => 'users', :action => 'update_zept_allowed', :id => @user.id) %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                  if (request.responseText == "") {
-                    tips("<%= t('msg.update_success') %>");
-                  } else {
-                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                  }
-                },
-                parameters:"zept_allowed="+zept_allowed
-              }
-            );
+      "<%= url_for(:controller => 'users', :action => 'update_zept_allowed') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          if (request.responseText == "") {
+            tips("<%= t('msg.update_success') %>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
+          }
+        }
+      }
+    );
 }
 
 </script>

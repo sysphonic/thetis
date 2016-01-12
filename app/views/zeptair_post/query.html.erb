@@ -13,37 +13,37 @@ if @post_item.nil?
       attachs = post_item.attachments_without_content
       next if attachs.empty?
 
-      ary = []
-      ary << post_item.user_id
-      ary << User.find(post_item.user_id).zeptair_id
-      ary << post_item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
+      arr = []
+      arr << post_item.user_id
+      arr << User.find(post_item.user_id).zeptair_id
+      arr << post_item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')
 
       attach_ids = []
       attachs.each do |attach|
         attach_ids << attach.id.to_s
       end
-      ary << attach_ids.join('|')
+      arr << attach_ids.join('|')
 
-      csv << ary
+      csv << arr
     end
   end
 else
   csv_lines << CSV.generate(opt) do |csv|
 
     @post_item.attachments_without_content.each do |attach|
-      ary = []
-      ary << attach.id
-      ary << attach.title
-      ary << attach.memo
-      ary << attach.name
+      arr = []
+      arr << attach.id
+      arr << attach.title
+      arr << attach.memo
+      arr << attach.name
 
       attach_ids = []
       item.attachments_without_content.each do |attach|
         attach_ids << attach.id.to_s
       end
-      ary << attach_ids.join('|')
+      arr << attach_ids.join('|')
 
-      csv << ary
+      csv << arr
     end
   end
 end

@@ -379,7 +379,7 @@ function checkDecimal(str, signed, prec)
 
 function collectionToArray(collection)
 {
-  var ret = new Array();
+  var ret = [];
   for (var i=0; i < collection.length; i++) {
     ret.push(collection[i]);
   }
@@ -545,7 +545,7 @@ function replaceAll(str, from, to)
 
 function uniq(arr)
 {
-  var ret = new Array();
+  var ret = [];
   for (var i=0; i < arr.length; i++) {
     if (ret.indexOf(arr[i]) < 0) {
       ret.push(arr[i]);
@@ -554,23 +554,23 @@ function uniq(arr)
   return ret;
 }
 
-function removeArrayElements(ary, entries)
+function removeArrayElements(arr, entries)
 {
-  for (var i=0; i < ary.length; i++) {
+  for (var i=0; i < arr.length; i++) {
     for (k=0; k < entries.length; k++) {
-      if (ary[i] == entries[k]) {
-        ary.splice(i, 1);
+      if (arr[i] == entries[k]) {
+        arr.splice(i, 1);
         i--;
         break;
       }
     }
   }
-  return ary;
+  return arr;
 }
 
 function getListSelected(list, reqText)
 {
-  var entries = new Array();
+  var entries = [];
   if (!list) {
     return entries;
   }
@@ -648,7 +648,7 @@ function addList(list, text, value, allowDuplex)
 
 function deleteList(list, val)
 {
-  var entries = new Array();
+  var entries = [];
   if (!list) {
     return entries;
   }
@@ -668,7 +668,7 @@ function deleteList(list, val)
 
 function sortList(list, direction)
 {
-  var opts = new Array();
+  var opts = [];
   for (var i=0; i < list.length; i++) {
     var option = list.options[i];
     opts.push(option);
@@ -701,7 +701,7 @@ function _sortTextDESC(a, b)
 
 function moveList(src, dst)
 {
-  var ret_ary = new Array();
+  var arr = [];
   for (var i=0; i < src.length; i++) {
     var option = src.options[i];
     if (option.selected == true) {
@@ -715,19 +715,19 @@ function moveList(src, dst)
       }
       if (!duplex) {
         dst.options[dst.length++] = new Option(option.text, option.value);
-        ret_ary[ret_ary.length] = option.value;
+        arr[arr.length] = option.value;
       }
       src.options[i] = null;
       i--;
     }
   }
   src.selectedIndex = -1;
-  return ret_ary;
+  return arr;
 }
 
 function moveListWithSuffix(src, dst, valSuffix, textSuffix)
 {
-  var ret_ary = new Array();
+  var arr = [];
   for (var i=0; i<src.length; i++) {
     var option=src.options[i];
     if (option.selected == true) {
@@ -741,19 +741,19 @@ function moveListWithSuffix(src, dst, valSuffix, textSuffix)
       }
       if (!duplex) {
         dst.options[dst.length++] = new Option(option.text+textSuffix, option.value+valSuffix);
-        ret_ary[ret_ary.length] = option.value+valSuffix;
+        arr[arr.length] = option.value+valSuffix;
       }
       src.options[i]=null;
       i--;
     }
   }
   src.selectedIndex=-1;
-  return ret_ary;
+  return arr;
 }
 
 function moveListTrimSuffix(src, dst, valSeparator, textSeparator)
 {
-  var ret_ary = new Array();
+  var arr = [];
   for (var i=0; i<src.length; i++) {
     var option=src.options[i];
     if (option.selected == true) {
@@ -778,19 +778,19 @@ function moveListTrimSuffix(src, dst, valSeparator, textSeparator)
                           text,
                           val
                         );
-        ret_ary[ret_ary.length] = val;
+        arr[arr.length] = val;
       }
       src.options[i]=null;
       i--;
     }
   }
   src.selectedIndex=-1;
-  return ret_ary;
+  return arr;
 }
 
 function moveListWithPrefix(src, dst, valPrefix, textPrefix)
 {
-  var ret_ary = new Array();
+  var arr = [];
   for (var i=0; i<src.length; i++) {
     var option=src.options[i];
     if (option.selected == true) {
@@ -804,19 +804,19 @@ function moveListWithPrefix(src, dst, valPrefix, textPrefix)
       }
       if (!duplex) {
         dst.options[dst.length++] = new Option(textPrefix+option.text, valPrefix+option.value);
-        ret_ary[ret_ary.length] = valPrefix+option.value;
+        arr[arr.length] = valPrefix+option.value;
       }
       src.options[i]=null;
       i--;
     }
   }
   src.selectedIndex=-1;
-  return ret_ary;
+  return arr;
 }
 
 function moveListTrimPrefix(src, dst, valSeparator, textSeparator)
 {
-  var ret_ary = new Array();
+  var arr = [];
   for (var i=0; i<src.length; i++) {
     var option=src.options[i];
     if (option.selected == true) {
@@ -841,14 +841,14 @@ function moveListTrimPrefix(src, dst, valSeparator, textSeparator)
                           text,
                           val
                         );
-        ret_ary[ret_ary.length] = val;
+        arr[arr.length] = val;
       }
       src.options[i]=null;
       i--;
     }
   }
   src.selectedIndex=-1;
-  return ret_ary;
+  return arr;
 }
 
 function selectListAll(list)
@@ -867,7 +867,7 @@ function deselectListAll(list)
 
 function _prepareShiftListItems(list)
 {
-  var selOptions = new Array();
+  var selOptions = [];
   var firstIdx = -1;
 
   for (var i=0; i < list.options.length; i++) {

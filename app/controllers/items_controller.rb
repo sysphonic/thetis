@@ -22,7 +22,7 @@ class ItemsController < ApplicationController
     before_filter :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]
     before_filter :allow_midair_login, :only => [:get_attachment]
   end
-  before_filter :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize, :move_in_team_folder]
+  before_filter :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize]  # :move_in_team_folder
   before_filter :check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment]
 
   ###########################
@@ -1376,30 +1376,32 @@ class ItemsController < ApplicationController
     render(:partial => 'ajax_team_info', :layout => false)
   end
 
-  #=== move_in_team_folder
-  #
-  #<Ajax>
-  #Moves the Item in the Team Folder.
-  #
-  def move_in_team_folder
-    Log.add_info(request, params.inspect)
-
-    raise(RequestPostOnlyException) unless request.post?
-
-    @item = Item.find(params[:id])
-
-    team_folder = @item.team.get_team_folder
-
-    @item.update_attribute(:folder_id, team_folder.id)
-
-    flash[:notice] = t('msg.move_success')
-
-    render(:partial => 'ajax_move_in_team_folder', :layout => false)
-
-  rescue => evar
-    Log.add_error(request, evar)
-    render(:partial => 'ajax_move_in_team_folder', :layout => false)
-  end
+=begin
+#  #=== move_in_team_folder
+#  #
+#  #<Ajax>
+#  #Moves the Item in the Team Folder.
+#  #
+#  def move_in_team_folder
+#    Log.add_info(request, params.inspect)
+#
+#    raise(RequestPostOnlyException) unless request.post?
+#
+#    @item = Item.find(params[:id])
+#
+#    team_folder = @item.team.get_team_folder
+#
+#    @item.update_attribute(:folder_id, team_folder.id)
+#
+#    flash[:notice] = t('msg.move_success')
+#
+#    render(:partial => 'ajax_move_in_team_folder', :layout => false)
+#
+#  rescue => evar
+#    Log.add_error(request, evar)
+#    render(:partial => 'ajax_move_in_team_folder', :layout => false)
+#  end
+=end
 
   #=== change_team_status
   #

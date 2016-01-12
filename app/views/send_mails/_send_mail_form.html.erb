@@ -62,7 +62,7 @@ _findInsertIdx = function(dst, valPrefix, val)
 
 moveListAddresses = function(src, dst, valPrefix, textPrefix)
 {
-  var ret_ary = new Array();
+  var ret_ary = [];
   for (var i=0; i < src.length; i++) {
     var option = src.options[i];
     if (option.selected == true) {
@@ -186,7 +186,7 @@ var thetisBoxSaveProgress = new ThetisBox;
 var saveFuncs = null;
 var saveFuncsIdx = 0;
 
-doSend = function()
+onSendMailClicked = function()
 {
   if (_z("addresses_selected").length <= 0) {
     msg("<%= t('msg.specify_to_address') %>");
@@ -195,13 +195,13 @@ doSend = function()
 
   var email_subject = _z("email_subject");
   if (email_subject && email_subject.value.length <= 0) {
-    confm("<%= t('mail.confirm_to_send_without_subject') %>", "_doSend()");
+    confm("<%= t('mail.confirm_to_send_without_subject') %>", "doSend()");
   } else {
-    confm("<%= t('mail.confirm_to_send') %>", "_doSend()");
+    confm("<%= t('mail.confirm_to_send') %>", "doSend()");
   }
 }
 
-_doSend = function()
+doSend = function()
 {
   doSave(true);
 }
@@ -218,7 +218,7 @@ doSave = function(do_smtp)
   _need_update = true;
 
   _do_send = do_smtp;
-  saveFuncs = new Array();
+  saveFuncs = [];
 
   // Basic
   saveFuncs.push(
@@ -234,7 +234,7 @@ doSave = function(do_smtp)
         var frm = document.form_send_mail<%= form_idx %>;
         var target_id = "div_sendmail_content";
 
-        var addParams = new Array();
+        var addParams = [];
         addParams.push("id="+_z("email_id").value);
         addParams.push(Form.serialize(frm));
 
@@ -247,12 +247,12 @@ doSave = function(do_smtp)
               asynchronous:true,
               evalScripts:true,
               onComplete:function(request){
-                            if (request.responseText.stripScripts().indexOf("<!-- $FLASH_NOTICE:ERROR -->") >= 0) {
-                              setTimeout("onSaveError('basic')", 10);
-                            } else {
-                              setTimeout("onSaveComplete('basic')", 10);
-                            }
-                          }
+                if (request.responseText.stripScripts().indexOf("<!-- $FLASH_NOTICE:ERROR -->") >= 0) {
+                  setTimeout("onSaveError('basic')", 10);
+                } else {
+                  setTimeout("onSaveComplete('basic')", 10);
+                }
+              }
             }
           );
       }
@@ -364,30 +364,30 @@ onFileSelectOK = function()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+_z("email_id").value);
 <% unless @mail_account.nil? %>
   addParams.push("mail_account_id=<%= @mail_account.id %>");
 <% end %>
 
   ajaxUploadFile(
-          document.form_file,
-          "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?"+addParams.join("&"),
-          "div_sendmail_attach",
-          function(){
-            thetisBoxProgress.remove();
+      document.form_file,
+      "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?"+addParams.join("&"),
+      "div_sendmail_attach",
+      function(){
+        thetisBoxProgress.remove();
 
-            thetisBoxAttachFile.remove();
-            thetisBoxAttachFile = null;
-          },
-          function(){
-            thetisBoxProgress.remove();
-            msg("<%= t('msg.system_error')%>");
+        thetisBoxAttachFile.remove();
+        thetisBoxAttachFile = null;
+      },
+      function(){
+        thetisBoxProgress.remove();
+        msg("<%= t('msg.system_error')%>");
 
-            thetisBoxAttachFile.remove();
-            thetisBoxAttachFile = null;
-          }
-        );
+        thetisBoxAttachFile.remove();
+        thetisBoxAttachFile = null;
+      }
+    );
 }
 
 onFileSelectCancel = function()
@@ -396,36 +396,36 @@ onFileSelectCancel = function()
   thetisBoxAttachFile = null;
 }
 
-doDeleteAttachment = function(div_id, attach_id, title)
+onDeleteAttachmentClicked = function(div_id, attach_id, title)
 {
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "_doDeleteAttachment('"+div_id+"', "+attach_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDeleteAttachment('"+div_id+"', "+attach_id+")");
 }
 
-_doDeleteAttachment = function(div_id, attach_id)
+doDeleteAttachment = function(div_id, attach_id)
 {
   _need_update = true;
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+_z("email_id").value);
   addParams.push("attachment_id="+attach_id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Updater(
-        "div_sendmail_attach",
-        "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment', :id => (@email)?(@email.id):nil) %>",
-        {
-          method:"post",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
-            removeElem(_z(div_id));
-          }
+      "div_sendmail_attach",
+      "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment', :id => (@email)?(@email.id):nil) %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          removeElem(_z(div_id));
         }
-     );
+      }
+   );
 }
 
 </script>

@@ -250,7 +250,7 @@ end
         <%= t('btn.register') %>
       </td>
       <td style="width:10px;"></td>
-      <td class="img_button_td" onclick="doClear();">
+      <td class="img_button_td" onclick="onClearTimecardClicked();">
         <%= t('btn.clear') %>
       </td>
     <% end %>
@@ -340,30 +340,35 @@ function doRegister()
     _z("timecard_end").value = end_date + " " + end_hour + ":" + end_min;
   }
 
+  var addParams = [];
+  addParams.push("id="+_z("timecard_id").value);
+  addParams.push(Form.serialize(document.form_timecard));
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'update') %>?id=" + _z("timecard_id").value,
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_timecard),
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
+      "div_break",
+      "<%= url_for(:controller => 'timecards', :action => 'update') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
+}
+
+function onClearTimecardClicked()
+{
+  confm("<%= t('timecard.confirm_to_clear_record') %>", "doClear()");
 }
 
 function doClear()
-{
-  confm("<%= t('timecard.confirm_to_clear_record') %>", "_doClear()");
-}
-
-function _doClear()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
@@ -399,23 +404,31 @@ function inputBreak(org_start, org_end)
 
 function onBreakOK()
 {
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_span));
+  addParams.push("id="+_z("timecard_id").value);
+  addParams.push("date=<%= date_s %>");
+  addParams.push("user_id=<%= @selected_user.id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'update_break') %>?id=" + _z("timecard_id").value,
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_span) + "&date=<%= date_s %>&user_id=<%= @selected_user.id %>&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBox.remove();
+      "div_break",
+      "<%= url_for(:controller => 'timecards', :action => 'update_break') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBox.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function onBreakCancel()
@@ -424,30 +437,38 @@ function onBreakCancel()
   thetisBox = null;
 }
 
-function doDeleteBreak(org_start, org_end)
+function onDeleteBreakClicked(org_start, org_end)
 {
-  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "_doDeleteBreak('"+org_start+"', '"+org_end+"')");
+  confm("<%= t('paren.square.left') %>"+org_start.split(" ")[1]+"~"+org_end.split(" ")[1]+"<%= t('msg.confirm_to_delete') %>", "doDeleteBreak('"+org_start+"', '"+org_end+"')");
 }
 
-function _doDeleteBreak(org_start, org_end)
+function doDeleteBreak(org_start, org_end)
 {
+  var addParams = [];
+  addParams.push("id="+_z("timecard_id").value);
+  addParams.push("org_start=" + encodeURIComponent(org_start));
+  addParams.push("org_end=" + encodeURIComponent(org_end));
+  addParams.push("user_id=<%= @selected_user.id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-          "div_break",
-          "<%= url_for(:controller => 'timecards', :action => 'delete_break') %>?id=" + _z("timecard_id").value,
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:"org_start=" + encodeURIComponent(org_start) + "&org_end=" + encodeURIComponent(org_end) + "&user_id=<%= @selected_user.id %>&authenticity_token=<%= form_authenticity_token %>",
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBox.remove();
+      "div_break",
+      "<%= url_for(:controller => 'timecards', :action => 'delete_break') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBox.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function changeWorkcode(workcode)
@@ -507,25 +528,25 @@ function showDescSelector()
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('timecard.select_from_recent_desc') %>";
   new Ajax.Request(
-          "<%= url_for(:controller => 'timecards', :action => 'recent_descriptions') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          mainWidth*70/100+"," + mainHeight*70/100,
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'timecards', :action => 'recent_descriptions') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBox.show(
+                    "CENTER",
+                    mainWidth*70/100+"," + mainHeight*70/100,
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function setAppropriateTime(sw, hour_str, min_str)

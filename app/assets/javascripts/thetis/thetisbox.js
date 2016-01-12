@@ -1279,7 +1279,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   },
   addChildBox: function(childBox) {
     if (!this.child_boxes) {
-      this.child_boxes = new Array();
+      this.child_boxes = [];
     }
     this.child_boxes.push(childBox);
   },
@@ -1438,11 +1438,11 @@ ThetisBox.fireDefaultButton = function(event, id, target)
   return true;
 }
 
-var ThetisBoxEventHandlers = new Array();
+var ThetisBoxEventHandlers = [];
 
 /**----------------**----------------**----------------**----------------**/
 
-var ThetisBoxProgressors = new Array();
+var ThetisBoxProgressors = [];
 
 var ThetisBoxProgressor = Class.create();
 ThetisBoxProgressor.prototype = {
@@ -1864,7 +1864,7 @@ ThetisBox.getTreeFullPath = function(rootDiv, nodeId)
 {
   var targetBlock = _z(rootDiv +":" + nodeId);
 
-  var names = new Array();
+  var names = [];
 
   for (var node=targetBlock; node && node.id != rootDiv; node=node.parentNode) {
     if (node.className == "thetisBoxTreeBlock") {
@@ -1881,7 +1881,7 @@ ThetisBox.getTreeFullPathIds = function(rootDiv, nodeId)
 {
   var targetBlock = _z(rootDiv +":" + nodeId);
 
-  var ids = new Array();
+  var ids = [];
 
   for (var node=targetBlock; node && node.id != rootDiv; node=node.parentNode) {
     if (node.className == "thetisBoxTreeBlock") {

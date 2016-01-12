@@ -170,7 +170,7 @@ JKL.Calendar.prototype.zindex = 30000;
 JKL.Calendar.prototype.show_clear = false;
 
 // 2012.01.09 Shin 入力欄からフォーカスが外れたら自動非表示
-JKL.Calendar.cal_h = new Array();
+JKL.Calendar.cal_h = [];
 JKL.Calendar.restoreFocus = function(eid)
 {
   var cal_obj = JKL.Calendar.cal_h[eid];
@@ -514,7 +514,7 @@ JKL.Calendar.prototype.write = function (x, y) {
 */
 
     // 最大で7日×6週間＝42日分のループ
-    var list = new Array();
+    var list = [];
     for( var i=0; i<42; i++ ) {
         var tmp = new Date();
         tmp.setTime( date.getTime() + (24*3600*1000)*i );

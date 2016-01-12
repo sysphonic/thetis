@@ -10,7 +10,7 @@
           <% if @login_user.admin?(User::AUTH_GROUP) %>
             <input type="button" value="<%= t('btn.new') %>" onclick="onCreateGroupClicked(getPos(this));" style="width:80px;" />
             <input type="button" value="<%= t('btn.rename') %>" onclick="onRenameGroupClicked(getPos(this));" style="width:80px;" />
-            <input type="button" value="<%= t('btn.delete') %>" onclick="doDelete();" style="width:80px;" />
+            <input type="button" value="<%= t('btn.delete') %>" onclick="onDeleteGroupClicked();" style="width:80px;" />
             <input type="button" value="<%= t('btn.move') %>" onclick="onMoveGroupClicked();" style="width:80px;"/>
           <% else %>
             <%= t('group.only_admin_can_edit_tree') %>
@@ -257,7 +257,7 @@ function onRenameGroupClicked(pos)
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doRenameGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.specify_name') %>", name);
 }
 
-function doDelete()
+function onDeleteGroupClicked()
 {
   if (document.form_group_tree.selKeeper.value == "") {
     msg("<%= t('group.select') %>");
@@ -273,26 +273,33 @@ function doDelete()
   ThetisBox.openTree("groupTree:"+group_id, true);
 
   var name = trim(_z("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
-  confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%= t('group.delete_info2') %></div><%= t('msg.confirm_sure') %>", "_doDelete("+group_id+")");
+  confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%= t('group.delete_info2') %></div><%= t('msg.confirm_sure') %>", "doDelete("+group_id+")");
 }
 
-function _doDelete(group_id)
+function doDelete(group_id)
 {
+  var addParams = [];
+  addParams.push("id="+group_id);
+  addParams.push(Form.serialize(document.form_group_tree));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBox = prog("TOP-RIGHT");
+
   new Ajax.Updater(
-          "base_groupTree:"+group_id,
-          "<%= url_for(:controller => 'groups', :action => 'destroy') %>?id="+group_id,
-          {
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBox.remove();
-              removeElem(_z("base_groupTree:"+group_id));
-              document.form_group_tree.selKeeper.value = "";
-            },
-            parameters:Form.serialize(document.form_group_tree)+"&authenticity_token=<%= form_authenticity_token %>"
-          }
-        );
+      "base_groupTree:"+group_id,
+      "<%= url_for(:controller => 'groups', :action => 'destroy') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
+          removeElem(_z("base_groupTree:"+group_id));
+          document.form_group_tree.selKeeper.value = "";
+        }
+      }
+    );
 }
 
 function onMoveGroupClicked()
@@ -334,7 +341,7 @@ function doMoveGroup(thetisBoxId, group_id)
 
 function doGetUsers(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+group_id);
   addParams.push(Form.serialize(document.form_group_tree));
 
@@ -343,7 +350,7 @@ function doGetUsers(group_id)
 
 function doGetGroupsOrder(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+group_id);
   addParams.push(Form.serialize(document.form_group_tree));
 
@@ -352,7 +359,7 @@ function doGetGroupsOrder(group_id)
 
 function doGetOfficialTitles(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+group_id);
   addParams.push(Form.serialize(document.form_group_tree));
 
@@ -361,7 +368,7 @@ function doGetOfficialTitles(group_id)
 
 function doGetWorkflows(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+group_id);
   addParams.push(Form.serialize(document.form_group_tree));
 
@@ -370,7 +377,7 @@ function doGetWorkflows(group_id)
 
 function doGetMaps(group_id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push("id="+group_id);
   addParams.push(Form.serialize(document.form_group_tree));
 

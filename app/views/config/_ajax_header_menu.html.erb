@@ -14,7 +14,7 @@
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
           <%= truncate(menu_name, :length => 20) %>
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditHeaderMenu('<%= ApplicationHelper.h_s_quote(menu_name) %>'); return false;" style="margin-left:10px;" />
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="doDeleteHeaderMenu('<%= ApplicationHelper.h_s_quote(menu_name) %>'); return false;" style="margin-left:5px;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteHeaderMenuClicked('<%= ApplicationHelper.h_s_quote(menu_name) %>'); return false;" style="margin-left:5px;" />
         </div>
       <%
         end

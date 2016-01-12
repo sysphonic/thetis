@@ -135,7 +135,7 @@ function onLoadSub()
   showNewDetail();
 <% end %>
 <% unless params[:doDelete].nil? %>
-  _doScheduleDelete("<%= params[:doDelete] %>");
+  doScheduleDelete("<%= params[:doDelete] %>");
 <% end %>
 
   var div_schedule_detail = _z("div_schedule_detail");
@@ -166,20 +166,20 @@ function showNewDetail()
 {
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-              "div_schedule_detail",
-              "<%= url_for(:controller => 'schedules', :action => 'new') %>",
-              {
-                method:"get",
-                parameters:Form.serialize(document.form_schedule),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
+      "div_schedule_detail",
+      "<%= url_for(:controller => 'schedules', :action => 'new') %>",
+      {
+        method:"get",
+        parameters:Form.serialize(document.form_schedule),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
 
-                  setTimeout("scrollToDetail()", 400);
-                }
-              }
-            );
+          setTimeout("scrollToDetail()", 400);
+        }
+      }
+    );
 }
 
 function scrollToDetail()
@@ -192,20 +192,20 @@ function showScheduleDetail(date, id, title)
 {
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-              "div_schedule_detail",
-              "<%= url_for(:controller => 'schedules', :action => 'show') %>?id="+id,
-              {
-                method:"get",
-                parameters:Form.serialize(document.form_schedule),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
+      "div_schedule_detail",
+      "<%= url_for(:controller => 'schedules', :action => 'show') %>?id="+id,
+      {
+        method:"get",
+        parameters:Form.serialize(document.form_schedule),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
 
-                  setTimeout("scrollToDetail()", 400);
-                }
-              }
-            );
+          setTimeout("scrollToDetail()", 400);
+        }
+      }
+    );
 }
 
 function editScheduleDetail(date, id)
@@ -228,17 +228,17 @@ function editScheduleDetail(date, id)
             );
 }
 
-function doScheduleDelete(date, id, title)
+function onDeleteScheduleClicked(date, id, title)
 {
   if (title == null) {
     return;
   }
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('schedule.confirm_to_delete') %>", "_doScheduleDelete("+id+")");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('schedule.confirm_to_delete') %>", "doScheduleDelete("+id+")");
 }
 
-function _doScheduleDelete(id)
+function doScheduleDelete(id)
 {
-  var addParams = new Array();
+  var addParams = [];
   addParams.push(Form.serialize(document.form_schedule));
   addParams.push("id="+id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");

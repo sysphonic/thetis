@@ -11,7 +11,7 @@
         <td style="padding-top:10px; text-align:center;">
           <table style="margin:0px auto;">
             <tr>
-              <td class="img_button_td" onclick="doTeamCancel();">
+              <td class="img_button_td" onclick="onTeamCancelClicked();">
                 <%= t('btn.cancel') %>
               </td>
             </tr>
@@ -27,26 +27,27 @@
 
 <script type="text/javascript">
 
-doTeamCancel = function()
+onTeamCancelClicked = function()
 {
-  confm("<%= t('team.confirm_cancel') %>", "_doTeamCancel()");
+  confm("<%= t('team.confirm_cancel') %>", "doTeamCancel()");
 }
 
-_doTeamCancel = function()
+doTeamCancel = function()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-                "div_team_apply",
-                document.form_team_cancel.action,
-                {
-                  asynchronous:true,
-                  evalScripts:true,
-                  onComplete:function(request) {
-                      thetisBox.remove();
-                  },
-                  parameters: Form.serialize(document.form_team_cancel)
-                }
-              );
+      "div_team_apply",
+      document.form_team_cancel.action,
+      {
+        method:"post",
+        parameters: Form.serialize(document.form_team_cancel),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 </script>
