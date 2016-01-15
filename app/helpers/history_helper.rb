@@ -1,8 +1,6 @@
 #
 #= HistoryHelper
 #
-#Original by::   Sysphonic
-#Authors::   MORITA Shintaro
 #Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
@@ -100,10 +98,10 @@ module HistoryHelper
       prms.delete('authenticity_token')
 
       last_reqs = request.session[:last_req_params] unless request.session.nil?
-      if last_reqs.nil?
+      if last_reqs.nil? or last_reqs.empty?
         last_reqs = [prms]
       else
-        if !last_reqs.last.nil? and last_reqs.last[:controller] == prms[:controller] and last_reqs.last[:action] == prms[:action]
+        if HistoryHelper.get_path_token(last_reqs.last) == HistoryHelper.get_path_token(prms)
           last_reqs[-1] = prms
         else
           last_reqs << prms
@@ -127,12 +125,24 @@ module HistoryHelper
 
     last_reqs = request.session[:last_req_params]
 
-    return if last_reqs.nil?
+    return if last_reqs.nil? or last_reqs.empty?
 
-    last_req_idx = last_reqs.length - 1
+#Debug
+#Log.add_error(nil, nil, '@@@ ' + last_reqs.collect {|prms| get_path_token(prms)}.join("\n"))
 
     if HistoryHelper.acceptable?(request.parameters)
-      last_req_idx -= 1
+      last_req_idx = -1
+      cur_path = HistoryHelper.get_path_token(request.parameters)
+      last_reqs.each_with_index.reverse_each do |last_params, idx|
+        if !cur_path.blank? and (cur_path == HistoryHelper.get_path_token(last_params))
+          next
+        else
+          last_req_idx = idx
+          break
+        end
+      end
+    else
+      last_req_idx = last_reqs.length - 1
     end
 
     return if last_req_idx < 0
@@ -176,10 +186,7 @@ module HistoryHelper
     history << entry
 
 #Debug
-#history.each do |prms|
-#  puts get_path_token(prms)
-#end
-#puts
+#Log.add_error(nil, nil, '### ' + history.collect {|prms| get_path_token(prms)}.join("\n"))
 
     request.session[:history] = history
     request.session[:last_req_params].delete_at(last_req_idx)
@@ -215,7 +222,7 @@ module HistoryHelper
   #
   def self.get_path_token(prms)
 
-    return prms[:controller] + '/' + prms[:action]
+    return prms['controller'] + '/' + prms['action']
   end
-
 end
+

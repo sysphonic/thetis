@@ -1,8 +1,6 @@
 #
 #= EmailsHelper
 #
-#Original by::   Sysphonic
-#Authors::   MORITA Shintaro
 #Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
