@@ -745,104 +745,104 @@ forceRepeat = function(sw)
 
 showCalStart = function()
 {
-  var calStart = new JKL.Calendar("div_cal_start", "form_detail", "start_date");
+  var calStart = new JKL.Calendar("div_cal_start", "start_date");
   calStart.setFunc(
-                function() {
-                    var start = _z("start_date");
-                    var end = _z("end_date");
-                    if (end.value != null && end.value != "" && start.value > end.value) {
-                      end.value = start.value;
-                    }
-                  }
-            );
+      function() {
+        var start = _z("start_date");
+        var end = _z("end_date");
+        if (end.value != null && end.value != "" && start.value > end.value) {
+          end.value = start.value;
+        }
+      }
+    );
   calStart.write();
 }
 
 showCalEnd = function()
 {
-  var calEnd = new JKL.Calendar("div_cal_end", "form_detail", "end_date");
+  var calEnd = new JKL.Calendar("div_cal_end", "end_date");
   calEnd.setFunc(
-                function() {
-                    var start = _z("start_date");
-                    var end = _z("end_date");
-                    if (start.value != null && start.value != "" && end.value < start.value) {
-                      start.value = end.value;
-                    }
-                  }
-            );
+      function() {
+        var start = _z("start_date");
+        var end = _z("end_date");
+        if (start.value != null && start.value != "" && end.value < start.value) {
+          start.value = end.value;
+        }
+      }
+    );
   calEnd.write();
 }
 
 showCalTermStart = function()
 {
-  var calRepStart = new JKL.Calendar("div_cal_repStart", "form_detail", "schedule[repeat_start]");
+  var calRepStart = new JKL.Calendar("div_cal_repStart", "schedule_repeat_start");
   calRepStart.setFunc(
-                function() {
-                    setForceTargetAll();
-                    var start = _z("schedule_repeat_start");
-                    var end = _z("schedule_repeat_end");
-                    if (end.value != null && end.value != "" && start.value > end.value) {
-                      end.value = start.value;
-                    }
-                  }
-            );
+      function() {
+        setForceTargetAll();
+        var start = _z("schedule_repeat_start");
+        var end = _z("schedule_repeat_end");
+        if (end.value != null && end.value != "" && start.value > end.value) {
+          end.value = start.value;
+        }
+      }
+    );
   calRepStart.write();
 }
 
 showCalTermEnd = function()
 {
-  var calRepEnd = new JKL.Calendar("div_cal_repEnd", "form_detail", "schedule[repeat_end]");
+  var calRepEnd = new JKL.Calendar("div_cal_repEnd", "schedule_repeat_end");
   calRepEnd.setFunc(
-                function() {
-                    setForceTargetAll();
-                    var start = _z("schedule_repeat_start");
-                    var end = _z("schedule_repeat_end");
-                    if (start.value != null && start.value != "" && end.value < start.value) {
-                      start.value = end.value;
-                    }
-                  }
-            );
+      function() {
+        setForceTargetAll();
+        var start = _z("schedule_repeat_start");
+        var end = _z("schedule_repeat_end");
+        if (start.value != null && start.value != "" && end.value < start.value) {
+          start.value = end.value;
+        }
+      }
+    );
   calRepEnd.write();
 }
 
 addRepeatExcept = function()
 {
-  var calExcept = new JKL.Calendar("div_cal_except", "form_detail", "except_day");
+  var calExcept = new JKL.Calendar("div_cal_except", "except_day");
   calExcept.setFunc(
-                function() {
-                    var input_day = _z("except_day").value;
-                    var list = _z("excepts");
-                    addList(list, input_day, input_day, false);
-                    sortList(list, "DESC");
-                    setForceTargetAll();
-                  }
-            );
+      function() {
+        var input_day = _z("except_day").value;
+        var list = _z("excepts");
+        addList(list, input_day, input_day, false);
+        sortList(list, "DESC");
+        setForceTargetAll();
+      }
+    );
   calExcept.write();
 }
 
 removeRepeatExcept = function()
 {
-  var del_ary = deleteList(_z("excepts"));
+  var arr = deleteList(_z("excepts"));
 
-  if (del_ary != null && del_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     setForceTargetAll();
   }
 }
 
 addMember = function(attr_name)
 {
-  var ret_ary = moveList(_z(attr_name+"_candidates"), _z(attr_name+"s_selected"));
+  var arr = moveList(_z(attr_name+"_candidates"), _z(attr_name+"s_selected"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 }
 
 removeMember = function(attr_name)
 {
-  var ret_ary = moveList(_z(attr_name+"s_selected"), _z(attr_name+"_candidates"));
+  var arr = moveList(_z(attr_name+"s_selected"), _z(attr_name+"_candidates"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 }
@@ -851,9 +851,9 @@ removeMember = function(attr_name)
 
 removeScheduleEquipment = function()
 {
-  var ret_ary = deleteList(_z("equipment_selected"));
+  var arr = deleteList(_z("equipment_selected"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 }
@@ -871,37 +871,37 @@ onSelectEquipmentClicked = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'select_equipment') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddScheduleEquipment.resizable = true;
-                thetisBoxAddScheduleEquipment.title = "<%= Equipment.model_name.human %>";
-                thetisBoxAddScheduleEquipment.overflow = "hidden";
-                thetisBoxAddScheduleEquipment.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'schedules', :action => 'select_equipment') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxAddScheduleEquipment.resizable = true;
+          thetisBoxAddScheduleEquipment.title = "<%= Equipment.model_name.human %>";
+          thetisBoxAddScheduleEquipment.overflow = "hidden";
+          thetisBoxAddScheduleEquipment.show(
+                    "CENTER",
+                    "460,320",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 // ----------------------------------------------------
 
 removeScheduleItems = function()
 {
-  var ret_ary = deleteList(_z("items_selected"));
+  var arr = deleteList(_z("items_selected"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 }
@@ -919,28 +919,28 @@ onSelectItemsClicked = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'select_items') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddScheduleItems.resizable = true;
-                thetisBoxAddScheduleItems.title = "<%= Item.model_name.human %>";
-                thetisBoxAddScheduleItems.overflow = "hidden";
-                thetisBoxAddScheduleItems.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'schedules', :action => 'select_items') %>",
+      {
+        method:"get",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxAddScheduleItems.resizable = true;
+          thetisBoxAddScheduleItems.title = "<%= Item.model_name.human %>";
+          thetisBoxAddScheduleItems.overflow = "hidden";
+          thetisBoxAddScheduleItems.show(
+                    "CENTER",
+                    "460,320",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 </script>

@@ -8,7 +8,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM) unless @date.nil?
 
 <script type="text/javascript">
 
-var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
+var calDisp = new JKL.Calendar("div_cal_disp", "cal_date");
 calDisp.setFunc(
     function() {
       _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -27,11 +27,11 @@ calDisp.setFunc(
       document.form_schedule.appendChild(elem);
     <% end %>
 
-      document.form_schedule.submit();
       prog("TOP-RIGHT");
+      document.form_schedule.submit();
     }
   );
-calDisp.setStyle( "frame_color", "#3333CC" );
+calDisp.setStyle("frame_color", "#3333CC");
 
 </script>
 
@@ -67,7 +67,7 @@ next_week = @date + 7
 %>
         <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
         <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <input name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+        <input id="cal_date" name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:10.5pt; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
         &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
         &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
       </td>
@@ -278,7 +278,6 @@ end
   <input type="hidden" id="timecard_date" name="timecard[date]" value="<%= date_s %>" />
   <input type="hidden" id="timecard_start" name="timecard[start]" />
   <input type="hidden" id="timecard_end" name="timecard[end]" />
-
 </form>
 
 </div>

@@ -3,7 +3,7 @@
 
 <script type="text/javascript">
 
-var calDisp = new JKL.Calendar("div_cal_disp", "form_schedule", "date");
+var calDisp = new JKL.Calendar("div_cal_disp", "cal_date");
 calDisp.setFunc(
     function() {
       _z("date_wday").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -94,7 +94,7 @@ next_week = @date + 7
 %>
   <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= last_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
   <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= yesterday.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-  <input class="date_label" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
+  <input class="date_label" id="cal_date" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
   &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&nbsp;</a>
   &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= next_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&gt;&nbsp;</a>
 </div>
@@ -164,17 +164,21 @@ function doPageDay(date)
 
 function showNewDetail()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_schedule));
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Updater(
       "div_schedule_detail",
       "<%= url_for(:controller => 'schedules', :action => 'new') %>",
       {
         method:"get",
-        parameters:Form.serialize(document.form_schedule),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
-          thetisBox.remove();
+          thetisBoxProgress.remove();
 
           setTimeout("scrollToDetail()", 400);
         }
@@ -190,17 +194,22 @@ function scrollToDetail()
 
 function showScheduleDetail(date, id, title)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_schedule));
+  addParams.push("id="+id);
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Updater(
       "div_schedule_detail",
-      "<%= url_for(:controller => 'schedules', :action => 'show') %>?id="+id,
+      "<%= url_for(:controller => 'schedules', :action => 'show') %>",
       {
         method:"get",
-        parameters:Form.serialize(document.form_schedule),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
-          thetisBox.remove();
+          thetisBoxProgress.remove();
 
           setTimeout("scrollToDetail()", 400);
         }
@@ -210,22 +219,27 @@ function showScheduleDetail(date, id, title)
 
 function editScheduleDetail(date, id)
 {
-  var thetisBox = prog("TOP-RIGHT");
-  new Ajax.Updater(
-              "div_schedule_detail",
-              "<%= url_for(:controller => 'schedules', :action => 'edit') %>?id="+id,
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_schedule));
+  addParams.push("id="+id);
 
-                  setTimeout("scrollToDetail()", 400);
-                },
-                parameters:Form.serialize(document.form_schedule)
-              }
-            );
+  var thetisBoxProgress = prog("TOP-RIGHT");
+
+  new Ajax.Updater(
+      "div_schedule_detail",
+      "<%= url_for(:controller => 'schedules', :action => 'edit') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
+
+          setTimeout("scrollToDetail()", 400);
+        }
+      }
+    );
 }
 
 function onDeleteScheduleClicked(date, id, title)
@@ -243,7 +257,7 @@ function doScheduleDelete(id)
   addParams.push("id="+id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Updater(
       "div_timetable",
       "<%= url_for(:controller => 'schedules', :action => 'destroy') %>",
@@ -252,14 +266,17 @@ function doScheduleDelete(id)
         parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); _z("div_schedule_detail").innerHTML=""; }
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          _z("div_schedule_detail").innerHTML = "";
+        }
       }
     );
 }
 
 function doSelectGroup(thetisBoxId)
 {
-  var thetisBoxProgress = prog("TOP-RIGHT");
+  prog("TOP-RIGHT");
 
   var display = _z("display");
   display.options[display.selectedIndex].value = "group_" + ThetisBox.getTreeSelect(thetisBoxId);
