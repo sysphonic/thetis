@@ -1,51 +1,39 @@
 
+<table style="width:100%; height:100%; background-color:cornsilk;">
+  <tr>
+    <td style="vertical-align:top;">
+
 <% if @folders.nil? or @folders.empty? %>
 
-  <table style="width:100%; background-color:cornsilk; height:100%;">
-    <tr>
-      <td style="vertical-align:top;">
-        <br/><br/><br/>
-        <table style="width:80%; margin:0px auto;">
-          <tr>
-            <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
-              <%= t('paren.no_folders') %>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+      <table style="width:80%; margin:30px auto 0px;">
+        <tr>
+          <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%= t('paren.no_folders') %>
+          </td>
+        </tr>
+      </table>
 
 <% else %>
 
-  <table style="width:100%; height:100%;">
-    <tr>
-      <td id="sortable_items" style="vertical-align:top;">
-      <%
-      @folders.each_with_index do |folder, idx|
-        td_class = (idx % 2 == 1) ? 'list_td_off' : 'list_td_on'
-      %>
-        <div class="<%= td_class %>" id="folder_<%= folder.id %>" style="padding:0px;">
-          <table style="width:100%;">
-            <tr>
-              <td style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
-                <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-                <%
-                folder_name = folder.name
-                if (folder_name.nil? or folder_name.empty?) \
-                    and (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
-                  folder_name = MailAccount.get_title(folder.mail_account_id)
-                end
-                %>
-                &nbsp;<span style="color:navy;"><%= truncate(folder_name, :length => 20) %></span>
-              </td>
-            </tr>
-          </table>
-        </div>
+      <table class="regular_table">
+       <tbody id="sortable_items">
+      <% @folders.each_with_index do |folder, idx| %>
+        <tr id="folder_<%= folder.id %>">
+          <td>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+            <%
+            folder_name = folder.name
+            if (folder_name.nil? or folder_name.empty?) \
+                and (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
+              folder_name = MailAccount.get_title(folder.mail_account_id)
+            end
+            %>
+            &nbsp;<span style="color:navy;"><%= truncate(folder_name, :length => 20) %></span>
+          </td>
+        </tr>
       <% end %>
-      </td>
-    </tr>
-  </table>
+       </tbody>
+      </table>
 
 <script type="text/javascript">
 
@@ -60,31 +48,34 @@ onFoldersOrderUpdated = function()
 {
   var addParams = [];
   addParams.push("id=<%= @folder_id %>");
+  addParams.push(Sortable.serialize("sortable_items", { name: "folders_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'mail_folders', :action => 'update_folders_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_items", { name: "folders_order" }) + "&" + addParams.join("&"),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true
       }
     );
 }
 
-//<![CDATA[
 Sortable.create(
-      "sortable_items",
-      {
-        onChange: onFoldersOrderChanged,
-        onUpdate: onFoldersOrderUpdated,
-        tag:"div"
-      }
-    );
-//]]>
+    "sortable_items",
+    {
+      onChange: onFoldersOrderChanged,
+      onUpdate: onFoldersOrderUpdated,
+      tag:"tr"
+    }
+  );
 
 </script>
 
 <% end %>
+
+    </td>
+  </tr>
+</table>
 

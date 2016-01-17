@@ -57,7 +57,8 @@
 </table>
 
 <div class="base_list" id="div_logs">
-<table id="list_logs" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_logs">
+ <thead>
   <tr>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('fin_at')"><%= ZeptairXlog.human_attribute_name('fin_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('fin_at', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('req_at')"><%= ZeptairXlog.human_attribute_name('req_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('req_at', @sort_col, @sort_type)) %></span></th>
@@ -66,15 +67,16 @@
     <th class="list_sort" style="width:10%;"  nowrap onclick="sortList('cs_protocol')"><%= ZeptairXlog.human_attribute_name('cs_protocol') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_protocol', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:25%;" nowrap onclick="sortList('cs_uri')"><%= ZeptairXlog.human_attribute_name('cs_uri') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('cs_uri', @sort_col, @sort_type)) %></span></th>
   </tr>
+ </thead>
+ <tbody>
 <%
 users_cache = {}
 exist_cache = {}
 @xlogs.each_with_index do |xlog, idx|
 %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:center;"><%= xlog.fin_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;"><%= xlog.req_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+  <tr>
+    <td nowrap style="text-align:center;"><%= xlog.fin_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+    <td nowrap style="text-align:center;"><%= xlog.req_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
     <%
     user_exist = false
     user_name = ''
@@ -96,21 +98,21 @@ exist_cache = {}
     end
     if user_exist == false
     %>
-      <td class="<%= td_class %>" style="color:crimson"><%= user_name %></td>
+      <td style="color:crimson"><%= user_name %></td>
     <% else %>
       <% if @login_user.admin?(User::AUTH_USER) %>
-        <td class="<%= td_class %>">
+        <td>
           <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => xlog.user_id) %>'; return false;">
             <%= truncate(user_name, :length => 20) %>
           </a>
         </td>
       <% else %>
-        <td class="<%= td_class %>"><%= truncate(user_name, :length => 20) %></td>
+        <td><%= truncate(user_name, :length => 20) %></td>
     <%
       end
     end
     %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <%
       disp_s_addr = xlog.s_addr
       if !xlog.s_addr.nil? and xlog.s_addr.length > 20
@@ -125,20 +127,21 @@ exist_cache = {}
     type_color = 'blue' unless xlog.cs_protocol.index('HTTP').nil?
     type_color = 'red' if xlog.cs_protocol == 'SMTP' or xlog.cs_protocol == 'POP3'
     %>
-    <td class="<%= td_class %>" nowrap style="text-align:center; color:<%= type_color %>">
+    <td nowrap style="text-align:center; color:<%= type_color %>">
       <%= xlog.cs_protocol %>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <%= truncate(xlog.cs_uri, :length => 20) %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="msg('<%= ApplicationHelper.h_s_quote(xlog.get_detail.gsub('<', '').gsub('>', '')) %>');">
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <%= check_box(:check_xlog, xlog.id, :class => 'check_xlog') %>
     </td>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 

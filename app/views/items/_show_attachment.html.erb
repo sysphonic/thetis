@@ -10,20 +10,20 @@
     @attachments = @item.attachments_without_content
     @attachments.each do |attach|
     %>
-      <table style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
+      <table style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onmouseover="this.style.borderColor='lime'" onmouseout="this.style.borderColor='white'">
         <tr>
           <td class="td_attachment_name" nowrap style="text-align:center;">
             <%= attach.name %>
           </td>
         </tr>
-      <% unless attach.title.nil? or attach.title.empty? %>
+      <% unless attach.title.blank? %>
         <tr>
           <td class="td_attachment_title" style="text-align:center;">
             <%= attach.title %>
           </td>
         </tr>
       <% end %>
-      <% unless attach.memo.nil? or attach.memo.empty? %>
+      <% unless attach.memo.blank? %>
         <tr>
           <td class="td_attachment_memo">
             <%= attach.memo %>

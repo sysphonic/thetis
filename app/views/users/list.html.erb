@@ -38,13 +38,13 @@ official_title_obj_cache = {}
 <table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left;" nowrap>
-<% if @group_id.nil? or @group_id.empty? %>
+<% if @group_id.blank? %>
       <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
 <% else %>
-      <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-      &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+      <%= t('cap.group') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
 <% end %>
     </td>
     <td style="text-align:right;" nowrap>
@@ -78,7 +78,8 @@ official_title_obj_cache = {}
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_users">
+ <thead>
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:16%;" nowrap onclick="sortList('User.name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.name', @sort_col, @sort_type)) %></span></th>
@@ -87,43 +88,45 @@ official_title_obj_cache = {}
     <th class="list_sort" style="width:10%;" nowrap onclick="sortList('OfficialTitle.xorder')"><%= t('user.title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('OfficialTitle.xorder', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:20%;" nowrap onclick="sortList('User.groups')"><%= User.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.groups', @sort_col, @sort_type)) %></span></th>
   </tr>
+ </thead>
+ <tbody>
 <% @users.each_with_index do |user, idx|  %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;">
+  <tr>
+    <td nowrap style="text-align:right;">
       <%= user.id %>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <a class="a_underline" href="javascript:this.onclick()" onclick="showUser(<%= user.id %>); return false;">
         <%= truncate(user.name, :length => 20) %>
       </a>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <%= truncate(user.fullname, :length => 30) %>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <%= truncate(user.email, :length => 30) %>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
     <% user.user_titles.each do |user_title|  %>
       <%= truncate(OfficialTitle.get_name(user_title.official_title_id, official_title_obj_cache), :length => 10) %><br/>
     <% end  %>
     </td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <% user.get_groups_a.each do |group_id| %>
         <%= Group.get_path(group_id, @groups_cache, @group_obj_cache) %><br/>
       <% end %>
     </td>
   <% if @login_user.admin?(User::AUTH_USER) %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditUser(<%= user.id %>);" />
     </td>
-    <td class="<%= td_class %>" style="width:20px; text-align:center;">
+    <td style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
     </td>
   <% end %>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 

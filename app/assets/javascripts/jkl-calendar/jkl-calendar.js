@@ -171,24 +171,24 @@ JKL.Calendar.Style = function() {
     return this;
 };
 
-JKL.Calendar.Style.prototype.frame_width        = "150px";      // フレーム横幅
-JKL.Calendar.Style.prototype.frame_color        = "#006000";    // フレーム枠の色
-JKL.Calendar.Style.prototype.font_size          = "12px";       // 文字サイズ
-JKL.Calendar.Style.prototype.day_bgcolor        = "#F0F0F0";    // カレンダーの背景色
-JKL.Calendar.Style.prototype.month_color        = "#FFFFFF";    // ○年○月部分の背景色
-JKL.Calendar.Style.prototype.month_hover_color  = "#009900";    // マウスオーバー時の≪≫文字色
-JKL.Calendar.Style.prototype.month_hover_bgcolor= "#FFFFCC";   // マウスオーバー時の≪≫背景色
-JKL.Calendar.Style.prototype.weekday_color      = "#404040";    // 月曜～金曜日セルの文字色
-JKL.Calendar.Style.prototype.saturday_color     = "#0040D0";    // 土曜日セルの文字色
-JKL.Calendar.Style.prototype.sunday_color       = "#D00000";    // 日曜日セルの文字色
-JKL.Calendar.Style.prototype.others_color       = "#999999";    // 他の月の日セルの文字色
-JKL.Calendar.Style.prototype.day_hover_bgcolor  = "#FF9933";    // マウスオーバー時の日セルの背景
-JKL.Calendar.Style.prototype.cursor             = "pointer";    // マウスオーバー時のカーソル形状
-JKL.Calendar.Style.prototype.today_color        = "#008000";    // 今日日付セルの文字色
-JKL.Calendar.Style.prototype.today_border_color = "#00A000";    // 今日日付セルの枠線の色
-JKL.Calendar.Style.prototype.others_border_color= "#E0E0E0";    // 他の日セルの枠線の色
-JKL.Calendar.Style.prototype.today_bgcolor      = "#D0FFD0";    // 今日日付セルの背景色
-JKL.Calendar.Style.prototype.unselectable_day_bgcolor = "#D0D0D0";    // 選択不可能な日付の背景色
+JKL.Calendar.Style.prototype.frame_width        = "150px";
+JKL.Calendar.Style.prototype.frame_color        = "#006000";
+JKL.Calendar.Style.prototype.font_size          = "12px";
+JKL.Calendar.Style.prototype.day_bgcolor        = "#F0F0F0";
+JKL.Calendar.Style.prototype.month_color        = "#FFFFFF";
+JKL.Calendar.Style.prototype.month_hover_color  = "#009900";
+JKL.Calendar.Style.prototype.month_hover_bgcolor= "#FFFFCC";
+JKL.Calendar.Style.prototype.weekday_color      = "#404040";
+JKL.Calendar.Style.prototype.saturday_color     = "#0040D0";
+JKL.Calendar.Style.prototype.sunday_color       = "#D00000";
+JKL.Calendar.Style.prototype.others_color       = "#999999";
+JKL.Calendar.Style.prototype.day_hover_bgcolor  = "#FF9933";
+JKL.Calendar.Style.prototype.cursor             = "pointer";
+JKL.Calendar.Style.prototype.today_color        = "#008000";
+JKL.Calendar.Style.prototype.today_border_color = "#00A000";
+JKL.Calendar.Style.prototype.others_border_color= "#E0E0E0";
+JKL.Calendar.Style.prototype.today_bgcolor      = "#D0FFD0";
+JKL.Calendar.Style.prototype.unselectable_day_bgcolor = "#D0D0D0";
 
 JKL.Calendar.Style.prototype.set = function(key,val) { this[key] = val; }
 JKL.Calendar.Style.prototype.get = function(key) { return this[key]; }
@@ -410,50 +410,50 @@ JKL.Calendar.prototype.write = function (x, y)
 
   var days_unselectable = "font-weight: normal;";
 
-  var src1 = "";
+  var html = "";
 
 // 2006.11.23 MOM 邪魔な<select>への応急処置その１
 // テーブルをdivで囲んで上位レイヤに設定(z-indexの値を大きくしておく)
 // 2006.11.27 MOM 描画フィールドの高さを取得するため、idをセットしておく
-  src1 += '<div id="'+this.disp_id+'_screen" style="position:relative; z-index:'+(this.zindex+1)+';">\n';
+  html += '<div id="'+this.disp_id+'_screen" style="position:relative; z-index:'+(this.zindex+1)+';">\n';
 
-  src1 += '<table style="'+month_table_style+'">\n';
-  src1 += '  <tr style="height:10px;">\n';
-  src1 += '    <td id="'+this.disp_id+'_handle" colspan="7" style="padding:0px; background-color:'+this.style.day_bgcolor+'; cursor:move;" onmousedown="JKL.Calendar.clear_blur_timer(\''+this.disp_id+'\');" onmouseup="JKL.Calendar.restoreFocus(\''+this.disp_id+'\');">\n';
-  src1 += '      <table style="width:100%; height:5px; border:ridge 5px '+this.style.frame_color+';"><tr><td></td></tr></table>\n\n';
-  src1 += '    </td>\n';
-  src1 += '  </tr>\n';
-  src1 += '  <tr>\n';
-  src1 += '    <td colspan="7">\n';
-  src1 += '      <table style="'+month_table_style+'">\n';
-  src1 += '        <tr>\n';
-  src1 += '          <td id="__'+this.disp_id+'_btn_prev" title="'+JKL.Calendar.captions[0]+'" style="'+month_td_style+'">&nbsp;&laquo;</td>\n';
-  src1 += '          <td style="'+month_td_style+'">&nbsp;</td>\n';
+  html += '<table style="'+month_table_style+'">\n';
+  html += '  <tr style="height:10px;">\n';
+  html += '    <td id="'+this.disp_id+'_handle" colspan="7" style="padding:0px; background-color:'+this.style.day_bgcolor+'; cursor:move;" onmousedown="JKL.Calendar.clear_blur_timer(\''+this.disp_id+'\');" onmouseup="JKL.Calendar.restoreFocus(\''+this.disp_id+'\');">\n';
+  html += '      <table style="width:100%; height:5px; border:ridge 5px '+this.style.frame_color+';"><tr><td></td></tr></table>\n\n';
+  html += '    </td>\n';
+  html += '  </tr>\n';
+  html += '  <tr>\n';
+  html += '    <td colspan="7">\n';
+  html += '      <table style="'+month_table_style+'">\n';
+  html += '        <tr>\n';
+  html += '          <td id="__'+this.disp_id+'_btn_prev" title="'+JKL.Calendar.captions[0]+'" style="'+month_td_style+'">&nbsp;&laquo;</td>\n';
+  html += '          <td style="'+month_td_style+'">&nbsp;</td>\n';
   if (this.show_clear) {
-    src1 += '          <td id="__'+this.disp_id+'_btn_clear" title="'+JKL.Calendar.captions[4]+'" style="'+month_td_style+'; padding:0px 5px;"><img src="'+JKL.Calendar.buttons['clear']+'" /></td>\n';
+    html += '          <td id="__'+this.disp_id+'_btn_clear" title="'+JKL.Calendar.captions[4]+'" style="'+month_td_style+'; padding:0px 5px;"><img src="'+JKL.Calendar.buttons['clear']+'" /></td>\n';
   }
-  src1 += '          <td id="__'+this.disp_id+'_btn_today" style="'+month_td_style+'"><nobr>'+JKL.Calendar.monthNames[mon]+'&nbsp;&nbsp;'+(year)+'</nobr></td>\n';
-  src1 += '          <td id="__'+this.disp_id+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:10.5pt; padding:0px 5px;">&times;</b></td>\n';
-  src1 += '          <td id="__'+this.disp_id+'_btn_next" title="'+JKL.Calendar.captions[2]+'" style="'+month_td_style+'">&raquo;&nbsp;</td>\n';
-  src1 += "        </tr>\n";
-  src1 += "      </table>\n";
-  src1 += '    </td>\n';
-  src1 += '  </tr>\n';
-  src1 += '  <tr>\n';
+  html += '          <td id="__'+this.disp_id+'_btn_today" style="'+month_td_style+'"><nobr>'+JKL.Calendar.monthNames[mon]+'&nbsp;&nbsp;'+(year)+'</nobr></td>\n';
+  html += '          <td id="__'+this.disp_id+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:10.5pt; padding:0px 5px;">&times;</b></td>\n';
+  html += '          <td id="__'+this.disp_id+'_btn_next" title="'+JKL.Calendar.captions[2]+'" style="'+month_td_style+'">&raquo;&nbsp;</td>\n';
+  html += "        </tr>\n";
+  html += "      </table>\n";
+  html += '    </td>\n';
+  html += '  </tr>\n';
+  html += '  <tr>\n';
 
   for (var i = this.start_wday; i < this.start_wday + 7; i++) {
     var _wday = i%7;
     if(_wday == 0) {
-      src1 += '<td style="color: '+this.style.sunday_color+'; '+week_td_style+'">'+JKL.Calendar.wdayNames[0]+'</td>';
+      html += '<td style="color: '+this.style.sunday_color+'; '+week_td_style+'">'+JKL.Calendar.wdayNames[0]+'</td>';
     } else if(_wday == 6) {
-      src1 += '<td style="color: '+this.style.saturday_color+'; '+week_td_style+'">'+JKL.Calendar.wdayNames[6]+'</td>';
+      html += '<td style="color: '+this.style.saturday_color+'; '+week_td_style+'">'+JKL.Calendar.wdayNames[6]+'</td>';
     } else {
-      src1 += '<td style="color: '+this.style.weekday_color+'; '+week_td_style+'">';
-      src1 += JKL.Calendar.wdayNames[_wday]+'</td>';
+      html += '<td style="color: '+this.style.weekday_color+'; '+week_td_style+'">';
+      html += JKL.Calendar.wdayNames[_wday]+'</td>';
     }
   }
 
-  src1 += "</tr>\n";
+  html += "</tr>\n";
 
   var curutc;
   if (textElem && textElem.value) {
@@ -488,7 +488,7 @@ JKL.Calendar.prototype.write = function (x, y)
     }
 
     if (ww == this.start_wday) {
-      src1 += "<tr>";
+      html += "<tr>";
     }
 
     var cc = days_td_style;
@@ -496,24 +496,24 @@ JKL.Calendar.prototype.write = function (x, y)
 
     if ( mon == mm ) {
       if (holiday_name != null) {
-        cc += "color: "+this.style.sunday_color+";";    // 当月の日曜日
+        cc += "color: "+this.style.sunday_color+";";
       } else if ( ww == 0 ) {
-        cc += "color: "+this.style.sunday_color+";";    // 当月の日曜日
+        cc += "color: "+this.style.sunday_color+";";
       } else if ( ww == 6 ) {
-        cc += "color: "+this.style.saturday_color+";";  // 当月の土曜日
+        cc += "color: "+this.style.saturday_color+";";
       } else if ( utc == realutc ){
-        cc += "color: "+this.style.today_color+";";     // 今日日付
+        cc += "color: "+this.style.today_color+";";
       } else {
-        cc += "color: "+this.style.weekday_color+";";   // 当月の平日
+        cc += "color: "+this.style.weekday_color+";";
       }
     } else {
-      cc += "color: "+this.style.others_color+";";        // 前月末と翌月初の日付
+      cc += "color: "+this.style.others_color+";";
     }
 
     if (( min && min > utc ) || ( max && max < utc ) || ( !this.selectable_wdays[dd.getDay()] )) {
       cc += days_unselectable;
     }
-    if ( utc == curutc ) {                                  // フォーム上の当日
+    if ( utc == curutc ) {
       cc += "background: "+this.style.day_hover_bgcolor+";";
     } else if ( mon == mm && utc == realutc ) {
       cc += "background: "+this.style.today_bgcolor+";";
@@ -536,21 +536,21 @@ JKL.Calendar.prototype.write = function (x, y)
     }
     var tt = dd.getDate();
 
-    src1 += '<td style="'+cc+'" title="'+day_title+'" id="__'+this.disp_id+'_td_'+ss+'">'+tt+'</td>';
+    html += '<td style="'+cc+'" title="'+day_title+'" id="__'+this.disp_id+'_td_'+ss+'">'+tt+'</td>';
 
     if (ww == (this.start_wday+6)%7) {
-      src1 += "</tr>\n";
+      html += "</tr>\n";
     }
   }
-  src1 += "</table>\n";
+  html += "</table>\n";
 
-  src1 += '</div>\n';
+  html += '</div>\n';
 
   var dispElem = this.getDispElem();
   if ( ! dispElem ) return;
   dispElem.style.width = this.style.frame_width;
   dispElem.style.position = "absolute";
-  dispElem.innerHTML = src1;
+  dispElem.innerHTML = html;
 
 // 2006.11.23 MOM 邪魔な<select>への応急処置その２
 // カレンダーと全く同じサイズのIFRAMEを生成し、座標を一致させて下位レイヤに描画する
@@ -565,12 +565,12 @@ JKL.Calendar.prototype.write = function (x, y)
     var screenHeight = dispElem.document.getElementById(this.disp_id+"_screen").offsetHeight;
     this.hide();
 
-    src1 += '<div style="position:absolute;z-index:'+this.zindex+';top:0px;left:0px;">';
-    src1 += '<iframe /?scid="dummy.htm" frameborder=0 scrolling=no width='+this.style.frame_width+' height='+screenHeight+'></iframe>';
-    src1 += '</div>\n';
+    html += '<div style="position:absolute;z-index:'+this.zindex+';top:0px;left:0px;">';
+    html += '<iframe /?scid="dummy.htm" frameborder=0 scrolling=no width='+this.style.frame_width+' height='+screenHeight+'></iframe>';
+    html += '</div>\n';
 
 //改めてinnerHTMLにセット
-    dispElem.innerHTML = src1;
+    dispElem.innerHTML = html;
   }
 
   /*

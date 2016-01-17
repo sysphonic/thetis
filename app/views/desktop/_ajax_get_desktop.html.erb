@@ -85,7 +85,7 @@ end
         <tr>
         <% unless @login_user.nil? %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_map" class="desktop_toolbtn" title="<%= OfficeMap.model_name.human %>" onclick="doShowLocations();" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_map" class="desktop_toolbtn" title="<%= OfficeMap.model_name.human %>" onclick="doShowLocations();">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_map.png" title="<%= OfficeMap.model_name.human %>" />
             </div>
           </td>
@@ -93,13 +93,13 @@ end
         <% if $thetis_config[:menu]['req_login_schedules'] == '1' and @login_user.nil? %>
         <% else %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_calendar" class="desktop_toolbtn" title="<%= t('calendar.name') %>" onclick="showCalendar()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_calendar" class="desktop_toolbtn" title="<%= t('calendar.name') %>" onclick="showCalendar()">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_calendar.png" title="<%= t('calendar.name') %>" />
             </div>
           </td>
         <% end %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_label" class="desktop_toolbtn" title="<%= t('desktop.label.create') %>" onclick="createLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_label" class="desktop_toolbtn" title="<%= t('desktop.label.create') %>" onclick="createLabel()">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_label.png" title="<%= t('desktop.label.create') %>" />
             </div>
           </td>
@@ -112,25 +112,25 @@ end
               end
             %>
             <input id="biorhythm_req_birth" type="hidden" value="<%= req_birth %>" />
-            <div id="tool_biorhythm" class="desktop_toolbtn" title="<%= t('biorhythm.show') %>" onclick="if (_z('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_biorhythm" class="desktop_toolbtn" title="<%= t('biorhythm.show') %>" onclick="if (_z('biorhythm_req_birth').value=='true') { requestBirthday(); } else { showBiorhythm(); }">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_biorhythm.png" title="<%= t('biorhythm.show') %>">
             </div>
             <% end %>
           </td>
         <% unless @login_user.nil? %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_postlabel" class="desktop_toolbtn" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_postlabel" class="desktop_toolbtn" title="<%= t('desktop.label.post') %>" onclick="createPostLabel()">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_postlabel.png" title="<%= t('desktop.label.post') %>" />
             </div>
           </td>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_addressbook" class="desktop_toolbtn" title="<%= t('address.book') %>" onclick="showAddressBook()" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_addressbook" class="desktop_toolbtn" title="<%= t('address.book') %>" onclick="showAddressBook()">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_addressbook.png" title="<%= t('address.book') %>" />
             </div>
           </td>
         <% end %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
-            <div id="tool_tray" class="desktop_toolbtn" onclick="showTray()" title="<%= t('desktop.news.tray') %>" onMouseOver="style.backgroundColor='pink';" onMouseOut="style.backgroundColor='';">
+            <div id="tool_tray" class="desktop_toolbtn" onclick="showTray()" title="<%= t('desktop.news.tray') %>">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/tool_tray.png" title="<%= t('desktop.news.tray') %>">
             </div>
           </td>

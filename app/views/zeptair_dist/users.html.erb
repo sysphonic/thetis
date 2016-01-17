@@ -25,7 +25,7 @@ zept_cmd = @item.zeptair_command
   <tr style="height:5px;"><td></td></tr>
   <tr>
     <td style="padding-bottom:5px;">
-    <% if @group_id.nil? or @group_id.empty? %>
+    <% if @group_id.blank? %>
       <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
@@ -33,8 +33,8 @@ zept_cmd = @item.zeptair_command
       <table style="width:100%;">
         <tr>
           <td style="text-align:left;" nowrap>
-            <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-            &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+            <%= t('cap.group') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
           </td>
         </tr>
       </table>
@@ -60,7 +60,8 @@ zept_cmd = @item.zeptair_command
 </table>
 
 <div class="base_list" id="div_users">
-<table id="list_users" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_users">
+ <thead>
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('User.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('User.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:22%;" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
@@ -72,32 +73,33 @@ zept_cmd = @item.zeptair_command
     <td style="width:10px; background-color:#FFDFAD; padding:0px 3px; text-align:center;" nowrap><%= t('zeptair.dist.command_exec') %></td>
 <% end %>
   </tr>
+ </thead>
+ <tbody>
 <%
 @users.each_with_index do |user, idx|
   comment = ZeptairDistHelper.get_comment_of(@item.id, user.id)
   entries = ZeptairDistHelper.get_ack_array_of(comment)
 %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= user.id %></td>
+  <tr>
+    <td nowrap style="text-align:right;"><%= user.id %></td>
    <% if @login_user.admin?(User::AUTH_USER) %>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => user.id) %>'; return false;">
         <%= truncate(user.get_name, :length => 20) %>
       </a>
     </td>
    <% else %>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
       <%= truncate(user.get_name, :length => 20) %>
     </td>
    <% end %>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
     <% unless comment.nil? or comment.updated_at.nil? %>
       <%= comment.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>
     <% end %>
     </td>
 <% attachments.each do |attach| %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
     <% if entries.nil? %>
       <%= ZeptairDistHelper::MARK_NA %>
     <% else %>
@@ -112,7 +114,7 @@ zept_cmd = @item.zeptair_command
     </td>
 <% end %>
 <% unless zept_cmd.nil? %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
     <% if entries.nil? %>
       <%= ZeptairDistHelper::MARK_NA %>
     <% else %>
@@ -128,6 +130,7 @@ zept_cmd = @item.zeptair_command
 <% end %>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 

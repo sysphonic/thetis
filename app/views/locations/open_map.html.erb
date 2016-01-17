@@ -67,8 +67,8 @@ end
             <table style="width:100%;">
               <tr>
                 <td style="text-align:left;" nowrap>
-                  <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-                  &nbsp; <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" />
+                  <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+                  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
                 </td>
               </tr>
             </table>
@@ -90,9 +90,9 @@ end
   </tr>
 </table>
 <script type="text/javascript">
-//<![CDATA[
+
 new Draggable("toolbar", {revert:false})
-//]]>
+
 </script>
 
 <!-- Locations -->

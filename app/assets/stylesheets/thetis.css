@@ -3,9 +3,10 @@
 .symbol_title {line-height:1.1; font-size:18pt; font-family:Times New Roman, Georgia; font-weight:500;}
 .base_list {overflow:scroll; overflow-x:visible; background-color:white;}
 
-.desktop_toolbtn {cursor:pointer; width:64px; vertical-align:middle; -moz-border-radius:10px; -webkit-border-radius:10px; border-radius:10px;}
-.postlabel_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
-.label_frame {-moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
+.desktop_toolbtn {cursor:pointer; width:64px; vertical-align:middle; border-radius:10px;}
+.desktop_toolbtn:hover {background-color:pink;}
+.postlabel_frame {border-radius:7px;}
+.label_frame {border-radius:7px;}
 
 .toolbtn_dropdown {position:absolute; background-color:ghostwhite; padding:3px; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; -webkit-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 .context_menu_item {display:block; height:25px; line-height:25px; text-align:left; vertical-align:middle; padding:0px 5px;}
@@ -86,8 +87,6 @@ table.timecard td{padding:2px 5px;}
 .list_th,.list_sort{background-image:url("../images/list_th_off.png"); background-repeat:repeat-x; font-size:10.5pt; line-height:17pt; white-space:nowrap;}
 .list_sort{cursor:pointer;}
 .list_sort:hover {background-image:url("../images/list_th_on.png");}
-.list_td_on{background-color:gainsboro; padding:0px 5px; text-align:left;}
-.list_td_off{background-color:white; padding:0px 5px; text-align:left;}
 
 .pagination_td{border:solid 1px darkgray; color:#404040; line-height:14pt;}
 
@@ -105,6 +104,12 @@ a:link {text-decoration:none; color:navy }
 a:visited {color:navy }
 a:active {text-decoration:none; color:blue }
 a:hover  {text-decoration:none; color:limegreen }
+
+a.linked_path {text-decoration:underline; color:red; background-color:inherit;}
+a.linked_path:hover {background-color:palegreen;}
+
+a.linked_item_dir {text-decoration:none; color:red; background-color:inherit;}
+a.linked_item_dir:hover {background-color:cornsilk;}
 
 .a_underline:link {text-decoration:underline; color:navy }
 .a_underline:visited {color:navy }
@@ -128,4 +133,12 @@ div.progressBar div.border {background-color:#fff; border:1px solid grey; width:
 div.progressBar div.background {background-color:#333; height:18px; width:0%;}
 
 div.hr {border-bottom:solid 1px gray; margin:5px 0px;}
+
+.regular_table {width:100%; border-spacing:1px;}
+.regular_table>tbody>tr {height:30px;}
+.regular_table>tbody>tr>td {text-align:left; padding:0px 5px;}
+.regular_table>tbody>tr:nth-child(odd)>td {background-color:white;}
+.regular_table>tbody>tr:nth-child(even)>td {background-color:gainsboro;}
+.regular_table>tbody#sortable_items>tr>td {cursor:move; border:2px solid transparent;}
+.regular_table>tbody#sortable_items>tr>td:hover {border-color:lime;}
 

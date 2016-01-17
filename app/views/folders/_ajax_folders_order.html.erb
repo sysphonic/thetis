@@ -1,46 +1,34 @@
 
+<table style="width:100%; height:100%; background-color:cornsilk;">
+  <tr>
+    <td style="vertical-align:top;">
+
 <% if Folder.check_user_auth(@folder_id, @login_user, 'w', true) %>
 
   <% if @folders.nil? or @folders.empty? %>
 
-    <table style="width:100%; background-color:cornsilk; height:100%;">
-      <tr>
-        <td style="vertical-align:top;">
-          <br/><br/><br/>
-          <table style="width:80%; margin:0px auto;">
-            <tr>
-              <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
-                <%= t('paren.no_folders') %>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
-    </table>
+      <table style="width:80%; margin:30px auto 0px;">
+        <tr>
+          <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%= t('paren.no_folders') %>
+          </td>
+        </tr>
+      </table>
 
   <% else %>
 
-    <table style="width:100%; background-color:cornsilk; height:100%;" >
-      <tr>
-        <td id="sortable_items" style="vertical-align:top;">
-        <%
-        @folders.each_with_index do |folder, idx|
-          td_class = (idx % 2 == 1) ? 'list_td_off' : 'list_td_on'
-        %>
-          <div class="<%= td_class %>" id="folder_<%= folder.id %>" style="padding:0px;">
-            <table style="width:100%;">
-              <tr>
-                <td style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-                  [<%= folder.id %>]&nbsp;&nbsp;<span style="color:navy;"><%= truncate(folder.name, :length => 20) %></span>
-                </td>
-              </tr>
-            </table>
-          </div>
-        <% end %>
-        </td>
-      </tr>
-    </table>
+      <table class="regular_table">
+       <tbody id="sortable_items">
+      <% @folders.each_with_index do |folder, idx| %>
+        <tr id="folder_<%= folder.id %>">
+          <td>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+            [<%= folder.id %>]&nbsp;&nbsp;<span style="color:navy;"><%= truncate(folder.name, :length => 20) %></span>
+          </td>
+        </tr>
+      <% end %>
+       </tbody>
+      </table>
 
 <script type="text/javascript">
 
@@ -48,47 +36,44 @@ onFoldersOrderUpdated = function()
 {
   var addParams = [];
   addParams.push("id=<%= Folder.find(@folders.first).parent_id %>");
+  addParams.push(Sortable.serialize("sortable_items", { name: "folders_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'folders', :action => 'update_folders_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_items", { name: "folders_order" }) + "&" + addParams.join("&"),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true
       }
     );
 }
 
-//<![CDATA[
 Sortable.create(
-      "sortable_items",
-      {
-        onUpdate: onFoldersOrderUpdated,
-        tag:"div"
-      }
-    );
-//]]>
+    "sortable_items",
+    {
+      onUpdate: onFoldersOrderUpdated,
+      tag:"tr"
+    }
+  );
+
 </script>
 
   <% end %>
 
 <% else %>
 
-  <table style="width:100%; background-color:cornsilk; height:100%; vertical-align:top;">
-    <tr>
-      <td style="vertical-align:top;">
-        <br/><br/><br/>
-        <table style="margin:0px auto; width:80%;">
-          <tr>
-            <td style="vertical-align:top; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
-              <%= t('folder.need_auth_to_modify') %>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+      <table style="width:80%; margin:30px auto 0px;">
+        <tr>
+          <td style="vertical-align:top; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%= t('folder.need_auth_to_modify') %>
+          </td>
+        </tr>
+      </table>
 
 <% end %>
+
+    </td>
+  </tr>
+</table>

@@ -64,7 +64,8 @@ unless @login_user.nil?
 </table>
 
 <div class="base_list" id="div_logs">
-<table id="list_logs" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_logs">
+ <thead>
   <tr>
     <th class="list_sort" style="width:5%;" nowrap onclick="sortList('logs.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:22%;" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
@@ -73,15 +74,16 @@ unless @login_user.nil?
     <th class="list_sort" style="width:7%;"  nowrap onclick="sortList('log_type')"><%= Log.human_attribute_name('log_type') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('log_type', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:28%;" nowrap onclick="sortList('access_path')"><%= Log.human_attribute_name('access_path') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('access_path', @sort_col, @sort_type)) %></span></th>
   </tr>
+ </thead>
+ <tbody>
 <%
 users_cache = {}
 user_obj_cache = {}
 @logs.each_with_index do |log, idx|
 %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= log.id %></td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;"><%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
+  <tr>
+    <td nowrap style="text-align:right;"><%= log.id %></td>
+    <td nowrap style="text-align:center;"><%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %></td>
     <%
     user_exist = false
     user_name = ''
@@ -91,36 +93,37 @@ user_obj_cache = {}
     end
     if user_exist == false
     %>
-      <td class="<%= td_class %>" style="color:crimson"><%= user_name %></td>
+      <td style="color:crimson"><%= user_name %></td>
     <% else %>
       <% if @login_user.admin?(User::AUTH_USER) %>
-        <td class="<%= td_class %>">
+        <td>
           <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'show', :id => log.user_id) %>'; return false;">
             <%= truncate(user_name, :length => 20) %>
           </a>
         </td>
       <% else %>
-        <td class="<%= td_class %>"><%= truncate(user_name, :length => 20) %></td>
+        <td><%= truncate(user_name, :length => 20) %></td>
     <%
       end
     end
     %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;"><%= log.remote_ip %></td>
+    <td nowrap style="text-align:center;"><%= log.remote_ip %></td>
     <%
     type_color = 'black'
     type_color = 'blue' if log.info?
     type_color = 'red' if log.error?
     %>
-    <td class="<%= td_class %>" nowrap style="text-align:center; color:<%= type_color %>"><%= log.log_type %></td>
-    <td class="<%= td_class %>" nowrap><%= truncate(log.access_path, :length => 30) %></td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center; color:<%= type_color %>"><%= log.log_type %></td>
+    <td nowrap><%= truncate(log.access_path, :length => 30) %></td>
+    <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="msg('<%= log.detail %>');">
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <%= check_box(:check_log, log.id, :class => 'check_log') %>
     </td>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 

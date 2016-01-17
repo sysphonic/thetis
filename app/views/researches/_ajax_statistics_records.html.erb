@@ -6,7 +6,7 @@
 <table style="width:100%;">
    <tr>
     <td style="text-align:left; padding:5px; padding-top:10px; padding-left:10px;" >
-    <% if @group_id.nil? or @group_id.empty? %>
+    <% if @group_id.blank? %>
       <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
         <%= t('btn.select_group') %>
       </div>
@@ -14,7 +14,7 @@
       <table>
         <tr>
           <td style="text-align:left;" nowrap>
-            <%= t('cap.group') %> <a class="a_underline" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'" style="color:red"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <%= t('cap.group') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
           </td>
         </tr>
       </table>

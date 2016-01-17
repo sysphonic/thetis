@@ -18,12 +18,12 @@
       <table style="width:100%;">
         <tr>
           <td style="text-align:left; padding-bottom:5px;" nowrap>
-    <% if @group_id.nil? or @group_id.empty? %>
+    <% if @group_id.blank? %>
             <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
               <%= t('btn.select_group') %>
             </div>
     <% else %>
-            <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;" style="color:red;" onMouseOver="this.style.backgroundColor='palegreen'" onMouseOut="this.style.backgroundColor='white'"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
+            <%= t('cap.group') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup();" style="margin-left:10px;" />
     <% end %>
           </td>
@@ -56,27 +56,29 @@
 </table>
 
 <div class="base_list" id="div_equipment">
-<table id="list_equipment" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_equipment">
+ <thead>
   <tr>
     <th class="list_sort" style="width:5%;"  nowrap onclick="sortList('equipment.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('equipment.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:28%;" nowrap onclick="sortList('name')"><%= Equipment.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:30%;" nowrap onclick="sortList('note')"><%= Equipment.human_attribute_name('note') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('note', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:27%;"  nowrap onclick="sortList('belongs_to')"><%= t('equipment.belongs_to') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('belongs_to', @sort_col, @sort_type)) %></span></th>
   </tr>
+ </thead>
+ <tbody>
 <%
 users_cache = {}
 @equipment.each_with_index do |equipment, idx|
 %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= equipment.id %></td>
-    <td class="<%= td_class %>" nowrap>
+  <tr>
+    <td nowrap style="text-align:right;"><%= equipment.id %></td>
+    <td nowrap>
       <a class="a_underline" href="javascript:this.onclick()" onclick="onShowEquipmentClicked('<%= equipment.id %>'); return false;">
         <%= truncate(equipment.name, :length => 20) %>
       </a>
     </td>
-    <td class="<%= td_class %>" nowrap><pre><%= truncate(equipment.note, :length => 30) %></pre></td>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap><pre><%= truncate(equipment.note, :length => 30) %></pre></td>
+    <td nowrap>
   <!--
       <% equipment.get_users_a.each do |user_id| %>
         <%= User.get_name(user_id, users_cache) %><br/>
@@ -105,14 +107,15 @@ users_cache = {}
         </div>
       <% end %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="onEditEquipmentClicked('<%= equipment.id %>');">
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <%= check_box(:check_equipment, equipment.id, :class => 'check_equipment') %>
     </td>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 

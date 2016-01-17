@@ -71,16 +71,18 @@
 </table>
 
 <div class="base_list" id="div_addresses">
-<table id="list_addresses" style="width:100%; border-spacing:1px;">
+<table class="regular_table" id="list_addresses">
+ <thead>
   <tr>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('name')"><%= Address.human_attribute_name('name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('email1')"><%= t('email.name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('email1', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:30%;" nowrap onclick="sortList('organization')"><%= Address.human_attribute_name('organization') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('organization', @sort_col, @sort_type)) %></span></th>
   </tr>
-<% @addresses.each_with_index do |address, idx|  %>
-  <% td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off' %>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap>
+ </thead>
+ <tbody>
+<% @addresses.each_with_index do |address, idx| %>
+  <tr>
+    <td nowrap style="text-align:left;">
       <a class="a_underline" href="javascript:this.onclick()" onclick="showAddress(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>'); return false;">
         <%= truncate(address.name, :length => 30) %>
       </a>
@@ -93,24 +95,25 @@
         truncate(addr, :length => 40)
       end
     %>
-    <td class="<%= td_class %>" nowrap>
+    <td nowrap>
     <% addrs.each do |addr| %>
       <%= addr %><br/>
     <% end %>
     </td>
-    <td class="<%= td_class %>">
+    <td>
       <%= truncate(address.organization, :length => 40) %>
     </td>
   <% if address.editable?(@login_user) %>
-    <td class="<%= td_class %>" nowrap style="width:20px; text-align:center;">
+    <td nowrap style="width:20px; text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
     </td>
-    <td class="<%= td_class %>" style="width:20px; text-align:center;">
+    <td style="width:20px; text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
     </td>
   <% end %>
   </tr>
 <% end %>
+ </tbody>
 </table>
 </div>
 
@@ -267,11 +270,11 @@ function doImportCsv(book)
   if (book) {
     addInputHidden(document.form_enc, null, "filter_book", book);
   }
+
+  prog("TOP-RIGHT");
   document.form_enc.method = "post";
   document.form_enc.action = "<%= url_for(:controller => 'addressbook', :action => 'import_csv') %>";
   document.form_enc.submit();
-
-  prog("TOP-RIGHT");
 
   thetisBoxExpImp.hide();
 }
@@ -294,11 +297,11 @@ function onDeleteClicked()
 function doDelete()
 {
   addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
+
+  prog("TOP-RIGHT");
   document.form_list.action = "<%= url_for(:controller => 'addressbook', :action => 'destroy') %>";
   document.form_list.method = "post";
   document.form_list.submit();
-
-  prog("TOP-RIGHT");
 }
 
 
@@ -310,10 +313,10 @@ function sortList(col)
     type = (type == "ASC") ? "DESC" : "ASC";
   }
 
+  prog("TOP-RIGHT");
   document.form_list.sort_col.value = col;
   document.form_list.sort_type.value = type;
   document.form_list.submit();
-  prog("TOP-RIGHT");
 }
 
 function doRegisterAddress(frm)

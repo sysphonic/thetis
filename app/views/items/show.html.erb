@@ -133,7 +133,7 @@ unless @for_print
             <%
             in_system_folder = @item.in_system_folder?(@folder_obj_cache)
             %>
-            <% unless in_system_folder %><a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';"><% end %>
+            <% unless in_system_folder %><a class="linked_item_dir" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;"><% end %>
               <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
             <% unless in_system_folder %></a><% end %>
           </td>

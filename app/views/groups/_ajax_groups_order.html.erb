@@ -1,44 +1,31 @@
+<table style="width:100%; height:100%; background-color:cornsilk;">
+  <tr>
+    <td style="vertical-align:top;">
 
 <% if @groups.nil? or @groups.empty? %>
 
-  <table style="width:100%; background-color:cornsilk; height:100%;">
-    <tr>
-      <td style="vertical-align:top;">
-        <br/><br/><br/>
-        <table style="width:80%; margin:0px auto;">
-          <tr>
-            <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
-              <%= t('paren.no_groups') %>
-            </td>
-          </tr>
-        </table>
-      </td>
-    </tr>
-  </table>
+      <table style="width:80%; margin:30px auto 0px;">
+        <tr>
+          <td style="text-align:center; padding:10px; color:firebrick; background-color:white; border:5px moccasin dashed;">
+            <%= t('paren.no_groups') %>
+          </td>
+        </tr>
+      </table>
 
 <% else %>
 
-  <table style="width:100%; background-color:cornsilk; height:100%;">
-    <tr>
-      <td id="sortable_items" style="vertical-align:top;">
-      <%
-      @groups.each_with_index do |group, idx|
-        td_class = (idx % 2 == 1) ? 'list_td_off' : 'list_td_on'
-      %>
-        <div class="<%= td_class %>" id="group_<%= group.id %>" style="padding:0px;">
-          <table style="width:100%;">
-            <tr>
-              <td style="cursor:move; border:2px solid white;" onMouseOver="this.style.borderColor='lime'" onMouseOut="this.style.borderColor='white'">
-                <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
-                [<%= group.id %>]&nbsp;&nbsp;<span style="color:navy;"><%= truncate(group.name, :length => 20) %></span>
-              </td>
-            </tr>
-          </table>
-        </div>
+      <table class="regular_table">
+       <tbody id="sortable_items">
+      <% @groups.each_with_index do |group, idx| %>
+        <tr id="group_<%= group.id %>">
+          <td>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+            [<%= group.id %>]&nbsp;&nbsp;<span style="color:navy;"><%= truncate(group.name, :length => 20) %></span>
+          </td>
+        </tr>
       <% end %>
-      </td>
-    </tr>
-  </table>
+       </tbody>
+      </table>
 
 <script type="text/javascript">
 
@@ -60,14 +47,17 @@ onGroupsOrderUpdated = function()
 }
 
 Sortable.create(
-      "sortable_items",
-      {
-        onUpdate: onGroupsOrderUpdated,
-        tag:"div"
-      }
-    );
+    "sortable_items",
+    {
+      onUpdate: onGroupsOrderUpdated,
+      tag:"tr"
+    }
+  );
 
 </script>
 
 <% end %>
 
+    </td>
+  </tr>
+</table>

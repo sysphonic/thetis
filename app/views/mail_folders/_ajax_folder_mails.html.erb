@@ -21,22 +21,23 @@
 <input type='hidden' id="selected_row" value="" />
 <input type='hidden' id="req_detail" value="false" />
 
-<table style="width:100%; border-spacing:1px;">
+<table class="regular_table">
+ <thead>
   <tr>
     <th class="list_sort" style="width:55%;" nowrap onclick="sortList('subject')"><%= t('mail.subject') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('subject', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:5%;" nowrap onclick="sortList('has_attach')"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif"><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('has_attach', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('from_address')"><%= t('mail.sender') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('from_address', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:20%;" nowrap onclick="sortList('sent_at')"><%= t('mail.sent_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('sent_at', @sort_col, @sort_type)) %></span></th>
   </tr>
-
+ </thead>
+ <tbody>
 <%
 @emails.each_with_index do |email, idx|
-  td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
   sbj_style = (email.unread?)?'email_subject_unread':''
   show_header = true # (email.status != Email::STATUS_DRAFT)
 %>
-  <tr id="tr_<%= email.id %>_<%= td_class.split('_').last %>" onclick="onSelChanged(this, '<%= email.id %>');" style="height:26px; cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'<%= (td_class.split('_').last=='on')?'gainsboro':'white' %>');">
-    <td class="<%= td_class %> <%= sbj_style %>" id="mail_subject_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">
+  <tr id="tr_<%= email.id %>" onclick="onSelChanged(this, '<%= email.id %>');" style="height:26px; cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'');">
+    <td class="<%= sbj_style %>" id="mail_subject_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">
     <% if show_header %>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="_z('req_detail').value='true';">
     <% end %>
@@ -46,28 +47,29 @@
       </div>
       <%= hidden_field_tag('email_status_' + email.id.to_s, email.status) %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <% if email.mail_attachments.nil? or email.mail_attachments.empty? %>
         &nbsp;
       <% else %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif">
       <% end %>
     </td>
-    <td class="<%= td_class %>" title="<%= email.from_address %>" nowrap style="text-align:center;">
+    <td title="<%= email.from_address %>" nowrap style="text-align:center;">
       <%= truncate(email.from_address, :length => 15) %>
     </td>
     <%
     sent_at = email.get_sent_at_exp(false)
     sent_at_full = email.get_sent_at_exp(true)
     %>
-    <td class="<%= td_class %>" title="<%= sent_at_full %>" nowrap style="text-align:center;">
+    <td title="<%= sent_at_full %>" nowrap style="text-align:center;">
       <%= sent_at %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;" onclick="onCheckBoxCellClicked(this, '<%= email.id %>');">
+    <td nowrap style="text-align:center;" onclick="onCheckBoxCellClicked(this, '<%= email.id %>');">
       <%= check_box(:check_mail, email.id, :class => 'check_mail') %>
     </td>
   </tr>
 <% end %>
+ </tbody>
 </table>
 <% end %>
 
@@ -105,7 +107,7 @@ onSelChanged = function(cur_tr, email_id)
 {
   var sel_tr = _z("selected_row").value;
   if (sel_tr != "") {
-    set_tr_bgcolor(_z(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
+    set_tr_bgcolor(_z(sel_tr), "");
   }
   _z("selected_row").value = cur_tr.id;
   set_tr_bgcolor(cur_tr, "lawngreen");

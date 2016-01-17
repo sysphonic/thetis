@@ -104,8 +104,8 @@
             <% end %>
             &nbsp;&nbsp;
           <% unless item.folder_id.nil? %>
-            <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;" onMouseOver="this.style.backgroundColor='cornsilk';" onMouseOut="this.style.backgroundColor='';">
-              <span style="color:red;"><%= item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
+            <a class="linked_item_dir" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => params[:from_action], :folder_id => item.folder_id) %>'; return false;">
+              <%= item.get_folder_path(@folders_cache, @folder_obj_cache) %>
             </a>
           <% end %>
           &nbsp;&nbsp;

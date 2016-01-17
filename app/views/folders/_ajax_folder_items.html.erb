@@ -201,7 +201,8 @@ onPaginate = function(url)
   </tr>
 </table>
 
-<table style="width:100%; border-spacing:1px;">
+<table class="regular_table">
+ <thead>
   <tr>
     <th class="list_sort" style="width:5%;" nowrap onclick="sortList('Item.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:35%;" nowrap onclick="sortList('title')"><%= Item.human_attribute_name('title') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('title', @sort_col, @sort_type)) %></span></th>
@@ -209,13 +210,12 @@ onPaginate = function(url)
     <th class="list_sort" style="width:7%;" nowrap onclick="sortList('public')"><%= Item.human_attribute_name('public') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('public', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:13%;" nowrap onclick="sortList('Item.user_id')"><%= t('item.registered_by') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Item.user_id', @sort_col, @sort_type)) %></span></th>
   </tr>
-<%
-@items.each_with_index do |item, idx|
-  td_class = (idx % 2 == 1) ? 'list_td_on' : 'list_td_off'
-%>
-  <tr style="height:33px;">
-    <td class="<%= td_class %>" nowrap style="text-align:right;"><%= item.id %></td>
-    <td class="<%= td_class %>" nowrap title="<%= item.title %>">
+ </thead>
+ <tbody>
+<% @items.each_with_index do |item, idx| %>
+  <tr>
+    <td nowrap style="text-align:right;"><%= item.id %></td>
+    <td nowrap title="<%= item.title %>">
       <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item) %>'; return false;" >
         <%= truncate(item.title, :length => 20) %>
       </a>
@@ -234,14 +234,14 @@ onPaginate = function(url)
     updated_at = item.get_timestamp_exp(false)
     updated_at_full = item.get_timestamp_exp(true)
     %>
-    <td class="<%= td_class %>" nowrap title="<%= updated_at_full %>" style="text-align:center;">
+    <td nowrap title="<%= updated_at_full %>" style="text-align:center;">
       <%= updated_at %>
     </td>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= item.public ? 'check_ok.gif' : 'check_ng.gif' %>">
     </td>
     <% user_name = item.disp_registered_by(@users_cache) %>
-    <td class="<%= td_class %>" nowrap title="<%= user_name %>">
+    <td nowrap title="<%= user_name %>">
       <%
       user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
       unless u_groups.empty?
@@ -257,7 +257,7 @@ onPaginate = function(url)
   if params[:read_only] != 'true'
     if !@login_user.nil? and item.editable?(@login_user.id)
   %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
     </td>
   <%
@@ -265,12 +265,13 @@ onPaginate = function(url)
   end
   %>
   <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
-    <td class="<%= td_class %>" nowrap style="text-align:center;">
+    <td nowrap style="text-align:center;">
       <%= check_box(:check_item, item.id, :class => 'check_item') %>
     </td>
   <% end %>
   </tr>
 <% end %>
+ </tbody>
 </table>
 <% end %>
 
