@@ -29,28 +29,28 @@
 onHeaderMenusOrderUpdated = function()
 {
   var addParams = [];
+  addParams.push(Sortable.serialize("sortable_header_menus", { name: "header_menus_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'config', :action => 'update_header_menus_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_header_menus", { name: "header_menus_order" }) + "&" + addParams.join("&"),
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true
       }
     );
 }
 
-//<![CDATA[
 Sortable.create(
-      "sortable_header_menus",
-      {
-        onUpdate: onHeaderMenusOrderUpdated,
-        tag:"div"
-      }
-    );
-//]]>
+    "sortable_header_menus",
+    {
+      onUpdate: onHeaderMenusOrderUpdated,
+      tag:"div"
+    }
+  );
+
 </script>
 
 <%= render(:partial => 'common/flash_notice') %>

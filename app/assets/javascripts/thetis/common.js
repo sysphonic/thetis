@@ -643,7 +643,10 @@ function addList(list, text, value, allowDuplex)
       }
     }
   }
-  list.options[list.length++] = new Option(text, value);
+  var idx = list.length;
+  var opt = new Option(text, value);
+  list.options[idx] = opt;
+  return idx;
 }
 
 function deleteList(list, val)
@@ -668,6 +671,9 @@ function deleteList(list, val)
 
 function sortList(list, direction)
 {
+  if (!list) {
+    return;
+  }
   var opts = [];
   for (var i=0; i < list.length; i++) {
     var option = list.options[i];
@@ -760,10 +766,10 @@ function moveListTrimSuffix(src, dst, valSeparator, textSeparator)
       var duplex = false;
       for (var k=0; k<dst.length; k++) {
         var sepIdx = option.value.lastIndexOf(valSeparator);
-        var val = option.value.substring(0, sepIdx);
+        var val = (sepIdx >= 0)?(option.value.substring(0, sepIdx)):(option.value);
         if (dst.options[k].value == val) {
           var sepIdx = option.text.lastIndexOf(textSeparator);
-          var text = option.text.substring(0, sepIdx);
+          var text = (sepIdx >= 0)?(option.text.substring(0, sepIdx)):(option.text);
           dst.options[k].text = text;
           duplex = true;
           break;
@@ -771,9 +777,9 @@ function moveListTrimSuffix(src, dst, valSeparator, textSeparator)
       }
       if (!duplex) {
         var sepIdx = option.value.lastIndexOf(valSeparator);
-        var val = option.value.substring(0, sepIdx);
+        var val = (sepIdx >= 0)?(option.value.substring(0, sepIdx)):(option.value);
         sepIdx = option.text.lastIndexOf(textSeparator);
-        var text = option.text.substring(0, sepIdx);
+        var text = (sepIdx >= 0)?(option.text.substring(0, sepIdx)):(option.text);
         dst.options[dst.length++] = new Option(
                           text,
                           val
@@ -1153,7 +1159,7 @@ function restoreHTML(html)
   return html.replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
 }
 
-function esc_quotes(str)
+function escQuotes(str)
 {
   if (str == null || str.length <= 0) {
     return str;
@@ -1161,7 +1167,7 @@ function esc_quotes(str)
   return str.replace(/[']/g, "\\'").replace(/["]/g, "&quot;");
 }
 
-function esc_w_quotes(str)
+function escWQuotes(str)
 {
   if (str == null || str.length <= 0) {
     return str;
@@ -1169,7 +1175,7 @@ function esc_w_quotes(str)
   return str.replace(/["]/g, "&quot;");
 }
 
-function set_tr_bgcolor(tr, color)
+function setTrBgcolor(tr, color)
 {
   var cnt = tr.childNodes.length;
 
@@ -1229,5 +1235,19 @@ function getDateTimeExp(date)
   exp += fillLeft(String(date.getMilliseconds()), "0", 3);
 
   return exp;
+}
+
+function splitTextBySelection(textarea)
+{
+  var arr = [];
+
+  var val = textarea.value;
+  var posStart = textarea.selectionStart;
+  var posEnd = textarea.selectionEnd;
+  arr[0] = val.substring(0, posStart);
+  arr[1] = val.substring(posStart, posEnd);
+  arr[2] = val.substring(posEnd);
+
+  return arr;
 }
 

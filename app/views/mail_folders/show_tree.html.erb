@@ -789,7 +789,7 @@ function clearMailContent()
   {
     var sel_tr = _z("selected_row").value;
     if (sel_tr != "") {
-      set_tr_bgcolor(_z(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
+      setTrBgcolor(_z(sel_tr), ((sel_tr.indexOf("_on")>=0)?"gainsboro":"white"));
       _z("selected_row").value = "";
     }
   }

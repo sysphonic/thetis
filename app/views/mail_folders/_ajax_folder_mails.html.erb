@@ -36,7 +36,7 @@
   sbj_style = (email.unread?)?'email_subject_unread':''
   show_header = true # (email.status != Email::STATUS_DRAFT)
 %>
-  <tr id="tr_<%= email.id %>" onclick="onSelChanged(this, '<%= email.id %>');" style="height:26px; cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {set_tr_bgcolor(this, '#BFFF81');}" onmouseout="set_tr_bgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'');">
+  <tr id="tr_<%= email.id %>" onclick="onSelChanged(this, '<%= email.id %>');" style="height:26px; cursor:pointer;" onmouseover="if (_z('selected_row').value!=this.id) {setTrBgcolor(this, '#BFFF81');}" onmouseout="setTrBgcolor(this, (_z('selected_row').value==this.id)?'lawngreen':'');">
     <td class="<%= sbj_style %>" id="mail_subject_<%= email.id %>" title="<%= email.subject %>" nowrap style="text-align:left;">
     <% if show_header %>
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" onclick="_z('req_detail').value='true';">
@@ -54,7 +54,7 @@
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.gif">
       <% end %>
     </td>
-    <td title="<%= email.from_address %>" nowrap style="text-align:center;">
+    <td title="<%= email.from_address %>" nowrap>
       <%= truncate(email.from_address, :length => 15) %>
     </td>
     <%
@@ -107,10 +107,10 @@ onSelChanged = function(cur_tr, email_id)
 {
   var sel_tr = _z("selected_row").value;
   if (sel_tr != "") {
-    set_tr_bgcolor(_z(sel_tr), "");
+    setTrBgcolor(_z(sel_tr), "");
   }
   _z("selected_row").value = cur_tr.id;
-  set_tr_bgcolor(cur_tr, "lawngreen");
+  setTrBgcolor(cur_tr, "lawngreen");
 
   if (_z("req_detail").value == "true") {
     showHeaderInfo(email_id, _z("mail_subject_"+email_id).title);

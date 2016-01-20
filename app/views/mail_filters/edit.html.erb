@@ -60,7 +60,7 @@ onRegisterFilterClicked = function()
 
   var addParams = [];
 
-  var frm = form_mail_filter<%= form_idx %>;
+  var frm = document.form_mail_filter<%= form_idx %>;
   addParams.push(Form.serialize(frm));
 
   addParams.push(getFilterConditionsOrderParams());
@@ -72,20 +72,21 @@ onRegisterFilterClicked = function()
   }
 
   var thetisBoxProgress = prog("TOP-RIGHT");
+
   new Ajax.Updater(
-                document.form_filters.parentNode,
-                "<%= url_for(:controller => 'mail_filters', :action => 'update') %>",
-                {
-                  method: "post",
-                  parameters: addParams.join("&"),
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request){
-                    thetisBoxProgress.remove();
-                    doUpdateFiltersList();
-                  }
-                }
-              );
+      document.form_filters.parentNode,
+      "<%= url_for(:controller => 'mail_filters', :action => 'update') %>",
+      {
+        method: "post",
+        parameters: addParams.join("&"),
+        asynchronous: true,
+        evalScripts: true,
+        onComplete: function(request){
+          thetisBoxProgress.remove();
+          doUpdateFiltersList();
+        }
+      }
+    );
   return true;
 }
 

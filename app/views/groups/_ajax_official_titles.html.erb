@@ -100,7 +100,7 @@ doEditOfficialTitle = function(official_title_id)
         parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           thetisBoxOfficialTitle = new ThetisBox;
@@ -116,7 +116,7 @@ doEditOfficialTitle = function(official_title_id)
 
 onDeleteOfficialTitleClicked = function(official_title_id, official_title_disp)
 {
-  confm("<%= t('paren.square.left') %>" + esc_w_quotes(official_title_disp) + "<%= t('msg.confirm_to_delete') %>", "doDeleteOfficialTitle("+official_title_id+")");
+  confm("<%= t('paren.square.left') %>" + escWQuotes(official_title_disp) + "<%= t('msg.confirm_to_delete') %>", "doDeleteOfficialTitle("+official_title_id+")");
 }
 
 doDeleteOfficialTitle = function(official_title_id)
@@ -140,9 +140,9 @@ doDeleteOfficialTitle = function(official_title_id)
         parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
-            thetisBoxProgress.remove();
-          },
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
       }
     );
 }

@@ -371,20 +371,20 @@ function onHeaderMenuInfoOK(org_name)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Updater(
-          "div_ajax_header_menu",
-          document.form_header_menu_info.action+"?org_name="+encodeURIComponent(org_name),
-          {
-            asynchronous:true,
-            evalScripts:false,
-            parameters:Form.serialize(document.form_header_menu_info),
-            onComplete:function(request) {
-              thetisBoxProgress.remove();
-              thetisBoxHeaderMenuInfo.remove();
+      "div_ajax_header_menu",
+      document.form_header_menu_info.action+"?org_name="+encodeURIComponent(org_name),
+      {
+        asynchronous:true,
+        evalScripts:false,
+        parameters:Form.serialize(document.form_header_menu_info),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          thetisBoxHeaderMenuInfo.remove();
 
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function onHeaderMenuInfoCancel()
@@ -398,75 +398,84 @@ function doEditHeaderMenu(org_name)
     return;
   }
 
+  var addParams = [];
+  if (org_name != null) {
+    addParams.push("org_name=" + encodeURIComponent(org_name));
+  }
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var add_param = "";
-  if (org_name != null) {
-    add_param = "?org_name=" + encodeURIComponent(org_name);
-  }
   new Ajax.Request(
-          "<%= url_for(:controller => 'config', :action => 'edit_header_menu') %>" + add_param,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'config', :action => 'edit_header_menu') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
 
-              thetisBoxHeaderMenuInfo = new ThetisBox;
-              thetisBoxHeaderMenuInfo.setOnClose(function(){ thetisBoxHeaderMenuInfo = null; });
-              thetisBoxHeaderMenuInfo.title = "<%= t('menu.header_menu') %>";
-              thetisBoxHeaderMenuInfo.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+          thetisBoxHeaderMenuInfo = new ThetisBox;
+          thetisBoxHeaderMenuInfo.setOnClose(function(){ thetisBoxHeaderMenuInfo = null; });
+          thetisBoxHeaderMenuInfo.title = "<%= t('menu.header_menu') %>";
+          thetisBoxHeaderMenuInfo.show("CENTER", "460,280", "TRAY", "", "", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 
 function onDeleteHeaderMenuClicked(name)
 {
-  confm("<%= t('paren.square.left') %>" + esc_w_quotes(name) + "<%= t('msg.confirm_to_delete') %>", "doDeleteHeaderMenu('"+esc_quotes(name)+"')");
+  confm("<%= t('paren.square.left') %>" + esc_w_quotes(name) + "<%= t('msg.confirm_to_delete') %>", "doDeleteHeaderMenu('"+escQuotes(name)+"')");
 }
 
 function doDeleteHeaderMenu(name)
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var addParams = [];
+  addParams.push("org_name=" + encodeURIComponent(name));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
       "div_ajax_header_menu",
       "<%= url_for(:controller => 'config', :action => 'destroy_header_menu') %>",
       {
         method:"post",
+        parameters:addParams.join("&"),
         asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){ thetisBox.remove(); },
-        parameters:"org_name=" + encodeURIComponent(name)+"&authenticity_token=<%= form_authenticity_token %>"
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
       }
     );
 }
 
 function doRegister()
 {
-  var check_ary = ["general_default_page", "smtp_from_address", "smtp_server", "smtp_port"];
+  var arr = ["general_default_page", "smtp_from_address", "smtp_server", "smtp_port"];
 
   if (_z("smtp_auth_enabled").checked) {
-    check_ary.push("smtp_user_name");
+    arr.push("smtp_user_name");
   }
 
-  for (var i=0; i < check_ary.length; i++) {
-    if (_z(check_ary[i]).value.length <= 0) {
+  for (var i=0; i < arr.length; i++) {
+    if (_z(arr[i]).value.length <= 0) {
       msg("<%= t('msg.specify_indispensable') %>");
       return;
     }
   }
 
   if (_z("smtp_auth_enabled").checked) {
-    check_ary = new Array("smtp_auth_plain", "smtp_auth_login", "smtp_auth_cram_md5");
+    arr = ["smtp_auth_plain", "smtp_auth_login", "smtp_auth_cram_md5"];
 
     var checked = false
-    for (var i=0; i < check_ary.length; i++) {
-      if (_z(check_ary[i]).checked) {
+    for (var i=0; i < arr.length; i++) {
+      if (_z(arr[i]).checked) {
         checked = true;
         break;
       }
@@ -486,5 +495,6 @@ function doRegister()
   prog("TOP-RIGHT");
   document.form_config.submit();
 }
+
 </script>
 

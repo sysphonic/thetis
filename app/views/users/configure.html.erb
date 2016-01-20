@@ -134,7 +134,7 @@ function doCreateTitle()
 
 function onDeleteTitleClicked(title)
 {
-  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteTitle('"+esc_quotes(title)+"')");
+  confm("<%= t('paren.square.left') %>" + title + "<%= t('msg.confirm_to_delete') %>", "doDeleteTitle('"+escQuotes(title)+"')");
 }
 
 function doDeleteTitle(title)
@@ -163,7 +163,7 @@ function doDeleteTitle(title)
 function onRenameTitleClicked(org)
 {
   var thetisBox = new ThetisBox;
-  thetisBox.show("CENTER", "", "INPUT", "doRenameTitle("+thetisBox.id+", '"+esc_quotes(org)+"')", "<%= t('user.specify_title_name') %>", org);
+  thetisBox.show("CENTER", "", "INPUT", "doRenameTitle("+thetisBox.id+", '"+escQuotes(org)+"')", "<%= t('user.specify_title_name') %>", org);
 }
 
 function doRenameTitle(thetisBoxId, org)

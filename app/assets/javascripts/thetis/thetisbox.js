@@ -231,7 +231,7 @@ ThetisBox.getContainer = function(elem)
     }
   } else {
     while (elem && elem.tagName.toLowerCase() != "html") {
-      if (elem.id != null && elem.id.indexOf("divThetisBox-") >= 0) {
+      if ((typeof(elem.id) == "string") && (elem.id.indexOf("divThetisBox-") >= 0)) {
         return elem;
       }
       elem = elem.parentNode;
@@ -1152,14 +1152,14 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     var id = this.id.split("-")[1];
 
     // Excluded Control Area
-    var excludeArray = new Array(
-        "thetisBoxOK-"+id,
-        "thetisBoxCancel-"+id,
-        "thetisBoxClose-"+id,
-        "thetisBoxEdit-"+id,
-        "thetisBoxTree-"+id,
-        "thetisBoxContent-"+id
-      );
+    var excludeArray = [
+      "thetisBoxOK-"+id,
+      "thetisBoxCancel-"+id,
+      "thetisBoxClose-"+id,
+      "thetisBoxEdit-"+id,
+      "thetisBoxTree-"+id,
+      "thetisBoxContent-"+id
+    ];
 
     var bodyScroll = ThetisBox.getBodyScroll();
 
@@ -1375,6 +1375,21 @@ ThetisBox.isAlive = function(id)
   return (_z("divThetisBox-"+id) != null);
 }
 
+ThetisBox.count = function(box_type)
+{
+  var cnt = 0;
+  for (var i=__thetisbox_id; i >= 0; i--) {
+    if (box_type) {
+      var instance = ThetisBox.getInstance(i);
+      if (!instance || instance.box_type != box_type) {
+        continue;
+      }
+    }
+    cnt++;
+  }
+  return cnt;
+}
+
 ThetisBox.clear = function(box_type)
 {
   for (var i=__thetisbox_id; i >= 0; i--) {
@@ -1408,7 +1423,7 @@ ThetisBox.setOnClose = function(id, func)
     }
   }
   if (func != null) {
-    arr.push(new Array(id, func));
+    arr.push([id, func]);
   }
 }
 

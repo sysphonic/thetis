@@ -161,8 +161,8 @@ getToAddrEditor = function(onOk, onCancel)
   <% end %>
   content += "      </select>";
 
-  content += "      <input type='text' id='to_addr_bare' value='"+esc_quotes(addrBare)+"' style='width:300px' />";
-  content += "      <input type='hidden' id='org_to_addr_val' value='"+esc_quotes(targetAddrVal)+"' />";
+  content += "      <input type='text' id='to_addr_bare' value='"+escQuotes(addrBare)+"' style='width:300px' />";
+  content += "      <input type='hidden' id='org_to_addr_val' value='"+escQuotes(targetAddrVal)+"' />";
   content += "    </td>";
   content += "  </tr>";
   content += "  <tr>";
@@ -238,31 +238,31 @@ onShowPanelSendToClicked = function()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Request(
-        "<%= url_for(:controller => 'send_mails', :action => 'edit_send_to') %>",
-        {
-          method:"get",
-          asynchronous:true,
-          evalScripts:true,
-          parameters:addParams.join("&"),
-          onComplete:function(request){
-            thetisBoxProgress.remove();
+      "<%= url_for(:controller => 'send_mails', :action => 'edit_send_to') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBoxProgress.remove();
 
-            thetisBoxSendTo.title = "<%= t('cap.send_to') %>";
-            if (thetisBoxMailForm) {
-              thetisBoxMailForm.addChildBox(thetisBoxSendTo);
-            }
-            thetisBoxSendTo.show(
-                      "TOP-RIGHT",
-                      "480,340",
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText.stripScripts()
-                    );
-            request.responseText.evalScripts();
+          thetisBoxSendTo.title = "<%= t('cap.send_to') %>";
+          if (thetisBoxMailForm) {
+            thetisBoxMailForm.addChildBox(thetisBoxSendTo);
           }
+          thetisBoxSendTo.show(
+                    "TOP-RIGHT",
+                    "480,340",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          request.responseText.evalScripts();
         }
-      );
+      }
+    );
 }
 
 _prepareMoveListItems = function(list)
