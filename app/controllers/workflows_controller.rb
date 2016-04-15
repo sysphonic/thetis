@@ -105,8 +105,8 @@ class WorkflowsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    unless params[:thetisBoxSelKeeper].nil?
-      folder_id = params[:thetisBoxSelKeeper].split(':').last
+    unless params[:tree_node_id].nil?
+      folder_id = params[:tree_node_id]
       SqlHelper.validate_token([folder_id])
 
       workflow = Workflow.find(params[:id])

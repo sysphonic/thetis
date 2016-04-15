@@ -100,7 +100,7 @@ class OfficialTitlesController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     if @group_id.blank?
-      @group_id = '0'   # '0' for ROOT
+      @group_id = TreeElement::ROOT_ID.to_s
     end
 
     render(:partial => 'groups/ajax_group_official_titles', :layout => false)

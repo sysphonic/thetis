@@ -140,15 +140,15 @@ class EquipmentController < ApplicationController
     con = []
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      if @group_id == '0'
+      if @group_id == TreeElement::ROOT_ID.to_s
         con << "((groups like '%|0|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")

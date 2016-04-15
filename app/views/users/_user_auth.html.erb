@@ -87,25 +87,33 @@
 </form>
 
 <script type="text/javascript">
+
 doUpdateAuth = function()
 {
   var thetisBox = prog("TOP-RIGHT");
+
   selectListAll(_z("auth_selected"));
+
+  var addParams = [];
+  addParams.push("id=<%= @user.id %>");
+  addParams.push(Form.serialize(document.form_ajax_userAuth));
+
   new Ajax.Request(
-              "<%= url_for(:controller => 'users', :action => 'update_auth', :id => @user.id) %>",
-              {
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                  if (request.responseText == "") {
-                    tips("<%= t('user.auth_updated') %>");
-                  } else {
-                    msg("<%= t('msg.system_error') %><br/>"+request.responseText);
-                  }
-                },
-                parameters:Form.serialize(document.form_ajax_userAuth)
-              }
-            );
+      "<%= url_for(:controller => 'users', :action => 'update_auth') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request){
+          thetisBox.remove();
+          if (request.responseText == "") {
+            tip("<%= t('user.auth_updated') %>");
+          } else {
+            msg("<%= t('msg.system_error') %><br/>"+request.responseText);
+          }
+        }
+      }
+    );
 }
 </script>

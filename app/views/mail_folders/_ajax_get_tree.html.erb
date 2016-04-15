@@ -5,28 +5,28 @@ figure = @login_user.get_figure
 mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
 mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
 %>
-var folderImgs = new Array(
-                    <% icons = MailFolder.get_icons(nil) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                    <% icons = MailFolder.get_icons(MailFolder::XTYPE_INBOX) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                    <% icons = MailFolder.get_icons(MailFolder::XTYPE_SENT) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                    <% icons = MailFolder.get_icons(MailFolder::XTYPE_DRAFTS) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                    <% icons = MailFolder.get_icons(MailFolder::XTYPE_TRASH) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                    <% icons = MailFolder.get_icons(MailFolder::XTYPE_ACCOUNT_ROOT) %>
-                      new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      new Array("<%= mail_user_open %>", "<%= mail_user_close %>")
-                    );
+var folderImgs = [
+<% icons = MailFolder.get_icons(nil) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+<% icons = MailFolder.get_icons(MailFolder::XTYPE_INBOX) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+<% icons = MailFolder.get_icons(MailFolder::XTYPE_SENT) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+<% icons = MailFolder.get_icons(MailFolder::XTYPE_DRAFTS) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+<% icons = MailFolder.get_icons(MailFolder::XTYPE_TRASH) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+<% icons = MailFolder.get_icons(MailFolder::XTYPE_ACCOUNT_ROOT) %>
+  ["<%= icons[1] %>", "<%= icons[2] %>"],
+  ["<%= mail_user_open %>", "<%= mail_user_close %>"]
+];
 
 var array = [];
-array.push(new Array("0", " <%= @login_user.get_name %>", "", "", 6 /* img_idx */));
+array.push(["0", " <%= @login_user.get_name %>", "", "", 6 /* img_idx */]);
 
-var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs);
+var firstMenuId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", folderImgs);
 <% @folder_tree.each do |parent_id, child_folders| %>
-array = new Array(
+array = [
 <%
 count = 0
 child_folders.each do |folder|
@@ -52,7 +52,7 @@ child_folders.each do |folder|
     folder_name = MailAccount.get_title(folder.mail_account_id)
   end
 %>
-  new Array("<%= folder.id %>", " <%= folder_name %>", "", "", <%= img_idx %>)
+  ["<%= folder.id %>", " <%= folder_name %>", "", "", <%= img_idx %>]
 <%
   count += 1
   if count < child_folders.length
@@ -62,13 +62,13 @@ child_folders.each do |folder|
   end
 end
 %>
-      );
-ThetisBox.buildTree("<%= parent_id %>", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", folderImgs, false);
+];
+ThetisBox.buildTree("<%= parent_id %>", array, "<%= params[:rootDiv] %>", folderImgs, false);
 <% end %>
-<% if params[:selId].nil? or params[:selId].empty? %>
-  ThetisBox.selectTree("<%= params[:selKeeper] %>", firstMenuId, null);
+<% if params[:selId].blank? %>
+  ThetisBox.selectTree("<%= params[:rootDiv] %>", firstMenuId);
 <% else %>
-  ThetisBox.selectTree("<%= params[:selKeeper] %>", "<%= params[:selId] %>", null, true);
+  ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selId] %>", true);
 <% end %>
 
 </script>

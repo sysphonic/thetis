@@ -88,7 +88,7 @@ class Log < ActiveRecord::Base
 
     unless err.nil?
       detail << ': <br/>' unless detail.empty?
-      detail <<  err.to_s[0, 512] + '<br/>' + ApplicationHelper.stacktrace(err.backtrace).join('<br/>')
+      detail <<  err.to_s[0, 512] + '<br/>' + ApplicationHelper.stacktrace(err).join('<br/>')
 
       logger.fatal(err.to_s)
     end

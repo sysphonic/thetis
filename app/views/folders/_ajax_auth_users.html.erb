@@ -119,31 +119,32 @@ modified_teams = 0;
 
 doSelectGroup = function(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    ThetisBox.remove(thetisBoxId);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("id=<%= @folder.id %>");
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("id=<%= @folder.id %>");
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
-
-    new Ajax.Updater(
-        "div_selectUsers",
-        "<%= url_for(:controller => 'folders', :action => 'get_group_users') %>",
-        {
-          method:"get",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_selectUsers",
+          "<%= url_for(:controller => 'folders', :action => 'get_group_users') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 

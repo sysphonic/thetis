@@ -56,7 +56,7 @@ class InquiryController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     if params[:group_id].nil?
-      group_id = '0'
+      group_id = TreeElement::ROOT_ID.to_s
     else
       group_id = params[:group_id]
     end

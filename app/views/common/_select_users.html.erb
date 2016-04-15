@@ -269,8 +269,8 @@ showGroupTreeToSelectUsers = function(group_id, elem)
 
 onGroupTreeSelected = function(evt)
 {
-  evt = evt || window.event;
-  var elem = evt.target || evt.srcElement;
+  evt = (evt || window.event);
+  var elem = (evt.target || evt.srcElement);
   for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
     if (elem.tagName.toUpperCase() == "BODY") {
       return;
@@ -285,8 +285,7 @@ onGroupTreeSelected = function(evt)
   if (email_type) {
     addParams.push("email_type="+email_type.value);
   }
-  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxGroupTreeSelUsers.id);
-  addParams.push(selKeeper.name+"="+elem.id);
+  addParams.push("tree_node_id="+ThetisBox.getTreeNodeIdFromMenuId(elem.id));
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 

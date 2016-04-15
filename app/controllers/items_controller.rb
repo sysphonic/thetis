@@ -71,8 +71,8 @@ class ItemsController < ApplicationController
     end
 
     @folder_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @folder_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @folder_id = params[:tree_node_id]
 
       if !@folder_id.nil? and @folder_id.index('+') == 0
         @folder_id[0, 1] = ''
@@ -260,9 +260,9 @@ class ItemsController < ApplicationController
 
     @item = Item.find(params[:id])
 
-    unless params[:thetisBoxSelKeeper].nil?
+    unless params[:tree_node_id].nil?
 
-      folder_id = params[:thetisBoxSelKeeper].split(':').last
+      folder_id = params[:tree_node_id]
 
       if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
@@ -291,7 +291,7 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:check_item].nil? or params[:thetisBoxSelKeeper].nil?
+    if params[:check_item].nil? or params[:tree_node_id].nil?
       list
       render(:action => 'list')
       return
@@ -299,7 +299,7 @@ class ItemsController < ApplicationController
 
     is_admin = @login_user.admin?(User::AUTH_ITEM)
 
-    folder_id = params[:thetisBoxSelKeeper].split(':').last
+    folder_id = params[:tree_node_id]
     SqlHelper.validate_token([folder_id])
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
@@ -1257,8 +1257,8 @@ class ItemsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end

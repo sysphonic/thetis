@@ -29,8 +29,8 @@ mode = 'groupware'
       menus = {
         :login => {:disp => t('btn.login'), :icon_tag => '', :action => 'doLogin();'},
         :desktop => {:disp => t('menu.desktop'), :icon_tag => 'desktop', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'desktop', :action => 'show')}');"},
-        :items_bbs => {:disp => t('menu.items_bbs'), :icon_tag => 'item_bbs', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'bbs', :tips => 'true')}');"},
-        :item_list => {:disp => t('menu.items_list'), :icon_tag => 'item_list', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'list', :tips => 'true')}');"},
+        :items_bbs => {:disp => t('menu.items_bbs'), :icon_tag => 'item_bbs', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'bbs', :tip => 'true')}');"},
+        :item_list => {:disp => t('menu.items_list'), :icon_tag => 'item_list', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'items', :action => 'list', :tip => 'true')}');"},
         :folder_tree => {:disp => t('menu.folder_tree'), :icon_tag => 'folder_tree', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'folders', :action => 'show_tree')}');"},
         :schedule => {:disp => t('menu.schedule'), :icon_tag => 'schedule', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'schedules', :action => 'day')}?id='+getDateString());"}
       }
@@ -47,7 +47,7 @@ mode = 'groupware'
         menus[:user_list] = {:disp => t('menu.user_list'), :icon_tag => 'user_list', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'users', :action => 'list')}');"}
       end
       if $thetis_config[:menu]['disp_mail'] == '1'
-        menus[:mail] = {:disp => t('menu.mail'), :icon_tag => 'mail', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'mail_folders', :action => 'show_tree', :tips => 'true')}');"}
+        menus[:mail] = {:disp => t('menu.mail'), :icon_tag => 'mail', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'mail_folders', :action => 'show_tree', :tip => 'true')}');"}
       end
       if $thetis_config[:menu]['disp_addressbook'] == '1'
         menus[:addressbook] = {:disp => t('menu.addressbook'), :icon_tag => 'addressbook', :action => "onGroupwareMenuClicked(this, '#{url_for(:controller => 'addressbook', :action => 'list')}');"}

@@ -14,7 +14,7 @@ if flash[:notice].starts_with?('ERROR:')
 else
   msg = flash[:notice].gsub("\n", '<br/>')
 %>
-  setTimeout("try{ tips(\"<%= raw(msg) %>\"); }catch(e){}", 100);
+  setTimeout("try{ tip(\"<%= raw(msg) %>\"); }catch(e){}", 100);
 <% end  %>
 </script>
 

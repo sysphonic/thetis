@@ -90,7 +90,7 @@ doGetAllAttachments = function()
     thetisBoxEnc = null;
   }
 
-  tips("<%= t('msg.wait_for_a_while') %>", "CENTER");
+  tip("<%= t('msg.wait_for_a_while') %>", "CENTER");
   location.href = "<%= url_for(:controller => 'mail_folders', :action => 'get_mail_attachments') %>?"+addParams.join("&");
 }
 <% end %>

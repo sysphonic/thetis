@@ -159,8 +159,8 @@ class UsersController < ApplicationController
     end
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
@@ -170,8 +170,8 @@ class UsersController < ApplicationController
     con = ['User.id > 0']
 
     unless @group_id.nil?
-      if @group_id == '0'
-        con << "((User.groups like '%|0|%') or (User.groups is null))"
+      if @group_id == TreeElement::ROOT_ID.to_s
+        con << "((User.groups like '%|#{@group_id}|%') or (User.groups is null))"
       else
         con << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
       end
@@ -271,13 +271,13 @@ class UsersController < ApplicationController
 
     @user = User.find(params[:user_id])
 
-    unless params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    unless params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     end
     SqlHelper.validate_token([@group_id])
 
     if @group_id.nil?
-      @official_titles = OfficialTitle.get_for('0', false, true)
+      @official_titles = OfficialTitle.get_for(TreeElement::ROOT_ID.to_s, false, true)
     else
       @official_titles = OfficialTitle.get_for(@group_id, false, true)
     end
@@ -428,13 +428,13 @@ class UsersController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:thetisBoxSelKeeper].blank?
+    if params[:tree_node_id].blank?
       render(:partial => 'ajax_groups', :layout => false)
       return
     end
 
-    group_id = params[:thetisBoxSelKeeper].split(':').last
-    unless group_id == '0'  # '0' for ROOT
+    group_id = params[:tree_node_id]
+    unless (group_id == TreeElement::ROOT_ID.to_s)
       begin
         group = Group.find(group_id)
       rescue => evar

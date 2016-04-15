@@ -626,7 +626,7 @@ function onSaveComplete(tabName)
     if (move_to_show) {
       doShow();
     } else {
-      tips("<%= t('msg.save_success') %>");
+      tip("<%= t('msg.save_success') %>");
     }
   }
 }
@@ -682,47 +682,50 @@ function showTemplateTreeToSelect()
 
 function onTemplateTreeNodeSelected(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    prog("TOP-RIGHT");
+      prog("TOP-RIGHT");
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
 
-    var frm = createPostForm("<%= url_for(:controller => 'templates', :action => 'copy') %>", addParams);
-    frm.submit();
+      var frm = createPostForm("<%= url_for(:controller => 'templates', :action => 'copy') %>", addParams);
+      frm.submit();
+    }
   }
 }
 
 function doSelectGroup(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    ThetisBox.remove(thetisBoxId);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
-
-    new Ajax.Updater(
-        "div_selectUsers",
-        "<%= url_for(:controller => 'items', :action => 'get_group_users') %>",
-        {
-          method:"get",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_selectUsers",
+          "<%= url_for(:controller => 'items', :action => 'get_group_users') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 

@@ -39,7 +39,6 @@
           <td id="td_tree" style="text-align:left; vertical-align:top; border:inset 2px silver; padding:0px;">
             <%= form_tag( {:controller => 'groups', :action => 'show_tree'}, :method => 'post', :name => 'form_group_tree') %>
               <div id="divGroupTree" style="overflow:auto;"><div id="groupTree" style="text-align:left; margin:10px;"></div></div>
-              <input type="hidden" name="selKeeper" id="selKeeper" value="" />
             </form>
           </td>
           <td id="drag_border" style="width:5px; background-color:burlywood; cursor:w-resize; vertical-align:middle;">
@@ -138,7 +137,7 @@ function onLoadSub()
                         new Array("<%= group_folder_open %>", "<%= group_folder_close %>")
                       );
   var array = new Array(new Array("0", "/(root)", "", "selectGroup('0');", 0));
-  var firstMenuId = ThetisBox.buildTree("", array, null, "groupTree", "selKeeper", folderImgs);
+  var firstMenuId = ThetisBox.buildTree("", array, "groupTree", folderImgs);
   <% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
     <% child_groups.each_with_index do |group, idx| %>
@@ -150,13 +149,13 @@ function onLoadSub()
     end
     %>
       );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "groupTree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, "groupTree", folderImgs, false);
   <% end %>
 
-<% unless session[:group_id].nil? or session[:group_id].empty? %>
+<% unless session[:group_id].blank? %>
   var menuId = "a_groupTree:<%= session[:group_id] %>";
-  ThetisBox.selectTree("selKeeper", menuId, null, true);
-  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
+  ThetisBox.selectTree("groupTree", menuId, true);
+  if (ThetisBox.isSelectedTree("groupTree", menuId)) {
     selectGroup(<%= session[:group_id] %>);
   }
 <% end %>
@@ -195,11 +194,11 @@ function doCreateGroup(thetisBoxId, group_id)
 
 function onCreateGroupClicked(pos)
 {
-  if (document.form_group_tree.selKeeper.value == "") {
+  var group_id = ThetisBox.getSelectedTreeNodeId("groupTree");
+  if (!group_id) {
     msg("<%= t('group.select_parent') %>");
     return;
   }
-  var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
 
   ThetisBox.openTree("groupTree:"+group_id, true);
 
@@ -239,11 +238,11 @@ function doRenameGroup(thetisBoxId, group_id)
 
 function onRenameGroupClicked(pos)
 {
-  if (document.form_group_tree.selKeeper.value == "") {
+  var group_id = ThetisBox.getSelectedTreeNodeId("groupTree");
+  if (!group_id) {
     msg("<%= t('group.select') %>");
     return;
   }
-  var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
 
   if (group_id == "0") {
     msg("<%= t('group.root_group_restricted') %>");
@@ -259,11 +258,11 @@ function onRenameGroupClicked(pos)
 
 function onDeleteGroupClicked()
 {
-  if (document.form_group_tree.selKeeper.value == "") {
+  var group_id = ThetisBox.getSelectedTreeNodeId("groupTree");
+  if (!group_id) {
     msg("<%= t('group.select') %>");
     return;
   }
-  var group_id = document.form_group_tree.selKeeper.value.split(":")[1]; 
 
   if (group_id == "0") {
     msg("<%= t('group.root_group_restricted') %>");
@@ -296,7 +295,7 @@ function doDelete(group_id)
         onComplete:function(request){
           thetisBox.remove();
           removeElem(_z("base_groupTree:"+group_id));
-          document.form_group_tree.selKeeper.value = "";
+          _z(ThetisBox.getSelKeeperId("groupTree")).value = "";
         }
       }
     );
@@ -304,11 +303,11 @@ function doDelete(group_id)
 
 function onMoveGroupClicked()
 {
-  if (document.form_group_tree.selKeeper.value == "") {
+  var group_id = ThetisBox.getSelectedTreeNodeId("groupTree");
+  if (!group_id) {
     msg("<%= t('group.select') %>");
     return;
   }
-  var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
 
   if (group_id == "0") {
     msg("<%= t('group.root_group_restricted') %>");
@@ -324,18 +323,20 @@ function onMoveGroupClicked()
 
 function doMoveGroup(thetisBoxId, group_id)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    var addParams = [];
-    addParams.push("id="+group_id);
-    addParams.push("thetisBoxSelKeeper="+val);
+      var addParams = [];
+      addParams.push("id="+group_id);
+      addParams.push("tree_node_id="+treeNodeId);
 
-    prog("TOP-RIGHT");
-    var frm = createPostForm("<%= url_for(:controller => 'groups', :action => 'move') %>", addParams);
-    frm.submit();
+      prog("TOP-RIGHT");
+      var frm = createPostForm("<%= url_for(:controller => 'groups', :action => 'move') %>", addParams);
+      frm.submit();
+    }
   }
 }
 
@@ -404,7 +405,7 @@ function selectGroup(group_id)
 
 function changeOption(val)
 {
-  var group_id = document.form_group_tree.selKeeper.value.split(":")[1];
+  var group_id = ThetisBox.getSelectedTreeNodeId("groupTree");
   if (!group_id) {
     return false;
   }
@@ -416,6 +417,16 @@ function changeOption(val)
     case "workflow": doGetWorkflows(group_id); break;
     case "office_map": doGetMaps(group_id); break;
   }
+}
+
+onGroupTreeNodeClicked = function(group_id, menu_id, div_id)
+{
+  selectFolder(group_id);
+  var selKeeperId = ThetisBox.getSelKeeperId("groupTree");
+  if (_z(selKeeperId).value == menu_id) {
+    ThetisBox.toggleTree(div_id);
+  }
+  ThetisBox.selectTree("groupTree", menu_id);
 }
 
 </script>

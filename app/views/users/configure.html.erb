@@ -102,7 +102,7 @@ function doUpdateConfig()
           thetisBox.remove();
 
           if (request.responseText == "") {
-            tips("<%= t('msg.update_success')%>");
+            tip("<%= t('msg.update_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }

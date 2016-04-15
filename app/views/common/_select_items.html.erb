@@ -119,8 +119,8 @@ showFolderTreeToSelectItems = function(folder_id, elem)
 
 onFolderTreeSelected = function(evt)
 {
-  evt = evt || window.event;
-  var elem = evt.target || evt.srcElement;
+  evt = (evt || window.event);
+  var elem = (evt.target || evt.srcElement);
   for ( ; elem.tagName.toUpperCase() != "A"; elem=elem.parentNode) {
     if (elem.tagName.toUpperCase() == "BODY") {
       return;
@@ -131,8 +131,7 @@ onFolderTreeSelected = function(evt)
     return;
   }
   var addParams = [];
-  var selKeeper = _z("thetisBoxSelKeeper-"+thetisBoxFolderTreeSelItems.id);
-  addParams.push(selKeeper.name+"="+elem.id);
+  addParams.push("tree_node_id="+ThetisBox.getTreeNodeIdFromMenuId(elem.id));
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 

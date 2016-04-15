@@ -171,11 +171,11 @@ onEditAttachmentClicked = function(attach_id, attach_name)
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
-            thetisBoxAttachInfo.title = attach_name;
-            thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBoxAttachInfo.title = attach_name;
+          thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -190,25 +190,25 @@ onAttachInfoOk = function()
   var thetisBoxProgress = prog("CENTER");
 
   ajaxUploadFile(
-          "form_attachment_info",
-          document.form_attachment_info.action,
-          "div_item_attachment",
-          function(){
-              setTimeout(setSortableAttach, 100);
-              thetisBoxProgress.remove();
-              var boxInstance = ThetisBox.getInstanceForElem(btnOk);
-              if (boxInstance) {
-                boxInstance.remove();
-              }
-              tips("<%= t('msg.update_success')%>");
-          },
-          function(){
-              thetisBoxProgress.remove();
-              btnOk.disabled = false;
-              btnCancel.disabled = false;
-              msg("<%= t('msg.system_error')%>");
-          }
-        );
+      "form_attachment_info",
+      document.form_attachment_info.action,
+      "div_item_attachment",
+      function() {
+        setTimeout(setSortableAttach, 100);
+        thetisBoxProgress.remove();
+        var boxInstance = ThetisBox.getInstanceForElem(btnOk);
+        if (boxInstance) {
+          boxInstance.remove();
+        }
+        tip("<%= t('msg.update_success')%>");
+      },
+      function() {
+        thetisBoxProgress.remove();
+        btnOk.disabled = false;
+        btnCancel.disabled = false;
+        msg("<%= t('msg.system_error')%>");
+      }
+    );
 }
 
 onAttachInfoCancel = function()

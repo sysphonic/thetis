@@ -187,15 +187,13 @@ initSortableFilterCondition = function()
   Position.includeScrollOffsets = true;
   Position.prepare();
 
-  //<![CDATA[
   Sortable.create(
-        "div_filter_conditions",
-        {
-          onUpdate: onFilterConditionsOrderUpdated,
-          tag:"div"
-        }
-      );
-  //]]>
+      "div_filter_conditions",
+      {
+        onUpdate: onFilterConditionsOrderUpdated,
+        tag:"div"
+      }
+    );
 }
 initSortableFilterCondition();
 
@@ -204,15 +202,13 @@ initSortableFilterAction = function()
   Position.includeScrollOffsets = true;
   Position.prepare();
 
-  //<![CDATA[
   Sortable.create(
-        "div_filter_actions",
-        {
-          onUpdate: onFilterActionsOrderUpdated,
-          tag:"div"
-        }
-      );
-  //]]>
+      "div_filter_actions",
+      {
+        onUpdate: onFilterActionsOrderUpdated,
+        tag:"div"
+      }
+    );
 }
 initSortableFilterAction();
 

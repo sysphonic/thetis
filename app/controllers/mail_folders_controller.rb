@@ -151,7 +151,7 @@ class MailFoldersController < ApplicationController
   #
   #Moves MailFolder.
   #Receives target MailFolder-ID from access-path and destination MailFolder-ID from ThetisBox.
-  #params[:thetisBoxSelKeeper] keeps selected ID of <a>-tag like "thetisBoxSelKeeper-1:<selected-id>". 
+  #params[:tree_node_id] keeps selected ID of <a>-tag like "tree_node_id-1:<selected-id>". 
   #
   def move
     Log.add_info(request, params.inspect)
@@ -160,17 +160,17 @@ class MailFoldersController < ApplicationController
 
     @mail_folder = MailFolder.find(params[:id])
 
-    if params[:thetisBoxSelKeeper].blank?
+    if params[:tree_node_id].blank?
       prms = ApplicationHelper.get_fwd_params(params)
       prms[:action] = 'show_tree'
       redirect_to(prms)
       return
     end
 
-    parent_id = params[:thetisBoxSelKeeper].split(':').last
+    parent_id = params[:tree_node_id]
     SqlHelper.validate_token([parent_id])
 
-    if parent_id == '0'   # '0' for ROOT
+    if parent_id == TreeElement::ROOT_ID.to_s
       flash[:notice] = 'ERROR:' + t('mail_folder.root_cannot_have_folders')
     else
       # Check if specified parent is not one of subfolders.
@@ -497,14 +497,14 @@ class MailFoldersController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    folder_id = params[:thetisBoxSelKeeper].split(':').last
+    folder_id = params[:tree_node_id]
     SqlHelper.validate_token([folder_id])
     begin
       mail_folder = MailFolder.find(folder_id)
     rescue => evar
     end
 
-    if folder_id == '0' \
+    if folder_id == TreeElement::ROOT_ID.to_s \
         or mail_folder.nil? \
         or mail_folder.user_id != @login_user.id
       flash[:notice] = 'ERROR:' + t('msg.cannot_save_in_folder')
@@ -547,7 +547,7 @@ class MailFoldersController < ApplicationController
     @folder_id = params[:id]
     SqlHelper.validate_token([@folder_id])
 
-    if @folder_id == '0'
+    if @folder_id == TreeElement::ROOT_ID.to_s
       @folders = MailFolder.get_account_roots_for(@login_user)
     else
       mail_folder = MailFolder.find(@folder_id)
@@ -646,10 +646,9 @@ class MailFoldersController < ApplicationController
   #Filter method to check if current User is owner of the specified MailFolder.
   #
   def check_owner
-    # '0' for ROOT
-    return if params[:id].nil? \
-             or params[:id].empty? \
-             or params[:id]=='0' \
+
+    return if params[:id].blank? \
+             or (params[:id] == TreeElement::ROOT_ID.to_s) \
              or @login_user.nil?
 
     begin

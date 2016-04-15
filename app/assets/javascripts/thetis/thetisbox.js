@@ -1,35 +1,7 @@
 /**-----------------**-----------------**-----------------**
-   ThetisBox ver.2.0.0
-     Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. All rights reserved.
-     http://sysphonic.com/
-
+ Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. All rights reserved.
+   http://sysphonic.com/
  This module is released under New BSD License.
-
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions are met:
-
- * Redistributions of source code must retain the above copyright notice,
-   this list of conditions and the following disclaimer. 
-
- * Redistributions in binary form must reproduce the above copyright notice,
-  this list of conditions and the following disclaimer in the documentation
-  and/or other materials provided with the distribution. 
-
- * Neither the name of the Sysphonic nor the names of its contributors may
-   be used to endorse or promote products derived from this software without
-   specific prior written permission. 
-
- THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
- "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
- A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER
- OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
- LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
- NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  **-----------------**-----------------**-----------------**/
 
 var __thetisbox_id = 0;
@@ -107,11 +79,19 @@ ThetisBox.onResizeHandleDragged = function(elem, draggable, evt)
 
   if (hasClassName(elem, "thetisbox_resize_handle_l")) {
     draggable.options.snap = function(x, y) {
-      return ThetisBox.resizeByLeftHandle(x, y, draggable, thetisBox, evt);
+      var ret = ThetisBox.resizeByLeftHandle(x, y, draggable, thetisBox, evt);
+      if (typeof(thetisBox.onResized) == "function") {
+        setTimeout(thetisBox.onResized, 0);
+      }
+      return ret;
     };
   } else {
     draggable.options.snap = function(x, y) {
-      return ThetisBox.resizeByRightHandle(x, y, draggable, thetisBox, evt);
+      var ret = ThetisBox.resizeByRightHandle(x, y, draggable, thetisBox, evt);
+      if (typeof(thetisBox.onResized) == "function") {
+        setTimeout(thetisBox.onResized, 0);
+      }
+      return ret;
     };
   }
 }
@@ -131,27 +111,24 @@ ThetisBox.resizeByLeftHandle = function(x, y, draggable, thetisBox, evt)
   var elemPos = getPos(elem);
   var bodyScroll = ThetisBox.getBodyScroll();
 
-//tips("["+Math.round(x)+", "+Math.round(y)+"]");
+//tip("["+Math.round(x)+", "+Math.round(y)+"]");
   var aborted = false;
   var contentWidth = posTopRight.x - elemPos.x;
   var contentHeight = (elemPos.y + elem.offsetHeight) - posTopRight.y;
 
   if (contentWidth < 100) {
-//tips("aborted_1["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
-    x = 0;
+//tip("aborted_1["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
     aborted = true;
   }
   if (contentHeight < 100) {
-    y = 0;
     aborted = true;
   } else if (contentHeight > clientRegion.height && y > 0) {
-    y = 0;
     aborted = true;
   }
   if (aborted) {
     return [x, y];
   }
-//tips("["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
+//tip("["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
   box.style.left = elemPos.x + "px";
   elem.style.left = "0px";
 
@@ -189,18 +166,14 @@ ThetisBox.resizeByRightHandle = function(x, y, draggable, thetisBox, evt)
   var contentWidth = x + elem.clientWidth;
   var contentHeight = y + elem.clientHeight;
   if (contentWidth < 30 && x < 0) {
-//tips("aborted_1["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
-    x = bodyScroll.left + 30;
+//tip("aborted_1["+x+", "+y+"] w="+contentWidth+", h="+contentHeight);
     aborted = true;
   } else if ((pos.x + contentWidth - bodyScroll.left) > clientRegion.width && x > 0) {
-    x = clientRegion.width - base.offsetWidth - (pos.x - bodyScroll.left);
     aborted = true;
   }
   if (contentHeight < 30 && y < 0) {
-    y = bodyScroll.top + 30;
     aborted = true;
   } else if ((pos.y + contentHeight - bodyScroll.top) > clientRegion.height && y > 0) {
-    y = clientRegion.height - base.offsetHeight - (pos.y - bodyScroll.top);
     aborted = true;
   }
   if (aborted) {
@@ -431,7 +404,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
-    content += "<input type='hidden' id='thetisBoxSelKeeper-"+this.id+"' name='thetisBoxSelKeeper' value='' />";
     for (i=0; this.additionalParams != null && i<this.additionalParams.length; i++) {
       var param = this.additionalParams[i].split("=");
       var eqidx = this.additionalParams[i].indexOf("=");
@@ -473,7 +445,6 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "    </td>";
     content += "  </tr>";
     content += "</table>";
-    content += "<input type='hidden' id='thetisBoxSelKeeper-"+this.id+"' name='thetisBoxSelKeeper' value='' />";
     for (i=0; this.additionalParams != null && i<this.additionalParams.length; i++) {
       var param = this.additionalParams[i].split("=");
       var eqidx = this.additionalParams[i].indexOf("=");
@@ -633,15 +604,15 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     ThetisBoxProgressors.push(progressor);
     progressor.update();
   },
-  // TIPS
+  // TIP
   drawTips: function(hasTitlebar, cap)
   {
     var content = "";
-    content += "<div class='thetisbox tips' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:"+this.z_index+"; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
-    content += "<table class='thetisbox_tips_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";'>";
+    content += "<div class='thetisbox tip' id='divThetisBox-"+this.id+"' style='position:absolute; z-index:"+this.z_index+"; display:none;' onkeypress=\"javascript:return ThetisBox.fireDefaultButton(event, '"+this.id+"', 'thetisBoxOK-"+this.id+"')\">";
+    content += "<table class='thetisbox_tip_dialog' id='thetisBoxBase-"+this.id+"' style='width:100%; height:100%; border:solid 2px; border-top-color:whitesmoke; border-left-color:whitesmoke; border-bottom-color:dimgray; border-right-color:dimgray; background-color:"+this.bgcolor_body+";'>";
     if (hasTitlebar) {
       content += "  <tr style='height:25px;'>";
-      content += "    <td class='thetisbox_tips_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
+      content += "    <td class='thetisbox_tip_title' style='color:white; background-color:"+this.bgcolor_title+"; text-indent:5px;'><b>"+this.title+"</b></td>";
       content += "  </tr>";
     }
     content += "  <tr>";
@@ -886,7 +857,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       if (this.bgcolor_body == null) this.bgcolor_body = "palegreen";
       this.drawProgress(false, p_caption);
 
-    } else if (p_type == "TIPS") {
+    } else if (p_type == "TIP") {
       if (this.bgcolor_title == null) this.bgcolor_title = "fuchsia";
       if (this.bgcolor_body == null) this.bgcolor_body = "yellow";
       this.drawTips(false, p_caption);
@@ -981,7 +952,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
           height = 260;  break;
         case "PROGRESS":
           height = 100;  break;
-        case "TIPS":
+        case "TIP":
           height = 70;  break;
         case "IFRAME":
           height = 320;  break;
@@ -1087,24 +1058,27 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     this.additionalParams = params;
   },
   // Tree
+  getTreeRootDivId: function()
+  {
+    return ("thetisBoxTree-"+this.id);
+  },
   buildTree: function(parentTreeId, array, open)
   {
-    return ThetisBox.buildTree(parentTreeId, array, "document.formThetisBox"+this.id, "thetisBoxTree-"+this.id, "thetisBoxSelKeeper-"+this.id, this.folderImg, open);
+    return ThetisBox.buildTree(parentTreeId, array, this.getTreeRootDivId(), this.folderImg, open);
   },
   selectTree: function(menuId, forceOpen)
   {
-    ThetisBox.selectTree("thetisBoxSelKeeper-"+this.id, "a_thetisBoxTree-"+this.id+":"+menuId, "document.formThetisBox"+this.id, forceOpen);
+    ThetisBox.selectTree(this.getTreeRootDivId(), "a_thetisBoxTree-"+this.id+":"+menuId, forceOpen);
   },
-  getTreeSelect: function()
+  getSelectedTreeNodeId: function()
   {
-    return ThetisBox.getTreeSelect(this.id);
+    return ThetisBox.getSelectedTreeNodeId(this.getTreeRootDivId());
   },
   setTree: function(url, selectId, onComplete)
   {
     var d = document.createElement("div");
     d.innerHTML = "<form method='get' name='form_ajax_thetisBoxTree'>"
         + "<input type='hidden' name='rootDiv' value='thetisBoxTree-"+this.id+"' />"
-        + "<input type='hidden' name='selKeeper' value='thetisBoxSelKeeper-"+this.id+"' />"
         + "<input type='hidden' name='selId' value='a_thetisBoxTree-"+this.id+":"+selectId+"' />"
         + "</form>";
     this.parent_elem.appendChild(d);
@@ -1283,6 +1257,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     }
     this.child_boxes.push(childBox);
   },
+  onResized: null,
   child_boxes: null
 });
 
@@ -1621,15 +1596,25 @@ ThetisBox.getTimeSpanDialog = function(hours, mins, onOk, onCancel, org_start, o
 
 /**----------------**----------------**----------------**----------------**/
 
-ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, folderImg, open)
+ThetisBox.getSelKeeperId = function(rootDiv)
 {
+  return (rootDiv+":selectedNode");
+}
+
+ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
+{
+  var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
+  var selKeeper = _z(selKeeperId);
+  if (!selKeeper) {
+    selKeeper = addInputHidden(null, selKeeperId, null, "", _z(rootDiv));
+  }
   var parent = null;
   if (parentTreeId == "") {
     parent = _z(rootDiv);
   } else {
     parent = _z(rootDiv+":"+parentTreeId);
     if (parent == null) {
-      alert("No parentTree found! "+parentTreeId);
+      tip("No parentTree found! "+parentTreeId, "CENTER");
       return null;
     }
   }
@@ -1711,7 +1696,6 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
       ThetisBox.addEvent(menu, "click",
             function(_onclick, menu_id, d_id){
               return function(evt){
-                var selKeeper = _z(selKeeperId);
 
                 eval(_onclick);
 
@@ -1721,28 +1705,25 @@ ThetisBox.buildTree = function(parentTreeId, array, frm, rootDiv, selKeeperId, f
                   } else {
                     ThetisBox.openTree(d_id, true);
                   }
-                  ThetisBox.selectTree(selKeeperId, menu_id, frm);
+                  ThetisBox.selectTree(rootDiv, menu_id);
                 }
                 return false;
               };
             }.call(this, onclick, menu.id, d.id));
-      //menu.onclick = onclick+" var selKeeper=_z('"+selKeeperId+"'); if (selKeeper != null) { if (selKeeper.value == '"+menu.id+"') { ThetisBox.toggleTree('"+d.id+"'); } else { ThetisBox.openTree('"+d.id+"', true); } ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); } return false;";
     } else {
       menu.href = "javascript:void(0)";
       ThetisBox.addEvent(menu, "click",
             function(_onclick, menu_id){
               return function(evt){
-                var selKeeper = _z(selKeeperId);
 
                 eval(onclick);
 
                 if (selKeeper != null) {
-                  ThetisBox.selectTree(selKeeperId, menu_id, frm);
+                  ThetisBox.selectTree(rootDiv, menu_id);
                 }
                 return false;
               };
             }.call(this, onclick, menu.id));
-      //menu.onclick = onclick+" var selKeeper=_z('"+selKeeperId+"'); if (selKeeper != null) { ThetisBox.selectTree('"+selKeeperId+"', '"+menu.id+"', "+frm+"); } return false;";
     }
   }
   return firstMenuId;
@@ -1811,8 +1792,9 @@ ThetisBox._openTree = function(tree, open)
   }
 }
 
-ThetisBox.selectTree = function(selKeeperId, menuId, frm, forceOpen)
+ThetisBox.selectTree = function(rootDiv, menuId, forceOpen)
 {
+  var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
   var lastSelected = _z(selKeeperId).value;
   if (lastSelected != "") {
     _z(lastSelected).style.backgroundColor = "";
@@ -1840,14 +1822,11 @@ ThetisBox.selectTree = function(selKeeperId, menuId, frm, forceOpen)
       }
     }
   }
-
-  if (frm != null && action != null) {
-    frm.action = action;
-  }
 }
 
-ThetisBox.isSelectedTree = function(selKeeperId, menuId)
+ThetisBox.isSelectedTree = function(rootDiv, menuId)
 {
+  var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
   return (_z(selKeeperId).value == menuId);
 }
 
@@ -1861,17 +1840,26 @@ ThetisBox.getMenuIdFromDivId = function(divId)
   return "a_" + divId;
 }
 
-ThetisBox.getTreeSelect = function(id)
+ThetisBox.getSelectedTreeNodeId = function(rootDiv)
 {
-  var selKeeper = _z("thetisBoxSelKeeper-"+id);
-  if (selKeeper == null) {
+  var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
+  var selKeeper = _z(selKeeperId);
+  if (!selKeeper) {
     return null;
   }
   var val = selKeeper.value;
-  if (val == null) {
+  if ((val == null) || (val == "")) {
     return null;
   }
-  var tokens = val.split(":");
+  return ThetisBox.getTreeNodeIdFromMenuId(val);
+}
+
+ThetisBox.getTreeNodeIdFromMenuId = function(menu_id)
+{
+  if (!menu_id) {
+    return null;
+  }
+  var tokens = menu_id.split(":");
   return tokens[tokens.length-1];
 }
 
@@ -2002,13 +1990,13 @@ msg = function(m, pos)
   return thetisBox;
 }
 
-tips = function(m, position)
+tip = function(m, position)
 {
   if (!position) {
     position = "TOP-RIGHT";
   }
   var thetisBox = new ThetisBox;
-  thetisBox.show(position, "", "TIPS", "", m, "");
+  thetisBox.show(position, "", "TIP", "", m, "");
 
   return thetisBox;
 }

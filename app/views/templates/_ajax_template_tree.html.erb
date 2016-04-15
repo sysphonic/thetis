@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 
-  var array = new Array(
+  var array = [
   <%
   is_first = true
   @tmpl_tree.each do |parent_id, childs|
@@ -10,20 +10,20 @@
     <% unless is_first %>
     ,
     <% end %>
-                    new Array("<%= parent_id %>", " <%= Item.get_title(parent_id) %>", "")
+    ["<%= parent_id %>", " <%= Item.get_title(parent_id) %>", ""]
   <%
     is_first = false
   end
   %>
-                  );
+  ];
 
   <% item_img = THETIS_RELATIVE_URL_ROOT + '/images/item.gif' %>
-  var firstMenuId = ThetisBox.buildTree("", array, null, "<%= params[:rootDiv] %>", "<%= params[:selKeeper] %>", "<%= item_img %>");
+  var firstMenuId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", "<%= item_img %>");
 
-  <% if params[:selId].nil? or params[:selId].empty? %>
-    ThetisBox.selectTree("<%= params[:selKeeper] %>", firstMenuId, null);
+  <% if params[:selId].blank? %>
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", firstMenuId);
   <% else %>
-    ThetisBox.selectTree("<%= params[:selKeeper] %>", "<%= params[:selId] %>", null);
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selId] %>");
   <% end %>
 </script>
 

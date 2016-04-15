@@ -290,29 +290,31 @@ onItemXtypeClicked = function(elem)
 
 function doSelectFolder(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    new Ajax.Updater(
-        "div_folderPath",
-        "<%= url_for(:controller => 'folders', :action => 'get_path') %>",
-        {
-          method:"get",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_folderPath",
+          "<%= url_for(:controller => 'folders', :action => 'get_path') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 

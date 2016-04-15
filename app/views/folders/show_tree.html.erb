@@ -77,7 +77,6 @@ var modified_teams = 0;
           <td id="td_tree" style="border:inset 2px silver; padding:0px; text-align:left; vertical-align:top;">
             <%= form_tag( {:controller => 'folders', :action => 'show_tree'}, :method => 'post', :name => 'form_folder_tree') %>
               <div id="divFolderTree" style="overflow:auto;"><div id="folderTree" style="text-align:left; margin:10px;"></div></div>
-              <input type="hidden" name="selKeeper" id="selKeeper" value="" />
             </form>
           </td>
           <td id="drag_border" style="width:5px; background-color:#F9BF8B; cursor:w-resize; vertical-align:middle;">
@@ -207,26 +206,26 @@ function onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFo
 
 function onLoadSub()
 {
-  var array = new Array(new Array("0", " (root)", "", "selectFolder('0');", 0));
-  var folderImgs = new Array(
-                      <% icons = Folder.get_icons(nil, false, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(nil, true, false) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(nil, false, true) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>"),
-                      <% icons = Folder.get_icons(nil, true, true) %>
-                        new Array("<%= icons[1] %>", "<%= icons[2] %>")
-                      );
-  var firstMenuId = ThetisBox.buildTree("", array, null, "folderTree", "selKeeper", folderImgs);
+  var array = [["0", " (root)", "", "selectFolder('0');", 0]];
+  var folderImgs = [
+  <% icons = Folder.get_icons(nil, false, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(nil, true, false) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(nil, false, true) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+  <% icons = Folder.get_icons(nil, true, true) %>
+    new Array("<%= icons[1] %>", "<%= icons[2] %>")
+  ];
+  var firstMenuId = ThetisBox.buildTree("", array, "folderTree", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
   array = new Array(
     <%
@@ -276,13 +275,13 @@ function onLoadSub()
     end
     %>
         );
-  ThetisBox.buildTree("<%= parent_id %>", array, null, "folderTree", "selKeeper", folderImgs, false);
+  ThetisBox.buildTree("<%= parent_id %>", array, "folderTree", folderImgs, false);
   <% end %>
 
-<% unless session[:folder_id].nil? or session[:folder_id].empty? %>
+<% unless session[:folder_id].blank? %>
   var menuId = "a_folderTree:<%= session[:folder_id] %>";
-  ThetisBox.selectTree("selKeeper", menuId, null, true);
-  if (ThetisBox.isSelectedTree("selKeeper", menuId)) {
+  ThetisBox.selectTree("folderTree", menuId, true);
+  if (ThetisBox.isSelectedTree("folderTree", menuId)) {
     doGetItems(<%= session[:folder_id] %>);
   }
 <% end %>
@@ -349,11 +348,11 @@ function checkTeamFolder(folder_id)
 
 function onCreateFolderClicked(pos)
 {
-  if (document.form_folder_tree.selKeeper.value == "") {
+  var folder_id = ThetisBox.getSelectedTreeNodeId("folderTree");
+  if (!folder_id) {
     msg("<%= t('folder.select_parent') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
 
   if (!checkSystemFolder(folder_id)) {
     return;
@@ -437,11 +436,11 @@ function doRenameFolder(thetisBoxId, folder_id)
 
 function onRenameFolderClicked(pos)
 {
-  if (document.form_folder_tree.selKeeper.value == '') {
+  var folder_id = ThetisBox.getSelectedTreeNodeId("folderTree");
+  if (!folder_id) {
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -462,11 +461,11 @@ function onRenameFolderClicked(pos)
 
 function onDeleteFolderClicked()
 {
-  if (document.form_folder_tree.selKeeper.value == '') {
+  var folder_id = ThetisBox.getSelectedTreeNodeId("folderTree");
+  if (!folder_id) {
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1]; 
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -490,12 +489,13 @@ function doDelete(folder_id)
 {
   var addParams = [];
   addParams.push(Form.serialize(document.form_folder_tree));
+  addParams.push("id="+folder_id);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Request(
-      "<%= url_for(:controller => 'folders', :action => 'destroy') %>?id="+folder_id,
+      "<%= url_for(:controller => 'folders', :action => 'destroy') %>",
       {
         method:"post",
         parameters:addParams.join("&"),
@@ -505,7 +505,7 @@ function doDelete(folder_id)
           thetisBox.remove();
           if (request.responseText == "") {
             removeElem(_z("base_folderTree:"+folder_id));
-            document.form_folder_tree.selKeeper.value = "";
+            _z(ThetisBox.getSelKeeperId("folderTree")).value = "";
           }
           request.responseText.evalScripts();
         }
@@ -515,11 +515,11 @@ function doDelete(folder_id)
 
 function onMoveFolderClicked()
 {
-  if (document.form_folder_tree.selKeeper.value == "") {
+  var folder_id = ThetisBox.getSelectedTreeNodeId("folderTree");
+  if (!folder_id) {
     msg("<%= t('folder.select') %>");
     return;
   }
-  var folder_id = document.form_folder_tree.selKeeper.value.split(":")[1];
 
   if (folder_id == "0") {
     msg("<%= t('folder.root_folder_restricted') %>");
@@ -542,18 +542,20 @@ function onMoveFolderClicked()
 
 function doMoveFolder(thetisBoxId, folder_id)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    var addParams = [];
-    addParams.push("id="+folder_id);
-    addParams.push("thetisBoxSelKeeper="+val);
+      var addParams = [];
+      addParams.push("id="+folder_id);
+      addParams.push("tree_node_id="+treeNodeId);
 
-    prog("TOP-RIGHT");
-    var frm = createPostForm("<%= url_for(:controller => 'folders', :action => 'move') %>", addParams);
-    frm.submit();
+      prog("TOP-RIGHT");
+      var frm = createPostForm("<%= url_for(:controller => 'folders', :action => 'move') %>", addParams);
+      frm.submit();
+    }
   }
 }
 
@@ -577,7 +579,7 @@ function selectFolder(folder_id)
 
 function changeOption(val)
 {
-  var folder_id = document.form_folder_tree.selKeeper.value.split(':')[1];
+  var folder_id = ThetisBox.getSelectedTreeNodeId("folderTree");
   if (!folder_id) {
     return false;
   }
@@ -746,13 +748,15 @@ function showGroupTreeToSelect(group_id)
 
 function onGroupNodeSelected(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    prog("TOP-RIGHT");
-    location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>?thetisBoxSelKeeper="+val;
+      prog("TOP-RIGHT");
+      location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>?tree_node_id="+treeNodeId;
+    }
   }
 }
 
@@ -760,6 +764,16 @@ function clearGroup()
 {
   prog("TOP-RIGHT");
   location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>";
+}
+
+onFolderTreeNodeClicked = function(folder_id, menu_id, div_id)
+{
+  selectFolder(folder_id);
+  var selKeeperId = ThetisBox.getSelKeeperId("folderTree");
+  if (_z(selKeeperId).value == menu_id) {
+    ThetisBox.toggleTree(div_id);
+  }
+  ThetisBox.selectTree("folderTree", menu_id);
 }
 
 </script>

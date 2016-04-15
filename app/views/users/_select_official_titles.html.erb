@@ -66,31 +66,32 @@ showGroupTreeToSelect = function(group_id)
 
 doSelectGroupOfficialTitles = function(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    ThetisBox.remove(thetisBoxId);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("user_id=<%= @user.id %>");
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("user_id=<%= @user.id %>");
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
-
-    new Ajax.Updater(
-        "div_select_official_titles",
-        "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
-        {
-          method:"get",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_select_official_titles",
+          "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+          {
+            method:"get",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 
@@ -99,18 +100,18 @@ doClearGroup = function()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_select_official_titles",
-              "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
-              {
-                method:"get",
-                parameters:"user_id=<%= @user.id %>",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBoxProgress.remove();
-                }
-              }
-            );
+      "div_select_official_titles",
+      "<%= url_for(:controller => 'users', :action => 'select_official_titles') %>",
+      {
+        method:"get",
+        parameters:"user_id=<%= @user.id %>",
+        asynchronous:true,
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 </script>

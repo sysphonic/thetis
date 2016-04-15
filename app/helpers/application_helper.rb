@@ -34,13 +34,48 @@ module ApplicationHelper
       end
     end
 
-    paths = Rails.root.split('/')
+    paths = Rails.root.to_s.split('/')
     paths.delete('')
-    stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}.join("\n")
+    stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}
     if evar.message == 'THETIS_EXCEPTION'
       stacktrace.pop  # Remove current stack.
     end
     return stacktrace
+  end
+
+  #=== self.a_to_attr
+  #
+  #Gets value of attribute from an Array.
+  #
+  #_arr_:: Target Array.
+  #return:: Value of attribute.
+  #
+  def self.a_to_attr(arr)
+
+    if arr.nil? or arr.empty?
+      attr = ''
+    else
+      attr = '|'+arr.join('|')+'|'
+    end
+    return attr
+  end
+
+  #=== self.attr_to_a
+  #
+  #Gets Array from value of attribute.
+  #
+  #_attr_:: Value of attribute.
+  #return:: Array.
+  #
+  def self.attr_to_a(attr)
+
+    return [] if attr.blank?
+
+    arr = attr.split('|')
+    arr.compact!
+    arr.delete('')
+
+    return arr
   end
 
   #=== self.split_preserving_quot

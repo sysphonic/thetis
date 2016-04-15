@@ -31,8 +31,8 @@ class LocationsController < ApplicationController
 
     @group_id = nil
 
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
@@ -73,10 +73,10 @@ class LocationsController < ApplicationController
     @group_obj_cache = {}
     if @location.nil? and @group_id.nil?
       group_ids = @login_user.get_groups_a(true, @group_obj_cache)
-      group_ids << '0'  # '0' for ROOT
+      group_ids << TreeElement::ROOT_ID.to_s
     elsif !@group_id.nil?
       group_ids << @group_id
-      if @group_id.to_i != 0
+      if @group_id.to_i != TreeElement::ROOT_ID
         group = Group.find_with_cache(@group_id, @group_obj_cache)
         group_ids |= group.get_parents(false, @group_obj_cache)
       end

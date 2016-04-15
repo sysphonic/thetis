@@ -159,7 +159,7 @@ function doStart()
 
           if (request.responseText == "") {
             changeStatus(true);
-            tips("<%= t('msg.start_success')%>");
+            tip("<%= t('msg.start_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
@@ -190,7 +190,7 @@ function doStop()
 
           if (request.responseText == "") {
             changeStatus(false);
-            tips("<%= t('msg.stop_success')%>");
+            tip("<%= t('msg.stop_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
@@ -221,7 +221,7 @@ function doReset()
 
           if (request.responseText == "") {
             changeStatus(false);
-            tips("<%= t('msg.reset_success')%>");
+            tip("<%= t('msg.reset_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
@@ -425,7 +425,7 @@ function doApplyCtrl()
           removeElem(f);
 
           if (request.responseText == "") {
-            tips("<%= t('msg.update_success')%>");
+            tip("<%= t('msg.update_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
@@ -460,34 +460,35 @@ function doResetCtrl()
 
 function doSelectGroup(thetisBoxId, current_id)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    ThetisBox.remove(thetisBoxId);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("authenticity_token=<%= form_authenticity_token %>");
+      if (current_id) {
+        addParams.push("current_id="+current_id);
+      }
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("authenticity_token=<%= form_authenticity_token %>");
-    if (current_id) {
-      addParams.push("current_id="+current_id);
-    }
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
-
-    new Ajax.Updater(
-        "div_statistics_groups",
-        "<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>",
-        {
-          method:"post",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_statistics_groups",
+          "<%= url_for(:controller => 'researches', :action => 'add_statistics_group') %>",
+          {
+            method:"post",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 

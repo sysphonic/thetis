@@ -689,8 +689,8 @@ class SchedulesController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
@@ -720,8 +720,8 @@ class SchedulesController < ApplicationController
     Log.add_info(request, params.inspect)
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
@@ -750,8 +750,8 @@ class SchedulesController < ApplicationController
   def get_folder_items
     Log.add_info(request, params.inspect)
 
-    unless params[:thetisBoxSelKeeper].blank?
-      @folder_id = params[:thetisBoxSelKeeper].split(':').last
+    unless params[:tree_node_id].blank?
+      @folder_id = params[:tree_node_id]
     end
 
     begin

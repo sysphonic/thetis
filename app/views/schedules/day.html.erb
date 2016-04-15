@@ -276,12 +276,14 @@ function doScheduleDelete(id)
 
 function doSelectGroup(thetisBoxId)
 {
-  prog("TOP-RIGHT");
-
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
   var display = _z("display");
-  display.options[display.selectedIndex].value = "group_" + ThetisBox.getTreeSelect(thetisBoxId);
 
-  document.form_schedule.submit();
+  if (thetisBox && display) {
+    prog("TOP-RIGHT");
+    display.options[display.selectedIndex].value = "group_" + thetisBox.getSelectedTreeNodeId();
+    document.form_schedule.submit();
+  }
 }
 
 function showGroupTree()

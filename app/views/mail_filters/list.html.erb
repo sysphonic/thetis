@@ -252,7 +252,7 @@ doExecNowFilters = function(mail_account_id, folder_id)
           }
 
           if (request.responseText == "") {
-            tips("<%= t('msg.execute_success')%>");
+            tip("<%= t('msg.execute_success')%>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }
@@ -388,7 +388,7 @@ showFilterNew = function()
 
   var mail_account_id = _z("mail_account_id").value;
   if (!mail_account_id) {
-    tips("<%= t('msg.select_account') %>", "CENTER");
+    tip("<%= t('msg.select_account') %>", "CENTER");
     return false;
   }
 

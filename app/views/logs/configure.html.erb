@@ -63,23 +63,23 @@ function doUpdateConfig()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Request(
-              document.form_log_config.action,
-              {
-                asynchronous:true,
-                evalScripts:true,
-                parameters:Form.serialize(document.form_log_config),
-                onComplete:function(request) {
+      document.form_log_config.action,
+      {
+        asynchronous:true,
+        evalScripts:true,
+        parameters:Form.serialize(document.form_log_config),
+        onComplete:function(request) {
 
-                  thetisBox.remove();
+          thetisBox.remove();
 
-                  if (request.responseText == "") {
-                    tips("<%= t('msg.update_success')%>");
-                  } else {
-                    msg("<%= t('msg.system_error')%><br/>"+request.responseText);
-                  }
-                }
-              }
-            );
+          if (request.responseText == "") {
+            tip("<%= t('msg.update_success')%>");
+          } else {
+            msg("<%= t('msg.system_error')%><br/>"+request.responseText);
+          }
+        }
+      }
+    );
   return true;
 }
 </script>

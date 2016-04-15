@@ -226,8 +226,8 @@ class ResearchesController < ApplicationController
 
     current_id = params[:current_id]
 
-    unless params[:thetisBoxSelKeeper].nil?
-      group_id = params[:thetisBoxSelKeeper].split(':').last
+    unless params[:tree_node_id].nil?
+      group_id = params[:tree_node_id]
     end
     SqlHelper.validate_token([current_id, group_id])
 
@@ -577,16 +577,16 @@ class ResearchesController < ApplicationController
     end
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      if @group_id == '0'
-        con << "((groups like '%|0|%') or (groups is null))"
+      if @group_id == TreeElement::ROOT_ID.to_s
+        con << "((groups like '%|#{@group_id}|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
@@ -726,13 +726,13 @@ class ResearchesController < ApplicationController
 
     where = ' where Research.status=' + Research::U_STATUS_COMMITTED.to_s
 
-    unless params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    unless params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
       SqlHelper.validate_token([@group_id])
 
       group_cons = []
 
-      if @group_id != '0'
+      if @group_id != TreeElement::ROOT_ID.to_s
         group_cons << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
 
         where << ' and (Research.user_id = User.id)'

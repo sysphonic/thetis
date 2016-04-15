@@ -53,25 +53,30 @@ _addToDesktop = function()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = [];
+  addParams.push("xtype=<%= toy_xtype %>");
+  addParams.push("target_id=<%= toy_target_id %>");
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Request(
-        "<%= url_for(:controller => 'desktop', :action => 'add_toy') %><%= "?xtype=#{toy_xtype}&target_id=#{toy_target_id}" %>",
-        {
-          method:"post",
-          parameters:"authenticity_token=<%= form_authenticity_token %>",
-          asynchronous:true,
-          evalScripts:false,
-          onComplete:function(request) {
-              var button = _z("add_to_desktop");
-              removeElem(button);
+      "<%= url_for(:controller => 'desktop', :action => 'add_toy') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        asynchronous:true,
+        evalScripts:false,
+        onComplete:function(request) {
+          var button = _z("add_to_desktop");
+          removeElem(button);
 
-              thetisBoxProgress.remove();
+          thetisBoxProgress.remove();
 
-              if (Number(request.responseText) > 0) {
-                tips("<%= t('msg.add_to_desktop_success')%>");
-              }
-            }
+          if (Number(request.responseText) > 0) {
+            tip("<%= t('msg.add_to_desktop_success')%>");
+          }
         }
-      );
+      }
+    );
 }
 
 </script>

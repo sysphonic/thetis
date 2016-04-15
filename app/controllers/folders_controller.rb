@@ -31,14 +31,14 @@ class FoldersController < ApplicationController
     if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
 
       @group_id = nil
-      if !params[:thetisBoxSelKeeper].nil?
-        @group_id = params[:thetisBoxSelKeeper].split(':').last
+      if !params[:tree_node_id].nil?
+        @group_id = params[:tree_node_id]
       elsif !params[:group_id].blank?
         @group_id = params[:group_id]
       end
       SqlHelper.validate_token([@group_id])
 
-      @folder_tree = Folder.get_tree_by_group_for_admin(@group_id || '0')
+      @folder_tree = Folder.get_tree_by_group_for_admin(@group_id || TreeElement::ROOT_ID.to_s)
     else
       @folder_tree = Folder.get_tree_for(@login_user)
     end
@@ -150,7 +150,7 @@ class FoldersController < ApplicationController
   #
   #Moves Folder.
   #Receives target Folder-ID from access-path and destination Folder-ID from ThetisBox.
-  #params[:thetisBoxSelKeeper] keeps selected ID of <a>-tag like "thetisBoxSelKeeper-1:<selected-id>". 
+  #params[:tree_node_id] keeps selected ID of <a>-tag like "tree_node_id-1:<selected-id>". 
   #
   def move
     Log.add_info(request, params.inspect)
@@ -159,12 +159,12 @@ class FoldersController < ApplicationController
 
     @folder = Folder.find(params[:id])
 
-    if params[:thetisBoxSelKeeper].blank?
+    if params[:tree_node_id].blank?
       redirect_to(:action => 'show_tree')
       return
     end
 
-    parent_id = params[:thetisBoxSelKeeper].split(':').last
+    parent_id = params[:tree_node_id]
 
     check = true
 
@@ -204,13 +204,13 @@ class FoldersController < ApplicationController
   def get_path
     Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxSelKeeper].blank?
+    if params[:tree_node_id].blank?
       @folder_path = '/' + t('paren.unknown')
       render(:partial => 'ajax_folder_path', :layout => false)
       return
     end
 
-    @selected_id = params[:thetisBoxSelKeeper].split(':').last
+    @selected_id = params[:tree_node_id]
     SqlHelper.validate_token([@selected_id])
 
     @folder_path = Folder.get_path(@selected_id)
@@ -252,7 +252,7 @@ class FoldersController < ApplicationController
       folder_ids = nil
       add_con = nil
 
-      if @folder_id.nil? and params[:find_in] != Item::FOLDER_ALL
+      if @folder_id.nil? and (params[:find_in] != Item::FOLDER_ALL)
         add_con = "(Item.folder_id != 0) and (Folder.disp_ctrl like '%|#{Folder::DISPCTRL_BBS_TOP}|%')"
       else
         case params[:find_in]
@@ -267,17 +267,18 @@ class FoldersController < ApplicationController
             folder_ids = [@folder_id]
         end
         unless folder_ids.nil?
-          delete_ary = []
+          del_arr = []
           folder_ids.each do |folder_id|
             unless Folder.check_user_auth(folder_id, @login_user, 'r', true)
-              delete_ary << folder_id
+              del_arr << folder_id
             end
           end
-          folder_ids -= delete_ary unless delete_ary.empty?
+          folder_ids -= del_arr unless del_arr.empty?
         end
       end
 
-      sql = ItemsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, false, add_con)
+      is_admin = ((!@login_user.nil?) and @login_user.admin?(User::AUTH_ITEM))
+      sql = ItemsHelper.get_list_sql(@login_user, params[:keyword], folder_ids, @sort_col, @sort_type, 0, is_admin, add_con)
       @item_pages, @items, @total_num = paginate_by_sql(Item, sql, 10)
 # FEATURE_PAGING_IN_TREE <<<
 
@@ -303,7 +304,7 @@ class FoldersController < ApplicationController
     @folder_id = params[:id]
     SqlHelper.validate_token([@folder_id])
 
-    if @folder_id != '0'
+    if @folder_id != TreeElement::ROOT_ID.to_s
       begin
         @folder = Folder.find(@folder_id)
       rescue => evar
@@ -339,7 +340,7 @@ class FoldersController < ApplicationController
 
     if Folder.check_user_auth(folder_id, @login_user, 'w', true)
 
-      order_ary = params[:items_order]
+      order_arr = params[:items_order]
 
       if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
         items = Folder.get_items_admin(folder_id)
@@ -347,7 +348,7 @@ class FoldersController < ApplicationController
         items = Folder.get_items(@login_user, folder_id)
       end
       items.each do |item|
-        item.update_attribute(:xorder, order_ary.index(item.id.to_s) + 1)
+        item.update_attribute(:xorder, order_arr.index(item.id.to_s) + 1)
       end
     else
       Log.add_error(request, nil, 'No Authority Error')
@@ -368,15 +369,15 @@ class FoldersController < ApplicationController
     @group_id = params[:group_id]
     SqlHelper.validate_token([@folder_id, @group_id])
 
-    if @folder_id != '0'
+    if @folder_id != TreeElement::ROOT_ID.to_s
       @folder = Folder.find(@folder_id)
     end
 
     @folders = Folder.get_childs_for(@login_user, @folder_id, false, nil, true)
 
-    if @folder_id == '0'
-      delete_ary = FoldersHelper.get_except_top_for_admin(@folders, @group_id)
-      @folders -= delete_ary
+    if @folder_id == TreeElement::ROOT_ID.to_s
+      del_arr = FoldersHelper.get_except_top_for_admin(@folders, @group_id)
+      @folders -= del_arr
     end
 
     session[:folder_id] = @folder_id
@@ -398,15 +399,15 @@ class FoldersController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:folders_order]
+    order_arr = params[:folders_order]
 
     folders = Folder.get_childs(params[:id], nil, false, true, false)
     # folders must be ordered by xorder ASC.
 
     folders.sort! { |id_a, id_b|
 
-      idx_a = order_ary.index(id_a)
-      idx_b = order_ary.index(id_b)
+      idx_a = order_arr.index(id_a)
+      idx_b = order_arr.index(id_b)
 
       if idx_a.nil? or idx_b.nil?
         idx_a = folders.index(id_a)
@@ -442,7 +443,7 @@ class FoldersController < ApplicationController
     folder_id = params[:id]
     SqlHelper.validate_token([folder_id])
 
-    if folder_id != '0'
+    if folder_id != TreeElement::ROOT_ID.to_s
       begin
         @folder = Folder.find(folder_id)
       rescue => evar
@@ -542,8 +543,8 @@ class FoldersController < ApplicationController
     end
 
     @group_id = nil
-    if !params[:thetisBoxSelKeeper].nil?
-      @group_id = params[:thetisBoxSelKeeper].split(':').last
+    if !params[:tree_node_id].nil?
+      @group_id = params[:tree_node_id]
     elsif !params[:group_id].blank?
       @group_id = params[:group_id]
     end
@@ -801,7 +802,7 @@ class FoldersController < ApplicationController
   def ajax_move_items
     Log.add_info(request, params.inspect)
 
-    folder_id = params[:thetisBoxSelKeeper].split(':').last
+    folder_id = params[:tree_node_id]
     SqlHelper.validate_token([folder_id])
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)

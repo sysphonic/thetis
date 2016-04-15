@@ -76,7 +76,7 @@ initFilterActionVerbOpts = function()
   }
   if (filter_action_verb.options.length <= 0
       || (filter_action_verb.options.length == 1 && !filter_action_verb.options[0].value)) {
-    tips("<%= t('mail_filter.no_more_action_available') %>", "CENTER");
+    tip("<%= t('mail_filter.no_more_action_available') %>", "CENTER");
 
     var boxInstance = ThetisBox.getInstanceForElem(filter_action_verb);
     if (boxInstance) {
@@ -129,7 +129,7 @@ showFolderTreeToSelect = function(folder_id)
 
 onFilterActionTreeDestSelected = function(thetisBoxId)
 {
-  var folder_id = thetisBoxFilterActionFolderTree.getTreeSelect();
+  var folder_id = thetisBoxFilterActionFolderTree.getSelectedTreeNodeId();
   if (folder_id == "<%= TreeElement::ROOT_ID %>") {
     msg("<%= t('msg.cannot_save_in_folder') %>");
     return;

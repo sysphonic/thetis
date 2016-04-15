@@ -22,7 +22,7 @@ getCsrfToken = function()
 alertSessionRenewed = function()
 {
   if (getCsrfToken() != "<%= form_authenticity_token %>") {
-    var tipsBox = tips("<%= t('msg.session_reset') %>", "CENTER");
+    var tipsBox = tip("<%= t('msg.session_reset') %>", "CENTER");
     var tipsContainer = tipsBox.getContainer();
     if (tipsContainer) {
       tipsContainer.style.zIndex += 100;

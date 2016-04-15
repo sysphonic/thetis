@@ -340,35 +340,36 @@ doDeleteProfileSheet = function(user_id)
 
 doSelectGroup = function(thetisBoxId, current_id)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    ThetisBox.remove(thetisBoxId);
+      var addParams = [];
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("user_id=<%= @user.id %>");
+      addParams.push("authenticity_token=<%= form_authenticity_token %>");
+      if (current_id) {
+        addParams.push("current_id="+current_id);
+      }
 
-    var addParams = [];
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("user_id=<%= @user.id %>");
-    addParams.push("authenticity_token=<%= form_authenticity_token %>");
-    if (current_id) {
-      addParams.push("current_id="+current_id);
-    }
+      var thetisBoxProgress = prog("TOP-RIGHT");
 
-    var thetisBoxProgress = prog("TOP-RIGHT");
-
-    new Ajax.Updater(
-        "div_user_groups",
-        "<%= url_for(:controller => 'users', :action => 'add_to_group') %>",
-        {
-          method:"post",
-          parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
-          onComplete:function(request) {
-            thetisBoxProgress.remove();
+      new Ajax.Updater(
+          "div_user_groups",
+          "<%= url_for(:controller => 'users', :action => 'add_to_group') %>",
+          {
+            method:"post",
+            parameters:addParams.join("&"),
+            asynchronous:true,
+            evalScripts:true,
+            onComplete:function(request) {
+              thetisBoxProgress.remove();
+            }
           }
-        }
-      );
+        );
+    }
   }
 }
 
@@ -447,7 +448,7 @@ doUpdateZeptAllowed = function()
         onComplete:function(request) {
           thetisBoxProgress.remove();
           if (request.responseText == "") {
-            tips("<%= t('msg.update_success') %>");
+            tip("<%= t('msg.update_success') %>");
           } else {
             msg("<%= t('msg.system_error')%><br/>"+request.responseText);
           }

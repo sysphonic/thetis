@@ -190,16 +190,18 @@ function showGroupTreeToSelect(group_id)
 
 function onGroupTreeNodeSelected(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    prog("TOP-RIGHT");
-    var addParams = [
-      "thetisBoxSelKeeper="+val
-    ];
-    location.href = "<%= url_for(:controller => 'timecards', :action => 'users') %>?"+addParams.join("&");
+      prog("TOP-RIGHT");
+      var addParams = [
+        "tree_node_id="+treeNodeId
+      ];
+      location.href = "<%= url_for(:controller => 'timecards', :action => 'users') %>?"+addParams.join("&");
+    }
   }
 }
 

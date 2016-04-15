@@ -323,17 +323,19 @@ function showFolderTreeToMove(folder_id)
 
 function onFolderTreeNodeToMoveSelected(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    prog("TOP-RIGHT");
-    var addParams = getCheckedItemsParam();
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("thumbnails=<%= params[:thumbnails] %>");
-    var frm = createPostForm("<%= url_for(:controller => 'items', :action => 'move_multi') %>", addParams);
-    frm.submit();
+      prog("TOP-RIGHT");
+      var addParams = getCheckedItemsParam();
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("thumbnails=<%= params[:thumbnails] %>");
+      var frm = createPostForm("<%= url_for(:controller => 'items', :action => 'move_multi') %>", addParams);
+      frm.submit();
+    }
   }
 }
 
@@ -391,7 +393,7 @@ function _addToDesktop(xtype, target_id)
             thetisBoxProgress.remove();
 
             if (Number(request.responseText) > 0) {
-              tips("<%= t('msg.add_to_desktop_success')%>");
+              tip("<%= t('msg.add_to_desktop_success')%>");
             }
           }
       }
@@ -413,10 +415,10 @@ function sortList(col)
   prog("TOP-RIGHT");
 }
 
-<% if @login_user.nil? and params[:tips]=='true' %>
+<% if @login_user.nil? and params[:tip]=='true' %>
 function showTips()
 {
-  tips("<%= t('item.no_login_info1') %><br/><span style='font-size:14pt;color:firebrick;font-weight:800'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");
+  tip("<%= t('item.no_login_info1') %><br/><span style='font-size:14pt;color:firebrick;font-weight:800'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");
 }
 <% end %>
 
@@ -429,17 +431,19 @@ function showFolderTreeToSelect(folder_id)
 
 function onFolderTreeNodeSelected(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    prog("TOP-RIGHT");
-    var addParams = [
-      "thetisBoxSelKeeper="+val,
-      "thumbnails=<%= params[:thumbnails] %>"
-    ];
-    location.href = "<%= url_for(:controller => 'items', :action => 'list') %>?"+addParams.join("&");
+      prog("TOP-RIGHT");
+      var addParams = [
+        "tree_node_id="+treeNodeId,
+        "thumbnails=<%= params[:thumbnails] %>"
+      ];
+      location.href = "<%= url_for(:controller => 'items', :action => 'list') %>?"+addParams.join("&");
+    }
   }
 }
 

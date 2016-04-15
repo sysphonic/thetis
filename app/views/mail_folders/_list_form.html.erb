@@ -98,22 +98,24 @@ onMoveMailsClicked = function()
 
 doMoveMails = function(thetisBoxId)
 {
-  var thetisBoxSelKeeper = _z("thetisBoxSelKeeper-"+thetisBoxId);
-  if (thetisBoxSelKeeper && thetisBoxSelKeeper.value) {
-    var val = thetisBoxSelKeeper.value;
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    if (treeNodeId) {
+      ThetisBox.remove(thetisBoxId);
 
-    invalidateAccountSummary();
+      invalidateAccountSummary();
 
-    var addParams = getCheckedMailsParam();
-    addParams.push(Form.serialize(document.form_list));
-    addParams.push("thetisBoxSelKeeper="+val);
-    addParams.push("authenticity_token=<%= form_authenticity_token %>");
-  <% unless params[:page].blank? %>
-    addParams.push("page=<%= params[:page] %>");
-  <% end %>
+      var addParams = getCheckedMailsParam();
+      addParams.push(Form.serialize(document.form_list));
+      addParams.push("tree_node_id="+treeNodeId);
+      addParams.push("authenticity_token=<%= form_authenticity_token %>");
+    <% unless params[:page].blank? %>
+      addParams.push("page=<%= params[:page] %>");
+    <% end %>
 
-    doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams, "<%= @folder_id %>");
+      doUpdateViewMails("post", "<%= url_for(:controller => 'mail_folders', :action => 'ajax_move_mails') %>", addParams, "<%= @folder_id %>");
+    }
   }
 }
 

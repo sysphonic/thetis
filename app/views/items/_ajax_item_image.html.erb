@@ -142,11 +142,11 @@ editImageInfo = function(img_id, img_name)
         asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
-            thetisBoxImageInfo.title = img_name;
-            thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBoxImageInfo.title = img_name;
+          thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -161,25 +161,25 @@ onImageInfoOK = function()
   var thetisBoxProgress = prog("CENTER");
 
   ajaxUploadFile(
-          "form_image_info",
-          document.form_image_info.action,
-          "div_item_image",
-          function() {
-              setTimeout(setSortableImg, 100);
-              thetisBoxProgress.remove();
-              var boxInstance = ThetisBox.getInstanceForElem(btnOk);
-              if (boxInstance) {
-                boxInstance.remove();
-              }
-              tips("<%= t('msg.update_success')%>");
-          },
-          function() {
-              thetisBoxProgress.remove();
-              btnOk.disabled = false;
-              btnCancel.disabled = false;
-              msg("<%= t('msg.system_error')%>");
-          }
-        );
+      "form_image_info",
+      document.form_image_info.action,
+      "div_item_image",
+      function() {
+        setTimeout(setSortableImg, 100);
+        thetisBoxProgress.remove();
+        var boxInstance = ThetisBox.getInstanceForElem(btnOk);
+        if (boxInstance) {
+          boxInstance.remove();
+        }
+        tip("<%= t('msg.update_success')%>");
+      },
+      function() {
+        thetisBoxProgress.remove();
+        btnOk.disabled = false;
+        btnCancel.disabled = false;
+        msg("<%= t('msg.system_error')%>");
+      }
+    );
 }
 
 onImageInfoCancel = function()

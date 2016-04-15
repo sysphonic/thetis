@@ -43,8 +43,7 @@ class GroupsController < ApplicationController
   def get_tree
     Log.add_info(request, params.inspect)
 
-    # '0' for ROOT
-    @group_tree = Group.get_tree(Hash.new, nil, '0')
+    @group_tree = Group.get_tree(Hash.new, nil, TreeElement::ROOT_ID.to_s)
   end
 
   #=== ajax_get_tree
@@ -128,7 +127,7 @@ class GroupsController < ApplicationController
   #
   #Moves Group.
   #Receives target Group-ID from access-path and destination Group-ID from ThetisBox.
-  #params[:thetisBoxSelKeeper] keeps selected id of <a>-tag like "thetisBoxSelKeeper-1:<selected-id>". 
+  #params[:tree_node_id] keeps selected id of <a>-tag like "tree_node_id-1:<selected-id>". 
   #
   def move
     Log.add_info(request, params.inspect)
@@ -137,9 +136,9 @@ class GroupsController < ApplicationController
 
     @group = Group.find(params[:id])
 
-    unless params[:thetisBoxSelKeeper].blank?
+    unless params[:tree_node_id].blank?
 
-      parent_id = params[:thetisBoxSelKeeper].split(':').last
+      parent_id = params[:tree_node_id]
 
       childs = @group.get_childs(true, false)
       if childs.include?(parent_id) or (@group.id == parent_id.to_i)
@@ -167,13 +166,13 @@ class GroupsController < ApplicationController
   def get_path
     Log.add_info(request, params.inspect)
 
-    if params[:thetisBoxSelKeeper].blank?
+    if params[:tree_node_id].blank?
       @group_path = '/' + t('paren.unknown')
       render(:partial => 'ajax_group_path', :layout => false)
       return
     end
 
-    @selected_id = params[:thetisBoxSelKeeper].split(':').last
+    @selected_id = params[:tree_node_id]
     SqlHelper.validate_token([@selected_id])
 
     @group_path = Group.get_path(@selected_id)
@@ -228,7 +227,7 @@ class GroupsController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     org_group_id = params[:id]
-    group_id = params[:thetisBoxSelKeeper].split(':').last
+    group_id = params[:tree_node_id]
     SqlHelper.validate_token([org_group_id, group_id])
 
     unless params[:check_user].blank?
@@ -277,8 +276,8 @@ class GroupsController < ApplicationController
     con = ['User.id > 0']
 
     unless @group_id.nil?
-      if @group_id == '0'
-        con << "((groups like '%|0|%') or (groups is null))"
+      if @group_id == TreeElement::ROOT_ID.to_s
+        con << "((groups like '%|#{@group_id}|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
       end
@@ -342,7 +341,7 @@ class GroupsController < ApplicationController
     @group_id = params[:id]
     SqlHelper.validate_token([@group_id])
 
-    if @group_id != '0'
+    if @group_id != TreeElement::ROOT_ID.to_s
       @group = Group.find(@group_id)
     end
 
@@ -368,15 +367,15 @@ class GroupsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:groups_order]
+    order_arr = params[:groups_order]
 
     groups = Group.get_childs(params[:id], false, false)
     # groups must be ordered by xorder ASC.
 
     groups.sort! { |id_a, id_b|
 
-      idx_a = order_ary.index(id_a)
-      idx_b = order_ary.index(id_b)
+      idx_a = order_arr.index(id_a)
+      idx_b = order_arr.index(id_b)
 
       if idx_a.nil? or idx_b.nil?
         idx_a = groups.index(id_a)
@@ -409,7 +408,7 @@ class GroupsController < ApplicationController
   def get_official_titles
     Log.add_info(request, params.inspect)
 
-    @group_id = (params[:id] || '0')  # '0' for ROOT
+    @group_id = (params[:id] || TreeElement::ROOT_ID.to_s)
     SqlHelper.validate_token([@group_id])
 
     session[:group_id] = params[:id]
@@ -426,13 +425,13 @@ class GroupsController < ApplicationController
   def get_workflows
     Log.add_info(request, params.inspect)
 
-    @group_id = (params[:id] || '0')  # '0' for ROOT
+    @group_id = (params[:id] || TreeElement::ROOT_ID.to_s)
     SqlHelper.validate_token([@group_id])
 
-    ary = TemplatesHelper.get_tmpl_folder
+    arr = TemplatesHelper.get_tmpl_folder
 
-    unless ary.nil? or ary.empty?
-      @tmpl_workflows_folder = ary[2]
+    unless arr.nil? or arr.empty?
+      @tmpl_workflows_folder = arr[2]
     end
 
     session[:group_id] = params[:id]
@@ -449,7 +448,7 @@ class GroupsController < ApplicationController
   def get_map
     Log.add_info(request, params.inspect)
 
-    @group_id = (params[:id] || '0')  # '0' for ROOT
+    @group_id = (params[:id] || TreeElement::ROOT_ID.to_s)
     SqlHelper.validate_token([@group_id])
 
     @office_map = OfficeMap.get_for_group(@group_id)

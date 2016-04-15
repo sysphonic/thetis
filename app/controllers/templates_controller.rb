@@ -54,8 +54,8 @@ class TemplatesController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     if @group_id.blank?
-      @group_id = '0'   # '0' for ROOT
-    elsif @group_id == '0'
+      @group_id = TreeElement::ROOT_ID.to_s
+    elsif (@group_id == TreeElement::ROOT_ID.to_s)
       ;
     else
       group = nil
@@ -79,7 +79,7 @@ class TemplatesController < ApplicationController
       workflow.item_id = item.id
       workflow.user_id = 0
       workflow.status = Workflow::STATUS_NOT_APPLIED
-      if @group_id == '0'
+      if @group_id == TreeElement::ROOT_ID.to_s
         workflow.groups = nil
       else
         workflow.groups = '|' + @group_id + '|'
@@ -110,7 +110,7 @@ class TemplatesController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     if @group_id.blank?
-      @group_id = '0'   # '0' for ROOT
+      @group_id = TreeElement::ROOT_ID.to_s
     end
 
     render(:partial => 'groups/ajax_group_workflows', :layout => false)
@@ -168,7 +168,7 @@ class TemplatesController < ApplicationController
   def copy
     Log.add_info(request, params.inspect)
 
-    tmpl_id = params[:thetisBoxSelKeeper].split(':').last
+    tmpl_id = params[:tree_node_id]
     tmpl_item = Item.find(tmpl_id)
 
     item = tmpl_item.copy(@login_user.id, @login_user.get_my_folder.id)
