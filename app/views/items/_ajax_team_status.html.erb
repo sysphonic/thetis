@@ -47,18 +47,21 @@ doChangeTeamStatus = function(team_id, status)
 {
   var thetisBox = prog("TOP-RIGHT");
 
+  var addParams = [];
+  addParams.push("team_id="+team_id);
+  addParams.push("status="+status);
+
   new Ajax.Updater(
-              "div_team_status",
-              "<%= url_for(:controller => 'items', :action => 'change_team_status') %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                },
-                parameters: "team_id="+team_id+"&status="+status
-              }
-            );
+      "div_team_status",
+      "<%= url_for(:controller => 'items', :action => 'change_team_status') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBox.remove();
+        }
+      }
+    );
 }
 </script>

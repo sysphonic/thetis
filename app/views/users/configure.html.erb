@@ -89,17 +89,16 @@
 
 function doUpdateConfig()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
       document.form_user_config.action,
       {
-        asynchronous:true,
-        evalScripts:true,
+        method:"post",
         parameters:Form.serialize(document.form_user_config),
         onComplete:function(request) {
 
-          thetisBox.remove();
+          thetisBoxProgress.remove();
 
           if (request.responseText == "") {
             tip("<%= t('msg.update_success')%>");
@@ -122,9 +121,8 @@ function doCreateTitle()
       {
         method:"post",
         parameters:"authenticity_token=<%= form_authenticity_token %>",
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBox.remove();
         }
       }
@@ -151,9 +149,8 @@ function doDeleteTitle(title)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
         }
       }
@@ -186,9 +183,8 @@ function doRenameTitle(thetisBoxId, org)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
-          onComplete:function(request){
+          onComplete:function(request) {
             thetisBoxProgress.remove();
             _z("item_" + org).id = "item_" + title;
           }

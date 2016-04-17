@@ -175,9 +175,8 @@ function showNewDetail()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           setTimeout("scrollToDetail()", 400);
@@ -206,9 +205,8 @@ function showScheduleDetail(date, id, title)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           setTimeout("scrollToDetail()", 400);
@@ -231,9 +229,8 @@ function editScheduleDetail(date, id)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           setTimeout("scrollToDetail()", 400);
@@ -264,7 +261,6 @@ function doScheduleDelete(id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

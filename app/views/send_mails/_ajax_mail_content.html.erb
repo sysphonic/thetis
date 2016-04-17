@@ -242,9 +242,7 @@ onShowPanelSendToClicked = function()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           thetisBoxSendTo.title = "<%= t('cap.send_to') %>";

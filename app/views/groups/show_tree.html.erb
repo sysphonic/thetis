@@ -55,12 +55,8 @@
 </table>
 
 <script type="text/javascript">
-//<![CDATA[
-new Draggable("drag_border", {revert:false, constraint:"horizontal"})
-//]]>
-</script>
 
-<script type="text/javascript">
+new Draggable("drag_border", {revert:false, constraint:"horizontal"});
 
 var BorderDragObserver = Class.create();
 BorderDragObserver.prototype = {
@@ -181,7 +177,6 @@ function doCreateGroup(thetisBoxId, group_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           insertion:Insertion.Bottom,
           onComplete:function(request) {
@@ -226,7 +221,6 @@ function doRenameGroup(thetisBoxId, group_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
@@ -290,9 +284,8 @@ function doDelete(group_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBox.remove();
           removeElem(_z("base_groupTree:"+group_id));
           _z(ThetisBox.getSelKeeperId("groupTree")).value = "";

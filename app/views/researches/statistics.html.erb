@@ -211,7 +211,6 @@ function doSelectGroup(thetisBoxId)
           {
             method:"get",
             parameters:addParams.join("&"),
-            asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
               thetisBoxProgress.remove();

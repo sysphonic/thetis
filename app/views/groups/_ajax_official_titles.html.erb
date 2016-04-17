@@ -23,7 +23,7 @@ showOfficialTitle = function(official_title_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   var addParams = [];
-  addParams.push("id=" + official_title_id);
+  addParams.push("id="+official_title_id);
   addParams.push("group_id=<%= @group_id %>");
 
   new Ajax.Request(
@@ -31,9 +31,7 @@ showOfficialTitle = function(official_title_id)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           var thetisBox = new ThetisBox;
@@ -62,7 +60,6 @@ onOfficialTitleOK = function()
       {
         method:"post",
         parameters:Form.serialize(document.form_official_title),
-        asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -98,8 +95,6 @@ doEditOfficialTitle = function(official_title_id)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
 
@@ -128,7 +123,7 @@ doDeleteOfficialTitle = function(official_title_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   var addParams = [];
-  addParams.push("id=" + official_title_id);
+  addParams.push("id="+official_title_id);
   addParams.push("group_id=<%= @group_id %>");
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
@@ -138,7 +133,6 @@ doDeleteOfficialTitle = function(official_title_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

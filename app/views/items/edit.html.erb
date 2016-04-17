@@ -264,22 +264,22 @@ function _ajaxPost(form_id, p_url, target_id, func_complete, func_error)
   var frm = _z(form_id);
 
   new Ajax.Updater(
-            target_id,
-            p_url,
-            {
-              asynchronous:true,
-              evalScripts:true,
-              onComplete:function(request){
-                            if (showErrorMsg(_z(target_id)) == true) {
-                              setTimeout(func_error, 10);
-                            } else {
-                              setTimeout(func_complete, 10);
-                            }
-                          },
-              parameters:Form.serialize(frm)
-            }
-          );
-   return false;
+      target_id,
+      p_url,
+      {
+        method:"post",
+        parameters:Form.serialize(frm),
+        evalScripts:true,
+        onComplete:function(request) {
+          if (showErrorMsg(_z(target_id)) == true) {
+            setTimeout(func_error, 10);
+          } else {
+            setTimeout(func_complete, 10);
+          }
+        }
+      }
+    );
+  return false;
 }
 
 var modifiedWorkflow = 0;
@@ -468,26 +468,29 @@ function showRestoreSelector()
 
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('cap.restore_from_log') %>";
+
+  var addParams = [];
+  addParams.push("id=<%= @item.id %>");
+
   new Ajax.Request(
-          "<%= url_for(:controller => 'items', :action => 'recent_descriptions', :id => @item.id) %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBox.show(
-                          "CENTER",
-                          mainWidth*70/100+"," + mainHeight*70/100,
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'items', :action => 'recent_descriptions') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBox.show(
+                    "CENTER",
+                    mainWidth*70/100+"," + mainHeight*70/100,
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 var thetisBoxProgress = new ThetisBox;
@@ -718,7 +721,6 @@ function doSelectGroup(thetisBoxId)
           {
             method:"get",
             parameters:addParams.join("&"),
-            asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
               thetisBoxProgress.remove();

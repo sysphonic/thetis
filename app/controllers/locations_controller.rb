@@ -41,8 +41,8 @@ class LocationsController < ApplicationController
     unless params[:keyword].blank?
       con_prim = []
       con_second = []
-      key_array = params[:keyword].split(nil)
-      key_array.each do |key|
+      key_arr = params[:keyword].split(nil)
+      key_arr.each do |key|
         key_quot = SqlHelper.quote(key)
         con_prim << "(name=#{key_quot} or fullname=#{key_quot} or email=#{key_quot})"
         con_second << SqlHelper.get_sql_like([:name, :fullname, :email], key)

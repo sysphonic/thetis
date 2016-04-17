@@ -71,7 +71,6 @@ function doCreateLocal()
       {
         method:"post",
         parameters:"authenticity_token=<%= form_authenticity_token %>",
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -100,7 +99,6 @@ function doDeleteLocal(item_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

@@ -82,16 +82,15 @@ doUpdateView = function(method, action, addParams)
 
   var thetisBox = prog("TOP-RIGHT");
   new Ajax.Updater(
-                "div_view",
-                action,
-                {
-                  method: method,
-                  parameters: addParams.join("&"),
-                  asynchronous: true,
-                  evalScripts: true,
-                  onComplete: function(request){ thetisBox.remove(); }
-                }
-              );
+      "div_view",
+      action,
+      {
+        method: method,
+        parameters: addParams.join("&"),
+        evalScripts: true,
+        onComplete: function(request){ thetisBox.remove(); }
+      }
+    );
 }
 
 bound = function(desktop, elem)

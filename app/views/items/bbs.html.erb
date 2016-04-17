@@ -366,26 +366,30 @@ attachments_num = item_attachments.length
 
 function showURL()
 {
+  var addParams = [];
+  addParams.push("disp[ctrl]=items");
+  addParams.push("disp[act]=bbs");
+  addParams.push("disp[folder_id]=<%= @folder_id %>");
+
   new Ajax.Request(
-          "<%= url_for(:controller => 'frames', :action => 'show_url') %>?disp[ctrl]=items&disp[act]=bbs&disp[folder_id]=<%= @folder_id %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                var thetisBox = new ThetisBox;
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth/10*8)+",320",
-                          "TRAY",
-                          "",
-                          "<%= t('cap.url_to_this_page') %>",
-                          request.responseText
-                        );
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'frames', :action => 'show_url') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          var thetisBox = new ThetisBox;
+          thetisBox.show(
+                    "CENTER",
+                    (mainWidth/10*8)+",320",
+                    "TRAY",
+                    "",
+                    "<%= t('cap.url_to_this_page') %>",
+                    request.responseText
+                  );
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 function doShowItem(item_id)
@@ -433,22 +437,25 @@ function _addToDesktop(xtype, target_id)
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = [];
+  addParams.push("xtype="+xtype);
+  addParams.push("target_id="+target_id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'desktop', :action => 'add_toy') %>?xtype="+xtype+"&target_id="+target_id,
+      "<%= url_for(:controller => 'desktop', :action => 'add_toy') %>",
       {
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
-        asynchronous:true,
-        evalScripts:false,
+        parameters:addParams.join("&"),
         onComplete:function(request) {
-            var button = _z("add_to_desktop");
-            removeElem(button);
+          var button = _z("add_to_desktop");
+          removeElem(button);
 
-            thetisBoxProgress.remove();
+          thetisBoxProgress.remove();
 
-            if (Number(request.responseText) > 0) {
-              tip("<%= t('msg.add_to_desktop_success')%>");
-            }
+          if (Number(request.responseText) > 0) {
+            tip("<%= t('msg.add_to_desktop_success')%>");
           }
+        }
       }
     );
 }

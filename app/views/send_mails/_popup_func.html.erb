@@ -24,17 +24,17 @@ showMailForm = function(isNew, addParams)
 
   thetisBoxMailForm = new ThetisBox;
   thetisBoxMailForm.resizable = true;
-  var on_close_func = function(){
-                        thetisBoxMailForm = null;
+  var on_close_func = function() {
+    thetisBoxMailForm = null;
 <% if ctrl_mails_list_update %>
-                        if (_need_update) {
-                          var folder_id = getCurrentFolderId();
-                          if (folder_id) {
-                            doUpdateMails(folder_id, false);
-                          }
-                        }
+    if (_need_update) {
+      var folder_id = getCurrentFolderId();
+      if (folder_id) {
+        doUpdateMails(folder_id, false);
+      }
+    }
 <% end %>
-                      };
+  };
   thetisBoxMailForm.setOnClose(on_close_func);
   var action = null;
   if (isNew) {
@@ -53,8 +53,6 @@ showMailForm = function(isNew, addParams)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxMailForm.show(
                     "CENTER",

@@ -145,7 +145,6 @@ onApplyFolderDispCtrlClicked = function()
       {
         method:"post",
         parameters:Form.serialize(document.form_folder_disp),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
           thetisBoxProgress.remove();

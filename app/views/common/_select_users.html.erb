@@ -216,18 +216,17 @@ doUpdateUserEmails = function(group_id)
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_selectUsers",
-              "<%= submit_url %>",
-              {
-                method:"get",
-                parameters:addParams.join("&"),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBoxProgress.remove();
-                }
-              }
-            );
+      "div_selectUsers",
+      "<%= submit_url %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 <% end %>
@@ -295,7 +294,6 @@ onGroupTreeSelected = function(evt)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request){
           thetisBoxProgress.remove();
@@ -309,17 +307,16 @@ doClearGroupToSelectUsers = function()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_selectUsers",
-              "<%= submit_url %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                }
-              }
-            );
+      "div_selectUsers",
+      "<%= submit_url %>",
+      {
+        method:"get",
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBox.remove();
+        }
+      }
+    );
 }
 
 </script>

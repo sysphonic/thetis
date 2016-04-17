@@ -160,9 +160,8 @@ doUpdateFiltersList = function()
       {
         method: "get",
         parameters: Form.serialize(document.form_filters),
-        asynchronous: true,
         evalScripts: true,
-        onComplete: function(request){
+        onComplete: function(request) {
           thetisBoxProgress.remove();
         }
       }
@@ -195,9 +194,7 @@ onOrderFiltersClicked = function(elem)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           thetisBoxFiltersOrder.title = "<%= t('btn.order') %>";
@@ -240,10 +237,8 @@ doExecNowFilters = function(mail_account_id, folder_id)
       "<%= url_for(:controller => 'mail_filters', :action => 'do_execute') %>",
       {
         method:"post",
-        asynchronous:true,
-        evalScripts:true,
         parameters:addParams.join("&"),
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           if (doUpdateMails) {
@@ -305,7 +300,6 @@ doDeleteFilters = function()
       {
         method: "post",
         parameters: addParams.join("&"),
-        asynchronous: true,
         evalScripts: true,
         onComplete: function(request){
           thetisBoxProgress.remove();
@@ -354,8 +348,6 @@ showFilter = function(mail_filter_id, mail_filter_title)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + mail_filter_title;
           thetisBox.overflow = "auto";
@@ -402,8 +394,6 @@ showFilterNew = function()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxFilterEdit = new ThetisBox;
           thetisBoxFilterEdit.resizable = true;
@@ -448,8 +438,6 @@ showFilterEdit = function(mail_filter_id, mail_filter_title)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxFilterEdit = new ThetisBox;
           thetisBoxFilterEdit.resizable = true;

@@ -145,7 +145,26 @@
 
 setSortableAttach = function() {
   // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
-  Sortable.create("sortable_attachments", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_attachments_order') %>?id="+_z("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_attachments", {name:"attachments_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
+  Sortable.create(
+      "sortable_attachments",
+      {
+        tag:"div",
+        onUpdate:function() {
+          var addParams = [];
+          addParams.push("id="+_z("item_id").value);
+          addParams.push(Sortable.serialize("sortable_attachments", {name:"attachments_order"}));
+          addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+          new Ajax.Request(
+              "<%= url_for(:controller => 'items', :action => 'update_attachments_order') %>",
+              {
+                method:"post",
+                parameters:addParams.join("&")
+              }
+            )
+        }
+      }
+    );
 }
 
 <% if item_attachments.length > 1 and params[:action] == 'edit' %>
@@ -164,12 +183,14 @@ onEditAttachmentClicked = function(attach_id, attach_name)
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push("attachment_id="+attach_id);
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'items', :action => 'edit_attachment_info') %>?attachment_id="+attach_id,
+      "<%= url_for(:controller => 'items', :action => 'edit_attachment_info') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
+        parameters:addParams.join("&"),
         onComplete:function(request) {
           thetisBoxAttachInfo.title = attach_name;
           thetisBoxAttachInfo.show("CENTER", "520,320", "TRAY", "", "", request.responseText.stripScripts());
@@ -238,7 +259,6 @@ doDeleteAttachment = function(attach_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

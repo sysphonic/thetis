@@ -350,25 +350,28 @@ function showPaidHldByUser(user_id, name)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  new Ajax.Request(
-          "<%= url_for(:controller => 'timecards', :action => 'paidhld_list') %>?user_id=" + user_id + "&edit=true",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+  var addParams = [];
+  addParams.push("user_id="+user_id);
+  addParams.push("edit=true");
 
-              thetisBoxPaidHldByUser = new ThetisBox;
-              thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
-              thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
-              thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
-              thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
-              thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+  new Ajax.Request(
+      "<%= url_for(:controller => 'timecards', :action => 'paidhld_list') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+
+          thetisBoxPaidHldByUser = new ThetisBox;
+          thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
+          thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
+          thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
+          thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
+          thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 
@@ -426,20 +429,31 @@ function onUpdateGivenDaysOK(user_id)
   elem.value = "true";
   document.form_given_days.appendChild(elem);
 
-  thetisBoxPaidHldByUser.setOnClose(function(){ prog("CENTER", "<%= t('msg.updating_list') %>"); document.form_list.submit(); });
+  thetisBoxPaidHldByUser.setOnClose(
+      function() {
+        prog("CENTER", "<%= t('msg.updating_list') %>");
+        document.form_list.submit();
+      }
+    );
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_given_days));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Updater(
-              "thetisBoxContent-"+thetisBoxPaidHldByUser.id,
-              "<%= url_for(:controller => 'timecards', :action => 'paidhld_update') %>",
-              {
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){ thetisBoxProgress.remove(); },
-                parameters:Form.serialize(document.form_given_days)+"&authenticity_token=<%= form_authenticity_token %>"
-              }
-            );
+      "thetisBoxContent-"+thetisBoxPaidHldByUser.id,
+      "<%= url_for(:controller => 'timecards', :action => 'paidhld_update') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&"),
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+        }
+      }
+    );
 }
 
 function onUpdateGivenDaysCancel()

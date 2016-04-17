@@ -23,29 +23,28 @@ date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
       "<%= url_for(open_url_h) %>",
       {
         method:"get",
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
-      <% if @desktop.popup_news %>
-            setTimeout("showTray()", 50);
-      <% end %>
-      <%
-      if @desktop.popup_schedule and !session[:schedule_popped_up]
-        session[:schedule_popped_up] = true
-      %>
-            setTimeout("showSchedule()", 100);
-      <% end %>
-      <%
-      if !@login_user.nil? and @desktop.popup_timecard
-        timecard = Timecard.get_for(@login_user.id, date_s)
-        if timecard.nil? or timecard.start.nil?
-      %>
-            setTimeout("showTimecard()", 150);
-      <%
-        end
+        onComplete:function(request) {
+    <% if @desktop.popup_news %>
+          setTimeout("showTray()", 50);
+    <% end %>
+    <%
+    if @desktop.popup_schedule and !session[:schedule_popped_up]
+      session[:schedule_popped_up] = true
+    %>
+          setTimeout("showSchedule()", 100);
+    <% end %>
+    <%
+    if !@login_user.nil? and @desktop.popup_timecard
+      timecard = Timecard.get_for(@login_user.id, date_s)
+      if timecard.nil? or timecard.start.nil?
+    %>
+          setTimeout("showTimecard()", 150);
+    <%
       end
-      %>
-          }
+    end
+    %>
+        }
       }
     );
 }
@@ -66,27 +65,29 @@ function showSchedule()
   var trayX = deskPos.x + 2;
   var trayY = deskPos.y + 2;
 
+  var addParams = [];
+  addParams.push("date=<%= date_s %>");
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'desktop', :action => 'get_schedule', :date => date_s) %>",
+      "<%= url_for(:controller => 'desktop', :action => 'get_schedule') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
+        parameters:addParams.join("&"),
         onComplete:function(request) {
-            thetisBox.title = "<%= date_s %>";
-            thetisBox.resizable = true;
+          thetisBox.title = "<%= date_s %>";
+          thetisBox.resizable = true;
 //          thetisBox.overflow = "scroll";
-            thetisBox.show(
-                      trayX+","+trayY,
-                      trayWidth+","+trayHeight,
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText.stripScripts()
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBox.show(
+                    trayX+","+trayY,
+                    trayWidth+","+trayHeight,
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -107,27 +108,29 @@ function showTimecard()
   var trayX = deskPos.x + 2;
   var trayY = deskPos.y + deskHeight - trayHeight;
 
+  var addParams = [];
+  addParams.push("date=<%= date_s %>");
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'desktop', :action => 'edit_timecard', :date => date_s) %>",
+      "<%= url_for(:controller => 'desktop', :action => 'edit_timecard') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
+        parameters:addParams.join("&"),
         onComplete:function(request) {
-            thetisBox.title = "<%= date_s %>";
-            thetisBox.resizable = true;
+          thetisBox.title = "<%= date_s %>";
+          thetisBox.resizable = true;
 //          thetisBox.overflow = "scroll";
-            thetisBox.show(
-                      trayX+","+trayY,
-                      trayWidth+","+trayHeight,
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText.stripScripts()
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBox.show(
+                    trayX+","+trayY,
+                    trayWidth+","+trayHeight,
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -174,22 +177,20 @@ function showTray()
       "<%= url_for(:controller => 'desktop', :action => 'get_news_tray') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
-            thetisBox.title = "<%= t('desktop.news.title') %>";
-            thetisBox.overflow = "scroll";
-            thetisBox.show(
-                      trayX+","+trayY,
-                      trayWidth+","+trayHeight,
-                      "TRAY",
-                      "",
-                      "<%= t('desktop.news.caption') %>",
-                      request.responseText.stripScripts()
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBox.title = "<%= t('desktop.news.title') %>";
+          thetisBox.overflow = "scroll";
+          thetisBox.show(
+                    trayX+","+trayY,
+                    trayWidth+","+trayHeight,
+                    "TRAY",
+                    "",
+                    "<%= t('desktop.news.caption') %>",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -239,14 +240,13 @@ function saveBirthday(thetisBoxId)
     new Ajax.Request(
         "<%= url_for(:controller => 'users', :action => 'update') %>",
         {
+          method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
-          evalScripts:true,
           onComplete:function(request) {
-              setTimeout("showBiorhythm()", 10);
-              thetisBoxProgress.remove();
-              _z("biorhythm_req_birth").value = "false";
-            }
+            setTimeout("showBiorhythm()", 10);
+            thetisBoxProgress.remove();
+            _z("biorhythm_req_birth").value = "false";
+          }
         }
       );
   }
@@ -269,12 +269,10 @@ function showBiorhythm()
       "<%= url_for(:controller => 'desktop', :action => 'show_biorhythm') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
-            thetisBox.show("CENTER", "530,407", "TRAY", "", "", request.responseText);
-            thetisBoxProgress.remove();
-          }
+          thetisBox.show("CENTER", "530,407", "TRAY", "", "", request.responseText);
+          thetisBoxProgress.remove();
+        }
       }
     );
 }

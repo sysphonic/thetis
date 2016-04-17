@@ -90,33 +90,31 @@ editFilterCondition = function(condition_id, isNew)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'mail_filters', :action => 'edit_condition') %>",
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxFilterCondition = new ThetisBox;
-                thetisBoxFilterCondition.bgcolor_title = "#8486e0";
-                thetisBoxFilterCondition.bgcolor_body = "#a5baff";
-                thetisBoxFilterCondition.title = "<%= t('mail_filter.condition.cap') %>";
-                if (thetisBoxFilterEdit) {
-                  thetisBoxFilterEdit.addChildBox(thetisBoxFilterCondition);
-                }
-                thetisBoxFilterCondition.show(
-                          "CENTER",
-                          "620,180",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'mail_filters', :action => 'edit_condition') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxFilterCondition = new ThetisBox;
+          thetisBoxFilterCondition.bgcolor_title = "#8486e0";
+          thetisBoxFilterCondition.bgcolor_body = "#a5baff";
+          thetisBoxFilterCondition.title = "<%= t('mail_filter.condition.cap') %>";
+          if (thetisBoxFilterEdit) {
+            thetisBoxFilterEdit.addChildBox(thetisBoxFilterCondition);
           }
-        );
+          thetisBoxFilterCondition.show(
+                    "CENTER",
+                    "620,180",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 deleteFilterCondition = function(condition_id)

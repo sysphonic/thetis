@@ -160,13 +160,9 @@ end
 <%= render(:partial => 'send_mails/popup_func', :locals => {:mail_account_not_set => @mail_accounts.empty?, :ctrl_mails_list_update => true}) %>
 
 <script type="text/javascript">
-//<![CDATA[
-new Draggable("drag_v_border", {revert:false, constraint:"horizontal"})
-new Draggable("drag_h_border", {revert:false, constraint:"vertical"})
-//]]>
-</script>
 
-<script type="text/javascript">
+new Draggable("drag_v_border", {revert:false, constraint:"horizontal"});
+new Draggable("drag_h_border", {revert:false, constraint:"vertical"});
 
 var BorderDragObserver = Class.create();
 BorderDragObserver.prototype = {
@@ -485,7 +481,6 @@ function doCreateFolder(thetisBoxId, folder_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           insertion:Insertion.Bottom,
           onComplete:function(request) {
@@ -543,7 +538,6 @@ function doRenameFolder(thetisBoxId, folder_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
@@ -625,8 +619,6 @@ function doDelete(folder_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
           if (request.responseText == "") {
@@ -749,7 +741,6 @@ function doUpdateViewMailContent(action, addParams)
       {
         method: "get",
         parameters: addParams.join("&"),
-        asynchronous: true,
         evalScripts: true,
         onComplete: function(request) {
           thetisBoxProgress.remove();
@@ -801,7 +792,6 @@ function showMailAccountSummary(mail_account_id)
         {
           method: "get",
           parameters: addParams.join("&"),
-          asynchronous: true,
           evalScripts: true,
           onComplete: function(request) {
             // thetisBox.remove();
@@ -845,17 +835,16 @@ function doUpdateViewMails(method, action, addParams, folder_id)
     addParams.push("authenticity_token=<%= form_authenticity_token %>");
   }
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
   new Ajax.Updater(
       "div_mails",
       action,
       {
         method: method,
         parameters: addParams.join("&"),
-        asynchronous: true,
         evalScripts: true,
         onComplete: function(request) {
-          thetisBox.remove();
+          thetisBoxProgress.remove();
           if (mail_account_id && mail_account_id != curSummaryAccountId) {
             showMailAccountSummary(mail_account_id);
           }
@@ -979,8 +968,6 @@ function onOrderFoldersClicked()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
 
@@ -1031,7 +1018,7 @@ thetisBoxFilters = null;
 
 function showFilters()
 {
-  if (thetisBoxFilters != null){
+  if (thetisBoxFilters != null) {
     thetisBoxFilters.remove();
     thetisBoxFilters = null;
   }
@@ -1056,8 +1043,6 @@ function showFilters()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxFilters.show(
                     "CENTER",
@@ -1118,8 +1103,6 @@ function showAccountSetting(isNew)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxAccount.show(
                     "CENTER",
@@ -1179,8 +1162,6 @@ function onEmailUnreadClicked(elem, email_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
           request.responseText.evalScripts();
@@ -1205,17 +1186,15 @@ function doRegisterAddress(frm)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
 
-            var instance = ThetisBox.getInstanceForElem(frm);
-            if (instance) {
-              instance.remove();
-            }
+          var instance = ThetisBox.getInstanceForElem(frm);
+          if (instance) {
+            instance.remove();
           }
+        }
       }
     );
   return true;

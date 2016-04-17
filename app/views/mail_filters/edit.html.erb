@@ -77,11 +77,10 @@ onRegisterFilterClicked = function()
       document.form_filters.parentNode,
       "<%= url_for(:controller => 'mail_filters', :action => 'update') %>",
       {
-        method: "post",
-        parameters: addParams.join("&"),
-        asynchronous: true,
-        evalScripts: true,
-        onComplete: function(request){
+        method:"post",
+        parameters:addParams.join("&"),
+        evalScripts:true,
+        onComplete:function(request) {
           thetisBoxProgress.remove();
           doUpdateFiltersList();
         }

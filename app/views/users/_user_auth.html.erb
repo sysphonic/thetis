@@ -90,7 +90,7 @@
 
 doUpdateAuth = function()
 {
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   selectListAll(_z("auth_selected"));
 
@@ -103,10 +103,8 @@ doUpdateAuth = function()
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
-          thetisBox.remove();
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
           if (request.responseText == "") {
             tip("<%= t('user.auth_updated') %>");
           } else {

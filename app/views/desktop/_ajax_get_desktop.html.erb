@@ -194,11 +194,11 @@ unless @toys.nil?
     <span id="<%= toy_id %>_type" style="display:none;"><%= toy.xtype %></span>
   </div>
 
-  <script type="text/javascript">
-  //<![CDATA[
-  new Draggable("<%= toy_id %>", {revert:false})
-  //]]>
-  </script>
+<script type="text/javascript">
+
+new Draggable("<%= toy_id %>", {revert:false});
+
+</script>
 <%
     end
   end
@@ -211,63 +211,61 @@ end
 
 
 <script type="text/javascript">
-//<![CDATA[
+
 Droppables.add(
-        "div_desktop",
-        {
-          accept: "toy_tray",
-          onHover:function(element)
-          {
-            _z("div_desktop").style.backgroundColor = "<%= @desktop.get_background_color(true) %>";
-          },
-          onDrop:function(element)
-          {
-            var axis = getAxis(_z("div_desktop"), element.id);
+    "div_desktop",
+    {
+      accept: "toy_tray",
+      onHover:function(element)
+      {
+        _z("div_desktop").style.backgroundColor = "<%= @desktop.get_background_color(true) %>";
+      },
+      onDrop:function(element)
+      {
+        var axis = getAxis(_z("div_desktop"), element.id);
 
-            new Ajax.Request(
-                    "<%= url_for(:controller => 'desktop', :action => 'drop_on_desktop') %>?id="+encodeURIComponent(element.id),
-                    {
-                      asynchronous:true,
-                      evalScripts:true,
-                      parameters:"x="+axis[0]+"&y="+axis[1]+"&authenticity_token=<%= form_authenticity_token %>",
-                      onComplete:function(request){
-                                    var xtype = element.id.split(":")[0];
-                                    element.id = "toy_" + request.responseText;
-                                    element.className = "toy_desktop";
+        var addParams = [];
+        addParams.push("id="+encodeURIComponent(element.id));
+        addParams.push("x="+axis[0]);
+        addParams.push("y="+axis[1]);
+        addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
-                                    var s = document.createElement("span");
-                                    s.id = element.id + "_type";
-                                    s.style.display = "none";
-                                    s.innerHTML = xtype;
-                                    element.appendChild(s);
-                                  }
-                    }
-                  );
-          }
-        }
-      )
-//]]>
+        new Ajax.Request(
+            "<%= url_for(:controller => 'desktop', :action => 'drop_on_desktop') %>",
+            {
+              method:"post",
+              parameters:addParams.join("&"),
+              onComplete:function(request) {
+                var xtype = element.id.split(":")[0];
+                element.id = "toy_" + request.responseText;
+                element.className = "toy_desktop";
 
-//<![CDATA[
+                var s = document.createElement("span");
+                s.id = element.id + "_type";
+                s.style.display = "none";
+                s.innerHTML = xtype;
+                element.appendChild(s);
+              }
+            }
+          );
+      }
+    }
+  );
+
 Droppables.add(
-        "recyclebox",
-        {
-          accept: "toy_desktop",
-          onHover:function(element)
-          {
-            _z("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png";
-          },
-          onDrop:function(element)
-          {
-            onRemoveToyClicked(element.id);
-          }
-        }
-      )
-//]]>
-</script>
-
-
-<script type="text/javascript">
+    "recyclebox",
+    {
+      accept: "toy_desktop",
+      onHover:function(element)
+      {
+        _z("recyclebox_img").src = "<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop/recyclebox_on.png";
+      },
+      onDrop:function(element)
+      {
+        onRemoveToyClicked(element.id);
+      }
+    }
+  );
 
 var desktop = _z("div_desktop");
 desktop.style.display = "block";
@@ -316,21 +314,19 @@ editConfig = function()
       "<%= url_for(:controller => 'desktop', :action => 'edit_config') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
-            thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
-            thetisBoxConfig.show(
-                      "CENTER",
-                      "580,"+(mainHeight*85/100),
-                      "TRAY",
-                      "",
-                      "",
-                      request.responseText.stripScripts()
-                    );
-            thetisBoxProgress.remove();
-            request.responseText.evalScripts();
-          }
+          thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
+          thetisBoxConfig.show(
+                    "CENTER",
+                    "580,"+(mainHeight*85/100),
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
       }
     );
 }
@@ -349,13 +345,15 @@ doRemoveToy = function(element_id)
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push("id="+id);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'desktop', :action => 'drop_on_recyclebox') %>?id="+id,
+      "<%= url_for(:controller => 'desktop', :action => 'drop_on_recyclebox') %>",
       {
-        parameters:"authenticity_token=<%= form_authenticity_token %>",
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
           thetisBoxProgress.remove();
           setTimeout(
               function(){
@@ -417,7 +415,6 @@ doUpdateLabel = function(thetisBoxId, toy_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
@@ -456,7 +453,6 @@ doCeateLabel = function(thetisBoxId)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           insertion:Insertion.Bottom,
           onComplete:function(request) {
@@ -499,7 +495,7 @@ createPostLabel = function()
     thetisBoxPostLabel = null;
   }
 
-  var content = getPostLabelEditor("if (!onPostLabelOK()) { return false; }", "onPostLabelCancel()");
+  var content = getPostLabelEditor("if (!onPostLabelOk()) { return false; }", "onPostLabelCancel()");
 
   thetisBoxPostLabel = new ThetisBox;
   thetisBoxPostLabel.bgcolor_title = "deeppink";
@@ -568,17 +564,17 @@ getPostLabelEditor = function(onOk, onCancel)
   return content;
 }
 
-onPostLabelOK = function()
+onPostLabelOk = function()
 {
   if (ThetisBox.trim(document.form_postlabel.txaPostLabel.value, true).length <= 0
       || _z("post_to").length <= 0 ) {
     return false;
   }
 
-  confm("<%= t('desktop.label.confirm_to_post1') %>"+_z("post_to").length+"<%= t('desktop.label.confirm_to_post2') %>", "_onPostLabelOK()");
+  confm("<%= t('desktop.label.confirm_to_post1') %>"+_z("post_to").length+"<%= t('desktop.label.confirm_to_post2') %>", "_onPostLabelOk()");
 }
 
-_onPostLabelOK = function()
+_onPostLabelOk = function()
 {
   thetisBoxPostLabel.hide();
 
@@ -587,21 +583,20 @@ _onPostLabelOK = function()
   selectListAll(_z("post_to"));
 
   new Ajax.Request(
-          document.form_postlabel.action,
-          {
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request)
-            {
-              thetisBoxProgress.remove();
+      document.form_postlabel.action,
+      {
+        method:"post",
+        parameters:Form.serialize(document.form_postlabel),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
 
-              thetisBoxPostLabel.remove();
-              thetisBoxPostLabel = null;
+          thetisBoxPostLabel.remove();
+          thetisBoxPostLabel = null;
 
-              request.responseText.evalScripts();
-            },
-            parameters:Form.serialize(document.form_postlabel)}
-          );
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 
@@ -613,7 +608,7 @@ onPostLabelCancel = function()
 
 removePostTo = function()
 {
-  var del_ary = deleteList(_z("post_to"));
+  deleteList(_z("post_to"));
 }
 
 thetisBoxAddPostTo = null;
@@ -629,31 +624,29 @@ addPostTo = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'select_users') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddPostTo.resizable = true;
-                thetisBoxAddPostTo.title = "<%= t('desktop.label.sel_users_to_post') %>";
-                thetisBoxAddPostTo.overflow = "hidden";
-                if (thetisBoxPostLabel){
-                  thetisBoxPostLabel.addChildBox(thetisBoxAddPostTo);
-                }
-                thetisBoxAddPostTo.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'desktop', :action => 'select_users') %>",
+      {
+        method:"get",
+        onComplete:function(request) {
+          thetisBoxAddPostTo.resizable = true;
+          thetisBoxAddPostTo.title = "<%= t('desktop.label.sel_users_to_post') %>";
+          thetisBoxAddPostTo.overflow = "hidden";
+          if (thetisBoxPostLabel){
+            thetisBoxPostLabel.addChildBox(thetisBoxAddPostTo);
           }
-        );
+          thetisBoxAddPostTo.show(
+                    "CENTER",
+                    "460,320",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 //////////////////////////
@@ -692,15 +685,19 @@ save = function(toy_id)
 
   var axis = getAxis(desktop, toy_id);
 
+  var addParams = [];
+  addParams.push("id="+encodeURIComponent(toy_id.split("_")[1]));
+  addParams.push("x="+axis[0]);
+  addParams.push("y="+axis[1]);
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Request(
-          "<%= url_for(:controller => 'desktop', :action => 'on_toys_moved') %>?id=" + encodeURIComponent(toy_id.split("_")[1]),
-          {
-            method:"post",
-            asynchronous:true,
-            evalScripts:true,
-            parameters:"x="+axis[0]+"&y="+axis[1]+"&authenticity_token=<%= form_authenticity_token %>"
-          }
-        );
+      "<%= url_for(:controller => 'desktop', :action => 'on_toys_moved') %>",
+      {
+        method:"post",
+        parameters:addParams.join("&")
+      }
+    );
 }
 
 var DesktopDragObserver = Class.create();

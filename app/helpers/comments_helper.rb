@@ -24,8 +24,8 @@ module CommentsHelper
 
     return nil if user.nil?
 
-    sql = "select distinct Comment.* from comments Comment, (select distinct items.id from items, comments where items.user_id=#{user.id} or (comments.user_id=#{user.id} and comments.item_id=items.id)) as Item"
-    sql << " where (Comment.item_id=Item.id) and not (Comment.xtype='#{Comment::XTYPE_DIST_ACK}')"
+    sql = "select distinct Comment.* from comments Comment, (select distinct items.id,items.original_by from items, comments where items.user_id=#{user.id} or (comments.user_id=#{user.id} and comments.item_id=items.id)) as Item"
+    sql << " where (Comment.item_id=Item.id) and not (Comment.xtype='#{Comment::XTYPE_DIST_ACK}') and (Item.original_by is null)"
 # ... or if you would like to except Comment::XTYPE_APPLY
 #   sql << " where (Comment.item_id=Item.id) and not (Comment.xtype='#{Comment::XTYPE_APPLY}' or Comment.xtype='#{Comment::XTYPE_DIST_ACK}')"
 

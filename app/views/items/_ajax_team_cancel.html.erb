@@ -42,7 +42,6 @@ doTeamCancel = function()
       {
         method:"post",
         parameters: Form.serialize(document.form_team_cancel),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

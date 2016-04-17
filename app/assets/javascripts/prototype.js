@@ -826,7 +826,18 @@ var Enumerable = (function() {
     var index = 0;
     try {
       this._each(function(value) {
-        iterator.call(context, value, index++);
+        try {
+          iterator.call(context, value, index++);
+        } catch (evar) {
+          if (evar != $break) {
+            var debug_area = _z("debug_area");
+            if (debug_area) {
+              debug_area.value += "-------------------\n";
+              debug_area.value += "context: "+context+"\nvalue: "+value;
+            }
+          }
+          throw evar;
+        }
       });
     } catch (e) {
       if (e != $break) throw e;

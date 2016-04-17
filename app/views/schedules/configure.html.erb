@@ -83,9 +83,8 @@ function doAddHolidays(thetisBoxId)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
-          onComplete:function(request){
+          onComplete:function(request) {
             thetisBoxProgress.remove();
           }
         }
@@ -156,14 +155,17 @@ function _removeHolidays()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = [];
+  addParams.push(Form.serialize(document.form_holidays));
+  addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
   new Ajax.Updater(
       "div_holidays",
       document.form_holidays.action,
       {
         method:"post",
-        asynchronous:true,
         evalScripts:false,
-        parameters:Form.serialize(document.form_holidays)+"&authenticity_token=<%= form_authenticity_token %>",
+        parameters:addParams.join("&"),
         onComplete:function(request) {
           thetisBoxProgress.remove();
           request.responseText.evalScripts();

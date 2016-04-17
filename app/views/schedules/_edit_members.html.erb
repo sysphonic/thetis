@@ -179,28 +179,26 @@ onSelectUsersClicked = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'schedules', :action => 'select_users') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxAddScheduleUsers.resizable = true;
-                thetisBoxAddScheduleUsers.title = "<%= User.model_name.human %>";
-                thetisBoxAddScheduleUsers.overflow = "hidden";
-                thetisBoxAddScheduleUsers.show(
-                          "CENTER",
-                          "460,320",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'schedules', :action => 'select_users') %>",
+      {
+        method:"get",
+        onComplete:function(request) {
+          thetisBoxAddScheduleUsers.resizable = true;
+          thetisBoxAddScheduleUsers.title = "<%= User.model_name.human %>";
+          thetisBoxAddScheduleUsers.overflow = "hidden";
+          thetisBoxAddScheduleUsers.show(
+                    "CENTER",
+                    "460,320",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 </script>

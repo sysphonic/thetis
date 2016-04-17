@@ -84,33 +84,31 @@ editFilterAction = function(action_id, isNew)
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'mail_filters', :action => 'edit_action') %>",
-          {
-            method:"get",
-            parameters:addParams.join("&"),
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxFilterAction = new ThetisBox;
-                thetisBoxFilterAction.bgcolor_title = "#8486e0";
-                thetisBoxFilterAction.bgcolor_body = "#a5baff";
-                thetisBoxFilterAction.title = "<%= t('mail_filter.action.cap') %>";
-                if (thetisBoxFilterEdit) {
-                  thetisBoxFilterEdit.addChildBox(thetisBoxFilterAction);
-                }
-                thetisBoxFilterAction.show(
-                          "CENTER",
-                          "620,180",
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
+      "<%= url_for(:controller => 'mail_filters', :action => 'edit_action') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxFilterAction = new ThetisBox;
+          thetisBoxFilterAction.bgcolor_title = "#8486e0";
+          thetisBoxFilterAction.bgcolor_body = "#a5baff";
+          thetisBoxFilterAction.title = "<%= t('mail_filter.action.cap') %>";
+          if (thetisBoxFilterEdit) {
+            thetisBoxFilterEdit.addChildBox(thetisBoxFilterAction);
           }
-        );
+          thetisBoxFilterAction.show(
+                    "CENTER",
+                    "620,180",
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 
 deleteFilterAction = function(action_id)

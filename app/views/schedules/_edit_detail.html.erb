@@ -629,7 +629,7 @@ doRegisterSchedule = function(schedule_id, addParams)
   selectListAll(_z("excepts"));
   selectListAll(_z("items_selected"));
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   if (!addParams) {
     addParams = [];
@@ -650,10 +650,9 @@ doRegisterSchedule = function(schedule_id, addParams)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
-            thetisBox.remove();
+            thetisBoxProgress.remove();
           }
         }
       );
@@ -874,8 +873,6 @@ onSelectEquipmentClicked = function()
       "<%= url_for(:controller => 'schedules', :action => 'select_equipment') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxAddScheduleEquipment.resizable = true;
           thetisBoxAddScheduleEquipment.title = "<%= Equipment.model_name.human %>";
@@ -922,8 +919,6 @@ onSelectItemsClicked = function()
       "<%= url_for(:controller => 'schedules', :action => 'select_items') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxAddScheduleItems.resizable = true;
           thetisBoxAddScheduleItems.title = "<%= Item.model_name.human %>";

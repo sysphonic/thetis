@@ -84,7 +84,6 @@ doSelectGroupOfficialTitles = function(thetisBoxId)
           {
             method:"get",
             parameters:addParams.join("&"),
-            asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
               thetisBoxProgress.remove();
@@ -105,7 +104,6 @@ doClearGroup = function()
       {
         method:"get",
         parameters:"user_id=<%= @user.id %>",
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

@@ -244,9 +244,8 @@ doSave = function(do_smtp)
             {
               method:"post",
               parameters:addParams.join("&"),
-              asynchronous:true,
               evalScripts:true,
-              onComplete:function(request){
+              onComplete:function(request) {
                 if (request.responseText.stripScripts().indexOf("<!-- $FLASH_NOTICE:ERROR -->") >= 0) {
                   setTimeout("onSaveError('basic')", 10);
                 } else {
@@ -265,12 +264,12 @@ doSave = function(do_smtp)
         function() {
           var frm = document.form_sendmail_attach<%= form_idx %>;
           ajaxUploadFile(
-                  frm,
-                  frm.action + "?id="+_z("email_id").value,
-                  "div_sendmail_attach",
-                  function(){ onSaveComplete("attachment") },
-                  function(){ onSaveError("attachment") }
-                );
+              frm,
+              frm.action + "?id="+_z("email_id").value,
+              "div_sendmail_attach",
+              function(){ onSaveComplete("attachment") },
+              function(){ onSaveError("attachment") }
+            );
         }
       );
   }
@@ -278,20 +277,21 @@ doSave = function(do_smtp)
   if (_do_send) {
     saveFuncs.push(
         function() {
-          var frm = document.form_send_mail<%= form_idx %>;
+          var addParams = [];
+          addParams.push("id="+_z("email_id").value);
+          addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
           new Ajax.Request(
-                      "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>?id="+_z("email_id").value,
-                      {
-                        method:"post",
-                        parameters:"authenticity_token=<%= form_authenticity_token %>",
-                        asynchronous:true,
-                        evalScripts:true,
-                        onComplete:function(request){
-                          request.responseText.evalScripts();
-                          onSaveComplete("send")
-                        }
-                      }
-                    );
+              "<%= url_for(:controller => 'send_mails', :action => 'do_send') %>",
+              {
+                method:"post",
+                parameters:addParams.join("&"),
+                onComplete:function(request) {
+                  request.responseText.evalScripts();
+                  onSaveComplete("send");
+                }
+              }
+            );
         }
       );
   }
@@ -414,11 +414,10 @@ doDeleteAttachment = function(div_id, attach_id)
 
   new Ajax.Updater(
       "div_sendmail_attach",
-      "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment', :id => (@email)?(@email.id):nil) %>",
+      "<%= url_for(:controller => 'send_mails', :action => 'delete_attachment') %>",
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

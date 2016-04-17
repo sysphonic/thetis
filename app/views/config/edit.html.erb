@@ -370,13 +370,16 @@ function onHeaderMenuInfoOK(org_name)
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push("org_name="+encodeURIComponent(org_name));
+  addParams.push(Form.serialize(document.form_header_menu_info));
+
   new Ajax.Updater(
       "div_ajax_header_menu",
-      document.form_header_menu_info.action+"?org_name="+encodeURIComponent(org_name),
+      document.form_header_menu_info.action,
       {
-        asynchronous:true,
         evalScripts:false,
-        parameters:Form.serialize(document.form_header_menu_info),
+        parameters:addParams.join("&"),
         onComplete:function(request) {
           thetisBoxProgress.remove();
           thetisBoxHeaderMenuInfo.remove();
@@ -411,8 +414,6 @@ function doEditHeaderMenu(org_name)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
 
@@ -446,7 +447,6 @@ function doDeleteHeaderMenu(name)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

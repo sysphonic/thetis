@@ -116,7 +116,26 @@
 
 setSortableImg = function() {
   // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
-  Sortable.create("sortable_images", {onUpdate:function(){new Ajax.Request("<%= url_for(:controller => 'items', :action => 'update_images_order') %>?id="+_z("item_id").value, {asynchronous:true, evalScripts:true, parameters:Sortable.serialize("sortable_images", {name:"images_order"})+"&authenticity_token=<%= form_authenticity_token %>"})}, tag:"div"})
+  Sortable.create(
+      "sortable_images",
+      {
+        tag:"div",
+        onUpdate:function() {
+          var addParams = [];
+          addParams.push("id="+_z("item_id").value);
+          addParams.push(Sortable.serialize("sortable_images", {name:"images_order"}));
+          addParams.push("authenticity_token=<%= form_authenticity_token %>");
+
+          new Ajax.Request(
+              "<%= url_for(:controller => 'items', :action => 'update_images_order') %>",
+              {
+                method:"post",
+                parameters:addParams.join("&")
+              }
+            );
+        }
+      }
+    );
 }
 
 <% if item_images.size > 1 and params[:action] == 'edit' %>
@@ -135,12 +154,14 @@ editImageInfo = function(img_id, img_name)
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push("image_id="+img_id);
+
   new Ajax.Request(
-      "<%= url_for(:controller => 'items', :action => 'edit_image_info') %>?image_id="+img_id,
+      "<%= url_for(:controller => 'items', :action => 'edit_image_info') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
+        parameters:addParams.join("&"),
         onComplete:function(request) {
           thetisBoxImageInfo.title = img_name;
           thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
@@ -209,7 +230,6 @@ doDeleteImage = function(img_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();

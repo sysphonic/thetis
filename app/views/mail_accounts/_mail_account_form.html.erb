@@ -290,9 +290,9 @@
 
 showAddressTab = function(name)
 {
-  var nameArray = new Array("basic", "receive", "send");
+  var arr = ["basic", "receive", "send"];
 
-  showTab(name, nameArray, "slateblue");
+  showTab(name, arr, "slateblue");
 }
 
 showAddressTab("basic");
@@ -307,26 +307,24 @@ doRegisterAccount = function()
     return;
   }
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
   form.submit();
 /*
   new Ajax.Request(
-              form.action,
-              {
-                method:"post",
-                parameters:Form.serialize(form),
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request){
-                  thetisBox.remove();
-                  request.responseText.evalScripts();
+      form.action,
+      {
+        method:"post",
+        parameters:Form.serialize(form),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
 
-                  if (thetisBoxAccount) {
-                    thetisBoxAccount.setOnClose("doUpdatePage()");
-                  }
-                }
-              }
-            );
+          if (thetisBoxAccount) {
+            thetisBoxAccount.setOnClose("doUpdatePage()");
+          }
+        }
+      }
+    );
 */
 }
 

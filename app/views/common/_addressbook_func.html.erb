@@ -24,8 +24,6 @@ showAddress = function(address_id, address_name)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + address_name;
           thetisBox.overflow = "auto";
@@ -65,8 +63,6 @@ showAddressNew = function()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxAddressEdit = new ThetisBox;
           thetisBoxAddressEdit.resizable = true;
@@ -118,8 +114,6 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxAddressEdit = new ThetisBox;
           thetisBoxAddressEdit.resizable = true;
@@ -158,8 +152,6 @@ queryAddressEmail = function(email, dispName)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           var thetisBox = new ThetisBox;
           thetisBox.resizable = true;

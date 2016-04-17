@@ -141,9 +141,8 @@ onFolderTreeSelected = function(evt)
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
         }
       }
@@ -155,17 +154,16 @@ doClearFolderToSelectItems = function()
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_selectItems",
-              "<%= submit_url %>",
-              {
-                method:"get",
-                asynchronous:true,
-                evalScripts:true,
-                onComplete:function(request) {
-                  thetisBox.remove();
-                }
-              }
-            );
+      "div_selectItems",
+      "<%= submit_url %>",
+      {
+        method:"get",
+        evalScripts:true,
+        onComplete:function(request) {
+          thetisBox.remove();
+        }
+      }
+    );
 }
 
 </script>

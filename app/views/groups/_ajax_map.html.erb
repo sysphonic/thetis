@@ -54,15 +54,18 @@ doClear = function()
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var addParams = [];
+  addParams.push("group_id=<%= @group_id %>");
+  addParams.push(Form.serialize(document.form_group_map));
+
   new Ajax.Updater(
       "div_ajax_map",
-      "<%= url_for(:controller => 'locations', :action => 'delete_map', :group_id => @group_id) %>",
+      "<%= url_for(:controller => 'locations', :action => 'delete_map') %>",
       {
         method:"post",
-        parameters:Form.serialize(document.form_group_map),
-        asynchronous:true,
+        parameters:addParams.join("&"),
         evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
         }
       }

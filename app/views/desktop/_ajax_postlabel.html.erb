@@ -24,13 +24,9 @@
   <span id="<%= toy_id %>_type" style="display:none;"><%= @toy.xtype %></span>
   </div>
 
-  <script type="text/javascript">
-  //<![CDATA[
-  new Draggable("<%= toy_id %>", {revert:false})
-  //]]>
-  </script>
-
 <script type="text/javascript">
+
+new Draggable("<%= toy_id %>", {revert:false});
 
 var desktop = _z("div_desktop");
 

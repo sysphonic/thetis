@@ -63,8 +63,6 @@ _addToDesktop = function()
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:false,
         onComplete:function(request) {
           var button = _z("add_to_desktop");
           removeElem(button);

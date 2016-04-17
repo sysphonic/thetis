@@ -89,23 +89,22 @@ doRegister = function()
   var thetisBoxProgress = prog("CENTER");
 
   new Ajax.Updater(
-              _z("div_dummy_result"),
-              document.form_timecard.action,
-              {
-                method:"get",
-                parameters:Form.serialize(document.form_timecard),
-                asynchronous:true,
-                evalScripts:false,
-                onComplete:function(request) {
-                  thetisBoxProgress.remove();
-                  try {
-                    request.responseText.evalScripts();
-                  } catch (e) {}
+      _z("div_dummy_result"),
+      document.form_timecard.action,
+      {
+        method:"get",
+        parameters:Form.serialize(document.form_timecard),
+        evalScripts:false,
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+          try {
+            request.responseText.evalScripts();
+          } catch (e) {}
 
-                  ThetisBox.getContainer(_z("desktop_timecard")).remove();
-                }
-              }
-            );
+          ThetisBox.getContainer(_z("desktop_timecard")).remove();
+        }
+      }
+    );
 }
 
 </script>

@@ -113,28 +113,31 @@ function showDecidedInbox(folder_id)
 
   var thetisBoxProgress = prog("CENTER");
 
+  var addParams = [];
+  addParams.push("id="+folder_id);
+  addParams.push("read_only=true");
+
   new Ajax.Request(
-          "<%= url_for(:controller => 'folders', :action => 'get_items') %>?id=" + folder_id + "&read_only=true",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request) {
-                thetisBoxDecidedInbox.title = "<%= Workflow.decided_inbox %>";
-                thetisBoxDecidedInbox.overflow = "scroll";
-                thetisBoxDecidedInbox.show(
-                          "CENTER",
-                          mainWidth*80/100+"," + mainHeight*80/100,
-                          "TRAY",
-                          "",
-                          "",
-                          "<div id='div_view'>" + request.responseText.stripScripts() + "</div>"
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'folders', :action => 'get_items') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxDecidedInbox.title = "<%= Workflow.decided_inbox %>";
+          thetisBoxDecidedInbox.overflow = "scroll";
+          thetisBoxDecidedInbox.show(
+                    "CENTER",
+                    mainWidth*80/100+"," + mainHeight*80/100,
+                    "TRAY",
+                    "",
+                    "",
+                    "<div id='div_view'>" + request.responseText.stripScripts() + "</div>"
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 }
 </script>
 
@@ -164,7 +167,6 @@ function doCreate()
         {
           method: "post",
           parameters:Form.serialize(document.form_workflow),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
@@ -198,7 +200,6 @@ function doDelete(workflow_id)
       {
         method: "post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -228,7 +229,6 @@ function doSelectFolder(thetisBoxId, workflow_id)
           {
             method:"post",
             parameters:addParams.join("&"),
-            asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
               thetisBoxProgress.remove();

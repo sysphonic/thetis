@@ -60,17 +60,15 @@ function doUpdateConfig()
     return;
   }
 
-  var thetisBox = prog("TOP-RIGHT");
+  var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Request(
       document.form_log_config.action,
       {
-        asynchronous:true,
-        evalScripts:true,
         parameters:Form.serialize(document.form_log_config),
         onComplete:function(request) {
 
-          thetisBox.remove();
+          thetisBoxProgress.remove();
 
           if (request.responseText == "") {
             tip("<%= t('msg.update_success')%>");

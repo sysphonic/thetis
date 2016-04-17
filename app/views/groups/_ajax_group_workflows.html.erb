@@ -40,20 +40,18 @@ onItemsOrderUpdated = function()
       "<%= url_for(:controller => 'folders', :action => 'update_items_order') %>",
       {
         method:"post",
-        parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true
+        parameters:addParams.join("&")
       }
     );
 }
 
 Sortable.create(
-      "sortable_items",
-      {
-        onUpdate: onItemsOrderUpdated,
-        tag:"div"
-      }
-    );
+    "sortable_items",
+    {
+      onUpdate: onItemsOrderUpdated,
+      tag:"div"
+    }
+  );
 
 </script>
 

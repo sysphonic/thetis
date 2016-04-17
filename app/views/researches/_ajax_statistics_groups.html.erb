@@ -27,25 +27,24 @@ end
 onGroupsOrderUpdated = function()
 {
   var addParams = [];
+  addParams.push(Sortable.serialize("sortable_groups", { name: "groups_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'researches', :action => 'update_groups_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_groups", { name: "groups_order" }) + "&" + addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true
+        parameters:addParams.join("&")
       }
     );
 }
 
 Sortable.create(
-      "sortable_groups",
-      {
-        onUpdate: onGroupsOrderUpdated,
-        tag:"div"
-      }
-    );
+    "sortable_groups",
+    {
+      onUpdate: onGroupsOrderUpdated,
+      tag:"div"
+    }
+  );
 
 </script>

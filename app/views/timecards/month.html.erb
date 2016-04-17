@@ -399,26 +399,28 @@ function showPaidHldByUser(user_id, name)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  new Ajax.Request(
-          "<%= url_for(:controller => 'timecards', :action => 'paidhld_list') %>?user_id=" + user_id,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            onComplete:function(request){
-              thetisBoxProgress.remove();
+  var addParams = [];
+  addParams.push("user_id="+user_id);
 
-              thetisBoxPaidHldByUser = new ThetisBox;
-              thetisBoxPaidHldByUser.resizable = true;
-              thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
-              thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
-              thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
-              thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
-              thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
-              request.responseText.evalScripts();
-            }
-          }
-        );
+  new Ajax.Request(
+      "<%= url_for(:controller => 'timecards', :action => 'paidhld_list') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxProgress.remove();
+
+          thetisBoxPaidHldByUser = new ThetisBox;
+          thetisBoxPaidHldByUser.resizable = true;
+          thetisBoxPaidHldByUser.setOnClose(function(){ thetisBoxPaidHldByUser = null; });
+          thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
+          thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
+          thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
+          thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
+          request.responseText.evalScripts();
+        }
+      }
+    );
   return true;
 }
 

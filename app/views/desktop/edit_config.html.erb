@@ -185,17 +185,16 @@ doUpdateConfig = function(user_id)
   var thetisBox = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-              "div_user_before_login",
-              document.form_desktop_config.action,
-              {
-                asynchronous:true,
-                evalScripts:true,
-                parameters:Form.serialize(document.form_desktop_config),
-                onComplete:function(request) {
-                  thetisBox.remove();
-                }
-              }
-            );
+      "div_user_before_login",
+      document.form_desktop_config.action,
+      {
+        evalScripts:true,
+        parameters:Form.serialize(document.form_desktop_config),
+        onComplete:function(request) {
+          thetisBox.remove();
+        }
+      }
+    );
   return true;
 }
 

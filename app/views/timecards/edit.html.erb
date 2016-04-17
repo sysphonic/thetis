@@ -351,7 +351,6 @@ function doRegister()
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -393,7 +392,7 @@ function inputBreak(org_start, org_end)
         <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
   <% end %>
       );
-  var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOK()", "onBreakCancel()", org_start, org_end);
+  var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOk()", "onBreakCancel()", org_start, org_end);
 
   thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('timecard.input_break') %>";
@@ -401,7 +400,7 @@ function inputBreak(org_start, org_end)
   thetisBox.show("CENTER", "250,200", "TRAY", "", "", content);
 }
 
-function onBreakOK()
+function onBreakOk()
 {
   var addParams = [];
   addParams.push(Form.serialize(document.form_span));
@@ -418,7 +417,6 @@ function onBreakOK()
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -458,7 +456,6 @@ function doDeleteBreak(org_start, org_end)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:false,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -530,8 +527,6 @@ function showDescSelector()
       "<%= url_for(:controller => 'timecards', :action => 'recent_descriptions') %>",
       {
         method:"get",
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBox.show(
                     "CENTER",

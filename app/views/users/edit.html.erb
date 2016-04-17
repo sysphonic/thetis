@@ -186,9 +186,7 @@ onUserTitlesAddClicked = function()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBoxProgress.remove();
 
           thetisBoxUserTitles = new ThetisBox;
@@ -222,7 +220,6 @@ onUserTitlesOK = function()
       frm.action,
       {
         method:"post",
-        asynchronous:true,
         evalScripts:false,
         parameters:Form.serialize(frm),
         onComplete:function(request) {
@@ -231,7 +228,6 @@ onUserTitlesOK = function()
           if (setUserModified) {
             setUserModified();
           }
-
           request.responseText.evalScripts();
         }
       }
@@ -271,7 +267,6 @@ _onUserTitlesRemoveClicked = function()
       "<%= url_for(:controller => 'users', :action => 'remove_official_titles') %>",
       {
         method:"post",
-        asynchronous:true,
         evalScripts:false,
         parameters:addParams.join("&"),
         onComplete:function(request) {
@@ -280,7 +275,6 @@ _onUserTitlesRemoveClicked = function()
           if (setUserModified) {
             setUserModified();
           }
-
           request.responseText.evalScripts();
         }
       }
@@ -301,7 +295,6 @@ doCreateProfileSheet = function(user_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -329,7 +322,6 @@ doDeleteProfileSheet = function(user_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -362,7 +354,6 @@ doSelectGroup = function(thetisBoxId, current_id)
           {
             method:"post",
             parameters:addParams.join("&"),
-            asynchronous:true,
             evalScripts:true,
             onComplete:function(request) {
               thetisBoxProgress.remove();
@@ -407,7 +398,6 @@ doRemoveGroup = function(group_id, user_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove()
@@ -443,8 +433,6 @@ doUpdateZeptAllowed = function()
       {
         method:"get",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
           if (request.responseText == "") {

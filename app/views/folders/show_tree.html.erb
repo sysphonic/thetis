@@ -131,13 +131,9 @@ end
   <span id="xtype_0" style="display:none;"></span>
 
 
-  <script type="text/javascript">
-  //<![CDATA[
-  new Draggable("drag_border", {revert:false, constraint:"horizontal"})
-  //]]>
-  </script>
-
 <script type="text/javascript">
+
+new Draggable("drag_border", {revert:false, constraint:"horizontal"});
 
 var BorderDragObserver = Class.create();
 BorderDragObserver.prototype = {
@@ -388,7 +384,6 @@ function doCreateFolder(thetisBoxId, folder_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           insertion:Insertion.Bottom,
           onComplete:function(request) {
@@ -423,7 +418,6 @@ function doRenameFolder(thetisBoxId, folder_id)
         {
           method:"post",
           parameters:addParams.join("&"),
-          asynchronous:true,
           evalScripts:true,
           onComplete:function(request) {
             thetisBoxProgress.remove();
@@ -499,9 +493,7 @@ function doDelete(folder_id)
       {
         method:"post",
         parameters:addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true,
-        onComplete:function(request){
+        onComplete:function(request) {
           thetisBox.remove();
           if (request.responseText == "") {
             removeElem(_z("base_folderTree:"+folder_id));

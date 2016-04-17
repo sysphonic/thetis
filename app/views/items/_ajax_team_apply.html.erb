@@ -44,7 +44,6 @@ doTeamApply = function()
       {
         method:"post",
         parameters: Form.serialize(document.form_team_apply),
-        asynchronous:true,
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
@@ -52,4 +51,5 @@ doTeamApply = function()
       }
     );
 }
+
 </script>

@@ -193,29 +193,27 @@ function doEditUser(user_id)
   }
 
   new Ajax.Request(
-          action,
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            parameters:addParams.join("&"),
-            onComplete:function(request) {
-                thetisBoxUser = new ThetisBox;
-                thetisBoxUser.title = "<%= User.model_name.human %>";
-                //thetisBoxUser.overflow = "scroll";
-                thetisBoxUser.show(
-                          "CENTER",
-                          width+",+"+(mainHeight*9/10),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      action,
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          thetisBoxUser = new ThetisBox;
+          thetisBoxUser.title = "<%= User.model_name.human %>";
+          //thetisBoxUser.overflow = "scroll";
+          thetisBoxUser.show(
+                    "CENTER",
+                    width+",+"+(mainHeight*9/10),
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 */
 }
 
@@ -239,29 +237,27 @@ function showUser(user_id)
   addParams.push("id="+user_id);
 
   new Ajax.Request(
-          "<%= url_for(:controller => 'users', :action => 'show') %>",
-          {
-            method:"get",
-            asynchronous:true,
-            evalScripts:true,
-            parameters:addParams.join("&"),
-            onComplete:function(request) {
-                var thetisBox = new ThetisBox;
-                thetisBox.title = "<%= User.model_name.human %>";
-                //thetisBox.overflow = "scroll";
-                thetisBox.show(
-                          "CENTER",
-                          (mainWidth*8/10)+",+"+(mainHeight*9/10),
-                          "TRAY",
-                          "",
-                          "",
-                          request.responseText.stripScripts()
-                        );
-                thetisBoxProgress.remove();
-                request.responseText.evalScripts();
-              }
-          }
-        );
+      "<%= url_for(:controller => 'users', :action => 'show') %>",
+      {
+        method:"get",
+        parameters:addParams.join("&"),
+        onComplete:function(request) {
+          var thetisBox = new ThetisBox;
+          thetisBox.title = "<%= User.model_name.human %>";
+          //thetisBox.overflow = "scroll";
+          thetisBox.show(
+                    "CENTER",
+                    (mainWidth*8/10)+",+"+(mainHeight*9/10),
+                    "TRAY",
+                    "",
+                    "",
+                    request.responseText.stripScripts()
+                  );
+          thetisBoxProgress.remove();
+          request.responseText.evalScripts();
+        }
+      }
+    );
 */
 }
 

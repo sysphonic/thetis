@@ -30,26 +30,25 @@ onItemsOrderUpdated = function()
 {
   var addParams = [];
   addParams.push("id=<%= @tmpl_local_folder.id %>");
+  addParams.push(Sortable.serialize("sortable_wfs", { name: "items_order" }));
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Request(
       "<%= url_for(:controller => 'folders', :action => 'update_items_order') %>",
       {
         method:"post",
-        parameters:Sortable.serialize("sortable_wfs", { name: "items_order" }) + "&" + addParams.join("&"),
-        asynchronous:true,
-        evalScripts:true
+        parameters:addParams.join("&")
       }
     );
 }
 
 Sortable.create(
-      "sortable_wfs",
-      {
-        onUpdate: onItemsOrderUpdated,
-        tag:"div"
-      }
-    );
+    "sortable_wfs",
+    {
+      onUpdate: onItemsOrderUpdated,
+      tag:"div"
+    }
+  );
 
 </script>
 
