@@ -1693,18 +1693,18 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
 
       linker.href = "javascript:void(0)";
       ThetisBox.addEvent(linker, "click",
-            function(_onclick, linker_id, d_id){
+            function(_onclick, linkerId, d_id){
               return function(evt){
 
                 eval(_onclick);
 
                 if (selKeeper != null) {
-                  if (selKeeper.value == linker_id) {
+                  if (selKeeper.value == linkerId) {
                     ThetisBox.toggleTree(d_id);
                   } else {
                     ThetisBox.openTree(d_id, true);
                   }
-                  ThetisBox.selectTree(rootDiv, linker_id);
+                  ThetisBox.selectTree(rootDiv, linkerId);
                 }
                 return false;
               };
@@ -1712,13 +1712,13 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
     } else {
       linker.href = "javascript:void(0)";
       ThetisBox.addEvent(linker, "click",
-            function(_onclick, linker_id){
+            function(_onclick, linkerId){
               return function(evt){
 
                 eval(onclick);
 
                 if (selKeeper != null) {
-                  ThetisBox.selectTree(rootDiv, linker_id);
+                  ThetisBox.selectTree(rootDiv, linkerId);
                 }
                 return false;
               };
@@ -1848,12 +1848,12 @@ ThetisBox.getSelectedTreeNodeId = function(rootDiv)
   return ThetisBox.getTreeNodeIdFromMenuId(val);
 }
 
-ThetisBox.getTreeNodeIdFromMenuId = function(linker_id)
+ThetisBox.getTreeNodeIdFromMenuId = function(linkerId)
 {
-  if (!linker_id) {
+  if (!linkerId) {
     return null;
   }
-  var tokens = linker_id.split(":");
+  var tokens = linkerId.split(":");
   return tokens[tokens.length-1];
 }
 

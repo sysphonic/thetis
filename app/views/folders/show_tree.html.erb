@@ -758,14 +758,14 @@ function clearGroup()
   location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>";
 }
 
-onFolderTreeNodeClicked = function(folder_id, menu_id, div_id)
+onFolderTreeNodeClicked = function(folderId, linkerId, divId)
 {
-  selectFolder(folder_id);
+  selectFolder(folderId);
   var selKeeperId = ThetisBox.getSelKeeperId("folderTree");
-  if (_z(selKeeperId).value == menu_id) {
-    ThetisBox.toggleTree(div_id);
+  if (_z(selKeeperId).value == linkerId) {
+    ThetisBox.toggleTree(divId);
   }
-  ThetisBox.selectTree("folderTree", menu_id);
+  ThetisBox.selectTree("folderTree", linkerId);
 }
 
 </script>

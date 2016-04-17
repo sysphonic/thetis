@@ -412,14 +412,14 @@ function changeOption(val)
   }
 }
 
-onGroupTreeNodeClicked = function(group_id, menu_id, div_id)
+onGroupTreeNodeClicked = function(groupId, linkerId, divId)
 {
-  selectFolder(group_id);
+  selectFolder(groupId);
   var selKeeperId = ThetisBox.getSelKeeperId("groupTree");
-  if (_z(selKeeperId).value == menu_id) {
-    ThetisBox.toggleTree(div_id);
+  if (_z(selKeeperId).value == linkerId) {
+    ThetisBox.toggleTree(divId);
   }
-  ThetisBox.selectTree("groupTree", menu_id);
+  ThetisBox.selectTree("groupTree", linkerId);
 }
 
 </script>

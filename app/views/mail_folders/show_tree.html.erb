@@ -1269,14 +1269,14 @@ function abortPopupSweeper(target)
   }
 }
 
-onFolderTreeNodeClicked = function(folder_id, menu_id, div_id)
+onFolderTreeNodeClicked = function(folderId, linkerId, divId)
 {
-  selectFolder(folder_id);
+  selectFolder(folderId);
   var selKeeperId = ThetisBox.getSelKeeperId("mailTree");
-  if (_z(selKeeperId).value == menu_id) {
-    ThetisBox.toggleTree(div_id);
+  if (_z(selKeeperId).value == linkerId) {
+    ThetisBox.toggleTree(divId);
   }
-  ThetisBox.selectTree("mailTree", menu_id);
+  ThetisBox.selectTree("mailTree", linkerId);
 }
 
 </script>

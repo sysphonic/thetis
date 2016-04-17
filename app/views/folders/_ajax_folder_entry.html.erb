@@ -9,9 +9,9 @@ unless @folder.nil?
 <div id="base_<%= div_id %>" nowrap style="padding:0px; display:inline;">
   <%
   div_id = 'folderTree:' + @folder.id.to_s
-  menu_id = 'a_' + div_id
+  linker_id = 'a_' + div_id
   %>
-  <a id="<%= menu_id %>" value="" href="javaScript:onFolderTreeNodeClicked('<%= @folder.id %>', '<%= menu_id %>', '<%= div_id %>')">
+  <a id="<%= linker_id %>" value="" href="javaScript:onFolderTreeNodeClicked('<%= @folder.id %>', '<%= linker_id %>', '<%= div_id %>')">
     <%
     icons = @folder.get_icons
     folder_open = icons[1]
