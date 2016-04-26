@@ -18,12 +18,12 @@
   ];
 
   <% item_img = THETIS_RELATIVE_URL_ROOT + '/images/item.gif' %>
-  var firstMenuId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", "<%= item_img %>");
+  var firstNodeId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", "<%= item_img %>");
 
-  <% if params[:selId].blank? %>
-    ThetisBox.selectTree("<%= params[:rootDiv] %>", firstMenuId);
+  <% if params[:selNodeId].blank? %>
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", firstNodeId);
   <% else %>
-    ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selId] %>");
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selNodeId] %>");
   <% end %>
 </script>
 

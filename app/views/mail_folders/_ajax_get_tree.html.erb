@@ -24,7 +24,7 @@ var folderImgs = [
 var array = [];
 array.push(["0", " <%= @login_user.get_name %>", "", "", 6 /* img_idx */]);
 
-var firstMenuId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", folderImgs);
+var firstNodeId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", folderImgs);
 <% @folder_tree.each do |parent_id, child_folders| %>
 array = [
 <%
@@ -65,10 +65,10 @@ end
 ];
 ThetisBox.buildTree("<%= parent_id %>", array, "<%= params[:rootDiv] %>", folderImgs, false);
 <% end %>
-<% if params[:selId].blank? %>
-  ThetisBox.selectTree("<%= params[:rootDiv] %>", firstMenuId);
+<% if params[:selNodeId].blank? %>
+  ThetisBox.selectTree("<%= params[:rootDiv] %>", firstNodeId);
 <% else %>
-  ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selId] %>", true);
+  ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selNodeId] %>", true);
 <% end %>
 
 </script>

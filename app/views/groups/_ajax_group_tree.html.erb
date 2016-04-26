@@ -11,11 +11,11 @@ hide_root = (params[:hide_root] == 'true')
     ["<%= group_folder_open %>", "<%= group_folder_close %>"]
   ];
   var array = null;
-  var firstMenuId = null;
-  var retMenuId = null;
+  var firstNodeId = null;
+  var retLinkerId = null;
 <% unless hide_root %>
   array = [["0", "/(root)", "", "", 0]];
-  firstMenuId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", folderImgs);
+  firstNodeId = ThetisBox.buildTree("", array, "<%= params[:rootDiv] %>", folderImgs);
 <% end %>
 <% @group_tree.each do |parent_id, child_groups| %>
   array = [
@@ -35,14 +35,14 @@ hide_root = (params[:hide_root] == 'true')
     parent_id = ''
   end
   %>
-  retMenuId = ThetisBox.buildTree("<%= parent_id %>", array, "<%= params[:rootDiv] %>", folderImgs, false);
-  if (firstMenuId == null) {
-    firstMenuId = retMenuId;
+  retLinkerId = ThetisBox.buildTree("<%= parent_id %>", array, "<%= params[:rootDiv] %>", folderImgs, false);
+  if (firstNodeId == null) {
+    firstNodeId = retLinkerId;
   }
 <% end %>
-<% if params[:selId].blank? %>
-    ThetisBox.selectTree("<%= params[:rootDiv] %>", firstMenuId);
+<% if params[:selNodeId].blank? %>
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", firstNodeId);
 <% else %>
-    ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selId] %>", true);
+    ThetisBox.selectTree("<%= params[:rootDiv] %>", "<%= params[:selNodeId] %>", true);
 <% end %>
 </script>

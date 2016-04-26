@@ -133,7 +133,7 @@ function onLoadSub()
                         new Array("<%= group_folder_open %>", "<%= group_folder_close %>")
                       );
   var array = new Array(new Array("0", "/(root)", "", "selectGroup('0');", 0));
-  var firstMenuId = ThetisBox.buildTree("", array, "groupTree", folderImgs);
+  ThetisBox.buildTree("", array, "groupTree", folderImgs);
   <% @group_tree.each do |parent_id, child_groups| %>
   array = new Array(
     <% child_groups.each_with_index do |group, idx| %>
@@ -149,9 +149,9 @@ function onLoadSub()
   <% end %>
 
 <% unless session[:group_id].blank? %>
-  var menuId = "a_groupTree:<%= session[:group_id] %>";
-  ThetisBox.selectTree("groupTree", menuId, true);
-  if (ThetisBox.isSelectedTree("groupTree", menuId)) {
+  var nodeId = "<%= session[:group_id] %>";
+  ThetisBox.selectTree("groupTree", nodeId, true);
+  if (ThetisBox.isSelectedTree("groupTree", nodeId)) {
     selectGroup(<%= session[:group_id] %>);
   }
 <% end %>
@@ -195,7 +195,7 @@ function onCreateGroupClicked(pos)
     return;
   }
 
-  ThetisBox.openTree("groupTree:"+group_id, true);
+  ThetisBox.openTree("groupTree", group_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doCreateGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.specify_name') %>", "");
@@ -243,7 +243,7 @@ function onRenameGroupClicked(pos)
     return;
   }
 
-  ThetisBox.openTree("groupTree:"+group_id, true);
+  ThetisBox.openTree("groupTree", group_id, true);
 
   var thetisBox = new ThetisBox;
   var name = trim(restoreHTML(_z("groupTree:"+group_id+"_name").innerHTML).replace("/", ""));
@@ -263,7 +263,7 @@ function onDeleteGroupClicked()
     return;
   }
 
-  ThetisBox.openTree("groupTree:"+group_id, true);
+  ThetisBox.openTree("groupTree", group_id, true);
 
   var name = trim(_z("groupTree:"+group_id+"_name").innerHTML.replace("/", ""));
   confm("<div style='padding-bottom:10px;'><%= t('paren.square.left') %>"+name+"<%= t('group.delete_info1') %></div><div style='padding-bottom:10px;'><%= t('group.delete_info2') %></div><%= t('msg.confirm_sure') %>", "doDelete("+group_id+")");
@@ -307,7 +307,7 @@ function onMoveGroupClicked()
     return;
   }
 
-  ThetisBox.openTree("groupTree:"+group_id, true);
+  ThetisBox.openTree("groupTree", group_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show("CENTER", "", "TREE", "doMoveGroup("+thetisBox.id+", '"+group_id+"')", "<%= t('group.select_dest')%>", "");
@@ -412,14 +412,14 @@ function changeOption(val)
   }
 }
 
-onGroupTreeNodeClicked = function(groupId, linkerId, divId)
+onGroupTreeNodeClicked = function(groupId)
 {
   selectFolder(groupId);
-  var selKeeperId = ThetisBox.getSelKeeperId("groupTree");
-  if (_z(selKeeperId).value == linkerId) {
-    ThetisBox.toggleTree(divId);
+  var selNodeId = ThetisBox.getSelectedTreeNodeId("groupTree");
+  if (selNodeId == groupId) {
+    ThetisBox.toggleTree("groupTree", groupId);
   }
-  ThetisBox.selectTree("groupTree", linkerId);
+  ThetisBox.selectTree("groupTree", groupId);
 }
 
 </script>

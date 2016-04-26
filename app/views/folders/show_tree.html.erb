@@ -221,7 +221,7 @@ function onLoadSub()
   <% icons = Folder.get_icons(nil, true, true) %>
     new Array("<%= icons[1] %>", "<%= icons[2] %>")
   ];
-  var firstMenuId = ThetisBox.buildTree("", array, "folderTree", folderImgs);
+  ThetisBox.buildTree("", array, "folderTree", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
   array = new Array(
     <%
@@ -275,9 +275,9 @@ function onLoadSub()
   <% end %>
 
 <% unless session[:folder_id].blank? %>
-  var menuId = "a_folderTree:<%= session[:folder_id] %>";
-  ThetisBox.selectTree("folderTree", menuId, true);
-  if (ThetisBox.isSelectedTree("folderTree", menuId)) {
+  var nodeId = "<%= session[:folder_id] %>";
+  ThetisBox.selectTree("folderTree", nodeId, true);
+  if (ThetisBox.isSelectedTree("folderTree", nodeId)) {
     doGetItems(<%= session[:folder_id] %>);
   }
 <% end %>
@@ -354,7 +354,7 @@ function onCreateFolderClicked(pos)
     return;
   }
 
-  ThetisBox.openTree("folderTree:"+folder_id, true);
+  ThetisBox.openTree("folderTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show((pos.x)+","+(pos.y+25), "", "INPUT", "doCreateFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", "");
@@ -446,7 +446,7 @@ function onRenameFolderClicked(pos)
     return;
   }
 
-  ThetisBox.openTree("folderTree:"+folder_id, true);
+  ThetisBox.openTree("folderTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   var name = trim(restoreHTML(_z("folderTree:"+folder_id+"_name").innerHTML));
@@ -473,7 +473,7 @@ function onDeleteFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("folderTree:"+folder_id, true);
+  ThetisBox.openTree("folderTree", folder_id, true);
 
   var name = trim(_z("folderTree:"+folder_id+"_name").innerHTML);
   confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "doDelete("+folder_id+")");
@@ -525,7 +525,7 @@ function onMoveFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("folderTree:"+folder_id, true);
+  ThetisBox.openTree("folderTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show("CENTER", "", "TREE", "doMoveFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.select_dest')%>", "");
@@ -758,14 +758,14 @@ function clearGroup()
   location.href = "<%= url_for(:controller => 'folders', :action => 'show_tree') %>";
 }
 
-onFolderTreeNodeClicked = function(folderId, linkerId, divId)
+onFolderTreeNodeClicked = function(folderId)
 {
   selectFolder(folderId);
-  var selKeeperId = ThetisBox.getSelKeeperId("folderTree");
-  if (_z(selKeeperId).value == linkerId) {
-    ThetisBox.toggleTree(divId);
+  var selNodeId = ThetisBox.getSelectedTreeNodeId("folderTree");
+  if (selNodeId == folderId) {
+    ThetisBox.toggleTree("folderTree", folderId);
   }
-  ThetisBox.selectTree("folderTree", linkerId);
+  ThetisBox.selectTree("folderTree", folderId);
 }
 
 </script>

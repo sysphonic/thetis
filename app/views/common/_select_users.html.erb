@@ -284,7 +284,7 @@ onGroupTreeSelected = function(evt)
   if (email_type) {
     addParams.push("email_type="+email_type.value);
   }
-  addParams.push("tree_node_id="+ThetisBox.getTreeNodeIdFromMenuId(elem.id));
+  addParams.push("tree_node_id="+ThetisBox.getTreeNodeIdFromLinkerId(elem.id));
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 

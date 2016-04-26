@@ -1062,24 +1062,24 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     return ("thetisBoxTree-"+this.id);
   },
-  buildTree: function(parentTreeId, array, open)
+  buildTree: function(parentTreeId, nodes, open)
   {
-    return ThetisBox.buildTree(parentTreeId, array, this.getTreeRootDivId(), this.folderImg, open);
+    return ThetisBox.buildTree(parentTreeId, nodes, this.getTreeRootDivId(), this.folderImg, open);
   },
-  selectTree: function(linkerId, forceOpen)
+  selectTree: function(nodeId, forceOpen)
   {
-    ThetisBox.selectTree(this.getTreeRootDivId(), "a_thetisBoxTree-"+this.id+":"+linkerId, forceOpen);
+    ThetisBox.selectTree(this.getTreeRootDivId(), nodeId, forceOpen);
   },
   getSelectedTreeNodeId: function()
   {
     return ThetisBox.getSelectedTreeNodeId(this.getTreeRootDivId());
   },
-  setTree: function(url, selectId, onComplete)
+  setTree: function(url, selNodeId, onComplete)
   {
     var d = document.createElement("div");
     d.innerHTML = "<form method='get' name='form_ajax_thetisBoxTree'>"
         + "<input type='hidden' name='rootDiv' value='thetisBoxTree-"+this.id+"' />"
-        + "<input type='hidden' name='selId' value='a_thetisBoxTree-"+this.id+":"+selectId+"' />"
+        + "<input type='hidden' name='selNodeId' value='"+selNodeId+"' />"
         + "</form>";
     this.parent_elem.appendChild(d);
 
@@ -1272,11 +1272,22 @@ ThetisBox.hide = function(id)
 
 ThetisBox.getInstance = function(id)
 {
-  for (var i=0; i < ThetisBox.array.length; i++) {
-    var instance = ThetisBox.array[i];
-    if (instance.id == id) {
-      return instance;
+  switch (typeof(id)) {
+    case "string":
+      id = parseInt(id, 10);
+      // FALL THROUGH
+    case "number":
+    {
+      for (var i=0; i < ThetisBox.array.length; i++) {
+        var instance = ThetisBox.array[i];
+        if (instance.id == id) {
+          return instance;
+        }
+      }
+      break;
     }
+    default:
+      return ThetisBox.getInstanceForElem(id);
   }
   return null;
 }
@@ -1600,7 +1611,7 @@ ThetisBox.getSelKeeperId = function(rootDiv)
   return (rootDiv+":selectedNode");
 }
 
-ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
+ThetisBox.buildTree = function(parentTreeId, nodes, rootDiv, folderImg, open)
 {
   var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
   var selKeeper = _z(selKeeperId);
@@ -1618,13 +1629,14 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
     }
   }
 
-  var firstMenuId = null;
-  for (var i=0; i < array.length; i++) {
+  var firstNodeId = null;
+  for (var i=0; i < nodes.length; i++) {
 
-    var div_id = rootDiv + ":" + array[i][0];
+    var nodeId = nodes[i][0];
+    var divId = rootDiv + ":" + nodeId;
 
     var base = document.createElement("div");
-    base.id = "base_" + div_id;
+    base.id = "base_" + divId;
 
     var appName = window.navigator.appName;
     var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0); // MSIE, Sleipnir
@@ -1648,9 +1660,9 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
     parent.appendChild(base);
 
     var linker = document.createElement("a");
-    linker.id = ThetisBox.getMenuIdFromDivId(div_id);
-    if (firstMenuId == null) {
-      firstMenuId = linker.id;
+    linker.id = ThetisBox.getLinkerIdFromDivId(divId);
+    if (firstNodeId == null) {
+      firstNodeId = nodeId;
     }
     base.appendChild(linker);
     base.appendChild(document.createElement("br"));
@@ -1665,8 +1677,8 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
             display_open = "display:none;";
             display_close = "";
           }
-          linker.innerHTML += "<img id='"+div_id+"_open' src='"+folderImg[array[i][4]][0]+"' border='0' style='vertical-align:middle;"+display_open+"'>";
-          linker.innerHTML += "<img id='"+div_id+"_close' src='"+folderImg[array[i][4]][1]+"' border='0' style='vertical-align:middle;"+display_close+"'>";
+          linker.innerHTML += "<img id='"+divId+"_open' src='"+folderImg[nodes[i][4]][0]+"' border='0' style='vertical-align:middle;"+display_open+"'>";
+          linker.innerHTML += "<img id='"+divId+"_close' src='"+folderImg[nodes[i][4]][1]+"' border='0' style='vertical-align:middle;"+display_close+"'>";
           linker.innerHTML += " ";
         } catch (e) {}
       } else if (folderImg != "") {
@@ -1674,15 +1686,15 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
         linker.innerHTML += " ";
       }
     }
-    linker.innerHTML += "<span id='"+div_id+"_name'>"+array[i][1]+"</span>";
-    linker.value = array[i][2];  // action
+    linker.innerHTML += "<span id='"+divId+"_name'>"+nodes[i][1]+"</span>";
+    linker.value = nodes[i][2];  // action
     var onclick = "";
-    if (array[i].length > 3) {
-      onclick = array[i][3];
+    if (nodes[i].length > 3) {
+      onclick = nodes[i][3];
     }
     if (linker.value == "") {    // Folder
       var d = document.createElement("div");
-      d.id = div_id;
+      d.id = divId;
       d.className = "thetisBoxTreeBlock";
       d.style.paddingLeft = "30px";
       d.style.borderLeft = "1px dotted navy";
@@ -1693,39 +1705,37 @@ ThetisBox.buildTree = function(parentTreeId, array, rootDiv, folderImg, open)
 
       linker.href = "javascript:void(0)";
       ThetisBox.addEvent(linker, "click",
-            function(_onclick, linkerId, d_id){
-              return function(evt){
+            function(_onclick, _nodeId) {
+              return function(evt) {
 
                 eval(_onclick);
 
-                if (selKeeper != null) {
-                  if (selKeeper.value == linkerId) {
-                    ThetisBox.toggleTree(d_id);
-                  } else {
-                    ThetisBox.openTree(d_id, true);
-                  }
-                  ThetisBox.selectTree(rootDiv, linkerId);
+                var selNodeId = ThetisBox.getSelectedTreeNodeId(rootDiv);
+                if (selNodeId == _nodeId) {
+                  ThetisBox.toggleTree(rootDiv, _nodeId);
+                } else {
+                  ThetisBox.openTree(rootDiv, _nodeId, true);
                 }
+                ThetisBox.selectTree(rootDiv, _nodeId);
                 return false;
               };
-            }.call(this, onclick, linker.id, d.id));
+            }.call(this, onclick, nodeId));
     } else {
       linker.href = "javascript:void(0)";
       ThetisBox.addEvent(linker, "click",
-            function(_onclick, linkerId){
-              return function(evt){
+            function(_onclick, _nodeId) {
+              return function(evt) {
 
                 eval(onclick);
 
-                if (selKeeper != null) {
-                  ThetisBox.selectTree(rootDiv, linkerId);
-                }
+                ThetisBox.selectTree(rootDiv, _nodeId);
                 return false;
               };
-            }.call(this, onclick, linker.id));
+            }.call(this, onclick, nodeId)
+          );
     }
   }
-  return firstMenuId;
+  return firstNodeId;
 }
 
 ThetisBox.trimTree = function(rootDiv)
@@ -1748,8 +1758,9 @@ ThetisBox.trimTree = function(rootDiv)
   }
 }
 
-ThetisBox.toggleTree = function(divId)
+ThetisBox.toggleTree = function(rootDiv, nodeId)
 {
+  var divId = rootDiv+":"+nodeId;
   var tree = document.getElementById(divId);
   if (tree == null) {
     return;
@@ -1758,22 +1769,23 @@ ThetisBox.toggleTree = function(divId)
   ThetisBox._openTree(tree, (tree.style.display == "none"));
 }
 
-ThetisBox.openTree = function(divId, open)
+ThetisBox.openTree = function(rootDiv, nodeId, open)
 {
-  var tree = document.getElementById(divId);
-  if (tree == null) {
+  var divId = rootDiv+":"+nodeId;
+  var nodeBlock = document.getElementById(divId);
+  if (nodeBlock == null) {
     return;
   }
-  ThetisBox._openTree(tree, open);
+  ThetisBox._openTree(nodeBlock, open);
 }
 
-ThetisBox._openTree = function(tree, open)
+ThetisBox._openTree = function(nodeBlock, open)
 {
-  var openImg = document.getElementById(tree.id + "_open");
-  var closeImg = document.getElementById(tree.id + "_close");
+  var openImg = document.getElementById(nodeBlock.id + "_open");
+  var closeImg = document.getElementById(nodeBlock.id + "_close");
 
   if (open == true) {
-    tree.style.display = "block";
+    nodeBlock.style.display = "block";
     if (openImg != null) {
       openImg.style.display = "inline";
     }
@@ -1781,7 +1793,7 @@ ThetisBox._openTree = function(tree, open)
       closeImg.style.display = "none";
     }
   } else {
-    tree.style.display = "none";
+    nodeBlock.style.display = "none";
     if (openImg != null) {
       openImg.style.display = "none";
     }
@@ -1791,13 +1803,14 @@ ThetisBox._openTree = function(tree, open)
   }
 }
 
-ThetisBox.selectTree = function(rootDiv, linkerId, forceOpen)
+ThetisBox.selectTree = function(rootDiv, nodeId, forceOpen)
 {
   var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
   var lastSelected = _z(selKeeperId).value;
   if (lastSelected != "") {
     _z(lastSelected).style.backgroundColor = "";
   }
+  var linkerId = ThetisBox.getLinkerIdFromDivId(rootDiv+":"+nodeId);
   var linker = _z(linkerId);
   if (linker == null) {
     return;
@@ -1808,28 +1821,29 @@ ThetisBox.selectTree = function(rootDiv, linkerId, forceOpen)
   if (forceOpen == true)
   {
     var elem = linker;
-    ThetisBox.openTree(ThetisBox.getDivIdFromMenuId(linkerId), true);
+    ThetisBox.openTree(rootDiv, nodeId, true);
 
     while (elem = elem.parentNode) {
       if (elem.className == "thetisBoxTreeBlock") {
-        ThetisBox.openTree(elem.id, true);
+        var idParts = elem.id.split(":");
+        ThetisBox.openTree(idParts[0], idParts[1], true);
       }
     }
   }
 }
 
-ThetisBox.isSelectedTree = function(rootDiv, linkerId)
+ThetisBox.isSelectedTree = function(rootDiv, nodeId)
 {
-  var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
-  return (_z(selKeeperId).value == linkerId);
+  var selNodeId = ThetisBox.getSelectedTreeNodeId(rootDiv);
+  return (selNodeId == nodeId);
 }
 
-ThetisBox.getDivIdFromMenuId = function(linkerId)
+ThetisBox.getDivIdFromLinkerId = function(linkerId)
 {
   return linkerId.substring(2, linkerId.length);
 }
 
-ThetisBox.getMenuIdFromDivId = function(divId)
+ThetisBox.getLinkerIdFromDivId = function(divId)
 {
   return "a_" + divId;
 }
@@ -1845,10 +1859,10 @@ ThetisBox.getSelectedTreeNodeId = function(rootDiv)
   if ((val == null) || (val == "")) {
     return null;
   }
-  return ThetisBox.getTreeNodeIdFromMenuId(val);
+  return ThetisBox.getTreeNodeIdFromLinkerId(val);
 }
 
-ThetisBox.getTreeNodeIdFromMenuId = function(linkerId)
+ThetisBox.getTreeNodeIdFromLinkerId = function(linkerId)
 {
   if (!linkerId) {
     return null;

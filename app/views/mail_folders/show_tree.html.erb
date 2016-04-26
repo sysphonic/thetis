@@ -341,7 +341,7 @@ function onLoadSub()
     ["<%= mail_user_open %>", "<%= mail_user_close %>"]
   ];
   var array = [["0", " <%= @login_user.get_name %>", "", "selectFolder('0');", 6 /* img_idx */]];
-  var firstMenuId = ThetisBox.buildTree("", array, "mailTree", folderImgs);
+  ThetisBox.buildTree("", array, "mailTree", folderImgs);
   <%
   folder_accounts_h = {}
   unless @folder_tree.nil?
@@ -505,7 +505,7 @@ function onCreateFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("mailTree:"+folder_id, true);
+  ThetisBox.openTree("mailTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show("CENTER", "", "INPUT", "doCreateFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.specify_name') %>", "");
@@ -566,7 +566,7 @@ function onRenameFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("mailTree:"+folder_id, true);
+  ThetisBox.openTree("mailTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   var name = trim(restoreHTML(_z("mailTree:"+folder_id+"_name").innerHTML));
@@ -592,7 +592,7 @@ function onDeleteFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("mailTree:"+folder_id, true);
+  ThetisBox.openTree("mailTree", folder_id, true);
 
   var name = trim(_z("mailTree:"+folder_id+"_name").innerHTML);
   confm("<%= t('paren.square.left') %>"+name+"<%= t('msg.confirm_to_delete') %>", "doDelete("+folder_id+")");
@@ -652,7 +652,7 @@ function onMoveFolderClicked()
     return;
   }
 
-  ThetisBox.openTree("mailTree:"+folder_id, true);
+  ThetisBox.openTree("mailTree", folder_id, true);
 
   var thetisBox = new ThetisBox;
   thetisBox.show("CENTER", "", "TREE", "doMoveFolder("+thetisBox.id+", '"+folder_id+"')", "<%= t('folder.select_dest') %>", "");
@@ -683,18 +683,17 @@ function doMoveFolder(thetisBoxId, folder_id)
   }
 }
 
-function doSelectTree(folder_id)
+function doSelectTree(folderId)
 {
-  var menuId = "a_mailTree:" + folder_id;
-  ThetisBox.selectTree("mailTree", menuId, true);
-  if (ThetisBox.isSelectedTree("mailTree", menuId)) {
-    selectFolder(folder_id);
+  ThetisBox.selectTree("mailTree", folderId, true);
+  if (ThetisBox.isSelectedTree("mailTree", folderId)) {
+    selectFolder(folderId);
   }
 }
 
-function selectFolder(folder_id)
+function selectFolder(folderId)
 {
-  doUpdateMails(folder_id, false);
+  doUpdateMails(folderId, false);
 }
 
 function doUpdateMails(folder_id, do_pop, addParams)
@@ -1269,14 +1268,14 @@ function abortPopupSweeper(target)
   }
 }
 
-onFolderTreeNodeClicked = function(folderId, linkerId, divId)
+onFolderTreeNodeClicked = function(folderId)
 {
   selectFolder(folderId);
-  var selKeeperId = ThetisBox.getSelKeeperId("mailTree");
-  if (_z(selKeeperId).value == linkerId) {
-    ThetisBox.toggleTree(divId);
+  var selNodeId = ThetisBox.getSelectedTreeNodeId("mailTree");
+  if (selNodeId == folderId) {
+    ThetisBox.toggleTree("mailTree", folderId);
   }
-  ThetisBox.selectTree("mailTree", linkerId);
+  ThetisBox.selectTree("mailTree", folderId);
 }
 
 </script>

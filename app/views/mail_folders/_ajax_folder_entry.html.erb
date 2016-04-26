@@ -10,7 +10,7 @@ unless @mail_folder.nil?
   <%
   linker_id = 'a_' + div_id
   %>
-  <a id="<%= linker_id %>" value="" href="javaScript:onFolderTreeNodeClicked('<%= @mail_folder.id %>', '<%= linker_id %>', '<%= div_id %>')">
+  <a id="<%= linker_id %>" href="javaScript:void(0)" onclick="onFolderTreeNodeClicked('<%= @mail_folder.id %>'); return false;">
     <%
     icons = @mail_folder.get_icons
     folder_open = icons[1]

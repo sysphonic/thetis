@@ -8,7 +8,7 @@ unless @group.nil?
   div_id = 'groupTree:' + @group.id.to_s
   linker_id = 'a_' + div_id
   %>
-  <a id="<%= linker_id %>" value="" href="javaScript:onGroupTreeNodeClicked('<%= @group.id %>', '<%= linker_id %>', '<%= div_id %>')">
+  <a id="<%= linker_id %>" href="javaScript:void(0)" onclick="onGroupTreeNodeClicked('<%= @group.id %>'); return false;">
     <%
     group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.gif'
     group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'
