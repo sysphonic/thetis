@@ -169,71 +169,35 @@ BorderDragObserver.prototype = {
   initialize: function() {
   },
   onStart: function(eventName, draggable, event) {
-    if (getUserAgentName() == "gecko") {
-      if (draggable.element.id == "drag_v_border") {
-        var divMailTree = _z("divMailTree");
-        var td_tree = _z("td_tree");
-        var td_view = _z("td_view");
-        var div_mails = _z("div_mails");
-        var div_mail_content = _z("div_mail_content");
-
-        var orgWidthMailTree = divMailTree.offsetWidth;
-        var orgWidthMails = div_mails.offsetWidth;
-
-        draggable.options.snap = function(x, y) {
-          return onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
-        };
-      } else if (draggable.element.id == "drag_h_border") {
-        var div_mails = _z("div_mails");
-        var div_mail_content = _z("div_mail_content");
-        var mail_body_view = _z("mail_body_view");
-
-        var orgHeightMails = div_mails.offsetHeight;
-        var orgHeightMailContent = div_mail_content.offsetHeight;
-
-        draggable.options.snap = function(x, y) {
-          return onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent);
-        };
-      }
-    }
   },
   onDrag: function(eventName, draggable, event) {
-    if (getUserAgentName() != "gecko") {
-      if (draggable.element.id == "drag_v_border") {
-        var divMailTree = _z("divMailTree");
-        var td_tree = _z("td_tree");
-        var td_view = _z("td_view");
-        var div_mails = _z("div_mails");
-        var div_mail_content = _z("div_mail_content");
+    if (draggable.element.id == "drag_v_border") {
+      var divMailTree = _z("divMailTree");
+      var td_tree = _z("td_tree");
+      var td_view = _z("td_view");
+      var div_mails = _z("div_mails");
+      var div_mail_content = _z("div_mail_content");
 
-        var orgWidthMailTree = divMailTree.offsetWidth;
-        var orgWidthMails = div_mails.offsetWidth;
+      var orgWidthMailTree = divMailTree.offsetWidth;
+      var orgWidthMails = div_mails.offsetWidth;
 
-        draggable.options.snap = function(x, y) {
-          return onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
-        };
-      } else if (draggable.element.id == "drag_h_border") {
-        var div_mails = _z("div_mails");
-        var div_mail_content = _z("div_mail_content");
-        var mail_body_view = _z("mail_body_view");
+      draggable.options.snap = function(x, y) {
+        return onVerticalBorderDragged(x, y, divMailTree, td_tree, td_view, div_mails, div_mail_content, orgWidthMailTree, orgWidthMails)
+      };
+    } else if (draggable.element.id == "drag_h_border") {
+      var div_mails = _z("div_mails");
+      var div_mail_content = _z("div_mail_content");
+      var mail_body_view = _z("mail_body_view");
 
-        var orgHeightMails = div_mails.offsetHeight;
-        var orgHeightMailContent = div_mail_content.offsetHeight;
+      var orgHeightMails = div_mails.offsetHeight;
+      var orgHeightMailContent = div_mail_content.offsetHeight;
 
-        draggable.options.snap = function(x, y) {
-          return onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent);
-        };
-      }
+      draggable.options.snap = function(x, y) {
+        return onHorizontalBorderDragged(x, y, div_mails, div_mail_content, mail_body_view, orgHeightMails, orgHeightMailContent);
+      };
     }
   },
   onEnd: function(eventName, draggable, event) {
-    if (draggable.element.id != "drag_v_border"
-        && draggable.element.id != "drag_h_border") {
-      return;
-    }
-    if (getUserAgentName() == "gecko") {
-      draggable.options.snap = false;
-    }
   }
 }
 Draggables.addObserver( new BorderDragObserver() );

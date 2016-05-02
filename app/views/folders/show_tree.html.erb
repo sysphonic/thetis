@@ -140,46 +140,23 @@ BorderDragObserver.prototype = {
   initialize: function() {
   },
   onStart: function(eventName, draggable, event) {
-    if (draggable.element.id != "drag_border") {
-      return;
-    }
-    if (getUserAgentName() == "gecko") {
-      var divFolderTree = _z("divFolderTree");
-      var td_tree = _z("td_tree");
-      var view = _z("div_view");
-      var td_view = _z("td_view");
-      var orgWidthFolderTree = divFolderTree.offsetWidth;
-      var orgWidthView = view.offsetWidth;
-
-      draggable.options.snap = function(x, y) {
-        return onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView);
-      };
-    }
   },
   onDrag: function(eventName, draggable, event) {
     if (draggable.element.id != "drag_border") {
       return;
     }
-    if (getUserAgentName() != "gecko") {
-      var divFolderTree = _z("divFolderTree");
-      var td_tree = _z("td_tree");
-      var view = _z("div_view");
-      var td_view = _z("td_view");
-      var orgWidthFolderTree = divFolderTree.offsetWidth;
-      var orgWidthView = view.offsetWidth;
+    var divFolderTree = _z("divFolderTree");
+    var td_tree = _z("td_tree");
+    var view = _z("div_view");
+    var td_view = _z("td_view");
+    var orgWidthFolderTree = divFolderTree.offsetWidth;
+    var orgWidthView = view.offsetWidth;
 
-      draggable.options.snap = function(x, y) {
-        return onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView);
-      };
-    }
+    draggable.options.snap = function(x, y) {
+      return onBorderDragged(x, y, divFolderTree, td_tree, view, td_view, orgWidthFolderTree, orgWidthView);
+    };
   },
   onEnd: function(eventName, draggable, event) {
-    if (draggable.element.id != "drag_border") {
-      return;
-    }
-    if (getUserAgentName() == "gecko") {
-      draggable.options.snap = false;
-    }
   }
 }
 Draggables.addObserver( new BorderDragObserver() );
