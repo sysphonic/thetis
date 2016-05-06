@@ -46,13 +46,6 @@ function doOnLoad()
 <% end %>
 }
 
-function _forBugfullIE(div, list)
-{
-//  if (list != null) {
-//    list.style.width = div.clientWidth+"px";
-//  }
-}
-
 var iframe_groupware = top._z("iframe_groupware");
 
 function enableFrameScrolling(sw)
@@ -131,10 +124,6 @@ function doResize()
 
     div.style.height = (availHeight - 95) + "px";
 
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_items"));
-    }
-
   } else if ((div = _z("divFolderTree")) || (div = _z("divGroupTree"))) {
 
     enableFrameScrolling(false);
@@ -203,19 +192,11 @@ function doResize()
 
     div.style.height = (availHeight - 120) + "px";
 
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_users"));
-    }
-
   } else if (div = _z("div_addresses")) {
 
     enableFrameScrolling(false);
 
     div.style.height = (availHeight - 120) + "px";
-
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_addresses"));
-    }
 
   } else if (div = _z("div_logs")) {
 
@@ -223,29 +204,17 @@ function doResize()
 
     div.style.height = (availHeight - 120) + "px";
 
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_logs"));
-    }
-
   } else if (div = _z("div_teams")) {
 
     enableFrameScrolling(false);
 
     div.style.height = (availHeight - 120) + "px";
 
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_teams"));
-    }
-
   } else if (div = _z("div_equipment")) {
 
     enableFrameScrolling(false);
 
     div.style.height = (availHeight - 120) + "px";
-
-    if (is_MS) {
-      _forBugfullIE(div, _z("list_equipment"));
-    }
 
 /* GREP WITH BUGFULL-IE!
   } else if (div = _z("div_schedule")) {

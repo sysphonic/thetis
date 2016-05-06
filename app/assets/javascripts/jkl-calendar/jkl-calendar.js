@@ -716,13 +716,9 @@ JKL.Calendar.prototype.write = function (x, y)
       pos = JKL.Calendar._getPos(document.getElementById(this.disp_id), true);
     }
 
-    if (!is_Opera) {
-      if (is_dtdStandard || !is_MS) {
-        var scroll = JKL.Calendar._getScroll(textElem)
-        pos.x -= scroll.left;
-        pos.y -= scroll.top;
-      }
-    }
+    var scroll = JKL.Calendar._getScroll(textElem)
+    pos.x -= scroll.left;
+    pos.y -= scroll.top;
 
     dispElem.style.left = (pos.x + textElem.clientWidth) + "px";
     dispElem.style.top = pos.y + "px";
@@ -737,12 +733,6 @@ JKL.Calendar.prototype.write = function (x, y)
   this.show();
 };
 
-// 2007.10.09 Shin ドラッグ対応（ThetisBoxから移植） ▽
-var _appName = window.navigator.appName;
-var is_MS = (_appName.toLowerCase().indexOf('explorer') >= 0);       // MSIE, Sleipnir
-//var is_Netscape = (_appName.toLowerCase().indexOf('netscape') >= 0); // Firefox, Safari
-var is_Opera = (_appName.toLowerCase().indexOf('opera') >= 0);       // Opera
-
 var is_dtdStandard = (document.compatMode == 'CSS1Compat');
 
 JKL.Calendar._within = function(elem, x, y)
@@ -753,11 +743,6 @@ JKL.Calendar._within = function(elem, x, y)
   var eWidth = elem.offsetWidth;
   var eHeight = elem.offsetHeight;
 
-  if (is_Opera || (is_MS && !is_dtdStandard)) {
-    var scroll = JKL.Calendar._getScroll(elem);
-    eX -= scroll.left;
-    eY -= scroll.top;
-  }
 //alert("x="+x+", y="+y+"\neX="+eX+", eY="+eY+", eWidth="+eWidth+", eHeight="+eHeight);
 
   return(x >= eX && x <= eX + eWidth && y >= eY && y <= eY + eHeight);

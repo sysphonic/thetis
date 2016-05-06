@@ -4,11 +4,6 @@
  This module is released under New BSD License.
  **-----------------**-----------------**-----------------**/
 
-var appName = window.navigator.appName;
-var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0);        // MSIE, Sleipnir
-var is_Netscape = (appName.toLowerCase().indexOf('netscape') >= 0);  // Firefox, Safari
-var is_Opera = (appName.toLowerCase().indexOf('opera') >= 0);
-
 function getUserAgentName()
 {
   var userAgent = window.navigator.userAgent.toLowerCase();
@@ -959,9 +954,22 @@ function getDateString(date)
 
 function getDateFromString(date_s)
 {
-  var parts = date_s.split("-");
-
-  return new Date(parts[0], parseInt(parts[1], 10)-1, parts[2]);
+  if (!dateStr) {
+    return null;
+  }
+  var m = dateStr.match(/^(\d+)[-](\d+)[-](\d+)\s+(\d+):(\d+):(\d+)[.](\d+)$/);
+  if (m) {
+    return new Date(m[1], parseInt(m[2], 10)-1, m[3], m[4], m[5], m[6], m[7]);
+  }
+  m = dateStr.match(/^(\d+)[-](\d+)[-](\d+)\s+(\d+):(\d+):(\d+)$/);
+  if (m) {
+    return new Date(m[1], parseInt(m[2], 10)-1, m[3], m[4], m[5], m[6]);
+  }
+  m = dateStr.match(/^(\d+)[-](\d+)[-](\d+)$/);
+  if (m) {
+    return new Date(m[1], parseInt(m[2], 10)-1, m[3]);
+  }
+  return null;
 }
 
 function getByteSize(str)
@@ -1226,5 +1234,28 @@ function splitTextBySelection(textarea)
   arr[2] = val.substring(posEnd);
 
   return arr;
+}
+
+function getFuncName(func)
+{
+  var m = String(func).match(/function\s+([^\s(]+)\s*[(]/);
+  if (m && m[1]) {
+    return m[1];
+  }
+  return null;
+}
+
+function getTypeExp(obj)
+{
+  var objType = typeof(obj);
+  if (objType == "object") {
+    if (obj == null) {
+      return "null";
+    }
+    if (obj.constructor) {
+      objType = (getFuncName(obj.constructor) || objType);
+    }
+  }
+  return objType;
 }
 

@@ -27,22 +27,13 @@ ThetisBoxDragObserver.prototype = {
       var pos = getPos(box);
       draggable.posTopRight = {x:(pos.x + box.offsetWidth), y:pos.y};
     }
-    if (!is_MS && !is_Opera) {
-      if (hasClassName(elem, "thetisbox_resize_handle_r")
-          || hasClassName(elem, "thetisbox_resize_handle_l")) {
-        ThetisBox.onResizeHandleDragged(elem, draggable);
-      }
+    if (hasClassName(elem, "thetisbox_resize_handle_r")
+        || hasClassName(elem, "thetisbox_resize_handle_l")) {
+      ThetisBox.onResizeHandleDragged(elem, draggable);
     }
   },
   onDrag: function(eventName, draggable, event) {
     var elem = draggable.element;
-
-    if (is_MS || is_Opera) {
-      if (hasClassName(elem, "thetisbox_resize_handle_r")
-          || hasClassName(elem, "thetisbox_resize_handle_l")) {
-        ThetisBox.onResizeHandleDragged(elem, draggable, event);
-      }
-    }
   },
   onEnd: function(eventName, draggable, event) {
     var elem = draggable.element;
@@ -1638,24 +1629,8 @@ ThetisBox.buildTree = function(parentTreeId, nodes, rootDiv, folderImg, open)
     var base = document.createElement("div");
     base.id = "base_" + divId;
 
-    var appName = window.navigator.appName;
-    var is_MS = (appName.toLowerCase().indexOf('explorer') >= 0); // MSIE, Sleipnir
-    var is_dtdStandard = (document.compatMode == 'CSS1Compat');
-
-    if (is_MS) {
-      if (is_dtdStandard) {
-        base.style.padding = "0px";
-        base.style.display = "inline";
-      } else {
-        base.style.padding = "0px";
-        base.style.paddingTop = "2px";
-        base.style.paddingBottom = "2px";
-        base.style.display = "block";
-      }
-    } else {
-      base.style.padding = "0px";
-      base.style.display = "block";
-    }
+    base.style.padding = "0px";
+    base.style.display = "block";
     base.noWrap = true;
     parent.appendChild(base);
 

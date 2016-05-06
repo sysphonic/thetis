@@ -216,15 +216,6 @@ ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
 //          "id" : 200
 //      },
       load: function(response, ioArgs) {
-/*
-                if (is_Opera) {
-                  _thetis_ajax_item_data = response;
-                  _thetis_ajax_item_func_complete = func_complete;
-                  _thetis_ajax_item_func_error = func_error;
-                  setTimeout("_onUploadForOpera('"+target_id+"')", 100);
-                  return;
-                }
-*/
                 var content = response.documentElement.innerHTML;
 /*
                 // needed due to problem with IframeIO: http://trac.dojotoolkit.org/ticket/674

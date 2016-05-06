@@ -167,11 +167,7 @@ function showTray()
   var trayHeight = deskHeight;
   var trayX = deskPos.x + deskWidth - trayWidth + 2;
   var trayY = deskPos.y + 2;
-  if (is_MS) {
-    trayX -= 3;
-  } else {
-    trayHeight += 4
-  }
+  trayHeight += 4;
 
   new Ajax.Request(
       "<%= url_for(:controller => 'desktop', :action => 'get_news_tray') %>",
