@@ -15,9 +15,9 @@ class FoldersController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_items'] == '1'
-    before_filter(:check_login)
+    before_action(:check_login)
   else
-    before_filter(:check_login, :except => [:show_tree, :show_url, :get_items, :get_tree, :ajax_get_tree])
+    before_action(:check_login, :except => [:show_tree, :show_url, :get_items, :get_tree, :ajax_get_tree])
   end
 
 
@@ -143,7 +143,7 @@ class FoldersController < ApplicationController
 
     @folder.force_destroy
     @folder = nil
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== move
@@ -354,7 +354,7 @@ class FoldersController < ApplicationController
       Log.add_error(request, nil, 'No Authority Error')
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== get_folders_order
@@ -429,7 +429,7 @@ class FoldersController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== get_disp_ctrl

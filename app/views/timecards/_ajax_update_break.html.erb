@@ -139,12 +139,13 @@ end
 <input type="hidden" id="timecard_id" name="timecard_id" value="<%= @timecard.id %>" />
 
 <script type="text/javascript">
-  _z("buttons_with_clear").style.display = "";
-  _z("buttons_without_clear").style.display = "none";
 
-  <% unless params[:action] == 'edit' %>
-  changeWorkcode(_z("timecard_workcode").value);
-  <% end %>
+_z("buttons_with_clear").style.display = "";
+_z("buttons_without_clear").style.display = "none";
+
+<% if params[:action] != 'edit' %>
+changeWorkcode(_z("timecard_workcode").value);
+<% end %>
 
 </script>
 

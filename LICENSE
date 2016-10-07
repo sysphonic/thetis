@@ -9,7 +9,7 @@ as the "source code".
 
                       **   **    **   **
 
-Copyright (c) 2007-2013, MORITA Shintaro, Sysphonic
+Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic
 All rights reserved.
 
   Redistribution and use in source and binary forms, with or without
@@ -46,8 +46,8 @@ POSSIBILITY OF SUCH DAMAGE.
 In addition, Thetis contains the following softwares.
 Be careful of these licenses, too.
 
-CKEditor ver.4.2
-  Copyright (c) 2003-2013, CKSource - Frederico Knabben
+CKEditor ver.4.5.6
+  Copyright (c) 2003-2015, CKSource - Frederico Knabben
   http://ckeditor.com/
 (thetis/public/javascripts/ckeditor)
 

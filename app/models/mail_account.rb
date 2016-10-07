@@ -14,7 +14,7 @@ class MailAccount < ActiveRecord::Base
 
   validates_presence_of(:title)
 
-  has_many(:mail_filters, -> {order('mail_filters.xorder asc')}, :dependent => :destroy)
+  has_many(:mail_filters, ->(rec) {order('mail_filters.xorder asc')}, {:dependent => :destroy})
 
   public::UIDL_SEPARATOR = "\n"
 

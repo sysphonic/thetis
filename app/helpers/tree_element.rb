@@ -162,6 +162,20 @@ module TreeElement
     return sorted_nodes
   end
 
+  #=== self.get_end_node_ids
+  #
+  #Gets sorted flattened Array of the tree nodes.
+  #
+  #_tree_:: Tree Array.
+  #return:: Node-IDs.
+  #
+  def self.get_end_node_ids(tree)
+
+    node_ids = TreeElement.get_flattened_nodes(tree).collect {|rec| rec.id.to_s}
+    del_ids = tree.keys.select {|parent_id| !(tree[parent_id].nil? or tree[parent_id].empty?)}
+    return (node_ids - del_ids)
+  end
+
 private
   #=== self._get_sorted_nodes
   #

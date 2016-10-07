@@ -61,7 +61,7 @@ class PaidHoliday < ActiveRecord::Base
       con = []
       con << "(user_id=#{user_id.to_i})"
       con << "(year=#{fiscal_year.to_i})"
-      PaidHoliday.destroy_all(con.join(' and '))
+      PaidHoliday.where(con.join(' and ')).destroy_all
       return
     end
 

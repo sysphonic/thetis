@@ -13,7 +13,7 @@
 #
 class Group < ActiveRecord::Base
 
-  has_many(:official_titles, :dependent => :destroy)
+  has_many(:official_titles, {:dependent => :destroy})
 
   extend CachedRecord
   include TreeElement
@@ -83,11 +83,11 @@ class Group < ActiveRecord::Base
     Schedule.trim_on_destroy_member(:group, self.id)
 
     # Locations and OfficeMaps
-    Location.destroy_all("(group_id=#{self.id})")
-    OfficeMap.destroy_all("(group_id=#{self.id})")
+    Location.where("(group_id=#{self.id})").destroy_all
+    OfficeMap.where("(group_id=#{self.id})").destroy_all
 
     # Settings
-    Setting.destroy_all("(group_id=#{self.id})")
+    Setting.where("(group_id=#{self.id})").destroy_all
 
     super()
   end
@@ -243,8 +243,8 @@ class Group < ActiveRecord::Base
 
     group_id = group_id.to_s
 
-    if group_id == '0'
-      con = "((groups like '%|0|%') or (groups is null))"
+    if group_id == TreeElement::ROOT_ID.to_s
+      con = "((groups like '%|#{TreeElement::ROOT_ID}|%') or (groups is null))"
     else
       con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
     end
@@ -266,8 +266,8 @@ class Group < ActiveRecord::Base
 
     group_id = group_id.to_s
 
-    if group_id == '0'
-      con = "((groups like '%|0|%') or (groups is null))"
+    if group_id == TreeElement::ROOT_ID.to_s
+      con = "((groups like '%|#{TreeElement::ROOT_ID}|%') or (groups is null))"
     else
       con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
     end
@@ -310,6 +310,53 @@ class Group < ActiveRecord::Base
   def self.get_childs(group_id, recursive, ret_obj)
 
     return TreeElement.get_childs(self, group_id, recursive, ret_obj)
+  end
+
+  #=== self.get_branches
+  #
+  #Gets Array of Group branches to which the User belongs.
+  #
+  #_grp_ids_:: Array of Groups to build branches of.
+  #_group_id_:: Target Group-ID.
+  #_group_obj_cache_:: Hash to accelerate response. {group_id, group}
+  #return:: Array of Group branches.
+  #
+  def self.get_branches(grp_ids, group_id=nil, group_obj_cache=nil)
+
+    return [] if grp_ids.nil? or grp_ids.empty?
+
+    group_branches = []
+    grp_ids.sort{|a, b| a.to_i <=> b.to_i}.each do |grp_id|
+      group = Group.find_with_cache(grp_id, group_obj_cache)
+
+      unless group.nil?
+        branch = group.get_parents(false, group_obj_cache)
+        branch << grp_id
+        group_branches << branch
+      end
+    end
+
+    if group_id.nil?
+    elsif group_id.to_s == TreeElement::ROOT_ID.to_s
+      group_branches = [[]]
+    else
+      target_group = Group.find_with_cache(group_id, group_obj_cache)
+      return [] if target_group.nil?
+
+      target_branch = target_group.get_parents(false, group_obj_cache)
+      target_branch << group_id.to_s
+
+      group_branches.map!{|group_branch| target_branch & group_branch}
+      max_branch = []
+      group_branches.each do |group_branch|
+        if max_branch.length < group_branch.length
+          max_branch = group_branch
+        end
+      end
+      group_branches = [max_branch]
+    end
+
+    return group_branches
   end
 
   #=== count_users

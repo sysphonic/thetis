@@ -14,7 +14,7 @@ selectMonth = function(func)
     thetisBoxYmSelector = null;
   }
 
-  var content = getYmSelector("onYmSelectOK()", "onYmSelectCancel()");
+  var content = getYmSelector("onYmSelectOk()", "onYmSelectCancel()");
 
   thetisBoxYmSelector = new ThetisBox;
   thetisBoxYmSelector.title = "<%= t('msg.select_month') %>";
@@ -70,7 +70,7 @@ getYmSelector = function(onOk, onCancel)
   return content;
 }
 
-onYmSelectOK = function()
+onYmSelectOk = function()
 {
   var date = _z("ym_select_year").value + "-" + fillLeft(_z("ym_select_month").value, "0", 2) + "-01";
   thetisBoxYmSelector.remove();

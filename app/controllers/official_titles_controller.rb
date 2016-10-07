@@ -14,7 +14,7 @@
 class OfficialTitlesController < ApplicationController
   layout 'base'
 
-  before_filter(:check_login)
+  before_action(:check_login)
 
   #=== show
   #
@@ -130,6 +130,6 @@ class OfficialTitlesController < ApplicationController
       official_title.update_attribute(:xorder, order_offset + order_ary.index(official_title.id.to_s) + 1)
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 end

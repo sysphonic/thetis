@@ -15,12 +15,12 @@ class SchedulesController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_schedules'] == '1'
-    before_filter :check_login
+    before_action :check_login
   else
-    before_filter :check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment]
+    before_action :check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment]
   end
 
-  before_filter :only => [:configure, :add_holidays, :delete_holidays] do |controller|
+  before_action :only => [:configure, :add_holidays, :delete_holidays] do |controller|
     controller.check_auth(User::AUTH_SCHEDULE)
   end
 
@@ -134,7 +134,7 @@ class SchedulesController < ApplicationController
 
       unless schedule.check_user_auth(@login_user, 'w', true)
 
-        Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
+        Log.add_check(request, '[Schedule.check_user_auth]'+params.inspect)
 
         if @login_user.nil?
           check_login
@@ -211,7 +211,7 @@ class SchedulesController < ApplicationController
       check_schedule = Schedule.new(params.require(:schedule).permit(Schedule::PERMIT_BASE))
       nearest_day = check_schedule.get_nearest_day(date)
       if nearest_day.nil?
-        check_schedule.id = params[:id].to_i unless params[:id].nil? or params[:id].empty?
+        check_schedule.id = params[:id].to_i unless params[:id].blank?
         flash[:notice] = 'ERROR:' + t('schedule.no_day_in_rule')
         if params[:fwd_controller].blank?
           self.index
@@ -228,7 +228,7 @@ class SchedulesController < ApplicationController
       end
 
       created = false
-      if schedule.nil? or params[:repeat_update_target] == 'each'
+      if schedule.nil? or (params[:repeat_update_target] == 'each')
         # Create
         params[:schedule][:created_by] = @login_user.id
         params[:schedule][:created_at] = Time.now
@@ -302,19 +302,19 @@ class SchedulesController < ApplicationController
     rescue => evar
       Log.add_error(request, evar)
       flash[:notice] = 'ERROR:' + t('msg.already_deleted', :name => Schedule.model_name.human)
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
     unless schedule.check_user_auth(@login_user, 'w', true)
 
-      Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Schedule.check_user_auth]'+params.inspect)
 
       if @login_user.nil?
         check_login
       else
         flash[:notice] = 'ERROR:' + t('schedule.need_auth_to_edit')
-        render(:text => '')
+        render(:plain => '')
       end
       return
     end
@@ -350,7 +350,7 @@ class SchedulesController < ApplicationController
 
     unless schedule.check_user_auth(@login_user, 'w', true)
 
-      Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Schedule.check_user_auth]'+params.inspect)
 
       if @login_user.nil?
         check_login
@@ -387,7 +387,7 @@ class SchedulesController < ApplicationController
 
     unless @schedule.check_user_auth(@login_user, 'r', true)
 
-      Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Schedule.check_user_auth]'+params.inspect)
 
       if @login_user.nil?
         check_login
@@ -565,7 +565,7 @@ class SchedulesController < ApplicationController
 
         unless @schedule.check_user_auth(@login_user, 'r', true)
 
-          Log.add_check(request, '[Schedule.check_user_auth]'+request.to_s)
+          Log.add_check(request, '[Schedule.check_user_auth]'+params.inspect)
 
           if @login_user.nil?
             check_login

@@ -7,12 +7,12 @@
 <script type="text/javascript">
 <%
 if flash[:notice].starts_with?('ERROR:')
-  msg = flash[:notice]['ERROR:'.length .. -1].gsub("\n", '<br/>')
+  msg = flash[:notice]['ERROR:'.length .. -1].gsub("\n", '<br/>').gsub("\"", '\'')
 %>
   setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);
 <%
 else
-  msg = flash[:notice].gsub("\n", '<br/>')
+  msg = flash[:notice].gsub("\n", '<br/>').gsub("\"", '\'')
 %>
   setTimeout("try{ tip(\"<%= raw(msg) %>\"); }catch(e){}", 100);
 <% end  %>

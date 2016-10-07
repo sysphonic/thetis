@@ -1,7 +1,7 @@
 #
 #= InquiryController
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -15,7 +15,7 @@ class InquiryController < ApplicationController
 
   require 'csv'
 
-  before_filter :check_login
+  before_action :check_login
 
 
   #=== auth
@@ -25,7 +25,7 @@ class InquiryController < ApplicationController
   def auth
     Log.add_info(request, '')   # Not to show passwords.
 
-    render(:text => @login_user.auth)
+    render(:plain => @login_user.auth)
   end
 
   #=== groups
@@ -35,17 +35,17 @@ class InquiryController < ApplicationController
   def groups
     Log.add_info(request, '')   # Not to show passwords.
 
-    ary = []
+    arr = []
     groups = Group.where(nil).to_a
     unless groups.nil?
       groups_cache = {}
       group_obj_cache = Group.build_cache(groups)
       groups.each do |group|
-        ary << group.id.to_s + ':' + Group.get_path(group.id, groups_cache, group_obj_cache)
+        arr << group.id.to_s + ':' + Group.get_path(group.id, groups_cache, group_obj_cache)
       end
     end
 
-    render(:text => ary.join("\n"))
+    render(:plain => arr.join("\n"))
   end
 
   #=== users
@@ -61,12 +61,12 @@ class InquiryController < ApplicationController
       group_id = params[:group_id]
     end
 
-    ary = []
+    arr = []
 
     users = Group.get_users(group_id)
     unless users.nil?
       users.each do |user|
-        ary << user.id.to_s + ':' + user.get_name
+        arr << user.id.to_s + ':' + user.get_name
       end
     end
 
@@ -77,13 +77,13 @@ class InquiryController < ApplicationController
         users = Group.get_users(child_id)
         unless users.nil?
           users.each do |user|
-            ary << user.id.to_s + ':' + user.get_name
+            arr << user.id.to_s + ':' + user.get_name
           end
         end
       end
     end
 
-    render(:text => ary.join("\n"))
+    render(:plain => arr.join("\n"))
   end
 
   #=== recent_items

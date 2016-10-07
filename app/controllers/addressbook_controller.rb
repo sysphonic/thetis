@@ -14,8 +14,8 @@
 class AddressbookController < ApplicationController
   layout 'base'
 
-  before_filter(:check_login)
-  before_filter(:check_owner, :only => [:edit, :update])
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:edit, :update])
 
   require 'digest/md5'
   require 'cgi'
@@ -125,11 +125,11 @@ class AddressbookController < ApplicationController
 
     @address ||= Address.find(params[:id])
     if @address.nil?
-      render(:text => 'ERROR:' + t('msg.already_deleted', :name => Address.model_name.human))
+      render(:plain => 'ERROR:' + t('msg.already_deleted', :name => Address.model_name.human))
       return
     else
       unless @address.visible?(@login_user)
-        render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
+        render(:plain => 'ERROR:' + t('msg.need_auth_to_access'))
         return
       end
     end
@@ -448,7 +448,7 @@ class AddressbookController < ApplicationController
     address = Address.find(params[:id])
 
     if !@login_user.admin?(User::AUTH_ADDRESSBOOK) and address.owner_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

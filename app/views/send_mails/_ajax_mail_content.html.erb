@@ -99,7 +99,7 @@ onEditToAddressClicked = function()
   thetisBoxSendTo.bgcolor_content = "aliceblue";
   thetisBoxSendTo.border_content = "";
 
-  var content = getToAddrEditor("onEditToAddrOK()", "onEditToAddrCancel()");
+  var content = getToAddrEditor("onEditToAddrOk()", "onEditToAddrCancel()");
   if (!content) {
     return;
   }
@@ -176,7 +176,7 @@ getToAddrEditor = function(onOk, onCancel)
   return content;
 }
 
-onEditToAddrOK = function()
+onEditToAddrOk = function()
 {
   var to_addr_prefix = _z("to_addr_prefix");
   var to_addr_bare = _z("to_addr_bare");

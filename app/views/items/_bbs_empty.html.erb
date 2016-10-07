@@ -1,13 +1,13 @@
 <table id="list_items" style="height:100%; width:100%; background-color:aliceblue;">
   <tr>
     <td style="vertical-align:top;">
-      <br/>
-      <br/>
-      <table style="width:80%; margin:10px auto 0px; background-color:white; border:5px dodgerblue dashed;">
+      <table style="width:80%; margin:30px auto 0px; padding:20px 0px 25px; background-color:white; border:5px dodgerblue dashed; border-radius:5px;">
         <tr>
           <td style="text-align:left; padding-left:20px; color:navy;" >
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" style="vertical-align:middle;">&nbsp;
-            <%= t('item.specify_folder_info1') %> <a href="javascript:this.onclick()" onclick="showFolderTreeToSelect(''); return false;"><%= t('btn.select_folder') %></a> <%= t('item.specify_folder_info2') %><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" style="vertical-align:middle;">&nbsp;
+            <%= t('item.specify_folder_info1') %>
+            <a href="javascript:this.onclick()" onclick="showFolderTreeToSelect(''); return false;"><%= t('btn.select_folder') %></a>
+            <%= t('item.specify_folder_info2') %><br/>
           </td>
         </tr>
         <tr style="height:10px;"><td></td></tr>
@@ -17,10 +17,9 @@
             <a href="javascript:this.onclick()" onclick="var bbs_help=_z('bbs_help'); if (bbs_help.style.display=='block') { bbs_help.style.display='none'; } else { bbs_help.style.display='block'; } return false;"><span style="font-size:10pt; color:royalblue;"><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/down.gif" style="vertical-align:middle;"> <u><%= t('btn.help') %></u></span></a><br/>
           </td>
         </tr>
-        <tr style="height:15px;"><td></td></tr>
         <tr>
           <td style="text-align:center; vertical-align:top;" >
-            <table id="bbs_help" style="width:80%; margin:0px auto 20px; display:none;">
+            <table id="bbs_help" style="width:80%; margin:15px auto 0px; display:none;">
               <tr>
                 <td style="text-align:left; vertical-align:top; padding:10px; color:mediumblue; background-color:aliceblue;">
                   &nbsp;&nbsp;<%= t('item.if_admin') %><br/>
@@ -28,7 +27,7 @@
                   <%= t('menu.folder_tree') + t('arrow.right_full') + t('folder.opt.display_control') %><br/>
                   <%= raw(t('paren.square_i.left')) + t('folder.disp_ctrl.added_to_bbs') + raw(t('paren.square_i.right')) %><br/>
                   </div>
-                  <%= t('item.bbs_info2') %><br/>
+                  <%= t('item.bbs_info2') %>
                 </td>
               </tr>
             </table>

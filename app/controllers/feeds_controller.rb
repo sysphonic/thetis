@@ -15,12 +15,12 @@ class FeedsController < ApplicationController
 
 # FEATURE_DIGEST_AUTH_FEEDS >>>
   require 'digest/md5'
-  before_filter(:digest_auth)
+  before_action(:digest_auth)
 
-#  before_filter(:basic_auth)
+#  before_action(:basic_auth)
 # FEATURE_DIGEST_AUTH_FEEDS <<<
 
-  before_filter(:check_enabled)
+  before_action(:check_enabled)
 
 
   #=== index
@@ -171,7 +171,7 @@ class FeedsController < ApplicationController
   #
   def check_enabled
     if $thetis_config[:feed].nil? or $thetis_config[:feed]['enabled'] != '1'
-      render(:text => '(Feed is currently disabled.)', :layout => false)
+      render(:plain => '(Feed is currently disabled.)', :layout => false)
     end
   end
 end

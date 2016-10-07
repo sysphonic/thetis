@@ -14,8 +14,8 @@
 class TeamsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter do |controller|
+  before_action :check_login
+  before_action do |controller|
     controller.check_auth(User::AUTH_TEAM)
   end
 
@@ -122,7 +122,7 @@ class TeamsController < ApplicationController
     return if params[:id].blank? or @login_user.nil?
 
     if Item.find(params[:id]).user_id != @login_user.id
-      Log.add_check(request, '[check_member]'+request.to_s)
+      Log.add_check(request, '[check_member]'+params.inspect)
 
       flash[:notice] = t('team.need_to_be_member')
       redirect_to(:controller => 'desktop', :action => 'show')

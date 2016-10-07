@@ -14,8 +14,8 @@
 class WorkflowsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :only => [:move, :destroy]
+  before_action :check_login
+  before_action :check_owner, :only => [:move, :destroy]
 
 
   #=== list
@@ -144,7 +144,7 @@ class WorkflowsController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_WORKFLOW) and owner_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

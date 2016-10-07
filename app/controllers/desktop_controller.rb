@@ -16,13 +16,13 @@ class DesktopController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_desktop'] == '1'
-    before_filter :check_login
+    before_action :check_login
   else
-    before_filter :check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file]
+    before_action :check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file]
   end
-  before_filter :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
+  before_action :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
 
-  before_filter :only => [:update_config] do |controller|
+  before_action :only => [:update_config] do |controller|
     controller.check_auth(User::AUTH_DESKTOP)
   end
 
@@ -37,13 +37,13 @@ class DesktopController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     if params[:file].nil? or params[:file].size <= 0
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
     my_folder = @login_user.get_my_folder
     if my_folder.nil?
-      render(:text => 'ERROR:' + t('folder.cannot_find_my_folder'))
+      render(:plain => 'ERROR:' + t('folder.cannot_find_my_folder'))
       return
     end
 
@@ -65,7 +65,7 @@ class DesktopController < ApplicationController
     toy.x, toy.y = DesktopsHelper.find_empty_block(@login_user)
     toy.save!
 
-    render(:text => t('file.uploaded'))
+    render(:plain => t('file.uploaded'))
   end
 
   #=== get_schedule
@@ -98,7 +98,7 @@ class DesktopController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    @timecard = Timecard.get_for(@login_user.id, date_s)
+    @timecard = Timecard.get_by(@login_user.id, date_s)
 
     render(:partial => 'timecard', :layout => false)
   end
@@ -239,13 +239,13 @@ class DesktopController < ApplicationController
     desktop = Desktop.get_for(user, true)
 
     if desktop.nil?
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
     response.headers["Content-Type"] = desktop.img_content_type
     response.headers["Content-Disposition"] = "inline"
-    render(:text => desktop.img_content)
+    render(:plain => desktop.img_content)
   end
 
   #=== get_news_tray
@@ -302,7 +302,7 @@ class DesktopController < ApplicationController
 
     if @login_user.nil?
       t = Time.now
-      render(:text => (t.hour.to_s + t.min.to_s + t.sec.to_s))
+      render(:plain => (t.hour.to_s + t.min.to_s + t.sec.to_s))
       return
     end
 
@@ -314,7 +314,7 @@ class DesktopController < ApplicationController
     toy.xtype, toy.target_id = params[:id].split(':')
     toy.save!
 
-    render(:text => toy.id.to_s)
+    render(:plain => toy.id.to_s)
   end
 
   #=== add_toy
@@ -328,7 +328,7 @@ class DesktopController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     if @login_user.nil?
-      render(:text => '0')
+      render(:plain => '0')
       return
     end
 
@@ -340,7 +340,7 @@ class DesktopController < ApplicationController
     toy.x, toy.y = DesktopsHelper.find_empty_block(@login_user)
     toy.save!
 
-    render(:text => toy.id.to_s)
+    render(:plain => toy.id.to_s)
   end
 
   #=== drop_on_recyclebox
@@ -358,7 +358,7 @@ class DesktopController < ApplicationController
       Toy.destroy(params[:id])
     end
 
-    render(:text => params[:id])
+    render(:plain => params[:id])
   end
 
   #=== on_toys_moved
@@ -384,7 +384,7 @@ class DesktopController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== create_label
@@ -476,7 +476,7 @@ class DesktopController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     if params[:txaPostLabel].empty? or params[:post_to].empty?
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
@@ -533,15 +533,15 @@ class DesktopController < ApplicationController
   #Filter method to check if current User is owner of the specified Toy.
   #
   def check_toy_owner
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
     begin
       owner_id = Toy.find(params[:id]).user_id
     rescue
       owner_id = -1
     end
-    if !@login_user.admin?(User::AUTH_DESKTOP) and owner_id != @login_user.id
-      Log.add_check(request, '[check_toy_owner]'+request.to_s)
+    if !@login_user.admin?(User::AUTH_DESKTOP) and (owner_id != @login_user.id)
+      Log.add_check(request, '[check_toy_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

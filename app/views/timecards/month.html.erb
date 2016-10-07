@@ -168,7 +168,7 @@ days.times do
         options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" title="'+t('timecard.business_trip')+'">'
       end
       %>
-      <%= options %>
+      <%= raw(options) %>
     </td>
     <td style="text-align:center;" nowrap>
       <%= (timecard.start.nil?)?'':timecard.start.strftime('%H:%M') %>
@@ -351,7 +351,7 @@ end
         <tr style="height:1px;"><td colspan="2"></td></tr>
         <tr>
           <th style="text-align:center;" nowrap>
-            <%= t('timecard.overtime_sum') %> <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/info.gif" onclick="msg('<%= t('timecard.overtime_sum_info')%><br/>');"><br/>
+            <%= t('timecard.overtime_sum') %> <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('timecard.overtime_sum_info')%><br/>');"><br/>
             [ <%= t('timecard.usual') %> + <%= t('timecard.midnight') %> ]
           </th>
           <td style="text-align:center; width:120px;" nowrap>

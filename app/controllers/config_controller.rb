@@ -14,8 +14,8 @@
 class ConfigController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :except => [:update_by_ajax] do |controller|
+  before_action :check_login
+  before_action :except => [:update_by_ajax] do |controller|
     controller.check_auth(User::AUTH_ALL)
   end
 
@@ -48,7 +48,7 @@ class ConfigController < ApplicationController
       next if params[cat].blank?
 
       unless @login_user.admin?(cat_h[cat])
-        render(:text => t('msg.need_to_be_admin'))
+        render(:plain => t('msg.need_to_be_admin'))
         return
       end
 
@@ -61,7 +61,7 @@ class ConfigController < ApplicationController
 
     ApplicationHelper.save_config_yaml(yaml)
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== update
@@ -246,6 +246,6 @@ class ConfigController < ApplicationController
       ApplicationHelper.save_config_yaml(yaml)
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 end

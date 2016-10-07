@@ -1,7 +1,7 @@
 #
 #= ApplicationController
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -18,10 +18,11 @@ class ApplicationController < ActionController::Base
   require 'will_paginate'
   require ::Rails.root.to_s+'/lib/iain-http_accept_language/lib/http_accept_language'
 
-  protect_from_forgery
+  protect_from_forgery(with: :exception)
+  config.filter_parameters(:password)
 
-  before_filter :set_locale
-  before_filter :gate_proc
+  before_action :set_locale
+  before_action :gate_proc
 
   include LoginChecker
 
@@ -73,7 +74,7 @@ class ApplicationController < ActionController::Base
   #
   def gate_proc
 
-    HistoryHelper.keep_last(request)
+    HistoryHelper.keep_last(request, params)
 
     if (request.get? and request.xhr?)
       unless valid_authenticity_token?(session, form_authenticity_param)

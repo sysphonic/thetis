@@ -612,7 +612,7 @@ class Schedule < ActiveRecord::Base
 
       target_ary.each do |other|
         if schedule.overlap?(other, date)
-          ret_ary = ret_ary | [other.id, schedule.id]
+          ret_ary |= [other.id, schedule.id]
         end
       end
 
@@ -775,7 +775,7 @@ class Schedule < ActiveRecord::Base
   def self.get_equipment_day(equipment_id, date)
 
     con = [SqlHelper.get_sql_like([:equipment], "|#{equipment_id}|")]
-    _get_by_day(con, date)
+    return _get_by_day(con, date)
   end
 
   #=== self.get_equipment_week
@@ -790,7 +790,7 @@ class Schedule < ActiveRecord::Base
   def self.get_equipment_week(equipment_id, date, holidays=nil)
 
     con = [SqlHelper.get_sql_like([:equipment], "|#{equipment_id}|")]
-    _get_by_week(con, date, holidays)
+    return _get_by_week(con, date, holidays)
   end
 
 private
@@ -863,7 +863,7 @@ private
 
       con[0] << ') or ('
 
-        con[0] << "(allday = 1) and (start = '#{curday_str}')"
+        con[0] << "(allday = 1) and (start <= '#{curday_str}') and (end >= '#{curday_str}')"
 
       con[0] << ')'
 
@@ -1141,7 +1141,7 @@ private
   #
   def repeat?
 
-     !self.repeat_rule.nil? and !self.repeat_rule.empty?
+     return (!self.repeat_rule.nil? and !self.repeat_rule.empty?)
   end
 
   #=== within_a_day?
@@ -1249,6 +1249,36 @@ private
     return self._get_feeds(alarms, '['+I18n.t('schedule.alarm_mark')+'] ', root_url, 'alarm')
   end
 
+  #=== now?
+  #
+  #Gets if the Schedule is ON at the specified time.
+  #
+  #_time_:: Target Time.
+  #return:: true if the Schedule is ON, otherwise false.
+  #
+  def now?(time=nil)
+
+    time ||= Time.now
+    date = Date.new(time.year, time.month, time.day)
+    date_s = Schedule.sys_date_form(date)
+
+    if self.repeat? or (Schedule.sys_date_form(self.start) == date_s)
+      if self.allday?
+        return true
+      else
+        s = self.start
+        e = self.end
+        start_time = Time.mktime(date.year, date.month, date.day, s.hour, s.min, s.sec)
+        end_time = Time.mktime(date.year, date.month, date.day, e.hour, e.min, e.sec)
+
+        if (start_time <= time) and (time <= end_time)
+          return true
+        end
+      end
+    end
+    return false
+  end
+
  private
   #=== self._get_feeds
   #
@@ -1344,5 +1374,4 @@ private
     end
     return entries
   end
-
 end

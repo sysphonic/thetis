@@ -14,8 +14,8 @@
 class MailFiltersController < ApplicationController
   layout 'base'
 
-  before_filter(:check_login)
-  before_filter(:check_owner, :only => [:edit, :update, :show])
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:edit, :update, :show])
 
 
   #=== list
@@ -111,11 +111,11 @@ class MailFiltersController < ApplicationController
     rescue => evar
     end
     if @mail_filter.nil?
-      render(:text => 'ERROR:' + t('msg.already_deleted', :name => MailFilter.model_name.human))
+      render(:plain => 'ERROR:' + t('msg.already_deleted', :name => MailFilter.model_name.human))
       return
     else
       if @mail_filter.mail_account.user_id != @login_user.id
-        render(:text => 'ERROR:' + t('msg.need_to_be_owner'))
+        render(:plain => 'ERROR:' + t('msg.need_to_be_owner'))
         return
       end
     end
@@ -238,7 +238,7 @@ class MailFiltersController < ApplicationController
 
     if mail_account.user_id != @login_user.id \
         or mail_folder.user_id != @login_user.id
-      render(:text => t('msg.need_to_be_owner'))
+      render(:plain => t('msg.need_to_be_owner'))
       return
     end
 
@@ -254,7 +254,7 @@ class MailFiltersController < ApplicationController
       break unless filter_next
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== get_order
@@ -303,7 +303,7 @@ class MailFiltersController < ApplicationController
     @mail_account = MailAccount.find(mail_account_id)
 
     if @mail_account.user_id != @login_user.id
-      render(:text => 'ERROR:' + t('msg.need_to_be_owner'))
+      render(:plain => 'ERROR:' + t('msg.need_to_be_owner'))
       return
     end
 
@@ -334,7 +334,7 @@ class MailFiltersController < ApplicationController
       idx += 1
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== edit_condition
@@ -370,7 +370,7 @@ class MailFiltersController < ApplicationController
     mail_filter = MailFilter.find(params[:id])
 
     if !@login_user.admin?(User::AUTH_MAIL) and mail_filter.mail_account.user_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

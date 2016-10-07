@@ -33,7 +33,7 @@
                 <tr style="height:10px;"><td></td></tr>
                 <tr>
                   <td colspan="2" style="text-align:center;">
-                    <input type="submit" value="<%= t('btn.login') %>" style="width:100px; height:28px;">
+                    <input id="login_button" type="button" value="<%= t('btn.login') %>" style="width:100px; height:28px;" onclick="onLoginClicked();">
                   </td>
                 </tr>
               </table>
@@ -89,6 +89,70 @@
 function onLoadSub()
 {
   focusFirstElem(document.form_login);
+
+  addEvent(window.document, "keydown", tabByEnterLogin);
+}
+
+function onLoginClicked()
+{
+  document.form_login.submit();
+}
+
+function tabByEnterLogin(evt)
+{
+  evt = (evt || window.event);
+
+  if (evt.keyCode != 13) {
+    return;
+  }
+
+  var elem = (evt.target || evt.srcElement);
+  var inputs = [_z("user_name"), _z("user_password"), _z("login_button")];
+  var prevElem = null;
+  var nextElem = null;
+
+  if (inputs && inputs.length > 0) {
+    if (elem.tagName == "INPUT") {
+      for (var i=0; i < inputs.length; i++) {
+        if (inputs[i] == elem) {
+          if ((i-1) >= 0 && inputs[i-1].type != "hidden") {
+            prevElem = inputs[i-1];
+          }
+          if ((i+1) < inputs.length && inputs[i+1].type != "hidden") {
+            nextElem = inputs[i+1];
+          }
+          break;
+        }
+      }
+      if (!prevElem && inputs[inputs.length-1].type != "hidden") {
+        prevElem = inputs[inputs.length-1];
+      }
+      if (!nextElem && inputs[0].type != "hidden") {
+        nextElem = inputs[0];
+      }
+    } else if (elem.tagName == "A") {
+      return true;
+    } else {
+      prevElem = inputs[0];
+      nextElem = inputs[0];
+    }
+  }
+
+  if (evt.shiftKey && prevElem) {
+    prevElem.focus();
+    prevElem.select();
+    return false;
+  } else if (!evt.shiftKey && nextElem) {
+    if (nextElem == _z("login_button")) {
+      nextElem.focus();
+      nextElem.onclick();
+      stopEvent(evt, true);
+    } else {
+      nextElem.focus();
+      nextElem.select();
+    }
+    return false;
+  }
 }
 
 function showSendPassword()

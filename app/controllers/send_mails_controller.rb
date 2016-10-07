@@ -14,8 +14,8 @@
 class SendMailsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :except => [:new]
+  before_action :check_login
+  before_action :check_owner, :except => [:new]
 
 
   #=== new
@@ -320,7 +320,7 @@ class SendMailsController < ApplicationController
       err_msg = 'ERROR:' + t('msg.system_error') + '<br/>' + evar.to_s
     end
     respond_to do |format|
-      format.text { render(:text => err_msg) }
+      format.text { render(:plain => err_msg) }
       format.html {
         flash[:notice] = err_msg
         render(:partial => 'ajax_mail_attachments', :layout => false)
@@ -391,7 +391,7 @@ class SendMailsController < ApplicationController
     email = Email.find(params[:id])
 
     if !@login_user.admin?(User::AUTH_MAIL) and email.user_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

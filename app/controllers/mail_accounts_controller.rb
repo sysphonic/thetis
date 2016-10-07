@@ -12,8 +12,8 @@
 class MailAccountsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :only => [:edit, :update, :show_summary]
+  before_action :check_login
+  before_action :check_owner, :only => [:edit, :update, :show_summary]
 
 
   #=== new
@@ -190,7 +190,7 @@ class MailAccountsController < ApplicationController
     mail_account = MailAccount.find(params[:id])
 
     if !@login_user.admin?(User::AUTH_MAIL) and mail_account.user_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

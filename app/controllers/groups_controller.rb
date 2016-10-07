@@ -14,14 +14,14 @@
 class GroupsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :except => [:get_tree, :ajax_get_tree, :get_path, :get_workflows, :get_map] do |controller|
+  before_action :check_login
+  before_action :except => [:get_tree, :ajax_get_tree, :get_path, :get_workflows, :get_map] do |controller|
     controller.check_auth(User::AUTH_GROUP)
   end
-  before_filter :only => [:get_workflows] do |controller|
+  before_action :only => [:get_workflows] do |controller|
     controller.check_auth(User::AUTH_WORKFLOW)
   end
-  before_filter :only => [:get_map] do |controller|
+  before_action :only => [:get_map] do |controller|
     controller.check_auth(User::AUTH_LOCATION)
   end
 
@@ -120,7 +120,7 @@ class GroupsController < ApplicationController
     rescue => evar
       Log.add_error(request, evar)
     end
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== move
@@ -397,7 +397,7 @@ class GroupsController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== get_official_titles

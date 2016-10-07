@@ -15,10 +15,10 @@ class EquipmentController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_equipment'] == '1'
-    before_filter :check_login
+    before_action :check_login
   end
 
-  before_filter :except => [:show, :list, :schedule_all] do |controller|
+  before_action :except => [:show, :list, :schedule_all] do |controller|
     controller.check_auth(User::AUTH_EQUIPMENT)
   end
 

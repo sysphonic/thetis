@@ -15,13 +15,13 @@ class ItemsController < ApplicationController
   layout 'base'
 
   if $thetis_config[:menu]['req_login_items'] == '1'
-    before_filter :check_login
+    before_action :check_login
   else
-    before_filter :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]
-    before_filter :allow_midair_login, :only => [:get_attachment]
+    before_action :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]
+    before_action :allow_midair_login, :only => [:get_attachment]
   end
-  before_filter :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize]  # :move_in_team_folder
-  before_filter :check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment]
+  before_action :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize]  # :move_in_team_folder
+  before_action :check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment]
 
 
   #=== index
@@ -48,7 +48,7 @@ class ItemsController < ApplicationController
     my_folder = @login_user.get_my_folder
 
     if my_folder.nil?
-      render(:text => '')
+      render(:plain => '')
     else
       params[:folder_id] = my_folder.id.to_s
       list
@@ -114,13 +114,13 @@ class ItemsController < ApplicationController
           folder_ids = [@folder_id]
       end
       unless folder_ids.nil?
-        delete_ary = []
+        delete_arr = []
         folder_ids.each do |folder_id|
           unless Folder.check_user_auth(folder_id, @login_user, 'r', true)
-            delete_ary << folder_id
+            delete_arr << folder_id
           end
         end
-        folder_ids -= delete_ary unless delete_ary.empty?
+        folder_ids -= delete_arr unless delete_arr.empty?
       end
     end
 
@@ -183,7 +183,7 @@ class ItemsController < ApplicationController
 
     unless @item.check_user_auth(@login_user, 'r', true)
 
-      Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Item.check_user_auth]'+params.inspect)
 
       if @login_user.nil?
         check_login
@@ -347,7 +347,7 @@ class ItemsController < ApplicationController
     end
 
     if params[:from_action].nil?
-      render(:text => params[:id])
+      render(:plain => params[:id])
     else
       flash[:notice] = t('msg.delete_success')
       self.send(params[:from_action])
@@ -479,7 +479,7 @@ class ItemsController < ApplicationController
 
     if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
         and !@login_user.admin?(User::AUTH_ZEPTAIR)
-      render(:text => t('msg.need_to_be_admin'))
+      render(:plain => t('msg.need_to_be_admin'))
       return
     end
 
@@ -706,14 +706,14 @@ class ItemsController < ApplicationController
 
     parent_item = img.item
     if parent_item.nil? or !parent_item.check_user_auth(@login_user, 'r', true)
-      Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Item.check_user_auth]'+params.inspect)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
       return
     end
 
     response.headers["Content-Type"] = img.content_type
     response.headers["Content-Disposition"] = "inline"
-    render(:text => img.content)
+    render(:plain => img.content)
   end
 
   #=== delete_image
@@ -820,7 +820,7 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:images_order]
+    order_arr = params[:images_order]
 
     item = Item.find(params[:id])
 
@@ -829,18 +829,18 @@ class ItemsController < ApplicationController
         def record_timestamps; false; end
       end
 
-      img.update_attribute(:xorder, order_ary.index(img.id.to_s) + 1)
+      img.update_attribute(:xorder, order_arr.index(img.id.to_s) + 1)
 
       class << img
         remove_method(:record_timestamps)
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   ####################
@@ -919,7 +919,7 @@ class ItemsController < ApplicationController
 
     parent_item = (attach.item || ((attach.comment.nil?) ? nil : attach.comment.item))
     if parent_item.nil? or !parent_item.check_user_auth(@login_user, 'r', true)
-      Log.add_check(request, '[Item.check_user_auth]'+request.to_s)
+      Log.add_check(request, '[Item.check_user_auth]'+params.inspect)
       redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
       return
     end
@@ -1055,7 +1055,7 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:attachments_order]
+    order_arr = params[:attachments_order]
 
     item = Item.find(params[:id])
 
@@ -1064,18 +1064,18 @@ class ItemsController < ApplicationController
         def record_timestamps; false; end
       end
 
-      attach.update_attribute(:xorder, order_ary.index(attach.id.to_s) + 1)
+      attach.update_attribute(:xorder, order_arr.index(attach.id.to_s) + 1)
 
       class << attach
         remove_method(:record_timestamps)
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   ################
@@ -1173,7 +1173,7 @@ class ItemsController < ApplicationController
     unless @login_user.admin?(User::AUTH_ITEM) or \
               comment.user_id == @login_user.id or \
               @item.user_id == @login_user.id
-      render(:text => 'ERROR:' + t('msg.need_to_be_admin'))
+      render(:plain => 'ERROR:' + t('msg.need_to_be_admin'))
       return
     end
 
@@ -1187,11 +1187,11 @@ class ItemsController < ApplicationController
           render(:partial => 'ajax_team_apply')
 
         else
-          render(:text => '')
+          render(:plain => '')
         end
 
       else
-        render(:text => '')
+        render(:plain => '')
     end
   end
 
@@ -1441,7 +1441,7 @@ class ItemsController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
@@ -1461,7 +1461,7 @@ class ItemsController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_ITEM) and owner_id != @login_user.id
-      Log.add_check(request, '[check_comment_registrant]'+request.to_s)
+      Log.add_check(request, '[check_comment_registrant]'+params.inspect)
 
       flash[:notice] = t('msg.need_auth_to_access')
       redirect_to(:controller => 'desktop', :action => 'show')

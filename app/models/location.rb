@@ -68,7 +68,7 @@ class Location < ActiveRecord::Base
       con << ' and (' + add_con + ')'
     end
 
-    Location.destroy_all(con)
+    Location.where(con).destroy_all
   end
 
   #=== expired?

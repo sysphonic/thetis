@@ -27,7 +27,12 @@ class Timecard < ActiveRecord::Base
   public::BGCOLOR_XLS_SUN = '#FF99CC'
   public::BGCOLOR_XLS_SAT = '#CBECFF'
 
+  public::MINUTES = [0, 15, 30, 45]
+
   public::OPT_BUSINESS_TRIP = 'business_trip'
+
+  public::STATUS_LATENESS = 'lateness'
+  public::STATUS_LEAVING_EARLY = 'leaving_early'
 
   public::WKCODE_WK_NORMAL = 'wk_normal'
   public::WKCODE_WK_ON_HOLIDAY = 'wk_on_holiday'
@@ -51,6 +56,14 @@ class Timecard < ActiveRecord::Base
 
   public::WKCODE_PARAM_LABORDAY = 0
   public::WKCODE_PARAM_PAIDHLD = 1
+
+  before_save do |rec|
+    status_arr = []
+    status_arr << Timecard::STATUS_LATENESS if rec.calc_lateness?
+    status_arr << Timecard::STATUS_LEAVING_EARLY if rec.calc_leaving_early?
+
+    rec.status = ApplicationHelper.a_to_attr(status_arr)
+  end
 
   def self.workcodes
     hash = {}
@@ -102,6 +115,31 @@ class Timecard < ActiveRecord::Base
   #
   def workcode_name
     return Timecard.workcode_names[self.workcode]
+  end
+
+  #=== self.get_by_key
+  #
+  #Gets Timecard identified by the specified keys.
+  #
+  #_user_id_:: Target User-ID.
+  #_date_:: Target date.
+  #return:: Timecard identified by the specified keys.
+  #
+  def self.get_by_key(user_id, date)
+
+    return nil if user_id.nil? or date.nil?
+
+    if date.kind_of?(Date)
+      date_s = Schedule.sys_date_form(date)
+    else
+      date_s = date
+    end
+
+    con = []
+    con << "(user_id=#{user_id})"
+    con << "(date='#{date_s}')"
+
+    return Timecard.where(con.join(' and ')).first
   end
 
   #=== self.off?
@@ -162,6 +200,21 @@ class Timecard < ActiveRecord::Base
   #return:: true if lateness, false otherwise.
   #
   def lateness?
+
+    if self.status.nil?
+      return false
+    else
+      return self.status.include?(ApplicationHelper.a_to_attr([Timecard::STATUS_LATENESS]))
+    end
+  end
+
+  #=== calc_lateness?
+  #
+  #Gets if it is a lateness.
+  #
+  #return:: true if lateness, false otherwise.
+  #
+  def calc_lateness?
     return false if self.start.nil? or self.work_on_holiday?
 
     if self.off_am?
@@ -184,6 +237,21 @@ class Timecard < ActiveRecord::Base
   #return:: true if leaving early, false otherwise.
   #
   def leaving_early?
+
+    if self.status.nil?
+      return false
+    else
+      return self.status.include?(ApplicationHelper.a_to_attr([Timecard::STATUS_LEAVING_EARLY]))
+    end
+  end
+
+  #=== calc_leaving_early?
+  #
+  #Gets if it is a leaving early.
+  #
+  #return:: true if leaving early, false otherwise.
+  #
+  def calc_leaving_early?
     return false if self.end.nil? or self.work_on_holiday?
 
     if self.off_pm?
@@ -209,7 +277,7 @@ class Timecard < ActiveRecord::Base
     if self.options.nil?
       return false
     else
-      return !self.options.index('|'+OPT_BUSINESS_TRIP+'|').nil?
+      return self.options.include?(ApplicationHelper.a_to_attr([Timecard::OPT_BUSINESS_TRIP]))
     end
   end
 
@@ -223,12 +291,10 @@ class Timecard < ActiveRecord::Base
 
     return [] if self.breaks.nil? or self.breaks.empty?
 
-    array = self.breaks.split('|')
-    array.compact!
-    array.delete('')
+    arr = ApplicationHelper.attr_to_a(self.breaks)
 
     ret = []
-    array.each do |span|
+    arr.each do |span|
       params = span.split('~')
       ret << [UtilDateTime.parse(params.first).to_time, UtilDateTime.parse(params.last).to_time]
     end
@@ -415,7 +481,7 @@ class Timecard < ActiveRecord::Base
   end
 
  public
-  #=== self.get_for
+  #=== self.get_by
   #
   #Gets Timecard of the specified User and Date.
   #
@@ -423,7 +489,7 @@ class Timecard < ActiveRecord::Base
   #_date_s_:: Target Date string.
   #return:: Timecard for the specified User and Date.
   #
-  def self.get_for(user_id, date_s)
+  def self.get_by(user_id, date_s)
 
     SqlHelper.validate_token([user_id, date_s])
     begin
@@ -849,5 +915,38 @@ class Timecard < ActiveRecord::Base
       end
     end
     return ret
+  end
+
+  #=== present_now?
+  #
+  #Gets if the specified time is within worktime.
+  #
+  #_time_:: Target Time.
+  #return:: true if the within worktime, otherwise false.
+  #
+  def present_now?(time=nil)
+
+    time ||= Time.now
+    date = Date.new(time.year, time.month, time.day)
+    date_s = Schedule.sys_date_form(date)
+
+    return false if self.start.nil?
+
+    s = self.start
+    start_time = Time.mktime(date.year, date.month, date.day, s.hour, s.min, s.sec)
+
+    if (Schedule.sys_date_form(self.date) == date_s) and (start_time <= time)
+      if self.end.nil?
+        return true
+      else
+        e = self.end
+        end_time = Time.mktime(date.year, date.month, date.day, e.hour, e.min, e.sec)
+
+        if (time <= end_time)
+          return true
+        end
+      end
+    end
+    return false
   end
 end

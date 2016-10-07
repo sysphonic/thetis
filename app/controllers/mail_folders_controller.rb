@@ -12,9 +12,9 @@
 class MailFoldersController < ApplicationController
   layout 'base'
 
-  before_filter(:check_login)
-  before_filter(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
-  before_filter(:check_mail_owner, :only => [:get_mail_content, :get_mail_raw])
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
+  before_action(:check_mail_owner, :only => [:get_mail_content, :get_mail_raw])
 
 
   #=== show_tree
@@ -129,11 +129,11 @@ class MailFoldersController < ApplicationController
 
     if trash_folder.nil?
       mail_folder.force_destroy
-      render(:text => '')
+      render(:plain => '')
     else
       if mail_folder.get_parents(false).include?(trash_folder.id.to_s)
         mail_folder.force_destroy
-        render(:text => '')
+        render(:plain => '')
       else
         mail_folder.update_attribute(:parent_id, trash_folder.id)
         flash[:notice] = t('msg.moved_to_trash')
@@ -298,7 +298,7 @@ class MailFoldersController < ApplicationController
       render(:partial => 'ajax_mail_content', :layout => false)
     rescue => evar
       Log.add_error(nil, evar)
-      render(:text => '')
+      render(:plain => '')
     end
   end
 
@@ -313,7 +313,7 @@ class MailFoldersController < ApplicationController
 
     email = Email.find(email_id)
     if email.nil? or email.user_id != @login_user.id
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
@@ -351,7 +351,7 @@ class MailFoldersController < ApplicationController
     rescue => evar
     end
     if email.nil? or email.user_id != @login_user.id
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
@@ -609,7 +609,7 @@ class MailFoldersController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== update_mail_unread
@@ -637,7 +637,7 @@ class MailFoldersController < ApplicationController
       Log.add_error(nil, evar)
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
  private
@@ -657,7 +657,7 @@ class MailFoldersController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_MAIL) and owner_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
@@ -677,7 +677,7 @@ class MailFoldersController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_MAIL) and owner_id != @login_user.id
-      Log.add_check(request, '[check_mail_owner]'+request.to_s)
+      Log.add_check(request, '[check_mail_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

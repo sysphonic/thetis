@@ -14,7 +14,7 @@
 class PaintmailController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
+  before_action :check_login
 
   #=== index
   #
@@ -44,6 +44,6 @@ class PaintmailController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 end

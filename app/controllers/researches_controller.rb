@@ -14,8 +14,8 @@
 class ResearchesController < ApplicationController
   layout 'base', :except => :index
 
-  before_filter :check_login, :except => [:index]
-  before_filter :except => [:index, :show_receipt, :edit_page, :save_page, :do_confirm] do |controller|
+  before_action :check_login, :except => [:index]
+  before_action :except => [:index, :show_receipt, :edit_page, :save_page, :do_confirm] do |controller|
     controller.check_auth(User::AUTH_RESEARCH)
   end
 
@@ -169,11 +169,11 @@ class ResearchesController < ApplicationController
 
     Research.save_config_yaml(yaml)
 
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   #=== reset_q_ctrl
@@ -284,7 +284,7 @@ class ResearchesController < ApplicationController
 
     Research.set_statistics_groups(order_ary)
 
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== start
@@ -308,7 +308,7 @@ class ResearchesController < ApplicationController
  
     if items.nil? or items.empty?
 
-      render(:text => t('research.create_page_first'))
+      render(:plain => t('research.create_page_first'))
       return
     else
 
@@ -317,7 +317,7 @@ class ResearchesController < ApplicationController
       items.each_with_index do |item, idx|
         desc = item.description
         if desc.nil? or desc.empty?
-          render(:text => t('research.specify_page_content') + item.title.to_s)
+          render(:plain => t('research.specify_page_content') + item.title.to_s)
           return
         end
 
@@ -346,11 +346,11 @@ class ResearchesController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   #=== stop
@@ -364,11 +364,11 @@ class ResearchesController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     ApplicationHelper.delete_file_safe(Research.get_pages)
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   #=== reset
@@ -383,11 +383,11 @@ class ResearchesController < ApplicationController
 
     Research.delete_all
 
-    render(:text => '')
+    render(:plain => '')
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   #=== reset_users
@@ -407,7 +407,7 @@ class ResearchesController < ApplicationController
         if value == '1'
           SqlHelper.validate_token([user_id])
           begin
-            Research.destroy_all("user_id=#{user_id.to_i}")
+            Research.where("user_id=#{user_id.to_i}").destroy_all
             count += 1
           rescue => evar
             Log.add_error(request, evar)
@@ -424,7 +424,7 @@ class ResearchesController < ApplicationController
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => evar.to_s)
+    render(:plain => evar.to_s)
   end
 
   #=== show_receipt

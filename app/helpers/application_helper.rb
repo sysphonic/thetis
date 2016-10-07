@@ -512,7 +512,11 @@ module ApplicationHelper
 
     return nil if params.nil?
 
-    prms = ApplicationHelper.dup_hash(params)
+    prms = params
+    if prms.respond_to?('to_h')
+      prms = prms.to_h
+    end
+    prms = ApplicationHelper.dup_hash(prms)
     prms.delete(:controller)
     prms.delete(:action)
     prms.delete('controller')

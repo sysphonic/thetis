@@ -14,8 +14,8 @@
 class TemplatesController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :except => [:copy, :ajax_get_tree] do |controller|
+  before_action :check_login
+  before_action :except => [:copy, :ajax_get_tree] do |controller|
     controller.check_auth(User::AUTH_TEMPLATE)
   end
 
@@ -64,7 +64,7 @@ class TemplatesController < ApplicationController
       rescue
       end
       if group.nil?
-        render(:text => 'ERROR:' + t('msg.already_deleted', :name => Group.model_name.human))
+        render(:plain => 'ERROR:' + t('msg.already_deleted', :name => Group.model_name.human))
         return
       end
     end

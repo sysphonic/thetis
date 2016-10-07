@@ -24,16 +24,21 @@ function getUserAgentName()
   }
 }
 
-function getCsrfToken()
+function getMetaContent(metaName)
 {
   var metas = document.getElementsByTagName("meta");
   for (var i=0; i < metas.length; i++) {
     var meta = metas[i];
-    if (meta.name == "csrf-token") {
+    if (meta.name == metaName) {
       return meta.content;
     }
   }
   return null;
+}
+
+function getCsrfToken()
+{
+  return getMetaContent("csrf-token");
 }
 
 function createPostForm(action, addParams)
@@ -831,16 +836,24 @@ function moveListTrimPrefix(src, dst, valSeparator, textSeparator)
 
 function selectListAll(list)
 {
+  var entries = [];
   for (var i=0; i < list.length; i++) {
-    list.options[i].selected = true;
+    var option = list.options[i];
+    option.selected = true;
+    entries.push(option.value);
   }
+  return entries;
 }
 
 function deselectListAll(list)
 {
+  var entries = [];
   for (var i=0; i < list.length; i++) {
-    list.options[i].selected = false;
+    var option = list.options[i];
+    option.selected = false;
+    entries.push(option.value);
   }
+  return entries;
 }
 
 function _prepareShiftListItems(list)
@@ -929,6 +942,51 @@ function getClientRegion()
   }
 
   return obj;
+}
+
+function formatStr(format, format_h)
+{
+  if (!format || !format_h) {
+    return format;
+  }
+  var m = format.match(/%{[^}]+}/g);
+
+  for (var i=0; m && (i < m.length); i++) {
+    var placeholder = m[i];
+    var keyword = placeholder.match(/%{([^}]+)}/)[1];
+    format = format.replace(placeholder, (format_h[keyword] || ""), "g");
+  }
+  return format;
+}
+
+function formatDate(format, date)
+{
+  if (!format || !date) {
+    return format;
+  }
+  var date_h = {
+    "%Y": date.getFullYear(),             // Year
+    "%y": (date.getFullYear() % 100),     // Year(00-99)
+    "%m": fillLeft(String(date.getMonth()+1), "0", 2),  // Month(01-12)
+    "%d": fillLeft(String(date.getDate()), "0", 2),     // Day(01-31)
+    "%H": fillLeft(String(date.getHours()), "0", 2),    // 24h(00-23)
+    "%p": (date.getHours() / 12)?"PM":"AM",             // (AM,PM)
+    "%I": fillLeft(String((date.getHours() % 12)+1), "0", 2),   // 12h(01-12)
+    "%M": fillLeft(String(date.getMinutes()), "0", 2),          // Minute(00-59)
+    "%S": fillLeft(String(date.getSeconds()), "0", 2),          // Second(00-60) (60 is the leap second)
+    "%w": date.getDay(),              // Weekday(0-6) (0 means Sunday)
+
+    "%-m": String(date.getMonth()+1),   // Month(1-12)
+    "%-d": String(date.getDate()),      // Day(1-31)
+    "%-H": String(date.getHours()),     // 24h(0-23)
+    "%-I": String((date.getHours() % 12)+1),   // 12h(1-12)
+    "%-M": String(date.getMinutes()),          // Minute(0-59)
+    "%-S": String(date.getSeconds()),          // Second(0-60) (60 is the leap second)
+  };
+  for (var keyword in date_h) {
+    format = format.replace(keyword, date_h[keyword], "g");
+  }
+  return format;
 }
 
 function getDateString(date)
@@ -1259,3 +1317,23 @@ function getTypeExp(obj)
   return objType;
 }
 
+function mergeHash(hashOrg, hashNew)
+{
+  var ret = {};
+  if (hashOrg) {
+    for (var key in hashOrg) {
+      ret[key] = hashOrg[key];
+    }
+  }
+  if (hashNew) {
+    for (var key in hashNew) {
+      ret[key] = hashNew[key];
+    }
+  }
+  return ret;
+}
+
+function getRandomInt(min, max)
+{
+  return Math.floor( Math.random() * (max - min + 1) ) + min;
+}

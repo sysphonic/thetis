@@ -15,7 +15,7 @@ class ZeptairPostController < ApplicationController
 
   require 'csv'
 
-  before_filter :check_login
+  before_action :check_login
 
 
   #=== upload
@@ -28,7 +28,7 @@ class ZeptairPostController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     if params[:file].nil? or params[:file].size <= 0
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
@@ -38,7 +38,7 @@ class ZeptairPostController < ApplicationController
 
     post_item.update_attribute(:updated_at, Time.now)
 
-    render(:text => t('file.uploaded'))
+    render(:plain => t('file.uploaded'))
   end
 
   #=== download
@@ -53,7 +53,7 @@ class ZeptairPostController < ApplicationController
     post_item = ZeptairPostHelper.get_item_for(@login_user)
 
     if post_item.id != attach.item_id
-      render(:text => 'ERROR:' + t('msg.system_error'))
+      render(:plain => 'ERROR:' + t('msg.system_error'))
       return
     end
 
@@ -75,7 +75,7 @@ class ZeptairPostController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     unless @login_user.admin?(User::AUTH_ZEPTAIR)
-      render(:text => 'ERROR:' + t('msg.need_to_be_admin'))
+      render(:plain => 'ERROR:' + t('msg.need_to_be_admin'))
       return
     end
 
@@ -124,7 +124,7 @@ class ZeptairPostController < ApplicationController
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => 'ERROR:' + t('msg.system_error'))
+    render(:plain => 'ERROR:' + t('msg.system_error'))
   end
 
   #=== delete_attachment
@@ -196,10 +196,10 @@ class ZeptairPostController < ApplicationController
       post_item.update_attribute(:updated_at, Time.now)
     end
 
-    render(:text => t('msg.delete_success'))
+    render(:plain => t('msg.delete_success'))
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:text => 'ERROR:' + t('msg.system_error'))
+    render(:plain => 'ERROR:' + t('msg.system_error'))
   end
 end

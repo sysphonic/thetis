@@ -139,13 +139,13 @@ function showEquipment(equipment_id, name)
   thetisBox.resizable = true;
   thetisBox.title = "<%= t('menu.equipment') %>";
   thetisBox.show(
-            "CENTER",
-            (mainWidth*7/10)+","+(mainHeight*7/10),
-            "IFRAME",
-            "",
-            "",
-            "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
-          );
+      "CENTER",
+      (mainWidth*7/10)+","+(mainHeight*7/10),
+      "IFRAME",
+      "",
+      "",
+      "<%= url_for(:controller => 'equipment', :action => 'show') %>?id=" + equipment_id + "&popup=true"
+    );
 }
 
 </script>

@@ -14,10 +14,10 @@
 class LocationsController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :check_owner, :only => [:drop_on_exit, :on_moved]
+  before_action :check_login
+  before_action :check_owner, :only => [:drop_on_exit, :on_moved]
 
-  before_filter :only => [:update_map, :delete_map] do |controller|
+  before_action :only => [:update_map, :delete_map] do |controller|
     controller.check_auth(User::AUTH_LOCATION)
   end
 
@@ -115,7 +115,7 @@ class LocationsController < ApplicationController
     end
 
     if office_map.nil?
-      render(:text => '')
+      render(:plain => '')
       return
     end
 
@@ -123,14 +123,14 @@ class LocationsController < ApplicationController
 # Too much restriction
     if !office_map.group_id.nil? and (office_map.group_id != 0)
       unless User.belongs_to_group?(@login_user, office_map.group_id, true)
-        render(:text => 'ERROR:' + t('msg.need_auth_to_access'))
+        render(:plain => 'ERROR:' + t('msg.need_auth_to_access'))
         return
       end
     end
 =end
     response.headers["Content-Type"] = office_map.img_content_type
     response.headers["Content-Disposition"] = "inline"
-    render(:text => office_map.img_content)
+    render(:plain => office_map.img_content)
   end
 
   #=== update_map
@@ -199,7 +199,7 @@ class LocationsController < ApplicationController
       Location.destroy(params[:id])
     end
 
-    render(:text => params[:id])
+    render(:plain => params[:id])
   end
 
   #=== on_moved
@@ -237,7 +237,7 @@ class LocationsController < ApplicationController
       location.update_attributes(attrs.permit(Location::PERMIT_BASE))
     end
 
-    render(:text => (location.nil?)?'':location.id.to_s)
+    render(:plain => (location.nil?)?'':location.id.to_s)
   end
 
  private
@@ -254,7 +254,7 @@ class LocationsController < ApplicationController
       owner_id = -1
     end
     if !@login_user.admin?(User::AUTH_LOCATION) and owner_id != @login_user.id
-      Log.add_check(request, '[check_owner]'+request.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')

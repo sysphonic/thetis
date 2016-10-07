@@ -14,8 +14,8 @@
 class Attachment < ActiveRecord::Base
   public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :location, :comment_id, :file]
 
-  belongs_to(:item)
-  belongs_to(:comment)
+  belongs_to(:item, {required: false})
+  belongs_to(:comment, {required: false})
 
   require 'tempfile'
   require 'fileutils'

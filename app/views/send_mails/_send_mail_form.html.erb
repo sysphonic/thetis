@@ -336,7 +336,7 @@ attachFile = function()
     thetisBoxAttachFile = null;
   }
 
-  var content = getFileSelector("onFileSelectOK()", "onFileSelectCancel()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "<%= form_authenticity_token %>", "attach_file");
+  var content = getFileSelector("onFileSelectOk()", "onFileSelectCancel()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "<%= form_authenticity_token %>", "attach_file");
 
   thetisBoxAttachFile = new ThetisBox;
   thetisBoxAttachFile.title = "<%= t('item.attach_file') %>";
@@ -349,7 +349,7 @@ attachFile = function()
   thetisBoxAttachFile.show("CENTER", "400,178", "TRAY", "", "", content);
 }
 
-onFileSelectOK = function()
+onFileSelectOk = function()
 {
   _need_update = true;
 

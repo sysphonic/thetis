@@ -414,6 +414,6 @@ class Team < ActiveRecord::Base
 
     con << '(' + user_con_a.join(' or ') + ')'
 
-    Comment.destroy_all(con.join(' and '))
+    Comment.where(con.join(' and ')).destroy_all
  end
 end

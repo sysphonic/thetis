@@ -86,22 +86,22 @@ module HistoryHelper
   #
   #_request_:: Request.
   #
-  def self.keep_last(request)
+  def self.keep_last(request, params)
 
-    if HistoryHelper.reset?(request.parameters)
+    if HistoryHelper.reset?(request)
       request.session[:last_req_params] = nil
       request.session[:history] = nil
     end
 
-    if HistoryHelper.acceptable?(request.parameters)
-      prms = ApplicationHelper.dup_hash(request.parameters)
+    if HistoryHelper.acceptable?(request)
+      prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
 
       last_reqs = request.session[:last_req_params] unless request.session.nil?
       if last_reqs.nil? or last_reqs.empty?
         last_reqs = [prms]
       else
-        if HistoryHelper.get_path_token(last_reqs.last) == HistoryHelper.get_path_token(prms)
+        if HistoryHelper.get_path_token(last_reqs.last) == HistoryHelper.get_path_token(request)
           last_reqs[-1] = prms
         else
           last_reqs << prms
@@ -121,7 +121,7 @@ module HistoryHelper
   #
   def self.set_back(request)
 
-    return if request.parameters[:history] == 'back'
+    return if request.path_parameters[:history] == 'back'
 
     last_reqs = request.session[:last_req_params]
 
@@ -130,9 +130,9 @@ module HistoryHelper
 #Debug
 #Log.add_error(nil, nil, '@@@ ' + last_reqs.collect {|prms| get_path_token(prms)}.join("\n"))
 
-    if HistoryHelper.acceptable?(request.parameters)
+    if HistoryHelper.acceptable?(request)
       last_req_idx = -1
-      cur_path = HistoryHelper.get_path_token(request.parameters)
+      cur_path = HistoryHelper.get_path_token(request)
       last_reqs.each_with_index.reverse_each do |last_params, idx|
         if !cur_path.blank? and (cur_path == HistoryHelper.get_path_token(last_params))
           next
@@ -196,33 +196,38 @@ module HistoryHelper
   #
   #Checks if the specified request parameters is acceptable to the history.
   #
-  #_prms_:: Parameters to check.
+  #_request_:: Request.
   #
-  def self.acceptable?(prms)
+  def self.acceptable?(request)
 
-    return HISTORY_ACCEPTS.include?(get_path_token(prms))
+    return HISTORY_ACCEPTS.include?(get_path_token(request))
   end
 
   #=== self.reset?
   #
   #Checks if the specified request parameters demand to reset history.
   #
-  #_prms_:: Parameters to check.
+  #_request_:: Request.
   #
-  def self.reset?(prms)
+  def self.reset?(request)
 
-    return HISTORY_RESETS.include?(get_path_token(prms))
+    return HISTORY_RESETS.include?(get_path_token(request))
   end
 
   #=== self.get_path_token
   #
   #Gets path token to identify the page.
   #
-  #_prms_:: Parameters.
+  #_request_:: Request.
   #
-  def self.get_path_token(prms)
+  def self.get_path_token(request)
 
-    return prms['controller'] + '/' + prms['action']
+    if request.respond_to?(:path_parameters)
+      prms = request.path_parameters
+    else
+      prms = request
+    end
+    return (prms[:controller] || '') + '/' + (prms[:action] || '')
   end
 end
 

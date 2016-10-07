@@ -55,7 +55,7 @@ module LoginChecker
     end
 
     if @login_user.nil?
-      Log.add_check(request, '[check_login]'+request.to_s)
+      Log.add_check(request, '[check_login]'+params.inspect)
 
       flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
       if request.xhr?
@@ -81,7 +81,7 @@ module LoginChecker
 
     if @login_user.nil? \
         or !@login_user.admin?(required_auth)
-      Log.add_check(request, '[check_auth]'+request.to_s)
+      Log.add_check(request, '[check_auth]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_admin')
       redirect_to(:controller => 'desktop', :action => 'show')

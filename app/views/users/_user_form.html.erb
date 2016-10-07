@@ -254,7 +254,7 @@ showTitleSelector = function()
     titleSelector = null;
   }
 
-  var content = getTitleSelector("onTitleSelectOK()", "onTitleSelectCancel()");
+  var content = getTitleSelector("onTitleSelectOk()", "onTitleSelectCancel()");
 
   titleSelector = new ThetisBox;
   titleSelector.title = "<%= t('user.select_title') %>";
@@ -314,7 +314,7 @@ getTitleSelector = function(onOk, onCancel)
   return content;
 }
 
-onTitleSelectOK = function()
+onTitleSelectOk = function()
 {
   _z("user_title").value = document.form_title.title.value;
   titleSelector.remove();

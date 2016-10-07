@@ -10,7 +10,7 @@
 #* 
 #
 class MailFolder < ActiveRecord::Base
-  has_many(:emails, :dependent => :destroy)
+  has_many(:emails, {:dependent => :destroy})
 
   extend CachedRecord
   include TreeElement

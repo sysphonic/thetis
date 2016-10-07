@@ -18,12 +18,12 @@
 class Item < ActiveRecord::Base
   public::PERMIT_BASE = [:title, :summary, :folder_id, :description, :public, :layout, :update_message, :xtype, :xorder]
 
-  has_one(:team, :dependent => :destroy)
-  has_one(:workflow, :dependent => :destroy)
-  has_one(:zeptair_command, :dependent => :destroy)
-  has_many(:comments, :dependent => :destroy)
-  has_many(:images, -> {order('images.xorder asc')}, :dependent => :destroy)
-  has_many(:attachments, -> {order('attachments.xorder asc')}, :dependent => :destroy)
+  has_one(:team, {:dependent => :destroy})
+  has_one(:workflow, {:dependent => :destroy})
+  has_one(:zeptair_command, {:dependent => :destroy})
+  has_many(:comments, {:dependent => :destroy})
+  has_many(:images, ->(rec) {order('images.xorder asc')}, {:dependent => :destroy})
+  has_many(:attachments, ->(rec) {order('attachments.xorder asc')}, {:dependent => :destroy})
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_PROJECT = 'project'

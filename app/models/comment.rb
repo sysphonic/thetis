@@ -16,7 +16,7 @@ class Comment < ActiveRecord::Base
 
   belongs_to(:item)
 
-  has_many(:attachments, -> {order('attachments.xorder asc')}, :dependent => :destroy)
+  has_many(:attachments, ->(rec) {order('attachments.xorder asc')}, {:dependent => :destroy})
 
   public::XTYPE_MSG = 'msg'
   public::XTYPE_ACK = 'ack'

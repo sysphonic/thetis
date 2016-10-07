@@ -14,8 +14,8 @@
 class ZeptairDistController < ApplicationController
   layout 'base'
 
-  before_filter :check_login
-  before_filter :only => [:users] do |controller|
+  before_action :check_login
+  before_action :only => [:users] do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)
   end
 
@@ -137,7 +137,7 @@ class ZeptairDistController < ApplicationController
     end
     if target.nil? or target.item.nil? \
         or target.item.xtype != Item::XTYPE_ZEPTAIR_DIST
-      render(:text => 'ERROR:' + t('msg.system_error'))
+      render(:plain => 'ERROR:' + t('msg.system_error'))
       return
     end
     item = target.item
@@ -223,6 +223,6 @@ class ZeptairDistController < ApplicationController
           end
         end
     end
-    render(:text => '')
+    render(:plain => '')
   end
 end

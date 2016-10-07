@@ -14,8 +14,8 @@
 class User < ActiveRecord::Base
   public::PERMIT_BASE = [:name, :fullname, :pass_md5, :address, :organization, :email, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :postalcode, :birthday, :time_zone, :figure, :email_sub1, :email_sub1_type, :email_sub2, :email_sub2_type, :title, :xorder]
 
-  has_many(:user_titles, :dependent => :destroy)
-  has_one(:paintmail, :dependent => :destroy)
+  has_many(:user_titles, {:dependent => :destroy})
+  has_one(:paintmail, {:dependent => :destroy})
 
   require 'csv'
 
@@ -124,9 +124,9 @@ class User < ActiveRecord::Base
     if group_id.nil?
       group_ids = nil
     else
-      group_ids = ['0']
+      group_ids = [TreeElement::ROOT_ID.to_s]
 
-      if group_id.to_s != '0'
+      if group_id.to_s != TreeElement::ROOT_ID.to_s
         group_obj_cache = {}
         group = Group.find_with_cache(group_id, group_obj_cache)
         unless group.nil?
@@ -313,32 +313,32 @@ class User < ActiveRecord::Base
     folder.force_destroy unless folder.nil?
 
     # Application for Teams
-    Comment.destroy_all("(user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')")
+    Comment.where("(user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')").destroy_all
 
-    Toy.destroy_all("(user_id=#{self.id})")
-    Research.destroy_all("(user_id=#{self.id})")
-    Desktop.destroy_all("(user_id=#{self.id})")
+    Toy.where("(user_id=#{self.id})").destroy_all
+    Research.where("(user_id=#{self.id})").destroy_all
+    Desktop.where("(user_id=#{self.id})").destroy_all
 
     # Timecards and PaidHolidays
-    Timecard.destroy_all("(user_id=#{self.id})")
-    PaidHoliday.destroy_all("(user_id=#{self.id})")
+    Timecard.where("(user_id=#{self.id})").destroy_all
+    PaidHoliday.where("(user_id=#{self.id})").destroy_all
 
     # MailFolders, Emails and MailAccounts
-    MailFolder.destroy_all("(user_id=#{self.id})")
+    MailFolder.where("(user_id=#{self.id})").destroy_all
     Email.destroy_by_user(self.id)
     MailAccount.destroy_by_user(self.id)
 
     # Addresses in private Addressbook
-    Address.destroy_all("(owner_id=#{self.id})")
+    Address.where("(owner_id=#{self.id})").destroy_all
 
     # Settings
-    Setting.destroy_all("(user_id=#{self.id})")
+    Setting.where("(user_id=#{self.id})").destroy_all
 
     # Schedules
     Schedule.trim_on_destroy_member(:user, self.id)
 
     # Locations
-    Location.destroy_all("(user_id=#{self.id})")
+    Location.where("(user_id=#{self.id})").destroy_all
 
     super()
   end
@@ -550,7 +550,7 @@ class User < ActiveRecord::Base
   #
   def get_groups_a(incl_parents=false, group_obj_cache=nil)
 
-    return ['0'] if self.groups.nil? or self.groups.empty?
+    return [TreeElement::ROOT_ID.to_s] if self.groups.nil? or self.groups.empty?
 
     arr = self.groups.split('|')
     arr.compact!
@@ -777,8 +777,8 @@ class User < ActiveRecord::Base
   #
   def self.get_my_folder(user_id)
 
-   SqlHelper.validate_token([user_id])
-   return Folder.where("(owner_id=#{user_id.to_i}) and (xtype='#{Folder::XTYPE_USER}')").first
+    SqlHelper.validate_token([user_id])
+    return Folder.where("(owner_id=#{user_id.to_i}) and (xtype='#{Folder::XTYPE_USER}')").first
   end
 
   #=== create_my_folder

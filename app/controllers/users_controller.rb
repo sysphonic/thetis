@@ -14,13 +14,13 @@
 class UsersController < ApplicationController
   layout 'base'
 
-  before_filter(:check_login, :except => [:new, :create])
-  before_filter(:check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet])
+  before_action(:check_login, :except => [:new, :create])
+  before_action(:check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet])
 
   auth_array = [:destroy, :add_to_group, :exclude_from_group, :notify, :update_auth, :export_csv, :import_csv, :configure, :create_title, :destroy_title, :rename_title, :update_titles_order, :update_zept_allowed]
   auth_array.concat([:list, :show, :search]) if $thetis_config[:menu]['disp_user_list'] != '1'
   auth_array.concat([:new, :create]) if $thetis_config[:menu]['open_user_reg'] != '1'
-  before_filter :only => auth_array do |controller|
+  before_action :only => auth_array do |controller|
     controller.check_auth(User::AUTH_USER)
   end
 
@@ -392,7 +392,7 @@ class UsersController < ApplicationController
         end
 
         if user_admin_err
-          render(:text => t('user.no_user_auth'))
+          render(:plain => t('user.no_user_auth'))
           return
         end
       end
@@ -405,14 +405,14 @@ class UsersController < ApplicationController
     end
 
     if user.nil?
-      render(:text => t('msg.already_deleted', :name => User.model_name.human))
+      render(:plain => t('msg.already_deleted', :name => User.model_name.human))
     else
       user.update_attribute(:auth, auth)
 
       if user.id == @login_user.id
         @login_user = user
       end
-      render(:text => '')
+      render(:plain => '')
     end
   end
 
@@ -840,7 +840,7 @@ class UsersController < ApplicationController
       end
       idx += 1
     end
-    render(:text => '')
+    render(:plain => '')
   end
 
   #=== update_zept_allowed
@@ -868,7 +868,7 @@ class UsersController < ApplicationController
       end
     end
 
-    render(:text => '')
+    render(:plain => '')
   end
 
  private
@@ -911,10 +911,10 @@ class UsersController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].nil? or params[:id].empty? or @login_user.nil?
+    return if params[:id].blank? or @login_user.nil?
 
-    if !@login_user.admin?(User::AUTH_USER) and params[:id] != @login_user.id.to_s
-      Log.add_check(request, '[check_owner]'+request.to_s)
+    if !@login_user.admin?(User::AUTH_USER) and (params[:id] != @login_user.id.to_s)
+      Log.add_check(request, '[check_owner]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
