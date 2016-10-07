@@ -210,7 +210,7 @@ class UsersController < ApplicationController
       order_by << ', User.name ASC'
     end
 
-    sql = 'select distinct User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
+    sql = 'select User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
     sql << ' left join official_titles OfficialTitle on UserTitle.official_title_id=OfficialTitle.id'
 
     sql << where + ' order by ' + order_by

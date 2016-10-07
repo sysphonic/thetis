@@ -314,7 +314,6 @@ function doGetUsers(group_id)
 {
   var addParams = [];
   addParams.push("id="+group_id);
-  addParams.push(Form.serialize(document.form_group_tree));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_users') %>", addParams);
 }
@@ -323,7 +322,6 @@ function doGetGroupsOrder(group_id)
 {
   var addParams = [];
   addParams.push("id="+group_id);
-  addParams.push(Form.serialize(document.form_group_tree));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_groups_order') %>", addParams);
 }
@@ -332,7 +330,6 @@ function doGetOfficialTitles(group_id)
 {
   var addParams = [];
   addParams.push("id="+group_id);
-  addParams.push(Form.serialize(document.form_group_tree));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_official_titles') %>", addParams);
 }
@@ -341,7 +338,6 @@ function doGetWorkflows(group_id)
 {
   var addParams = [];
   addParams.push("id="+group_id);
-  addParams.push(Form.serialize(document.form_group_tree));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_workflows') %>", addParams);
 }
@@ -350,7 +346,6 @@ function doGetMaps(group_id)
 {
   var addParams = [];
   addParams.push("id="+group_id);
-  addParams.push(Form.serialize(document.form_group_tree));
 
   doUpdateView("get", "<%= url_for(:controller => 'groups', :action => 'get_map') %>", addParams);
 }

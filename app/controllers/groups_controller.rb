@@ -1,7 +1,7 @@
 #
 #= GroupsController
 #
-#Copyright:: Copyright (c) 2007-2013 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -316,7 +316,7 @@ class GroupsController < ApplicationController
       order_by << ', name ASC'
     end
 
-    sql = 'select distinct User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
+    sql = 'select User.* from (users User left join user_titles UserTitle on User.id=UserTitle.user_id)'
     sql << ' left join official_titles OfficialTitle on UserTitle.official_title_id=OfficialTitle.id'
 
     sql << where + ' order by ' + order_by

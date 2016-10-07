@@ -374,9 +374,9 @@ function doWorkflowIssue()
 
 <div id="div_team">
 
-  <table style="width:95%; margin:0px auto;" cellpadding="5"> 
+  <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
         <%= t('cap.information') %>
         <div class="hr"></div>
       </td>
@@ -393,9 +393,9 @@ function doWorkflowIssue()
 
   <a name="team_organize"></a>
 
-  <table style="width:95%; margin:0px auto;" cellpadding="5"> 
+  <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
         <%= t('team.organize') %>
         <div class="hr"></div>
       </td>
@@ -403,9 +403,9 @@ function doWorkflowIssue()
   </table>
 
   <div id="div_team_organize">
-    <table style="width:95%; margin:0px auto;" cellpadding="5"> 
+    <table style="width:95%; margin:0px auto;">
       <tr>
-        <td style="text-align:left;"> 
+        <td style="text-align:left; padding:5px;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png">&nbsp;
           <%= t('team.organize_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span>
           <%= t('team.organize_info2') %>
@@ -496,9 +496,9 @@ else
   if @team.nil? or (!@team.nil? and @team.status != Team::STATUS_DEACTIVATED) or !@comment.nil?
 %>
 
-  <table style="width:95%; margin:0px auto;" cellpadding="5"> 
+  <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
         <%= t('team.application') %>
         <div class="hr"></div>
       </td>
@@ -577,9 +577,9 @@ end
     comment = ZeptairDistHelper.get_comment_of(@item.id, @login_user.id)
     entries = ZeptairDistHelper.get_ack_array_of(comment)
   %>
-      <table style="width:95%; margin:15px auto 0px;" cellpadding="5"> 
+      <table style="width:95%; margin:15px auto 0px;">
         <tr>
-          <td style="text-align:left; font-size:14pt; line-height:1.0;">
+          <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
             <%= t('msg.myself') %>
             <div class="hr"></div>
           </td>
@@ -646,9 +646,9 @@ end
       </table>
 
     <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
-      <table style="width:95%; margin:0px auto;" cellpadding="5"> 
+      <table style="width:95%; margin:0px auto;">
         <tr>
-          <td style="text-align:left; font-size:14pt; line-height:1.0;">
+          <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
             <%= t('msg.all_users') %>
             <div class="hr"></div>
           </td>
@@ -731,9 +731,9 @@ function showZeptairDistUsers()
   <%= render(:partial => 'caption', :locals => {:title => t('item.message'), :div_name => 'div_message'}) %>
 
   <div id="div_message">
-    <table style="width:95%; margin:0px auto;" cellpadding="5">
+    <table style="width:95%; margin:0px auto;">
       <tr>
-        <td style="text-align:left; background-color:ghostwhite;">
+        <td style="text-align:left; background-color:ghostwhite; padding:5px;">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png">&nbsp;
           <%= t('item.message_info1') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info2') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info3') %>
           <%= t('item.message_info4') %><span style="color:green;"><b><%= t('item.owner_full') %></b></span><%= t('item.message_info5') %><br/>

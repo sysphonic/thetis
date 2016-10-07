@@ -491,6 +491,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "          <td style='text-align:right;'>";
     content += "            <input type='button' id='thetisBoxOk-"+this.id+"' value='"+this.button_ok+"' onclick=\""+ok_act +"; ThetisBox.remove('"+this.id+"');\" tabindex='2' style='width:90px; height:25px'>";
     content += "          </td>";
+    content += "          <td style='width:5px;'></td>";
     content += "          <td style='text-align:left;'>";
     content += "            <input type='button' id='thetisBoxCancel-"+this.id+"' value='"+this.button_cancel+"' onclick=\""+cancel_act +"; ThetisBox.remove('"+this.id+"');\" tabindex='3' style='width:90px; height:25px' onkeypress=\"ThetisBox.remove('"+this.id+"'); return true;\" onclick=\"ThetisBox.remove('"+this.id+"');\">";
     content += "          </td>";
@@ -810,8 +811,8 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
       this.drawInput(p_action, hasTitlebar, false, p_caption);
 
     } else if (p_type == "TEXTAREA") {
-      if (this.bgcolor_title == null) this.bgcolor_title = "dodgerblue";
-      if (this.bgcolor_body == null) this.bgcolor_body = "skyblue";
+      if (this.bgcolor_title == null) this.bgcolor_title = "#5da5ff";
+      if (this.bgcolor_body == null) this.bgcolor_body = "#cde3ff";
       this.drawTextArea(p_action, hasTitlebar, false, p_caption);
 
     } else if (p_type == "TREE" || p_type == "MINI-TREE") {
