@@ -251,6 +251,7 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
     content += "            <input type='button' id='thetisBoxOk-"+this.id+"' value='"+this.button_ok+"' onclick=\""+action+"\" tabindex='2' style='width:90px; height:25px'>";
     content += "          </td>";
     content += "        </tr>";
+    content += "        <tr style='height:5px;'><td></td></tr>";
     content += "        <tr>";
     content += "          <td>";
     content += "            <input type='button' id='thetisBoxCancel-"+this.id+"' value='"+this.button_cancel+"' tabindex='3' style='width:90px; height:25px' onkeypress=\"ThetisBox.remove('"+this.id+"'); return true;\" onclick=\"ThetisBox.remove('"+this.id+"');\">";

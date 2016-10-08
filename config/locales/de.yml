@@ -200,7 +200,7 @@ de:
     down: "&or;"
     right: "&gt;"
     left: "&lt;"
-    right_full: " -> "
+    right_full: " &rarr; "
   attachment:
     plural: "Dateianhänge"
     plural_full: "Dateianhänge"
@@ -730,7 +730,7 @@ de:
     select_scope: "Bitte wählen Sie den Umfang zu zeigen aus."
     specify_repeat_rule: "Geben Sie die Regeln zu wiederholen an."
     confirm_to_delete: "] wird von Zeitpläne aller entsprechenden Benutzern gelöscht. Sind Sie sicher?"
-    back_to_calendar: "-> Zurück zu Kalender"
+    back_to_calendar: "&rarr; Zurück zu Kalender"
   sort:
     asc: " &and;"
     desc: " &or;"
@@ -859,8 +859,8 @@ de:
   login:
     name: "LOGIN"
     mail_address: "E-Mail Adresse"
-    to_user_reg: "-> Anmelden"
-    to_send_password: "-> Passwort vergessen?"
+    to_user_reg: "&rarr; Anmelden"
+    to_send_password: "&rarr; Passwort vergessen?"
     send_password_info1: "Ihre Passwort wird zurückgesetzt und gesandt mit Benutzername per E-Mail."
     send_password_info2: "Bitte geben Sie Ihre "
     send_password_info3: " registriert in Thetis."
@@ -1113,7 +1113,7 @@ de:
     edit_new: "Edit new"
     register: "Registrieren"
     back: "Zurück"
-    arrow_back: "-> Zurück"
+    arrow_back: "&rarr; Zurück"
     select_group: "Gruppe ausw."
     clear: "Ausräumen"
     apply: "Anwenden"

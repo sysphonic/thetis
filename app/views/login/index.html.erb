@@ -43,11 +43,13 @@
             <td style="text-align:right;">
             <% if $thetis_config[:menu]['open_user_reg'] == '1' %>
               <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new') %>'; return false;">
-                <%= t('login.to_user_reg') %>
+                <%= raw(t('login.to_user_reg')) %>
               </a>
                &nbsp;
             <% end %>
-              <a class="a_underline" href="javascript:this.onclick()" onclick="showSendPassword(); return false;"><%= t('login.to_send_password')%></a>
+              <a class="a_underline" href="javascript:this.onclick()" onclick="showSendPassword(); return false;">
+                <%= raw(t('login.to_send_password'))%>
+              </a>
               &nbsp;
             </td>
           </tr>

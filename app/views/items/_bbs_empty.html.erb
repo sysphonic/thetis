@@ -4,7 +4,7 @@
       <table style="width:80%; margin:30px auto 0px; padding:20px 0px 25px; background-color:white; border:5px dodgerblue dashed; border-radius:5px;">
         <tr>
           <td style="text-align:left; padding-left:20px; color:navy;" >
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" style="vertical-align:middle;">&nbsp;
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png">&nbsp;
             <%= t('item.specify_folder_info1') %>
             <a href="javascript:this.onclick()" onclick="showFolderTreeToSelect(''); return false;"><%= t('btn.select_folder') %></a>
             <%= t('item.specify_folder_info2') %><br/>
@@ -24,7 +24,7 @@
                 <td style="text-align:left; vertical-align:top; padding:10px; color:mediumblue; background-color:aliceblue;">
                   &nbsp;&nbsp;<%= t('item.if_admin') %><br/>
                   <div style="padding-left:30px;">
-                  <%= t('menu.folder_tree') + t('arrow.right_full') + t('folder.opt.display_control') %><br/>
+                  <%= raw(t('menu.folder_tree') + t('arrow.right_full') + t('folder.opt.display_control')) %><br/>
                   <%= raw(t('paren.square_i.left')) + t('folder.disp_ctrl.added_to_bbs') + raw(t('paren.square_i.right')) %><br/>
                   </div>
                   <%= t('item.bbs_info2') %>

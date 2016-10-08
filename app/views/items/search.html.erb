@@ -49,7 +49,7 @@
       </select>
       &nbsp;&nbsp;
 
-      <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]='+encodeURIComponent('items/search'); return false;"><%= t('btn.arrow_back') %></a>
+      <a href="javascript:this.onclick()" onclick="onBackClicked(); return false;"><%= raw(t('btn.arrow_back')) %></a>
     </td>
   </tr>
 </table>
@@ -186,6 +186,12 @@ function doDelete(item_id)
   document.form_search.action = "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+item_id;
   document.form_search.method = "post";
   document.form_search.submit();
+}
+
+function onBackClicked()
+{
+  prog("TOP-RIGHT");
+  location.href = "<%= url_for(:controller => 'history', :action => 'back') %>?avoid[]="+encodeURIComponent("items/search");
 }
 
 </script>

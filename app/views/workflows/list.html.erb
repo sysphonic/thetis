@@ -69,7 +69,7 @@
           <tr>
             <td style="text-align:center; padding:2px 0px; background-color:burlywood;" nowrap >
               <%= t('workflow.received_list') %>&nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= t('arrow.right_full') %><%= ApplicationHelper.h_s_quote(Workflow.decided_inbox) %>');">
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('workflow.received_list_info') %><br/><%= raw(t('arrow.right_full')) %><%= ApplicationHelper.h_s_quote(Workflow.decided_inbox) %>');">
             </td>
           </tr>
           <tr style="height:5px;"><td></td></tr>
