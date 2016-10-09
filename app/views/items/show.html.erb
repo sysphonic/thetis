@@ -1,8 +1,4 @@
 <%
-if params[:action] == 'show'
-  HistoryHelper.set_back(request)
-end
-
 @for_print = (params[:action] == 'show_for_print')
 
 @users_cache = {}

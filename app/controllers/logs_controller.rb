@@ -85,6 +85,9 @@ class LogsController < ApplicationController
     end
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + " " + @sort_type
+    if @sort_col != 'Log.id'
+      order_by << ', Log.id ' + @sort_type
+    end
 
     sql = 'select distinct Log.* from logs Log'
     if include_user

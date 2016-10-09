@@ -67,7 +67,7 @@ unless @login_user.nil?
 <table class="regular_table" id="list_logs">
  <thead>
   <tr>
-    <th class="list_sort" style="width:5%;" nowrap onclick="sortList('logs.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('logs.id', @sort_col, @sort_type)) %></span></th>
+    <th class="list_sort" style="width:5%;" nowrap onclick="sortList('Log.id')"><%= t('activerecord.attributes.id') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Log.id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:22%;" nowrap onclick="sortList('updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('updated_at', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:20%;" nowrap onclick="sortList('user_id')"><%= User.model_name.human %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('user_id', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:15%;" nowrap onclick="sortList('remote_ip')"><%= Log.human_attribute_name('remote_ip') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('remote_ip', @sort_col, @sort_type)) %></span></th>

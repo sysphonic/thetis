@@ -1,7 +1,7 @@
 #
 #= HistoryHelper
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -61,22 +61,33 @@ module HistoryHelper
     ]
 
   private::HISTORY_MAX = 5
-  private::LAST_REQ_NUM = 2
 
  public
-  #=== self.get_last_in_session
+  #=== self.pop
   #
-  #Gets last history parameters in the session.
+  #Pops last history parameters in the session.
   #
   #_session_:: Request session.
+  #_avoid_paths_:: Path tokens to avoid.
   #return:: Last history parameters in the session.
   #
-  def self.get_last_in_session(session)
+  def self.pop(session, avoid_paths=nil)
 
-    if session[:history].nil? or session[:history].empty?
+    if session[:history].nil? or (session[:history].length < 2)
       return nil
     else
-      return session[:history].last
+      if avoid_paths.nil? or avoid_paths.empty?
+        last_req = session[:history][-2]
+        session[:history].slice!(-2..-1)
+      else
+        histories = session[:history]
+        histories.reject! {|prms|
+          path = HistoryHelper.get_path_token(prms)
+          avoid_paths.include?(path)
+        }
+        last_req = histories[-1]
+      end
+      return last_req
     end
   end
 
@@ -89,129 +100,35 @@ module HistoryHelper
   def self.keep_last(request, params)
 
     if HistoryHelper.reset?(request)
-      request.session[:last_req_params] = nil
       request.session[:history] = nil
     end
 
-    if HistoryHelper.acceptable?(request)
+    cur_path = HistoryHelper.get_path_token(request)
+
+    if HistoryHelper.acceptable?(cur_path)
       prms = ApplicationHelper.dup_hash(params)
       prms.delete('authenticity_token')
 
-      last_reqs = request.session[:last_req_params] unless request.session.nil?
-      if last_reqs.nil? or last_reqs.empty?
-        last_reqs = [prms]
+      histories = request.session[:history] unless request.session.nil?
+      if histories.nil? or histories.empty?
+        histories = [prms]
       else
-        if HistoryHelper.get_path_token(last_reqs.last) == HistoryHelper.get_path_token(request)
-          last_reqs[-1] = prms
+        if HistoryHelper.get_path_token(histories.last) == HistoryHelper.get_path_token(request)
+          histories[-1] = prms
         else
-          last_reqs << prms
-          last_reqs.delete_at(0) if last_reqs.length > LAST_REQ_NUM
+          histories = HistoryHelper.avoid_duplex_patterns(histories, prms)
+
+          histories.delete_at(0) if histories.length > HISTORY_MAX
         end
       end
 
-      request.session[:last_req_params] = last_reqs
-    end
-  end
-
-  #=== self.set_back
-  #
-  #Adds the last request to the history to move backward.
-  #
-  #_request_:: Request to get session data.
-  #
-  def self.set_back(request)
-
-    return if request.path_parameters[:history] == 'back'
-
-    last_reqs = request.session[:last_req_params]
-
-    return if last_reqs.nil? or last_reqs.empty?
-
-#Debug
-#Log.add_error(nil, nil, '@@@ ' + last_reqs.collect {|prms| get_path_token(prms)}.join("\n"))
-
-    if HistoryHelper.acceptable?(request)
-      last_req_idx = -1
-      cur_path = HistoryHelper.get_path_token(request)
-      last_reqs.each_with_index.reverse_each do |last_params, idx|
-        if !cur_path.blank? and (cur_path == HistoryHelper.get_path_token(last_params))
-          next
-        else
-          last_req_idx = idx
-          break
-        end
-      end
-    else
-      last_req_idx = last_reqs.length - 1
+      request.session[:history] = histories
     end
 
-    return if last_req_idx < 0
-
-    entry = last_reqs[last_req_idx]
-
-    history = request.session[:history]
-    if history.nil?
-      history = []
-    elsif !history.last.nil?
-      if get_path_token(history.last) == get_path_token(entry)
-        history.delete_at(-1)
-      end
-    end
-
-    # Avoid duplex patterns.
-    if history.length > 2
-      cur_order = ''
-      idx = -1
-      history.each do |prms|
-        path = get_path_token(prms)
-        idx = HISTORY_ACCEPTS.index(path)
-        cur_order << sprintf('%02d', idx)
-      end
-      path = get_path_token(entry)
-      new_tail = sprintf('%02d%02d', idx, HISTORY_ACCEPTS.index(path))
-
-      replace_idx = cur_order.index(new_tail)
-      if replace_idx.nil?
-        if history.length >= HISTORY_MAX
-          history.delete_at(-1)
-        end
-      else
-        # A - B - C - B  ( - C )
-        # => A - B ( - C )
-        replace_idx /= 2    # <== '%02d'
-        history.slice!(replace_idx, history.length - replace_idx - 1)
-      end
-    end
-
-    history << entry
-
-#Debug
-#Log.add_error(nil, nil, '### ' + history.collect {|prms| get_path_token(prms)}.join("\n"))
-
-    request.session[:history] = history
-    request.session[:last_req_params].delete_at(last_req_idx)
-  end
-
-  #=== self.acceptable?
-  #
-  #Checks if the specified request parameters is acceptable to the history.
-  #
-  #_request_:: Request.
-  #
-  def self.acceptable?(request)
-
-    return HISTORY_ACCEPTS.include?(get_path_token(request))
-  end
-
-  #=== self.reset?
-  #
-  #Checks if the specified request parameters demand to reset history.
-  #
-  #_request_:: Request.
-  #
-  def self.reset?(request)
-
-    return HISTORY_RESETS.include?(get_path_token(request))
+    details = []
+    details << 'keep_last # '+cur_path
+    details << 'session[:history]='+(request.session[:history] || {}).inspect
+    HistoryHelper.log(request, details.join('<br/>'))
   end
 
   #=== self.get_path_token
@@ -227,7 +144,75 @@ module HistoryHelper
     else
       prms = request
     end
-    return (prms[:controller] || '') + '/' + (prms[:action] || '')
+    return (prms['controller'] || prms[:controller] || '') + '/' + (prms['action'] || prms[:action] || '')
+  end
+
+ private
+  #=== self.acceptable?
+  #
+  #Checks if the specified request parameters is acceptable to the history.
+  #
+  #_path_token_:: Path token.
+  #
+  def self.acceptable?(path_token)
+
+    return HISTORY_ACCEPTS.include?(path_token)
+  end
+
+  #=== self.reset?
+  #
+  #Checks if the specified request parameters demand to reset history.
+  #
+  #_request_:: Request.
+  #
+  def self.reset?(request)
+
+    return HISTORY_RESETS.include?(HistoryHelper.get_path_token(request))
+  end
+
+  #=== self.avoid_duplex_patterns
+  #
+  #Avoids duplex request patterns.
+  #
+  #_entries_:: Array of Request parameters.
+  #_entries_:: Array of Request parameters.
+  #return:: Array of Request parameters.
+  #
+  def self.avoid_duplex_patterns(entries, last_req)
+
+    if entries.length > 2
+      cur_order = ''
+      idx = -1
+      entries.each do |prms|
+        path = HistoryHelper.get_path_token(prms)
+        idx = HISTORY_ACCEPTS.index(path)
+        cur_order << sprintf('%02d', idx)
+      end
+      path = HistoryHelper.get_path_token(last_req)
+      new_tail = sprintf('%02d%02d', idx, HISTORY_ACCEPTS.index(path))
+
+      replace_idx = cur_order.index(new_tail)
+      unless replace_idx.nil?
+        # A - B - C - B  ( - C )
+        # => A - B ( - C )
+        replace_idx /= 2    # <== '%02d'
+        entries.slice!(replace_idx, entries.length - replace_idx - 1)
+      end
+    end
+    entries << last_req
+    return entries
+  end
+
+  #=== self.log
+  #
+  #Adds log of history.
+  #
+  #_request_:: Request.
+  #_detail_:: Detail description.
+  #
+  def self.log(request, detail)
+
+    #Log.add(:HISTORY, request, detail)
   end
 end
 

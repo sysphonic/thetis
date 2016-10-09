@@ -271,7 +271,7 @@ class TimecardsController < ApplicationController
   def recent_descriptions
     Log.add_info(request, params.inspect)
 
-    sql = "select comment from timecards where user_id=#{@login_user.id} order by updated_at DESC limit 0,10"
+    sql = "select user_id,comment,max(updated_at) as last_update from timecards group by user_id,comment having user_id=#{@login_user.id} order by last_update DESC limit 0,10"
     @timecards = Timecard.find_by_sql(sql)
 
     render(:partial => 'ajax_recent_descriptions', :layout => false)

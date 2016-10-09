@@ -19,37 +19,7 @@ class HistoryController < ApplicationController
   #
   def back
 
-    if session[:history].blank?
-      Log.add_error(request, nil, 'session[:history] is nil or empty.')
-      redirect_to(:controller => 'desktop', :action => 'show')
-      return
-    end
-
-    last_params = nil
-
-    while !session[:history].blank?
-      last_params = HistoryHelper.get_last_in_session(session)
-      session[:history].delete_at(-1)
-
-#      cur_path = params[:cur_path]
-#      if !cur_path.blank? and (cur_path == HistoryHelper.get_path_token(last_params))
-#        last_params = nil
-#        next
-#      end
-
-      avoid = params[:avoid]
-      if avoid.blank?
-        break
-      else
-        avoid = avoid.to_a
-
-        if avoid.include?(HistoryHelper.get_path_token(last_params))
-          last_params = nil
-        else
-          break
-        end
-      end
-    end
+    last_params = HistoryHelper.pop(session, params[:avoid])
 
     if last_params.nil?
       url_h = {

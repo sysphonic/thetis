@@ -15,7 +15,7 @@ class Log < ActiveRecord::Base
 
   public::INFO = 'INFO'
   public::CHECK = 'CHECK'
-  public::WARM = 'WARN'
+  public::WARN = 'WARN'
   public::ERROR = 'ERROR'
 
   #=== self.trim
@@ -163,7 +163,7 @@ class Log < ActiveRecord::Base
       self.remote_ip = request.remote_ip
       self.access_path = request.path
     end
-    self.log_type = type
+    self.log_type = type.to_s
 
     user_agent = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': '))
     ['Googlebot', 'bingbot', 'Baiduspider'].each do |bot|

@@ -1,7 +1,7 @@
 #
 #= SqlHelper
 #
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
 #License::   New BSD License (See LICENSE file)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
@@ -27,13 +27,15 @@ module SqlHelper
     else
       extra_chars = Regexp.escape(extra_chars.join())
     end
-    regexp = Regexp.new("^[ ]*[a-zA-Z0-9_#{extra_chars}]+[ ]*$")
+    regexp = Regexp.new("\\A[ ]*[a-zA-Z0-9_#{extra_chars}]+[ ]*\\z")
 
     [tokens].flatten.each do |token|
       next if token.blank?
 
-      if token.to_s.match(regexp).nil? \
-          and token.to_s.match(/^[ ]*\d+-\d+-\d+[ ]*$/).nil?
+      token = token.to_s
+
+      if token.match(regexp).nil? \
+          and token.match(/\A[ ]*\d+-\d+-\d+[ ]*\z/).nil?
         raise("[ERROR] SqlHelper.validate_token failed: #{token}")
       end
     end
