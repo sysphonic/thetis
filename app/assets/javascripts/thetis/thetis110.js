@@ -200,11 +200,6 @@ showErrorMsg = function(target_element)
   return false;
 }
 
-/*
-var _thetis_ajax_item_data = null;
-var _thetis_ajax_item_func_complete = null;
-var _thetis_ajax_item_func_error = null;
-*/
 ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
 {
   dojo.io.iframe.send({
@@ -212,86 +207,26 @@ ajaxUploadFile = function(form_id, p_url, target_id, func_complete, func_error)
       url:      p_url,
       method:   "post",
       form: form_id,
-//      content:{
-//          "id" : 200
-//      },
       load: function(response, ioArgs) {
-                var content = response.documentElement.innerHTML;
-/*
-                // needed due to problem with IframeIO: http://trac.dojotoolkit.org/ticket/674
-                if (response != null) {
-                  content = response.documentElement.innerHTML;
-                } else {
-                  content = dojo.io.iframeContentWindow(dojo.io.IframeTransport.iframe).document.body.innerHTML;
-                  if (content.match("/<pre>(.*)</pre>/i")) {
-                      // Internet Explorer [Jon Aquino 2006-05-06]
-                      content = RegExp.$1;
-                  }
-                }
-*/
-                _z(target_id).innerHTML = content.stripScripts();
-                content.evalScripts();
+        var content = response.documentElement.innerHTML;
+        _z(target_id).innerHTML = content.stripScripts();
+        content.evalScripts();
 
-                if (showErrorMsg(target_id) == true) {
-                  setTimeout(func_error, 10);
-                } else {
-                  setTimeout(func_complete, 10);
-                }
-            },
+        if (showErrorMsg(target_id) == true) {
+          setTimeout(func_error, 10);
+        } else {
+          setTimeout(func_complete, 10);
+        }
+      },
       error: function(response, ioArgs) {
-/*
-                    if (error.reason != null) {
-                        var thetisBoxErr = new ThetisBox;
-                        thetisBoxErr.show("TOP-RIGHT", "", "MESSAGE", "", error.reason, "");
-                    }
-*/
-                    if (response != null) {
-                        var thetisBoxErr = new ThetisBox;
-                        thetisBoxErr.show("TOP-RIGHT", "", "MESSAGE", "", response, "");
-                    }
-                    setTimeout(func_error(), 10);
-                  }
-  });
+        if (response != null) {
+          var thetisBoxErr = new ThetisBox;
+          thetisBoxErr.show("TOP-RIGHT", "", "MESSAGE", "", response, "");
+        }
+        setTimeout(func_error(), 10);
+      }
+    });
 }
-
-/*
-_onUploadForOpera = function(target_id) {
-
-  var data = _thetis_ajax_item_data;
-
-  if (data == null)
-    return;
-
-  if (data.documentElement.innerHTML.length < 100) {
-
-    setTimeout("_onUploadForOpera('"+target_id+"')", 100);
-
-  } else {
-
-    setTimeout("_onUploadCompletedForOpera('"+target_id+"')", 100);
-  }
-}
-
-_onUploadCompletedForOpera = function(target_id) {
-
-  var data = _thetis_ajax_item_data;
-  var func_complete = _thetis_ajax_item_func_complete;
-  var func_error = _thetis_ajax_item_func_error;
-
-  if (data == null)
-    return;
-
-  var value = data.documentElement.innerHTML;
-  _z(target_id).innerHTML = value.stripScripts();
-  value.evalScripts();
-
-  if (showErrorMsg(target_id) == true) {
-    setTimeout(func_error, 10);
-  } else {
-    setTimeout(func_complete, 10);
-  }
-}
-*/
 
 function getFileSelector(onOk, onCancel, btnOk, btnCancel, authToken, input_name)
 {

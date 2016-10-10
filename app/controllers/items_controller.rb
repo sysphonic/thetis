@@ -455,12 +455,12 @@ class ItemsController < ApplicationController
     end
     @item.workflow.update_attribute(:users, orders.join(','))
 
-    render(:partial => 'ajax_item_workflow', :layout => false)
+    render(:partial => 'edit_item_workflow', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
 
-    render(:partial => 'ajax_item_workflow', :layout => false)
+    render(:partial => 'edit_item_workflow', :layout => false)
   end
 
   ######################
@@ -488,7 +488,7 @@ class ItemsController < ApplicationController
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
       @item = Item.new(params.require(:item).permit(Item::PERMIT_BASE))
       @item.errors.add_to_base t('folder.need_auth_to_write_in')
-      render(:partial => 'ajax_item_basic', :layout => false)
+      render(:partial => 'edit_item_basic', :layout => false)
       return
     end
 
@@ -572,11 +572,11 @@ class ItemsController < ApplicationController
       end
     end
 
-    render(:partial => 'ajax_item_basic', :layout => false)
+    render(:partial => 'edit_item_basic', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:partial => 'ajax_item_basic', :layout => false)
+    render(:partial => 'edit_item_basic', :layout => false)
   end
 
   #################
@@ -604,11 +604,11 @@ class ItemsController < ApplicationController
       @item.update_attributes(params.require(:item).permit(Item::PERMIT_BASE))
     end
 
-    render(:partial => 'ajax_item_description', :layout => false)
+    render(:partial => 'edit_item_description', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
-    render(:partial => 'ajax_item_description', :layout => false)
+    render(:partial => 'edit_item_description', :layout => false)
   end
 
   #=== recent_descriptions
@@ -681,7 +681,7 @@ class ItemsController < ApplicationController
       @item.update_attribute(:updated_at, Time.now)
     end
 
-    render(:partial => 'ajax_item_image', :layout => false)
+    render(:partial => 'edit_item_image', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
@@ -689,7 +689,7 @@ class ItemsController < ApplicationController
     @image = Image.new
     @image.errors.add_to_base(evar.to_s[0, 256])
 
-    render(:partial => 'ajax_item_image', :layout => false)
+    render(:partial => 'edit_item_image', :layout => false)
   end
 
   #=== get_image
@@ -743,7 +743,7 @@ class ItemsController < ApplicationController
       Log.add_error(request, evar)
     end
 
-    render(:partial => 'ajax_item_image', :layout => false)
+    render(:partial => 'edit_item_image', :layout => false)
   end
 
   #=== edit_image_info
@@ -792,14 +792,14 @@ class ItemsController < ApplicationController
     end
     unless image.update_attributes(params.require(:image).permit(Image::PERMIT_BASE))
       @image = image
-      render(:partial => 'ajax_item_image', :layout => false)
+      render(:partial => 'edit_item_image', :layout => false)
       return
     end
 
     @item = Item.find(image.item_id)
     @item.update_attribute(:updated_at, Time.now)
 
-    render(:partial => 'ajax_item_image', :layout => false)
+    render(:partial => 'edit_item_image', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
@@ -807,7 +807,7 @@ class ItemsController < ApplicationController
     @image = Image.new
     @image.errors.add_to_base(evar.to_s[0, 256])
 
-    render(:partial => 'ajax_item_image', :layout => false)
+    render(:partial => 'edit_item_image', :layout => false)
   end
 
   #=== update_images_order
@@ -893,7 +893,7 @@ class ItemsController < ApplicationController
       @item.update_attribute(:updated_at, Time.now)
     end
 
-    render(:partial => 'ajax_item_attachment', :layout => false)
+    render(:partial => 'edit_item_attachment', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
@@ -901,7 +901,7 @@ class ItemsController < ApplicationController
     @attachment = Attachment.new
     @attachment.errors.add_to_base(evar.to_s[0, 256])
 
-    render(:partial => 'ajax_item_attachment', :layout => false)
+    render(:partial => 'edit_item_attachment', :layout => false)
   end
 
   #=== get_attachment
@@ -978,7 +978,7 @@ class ItemsController < ApplicationController
       Log.add_error(request, evar)
     end
 
-    render(:partial => 'ajax_item_attachment', :layout => false)
+    render(:partial => 'edit_item_attachment', :layout => false)
   end
 
   #=== edit_attachment_info
@@ -1027,14 +1027,14 @@ class ItemsController < ApplicationController
     end
     unless attachment.update_attributes(params.require(:attachment).permit(Attachment::PERMIT_BASE))
       @attachment = attachment
-      render(:partial => 'ajax_item_attachment', :layout => false)
+      render(:partial => 'edit_item_attachment', :layout => false)
       return
     end
 
     @item = Item.find(attachment.item_id)
     @item.update_attribute(:updated_at, Time.now)
 
-    render(:partial => 'ajax_item_attachment', :layout => false)
+    render(:partial => 'edit_item_attachment', :layout => false)
 
   rescue => evar
     Log.add_error(request, evar)
@@ -1042,7 +1042,7 @@ class ItemsController < ApplicationController
     @attachment = Attachment.new
     @attachment.errors.add_to_base(evar.to_s[0, 256])
 
-    render(:partial => 'ajax_item_attachment', :layout => false)
+    render(:partial => 'edit_item_attachment', :layout => false)
   end
 
   #=== update_attachments_order
