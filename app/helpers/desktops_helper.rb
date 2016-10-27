@@ -1,9 +1,8 @@
 #
 #= DesktopsHelper
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Provides utility methods and constants about Desktop.
 #
@@ -45,21 +44,21 @@ module DesktopsHelper
   #
   #_desktop_toys_:: Array of the Toys on the desktop.
   #_latests_toys_:: Array of the Toys on the latest-tray.
-  #_deleted_ary_:: Array in which the duplicated Toys should be added.
-  #return:: deleted_ary.
+  #_deleted_arr_:: Array in which the duplicated Toys should be added.
+  #return:: deleted_arr.
   #
-  def self.merge_toys(desktop_toys, latests_toys, deleted_ary)
+  def self.merge_toys(desktop_toys, latests_toys, deleted_arr)
 
     latests_toys.each do |tray_toy|
       found_toy = desktop_toys.find{ |toy|
             ((toy.xtype == tray_toy.xtype) and (toy.target_id == tray_toy.target_id))
           }
       unless found_toy.nil?
-        deleted_ary << tray_toy
+        deleted_arr << tray_toy
       end
     end
 
-    return deleted_ary
+    return deleted_arr
   end
 
   #=== self.find_empty_block

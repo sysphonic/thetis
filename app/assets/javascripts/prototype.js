@@ -4999,7 +4999,9 @@ var Form = {
 
   serializeElements: function(elements, options) {
     if (typeof options != 'object') options = { hash: !!options };
-    else if (Object.isUndefined(options.hash)) options.hash = true;
+// shin FEATURE options.recursiveDisabled >>>
+    //else if (Object.isUndefined(options.hash)) options.hash = true;
+// shin FEATURE options.recursiveDisabled <<<
     var key, value, submitted = false, submit = options.submit, accumulator, initial;
 
     if (options.hash) {
@@ -5019,8 +5021,18 @@ var Form = {
     }
 
     return elements.inject(initial, function(result, element) {
-      if (!element.disabled && element.name) {
+// shin FEATURE options.recursiveDisabled >>>
+      if (!(options.recursiveDisabled && isElemDisabled(element))
+          && !element.disabled
+          && element.name) {
+    //if (!element.disabled && element.name) {
+// shin FEATURE options.recursiveDisabled <<<
         key = element.name; value = $(element).getValue();
+// shin Serialize checked only >>>
+        if ((element.type == 'checkbox' || element.type == 'radio')
+            && !element.checked) {
+        } else
+// shin Serialize checked only <<<
         if (value != null && element.type != 'file' && (element.type != 'submit' || (!submitted &&
             submit !== false && (!submit || key == submit) && (submitted = true)))) {
 // shin Applied the patch >>>

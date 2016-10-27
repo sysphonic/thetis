@@ -1,9 +1,8 @@
 #
 #= DesktopController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Desktop.
 #
@@ -259,29 +258,29 @@ class DesktopController < ApplicationController
     @toys = []
     desktop_toys = Toy.get_for_user(@login_user)
 
-    deleted_ary = []
+    deleted_arr = []
 
     # Item
     latests = Item.get_toys(@login_user)
-    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
+    deleted_arr = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_arr)
     @toys.concat(latests)
 
     # Comment
     latests = Comment.get_toys(@login_user)
-    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
+    deleted_arr = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_arr)
     @toys.concat(latests)
 
     # Workflow
     latests = Workflow.get_toys(@login_user)
-    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
+    deleted_arr = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_arr)
     @toys.concat(latests)
 
     # Schedule
     latests = Schedule.get_toys(@login_user)
-    deleted_ary = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_ary)
+    deleted_arr = DesktopsHelper.merge_toys(desktop_toys, latests, deleted_arr)
     @toys.concat(latests)
 
-    deleted_ary.each do |toy|
+    deleted_arr.each do |toy|
       @toys.delete(toy)
     end
 

@@ -1,4 +1,6 @@
 
+<%= render(:partial => 'common/plupload_init') %>
+
 <table id="tree_main" style="width:100%; background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
     <td style="padding:2px 0px;">
@@ -55,7 +57,7 @@
                 <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
                   <div style="display:inline-block; padding-left:10px;">
                     <a href="javascript:this.onclick()" onclick="onMailAccountOptsClicked(this); return false;" onblur="onMailAccountOptsClicked(this, true);" style="color:white; font-weight:bold;">
-                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/account_close.gif" />
+                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/account_close.png" />
                       <span class="toolbtn_label"><%= t('mail_account.btn.control') %> <%= raw('&raquo;') %></span>
                     </a>
                     <div class="toolbtn_dropdown" id="div_mail_account_opts" style="display:none; width:140px; margin:-60px 0px 0px 150px; z-index:1001;">
@@ -65,7 +67,7 @@
                           <%= t('btn.config') %>
                         </a>
                         <a class="context_menu_item" href="javascript:this.onclick()" onclick="showAccountSetting(true); return false;">
-                          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif">
+                          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/file_add.png">
                           <%= t('btn.add') %>
                         </a>
                       </div>
@@ -77,7 +79,7 @@
                 <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
                   <div style="display:inline-block; padding-left:10px;">
                     <a href="javascript:this.onclick()" onclick="onMailFolderOptsClicked(this); return false;" onblur="onMailFolderOptsClicked(this, true);" style="color:white; font-weight:bold;">
-                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.gif">
+                      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.png">
                       <span class="toolbtn_label"><%= t('mail_folder.btn.control') %> <%= raw('&raquo;') %></span>
                     </a>
                     <div class="toolbtn_dropdown" id="div_mail_folder_opts" style="display:none; width:140px; margin:-162px 0px 0px 150px; z-index:1001;">
@@ -113,7 +115,7 @@
           </td>
 
           <td id="drag_v_border" style="width:5px; vertical-align:middle; background-color:#8DB7EB; cursor:w-resize;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_vertical.png">
           </td>
 
           <td id="td_view" style="vertical-align:top;">
@@ -125,7 +127,7 @@
               </tr>
               <tr style="height:5px">
                 <td id="drag_h_border" style="text-align:center; vertical-align:middle; background-color:#8DB7EB; cursor:s-resize; line-height:5px;">
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_horizontal.png" style="vertical-align:top; height:5px;">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_horizontal.png" style="vertical-align:top; height:5px;">
                 </td>
               </tr>
               <tr>
@@ -286,8 +288,8 @@ function onLoadSub()
 {
   <%
   figure = @login_user.get_figure
-  mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
-  mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
+  mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/figures/#{figure}.png"
+  mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/figures/#{figure}.png"
   %>
   var folderImgs = [
   <% icons = MailFolder.get_icons(nil) %>
@@ -969,7 +971,7 @@ function showAddressBook()
 
   thetisBox.show(
         "CENTER",
-        (mainWidth*80/100)+","+(mainHeight*90/100),
+        (_mainWidth*80/100)+","+(_mainHeight*90/100),
         "IFRAME",
         "",
         "",
@@ -1069,7 +1071,7 @@ function showAccountSetting(isNew)
         onComplete:function(request) {
           thetisBoxAccount.show(
                     "CENTER",
-                    "540," + mainHeight*90/100,
+                    "540,"+(_mainHeight*90/100),
                     "TRAY",
                     "",
                     "",

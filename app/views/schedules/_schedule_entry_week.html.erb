@@ -36,8 +36,8 @@ end
       <!-- <%= raw(scope) %> -->
       <% if auth_write %>
       <!--
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" />
       -->
       <% end %>
       <br/>
@@ -53,8 +53,8 @@ end
       if auth_write
     %>
       <!--
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" /><br/>
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', '<%= @schedule.id %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>'); return false;" /><br/>
       -->
       <% end %>
       <% if @schedule.repeat? %><b style="color:white; background-color:#0770E7;">&sub;</b><% end %>

@@ -1,9 +1,8 @@
 #
 #= ItemsController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Items.
 #
@@ -463,10 +462,6 @@ class ItemsController < ApplicationController
     render(:partial => 'edit_item_workflow', :layout => false)
   end
 
-  ######################
-  # Basic Information  #
-  ######################
-
   #=== set_basic
   #
   #<Ajax>
@@ -579,10 +574,6 @@ class ItemsController < ApplicationController
     render(:partial => 'edit_item_basic', :layout => false)
   end
 
-  #################
-  # Description   #
-  #################
-
   #=== set_description
   #
   #<Ajax>
@@ -626,10 +617,6 @@ class ItemsController < ApplicationController
     render(:partial => 'ajax_recent_descriptions', :layout => false)
   end
 
-  ################
-  # Images       #
-  ################
-
   #=== set_image
   #
   #<Ajax>
@@ -640,45 +627,44 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
+    img_attrs = nil
+    unless params[:file].blank?
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      img_attrs = {:file => params[:file]}
+      params.delete(:file)
+    end
+
     created = false
 
     if params[:id].blank?
-      @item = Item.new_info(0)
-      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
-      @item.user_id = @login_user.id
-      @item.title = t('paren.no_title')
-
-      [:image0, :image1].each do |img|
-
-        next if params[img].nil? or params[img][:file].size == 0
-
+      attrs = params.fetch(:item, nil)
+      unless attrs.nil? or img_attrs.nil?
+        @item = Item.new_info(0)
+        @item.attributes = attrs.permit(Item::PERMIT_BASE)
+        @item.user_id = @login_user.id
+        @item.title ||= t('paren.no_title')
         @item.save!
         created = true
-        break
       end
     else
       @item = Item.find(params[:id])
     end
 
-    modified = false
+    unless @item.nil? or img_attrs.nil?
+      item_images = @item.images_without_content
 
-    item_images = @item.images_without_content
-    [:image0, :image1].each do |img|
-      next if params[img].nil? or params[img][:file].nil? or params[img][:file].size == 0
       image = Image.new
       image.item_id = @item.id
-      image.file = params[img][:file]
-      image.title = params[img][:title]
-      image.memo = params[img][:memo]
+      image.file = img_attrs[:file]
+      image.title = File.basename(image.name, '.*')
       image.xorder = item_images.length
       image.save!
 
-      modified = true
       item_images << image
-    end
 
-    if modified and !created
-      @item.update_attribute(:updated_at, Time.now)
+      unless created
+        @item.update_attribute(:updated_at, Time.now)
+      end
     end
 
     render(:partial => 'edit_item_image', :layout => false)
@@ -732,7 +718,7 @@ class ItemsController < ApplicationController
       @item = Item.find(image.item_id)
 
       unless @item.check_user_auth(@login_user, 'w', true)
-        raise t('msg.need_to_be_owner')
+        raise(t('msg.need_to_be_owner'))
       end
 
       image.destroy
@@ -760,7 +746,7 @@ class ItemsController < ApplicationController
       item = Item.find(@image.item_id)
 
       unless item.check_user_auth(@login_user, 'w', true)
-        raise t('msg.need_to_be_owner')
+        raise(t('msg.need_to_be_owner'))
       end
     rescue => evar
       Log.add_error(request, evar)
@@ -784,13 +770,21 @@ class ItemsController < ApplicationController
     @item = Item.find(image.item_id)
 
     unless @item.check_user_auth(@login_user, 'w', true)
-      raise t('msg.need_to_be_owner')
+      raise(t('msg.need_to_be_owner'))
     end
 
-    if !params[:image][:file].nil? and params[:image][:file].size == 0
-      params[:image].delete(:file)
+    img_attrs = nil
+    unless params[:file].blank?
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      img_attrs = {:file => params[:file]}
+      params.delete(:file)
     end
-    unless image.update_attributes(params.require(:image).permit(Image::PERMIT_BASE))
+
+    image.file = img_attrs[:file] unless img_attrs.nil?
+    image.title = params[:image][:title]
+    image.memo = params[:image][:memo]
+
+    unless image.save
       @image = image
       render(:partial => 'edit_item_image', :layout => false)
       return
@@ -843,10 +837,6 @@ class ItemsController < ApplicationController
     render(:plain => evar.to_s)
   end
 
-  ####################
-  # Attachment files #
-  ####################
-
   #=== set_attachment
   #
   #<Ajax>
@@ -857,40 +847,42 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
+    attach_attrs = nil
+    unless params[:file].blank?
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      attach_attrs = {:file => params[:file]}
+      params.delete(:file)
+    end
+
     created = false
 
     if params[:id].blank?
-      @item = Item.new_info(0)
-      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
-      @item.user_id = @login_user.id
-      @item.title = t('paren.no_title')
-
-      [:attachment0, :attachment1].each do |attach|
-
-        next if params[attach].nil? or params[attach][:file].nil? or params[attach][:file].size == 0
-
+      attrs = params.fetch(:item, nil)
+      unless attrs.nil? or attach_attrs.nil?
+        @item = Item.new_info(0)
+        @item.attributes = attrs.permit(Item::PERMIT_BASE)
+        @item.user_id = @login_user.id
+        @item.title ||= t('paren.no_title')
         @item.save!
         created = true
-        break
       end
     else
       @item = Item.find(params[:id])
     end
 
-    modified = false
+    unless @item.nil? or attach_attrs.nil?
+      item_attachments = @item.attachments_without_content
 
-    item_attachments = @item.attachments_without_content
-    [:attachment0, :attachment1].each do |attach|
-      next if params[attach].nil? or params[attach][:file].nil? or params[attach][:file].size == 0
+      attachment = Attachment.create(attach_attrs, @item, item_attachments.length)
+      attachment.item_id = @item.id
+      attachment.title = File.basename(attachment.name, '.*')
+      attachment.save!
 
-      attachment = Attachment.create(params[attach], @item, item_attachments.length)
-
-      modified = true
       item_attachments << attachment
-    end
 
-    if modified and !created
-      @item.update_attribute(:updated_at, Time.now)
+      unless created
+        @item.update_attribute(:updated_at, Time.now)
+      end
     end
 
     render(:partial => 'edit_item_attachment', :layout => false)
@@ -967,7 +959,7 @@ class ItemsController < ApplicationController
       @item = Item.find(attach.item_id)
 
       unless @item.check_user_auth(@login_user, 'w', true)
-        raise t('msg.need_to_be_owner')
+        raise(t('msg.need_to_be_owner'))
       end
 
       attach.destroy
@@ -995,7 +987,7 @@ class ItemsController < ApplicationController
       item = Item.find(@attachment.item_id)
 
       unless item.check_user_auth(@login_user, 'w', true)
-        raise t('msg.need_to_be_owner')
+        raise(t('msg.need_to_be_owner'))
       end
     rescue => evar
       Log.add_error(request, evar)
@@ -1019,13 +1011,25 @@ class ItemsController < ApplicationController
     @item = Item.find(attachment.item_id)
 
     unless @item.check_user_auth(@login_user, 'w', true)
-      raise t('msg.need_to_be_owner')
+      raise(t('msg.need_to_be_owner'))
     end
 
-    if !params[:attachment][:file].nil? and params[:attachment][:file].size == 0
-      params[:attachment].delete(:file)
+    attach_attrs = nil
+    unless params[:file].blank?
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      attach_attrs = {:file => params[:file]}
+      params.delete(:file)
     end
-    unless attachment.update_attributes(params.require(:attachment).permit(Attachment::PERMIT_BASE))
+
+    attrs = {
+      :title => params[:attachment][:title],
+      :memo => params[:attachment][:memo]
+    }
+    unless attach_attrs.nil?
+      attrs[:file] = attach_attrs[:file]
+    end
+
+    unless attachment.update_attributes(attrs)
       @attachment = attachment
       render(:partial => 'edit_item_attachment', :layout => false)
       return
@@ -1078,10 +1082,6 @@ class ItemsController < ApplicationController
     render(:plain => evar.to_s)
   end
 
-  ################
-  # Messages     #
-  ################
-
   #=== add_comment
   #
   #<Ajax>
@@ -1092,22 +1092,9 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    unless params[:comment][:file].nil?
-      attach_params = { :file => params[:comment][:file] }
-      params[:comment].delete(:file)
-    end
-
     @comment = Comment.new(params.require(:comment).permit(Comment::PERMIT_BASE))
     @comment.save!
     @item = @comment.item
-
-    unless attach_params.nil? or attach_params[:file].size <= 0
-      @comment.attachments << Attachment.create(attach_params, @comment, 0)
-    end
-
-    # Sends Mail to the owner of the item.
-    # user = User.find(@item.user_id)
-    # NoticeMailer.comment(user, ApplicationHelper.root_url(request)).deliver unless user.nil?
 
     case @item.xtype
       when Item::XTYPE_WORKFLOW
@@ -1205,15 +1192,16 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    unless params[:comment_file].nil?
-      attach_params = { :file => params[:comment_file] }
-      params.delete(:comment_file)
-    end
+    attach_attrs = nil
+    unless params[:file].blank?
 
-    unless attach_params.nil? or attach_params[:file].size <= 0
       @comment = Comment.find(params[:comment_id])
 
-      @comment.attachments << Attachment.create(attach_params, @comment, 0)
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      attach_attrs = {:file => params[:file]}
+      params.delete(:file)
+
+      @comment.attachments << Attachment.create(attach_attrs, @comment, 0)
       @comment.update_attribute(:updated_at, Time.now)
     end
 

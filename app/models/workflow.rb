@@ -1,9 +1,8 @@
 #
 #= Workflow
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Workflow is related to Item whose xtype attribute is XTYPE_WORKFLOW, and
 #has information of its status and users to require confirmation.
@@ -507,10 +506,10 @@ class Workflow < ActiveRecord::Base
     num = user_comments.length / user_cnt
     num += 1 if (user_comments.length % user_cnt) >= (order_idx + 1)
 
-    ary = []
+    arr = []
     num.times do |x|
-      ary << user_comments[order_idx + x * user_cnt]
+      arr << user_comments[order_idx + x * user_cnt]
     end
-    return ary
+    return arr
   end
 end

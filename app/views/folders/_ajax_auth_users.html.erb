@@ -58,10 +58,10 @@
                     <table style="width:100%;">
                       <tr>
                         <td style="text-align:center;" nowrap>
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="var ary=moveListWithSuffix(_z('user_candidates'), _z('users_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_users++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="var ary=moveListWithSuffix(_z('user_candidates'), _z('users_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_users++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="var ary=moveListWithSuffix(_z('user_candidates'), _z('users_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_users++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="var ary=moveListTrimSuffix(_z('users_auth'), _z('user_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_users++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="onAddUsersReadWriteClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="onAddUsersReadClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="onAddUsersWriteClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="onRemoveUsersClicked();" />
                         </td>
                       </tr>
                     </table>
@@ -116,6 +116,38 @@
 modified_users = 0;
 modified_groups = 0;
 modified_teams = 0;
+
+onAddUsersReadWriteClicked = function()
+{
+  var arr = moveListWithSuffix(_z("user_candidates"), _z("users_auth"), ":r+w", " (Read/Write)");
+  if (arr != null && arr.length > 0) {
+    modified_users++;
+  }
+}
+
+onAddUsersReadClicked = function()
+{
+  var arr = moveListWithSuffix(_z("user_candidates"), _z("users_auth"), ":r", " (Read)");
+  if (arr != null && arr.length > 0) {
+    modified_users++;
+  }
+}
+
+onAddUsersWriteClicked = function()
+{
+  var arr = moveListWithSuffix(_z("user_candidates"), _z("users_auth"), ":w", " (Write)");
+  if (arr != null && arr.length > 0) {
+    modified_users++;
+  }
+}
+
+onRemoveUsersClicked = function()
+{
+  var arr = moveListTrimSuffix(_z("users_auth"), _z("user_candidates"), ":", "(");
+  if (arr != null && arr.length > 0) {
+    modified_users++;
+  }
+}
 
 doSelectGroup = function(thetisBoxId)
 {

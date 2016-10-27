@@ -228,6 +228,7 @@ de:
       apply: "Bewergung"
       dist_ack: "Distribution Einverständnis"
     from: " von "
+    attachments_info: "Files can be attached after a comment is registered."
   config:
     menu_name: "Menüname"
     menu_target: "Ziel"

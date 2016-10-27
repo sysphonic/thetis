@@ -22,11 +22,11 @@
           <%
           vals = @research.get_by_q_code(q_code)
           unless vals.nil?
-            ary = vals.split("\n")
+            arr = vals.split("\n")
           %>
-          <%
-            ary.each do |val|
-          %>
+            <%
+            arr.each do |val|
+            %>
             <b><%= val %></b><br/>
           <%
             end

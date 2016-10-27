@@ -84,11 +84,11 @@
           <tr style="height:5px;"><td></td></tr>
           <tr>
             <td style="text-align:center;">
-              <table onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') left no-repeat; cursor:pointer;">
+              <table onclick="showDecidedInbox(<%= WorkflowsHelper.get_decided_inbox(@login_user.id).id %>);" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/flat_button.png') left no-repeat; cursor:pointer;">
                 <tr style="height:35px;">
                   <td style="width:15px;"></td>
                   <td style="width:20px; text-align:center;" >
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder.gif">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder.png" />
                   </td>
                   <td style="text-align:left; padding-left:10px">
                     <span id="divWfStatus" style="color:black;" title="<%= Workflow.decided_inbox %>"><%= truncate(Workflow.decided_inbox, :length => 30) %></span><br/>
@@ -127,7 +127,7 @@ function showDecidedInbox(folder_id)
           thetisBoxDecidedInbox.overflow = "scroll";
           thetisBoxDecidedInbox.show(
                     "CENTER",
-                    mainWidth*80/100+"," + mainHeight*80/100,
+                    (_mainWidth*80/100)+","+(_mainHeight*80/100),
                     "TRAY",
                     "",
                     "",

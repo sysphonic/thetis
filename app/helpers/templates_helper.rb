@@ -1,9 +1,8 @@
 #
 #= TemplatesHelper
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Provides utility methods and constants about templates of Items.
 #
@@ -119,14 +118,14 @@ module TemplatesHelper
 
     if tmpl_folder.nil?
 
-      ary = self.setup_tmpl_folder
+      arr = self.setup_tmpl_folder
 
-      unless ary.nil? or ary.empty?
-        tmpl_folder = ary[0]
-        tmpl_system_folder = ary[1]
-        tmpl_workflows_folder = ary[2]
-        tmpl_local_folder = ary[3]
-        tmpl_q_folder = ary[4]
+      unless arr.nil? or arr.empty?
+        tmpl_folder = arr[0]
+        tmpl_system_folder = arr[1]
+        tmpl_workflows_folder = arr[2]
+        tmpl_local_folder = arr[3]
+        tmpl_q_folder = arr[4]
       end
 
     else

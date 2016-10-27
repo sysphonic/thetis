@@ -1,18 +1,25 @@
 
 <% unless @office_map.nil? %>
 
-<%= form_tag( {:controller => 'locations', :action => 'update_map', :group_id => @group_id}, :name => 'form_group_map', :method => 'post', :enctype => 'multipart/form-data') %>
+<form name="form_group_map">
   <%= check_box(:office_map, :img_enabled) %><label for="office_map_img_enabled"><%= t('office_map.enable_map') %></label><br/>
   <div style="text-align:left; padding:5px 0px 5px 30px;">
   <% if !@office_map.img_size.nil? and @office_map.img_size > 0 %>
     <img style="width:120px;" src="<%= url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :ts => ApplicationHelper.get_timestamp(@office_map)) %>" />
   <% end %>
   </div>
-  <div style="text-align:left; padding-left:20px;">
-    <%= file_field(:office_map, :file, :style => 'width:100%', :size => '50') %>
+  <div id="office_map_uploader">
+    <p>Your browser doesn't have HTML5 support.</p>
   </div>
+  <input type="hidden" name="group_id" value="<%= @group_id %>" />
   <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
 </form>
+
+<script type="text/javascript">
+
+jQuery("#office_map_uploader").plupload(getPluploadImgOptions(1));
+
+</script>
 
 <% end %>
 

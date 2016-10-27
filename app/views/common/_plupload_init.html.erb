@@ -1,0 +1,75 @@
+
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.9/themes/redmond/jquery-ui.css" type="text/css" />
+<link rel="stylesheet" href="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/plupload/js/jquery.ui.plupload/css/jquery.ui.plupload.css" type="text/css" />
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.2/jquery-ui.min.js"></script>
+
+<script type="text/javascript" src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/plupload/js/plupload.min.js"></script>
+<script type="text/javascript" src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/plupload/js/jquery.ui.plupload/jquery.ui.plupload.js"></script>
+
+
+<script type="text/javascript">
+
+jQuery.noConflict();
+
+getPluploadImgOptions = function(maxFiles)
+{
+  var opts = {
+    filters : {
+      max_file_size : "10mb",
+      mime_types: [
+        {title : "Image files", extensions : "jpg,gif,png"},
+      ]
+    },
+  };
+  if (maxFiles) {
+    opts = mergeHash(opts, {max_file_count:maxFiles});
+  }
+  return getPluploadOptions(opts);
+}
+
+getPluploadOptions = function(opts)
+{
+  var baseOpts = {
+    runtimes : "html5",   //,flash,silverlight,html4
+    url : "",             // uploader.setOption("url", ...)
+    max_file_count: 20,
+    chunk_size: "1mb",
+
+    buttons : {
+      start : false
+    },
+
+    //resize : {
+    //  width : 200, 
+    //  height : 200, 
+    //  quality : 90,
+    //  crop: true // crop to exact dimensions
+    //},
+
+    filters : {
+      max_file_size : "1000mb",
+      mime_types: [
+        {title : "Image files", extensions : "jpg,gif,png"},
+        {title : "Zip files", extensions : "zip"}
+      ]
+    },
+    rename: true,
+    sortable: true,
+    dragdrop: true,
+
+    views: {
+      list: true,
+      thumbs: true,
+      active: "thumbs"
+    }
+  };
+  if (opts) {
+    return mergeHash(baseOpts, opts);
+  } else {
+    return baseOpts;
+  }
+}
+
+</script>

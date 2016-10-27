@@ -15,7 +15,9 @@
             <%= t('item.new_file') %>
           </td>
           <td class="item_value_td">
-            <%= file_field(:attachment, :file, :size => '43', :style => 'width:100%') %><br/>
+            <div id="attachment_info_uploader">
+              <p>Your browser doesn't have HTML5 support.</p>
+            </div>
           </td>
         </tr>
         <tr>
@@ -54,8 +56,8 @@
             <table style="width:100%;">
               <tr>
                 <td style="text-align:center;">
-                  <input id="attachment_info_ok" type="button" value="<%= t('btn.register') %>" onclick="onAttachInfoOk()" style="width:80px;">
-                  &nbsp;&nbsp;<input id="attachment_info_cancel" type="button" value="<%= t('btn.cancel') %>" onclick="onAttachInfoCancel()" style="width:80px;">
+                  <input id="attachment_info_ok" type="button" value="<%= t('btn.register') %>" onclick="onAttachInfoOkClicked()" style="width:80px;">
+                  &nbsp;&nbsp;<input id="attachment_info_cancel" type="button" value="<%= t('btn.cancel') %>" onclick="onAttachInfoCancelClicked()" style="width:80px;">
                 </td>
               </tr>
             </table>
@@ -70,3 +72,10 @@
 
 </form>
 
+<script type="text/javascript">
+
+jQuery(document).ready(function($){
+	$("#attachment_info_uploader").plupload(getPluploadOptions(1));
+});
+
+</script>

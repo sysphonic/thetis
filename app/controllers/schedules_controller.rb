@@ -1,9 +1,8 @@
 #
 #= SchedulesController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Schedules.
 #
@@ -579,14 +578,14 @@ class SchedulesController < ApplicationController
     end
 
     if !@login_user.nil? and user_id == @login_user.id and !@schedules.nil?
-      equip_ary = []
+      equip_arr = []
       @schedules.each do |schedule|
-        equip_ary = equip_ary | schedule.get_equipment_a
+        equip_arr = equip_arr | schedule.get_equipment_a
       end
       overlap_h = {}
-      equip_ary.each do |equip_id|
-        schedule_ary = Schedule.get_equipment_day(equip_id, @date)
-        overlaps = Schedule.check_overlap_equipment(equip_id, schedule_ary, @date)
+      equip_arr.each do |equip_id|
+        schedule_arr = Schedule.get_equipment_day(equip_id, @date)
+        overlaps = Schedule.check_overlap_equipment(equip_id, schedule_arr, @date)
         unless overlaps.empty?
           overlap_h[equip_id] = overlaps
         end
@@ -594,10 +593,10 @@ class SchedulesController < ApplicationController
       unless overlap_h.empty?
         flash[:notice] = 'ERROR:' + t('schedule.conflict_equipment')
         flash[:notice] << '<br/>'
-        overlap_h.each do |equip_id, schedule_ary|
+        overlap_h.each do |equip_id, schedule_arr|
           flash[:notice] << '&laquo;' + Equipment.get_name(equip_id) + '&raquo;<br/>'
           flash[:notice] << '<ul style=\'padding-left:40px;\'>'
-          schedule_ary.each do |schedule_id|
+          schedule_arr.each do |schedule_id|
             flash[:notice] << '<li>' + Schedule.get_title(schedule_id) + '</li>'
           end
           flash[:notice] << '</ul>'

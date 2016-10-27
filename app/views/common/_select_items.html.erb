@@ -21,7 +21,7 @@ end
     <td style="text-align:left; color:blue;">
       <% unless @folder_id.nil? %>
         <%= Folder.get_path(@folder_id, @folders_cache, @folder_obj_cache) %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearFolderToSelectItems();" title="<%= t('btn.clear') %>">
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" onclick="doClearFolderToSelectItems();" title="<%= t('btn.clear') %>">
       <% end %>
     </td>
   </tr>

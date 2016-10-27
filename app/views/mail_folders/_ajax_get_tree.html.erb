@@ -2,8 +2,8 @@
 
 <%
 figure = @login_user.get_figure
-mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
-mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
+mail_user_open = THETIS_RELATIVE_URL_ROOT + "/images/figures/#{figure}.png"
+mail_user_close = THETIS_RELATIVE_URL_ROOT + "/images/figures/#{figure}.png"
 %>
 var folderImgs = [
 <% icons = MailFolder.get_icons(nil) %>

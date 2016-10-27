@@ -162,23 +162,23 @@ unless @toys.nil?
 %>
   <div class="toy_desktop" id="<%= toy_id %>" style="text-align:left; position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
-    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
+    img_root = THETIS_RELATIVE_URL_ROOT + '/images/icons/'
     icon_img = ""
     case toy.xtype
       when Toy::XTYPE_ITEM
-        icon_img = img_root + 'item.gif'
+        icon_img = img_root + 'item.png'
       when Toy::XTYPE_COMMENT
-        icon_img = img_root + 'comment.gif'
+        icon_img = img_root + 'comment.png'
       when Toy::XTYPE_WORKFLOW
-        icon_img = img_root + 'workflow.gif'
+        icon_img = img_root + 'workflow.png'
       when Toy::XTYPE_SCHEDULE
-        icon_img = img_root + 'schedule.gif'
+        icon_img = img_root + 'schedule.png'
       when Toy::XTYPE_FOLDER
         begin
           folder = Folder.find(toy.target_id)
           icon_img = folder.get_icons[0]
         rescue
-          icon_img = img_root + 'folder/folder.gif'
+          icon_img = img_root + 'folder/folder.png'
         end
     end
     %>
@@ -382,7 +382,7 @@ user_param += @login_user.id.to_s unless @login_user.nil?
 
   thetisBox.show(
             "CENTER",
-            (mainWidth*90/100)+','+(mainHeight*90/100),
+            (_mainWidth*90/100)+','+(_mainHeight*90/100),
             "IFRAME",
             "",
             "",
@@ -667,7 +667,7 @@ showAddressBook = function()
 
   thetisBoxAddressBook.show(
             "CENTER",
-            (mainWidth*80/100)+','+(mainHeight*90/100),
+            (_mainWidth*80/100)+','+(_mainHeight*90/100),
             "IFRAME",
             "",
             "",
@@ -781,7 +781,7 @@ doShowLocations = function()
 
   thetisBoxLocations.show(
             "CENTER",
-            (mainWidth*80/100)+','+(mainHeight*92/100),
+            (_mainWidth*80/100)+','+(_mainHeight*92/100),
             "IFRAME",
             "",
             "",

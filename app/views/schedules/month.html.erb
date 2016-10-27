@@ -13,7 +13,7 @@
       <table style="margin:0px auto 0px 0px; width:65px;">
         <tr>
           <td nowrap style="text-align:left; width:30px;">
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/schedule_add.png" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'day', :date => @date.strftime(Schedule::SYS_DATE_FORM), :showNew => 'true') %>';">
           </td>
           <% if @login_user.admin?(User::AUTH_SCHEDULE) %>
           <td style="width:5px;"></td>
@@ -129,7 +129,7 @@ for wd in 0..6 do
           <% elsif schedule.repeat? %>
             <b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<%= title %><br/>
           <% else %>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" />&nbsp;<%= title %><br/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" />&nbsp;<%= title %><br/>
         <%
           end
         end
@@ -149,16 +149,16 @@ for wd in 0..6 do
     %>
         <% alt = h(timecard.workcode_name) %>
         <a href="javascript:this.onclick()" onclick="parentNode.onclick=null; prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => @login_user.id) %>'; return false;">
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" title="<%= alt %>">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/<%= timecard.workcode_icon %>" title="<%= alt %>" />
           <%
           options = ''
           if timecard.business_trip?
-            options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" title="'+t('timecard.business_trip')+'">'
+            options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.png" title="'+t('timecard.business_trip')+'" />'
           end
           %>
           <%= raw(options) %>
           <% if !timecard.start.nil? and timecard.end.nil? %>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" title="<%= t('msg.not_fulfilled') %>"/>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png" title="<%= t('msg.not_fulfilled') %>" />
           <% end %>
         </a>
     <%

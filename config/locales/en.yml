@@ -228,6 +228,7 @@ en:
       apply: "Application"
       dist_ack: "Distribution Acknowledgment"
     from: " from "
+    attachments_info: "Files can be attached after a comment is registered."
   config:
     menu_name: "Menu name"
     menu_target: "Target"

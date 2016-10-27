@@ -1,9 +1,8 @@
 #
 #= ApplicationHelper
 #
-#Copyright:: Copyright (c) 2007-2015 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Methods added to this helper will be available to all templates in the application.
 #
@@ -177,11 +176,11 @@ module ApplicationHelper
   #
   #Sorts an array by updated_at field.
   #
-  #_ary_:: Target array.
+  #_arr_:: Target array.
   #
-  def self.sort_updated_at(ary)
+  def self.sort_updated_at(arr)
 
-    ary.sort! { |elem_a, elem_b|
+    arr.sort! { |elem_a, elem_b|
 
       idx_a = elem_a.updated_at || DateTime.new
       idx_b = elem_b.updated_at || DateTime.new

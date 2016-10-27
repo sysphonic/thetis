@@ -1,9 +1,8 @@
 #
 #= Schedule
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Schedule is related to date (or rules) and Users. It can be also related to Equipment and Items.
 #
@@ -604,22 +603,22 @@ class Schedule < ActiveRecord::Base
 
     return [] if equipment_id.nil? or schedules.nil? or date.nil?
 
-    target_ary = []
-    ret_ary = []
+    target_arr = []
+    ret_arr = []
 
     schedules.each do |schedule|
       next unless schedule.get_equipment_a.include?(equipment_id.to_s)
 
-      target_ary.each do |other|
+      target_arr.each do |other|
         if schedule.overlap?(other, date)
-          ret_ary |= [other.id, schedule.id]
+          ret_arr |= [other.id, schedule.id]
         end
       end
 
-      target_ary << schedule
+      target_arr << schedule
     end
 
-    return ret_ary
+    return ret_arr
   end
 
   #=== overlap?

@@ -1,5 +1,5 @@
 
-<%= render(:partial => 'common/dojo_init') %>
+<%= render(:partial => 'common/plupload_init') %>
 
 <table id="tree_main" style="width:100%; background-color:burlywood; border:solid 2px; border-top-color:palegoldenrod; border-left-color:palegoldenrod; border-bottom-color:dimgray; border-right-color:dimgray;">
   <tr>
@@ -42,7 +42,7 @@
             </form>
           </td>
           <td id="drag_border" style="width:5px; background-color:burlywood; cursor:w-resize; vertical-align:middle;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/grip_vertical.png">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_vertical.png">
           </td>
           <td id="td_view" style="width:63%; border:inset 2px silver; text-align:center; vertical-align:top;">
             <div id="div_view" style="width:100%; overflow:auto;">&nbsp;</div>
@@ -103,8 +103,8 @@ function onBorderDragged(x, y, divGroupTree, td_tree, view, td_view, orgWidthGro
 function onLoadSub()
 {
   <%
-  group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.gif'
-  group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'
+  group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.png'
+  group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.png'
   %>
   var folderImgs = new Array(
                         new Array("<%= group_folder_open %>", "<%= group_folder_close %>")

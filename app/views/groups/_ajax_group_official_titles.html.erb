@@ -8,12 +8,12 @@
         official_titles.each do |official_title|
       %>
         <div id="item_<%= official_title.id %>" style="height:18px; padding-top:4px; padding-bottom:4px;">
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/up_down.png" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
           <a class="a_underline" href="javascript:this.onclick()" onclick="showOfficialTitle(<%= official_title.id %>); return false;">
             <%= truncate(official_title.name, :length => 20) %>
           </a>
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" style="margin-left:10px;" />
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteOfficialTitleClicked(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" style="margin-left:5px;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="doEditOfficialTitle(<%= official_title.id %>);" style="margin-left:10px;" />
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteOfficialTitleClicked(<%= official_title.id %>, '<%= ApplicationHelper.h_s_quote(truncate(official_title.name, :length => 20)) %>'); return false;" style="margin-left:5px;" />
         </div>
       <%
         end

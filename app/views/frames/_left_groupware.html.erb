@@ -22,7 +22,7 @@ mode = 'groupware'
         <tr id="tr_top_space_lower" style="height:3px;"><td></td></tr>
         <tr id="tr_drop_down" style="height:15px; display:none;">
           <td style="text-align:center; vertical-align:middle;">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropdown.gif" onclick="toggleSymbol(true);" style="cursor:pointer;">
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropdown.png" onclick="toggleSymbol(true);" style="cursor:pointer;">
           </td>
         </tr>
       <%
@@ -74,7 +74,7 @@ mode = 'groupware'
           <tr style="height:28px;">
             <td style="text-align:center;" onmouseover="activateAdminMenu(this);" onmouseout="deactivateAdminMenu(this);">
               <a href="javascript:this.onclick()" class="a_underline" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onblur="setTimeout('hideAdminMenu()', 200);" style="color:darkgreen;"><%= t('menu.for_admin') %></a>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/arrow_disc_green.gif">
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/arrow_disc_green.png">
             </td>
           </tr>
         </table>
@@ -84,7 +84,7 @@ mode = 'groupware'
   <tr style="height:100%;"><td></td></tr>
 
   <tr style="height:48px;">
-    <td style="text-align:left; padding-left:15px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/left_down.png') center top no-repeat;">
+    <td style="text-align:left; padding-left:15px; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/background/left_bottom.png') center top no-repeat;">
       <table style="width:50%; cursor:pointer;" onclick="doUpdateIframe('<%= url_for(:controller => 'schedules', :action => 'month') %>?id='+getDateString(), '<%= mode %>');" onmouseover="this.style.border='1px dotted white'; hideAdminMenu();" onmouseout="this.style.border=''">
         <tr>
           <td style="padding:0px 5px; color:white; font-size:9pt; line-height:13px;" nowrap>
@@ -99,7 +99,7 @@ mode = 'groupware'
 <table id="adminPopup" style="width:170px; position:absolute; display:none; z-index:99999; background-color:white; border:outset 3px green;">
   <tr style="height:10px;">
     <td style="text-align:right; vertical-align:top; background-color:white; padding:0px 5px; border:none;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/close_tiny.png" onclick="hideAdminMenu();" style="cursor:pointer;">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/close_tiny.png" onclick="hideAdminMenu();" style="cursor:pointer;">
     </td>
   </tr>
   <tr>
@@ -151,7 +151,7 @@ mode = 'groupware'
 <img id='popupImg_timecard' src="<%= THETIS_RELATIVE_URL_ROOT %>/images/menu/timecard.png" style="position:absolute; display:none; z-index:99999;" title="" />
 <% end %>
 
-<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/list_th_on.png" style="display:none;" title="" />
+<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/list_th_on.png" style="display:none;" title="" />
 
 <script type="text/javascript">
 

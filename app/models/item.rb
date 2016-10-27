@@ -1,9 +1,8 @@
 #
 #= Item
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Item is the most elemental object on this system.
 #It contains description(expected HTML-formatted by FCKeditor), 
@@ -824,15 +823,15 @@ class Item < ActiveRecord::Base
 
     return [] if self.comments.nil?
 
-    ary = []
+    arr = []
 
     self.comments.each do |comment|
       next unless comment.xtype == Comment::XTYPE_APPLY
 
-      ary << comment.user_id.to_s
+      arr << comment.user_id.to_s
     end
 
-    return ary.uniq
+    return arr.uniq
   end
 
   #=== self.get_toys

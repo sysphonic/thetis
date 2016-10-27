@@ -32,7 +32,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         <table style="width:65px; margin:0px auto 0px 0px;">
           <tr>
             <td style="width:30px; text-align:left;" nowrap>
-              <img class="img_btn" onclick="showNewDetail(); return false;" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/schedule_add.gif" title="<%= t('btn.create') %>">
+              <img class="img_btn" onclick="showNewDetail(); return false;" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/schedule_add.png" title="<%= t('btn.create') %>">
             </td>
           <% if @login_user.admin?(User::AUTH_SCHEDULE) %>
             <td style="width:5px;"></td>

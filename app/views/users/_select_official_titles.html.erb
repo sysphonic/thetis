@@ -15,7 +15,7 @@
         <td style="text-align:left; color:blue;">
           <% unless @group_id.nil? %>
             <%= Group.get_path(@group_id, @groups_cache) %>
-            &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" onclick="doClearGroup();" title="<%= t('btn.clear') %>">
+            &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" onclick="doClearGroup();" title="<%= t('btn.clear') %>">
           <% end %>
         </td>
       </tr>

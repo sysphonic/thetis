@@ -5,23 +5,23 @@
   <% toy_id = "#{toy.xtype}:#{toy.target_id}" %>
   <div class="toy_tray" id="<%= toy_id %>" style="z-index:10000; padding:5px; font-size:9pt; word-break:break-all;">
     <%
-    img_root = THETIS_RELATIVE_URL_ROOT + '/images/'
+    img_root = THETIS_RELATIVE_URL_ROOT + '/images/icons/'
     icon_img = ""
     case toy.xtype
       when Toy::XTYPE_ITEM
-        icon_img = img_root + 'item.gif'
+        icon_img = img_root + 'item.png'
       when Toy::XTYPE_COMMENT
-        icon_img = img_root + 'comment.gif'
+        icon_img = img_root + 'comment.png'
       when Toy::XTYPE_WORKFLOW
-        icon_img = img_root + 'workflow.gif'
+        icon_img = img_root + 'workflow.png'
       when Toy::XTYPE_SCHEDULE
-        icon_img = img_root + 'schedule.gif'
+        icon_img = img_root + 'schedule.png'
       when Toy::XTYPE_FOLDER
         begin
           folder = Folder.find(toy.target_id)
           icon_img = folder.get_icons[0]
         rescue
-          icon_img = img_root + 'folder/folder.gif'
+          icon_img = img_root + 'folder/folder.png'
         end
     end
     %>

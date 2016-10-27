@@ -1,24 +1,6 @@
 
 <script type="text/javascript">
 
-// Verbose definition for dojo.io.iframe >>>
-getCsrfToken = function()
-{
-  var targetFrame = top;
-  if (typeof(top.getActiveContent) != "undefined") {
-    targetFrame = top.getActiveContent();
-  }
-  var metas = targetFrame.document.getElementsByTagName ("meta");
-  for (var i=0; i < metas.length; i++) {
-    var meta = metas[i];
-    if (meta.name == "csrf-token") {
-      return meta.content;
-    }
-  }
-  return null;
-}
-// Verbose definition for dojo.io.iframe <<<
-
 alertSessionRenewed = function()
 {
   if (getCsrfToken() != "<%= form_authenticity_token %>") {

@@ -27,10 +27,10 @@ unless params[:from].blank?
         <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;">
           <%= @schedule.title %>
         </a>
-        &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
+        &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.move_to_schedule') %>" onclick="prog('TOP-RIGHT'); location.href='<%= href %>'; return false;" />
       <% if auth_write %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', <%= @schedule.id %>)" />
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>');" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editScheduleDetail('<%= date_s %>', <%= @schedule.id %>)" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteScheduleClicked('<%= date_s %>', '<%= @schedule.id %>', '<%= ApplicationHelper.h_s_quote(truncate(@schedule.title, :length => 20)) %>');" />
       <% end %>
 <% else %>
         <%= @schedule.title %>
@@ -40,7 +40,7 @@ unless params[:from].blank?
   if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s))
   %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+        <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/desktop.png" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
 
 <script type="text/javascript">
 
@@ -310,7 +310,7 @@ end
             <%= disp %>
           <% if auth_read %></a><% end %>
           <% if !@login_user.nil? and !item.nil? and item.editable?(@login_user.id) %>
-          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
+          &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
           <% end %>
         </li>
         <% end %>
@@ -359,7 +359,7 @@ showItem = function(item_id, title)
   thetisBox.title = title;
   thetisBox.show(
             "CENTER",
-            (mainWidth*8/10)+','+(mainHeight*8/10),
+            (_mainWidth*8/10)+','+(_mainHeight*8/10),
             "IFRAME",
             "",
             "",
@@ -374,7 +374,7 @@ showEquipment = function(equipment_id, name)
   thetisBox.title = "<%= t('menu.equipment') %>";
   thetisBox.show(
             "CENTER",
-            (mainWidth*7/10)+","+(mainHeight*7/10),
+            (_mainWidth*7/10)+","+(_mainHeight*7/10),
             "IFRAME",
             "",
             "",

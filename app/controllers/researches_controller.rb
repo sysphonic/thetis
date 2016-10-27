@@ -1,9 +1,8 @@
 #
 #= ResearchesController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Researches.
 #
@@ -48,8 +47,8 @@ class ResearchesController < ApplicationController
     tmpl_folder, @tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
     if @tmpl_q_folder.nil?
-      ary = TemplatesHelper.setup_tmpl_folder
-      @tmpl_q_folder = ary[4]
+      arr = TemplatesHelper.setup_tmpl_folder
+      @tmpl_q_folder = arr[4]
     end
 
     @items = Folder.get_items_admin(@tmpl_q_folder.id, 'xorder ASC')
@@ -280,9 +279,9 @@ class ResearchesController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:groups_order]
+    order_arr = params[:groups_order]
 
-    Research.set_statistics_groups(order_ary)
+    Research.set_statistics_groups(order_arr)
 
     render(:plain => '')
   end
@@ -300,8 +299,8 @@ class ResearchesController < ApplicationController
     tmpl_folder, tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
     if tmpl_q_folder.nil?
-      ary = TemplatesHelper.setup_tmpl_folder
-      tmpl_q_folder = ary[4]
+      arr = TemplatesHelper.setup_tmpl_folder
+      tmpl_q_folder = arr[4]
     end
 
     items = Folder.get_items_admin(tmpl_q_folder.id, 'xorder ASC')
@@ -512,8 +511,8 @@ class ResearchesController < ApplicationController
       tmpl_folder, tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
       if tmpl_q_folder.nil?
-        ary = TemplatesHelper.setup_tmpl_folder
-        tmpl_q_folder = ary[4]
+        arr = TemplatesHelper.setup_tmpl_folder
+        tmpl_q_folder = arr[4]
       end
 
       items = Folder.get_items_admin(tmpl_q_folder.id, 'xorder ASC')
@@ -672,8 +671,8 @@ class ResearchesController < ApplicationController
     tmpl_folder, tmpl_q_folder = TemplatesHelper.get_tmpl_subfolder(TemplatesHelper::TMPL_RESEARCH)
 
     if tmpl_q_folder.nil?
-      ary = TemplatesHelper.setup_tmpl_folder
-      tmpl_q_folder = ary[4]
+      arr = TemplatesHelper.setup_tmpl_folder
+      tmpl_q_folder = arr[4]
     end
 
     @q_codes = []

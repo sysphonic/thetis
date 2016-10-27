@@ -54,20 +54,20 @@ CKEditor ver.4.5.6
 JKL.Calendar based on ver.0.13 
   Copyright 2005-2006 Kawasaki Yusuke
   http://www.kawa.net/works/js/jkl/calender.html
-(thetis/public/javascripts/jkl-calendar)
+(thetis/app/assets/javascripts/jkl-calendar)
 
-Dojo ver.1.7.2
-  Copyright (c) 2004-2011, The Dojo Foundation
-  http://dojotoolkit.org 
-(thetis/public/javascripts/dojo)
+Plupload v3.0-beta1
+  Copyright 2013, Moxiecode Systems AB
+  http://www.moxiecode.com/
+(thetis/public/javascripts/plupload)
 
 Prototype JavaScript framework ver.1.7
   (c) 2005-2010 Sam Stephenson
   http://prototype.conio.net/
-(thetis/public/javascripts/prototype.js)
+(thetis/app/assets/javascripts/prototype.js)
 
 script.aculo.us v1.9.0
   Copyright (c) 2005-2010 Thomas Fuchs
   http://script.aculo.us
-(thetis/public/javascripts/scriptaculous)
+(thetis/app/assets/javascripts/scriptaculous)
 **---------------**---------------**---------------**---------------**

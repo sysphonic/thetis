@@ -114,25 +114,25 @@ else
     </td>
     <td style="text-align:center;" nowrap>
       <% if !timecard.start.nil? and timecard.end.nil? %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/pencil.gif" title="<%= t('msg.not_fulfilled') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png" title="<%= t('msg.not_fulfilled') %>">
       <%
       elsif !timecard.start.nil?
         check_ok = true
         if timecard.lateness?
           check_ok = false
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.gif" title="<%= t('timecard.lateness') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/lateness.png" title="<%= t('timecard.lateness') %>">
         <%
         end
         if timecard.leaving_early?
           check_ok = false
         %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.gif" title="<%= t('timecard.leaving_early') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/leaving_early.png" title="<%= t('timecard.leaving_early') %>">
       <%
         end
         if check_ok
       %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" title="<%= t('btn.ok') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ok.png" title="<%= t('btn.ok') %>">
       <%
         end
       end
@@ -142,7 +142,7 @@ else
       <%
       options = ''
       if timecard.business_trip?
-        options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.gif" title="'+t('timecard.business_trip')+'">'
+        options = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/timecard/business_trip.png" title="'+t('timecard.business_trip')+'">'
       end
       %>
       <%= raw(options) %>
@@ -194,7 +194,7 @@ else
       <% end %>
     </td>
     <td style="text-align:center; text-align:center;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => user.id, :display => params[:display]) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.detail') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => user.id, :display => params[:display]) %>';">
     </td>
   </tr>
 <%

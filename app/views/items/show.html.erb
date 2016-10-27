@@ -12,7 +12,7 @@
 @folder_obj_cache = {}
 %>
 
-<%= render(:partial => 'common/dojo_init') %>
+<%= render(:partial => 'common/plupload_init') %>
 
 <table style="width:100%;">
   <tr>
@@ -29,9 +29,9 @@ unless @for_print
   end
   if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
 %>
-      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/desktop.png" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
   <% end %>
-      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" title="<%= t('item.show_url') %>" onclick="showURL();">
+      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/url.png" title="<%= t('item.show_url') %>" onclick="showURL();">
 <% end %>
     </td>
     <td>
@@ -42,7 +42,7 @@ unless @for_print
               <tr style="height:18px;">
               <% if @item.xtype == Item::XTYPE_PROJECT %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" />
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
                 </td>
               <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
@@ -80,7 +80,7 @@ unless @for_print
                 </td>
               <% end %>
                 <td class="td_entry_info_val" nowrap>
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= (@item.public) ? 'check_ok.gif' : 'check_ng.gif' %>">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= (@item.public) ? 'check_ok.png' : 'check_ng.png' %>">
                 </td>
               </tr>
             </table>
@@ -175,13 +175,13 @@ end
   <% if !@login_user.nil? and @item.editable?(@login_user) %>
     <td style="width:10px;"></td>
     <td id="edit_button" class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
     </td>
   <% end %>
   <% if !@login_user.nil? and @item.movable?(@login_user) %>
     <td style="width:10px;"></td>
     <td class="img_button_td" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.gif" title="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.png" title="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
     </td>
 
 <script type="text/javascript">
@@ -233,7 +233,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
   <% if !@login_user.nil? and @item.deletable?(@login_user) %>
     <td style="width:10px;"></td>
     <td id="delete_button" class="img_button_td" onclick="onDeleteItemClicked(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
     </td>
   <% end %>
   </tr>
@@ -611,9 +611,9 @@ end
                   <%= ZeptairDistHelper::MARK_NA %>
                 <% else %>
                   <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(attach)) %>
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ok.png">
                   <% elsif !entries.find{|entry| entry.index("#{attach.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ng.png">
                   <% else %>
                     <%= ZeptairDistHelper::MARK_NA %>
                   <% end %>
@@ -626,9 +626,9 @@ end
                   <%= ZeptairDistHelper::MARK_NA %>
                 <% else %>
                   <% if entries.include?(ZeptairDistHelper.get_ack_entry_for(zept_cmd)) %>
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ok.png">
                   <% elsif !entries.find{|entry| entry.index("#{zept_cmd.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{zept_cmd.id}#{ZeptairDistHelper::ACK_ID_SEP}")==0}.nil? %>
-                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+                    <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ng.png">
                   <% else %>
                     <%= ZeptairDistHelper::MARK_NA %>
                   <% end %>
@@ -685,7 +685,7 @@ end
         </tr>
       </table>
 
-      <table onclick="showZeptairDistUsers()" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/flat_button.png') center no-repeat; cursor:pointer;">
+      <table onclick="showZeptairDistUsers()" style="width:300px; margin:0px auto; background:url('<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/flat_button.png') center no-repeat; cursor:pointer;">
         <tr style="height:35px;">
           <td style="text-align:center;">
             <%= t('msg.show_list') %>
@@ -700,7 +700,7 @@ function showZeptairDistUsers()
   thetisBox.title = "<%= t('zeptair.dist.state') %>";
   thetisBox.show(
             "CENTER",
-            (mainWidth*80/100)+','+(mainHeight*95/100),
+            (_mainWidth*80/100)+','+(_mainHeight*95/100),
             "IFRAME",
             "",
             "",
@@ -772,26 +772,17 @@ function showZeptairDistUsers()
         </td>
       </tr>
       <tr>
-        <td style="padding:20px 15px 15px;">
+        <td style="padding:10px 15px 15px;">
           <table style="width:85%; margin:0px auto;">
+            <tr>
+              <td style="text-align:right;">
+                <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png">&nbsp;<%= t('comment.attachments_info') %>
+              </td>
+            </tr>
+            <tr style="height:5px;"><td></td></tr>
             <tr>
               <td>
                 <textarea id="comment_message" name="comment[message]" rows="4" wrap="off" style="width:100%"></textarea>
-              </td>
-            </tr>
-            <tr style="height:10px;"><td></td></tr>
-            <tr>
-              <td>
-                <table style="width:100%;">
-                  <tr>
-                    <td nowrap style="width:80px; text-align:left; vertical-align:middle; padding-left:10px; font-size:10pt;">
-                      <%= t('item.file') %> :
-                    </td>
-                    <td style="vertical-align:middle;">
-                      <%= file_field(:comment, :file, :size => '60', :style => 'width:100%') %>
-                    </td>
-                  </tr>
-                </table>
               </td>
             </tr>
             <tr style="height:15px;"><td></td></tr>
@@ -935,26 +926,26 @@ function doRegisterComment(frm)
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  ajaxUploadFile(
-      frm,
-      frm.action,
+  new Ajax.Updater(
       "div_comments",
-      function(){
-        var comments_table = _z("comments_table");
-        if (comments_table.style.display == "none") {
-          comments_table.style.display = "block";
+      frm.action,
+      {
+        method: "post",
+        parameters: Form.serialize(frm),
+        evalScripts: true,
+        onComplete: function(request){
+          var comments_table = _z("comments_table");
+          if (comments_table.style.display == "none") {
+            comments_table.style.display = "block";
+          }
+          frm.reset();
+          thetisBoxProgress.remove();
         }
-        frm.reset();
-        thetisBoxProgress.remove();
-      },
-      function(){
-        thetisBoxProgress.remove();
-        msg("<%= t('msg.system_error')%>");
       }
     );
 }
 
-function doUpdateComment(thetisBoxId, comment_id)
+function doUpdateComment(thetisBoxId, commentId)
 {
   var thetisBoxEdit = _z("thetisBoxEdit-"+thetisBoxId);
   if (thetisBoxEdit && thetisBoxEdit.value) {
@@ -966,14 +957,14 @@ function doUpdateComment(thetisBoxId, comment_id)
     ThetisBox.remove(thetisBoxId);
 
     var addParams = [];
-    addParams.push("comment_id="+comment_id);
+    addParams.push("comment_id="+commentId);
     addParams.push("thetisBoxEdit="+encodeURIComponent(val));
     addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
     var thetisBoxProgress = prog("TOP-RIGHT");
 
     new Ajax.Updater(
-        "div_comment_"+comment_id,
+        "div_comment_"+commentId,
         "<%= url_for(:controller => 'items', :action => 'update_comment') %>",
         {
           method:"post",
@@ -987,12 +978,12 @@ function doUpdateComment(thetisBoxId, comment_id)
   }
 }
 
-function editComment(comment_id)
+function editComment(commentId)
 {
   var thetisBox = new ThetisBox;
   // GREP WITH ~.gsub('  ', '&nbsp; ')
   // Corresponds to ~.gsub(/&nbsp;/, " ") in the following line.
-  thetisBox.show("CENTER", "540,200", "TEXTAREA", "doUpdateComment("+thetisBox.id+", '"+comment_id+"')", "", restoreHTML(_z("comment_body" + comment_id).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
+  thetisBox.show("CENTER", "540,200", "TEXTAREA", "doUpdateComment("+thetisBox.id+", '"+commentId+"')", "", restoreHTML(_z("comment_body" + commentId).innerHTML.gsub(/&nbsp;/, " ")).gsub(/[\r]?\n/, "").gsub(/<br[/]?>/i, "\n"));
 }
 
 function _checkComment(val)
@@ -1003,21 +994,21 @@ function _checkComment(val)
   return true;
 }
 
-function onDeleteCommentClicked(comment_id)
+function onDeleteCommentClicked(commentId)
 {
-  confm("<%= t('item.confirm_to_delete_message') %>", "doDeleteComment("+comment_id+")");
+  confm("<%= t('item.confirm_to_delete_message') %>", "doDeleteComment("+commentId+")");
 }
 
-function doDeleteComment(comment_id)
+function doDeleteComment(commentId)
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   var addParams = [];
-  addParams.push("comment_id="+comment_id);
+  addParams.push("comment_id="+commentId);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   new Ajax.Updater(
-      "div_comment_"+comment_id,
+      "div_comment_"+commentId,
       "<%= url_for(:controller => 'items', :action => 'destroy_comment') %>",
       {
         method:"post",
@@ -1030,22 +1021,22 @@ function doDeleteComment(comment_id)
     );
 }
 
-function onDeleteCommentAttachmentClicked(div_id, comment_id, attach_id, title)
+function onDeleteCommentAttachmentClicked(divId, commentId, attachId, title)
 {
-  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDeleteCommentAttachment('"+div_id+"', "+comment_id+", "+attach_id+")");
+  confm("<%= t('paren.square.left') %>"+title+"<%= t('msg.confirm_to_delete') %>", "doDeleteCommentAttachment('"+divId+"', "+commentId+", "+attachId+")");
 }
 
-function doDeleteCommentAttachment(div_id, comment_id, attach_id)
+function doDeleteCommentAttachment(divId, commentId, attachId)
 {
   var addParams = [];
-  addParams.push("comment_id="+comment_id);
-  addParams.push("attachment_id="+attach_id);
+  addParams.push("comment_id="+commentId);
+  addParams.push("attachment_id="+attachId);
   addParams.push("authenticity_token=<%= form_authenticity_token %>");
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   new Ajax.Updater(
-      "div_comment_"+comment_id,
+      "div_comment_"+commentId,
       "<%= url_for(:controller => 'items', :action => 'delete_comment_attachment') %>",
       {
         method:"post",
@@ -1053,7 +1044,7 @@ function doDeleteCommentAttachment(div_id, comment_id, attach_id)
         evalScripts:true,
         onComplete:function(request) {
           thetisBoxProgress.remove();
-          removeElem(_z(div_id));
+          removeElem(_z(divId));
         }
       }
     );
@@ -1075,7 +1066,7 @@ function showURL()
           var thetisBox = new ThetisBox;
           thetisBox.show(
                     "CENTER",
-                    (mainWidth/10*8)+",320",
+                    (_mainWidth/10*8)+",320",
                     "TRAY",
                     "",
                     "<%= t('cap.url_to_this_page') %>",
@@ -1122,29 +1113,36 @@ function _addToDesktop()
 
 var thetisBoxAttachFile = null;
 
-function attachFile(comment_id)
+function attachFileToComment(commentId)
 {
   if (thetisBoxAttachFile != null){
     thetisBoxAttachFile.remove();
     thetisBoxAttachFile = null;
   }
 
-  var content = getFileSelector("onFileSelectOk("+comment_id+")", "onFileSelectCancel()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "<%= form_authenticity_token %>", "comment_file");
+  var content = getFileSelector("onFileSelectOkClicked("+commentId+")", "onFileSelectCancelClicked()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "comment_file_uploader");
 
   thetisBoxAttachFile = new ThetisBox;
   thetisBoxAttachFile.title = "<%= t('item.attach_file') %>";
-  thetisBoxAttachFile.overflow = "hide";
-  thetisBoxAttachFile.show("CENTER", "400,200", "TRAY", "", "", content);
+  thetisBoxAttachFile.resizable = true;
+  thetisBoxAttachFile.show("CENTER", "400,340", "TRAY", "", "", content);
+
+  initFileSelector("comment_file_uploader");
 }
 
-function onFileSelectOk(comment_id)
+function onFileSelectOkClicked(commentId)
 {
   var thetisBoxProgress = prog("TOP-RIGHT");
 
+  var hash = {
+    comment_id: commentId,
+    authenticity_token: "<%= form_authenticity_token %>"
+  };
   ajaxUploadFile(
-      document.form_file,
-      "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>?comment_id=" + comment_id,
-      "div_comment_" + comment_id,
+      "comment_file_uploader",
+      hash,
+      "<%= url_for(:controller => 'items', :action => 'add_comment_attachment') %>",
+      "div_comment_"+commentId,
       function(){
         var comments_table = _z("comments_table");
         if (comments_table.style.display == "none") {
@@ -1165,7 +1163,7 @@ function onFileSelectOk(comment_id)
     );
 }
 
-function onFileSelectCancel()
+function onFileSelectCancelClicked()
 {
   thetisBoxAttachFile.remove();
   thetisBoxAttachFile = null;

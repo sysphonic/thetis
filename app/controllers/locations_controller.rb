@@ -1,9 +1,8 @@
 #
 #= LocationsController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Desktop.
 #
@@ -146,10 +145,17 @@ class LocationsController < ApplicationController
     SqlHelper.validate_token([group_id])
 
     @office_map = OfficeMap.get_for_group(group_id, true)
-
     params[:office_map].delete(:group_id)
 
-    @office_map.update_attributes(params.require(:office_map).permit(OfficeMap::PERMIT_BASE))
+    attrs = params.require(:office_map).permit(OfficeMap::PERMIT_BASE)
+
+    unless params[:file].blank?
+      params[:file].original_filename = params[:name] unless params[:name].blank?
+      attrs = {:file => params[:file]}
+      params.delete(:file)
+    end
+
+    @office_map.update_attributes(attrs)
 
     params.delete(:office_map)
 

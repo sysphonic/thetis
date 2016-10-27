@@ -135,11 +135,11 @@
     <tr>
       <td class="item_value_td">
         <% if @user.allowed_zept_connect? %>
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ok.png">
           <%= t('msg.allowed') %><br/>
           <%= t('zeptair.recent_zeptid') %> <b style="color:blueviolet;"><%= @user.zeptair_id %></b>
         <% else %>
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif">
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ng.png">
           <%= t('msg.not_allowed') %>
         <% end %>
       </td>

@@ -41,14 +41,14 @@
         <tr>
         <% if @login_user.id == @comment.user_id %>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
           </td>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file_add.gif" title="<%= t('item.attach_file') %>" onclick="attachFile(<%= @comment.id %>);" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/file_add.png" title="<%= t('item.attach_file') %>" onclick="attachFileToComment(<%= @comment.id %>);" />
           </td>
         <% end %>
           <td>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteCommentClicked(<%= @comment.id %>); return false;" />
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteCommentClicked(<%= @comment.id %>); return false;" />
           </td>
         </tr>
       </table>
@@ -72,10 +72,10 @@ unless comment_attachments.nil? or comment_attachments.empty?
     <% comment_attachments.each do |attach| %>
       <div id="div_comment_attach_<%= attach.id %>">
         <a href="<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>">
-          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/file.gif"> <%= attach.name %>
+          <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/file.png"> <%= attach.name %>
         </a>
       <% if params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id %>
-        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteCommentAttachmentClicked('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
+        &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteCommentAttachmentClicked('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
       <% end %>
       </div>
     <% end %>
@@ -106,7 +106,7 @@ if @for_print.nil? or @for_print == false
     <td colspan="2" style="text-align:right;">
       <a class="a_underline" href="javascript:this.onclick()" onclick="onShowProfileSheetClicked('<%= profile_sheet.id %>', '<%= ApplicationHelper.h_s_quote(user_name) %>'); return false;">
         <%= t('item.profile_sheet') %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('item.show_profile_sheet') %>" />
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('item.show_profile_sheet') %>" />
       </a>
     </td>
   </tr>

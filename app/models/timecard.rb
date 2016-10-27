@@ -1,9 +1,8 @@
 #
 #= Timecard
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Timecard represents a timecard's record by day and User.
 #
@@ -44,14 +43,14 @@ class Timecard < ActiveRecord::Base
   public::WKCODE_ABSENCE = 'absence'
 
   public::WKCODE_ICONS = {
-    WKCODE_WK_NORMAL => 'attendance.gif',
-    WKCODE_WK_ON_HOLIDAY => 'work_on_holiday.gif',
-    WKCODE_HLD_PAID => 'paid_holiday.gif',
-    WKCODE_HLD_AM => 'off_am.gif',
-    WKCODE_HLD_PM => 'off_pm.gif',
-    WKCODE_HLD_SPECIAL => 'special_holiday.gif',
-    WKCODE_HLD_MAKEUP => 'makeup_holiday.gif',
-    WKCODE_ABSENCE => 'absence.gif',
+    WKCODE_WK_NORMAL => 'attendance.png',
+    WKCODE_WK_ON_HOLIDAY => 'work_on_holiday.png',
+    WKCODE_HLD_PAID => 'paid_holiday.png',
+    WKCODE_HLD_AM => 'off_am.png',
+    WKCODE_HLD_PM => 'off_pm.png',
+    WKCODE_HLD_SPECIAL => 'special_holiday.png',
+    WKCODE_HLD_MAKEUP => 'makeup_holiday.png',
+    WKCODE_ABSENCE => 'absence.png',
   }
 
   public::WKCODE_PARAM_LABORDAY = 0
@@ -517,10 +516,10 @@ class Timecard < ActiveRecord::Base
     end_s = end_date.strftime(Schedule::SYS_DATE_FORM)
 
     con = "(user_id=#{user_id.to_i}) and (date >= '#{start_s}') and (date <= '#{end_s}')"
-    ary = Timecard.where(con).order('date ASC').to_a
+    arr = Timecard.where(con).order('date ASC').to_a
     timecards_h = Hash.new
-    unless ary.nil?
-      ary.each do |timecard|
+    unless arr.nil?
+      arr.each do |timecard|
         timecards_h[timecard.date.strftime(Schedule::SYS_DATE_FORM)] = timecard
       end
     end
@@ -898,12 +897,12 @@ class Timecard < ActiveRecord::Base
   #return:: Array of the dates. [start_date, end_date]
   #
   def self.get_exist_span(user_id)
-    ary = connection.select_one("SELECT MIN(date),MAX(date) FROM (SELECT * FROM timecards WHERE user_id=#{user_id}) AS my_table").to_a
-    if ary.nil?
+    arr = connection.select_one("SELECT MIN(date),MAX(date) FROM (SELECT * FROM timecards WHERE user_id=#{user_id}) AS my_table").to_a
+    if arr.nil?
       return [nil, nil]
     else
       ret = []
-      ary.each do |key, value|
+      arr.each do |key, value|
 
         return [nil, nil] if value.nil?
 

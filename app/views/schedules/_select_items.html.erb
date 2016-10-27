@@ -33,9 +33,9 @@
 
 onScheduleItemsOk = function()
 {
-  var ret_ary = moveList(_z("item_candidates"), _z("items_selected"));
+  var arr = moveList(_z("item_candidates"), _z("items_selected"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 

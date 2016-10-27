@@ -1,9 +1,8 @@
 #
 #= Group
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Group contains Users and sub Groups, and represents the unit in the organization.
 #
@@ -165,8 +164,8 @@ class Group < ActiveRecord::Base
     unless groups_cache.nil?
       path = groups_cache[group_id.to_i]
       if path.nil?
-        id_ary = []
-        name_ary = []
+        id_arr = []
+        name_arr = []
       else
         return path
       end
@@ -193,15 +192,15 @@ class Group < ActiveRecord::Base
 
       group = Group.find_with_cache(group_id, group_obj_cache)
 
-      id_ary.unshift(group_id.to_i) unless groups_cache.nil?
+      id_arr.unshift(group_id.to_i) unless groups_cache.nil?
 
       if group.nil?
         path = '/' + I18n.t('paren.deleted') + path
-        name_ary.unshift(I18n.t('paren.deleted')) unless groups_cache.nil?
+        name_arr.unshift(I18n.t('paren.deleted')) unless groups_cache.nil?
         break
       else
         path = '/' + group.name + path
-        name_ary.unshift(group.name) unless groups_cache.nil?
+        name_arr.unshift(group.name) unless groups_cache.nil?
       end
 
       group_id = group.parent_id
@@ -212,8 +211,8 @@ class Group < ActiveRecord::Base
       unless cached_path.nil?
         path_to_cache << cached_path
       end
-      id_ary.each_with_index do |f_id, idx|
-        path_to_cache << '/' + name_ary[idx]
+      id_arr.each_with_index do |f_id, idx|
+        path_to_cache << '/' + name_arr[idx]
 
         groups_cache[f_id] = path_to_cache.dup
       end

@@ -3,59 +3,6 @@
 
 <table style="width:90%; margin:20px auto 0px; border-spacing:2px;">
   <tr>
-    <td style="vertical-align:top;">
-      <table style="width:100%;">
-        <tr>
-          <td class="item_cap_td" style="width:100%; background-color:lightpink;"><%= t('item.add_images') %></td>
-        </tr>
-        <tr>
-          <td class="item_value_td" style="width:80%;">
-            <table style="width:100%; border-spacing:2px;">
-              <tr>
-                <td rowspan="3" style="width:20px; background-color:lightcoral; text-align:center;" >A</td>
-                <td class="item_cap_td" style="background-color:pink;"><%= t('item.file') %></td>
-                <td class="item_value_td">
-                  <%= file_field(:image0, :file, :style => 'width:100%', :size => '50') %><br/>
-                </td>
-              </tr>
-              <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= Item.human_attribute_name('title') %></td>
-                <td class="item_value_td">
-                  <%= text_field(:image0, :title, :style => 'width:70%') %><br/>
-                </td>
-              </tr>
-              <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= Image.human_attribute_name('memo') %></td>
-                <td class="item_value_td">
-                  <%= text_area(:image0, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
-                </td>
-              </tr>
-              <tr style="height:5px;"><td></td></tr>
-              <tr>
-                <td rowspan="3" style="width:20px; background-color:lightcoral; text-align:center;" >B</td>
-                <td class="item_cap_td" style="background-color:pink"><%= t('item.file') %></td>
-                <td class="item_value_td">
-                  <%= file_field(:image1, :file, :style => 'width:100%', :size => '50') %><br/>
-                </td>
-              </tr>
-              <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= Item.human_attribute_name('title') %></td>
-                <td class="item_value_td">
-                  <%= text_field(:image1, :title, :style => 'width:70%') %><br/>
-                </td>
-              </tr>
-              <tr>
-                <td class="item_cap_td" style="background-color:pink"><%= Image.human_attribute_name('memo') %></td>
-                <td class="item_value_td">
-                  <%= text_area(:image1, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
-    </td>
-    <td style="width:10px;"></td>
     <td id="sortable_images" style="text-align:center; width:150px; vertical-align:top;">
     <%
     item_images = @item.images_without_content
@@ -66,7 +13,7 @@
           <tr>
             <td style="text-align:right; vertical-align:middle; cursor:move;" >
             <% if item_images.size > 1 %>
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/up_down.gif" title="<%= t('msg.drag_to_change_orger') %>" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/up_down.png" title="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
             <td class="img_td" style="text-align:center; padding-left:5px; padding-right:5px; cursor:move;">
@@ -74,7 +21,7 @@
                 <tr>
                   <td style="text-align:center;">
                     <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img)) %>
-                    <img id="<%= "img#{img.id}" %>" src="<%= img_url %>" style="width:90px; height:60px;" />
+                    <img id="img<%= img.id %>" src="<%= img_url %>" style="max-width:90px; max-height:60px;" />
                   </td>
                 </tr>
                 <tr>
@@ -92,13 +39,13 @@
               <table style="width:100%;">
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="editImageInfo(<%= img.id %>, '<%= ApplicationHelper.h_s_quote(img.name) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editImageInfo(<%= img.id %>, '<%= ApplicationHelper.h_s_quote(img.name) %>');" />
                   </td>
                 </tr>
                 <tr style="height:5px;"><td></td></tr>
                 <tr>
                   <td>
-                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteImageClicked(<%= img.id %>, '<%= ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
+                    <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteImageClicked(<%= img.id %>, '<%= ApplicationHelper.h_s_quote((img.title.nil? or img.title.empty?)?(img.name):(img.title)) %>');" />
                   </td>
                 </tr>
               </table>
@@ -108,14 +55,26 @@
       </div>
     <% end %>
     </td>
+    <td style="min-width:10px;"></td>
+    <td style="vertical-align:top;">
+      <div id="img_uploader">
+        <p>Your browser doesn't have HTML5 support.</p>
+      </div>
+    </td>
   </tr>
 </table>
 
 
 <script type="text/javascript">
 
-setSortableImg = function() {
-  // Following code in HTML body such as "sortable_element" tag causes a JavaScript error in dojo.io.bind.
+jQuery(document).ready(function($){
+  var context = $("#img_uploader");
+	context.plupload(getPluploadImgOptions());
+	$(".plupload_container", context)[0].style.height = "300px";
+});
+
+setSortableImg = function()
+{
   Sortable.create(
       "sortable_images",
       {
@@ -164,6 +123,7 @@ editImageInfo = function(img_id, img_name)
         parameters:addParams.join("&"),
         onComplete:function(request) {
           thetisBoxImageInfo.title = img_name;
+          thetisBoxImageInfo.resizable = true;
           thetisBoxImageInfo.show("CENTER", "460,390", "TRAY", "", "", request.responseText.stripScripts());
           thetisBoxProgress.remove();
           request.responseText.evalScripts();
@@ -172,7 +132,7 @@ editImageInfo = function(img_id, img_name)
     );
 }
 
-onImageInfoOk = function()
+onImageInfoOkClicked = function()
 {
   var btnOk = _z("image_info_ok");
   btnOk.disabled = true;
@@ -182,6 +142,7 @@ onImageInfoOk = function()
   var thetisBoxProgress = prog("CENTER");
 
   ajaxUploadFile(
+      "img_info_uploader",
       "form_image_info",
       document.form_image_info.action,
       "div_item_image",
@@ -203,7 +164,7 @@ onImageInfoOk = function()
     );
 }
 
-onImageInfoCancel = function()
+onImageInfoCancelClicked = function()
 {
   var boxInstance = ThetisBox.getInstanceForElem(document.form_image_info);
   if (boxInstance) {

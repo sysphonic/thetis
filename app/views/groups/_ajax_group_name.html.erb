@@ -2,9 +2,9 @@
 unless @group.nil?
   div_id = 'groupTree:' + @group.id.to_s
 
-  group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.gif'
-  group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.gif'
+  group_folder_open = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_open.png'
+  group_folder_close = THETIS_RELATIVE_URL_ROOT + '/images/folder/group_folder_close.png'
 %>
-  <img id="<%= div_id %>_open" src="<%= group_folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= group_folder_close %>" border="0" style="display:none;">
+  <img id="<%= div_id %>_open" src="<%= group_folder_open %>" /><img id="<%= div_id %>_close" src="<%= group_folder_close %>" style="display:none;" />
   /<span id="<%= div_id %>_name"><%= @group.name %></span>
 <% end %>

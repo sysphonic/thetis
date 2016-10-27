@@ -7,18 +7,18 @@
       <table style="width:100%;">
         <tr>
           <td style="text-align:left; width:1%;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.create') %>" onclick="showAddressNew();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/user_add.png" title="<%= t('btn.create') %>" onclick="showAddressNew();">
           </td>
           <td style="width:10px;"></td>
           <td style="text-align:left; width:1%;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/csv_exp.png" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
           </td>
           <td style="width:10px;"></td>
           <td style="text-align:left; width:1%;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/csv_imp.png" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
           </td>
           <td style="text-align:right;" nowrap>
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
           <% if params[:admin] == 'true' %>
             <%= t('address.book') %><%= t('cap.suffix') %><%= t('scope.common') %>
           <% else %>
@@ -105,7 +105,7 @@
     </td>
   <% if address.editable?(@login_user) %>
     <td nowrap style="width:20px; text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(address.name, :length => 20)) %>', '<%= params[:admin] %>');" />
     </td>
     <td style="width:20px; text-align:center;">
       <%= check_box(:check_address, address.id, :class => 'check_address') %>
@@ -386,7 +386,7 @@ function showImportError()
   thetisBox.title = "<%= t('cap.import_error') %>";
   thetisBox.bgcolor_title = "crimson";
   thetisBox.bgcolor_body = "salmon";
-  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", _z("imp_errs").innerHTML);
+  thetisBox.show("CENTER", (_mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", _z("imp_errs").innerHTML);
 }
 
 function onLoadSub()

@@ -1,9 +1,8 @@
 #
 #= OfficialTitlesController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about OfficialTitles.
 #
@@ -116,7 +115,7 @@ class OfficialTitlesController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    order_ary = params[:official_titles_order]
+    order_arr = params[:official_titles_order]
 
     @group_id = params[:group_id]
     SqlHelper.validate_token([@group_id])
@@ -127,7 +126,7 @@ class OfficialTitlesController < ApplicationController
     @official_titles = OfficialTitle.get_for(@group_id, false, true)
 
     @official_titles.each do |official_title|
-      official_title.update_attribute(:xorder, order_offset + order_ary.index(official_title.id.to_s) + 1)
+      official_title.update_attribute(:xorder, order_offset + order_arr.index(official_title.id.to_s) + 1)
     end
 
     render(:plain => '')

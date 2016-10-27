@@ -99,7 +99,7 @@ tabs = new Array("basic", "admin");
                       <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
                       <div style="text-align:left; padding:5px 0px 5px 30px;" >
                       <% if !@desktop.img_size.nil? and @desktop.img_size > 0 %>
-                        <img style="width:120px;" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />
+                        <img style="max-width:120px; max-height:100px;" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />
                       <% end %>
                       </div>
                       <div style="text-align:left; padding-left:20px;" >

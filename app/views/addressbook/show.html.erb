@@ -4,7 +4,7 @@
 
 <div style="padding:5px 15px; text-align:left;">
 <% if @address.editable?(@login_user) %>
-  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= @address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@address.name, :length => 20)) %>', '<%= params[:admin] %>', this);" />
+  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="showAddressEdit(<%= @address.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@address.name, :length => 20)) %>', '<%= params[:admin] %>', this);" />
 <% end %>
 </div>
 <div style="padding:0px 15px;">

@@ -5,11 +5,9 @@
 </div>
 </form>
 
-<%= form_tag({:controller => 'send_mails', :action => 'add_attachment'}, :method => 'post', :name => 'form_sendmail_attach'+form_idx, :enctype => 'multipart/form-data') %>
 <div id="div_sendmail_attach" style="padding:10px 0px 20px;">
   <%= render(:partial => 'ajax_mail_attachments', :object => @email) %>
 </div>
-</form>
 
 
 <script type="text/javascript">
@@ -62,7 +60,7 @@ _findInsertIdx = function(dst, valPrefix, val)
 
 moveListAddresses = function(src, dst, valPrefix, textPrefix)
 {
-  var ret_ary = [];
+  var arr = [];
   for (var i=0; i < src.length; i++) {
     var option = src.options[i];
     if (option.selected == true) {
@@ -77,14 +75,14 @@ moveListAddresses = function(src, dst, valPrefix, textPrefix)
       if (!duplex) {
         var insertIdx = _findInsertIdx(dst, valPrefix, option.value);
         dst.options.add(new Option(textPrefix+option.text, valPrefix+option.value), insertIdx);
-        ret_ary[ret_ary.length] = valPrefix+option.value;
+        arr[arr.length] = valPrefix+option.value;
       }
       src.options[i] = null;
       i--;
     }
   }
   src.selectedIndex = -1;
-  return ret_ary;
+  return arr;
 }
 
 
@@ -257,23 +255,6 @@ doSave = function(do_smtp)
       }
     );
 
-  // Attachment
-  var attach_file = _z("attach_file");
-  if (attach_file && attach_file.value.length > 0) {
-    saveFuncs.push(
-        function() {
-          var frm = document.form_sendmail_attach<%= form_idx %>;
-          ajaxUploadFile(
-              frm,
-              frm.action + "?id="+_z("email_id").value,
-              "div_sendmail_attach",
-              function(){ onSaveComplete("attachment") },
-              function(){ onSaveError("attachment") }
-            );
-        }
-      );
-  }
-
   if (_do_send) {
     saveFuncs.push(
         function() {
@@ -302,7 +283,7 @@ doSave = function(do_smtp)
   }
 }
 
-onSaveComplete = function(tab_name)
+onSaveComplete = function(tabName)
 {
   if (saveFuncsIdx < saveFuncs.length) {
     saveFuncs[saveFuncsIdx++]();
@@ -320,7 +301,7 @@ onSaveComplete = function(tab_name)
   }
 }
 
-onSaveError = function(tab_name)
+onSaveError = function(tabName)
 {
   saveFuncsIdx = 0;
   thetisBoxSaveProgress.remove();
@@ -329,27 +310,29 @@ onSaveError = function(tab_name)
 
 var thetisBoxAttachFile = null;
 
-attachFile = function()
+attachFileToMail = function()
 {
   if (thetisBoxAttachFile != null){
     thetisBoxAttachFile.remove();
     thetisBoxAttachFile = null;
   }
 
-  var content = getFileSelector("onFileSelectOk()", "onFileSelectCancel()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "<%= form_authenticity_token %>", "attach_file");
+  var content = getFileSelector("onFileSelectOkClicked()", "onFileSelectCancelClicked()", "<%= t('btn.ok') %>", "<%= t('btn.cancel') %>", "mail_attach_uploader");
 
   thetisBoxAttachFile = new ThetisBox;
   thetisBoxAttachFile.title = "<%= t('item.attach_file') %>";
-  thetisBoxAttachFile.overflow = "hide";
+  thetisBoxAttachFile.resizable = true;
 
   if (thetisBoxMailForm) {
     thetisBoxMailForm.addChildBox(thetisBoxAttachFile);
   }
 
-  thetisBoxAttachFile.show("CENTER", "400,178", "TRAY", "", "", content);
+  thetisBoxAttachFile.show("CENTER", "400,340", "TRAY", "", "", content);
+
+  initFileSelector("mail_attach_uploader");
 }
 
-onFileSelectOk = function()
+onFileSelectOkClicked = function()
 {
   _need_update = true;
 
@@ -364,15 +347,19 @@ onFileSelectOk = function()
 
   var thetisBoxProgress = prog("TOP-RIGHT");
 
-  var addParams = [];
-  addParams.push("id="+_z("email_id").value);
-<% unless @mail_account.nil? %>
-  addParams.push("mail_account_id=<%= @mail_account.id %>");
-<% end %>
-
+  var getHashFunc = function() {
+    return {
+      id: _z("email_id").value,
+    <% unless @mail_account.nil? %>
+      mail_account_id: "<%= @mail_account.id %>",
+    <% end %>
+      authenticity_token: "<%= form_authenticity_token %>"
+    };
+  };
   ajaxUploadFile(
-      document.form_file,
-      "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>?"+addParams.join("&"),
+      "mail_attach_uploader",
+      getHashFunc,
+      "<%= url_for(:controller => 'send_mails', :action => 'add_attachment') %>",
       "div_sendmail_attach",
       function(){
         thetisBoxProgress.remove();
@@ -390,7 +377,7 @@ onFileSelectOk = function()
     );
 }
 
-onFileSelectCancel = function()
+onFileSelectCancelClicked = function()
 {
   thetisBoxAttachFile.remove();
   thetisBoxAttachFile = null;

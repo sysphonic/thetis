@@ -13,11 +13,11 @@
 <table style="width:100%; padding:2px 5px 5px;">
   <tr>
     <td style="text-align:left;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
       <input type="hidden" id="find_in" name="find_in" value="<%= Item::FOLDER_CURRENT %>" />
 
       <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
     </td>
     <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
@@ -216,7 +216,7 @@ onPaginate = function(url)
   <tr>
     <td nowrap style="text-align:right;"><%= item.id %></td>
     <td nowrap title="<%= item.title %>">
-      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item) %>'; return false;" >
+      <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show') %>?id=<%= item.id %>'; return false;" >
         <%= truncate(item.title, :length => 20) %>
       </a>
       <% if !item.workflow.nil? and item.workflow.decided? %>
@@ -224,7 +224,7 @@ onPaginate = function(url)
       <% end %>
 
       <% if item.xtype == Item::XTYPE_PROJECT %>
-        &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" />
+        &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
         <div id="div_project_<%= item.id %>" style="display:none;"><%= item.title %></div>
       <% elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
         &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" />
@@ -238,7 +238,7 @@ onPaginate = function(url)
       <%= updated_at %>
     </td>
     <td nowrap style="text-align:center;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= item.public ? 'check_ok.gif' : 'check_ng.gif' %>">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= item.public ? 'check_ok.png' : 'check_ng.png' %>">
     </td>
     <% user_name = item.disp_registered_by(@users_cache) %>
     <td nowrap title="<%= user_name %>">
@@ -258,7 +258,7 @@ onPaginate = function(url)
     if !@login_user.nil? and item.editable?(@login_user.id)
   %>
     <td nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit') %>?id=<%= item.id %>';">
     </td>
   <%
     end

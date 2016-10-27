@@ -4,10 +4,10 @@
 <table style="width:100%; margin-bottom:5px; border-spacing:3px;">
   <tr>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/csv_exp.png" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
     </td>
     <td style="text-align:right;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">
       &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
 <% unless @login_user.nil? %>
   <%= t('cap.targets') %> <%= select_tag 'filter',
@@ -134,7 +134,7 @@ exist_cache = {}
       <%= truncate(xlog.cs_uri, :length => 20) %>
     </td>
     <td nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif" title="<%= t('btn.detail') %>" onclick="msg('<%= ApplicationHelper.h_s_quote(xlog.get_detail.gsub('<', '').gsub('>', '')) %>');">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.detail') %>" onclick="msg('<%= ApplicationHelper.h_s_quote(xlog.get_detail.gsub('<', '').gsub('>', '')) %>');">
     </td>
     <td nowrap style="text-align:center;">
       <%= check_box(:check_xlog, xlog.id, :class => 'check_xlog') %>

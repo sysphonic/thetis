@@ -33,9 +33,9 @@
 
 onScheduleUsersOk = function()
 {
-  var ret_ary = moveList(_z("user_candidates"), _z("users_selected"));
+  var arr = moveList(_z("user_candidates"), _z("users_selected"));
 
-  if (ret_ary != null && ret_ary.length > 0) {
+  if (arr != null && arr.length > 0) {
     reqTargetDay++;
   }
 

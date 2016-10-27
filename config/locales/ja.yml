@@ -232,6 +232,7 @@ ja:
       apply: "応募"
       dist_ack: "配布応答"
     from: " from "
+    attachments_info: "添付ファイルはメッセージ登録後に追加できます。"
   config:
     menu_name: "メニュー名"
     menu_target: "ターゲット"

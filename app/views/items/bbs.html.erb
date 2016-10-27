@@ -15,14 +15,14 @@
 <table style="width:100%; padding-bottom:5px;">
   <tr>
     <td nowrap style="width:1%; text-align:left;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/item_add.png" title="<%= t('btn.create') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'new', :folder_id => @folder_id) %>';">
     </td>
     <td style="width:10px;"></td>
     <td nowrap style="width:1%; text-align:left;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/url.gif" title="<%= t('item.show_url') %>" onclick="showURL();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/url.png" title="<%= t('item.show_url') %>" onclick="showURL();">
     </td>
     <td nowrap style="text-align:right;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
       <%= t('msg.search_in') %> <%= select_tag 'find_in',
                                options_for_select([[h(t('folder.current')),Item::FOLDER_CURRENT],
                                                   [h(t('folder.all')),Item::FOLDER_ALL],
@@ -48,7 +48,7 @@
       if !session_folder.nil? and Folder.exists?(session_folder)
         if session_folder != '0'
       %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.gif" title="<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.png" title="<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
       <%
         end
       end
@@ -58,20 +58,20 @@
         my_folder = @login_user.get_my_folder
         unless my_folder.nil?
       %>
-        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.gif" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
+        <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/my_folder.png" title="<%= t('folder.my_folder') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => my_folder.id) %>';">
       <%
         end
       end
       %>
   <% else %>
       <%= t('cap.folder') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showFolderTreeToSelect('<%= @folder_id %>'); return false;"><%= Folder.get_path(@folder_id, @folders_cache, @folder_obj_cache) %></a>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearFolder()" style="margin-left:10px;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" title="<%= t('btn.clear') %>" onclick="clearFolder()" style="margin-left:10px;" />
     <%
     toy_xtype = Toy::XTYPE_FOLDER
     toy_target_id = @folder_id
     if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
     %>
-      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/desktop.gif" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%= ApplicationHelper.h_s_quote(truncate(Folder.get_name(@folder_id), :length => 20)) %>');">
+      <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/desktop.png" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%= ApplicationHelper.h_s_quote(truncate(Folder.get_name(@folder_id), :length => 20)) %>');">
     <% end %>
   <% end %>
     </td>
@@ -150,14 +150,14 @@
             <% end %>
             <% if !@login_user.nil? and item.editable?(@login_user.id) %>
             &nbsp;
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
             <% end %>
             <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
               <%
               del_type = 'null'
               del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
               %>
-              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/delete.gif" title="<%= t('btn.delete') %>" onclick="onDeleteItemClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
+              <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteItemClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
             <% end %>
           </TD>
         </TR>
@@ -181,7 +181,7 @@
               <span style="color:blue"><%= raw(t('schedule.private')) %></span>
             <% end %>
             <% if item.xtype == Item::XTYPE_PROJECT %>
-              &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" />
+              &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
               <%
               unless item.team.nil? or @login_user.nil?
                 team_folder = item.team.get_team_folder
@@ -241,7 +241,7 @@ attachments_num = item_attachments.length
                       <tr>
                         <td>
                         <script type="text/javascript">
-                          document.write('<div id="div_description_<%= item.id %>" style="padding:5px; width:'+(mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
+                          document.write('<div id="div_description_<%= item.id %>" style="padding:5px; width:'+(_mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
                         </script>
                         <%= raw(item.description) %></div>
                         </td>
@@ -279,7 +279,7 @@ attachments_num = item_attachments.length
                            <tr>
                              <td style="width:130px; padding:5px">
                                <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => image.id, :ts => ApplicationHelper.get_timestamp(image)) %>
-                               <img style="cursor:pointer; width:120px;" src="<%= img_url %>" onclick="doShowItem(<%= item.id %>);" />
+                               <img style="cursor:pointer; max-width:120px; max-height:100px;" src="<%= img_url %>" onclick="doShowItem(<%= item.id %>);" />
                              </td>
                            </tr>
                 <% end %>
@@ -380,7 +380,7 @@ function showURL()
           var thetisBox = new ThetisBox;
           thetisBox.show(
                     "CENTER",
-                    (mainWidth/10*8)+",320",
+                    (_mainWidth/10*8)+",320",
                     "TRAY",
                     "",
                     "<%= t('cap.url_to_this_page') %>",

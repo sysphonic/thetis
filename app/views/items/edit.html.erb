@@ -1,9 +1,11 @@
 
-<%= render(:partial => 'common/dojo_init') %>
+<script src="<%= THETIS_RELATIVE_URL_ROOT %>/javascripts/ckeditor/ckeditor.js" type="text/javascript"></script>
+
+<%= render(:partial => 'common/plupload_init') %>
 
 <script type="text/javascript">
 var oEditor;
-tabs = new Array("workflow", "basic", "description", "image", "attachment");
+tabs = ["workflow", "basic", "description", "image", "attachment"];
 </script>
 
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
@@ -305,16 +307,12 @@ function isModifiedDescription()
 
 function isModifiedImage()
 {
-  if (_z("image0_file").value.length > 0) return true;
-  if (_z("image1_file").value.length > 0) return true;
-  return false
+  return (jQuery("#img_uploader").plupload("getFiles").length > 0);
 }
 
 function isModifiedAttachment()
 {
-  if (_z("attachment0_file").value.length > 0) return true;
-  if (_z("attachment1_file").value.length > 0) return true;
-  return false
+  return (jQuery("#attachment_uploader").plupload("getFiles").length > 0);
 }
 
 <% if @item.xtype == Item::XTYPE_WORKFLOW %>
@@ -363,9 +361,9 @@ function addWfOrder()
 function removeWfOrder()
 {
   var order_list = _z("orders");
-  var del_ary = deleteList(order_list);
-  for (var i=0; i < del_ary.length; i++) {
-    _z("order-"+del_ary[i]).remove();
+  var del_arr = deleteList(order_list);
+  for (var i=0; i < del_arr.length; i++) {
+    _z("order-"+del_arr[i]).remove();
   }
   _z("users_selected").length=0;
   modifiedWorkflow++;
@@ -374,18 +372,18 @@ function removeWfOrder()
 
 function addWfUser()
 {
-  var order_ary=getListSelected(_z("orders"));
-  if (order_ary <= 0) {
+  var order_arr=getListSelected(_z("orders"));
+  if (order_arr <= 0) {
     msg("<%= t('workflow.select_order')%>");
     return;
   }
-  var add_ary = moveList(_z("user_candidates"), _z("users_selected"));
-  var order_id = order_ary[0];
+  var add_arr = moveList(_z("user_candidates"), _z("users_selected"));
+  var order_id = order_arr[0];
   var divOrder = _z("order-"+order_id);
-  var array=add_ary;
+  var array=add_arr;
   if (divOrder.value != null && divOrder.value.length > 0) {
     array = divOrder.value.split(",");
-    array = array.concat(add_ary);
+    array = array.concat(add_arr);
   }
   divOrder.value = array.join(",");
   modifiedWorkflow++;
@@ -394,14 +392,14 @@ function addWfUser()
 
 function removeWfUser()
 {
-  var del_ary = moveList(_z("users_selected"), _z("user_candidates"));
+  var del_arr = moveList(_z("users_selected"), _z("user_candidates"));
   var order_id = getListSelected(_z("orders"))[0];
   var divOrder = _z("order-"+order_id);
   if (divOrder.value == null) {
     return;
   }
   var array = divOrder.value.split(",");
-  array = removeArrayElements(array, del_ary);
+  array = removeArrayElements(array, del_arr);
   divOrder.value = array.join(",");
   modifiedWorkflow++;
   return false;
@@ -479,7 +477,7 @@ function showRestoreSelector()
         onComplete:function(request) {
           thetisBox.show(
                     "CENTER",
-                    mainWidth*70/100+"," + mainHeight*70/100,
+                    (_mainWidth*70/100)+","+(_mainHeight*70/100),
                     "TRAY",
                     "",
                     "",
@@ -518,16 +516,16 @@ function doSave()
     }
     addInputHidden(_z("form_workflow"), null, "item[folder_id]", _z("item_folder_id").value); 
     saveFuncs.push(
-          function() {
-            _ajaxPost(
-                    "form_workflow",
-                    "<%= url_for(:controller => 'items', :action => 'set_workflow') %>?id="+_z("item_id").value,
-                    "div_item_workflow",
-                    function(){ onSaveComplete("workflow") },
-                    function(){ onSaveError("workflow") }
-                  );
-          }
-        );
+        function() {
+          _ajaxPost(
+              "form_workflow",
+              "<%= url_for(:controller => 'items', :action => 'set_workflow') %>?id="+_z("item_id").value,
+              "div_item_workflow",
+              function(){ onSaveComplete("workflow") },
+              function(){ onSaveError("workflow") }
+            );
+        }
+      );
   }
 <% end %>
 
@@ -538,16 +536,16 @@ function doSave()
       return false;
     }
     saveFuncs.push(
-          function() {
-            _ajaxPost(
-                    "form_basic",
-                    "<%= url_for(:controller => 'items', :action => 'set_basic') %>?id="+_z("item_id").value,
-                    "div_item_basic",
-                    function(){ onSaveComplete("basic") },
-                    function(){ onSaveError("basic") }
-                  );
-          }
-        );
+        function() {
+          _ajaxPost(
+              "form_basic",
+              "<%= url_for(:controller => 'items', :action => 'set_basic') %>?id="+_z("item_id").value,
+              "div_item_basic",
+              function(){ onSaveComplete("basic") },
+              function(){ onSaveError("basic") }
+            );
+        }
+      );
   }
 
   // Description
@@ -555,54 +553,63 @@ function doSave()
     addInputHidden(_z("form_description"), null, "item[folder_id]", _z("item_folder_id").value);
     _z("item_description").value = oEditor.getData();
     saveFuncs.push(
-          function() {
-              _ajaxPost(
-                    "form_description",
-                    "<%= url_for(:controller => 'items', :action => 'set_description') %>?id="+_z("item_id").value,
-                    "div_item_description",
-                    function(){ onSaveComplete("description") },
-                    function(){ onSaveError("description") }
-                  );
-          }
-        );
+        function() {
+          _ajaxPost(
+              "form_description",
+              "<%= url_for(:controller => 'items', :action => 'set_description') %>?id="+_z("item_id").value,
+              "div_item_description",
+              function(){ onSaveComplete("description") },
+              function(){ onSaveError("description") }
+            );
+        }
+      );
   }
 
   // Image
   if (isModifiedImage()) {
-    addInputHidden(_z("form_image"), null, "item[folder_id]", _z("item_folder_id").value);
     saveFuncs.push(
-          function() {
-            ajaxUploadFile(
-                    "form_image",
-                    "<%= url_for(:controller => 'items', :action => 'set_image') %>?id="+_z("item_id").value,
-                    "div_item_image",
-                    function(){
-                      setTimeout(setSortableImg, 100);
-                      onSaveComplete("image");
-                    },
-                    function(){ onSaveError("image") }
-                  );
-          }
-        );
+        function() {
+          var hash = {
+            id: _z("item_id").value,
+            authenticity_token: "<%= form_authenticity_token %>"
+          };
+          ajaxUploadFile(
+              "img_uploader",
+              hash,
+              "<%= url_for(:controller => 'items', :action => 'set_image') %>",
+              "div_item_image",
+              function(){
+                setTimeout(setSortableImg, 100);
+                onSaveComplete("image");
+              },
+              function(){ onSaveError("image") }
+            );
+        }
+      );
   }
 
   // Attachment
   if (isModifiedAttachment()) {
     addInputHidden(_z("form_attachment"), null, "item[folder_id]", _z("item_folder_id").value);
     saveFuncs.push(
-          function() {
-            ajaxUploadFile(
-                    "form_attachment",
-                    "<%= url_for(:controller => 'items', :action => 'set_attachment') %>?id="+_z("item_id").value,
-                    "div_item_attachment",
-                    function(){
-                      setTimeout(setSortableAttach, 100);
-                      onSaveComplete("attachment");
-                    },
-                    function(){ onSaveError("attachment") }
-                  );
-          }
-        );
+        function() {
+          var hash = {
+            id: _z("item_id").value,
+            authenticity_token: "<%= form_authenticity_token %>"
+          };
+          ajaxUploadFile(
+              "attachment_uploader",
+              hash,
+              "<%= url_for(:controller => 'items', :action => 'set_attachment') %>",
+              "div_item_attachment",
+              function(){
+                setTimeout(setSortableAttach, 100);
+                onSaveComplete("attachment");
+              },
+              function(){ onSaveError("attachment") }
+            );
+        }
+      );
   }
 
   if (saveFuncs.length > 0) {

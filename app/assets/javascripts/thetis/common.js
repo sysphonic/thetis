@@ -1,6 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. All rights reserved.
-   http://sysphonic.com/
+ Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
  This module is released under New BSD License.
  **-----------------**-----------------**-----------------**/
 
@@ -1310,8 +1309,12 @@ function getTypeExp(obj)
     if (obj == null) {
       return "null";
     }
+    if ((typeof(HTMLElement) != "undefined")
+        && (obj instanceof HTMLElement)) {
+      return "HTMLElement";
+    }
     if (obj.constructor) {
-      objType = (getFuncName(obj.constructor) || objType);
+      return (getFuncName(obj.constructor) || objType);
     }
   }
   return objType;

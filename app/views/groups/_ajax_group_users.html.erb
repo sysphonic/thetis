@@ -4,10 +4,10 @@
 <table style="width:100%; padding:2px 5px 5px;">
   <tr>
     <td style="text-align:left;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
 
       <input type="submit" value="<%= t('btn.search') %>" onclick="onSearchClicked(); return false;" />
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" title="<%= t('btn.clear') %>" onclick="onResetClicked(); return false;" />
     </td>
     <td style="text-align:right;" nowrap>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
@@ -214,7 +214,7 @@ official_title_obj_cache = {}
       <%= truncate(user.organization, :length => 30) %>
     </td>
     <td nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'edit', :id => user) %>';">
     </td>
     <td nowrap style="text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>

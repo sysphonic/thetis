@@ -1,9 +1,8 @@
 #
 #= MailFolder
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #== Note:
 #
@@ -44,29 +43,29 @@ class MailFolder < ActiveRecord::Base
 
     case xtype
       when MailFolder::XTYPE_INBOX
-        normal = img_root + 'mail/mail_folder.gif'
-        open = img_root + 'mail/tree_mail_open.gif'
-        close = img_root + 'mail/tree_mail_close.gif'
+        normal = img_root + 'mail/mail_folder.png'
+        open = img_root + 'mail/tree_mail_open.png'
+        close = img_root + 'mail/tree_mail_close.png'
       when MailFolder::XTYPE_SENT
-        normal = img_root + 'mail/mail_folder.gif'
-        open = img_root + 'mail/tree_mail_open.gif'
-        close = img_root + 'mail/tree_mail_close.gif'
+        normal = img_root + 'mail/mail_folder.png'
+        open = img_root + 'mail/tree_mail_open.png'
+        close = img_root + 'mail/tree_mail_close.png'
       when MailFolder::XTYPE_DRAFTS
-        normal = img_root + 'mail/mail_folder.gif'
-        open = img_root + 'mail/tree_mail_open.gif'
-        close = img_root + 'mail/tree_mail_close.gif'
+        normal = img_root + 'mail/mail_folder.png'
+        open = img_root + 'mail/tree_mail_open.png'
+        close = img_root + 'mail/tree_mail_close.png'
       when MailFolder::XTYPE_TRASH
         normal = img_root + 'mail/trash_open.png'
         open = img_root + 'mail/trash_open.png'
         close = img_root + 'mail/trash_close.png'
       when MailFolder::XTYPE_ACCOUNT_ROOT
-        normal = img_root + 'mail/account_open.gif'
-        open = img_root + 'mail/account_open.gif'
-        close = img_root + 'mail/account_close.gif'
+        normal = img_root + 'mail/account_open.png'
+        open = img_root + 'mail/account_open.png'
+        close = img_root + 'mail/account_close.png'
       else
-        normal = img_root + 'mail/mail_folder.gif'
-        open = img_root + 'mail/tree_mail_open.gif'
-        close = img_root + 'mail/tree_mail_close.gif'
+        normal = img_root + 'mail/mail_folder.png'
+        open = img_root + 'mail/tree_mail_open.png'
+        close = img_root + 'mail/tree_mail_close.png'
     end
     return [normal, open, close]
   end
@@ -239,19 +238,19 @@ class MailFolder < ActiveRecord::Base
   #
   #_folder_tree_:: MailFolder tree.
   #_parent_id_:: Parent MailFolder-ID.
-  #_delete_ary_:: Array of Folders to remove.
+  #_delete_arr_:: Array of Folders to remove.
   #return:: MailFolder tree.
   #
-  def self.delete_tree(folder_tree, parent_id, delete_ary)
+  def self.delete_tree(folder_tree, parent_id, delete_arr)
 
-    return folder_tree if delete_ary.nil? or delete_ary.empty?
+    return folder_tree if delete_arr.nil? or delete_arr.empty?
 
-    delete_ary.each do |folder|
+    delete_arr.each do |folder|
       folder_tree = MailFolder.delete_tree(folder_tree, folder.id, folder_tree[folder.id.to_s])
       folder_tree.delete folder.id.to_s
     end
 
-    folder_tree[parent_id.to_s] -= delete_ary
+    folder_tree[parent_id.to_s] -= delete_arr
 
     return folder_tree
   end
@@ -293,8 +292,8 @@ class MailFolder < ActiveRecord::Base
     unless folders_cache.nil?
       path = folders_cache[mail_folder_id.to_i]
       if path.nil?
-        id_ary = []
-        name_ary = []
+        id_arr = []
+        name_arr = []
       else
         return path
       end
@@ -321,11 +320,11 @@ class MailFolder < ActiveRecord::Base
 
       folder = MailFolder.find_with_cache(mail_folder_id, folder_obj_cache)
 
-      id_ary.unshift(mail_folder_id.to_i) unless folders_cache.nil?
+      id_arr.unshift(mail_folder_id.to_i) unless folders_cache.nil?
 
       if folder.nil?
         path = '/' + I18n.t('paren.deleted') + path
-        name_ary.unshift(I18n.t('paren.deleted')) unless folders_cache.nil?
+        name_arr.unshift(I18n.t('paren.deleted')) unless folders_cache.nil?
         break
       else
         folder_name = folder.name
@@ -334,7 +333,7 @@ class MailFolder < ActiveRecord::Base
           folder_name = MailAccount.get_title(folder.mail_account_id)
         end
         path = '/' + folder_name + path
-        name_ary.unshift(folder_name) unless folders_cache.nil?
+        name_arr.unshift(folder_name) unless folders_cache.nil?
       end
 
       mail_folder_id = folder.parent_id
@@ -345,8 +344,8 @@ class MailFolder < ActiveRecord::Base
       unless cached_path.nil?
         path_to_cache << cached_path
       end
-      id_ary.each_with_index do |f_id, idx|
-        path_to_cache << '/' + name_ary[idx]
+      id_arr.each_with_index do |f_id, idx|
+        path_to_cache << '/' + name_arr[idx]
 
         folders_cache[f_id] = path_to_cache.dup
       end

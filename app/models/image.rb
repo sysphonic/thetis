@@ -1,9 +1,8 @@
 #
 #= Image
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Each Image is related to an Item, and shown on displays of the Item.
 #
@@ -32,9 +31,9 @@ class Image < ActiveRecord::Base
   #
   #
   def file=(file)
-    write_attribute(:name, file.original_filename)
+    write_attribute(:name, file.original_filename.force_encoding(Encoding::UTF_8))
     write_attribute(:size, file.size)
-    write_attribute(:content_type, file.content_type.strip)
+    write_attribute(:content_type, file.content_type.strip) unless file.content_type.nil?
     write_attribute(:content, file.read)
   end
 

@@ -43,14 +43,14 @@ if ($thetis_config[:menu]['disp_user_list'] == '1') \
 <% end %>
 
   if (figure == "") {
-    figure = "user.gif";
+    figure = "user.png";
   } else {
     figure += ".png";
   }
 
   var thetisBox = new ThetisBox;
   thetisBox.button_ok = "<%= t('btn.close') %>";
-  thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/"+figure+"'> " + user_name;
+  thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/"+figure+"'> " + user_name;
   thetisBox.bgcolor_title = "#22B9FE";
   thetisBox.bgcolor_body = "#C5EFFF";
   thetisBox.show("CENTER", "", "MESSAGE", "", content, "");

@@ -7,7 +7,7 @@
    <tr>
     <td style="text-align:left; padding:5px; padding-top:10px; padding-left:10px;" >
     <% if @group_id.blank? %>
-      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= TreeElement::ROOT_ID %>');">
         <%= t('btn.select_group') %>
       </div>
     <% else %>
@@ -77,11 +77,11 @@ else
           <%
           vals = research.get_by_q_code(q_code)
           unless vals.nil?
-            ary = vals.split("\n")
+            arr = vals.split("\n")
           %>
-          <%
-            ary.each do |val|
-          %>
+            <%
+            arr.each do |val|
+            %>
             <%= val %><br/>
           <%
             end

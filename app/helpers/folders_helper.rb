@@ -1,9 +1,8 @@
 #
 #= FoldersHelper
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Provides utility methods and constants about Folders.
 #
@@ -42,14 +41,14 @@ module FoldersHelper
       end
 
     else
-      ary = order_by.split(' ')
+      arr = order_by.split(' ')
 
-      sort_field = ary.first
+      sort_field = arr.first
 
-      if ary.length <= 1
+      if arr.length <= 1
         sort_direction = 'ASC'
       else
-        sort_direction = ary.last
+        sort_direction = arr.last
       end
     end
 
@@ -66,13 +65,13 @@ module FoldersHelper
 
     return [] if top_childs.nil?
 
-    delete_ary = []
+    delete_arr = []
 
     if group_id.nil?
 
       top_childs.each do |folder|
         if folder.xtype == Folder::XTYPE_USER or folder.xtype == Folder::XTYPE_GROUP
-          delete_ary << folder
+          delete_arr << folder
         end
       end
 
@@ -94,10 +93,10 @@ module FoldersHelper
             user = users_cache.delete(folder.owner_id)
 
             unless user.nil? or user.get_groups_a.empty?
-              delete_ary << folder
+              delete_arr << folder
             end
           else
-            delete_ary << folder
+            delete_arr << folder
           end
         end
 
@@ -108,21 +107,21 @@ module FoldersHelper
             user = users_cache.delete folder.owner_id
 
             unless user.nil? or user.get_groups_a.include?(group_id)
-              delete_ary << folder
+              delete_arr << folder
             end
 
           elsif folder.xtype == Folder::XTYPE_GROUP
 
             if folder.owner_id.to_s != group_id
-              delete_ary << folder
+              delete_arr << folder
             end
           else
-            delete_ary << folder
+            delete_arr << folder
           end
         end
       end
     end
 
-    return delete_ary
+    return delete_arr
   end
 end

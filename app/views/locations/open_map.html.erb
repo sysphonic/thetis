@@ -43,7 +43,7 @@ end
       location_id = "location_xx"
     %>
       <div class="location_tray" id="<%= location_id %>" style="text-align:left; width:200px; z-index:1000; cursor:move;" >
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/<%= @login_user.get_figure %>.png" />
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/<%= @login_user.get_figure %>.png" />
         <%= @login_user.get_name %>
       </div>
 <script type="text/javascript">
@@ -59,20 +59,20 @@ new Draggable("<%= location_id %>", {revert:false});
       <table style="width:100%;">
          <tr>
           <td style="text-align:left; width:120px; padding-bottom:5px;" >
-  <% if @group_id.nil? %>
-            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
+        <% if @group_id.nil? %>
+            <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= TreeElement::ROOT_ID %>');">
               <%= t('btn.select_group') %>
             </div>
-  <% else %>
+        <% else %>
             <table style="width:100%;">
               <tr>
                 <td style="text-align:left;" nowrap>
                   <%= t('cap.group') %> <a href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-                  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
+                  <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
                 </td>
               </tr>
             </table>
-  <% end %>
+        <% end %>
           </td>
         </tr>
       </table>
@@ -81,7 +81,7 @@ new Draggable("<%= location_id %>", {revert:false});
   <tr>
     <td style="text-align:left; padding:3px 0px;">
       <%= form_tag( {:controller => 'locations', :action => 'open_map'}, :method => 'get', :name => 'form_map') %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">
         <%= text_field_tag('keyword', params[:keyword]) %>
         <input type="button" value="<%= t('btn.search') %>" onclick="form_map.submit(); prog('TOP-RIGHT');"/>
         <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'locations', :action => 'open_map') %>';"/>
@@ -112,7 +112,7 @@ unless @locations.nil?
 <div class="location_on_map" id="<%= location_id %>" title="<%= location_at %>" style="position:absolute; z-index:1000; display:none; text-align:left; <%= width_limit %>">
   <%
   user_name, u_groups, figure = UsersHelper.get_groups_info(location.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
-  icon_img = THETIS_RELATIVE_URL_ROOT + "/images/#{figure}.png"
+  icon_img = THETIS_RELATIVE_URL_ROOT + "/images/figures/#{figure}.png"
   is_target = (!@target_user.nil? and @target_user.id == location.user_id)
   %>
   <img src="<%= icon_img %>" style="cursor:move;" />

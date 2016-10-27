@@ -23,7 +23,7 @@
       <%= Research.model_name.human %>
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
       <%= radio_button('item', 'xtype', Item::XTYPE_INFO, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
-      <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
+      <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
     <%
 =begin
 #    if @login_user.admin?(User::AUTH_ZEPTAIR)

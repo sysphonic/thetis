@@ -10,7 +10,7 @@ mail_account_id = params[:mail_account_id]
       <table style="width:100%;">
         <tr>
           <td style="text-align:left; width:1%;" nowrap>
-            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/item_add.gif" title="<%= t('btn.create') %>" onclick="showFilterNew();">
+            <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/item_add.png" title="<%= t('btn.create') %>" onclick="showFilterNew();">
           </td>
           <td style="width:10px;"></td>
           <td style="text-align:right;" nowrap>
@@ -118,13 +118,13 @@ mail_account_id = params[:mail_account_id]
     </td>
     <td style="text-align:center;">
     <% if filter.enabled %>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ok.gif" />
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ok.png" />
     <% else %>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/check_ng.gif" />
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/check_ng.png" />
     <% end %>
     </td>
     <td nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="showFilterEdit(<%= filter.id %>, '<%= ApplicationHelper.h_s_quote(truncate(filter.title, :length => 20)) %>');" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="showFilterEdit(<%= filter.id %>, '<%= ApplicationHelper.h_s_quote(truncate(filter.title, :length => 20)) %>');" />
     </td>
     <td style="width:20px; text-align:center;">
       <%= check_box(:check_filter, filter.id, :class => 'check_filter') %>
@@ -349,14 +349,14 @@ showFilter = function(mail_filter_id, mail_filter_title)
         method:"get",
         parameters:addParams.join("&"),
         onComplete:function(request) {
-          thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/zoom.gif'> " + mail_filter_title;
+          thetisBox.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png'> " + mail_filter_title;
           thetisBox.overflow = "auto";
           if (thetisBoxFilters) {
             thetisBoxFilters.addChildBox(thetisBox);
           }
           thetisBox.show(
                     "CENTER",
-                    Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                    Math.min(520, _mainWidth*9/10)+","+Math.min(640, _mainHeight*9/10),
                     "TRAY",
                     "",
                     "",
@@ -399,14 +399,14 @@ showFilterNew = function()
           thetisBoxFilterEdit.resizable = true;
           thetisBoxFilterEdit.bgcolor_title = "#8486e0";
           thetisBoxFilterEdit.bgcolor_body = "#a5baff";
-          thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> <%= t('mail_filter.new') %>";
+          thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> <%= t('mail_filter.new') %>";
           thetisBoxFilterEdit.overflow = "auto";
           if (thetisBoxFilters) {
             thetisBoxFilters.addChildBox(thetisBoxFilterEdit);
           }
           thetisBoxFilterEdit.show(
                     "CENTER",
-                    Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                    Math.min(520, _mainWidth*9/10)+","+Math.min(640, _mainHeight*9/10),
                     "TRAY",
                     "",
                     "",
@@ -443,14 +443,14 @@ showFilterEdit = function(mail_filter_id, mail_filter_title)
           thetisBoxFilterEdit.resizable = true;
           thetisBoxFilterEdit.bgcolor_title = "#8486e0";
           thetisBoxFilterEdit.bgcolor_body = "#a5baff";
-          thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> " + mail_filter_title;
+          thetisBoxFilterEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> " + mail_filter_title;
           thetisBoxFilterEdit.overflow = "auto";
           if (thetisBoxFilters) {
             thetisBoxFilters.addChildBox(thetisBoxFilterEdit);
           }
           thetisBoxFilterEdit.show(
                     "CENTER",
-                    Math.min(520, mainWidth*9/10)+","+Math.min(640, mainHeight*9/10),
+                    Math.min(520, _mainWidth*9/10)+","+Math.min(640, _mainHeight*9/10),
                     "TRAY",
                     "",
                     "",

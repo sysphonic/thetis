@@ -20,7 +20,7 @@ onShowProfileSheetClicked = function(profileSheetId, userName)
 {
   var thetisBox = new ThetisBox;
   thetisBox.title = "<%= t('item.profile_sheet') %> - "+userName;
-  thetisBox.show("CENTER", (mainWidth*8/10)+","+(mainHeight*8/10), "IFRAME", "", "", "<%= url_for(:controller => 'items', :action => 'show_for_print') %>?id="+profileSheetId);
+  thetisBox.show("CENTER", (_mainWidth*8/10)+","+(_mainHeight*8/10), "IFRAME", "", "", "<%= url_for(:controller => 'items', :action => 'show_for_print') %>?id="+profileSheetId);
 }
 
 </script>

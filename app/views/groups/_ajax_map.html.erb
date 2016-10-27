@@ -16,7 +16,7 @@
         <% unless @office_map.nil? %>
           <td style="width:10px;"></td>
           <td class="img_button_td" onclick="onClearClicked();">
-            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" /> <%= t('btn.clear') %>
+            <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" /> <%= t('btn.clear') %>
           </td>
         <% end %>
         </tr>
@@ -34,8 +34,9 @@ doRegister = function()
   var thetisBoxProgress = prog("TOP-RIGHT");
 
   ajaxUploadFile(
+      "office_map_uploader",
       document.form_group_map,
-      document.form_group_map.action,
+      "<%= url_for({:controller => 'locations', :action => 'update_map'}) %>",
       "div_ajax_map",
       function(){
         thetisBoxProgress.remove();

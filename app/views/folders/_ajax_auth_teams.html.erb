@@ -68,10 +68,10 @@
                     <table style="width:100%;">
                       <tr>
                         <td style="text-align:center;" nowrap>
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="var ary=moveListWithSuffix(_z('team_candidates'), _z('teams_auth'), ':r+w', ' (Read/Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="var ary=moveListWithSuffix(_z('team_candidates'), _z('teams_auth'), ':r', ' (Read)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="var ary=moveListWithSuffix(_z('team_candidates'), _z('teams_auth'), ':w', ' (Write)'); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
-                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="var ary=moveListTrimSuffix(_z('teams_auth'), _z('team_candidates'), ':', '('); if (ary != null && ary.length > 0) {modified_teams++;} return false;">
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read_write') %>" onclick="onAddTeamsReadWriteClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.read') %>" onclick="onAddTeamsReadClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.down')) %><%= t('auth.write') %>" onclick="onAddTeamsWriteClicked();" />
+                          <input type="button" value="<%= raw(t('arrow.up')) %><%= t('btn.remove') %>" onclick="onRemoveTeamsClicked();" />
                         </td>
                       </tr>
                     </table>
@@ -128,5 +128,37 @@
 modified_users = 0;
 modified_groups = 0;
 modified_teams = 0;
+
+onAddTeamsReadWriteClicked = function()
+{
+  var arr = moveListWithSuffix(_z("team_candidates"), _z("teams_auth"), ":r+w", " (Read/Write)");
+  if (arr != null && arr.length > 0) {
+    modified_teams++;
+  }
+}
+
+onAddTeamsReadClicked = function()
+{
+  var arr = moveListWithSuffix(_z("team_candidates"), _z("teams_auth"), ":r", " (Read)");
+  if (arr != null && arr.length > 0) {
+    modified_teams++;
+  }
+}
+
+onAddTeamsWriteClicked = function()
+{
+  var arr = moveListWithSuffix(_z("team_candidates"), _z("teams_auth"), ":w", " (Write)");
+  if (arr != null && arr.length > 0) {
+    modified_teams++;
+  }
+}
+
+onRemoveTeamsClicked = function()
+{
+  var arr = moveListTrimSuffix(_z("teams_auth"), _z("team_candidates"), ":", "(");
+  if (arr != null && arr.length > 0) {
+    modified_teams++;
+  }
+}
 
 </script>

@@ -67,7 +67,7 @@
         if  Folder.check_user_auth(team_folder.id, @login_user, 'r', true)
           path = team_folder.get_path(@folders_cache, @folder_obj_cache)
     %>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.gif" title="" />
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="" />
       <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => team_folder.id) %>'; return false;">
         <%= path %>
       </a>

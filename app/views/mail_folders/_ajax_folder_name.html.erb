@@ -7,7 +7,7 @@ unless @mail_folder.nil?
   folder_open = icons[1]
   folder_close = icons[2]
   %>
-  <img id="<%= div_id %>_open" src="<%= folder_open %>" border="0"><img id="<%= div_id %>_close" src="<%= folder_close %>" border="0" style="display:none;">
+  <img id="<%= div_id %>_open" src="<%= folder_open %>" /><img id="<%= div_id %>_close" src="<%= folder_close %>" style="display:none;" />
   <span id="<%= div_id %>_name"><%= @mail_folder.name %></span>
 <% end %>
 

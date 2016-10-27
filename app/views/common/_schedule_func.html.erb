@@ -93,7 +93,7 @@ newScheduleDetail = function(date, addParams, title)
         onComplete:function(request){
           thetisBoxProgress.remove();
 
-          thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> ";
+          thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> ";
           if (title) {
             thetisBoxScheduleDetail.title += title;
           } else {
@@ -146,7 +146,7 @@ editScheduleDetail = function(date, id, title, addParams)
         onComplete:function(request) {
           thetisBoxProgress.remove();
 
-          thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif'> ";
+          thetisBoxScheduleDetail.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> ";
           if (title) {
             thetisBoxScheduleDetail.title += title;
           } else {

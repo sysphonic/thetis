@@ -111,13 +111,13 @@ end
 
       <% if editable %>
         <%
-        opt_ary = []
+        opts = []
         Timecard.workcodes.each do |workcode, value|
-          opt_ary << [h(Timecard.workcode_names[workcode]), workcode]
+          opts << [h(Timecard.workcode_names[workcode]), workcode]
         end
         %>
         <%= select_tag 'timecard[workcode]',
-                     options_for_select(opt_ary, (@timecard.nil?)?nil:(@timecard.workcode)),
+                     options_for_select(opts, (@timecard.nil?)?nil:(@timecard.workcode)),
                      :onChange => 'changeWorkcode(this.value);'
                   %>
       <% elsif !@timecard.nil? %>
@@ -156,8 +156,8 @@ end
         <% end %>
         </select>
         <% if @timecard.nil? or @timecard.start.nil? %>
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/laquo.gif" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= @login_user.login_at.hour %>', '<%= @login_user.login_at.min %>');">
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/laquo.png" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= @login_user.login_at.hour %>', '<%= @login_user.login_at.min %>');">
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/time.png" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
         <% end %>
         ~
         <select id="end_hour" onchange="changeHour(this.value, _z('end_min'));">
@@ -185,7 +185,7 @@ end
         <% end %>
         </select>
         <% if !@timecard.nil? and @timecard.end.nil? %>
-          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/time.gif" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('end', null, null);">
+          <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/time.png" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('end', null, null);">
         <% end %>
       <% elsif !@timecard.nil? %>
         <%= (@timecard.start.nil?)?'':(@timecard.start.strftime('%H:%M')) %>
@@ -201,9 +201,9 @@ end
       <td class="item_value_td">
       <% if editable %>
         <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
-        <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %></label>
+        <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.png" /> <%= t('timecard.business_trip') %></label>
       <% elsif !@timecard.nil? and @timecard.business_trip? %>
-        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.gif"> <%= t('timecard.business_trip') %>
+        <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.png" /> <%= t('timecard.business_trip') %>
       <% end %>
       </td>
     </tr>
@@ -219,7 +219,7 @@ end
               <%= text_area('timecard', 'comment', :rows => 3, :style => 'width:100%;') %>
             </td>
             <td style="width:25px; text-align:center; border:none;">
-              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/dropleft.gif" onclick="showDescSelector();" style="cursor:pointer; vertical-align:middle;" />
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropleft.png" onclick="showDescSelector();" style="cursor:pointer; vertical-align:middle;" />
             </td>
           </tr>
         </table>
@@ -528,7 +528,7 @@ function showDescSelector()
         onComplete:function(request) {
           thetisBox.show(
                     "CENTER",
-                    mainWidth*70/100+"," + mainHeight*70/100,
+                    (_mainWidth*70/100)+","+(_mainHeight*70/100),
                     "TRAY",
                     "",
                     "",

@@ -1,9 +1,8 @@
 #
 #= SendMailsController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Sending Emails.
 #
@@ -263,57 +262,49 @@ class SendMailsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    unless params[:attach_file].nil?
-      attach_attrs = ActionController::Parameters.new({file: params[:attach_file]})
-      params.delete(:attach_file)
-    end
-
-    if params[:id].blank?
-      mail_account = MailAccount.find(params[:mail_account_id])
-
-      @email = SendMailsHelper.get_mail_to_send(@login_user, mail_account, nil)
-      @email.status = Email::STATUS_TEMPORARY
-      @email.save!
-    else
-      @email = Email.find(params[:id])
-    end
-
-    unless attach_attrs.nil?
-
-      unless @email.can_attach?(attach_attrs[:file].size)
-        flash[:notice] = 'ERROR:' + t('mail.sum_of_attach_size_over')
-        render(:partial => 'ajax_mail_attachments', :layout => false)
-        return
+    ActiveRecord::Base.transaction do
+      attach_attrs = nil
+      unless params[:file].blank?
+        params[:file].original_filename = params[:name] unless params[:name].blank?
+        attach_attrs = {:file => params[:file]}
+        params.delete(:file)
       end
 
-      attach_attrs[:email_id] = @email.id
-      attach_attrs[:xorder] = 0
-      @mail_attachment = MailAttachment.create(attach_attrs.permit(MailAttachment::PERMIT_BASE))
-      @email.mail_attachments << @mail_attachment
+      if params[:id].blank?
+        mail_account = MailAccount.find(params[:mail_account_id])
 
-      update_attrs = ActionController::Parameters.new({updated_at: Time.now})
-      if @email.status == Email::STATUS_TEMPORARY \
-          and !@email.mail_account_id.nil?
-        update_attrs[:status] = Email::STATUS_DRAFT
+        @email = SendMailsHelper.get_mail_to_send(@login_user, mail_account, nil)
+        @email.status = Email::STATUS_TEMPORARY
+        @email.save!
+      else
+        @email = Email.find(params[:id])
       end
-      @email.update_attributes(update_attrs.permit(Email::PERMIT_BASE))
+
+      unless attach_attrs.nil?
+
+        unless @email.can_attach?(attach_attrs[:file].size)
+          flash[:notice] = 'ERROR:' + t('mail.sum_of_attach_size_over')
+          render(:partial => 'ajax_mail_attachments', :layout => false)
+          return
+        end
+
+        attach_attrs[:email_id] = @email.id
+        attach_attrs[:xorder] = 0
+        @mail_attachment = MailAttachment.create(attach_attrs)
+        @email.mail_attachments << @mail_attachment
+
+        mail_attrs = {updated_at: Time.now}
+        if @email.status == Email::STATUS_TEMPORARY \
+            and !@email.mail_account_id.nil?
+          mail_attrs[:status] = Email::STATUS_DRAFT
+        end
+        @email.update_attributes(mail_attrs)
+      end
     end
 
     render(:partial => 'ajax_mail_attachments', :layout => false)
 
   rescue => evar
-    begin
-      unless @mail_attachment.nil? or @mail_attachment.id.nil?
-        @email.mail_attachments.delete(@mail_attachment)
-      end
-    rescue
-    end
-    begin
-      unless @mail_attachment.nil? or @mail_attachment.id.nil?
-        @mail_attachment.destroy
-      end
-    rescue
-    end
     if evar.to_s.starts_with?('ERROR:')
       err_msg = evar.to_s
     else
@@ -346,11 +337,11 @@ class SendMailsController < ApplicationController
       if attachment.email_id == @email.id
         attachment.destroy
 
-        update_attrs = ActionController::Parameters.new({updated_at: Time.now})
+        mail_attrs = {updated_at: Time.now}
         if @email.status == Email::STATUS_TEMPORARY
-          update_attrs[:status] = Email::STATUS_DRAFT
+          mail_attrs[:status] = Email::STATUS_DRAFT
         end
-        @email.update_attributes(update_attrs.permit(Email::PERMIT_BASE))
+        @email.update_attributes(mail_attrs)
       end
     rescue => evar
       Log.add_error(request, evar)

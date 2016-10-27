@@ -1,0 +1,14 @@
+
+.plupload_wrapper {min-width:10px !important;}
+.plupload_container {min-height:100px !important; background:white url(../images/background/item_bg.png) center no-repeat  !important;}
+.plupload_content {top:20px !important; bottom:30px !important;}
+
+.plupload_header_content {height:20px !important;}
+.plupload_logo {display:none;}
+.plupload_header_title {display:none;}
+.plupload_header_text {display:none;}
+
+.plupload_cell {padding:0px 6px !important;}
+
+.plupload_view_switch {bottom:0px !important;}
+

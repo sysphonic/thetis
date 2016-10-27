@@ -12,15 +12,15 @@ official_title_obj_cache = {}
   <tr>
   <% if @login_user.admin?(User::AUTH_USER) %>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/user_add.gif" title="<%= t('btn.create') %>" onclick="doEditUser(null);">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/user_add.png" title="<%= t('btn.create') %>" onclick="doEditUser(null);">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_exp.gif" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/csv_exp.png" title="<%= t('btn.export_csv') %>" onclick="exportCsv();">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/csv_imp.gif" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/csv_imp.png" title="<%= t('btn.import_csv') %>" onclick="importCsv();">
     </td>
     <td style="width:10px;"></td>
     <td style="text-align:left; width:1%;" nowrap>
@@ -28,7 +28,7 @@ official_title_obj_cache = {}
     </td>
   <% end %>
     <td style="text-align:right;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/search.gif" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
       <input type="button" value="<%= t('btn.search') %>" onclick="form_list.action='<%= url_for(:controller => 'users', :action => 'search') %>'; form_list.submit(); prog('TOP-RIGHT');"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="location.href='<%= url_for(:controller => 'users', :action => 'list') %>'; prog('TOP-RIGHT');"/>
     </td>
@@ -38,24 +38,24 @@ official_title_obj_cache = {}
 <table style="width:100%; padding-bottom:5px;">
   <tr>
     <td style="text-align:left;" nowrap>
-<% if @group_id.blank? %>
-      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('0');">
+  <% if @group_id.blank? %>
+      <div class="button_gray" style="float:left;" onclick="showGroupTreeToSelect('<%= TreeElement::ROOT_ID %>');">
         <%= t('btn.select_group') %>
       </div>
-<% else %>
+  <% else %>
       <%= t('cap.group') %> <a class="linked_path" href="javascript:this.onclick()" onclick="showGroupTreeToSelect('<%= @group_id %>'); return false;"><%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %></a>
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/erase.gif" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
-<% end %>
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" title="<%= t('btn.clear') %>" onclick="clearGroup()" style="margin-left:10px;" />
+  <% end %>
     </td>
     <td style="text-align:right;" nowrap>
-<% if @login_user.admin?(User::AUTH_USER) %>
+  <% if @login_user.admin?(User::AUTH_USER) %>
       <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll();">
       <span style="color:silver;">|</span>
       <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteUserClicked();">
       <input type="button" value="<%= t('btn.send_notification')%>" onclick="onNotifyClicked();">
-<% else %>
+  <% else %>
       &nbsp;
-<% end %>
+  <% end %>
     </td>
   </tr>
 </table>
@@ -118,7 +118,7 @@ official_title_obj_cache = {}
     </td>
   <% if @login_user.admin?(User::AUTH_USER) %>
     <td nowrap style="text-align:center;">
-      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/edit.gif" title="<%= t('btn.edit') %>" onclick="doEditUser(<%= user.id %>);" />
+      <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="doEditUser(<%= user.id %>);" />
     </td>
     <td style="width:20px; text-align:center;">
       <%= check_box(:check_user, user.id, :class => 'check_user') %>
@@ -552,7 +552,7 @@ function showImportError()
   thetisBox.title = "<%= t('cap.import_error') %>";
   thetisBox.bgcolor_title = "crimson";
   thetisBox.bgcolor_body = "salmon";
-  thetisBox.show("CENTER", (mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", _z("imp_errs").innerHTML);
+  thetisBox.show("CENTER", (_mainWidth*7/10)+",450", "TRAY", "", "<%= t('msg.error_detected') %>", _z("imp_errs").innerHTML);
 }
 
 function onLoadSub()

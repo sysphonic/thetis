@@ -1,9 +1,8 @@
 #
 #= ItemsHelper
 #
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #Provides utility methods and constants about Items.
 #
@@ -29,10 +28,10 @@ module ItemsHelper
 
     rev = 0
     copied_items.each do |item|
-      rev_ary = item.title.scan(/[#](\d\d\d)$/)
-      next if rev_ary.nil?
+      rev_arr = item.title.scan(/[#](\d\d\d)$/)
+      next if rev_arr.nil?
 
-      rev = rev_ary.first.to_a.first.to_i
+      rev = rev_arr.first.to_a.first.to_i
       break
     end
 

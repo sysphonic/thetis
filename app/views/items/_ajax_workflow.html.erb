@@ -8,7 +8,7 @@
       <%
       back_style = ''
       if @workflow.decided?
-        back_style = "background:url('#{THETIS_RELATIVE_URL_ROOT}/images/colback.png') left no-repeat;"
+        back_style = "background:url('#{THETIS_RELATIVE_URL_ROOT}/images/background/colback.png') left no-repeat;"
       end
       %>
       <table style="width:100%; <%= back_style %>">
@@ -19,9 +19,9 @@
             <%
             img = ''
             if @workflow.accepted?
-              img = "#{THETIS_RELATIVE_URL_ROOT}/images/check_ok.gif"
+              img = "#{THETIS_RELATIVE_URL_ROOT}/images/icons/check_ok.png"
             elsif @workflow.denied?
-              img = "#{THETIS_RELATIVE_URL_ROOT}/images/check_ng.gif"
+              img = "#{THETIS_RELATIVE_URL_ROOT}/images/icons/check_ng.png"
             end
             %>
             <img src="<%= img %>" />
@@ -55,7 +55,7 @@
           order.each do |user_id, user_name|
             expected_mark = ''
             if !expected_users.nil? and expected_users.include?(user_id) and !marked_users.include?(user_id)
-              expected_mark = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/red_flag.gif" title="'+h(t('workflow.expected_icon_alt'))+'" />'
+              expected_mark = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/icons/red_flag.png" title="'+h(t('workflow.expected_icon_alt'))+'" />'
               marked_users << user_id
             end
           %>

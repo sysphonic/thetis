@@ -1,9 +1,8 @@
 #
 #= ZeptairDistController
 #
-#Copyright:: Copyright (c) 2007-2016 MORITA Shintaro, Sysphonic. All rights reserved.
+#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
 #
 #The Action-Controller about Zeptair Distribution feature.
 #
@@ -169,14 +168,14 @@ class ZeptairDistController < ApplicationController
               next if entry.nil? or entry.empty?
 
               regexp = Regexp.new("^([a-zA-Z]+)#{ZeptairDistHelper::ACK_CLASS_SEP}(\\d+)[#{ZeptairDistHelper::ACK_ID_SEP}]")
-              matched_ary = entry.scan(regexp)
-              next if matched_ary.nil?
-              matched_ary = matched_ary.flatten
-              next if matched_ary.length < 2
+              matched_arr = entry.scan(regexp)
+              next if matched_arr.nil?
+              matched_arr = matched_arr.flatten
+              next if matched_arr.length < 2
 
-              entry_class = matched_ary.first
+              entry_class = matched_arr.first
               entry_order = class_order[entry_class]
-              entry_id = matched_ary.last.to_i
+              entry_id = matched_arr.last.to_i
               if entry_class == target.class.to_s \
                   and entry_id == target.id
                 msg << new_entry + "\n"
