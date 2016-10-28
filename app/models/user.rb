@@ -10,7 +10,7 @@
 #
 #* 
 #
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   public::PERMIT_BASE = [:name, :fullname, :pass_md5, :address, :organization, :email, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :postalcode, :birthday, :time_zone, :figure, :email_sub1, :email_sub1_type, :email_sub2, :email_sub2_type, :title, :xorder]
 
   has_many(:user_titles, {:dependent => :destroy})

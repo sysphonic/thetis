@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Timecard < ActiveRecord::Base
+class Timecard < ApplicationRecord
   public::PERMIT_BASE = [:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options]
 
   belongs_to(:user)

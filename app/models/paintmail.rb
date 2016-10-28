@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Paintmail < ActiveRecord::Base
+class Paintmail < ApplicationRecord
   public::PERMIT_BASE = [:smtpSenderAddress, :smtpServerAddress, :smtpServerPort, :popServerAddress, :popServerPort, :popUser, :popPassword, :popInterval, :toAddresses, :confDir, :checkNew, :smtpAuth, :smtpUser, :smtpPassword]
 
   belongs_to :user

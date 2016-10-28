@@ -8,7 +8,7 @@
 #
 #* 
 #
-class MailAttachment < ActiveRecord::Base
+class MailAttachment < ApplicationRecord
   public::PERMIT_BASE = [:email_id, :xorder, :file]
 
   belongs_to :email

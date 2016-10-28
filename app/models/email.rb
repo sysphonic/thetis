@@ -8,7 +8,7 @@
 #
 #* 
 #
-class Email < ActiveRecord::Base
+class Email < ApplicationRecord
   public::PERMIT_BASE = [:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size]
 
   has_many(:mail_attachments, ->(rec) {order('mail_attachments.xorder asc')}, {:dependent => :destroy})

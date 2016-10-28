@@ -11,7 +11,7 @@
 #
 #* 
 #
-class Workflow < ActiveRecord::Base
+class Workflow < ApplicationRecord
   public::PERMIT_BASE = [:status, :issued_at]
 
   belongs_to(:item)

@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Toy < ActiveRecord::Base
+class Toy < ApplicationRecord
   public::PERMIT_BASE = [:name, :xtype, :target_id, :address, :x, :y, :memo, :message]
 
   public::XTYPE_UNKNOWN = nil

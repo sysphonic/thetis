@@ -10,7 +10,7 @@
 #
 #*
 #
-class Equipment < ActiveRecord::Base
+class Equipment < ApplicationRecord
   public::PERMIT_BASE = [:name, :note, :users, :groups, :teams]
 
   extend CachedRecord

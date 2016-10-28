@@ -10,6 +10,6 @@
 #
 #* 
 #
-class UserTitle < ActiveRecord::Base
+class UserTitle < ApplicationRecord
 
 end

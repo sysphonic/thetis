@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Image < ActiveRecord::Base
+class Image < ApplicationRecord
   public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :file]
 
   validates_length_of(:content, :within => 1..THETIS_IMAGE_MAX_KB*1024)

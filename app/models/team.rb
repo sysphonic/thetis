@@ -10,7 +10,7 @@
 #
 #*
 #
-class Team < ActiveRecord::Base
+class Team < ApplicationRecord
   public::PERMIT_BASE = [:name, :item_id, :users, :status, :req_to_del_at]
 
   belongs_to(:item)

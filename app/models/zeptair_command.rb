@@ -10,7 +10,7 @@
 #
 #* 
 #
-class ZeptairCommand < ActiveRecord::Base
+class ZeptairCommand < ApplicationRecord
   belongs_to :item
 
 end

@@ -10,7 +10,7 @@
 #
 #* 
 #
-class OfficeMap < ActiveRecord::Base
+class OfficeMap < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :img_enabled, :file]
 
   validates_length_of(:img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true)

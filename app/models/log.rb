@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Log < ActiveRecord::Base
+class Log < ApplicationRecord
 
   public::INFO = 'INFO'
   public::CHECK = 'CHECK'

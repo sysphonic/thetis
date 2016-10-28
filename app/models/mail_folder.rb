@@ -8,7 +8,7 @@
 #
 #* 
 #
-class MailFolder < ActiveRecord::Base
+class MailFolder < ApplicationRecord
   has_many(:emails, {:dependent => :destroy})
 
   extend CachedRecord

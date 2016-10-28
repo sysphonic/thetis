@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Attachment < ActiveRecord::Base
+class Attachment < ApplicationRecord
   public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :location, :comment_id, :file]
 
   belongs_to(:item, {required: false})

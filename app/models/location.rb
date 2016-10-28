@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Location < ActiveRecord::Base
+class Location < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :x, :y, :memo]
 
   #=== self.get_for

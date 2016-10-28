@@ -12,7 +12,7 @@
 #* Root Folder has no records in DB, and its ID is '0'.
 #* Folder names which start with '$' are reserved by the system, and also cannot include character '/'.
 #
-class Folder < ActiveRecord::Base
+class Folder < ApplicationRecord
 
   extend CachedRecord
   include TreeElement

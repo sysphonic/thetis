@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Desktop < ActiveRecord::Base
+class Desktop < ApplicationRecord
   public::PERMIT_BASE = [:theme, :background_color, :popup_news, :popup_timecard, :popup_schedule, :img_enabled, :file]
 
   validates_length_of(:img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true)

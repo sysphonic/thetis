@@ -14,7 +14,7 @@
 #
 #* 
 #
-class Item < ActiveRecord::Base
+class Item < ApplicationRecord
   public::PERMIT_BASE = [:title, :summary, :folder_id, :description, :public, :layout, :update_message, :xtype, :xorder]
 
   has_one(:team, {:dependent => :destroy})

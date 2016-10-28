@@ -10,7 +10,7 @@
 #
 #* 
 #
-class Comment < ActiveRecord::Base
+class Comment < ApplicationRecord
   public::PERMIT_BASE = [:user_id, :item_id, :message, :xtype]
 
   belongs_to(:item)

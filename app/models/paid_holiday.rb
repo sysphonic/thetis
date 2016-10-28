@@ -10,7 +10,7 @@
 #
 #* 
 #
-class PaidHoliday < ActiveRecord::Base
+class PaidHoliday < ApplicationRecord
   belongs_to :user
 
   public::CARRY_OVER_NONE = 'none'

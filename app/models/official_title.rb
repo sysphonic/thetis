@@ -10,7 +10,7 @@
 #
 #* 
 #
-class OfficialTitle < ActiveRecord::Base
+class OfficialTitle < ApplicationRecord
   public::PERMIT_BASE = [:name]
 
   extend CachedRecord

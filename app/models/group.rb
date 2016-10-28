@@ -10,7 +10,7 @@
 #
 #* Root Group has no records in DB, and its ID is '0'.
 #
-class Group < ActiveRecord::Base
+class Group < ApplicationRecord
 
   has_many(:official_titles, {:dependent => :destroy})
 

@@ -8,7 +8,7 @@
 #
 #* 
 #
-class MailFilter < ActiveRecord::Base
+class MailFilter < ApplicationRecord
   public::PERMIT_BASE = [:title, :enabled, :triggers, :and_or, :conditions, :actions, :xorder]
 
   validates_presence_of(:title)
