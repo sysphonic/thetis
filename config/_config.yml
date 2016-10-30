@@ -1,19 +1,15 @@
 --- 
-? !ruby/symbol desktop
-: 
+desktop:
   user_before_login: ""
-? !ruby/symbol general
-: 
+general:
   app_title: Thetis
-  default_page: /thetis/desktop/show
+  default_page: "/thetis/desktop/show"
   default_topicbox: "1"
   header_menus: []
   symbol_title: "Replace Me!"
-? !ruby/symbol log
-: 
+log:
   max_num: "1000"
-? !ruby/symbol menu
-: 
+menu:
   disp_equipment: "1"
   disp_mail: "1"
   disp_addressbook: "0"
@@ -27,26 +23,19 @@
   req_login_equipment: "0"
   req_login_items: "0"
   req_login_schedules: "0"
-? !ruby/symbol note
-: {}
-? !ruby/symbol feed
-: 
+feed:
   enabled: "1"
   feed_content: "1"
-? !ruby/symbol smtp
-: 
-  auth: ~
+smtp:
+  auth: 
   auth_enabled: "0"
   domain: example.com
   from_address: user@example.com
-  password: ~
+  password: 
   port: "25"
   server: example.com
-  user_name: ~
-? !ruby/symbol topic
-: 
+  user_name: 
+topic:
   caption: ""
-  src: /thetis/links_en.html
-? !ruby/symbol user
-: 
+user:
   by_full_name: "0"

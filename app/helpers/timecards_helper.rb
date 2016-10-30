@@ -143,13 +143,12 @@ module TimecardsHelper
   #return:: Array of fiscal parameters. [year_begins_from, month_begins_at]
   #
   def self.get_fiscal_params(yaml=nil) 
+
     yaml ||= ApplicationHelper.get_config_yaml
-    month_begins_at = 1
-    year_begins_from = 1
-    unless yaml[:timecard].nil?
-      month_begins_at = (yaml[:timecard]['month_begins_at'] || 1).to_i
-      year_begins_from = (yaml[:timecard]['year_begins_from'] || 1).to_i
-    end
+
+    month_begins_at = YamlHelper.get_value(yaml, 'timecard.month_begins_at', 1).to_i
+    year_begins_from = YamlHelper.get_value(yaml, 'timecard.year_begins_from', 1).to_i
+
     return [year_begins_from, month_begins_at]
   end
 end

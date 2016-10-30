@@ -10,9 +10,7 @@
     <td class="prim_cap_td" nowrap><%= t('desktop.currently_selected') %></td>
     <td class="item_value_td" style="width:70%;">
       <%
-      unless @yaml[:desktop].nil?
-        user_before_login = @yaml[:desktop]['user_before_login']
-      end
+      user_before_login = YamlHelper.get_value(@yaml, 'desktop.user_before_login', nil)
 
       if user_before_login.nil? or user_before_login.empty?
       %>

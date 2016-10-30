@@ -13,7 +13,7 @@
 class SchedulesController < ApplicationController
   layout 'base'
 
-  if $thetis_config[:menu]['req_login_schedules'] == '1'
+  if YamlHelper.get_value($thetis_config, 'menu.req_login_schedules', nil) == '1'
     before_action :check_login
   else
     before_action :check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment]

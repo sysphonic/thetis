@@ -13,7 +13,7 @@
 class EquipmentController < ApplicationController
   layout 'base'
 
-  if $thetis_config[:menu]['req_login_equipment'] == '1'
+  if YamlHelper.get_value($thetis_config, 'menu.req_login_equipment', nil) == '1'
     before_action :check_login
   end
 

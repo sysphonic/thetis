@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 
-<title><%= $thetis_config[:general]['app_title'] %></title>
+<title><%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %></title>
 
 <link rel="shortcut icon" href="images/thetis.ico">
 
@@ -12,7 +12,7 @@
 
 <script type="text/javascript">
 
-ThetisBox.setTitle("<%= $thetis_config[:general]['app_title'] %>");
+ThetisBox.setTitle("<%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %>");
 ThetisBox.setOk("<%= t('btn.ok') %>");
 ThetisBox.setCancel("<%= t('btn.cancel') %>");
 ThetisBox.setClose("<%= t('btn.close') %>");
@@ -52,7 +52,7 @@ function showTopicBox()
   thetisBoxTopic = new ThetisBox;
   thetisBoxTopic.resizable = true;
   thetisBoxTopic.title = "<%= t('topicbox.title') %>";
-  thetisBoxTopic.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= $thetis_config[:topic]['caption'] %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
+  thetisBoxTopic.show("CENTER", (mainWidth/10*7)+","+(mainHeight/10*7), "IFRAME", "", "<%= YamlHelper.get_value($thetis_config, 'topic.caption', nil) %>", "<%= THETIS_TOPICS_URL %>?"+((new Date()).getTime()));
 }
 
 function hideTopicBox()
@@ -142,8 +142,8 @@ function setMode(mode)
     <%
     if params[:default].blank?
       url = ''
-      url << $thetis_config[:general]['default_page']
-      if $thetis_config[:general]['default_topicbox'] == '1'
+      url << YamlHelper.get_value($thetis_config, 'general.default_page', nil)
+      if YamlHelper.get_value($thetis_config, 'general.default_topicbox', nil) == '1'
         url << "#{url.include?('?')?'&':'?'}topicBox=true"
       end
     else

@@ -282,7 +282,7 @@ ja:
     before_login: "ログイン前のデスクトップ"
     before_login_info1: "ログイン前のすべてのユーザーに表示するデスクトップ<sup>*</sup>をここで指定できます。"
     before_login_info2: "（デスクトップ画面の表示にログインが要求されない時にのみ有効です）"
-    before_login_info3: "* <i>My Folder は自動的に除かれます.</i>"
+    before_login_info3: "* <i>My Folder へのショートカットアイコンは自動的に除かれます.</i>"
     currently_selected: "現在の選択"
     select_mine: "自分のデスクトップを選択"
     theme:

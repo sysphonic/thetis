@@ -877,7 +877,8 @@ class Item < ApplicationRecord
       feed_entry.guid            = FeedEntry.create_guid(item, ApplicationHelper.get_timestamp(item))
       feed_entry.title           = '['+Item.model_name.human+'] '+item.title
       feed_entry.content     = (item.summary.nil?)?'(No summary)':(item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
-      if $thetis_config[:feed]['feed_content'] == '1' and !item.description.nil?
+      if (YamlHelper.get_value($thetis_config, 'feed.feed_content', nil) == '1') \
+          and !item.description.nil?
         feed_entry.content << "\n#{item.description}"
         feed_entry.content_encoded = "<![CDATA[#{item.description}]]>"
       end

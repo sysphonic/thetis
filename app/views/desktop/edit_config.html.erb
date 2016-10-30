@@ -5,7 +5,7 @@ is_admin = @login_user.admin?(User::AUTH_DESKTOP)
 <%= render(:partial => 'common/error', :locals => {:obj => @desktop}) %>
 
 <script type="text/javascript">
-tabs = new Array("basic", "admin");
+tabs = ["basic", "admin"];
 </script>
 
 <table style="width:100%; padding:10px 15px 20px;">
@@ -153,7 +153,7 @@ tabs = new Array("basic", "admin");
 
 selectBgColor = function(color)
 {
-  var nameArray = new Array("blue", "pink", "orange", "brown", "green");
+  var nameArray = ["blue", "pink", "orange", "brown", "green"];
 
   for (var i=0; i < nameArray.length; i++) {
     td_bgcolor = _z("td_bgcolor_"+nameArray[i]);

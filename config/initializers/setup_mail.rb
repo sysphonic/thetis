@@ -11,17 +11,17 @@ ActionMailer::Base.smtp_settings = {
   :openssl_verify_mode => 'none'
 =end
 
-  :address => $thetis_config[:smtp]['server'],
-  :port => $thetis_config[:smtp]['port'].to_i,
-  :domain => $thetis_config[:smtp]['domain']
+  :address => YamlHelper.get_value($thetis_config, 'smtp.server', nil),
+  :port => YamlHelper.get_value($thetis_config, 'smtp.port', nil).to_i,
+  :domain => YamlHelper.get_value($thetis_config, 'smtp.domain', nil)
 }
 
-if $thetis_config[:smtp]['auth_enabled'] == '1'
-  ActionMailer::Base.smtp_settings[:authentication] = $thetis_config[:smtp]['auth'].to_sym
-  ActionMailer::Base.smtp_settings[:user_name] = $thetis_config[:smtp]['user_name']
-  ActionMailer::Base.smtp_settings[:password] = $thetis_config[:smtp]['password']
+if YamlHelper.get_value($thetis_config, 'smtp.auth_enabled', nil) == '1'
+  ActionMailer::Base.smtp_settings[:authentication] = YamlHelper.get_value($thetis_config, 'smtp.auth', nil).to_sym
+  ActionMailer::Base.smtp_settings[:user_name] = YamlHelper.get_value($thetis_config, 'smtp.user_name', nil)
+  ActionMailer::Base.smtp_settings[:password] = YamlHelper.get_value($thetis_config, 'smtp.password', nil)
 end
-if $thetis_config[:smtp]['starttls'] == '1'
+if YamlHelper.get_value($thetis_config, 'smtp.starttls', nil) == '1'
   ActionMailer::Base.smtp_settings[:enable_starttls_auto] = true
   ActionMailer::Base.smtp_settings[:openssl_verify_mode] = 'none'
 end

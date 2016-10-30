@@ -17,7 +17,7 @@
               <%= t('config.app_title') %>
             </td>
             <td class="item_value_td" style="width:70%;">
-              <input type="text" name="general[app_title]" value="<%= @yaml[:general]['app_title'] %>" style="width:95%" />
+              <input type="text" name="general[app_title]" value="<%= YamlHelper.get_value(@yaml, 'general.app_title', nil) %>" style="width:95%" />
             </td>
           </tr>
           <tr>
@@ -25,7 +25,7 @@
               <%= t('config.emblem_title') %>
             </td>
             <td class="item_value_td">
-              <input type="text" name="general[symbol_title]" value="<%= @yaml[:general]['symbol_title'] %>" style="width:95%" />
+              <input type="text" name="general[symbol_title]" value="<%= YamlHelper.get_value(@yaml, 'general.symbol_title', nil) %>" style="width:95%" />
             </td>
           </tr>
           <tr>
@@ -42,7 +42,7 @@
             </td>
             <td class="item_value_td" nowrap>
               <input type="text" id="general_default_page" name="general[default_page]" value="" style="width:95%" /><br/>
-              <% checked = (@yaml[:general]['default_topicbox']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'general.default_topicbox', nil)=='1')?'checked':'' %>
               <input name="general[default_topicbox]" type="hidden" value="0" />
               <input type="checkbox" id="general_default_topicbox" name="general[default_topicbox]" value="1" <%= checked %>><label for="general_default_topicbox"> <%= t('config.show_topicbox') %></label>
             </td>
@@ -60,7 +60,7 @@
               <%= t('config.mode') %>
             </td>
             <td class="item_value_td" style="width:70%">
-              <% checked = (@yaml[:menu]['open_user_reg']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.open_user_reg', nil)=='1')?'checked':'' %>
               <input name="menu[open_user_reg]" type="hidden" value="0" />
               <input type="checkbox" id="menu_open_user_reg" name="menu[open_user_reg]" value="1" <%= checked %>><label for='menu_open_user_reg'><%= t('config.open_user_reg') %></label>
             </td>
@@ -70,35 +70,35 @@
               <%= t('config.display') %>
             </td>
             <td class="item_value_td">
-              <% checked = (@yaml[:menu]['disp_equipment']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_equipment', nil)=='1')?'checked':'' %>
               <input name="menu[disp_equipment]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_equipment" name="menu[disp_equipment]" value="1" <%= checked %>><label for="menu_disp_equipment"> <%= t('menu.equipment') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_workflow']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_workflow', nil)=='1')?'checked':'' %>
               <input name="menu[disp_workflow]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_workflow" name="menu[disp_workflow]" value="1" <%= checked %>><label for="menu_disp_workflow"> <%= t('menu.workflow') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_research']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_research', nil)=='1')?'checked':'' %>
               <input name="menu[disp_research]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_research" name="menu[disp_research]" value="1" <%= checked %>><label for="menu_disp_research"> <%= t('menu.research') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_user_list']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_user_list', nil)=='1')?'checked':'' %>
               <input name="menu[disp_user_list]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_user_list" name="menu[disp_user_list]" value="1" <%= checked %>><label for="menu_disp_user_list"> <%= t('menu.user_list') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_mail']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_mail', nil)=='1')?'checked':'' %>
               <input name="menu[disp_mail]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_mail" name="menu[disp_mail]" value="1" <%= checked %>><label for="menu_disp_mail"> <%= t('menu.mail') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_addressbook']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_addressbook', nil)=='1')?'checked':'' %>
               <input name="menu[disp_addressbook]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_addressbook" name="menu[disp_addressbook]" value="1" <%= checked %>><label for="menu_disp_addressbook"> <%= t('menu.addressbook') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_paintmail']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_paintmail', nil)=='1')?'checked':'' %>
               <input name="menu[disp_paintmail]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_paintmail" name="menu[disp_paintmail]" value="1" <%= checked %>><label for="menu_disp_paintmail"> <%= t('menu.paintmail') %></label><br/>
 
-              <% checked = (@yaml[:menu]['disp_timecard']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.disp_timecard', nil)=='1')?'checked':'' %>
               <input name="menu[disp_timecard]" type="hidden" value="0" />
               <input type="checkbox" id="menu_disp_timecard" name="menu[disp_timecard]" value="1" <%= checked %>><label for="menu_disp_timecard"> <%= t('menu.timecard') %></label><br/>
             </td>
@@ -108,19 +108,19 @@
               <%= t('config.login_required') %>
             </td>
             <td class="item_value_td">
-              <% checked = (@yaml[:menu]['req_login_desktop']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.req_login_desktop', nil)=='1')?'checked':'' %>
               <input name="menu[req_login_desktop]" type="hidden" value="0" />
               <input type="checkbox" id="menu_req_login_desktop" name="menu[req_login_desktop]" value="1" <%= checked %>><label for="menu_req_login_desktop"> <%= t('menu.desktop') %></label><br/>
 
-              <% checked = (@yaml[:menu]['req_login_items']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.req_login_items', nil)=='1')?'checked':'' %>
               <input name="menu[req_login_items]" type="hidden" value="0" />
               <input type="checkbox" id="menu_req_login_items" name="menu[req_login_items]" value="1" <%= checked %>><label for="menu_req_login_items"> <%= t('menu.items') %></label><br/>
 
-              <% checked = (@yaml[:menu]['req_login_schedules']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.req_login_schedules', nil)=='1')?'checked':'' %>
               <input name="menu[req_login_schedules]" type="hidden" value="0" />
               <input type="checkbox" id="menu_req_login_schedules" name="menu[req_login_schedules]" value="1" <%= checked %>><label for="menu_req_login_schedules"> <%= t('menu.schedules') %></label><br/>
 
-              <% checked = (@yaml[:menu]['req_login_equipment']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'menu.req_login_equipment', nil)=='1')?'checked':'' %>
               <input name="menu[req_login_equipment]" type="hidden" value="0" />
               <input type="checkbox" id="menu_req_login_equipment" name="menu[req_login_equipment]" value="1" <%= checked %>><label for="menu_req_login_equipment"> <%= t('menu.equipment') %></label><br/>
             </td>
@@ -187,7 +187,7 @@
               <%= t('config.from_address') %>
             </td>
             <td class="item_value_td" style="width:70%;" nowrap>
-              <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%= @yaml[:smtp]['from_address'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_from_address" name="smtp[from_address]" value="<%= YamlHelper.get_value(@yaml, 'smtp.from_address', nil) %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
@@ -195,7 +195,7 @@
               <%= t('config.server') %>
             </td>
             <td class="item_value_td" nowrap>
-              <input type="text" id="smtp_server" name="smtp[server]" value="<%= @yaml[:smtp]['server'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_server" name="smtp[server]" value="<%= YamlHelper.get_value(@yaml, 'smtp.server', nil) %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
@@ -203,7 +203,7 @@
               <%= t('config.port') %>
             </td>
             <td class="item_value_td" nowrap>
-              <input type="text" id="smtp_port" name="smtp[port]" value="<%= @yaml[:smtp]['port'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+              <input type="text" id="smtp_port" name="smtp[port]" value="<%= YamlHelper.get_value(@yaml, 'smtp.port', nil) %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
             </td>
           </tr>
           <tr>
@@ -211,7 +211,7 @@
               <%= t('config.domain') %>
             </td>
             <td class="item_value_td">
-              <input type="text" name="smtp[domain]" value="<%= @yaml[:smtp]['domain'] %>" style="ime-mode:disabled; width:95%" />
+              <input type="text" name="smtp[domain]" value="<%= YamlHelper.get_value(@yaml, 'smtp.domain', nil) %>" style="ime-mode:disabled; width:95%" />
             </td>
           </tr>
           <tr>
@@ -219,7 +219,7 @@
               <%= t('mail_account.secure_connection') %>
             </td>
             <td class="item_value_td">
-              <% checked = (@yaml[:smtp]['starttls']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'smtp.starttls', nil)=='1')?'checked':'' %>
               <input name="smtp[starttls]" type="hidden" value="0" />
               <input type="checkbox" id="smtp_starttls" name="smtp[starttls]" value="1" <%= checked %> /><label for="smtp_starttls">STARTTLS</label>
             </td>
@@ -229,7 +229,7 @@
               <%= t('config.authentication') %>
             </td>
             <td class="item_value_td">
-              <% checked = (@yaml[:smtp]['auth_enabled']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'smtp.auth_enabled', nil)=='1')?'checked':'' %>
               <input name="smtp[auth_enabled]" type="hidden" value="0" />
               <input type="checkbox" id="smtp_auth_enabled" name="smtp[auth_enabled]" value="1" <%= checked %> onclick="_z('smtp_auth_param').style.display=this.checked?'block':'none';" /><label for="smtp_auth_enabled"><%= t('config.smtp_auth') %></label>
             </td>
@@ -240,7 +240,7 @@
           checked_plain = ''
           checked_login = ''
           checked_cram_md5 = ''
-          case @yaml[:smtp]['auth']
+          case YamlHelper.get_value(@yaml, 'smtp.auth', nil)
             when 'plain'; checked_plain = 'checked'
             when 'login'; checked_login = 'checked'
             when 'cram_md5'; checked_cram_md5 = 'checked'
@@ -258,7 +258,7 @@
                 <%= t('user.u_name') %>
               </td>
               <td class="item_value_td" nowrap>
-                <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%= @yaml[:smtp]['user_name'] %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
+                <input type="text" id="smtp_user_name" name="smtp[user_name]" value="<%= YamlHelper.get_value(@yaml, 'smtp.user_name', nil) %>" style="ime-mode:disabled; width:95%" /><sup style="color:red">*</sup>
               </td>
             </tr>
             <tr>
@@ -266,7 +266,7 @@
                 <%= t('password.name') %>
               </td>
               <td class="item_value_td">
-                <input type="password" id="smtp_password" name="smtp[password]" value="<%= @yaml[:smtp]['password'] %>" style="width:95%" />
+                <input type="password" id="smtp_password" name="smtp[password]" value="<%= YamlHelper.get_value(@yaml, 'smtp.password', nil) %>" style="width:95%" />
               </td>
             </tr>
           </table>
@@ -284,7 +284,7 @@
               <%= t('feed.name') %>
             </td>
             <td class="item_value_td" style="width:70%;">
-              <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'feed.enabled', nil)=='1')?'checked':'' %>
               <input name="feed[enabled]" type="hidden" value="0" />
               <input type="checkbox" id="feed_enabled" name="feed[enabled]" value="1" <%= checked %>><label for="feed_enabled"> <%= t('cap.enabled') %></label><br/>
             </td>
@@ -294,7 +294,7 @@
               <%= t('feed.data') %>
             </td>
             <td class="item_value_td">
-              <% checked = (!@yaml[:feed].nil? and @yaml[:feed]['enabled']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'feed.feed_content', nil)=='1')?'checked':'' %>
               <input name="feed[feed_content]" type="hidden" value="0" />
               <input type="checkbox" id="feed_feed_content" name="feed[feed_content]" value="1" <%= checked %>><label for="feed_feed_content"> <%= t('feed.feed_content') %></label><br/>
             </td>
@@ -353,8 +353,8 @@ function onLoadSub()
 function forBugfulIE()
 {
   // Bugful IE decides width of an input-text control depending on the length of its content.
-  _z("general_default_page").value = restoreHTML("<%= @yaml[:general]['default_page'] %>");
-  _z("topic_caption").value = restoreHTML("<%= @yaml[:topic]['caption'] %>");
+  _z("general_default_page").value = restoreHTML("<%= YamlHelper.get_value(@yaml, 'general.default_page', nil) %>");
+  _z("topic_caption").value = restoreHTML("<%= YamlHelper.get_value(@yaml, 'topic.caption', nil) %>");
 }
 
 
@@ -429,7 +429,7 @@ function doEditHeaderMenu(org_name)
 
 function onDeleteHeaderMenuClicked(name)
 {
-  confm("<%= t('paren.square.left') %>" + esc_w_quotes(name) + "<%= t('msg.confirm_to_delete') %>", "doDeleteHeaderMenu('"+escQuotes(name)+"')");
+  confm("<%= t('paren.square.left') %>" + escWQuotes(name) + "<%= t('msg.confirm_to_delete') %>", "doDeleteHeaderMenu('"+escQuotes(name)+"')");
 }
 
 function doDeleteHeaderMenu(name)

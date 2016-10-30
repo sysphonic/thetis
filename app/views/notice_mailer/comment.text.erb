@@ -3,4 +3,4 @@
 <%= t('item.message_arrived') %>
 <%= t('msg.check_it_out') %>
 
-<%= $thetis_config[:general]['app_title'] %> : <%= @root_url + ApplicationHelper.url_for %>
+<%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %> : <%= @root_url + ApplicationHelper.url_for %>

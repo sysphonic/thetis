@@ -149,7 +149,8 @@ class Comment < ApplicationRecord
       xtype_name = comment.get_xtype_name
       feed_entry.title           = '['+I18n.t('comment.name')+'] '+Item.get_title(comment.item_id)+': '+ xtype_name + I18n.t('comment.from') + User.get_name(comment.user_id, users_cache)
 
-      if $thetis_config[:feed]['feed_content'] == '1' and !comment.message.nil?
+      if (YamlHelper.get_value($thetis_config, 'feed.feed_content', nil) == '1') \
+          and !comment.message.nil?
         feed_entry.content_encoded = "<![CDATA[#{comment.message}]]>"
       end
       entries << feed_entry

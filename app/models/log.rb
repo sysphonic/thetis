@@ -107,7 +107,7 @@ class Log < ApplicationRecord
   #
   def self.add(type, request, detail)
 
-    Log.trim($thetis_config[:log]['max_num'].to_i - 1)
+    Log.trim(YamlHelper.get_value($thetis_config, 'log.max_num', nil).to_i - 1)
 
     detail = detail.gsub(/'/m, '\\\\\'')
 

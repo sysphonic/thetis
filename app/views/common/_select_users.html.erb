@@ -2,7 +2,7 @@
 target_attr ||= :id
 
 if target_attr.to_s == 'email'
-  if $thetis_config[:menu]['disp_user_list'] != '1'
+  if YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) != '1'
     raise('*** ACCESS NOT PERMITTED!! ***')
   end
   rows = 10

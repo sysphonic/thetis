@@ -23,15 +23,14 @@ module DesktopsHelper
     user = nil
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:desktop].nil?
-      user_before_login = yaml[:desktop]['user_before_login']
 
-      unless user_before_login.nil? or user_before_login.empty?
-        begin
-          user = User.find(user_before_login)
-        rescue => evar
-          Log.add_error(nil, evar)
-        end
+    user_before_login = YamlHelper.get_value(yaml, 'desktop.user_before_login', nil)
+
+    unless user_before_login.nil? or user_before_login.empty?
+      begin
+        user = User.find(user_before_login)
+      rescue => evar
+        Log.add_error(nil, evar)
       end
     end
 

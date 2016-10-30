@@ -15,7 +15,7 @@
           <tr>
             <td class="item_cap_td" nowrap><%= t('user.u_name') %></td>
             <td class="item_value_td" style="width:70%;">
-              <% checked = (@yaml[:user]['by_full_name']=='1')?'checked':'' %>
+              <% checked = (YamlHelper.get_value(@yaml, 'user.by_full_name', nil)=='1')?'checked':'' %>
               <input name="user[by_full_name]" type="hidden" value="0" />
               <input type="checkbox" id="user_by_full_name" name="user[by_full_name]" value="1" <%= checked %>><label for="user_by_full_name"><%= t('user.show_by_full_name') %></label>
             </td>
@@ -42,7 +42,7 @@
           </tr>
           <tr>
             <td class="item_value_td">
-              <%= t('msg.manage_in_groups') %>
+              <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png"> <%= t('msg.manage_in_groups') %>
             </td>
           </tr>
         </table>

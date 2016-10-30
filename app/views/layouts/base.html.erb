@@ -11,7 +11,7 @@
 
 <script type="text/javascript">
 
-ThetisBox.setTitle("<%= $thetis_config[:general]['app_title'] %>");
+ThetisBox.setTitle("<%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %>");
 ThetisBox.setOk("<%= t('btn.ok') %>");
 ThetisBox.setCancel("<%= t('btn.cancel') %>");
 ThetisBox.setClose("<%= t('btn.close') %>");

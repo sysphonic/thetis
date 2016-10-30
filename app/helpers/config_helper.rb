@@ -23,9 +23,9 @@ module ConfigHelper
 
     path = ::Rails.root.to_s + '/public/images/custom/' + file_name
 
-    mode = ApplicationHelper.f_chmod 0666, path
+    mode = ApplicationHelper.f_chmod(0666, path)
     File.open(path, 'wb') { |f| f.write(file.read) }
-    ApplicationHelper.f_chmod mode, path
+    ApplicationHelper.f_chmod(mode, path)
   end
 
   #=== self.save_html
@@ -39,8 +39,8 @@ module ConfigHelper
 
     path = ::Rails.root.to_s + '/public/custom/' + file_name
 
-    mode = ApplicationHelper.f_chmod 0666, path
+    mode = ApplicationHelper.f_chmod(0666, path)
     File.open(path, 'wb') { |f| f.write(file.read) }
-    ApplicationHelper.f_chmod mode, path
+    ApplicationHelper.f_chmod(mode, path)
   end
 end

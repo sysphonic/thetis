@@ -114,8 +114,8 @@ class FeedsController < ApplicationController
   def _build_site_info(root_url)
     app_root = root_url + THETIS_RELATIVE_URL_ROOT + '/'
 
-    @site_title = '[%s] %s' % [$thetis_config[:general]['app_title'], app_root]
-    @site_description = '%s %s' % [$thetis_config[:general]['symbol_title'], $thetis_config[:general]['app_title']] + (($thetis_config[:general]['symbol_title']=='Sysphonic' and $thetis_config[:general]['app_title']=='Thetis')?'':' based on Sysphonic Thetis')
+    @site_title = '[%s] %s' % [YamlHelper.get_value($thetis_config, 'general.app_title', nil), app_root]
+    @site_description = '%s %s' % [YamlHelper.get_value($thetis_config, 'general.symbol_title', nil), YamlHelper.get_value($thetis_config, 'general.app_title', nil)] + ((YamlHelper.get_value($thetis_config, 'general.symbol_title', nil)=='Sysphonic' and YamlHelper.get_value($thetis_config, 'general.app_title', nil)=='Thetis')?'':' based on Sysphonic Thetis')
     @site_url = app_root
     @atom_url = root_url + ApplicationHelper.url_for(:controller => 'feeds', :action => 'index')
     @rss_url = @atom_url
@@ -169,7 +169,8 @@ class FeedsController < ApplicationController
   #Filter method to check if Feeds is enabled.
   #
   def check_enabled
-    if $thetis_config[:feed].nil? or $thetis_config[:feed]['enabled'] != '1'
+    if $thetis_config[:feed].nil? \
+        or (YamlHelper.get_value($thetis_config, 'feed.enabled', nil) != '1')
       render(:plain => '(Feed is currently disabled.)', :layout => false)
     end
   end

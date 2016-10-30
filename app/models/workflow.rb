@@ -461,7 +461,8 @@ class Workflow < ApplicationRecord
       feed_entry.content         = (workflow.item.summary.nil?)?'':(workflow.item.summary.gsub(/^(.{0,200}).*/m,"\\1"))
       feed_entry.title           = '['+I18n.t('workflow.name')+'] '+Item.get_title(workflow.item_id) + I18n.t('workflow.from') + User.get_name(workflow.item.user_id, users_cache)
 
-      if $thetis_config[:feed]['feed_content'] == '1' and !workflow.item.description.nil?
+      if (YamlHelper.get_value($thetis_config, 'feed.feed_content', nil) == '1') \
+          and !workflow.item.description.nil?
         feed_entry.content_encoded = "<![CDATA[#{workflow.item.description}]]>"
       end
       entries << feed_entry

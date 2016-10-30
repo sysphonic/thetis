@@ -4,9 +4,7 @@ is_def_desktop = false
 
 if !@login_user.nil? and @login_user.admin?(User::AUTH_DESKTOP)
   yaml = ApplicationHelper.get_config_yaml
-  unless yaml[:desktop].nil?
-    is_def_desktop = (yaml[:desktop]['user_before_login'] == @login_user.id.to_s)
-  end
+  is_def_desktop = (YamlHelper.get_value(yaml, 'desktop.user_before_login', nil) == @login_user.id.to_s)
 end
 
 @users_cache = {}
@@ -90,7 +88,7 @@ end
             </div>
           </td>
         <% end %>
-        <% if $thetis_config[:menu]['req_login_schedules'] == '1' and @login_user.nil? %>
+        <% if (YamlHelper.get_value($thetis_config, 'menu.req_login_schedules', nil) == '1') and @login_user.nil? %>
         <% else %>
           <td style="width:68px; text-align:center; vertical-align:middle;">
             <div id="tool_calendar" class="desktop_toolbtn" title="<%= t('calendar.name') %>" onclick="showCalendar()">
@@ -318,7 +316,7 @@ editConfig = function()
           thetisBoxConfig.title = "<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/config.png' /> <%= Desktop.model_name.human %> <%= t('btn.config') %>";
           thetisBoxConfig.show(
                     "CENTER",
-                    "580,"+(mainHeight*85/100),
+                    "580,"+(_mainHeight*85/100),
                     "TRAY",
                     "",
                     "",

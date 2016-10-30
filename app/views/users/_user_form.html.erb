@@ -14,7 +14,7 @@
     </tr>
   <%
   req_pass = false
-  if $thetis_config[:menu]['open_user_reg'] == '1'
+  if YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) == '1'
     unless  params[:action]=='new' or params[:action]=='create'
       req_pass = true
     end

@@ -230,7 +230,8 @@ class Toy < ApplicationRecord
       feed_entry.content         = (toy.message.nil?)?'':(toy.message.gsub(/^(.{0,200}).*/m,"\\1"))
       feed_entry.title           = '['+I18n.t('postlabel.name')+'] '+ I18n.t('postlabel.from') + User.get_name(toy.posted_by, users_cache)
 
-      if $thetis_config[:feed]['feed_content'] == '1' and !toy.message.nil?
+      if (YamlHelper.get_value($thetis_config, 'feed.feed_content', nil) == '1') \
+          and !toy.message.nil?
         feed_entry.content_encoded = "<![CDATA[#{toy.message}]]>"
       end
       entries << feed_entry

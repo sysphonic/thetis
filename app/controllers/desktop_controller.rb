@@ -14,7 +14,7 @@ class DesktopController < ApplicationController
   protect_from_forgery :except => :drop_file
   layout 'base'
 
-  if $thetis_config[:menu]['req_login_desktop'] == '1'
+  if YamlHelper.get_value($thetis_config, 'menu.req_login_desktop', nil) == '1'
     before_action :check_login
   else
     before_action :check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file]
@@ -151,10 +151,8 @@ class DesktopController < ApplicationController
     @yaml = ApplicationHelper.get_config_yaml
 
     unless params[:desktop].blank?
-      @yaml[:desktop] = Hash.new if @yaml[:desktop].nil?
-
       params[:desktop].each do |key, val|
-        @yaml[:desktop][key] = val
+        YamlHelper.set_value(@yaml, ['desktop', key].join('.'), val)
       end
       ApplicationHelper.save_config_yaml(@yaml)
     end

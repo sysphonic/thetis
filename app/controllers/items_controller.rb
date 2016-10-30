@@ -13,7 +13,7 @@
 class ItemsController < ApplicationController
   layout 'base'
 
-  if $thetis_config[:menu]['req_login_items'] == '1'
+  if YamlHelper.get_value($thetis_config, 'menu.req_login_items', nil) == '1'
     before_action :check_login
   else
     before_action :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]

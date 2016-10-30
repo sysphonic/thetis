@@ -38,7 +38,7 @@ class ConfigController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    cat_h = {:desktop => User::AUTH_DESKTOP, :user => User::AUTH_USER, :log => User::AUTH_LOG}
+    cat_h = {'desktop' => User::AUTH_DESKTOP, 'user' => User::AUTH_USER, 'log' => User::AUTH_LOG}
 
     yaml = ApplicationHelper.get_config_yaml
 
@@ -51,10 +51,8 @@ class ConfigController < ApplicationController
         return
       end
 
-      yaml[cat] ||= {}
-
       params[cat].each do |key, val|
-        yaml[cat][key] = val
+        YamlHelper.set_value(yaml, [cat, key].join('.'), val)
       end
     end
 
@@ -72,42 +70,40 @@ class ConfigController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    categories = [:general, :menu, :topic, :note, :smtp, :feed, :user, :log]
+    categories = ['general', 'menu', 'topic', 'note', 'smtp', 'feed', 'user', 'log']
 
     yaml = ApplicationHelper.get_config_yaml
 
     categories.each do |cat|
       next if params[cat].nil? or params[cat].empty?
 
-      yaml[cat] = Hash.new if yaml[cat].nil?
-
       params[cat].each do |key, val|
-        if cat == :general
+        if cat == 'general'
           case key
             when 'symbol_image'
               ConfigHelper.save_img('symbol.png', val) if val.size > 0
             else
-              yaml[cat][key] = val
+              YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
-        elsif cat == :topic
+        elsif cat == 'topic'
           case key
             when 'src'
               ConfigHelper.save_html('topics.html', val) if val.size > 0
             else
-              yaml[cat][key] = val
+              YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
-        elsif cat == :note
+        elsif cat == 'note'
           case key
             when 'src'
               ConfigHelper.save_html('note.html', val) if val.size > 0
             else
-              yaml[cat][key] = val
+              YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
         else
           if params[:smtp]['auth_enabled'] == '0'
             val = nil if ['auth', 'user_name', 'password'].include?(key)
           end
-          yaml[cat][key] = val
+          YamlHelper.set_value(yaml, [cat, key].join('.'), val)
         end
       end
     end
@@ -129,8 +125,8 @@ class ConfigController < ApplicationController
     unless params[:org_name].nil?
       yaml = ApplicationHelper.get_config_yaml
 
-      unless yaml[:general]['header_menus'].nil?
-        yaml[:general]['header_menus'].each do |header_menu|
+      unless YamlHelper.get_value(yaml, 'general.header_menus', nil).nil?
+        YamlHelper.get_value(yaml, 'general.header_menus', nil).each do |header_menu|
           if header_menu[0] == params[:org_name]
             @header_menu_param = header_menu
             break
@@ -154,10 +150,11 @@ class ConfigController < ApplicationController
 
     @yaml = ApplicationHelper.get_config_yaml
 
-    unless params[:org_name].nil? or @yaml[:general]['header_menus'].nil?
-      @yaml[:general]['header_menus'].each do |header_menu|
+    unless params[:org_name].nil?
+      header_menus = YamlHelper.get_value(@yaml, 'general.header_menus', [])
+      header_menus.each do |header_menu|
         if header_menu[0] == params[:org_name]
-          @yaml[:general]['header_menus'].delete(header_menu)
+          header_menus.delete(header_menu)
           ApplicationHelper.save_config_yaml(@yaml)
           break
         end
@@ -178,27 +175,24 @@ class ConfigController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     @yaml = ApplicationHelper.get_config_yaml
-
-    @yaml[:general]['header_menus'] = [] if @yaml[:general]['header_menus'].nil?
+    header_menus = YamlHelper.get_value(@yaml, 'general.header_menus', [])
 
     entry = [params[:header_menu]['name'], params[:header_menu]['target'], params[:header_menu]['url']]
 
-    unless @yaml[:general]['header_menus'].nil?
-      if params[:org_name].nil? or params[:org_name] != entry[0]
-        @yaml[:general]['header_menus'].each do |header_menu|
-          if header_menu[0] == entry[0]
-            flash[:notice] = 'ERROR:' + t('msg.menu_duplicated')
-            render(:partial => 'ajax_header_menu', :layout => false)
-            return
-          end
+    if params[:org_name].nil? or (params[:org_name] != entry[0])
+      header_menus.each do |header_menu|
+        if header_menu[0] == entry[0]
+          flash[:notice] = 'ERROR:' + t('msg.menu_duplicated')
+          render(:partial => 'ajax_header_menu', :layout => false)
+          return
         end
       end
     end
 
     idx = nil
-    unless params[:org_name].nil? or @yaml[:general]['header_menus'].nil?
+    unless params[:org_name].nil?
       i = 0
-      @yaml[:general]['header_menus'].each do |header_menu|
+      header_menus.each do |header_menu|
         if header_menu[0] == params[:org_name]
           idx = i
           break
@@ -208,11 +202,12 @@ class ConfigController < ApplicationController
     end
 
     if idx.nil?
-      @yaml[:general]['header_menus'] << entry
+      header_menus << entry
     else
-      @yaml[:general]['header_menus'][idx] = entry
+      header_menus[idx] = entry
     end
 
+    YamlHelper.set_value(@yaml, 'general.header_menus', header_menus)
     ApplicationHelper.save_config_yaml(@yaml)
 
     render(:partial => 'ajax_header_menu', :layout => false)
@@ -232,8 +227,8 @@ class ConfigController < ApplicationController
 
     yaml = ApplicationHelper.get_config_yaml
 
-    unless yaml[:general]['header_menus'].nil?
-      yaml[:general]['header_menus'].sort! { |h_menu_a, h_menu_b|
+    unless YamlHelper.get_value(yaml, 'general.header_menus', nil).nil?
+      YamlHelper.get_value(yaml, 'general.header_menus', nil).sort! { |h_menu_a, h_menu_b|
         idx_a = header_menus.index h_menu_a[0]
         idx_a = 100 if idx_a.nil?
         idx_b = header_menus.index h_menu_b[0]

@@ -278,7 +278,7 @@ de:
     before_login: "Desktop vor Login"
     before_login_info1: "Hier kann Desktop, das zu alle Benutzern vor Login gezeigt wird<sup>*</sup>, angegeben."
     before_login_info2: "(Effektiv nur wenn Login nicht erforderlich um Desktop zu zeigen ist.)"
-    before_login_info3: "* <i>My Folder wird automatisch ausgenommen.</i>"
+    before_login_info3: "* <i>My Folder shortcut-icon wird automatisch ausgenommen.</i>"
     currently_selected: "Gegenwärtigen Ausgewählte"
     select_mine: "Meinen Desktop auswählen"
     theme:

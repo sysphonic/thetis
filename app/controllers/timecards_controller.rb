@@ -457,7 +457,8 @@ class TimecardsController < ApplicationController
       @sort_type = "ASC"
     end
 
-    if @sort_col == 'name' and $thetis_config[:user]['by_full_name'] == '1'
+    if (@sort_col == 'name') \
+        and (YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1')
       @sort_col == 'fullname'
     end
 
@@ -604,8 +605,7 @@ class TimecardsController < ApplicationController
     Log.add_info(request, params.inspect)
 
     yaml = ApplicationHelper.get_config_yaml
-    @yaml_timecard = yaml[:timecard]
-    @yaml_timecard = Hash.new if @yaml_timecard.nil?
+    @yaml_timecard = YamlHelper.get_value(yaml, 'timecard', {})
   end
 
   #=== update_config
@@ -621,16 +621,14 @@ class TimecardsController < ApplicationController
     yaml = ApplicationHelper.get_config_yaml
 
     unless params[:timecard].blank?
-      yaml[:timecard] = Hash.new if yaml[:timecard].nil?
-      
+
       params[:timecard].each do |key, val|
-        yaml[:timecard][key] = val
+        YamlHelper.set_value(yaml, ['timecard', key].join('.'), val)
       end
       ApplicationHelper.save_config_yaml(yaml)
     end
 
-    @yaml_timecard = yaml[:timecard]
-    @yaml_timecard = Hash.new if @yaml_timecard.nil?
+    @yaml_timecard = YamlHelper.get_value(yaml, 'timecard', {})
 
     flash[:notice] = t('msg.update_success')
     render(:action => 'configure')
@@ -662,9 +660,7 @@ class TimecardsController < ApplicationController
     end
 
     yaml = ApplicationHelper.get_config_yaml
-
-    yaml[:timecard] = Hash.new if yaml[:timecard].nil?
-    spans = yaml[:timecard]['default_breaks']
+    spans = YamlHelper.get_value(yaml, 'timecard.default_breaks', nil)
     spans = [] if spans.nil?
 
     found = false
@@ -683,7 +679,7 @@ class TimecardsController < ApplicationController
     begin
       spans = Timecard.sort_breaks(spans)
 
-      yaml[:timecard]['default_breaks'] = spans
+      YamlHelper.set_value(yaml, 'timecard.default_breaks', spans)
 
       ApplicationHelper.save_config_yaml(yaml)
 
@@ -692,8 +688,7 @@ class TimecardsController < ApplicationController
       flash[:notice] = 'ERROR:' + t('timecard.break_overlap')
     end
 
-    @yaml_timecard = yaml[:timecard]
-    @yaml_timecard = Hash.new if @yaml_timecard.nil?
+    @yaml_timecard = YamlHelper.get_value(yaml, 'timecard', {})
 
     render(:partial => 'ajax_config_break', :layout => false)
   end
@@ -713,11 +708,11 @@ class TimecardsController < ApplicationController
 
       yaml = ApplicationHelper.get_config_yaml
 
-      unless yaml[:timecard].nil? or yaml[:timecard]['default_breaks'].nil?
+      unless YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).nil?
 
-        yaml[:timecard]['default_breaks'].each do |span|
+        YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).each do |span|
           if span.first == org_start
-            yaml[:timecard]['default_breaks'].delete(span)
+            YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).delete(span)
             ApplicationHelper.save_config_yaml(yaml)
             break
           end
@@ -725,8 +720,7 @@ class TimecardsController < ApplicationController
       end
     end
 
-    @yaml_timecard = yaml[:timecard]
-    @yaml_timecard = Hash.new if @yaml_timecard.nil?
+    @yaml_timecard = YamlHelper.get_value(yaml, 'timecard', {})
 
     render(:partial => 'ajax_config_break', :layout => false)
   end

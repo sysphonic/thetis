@@ -161,12 +161,8 @@ class Research < ApplicationRecord
     ApplicationHelper.f_ensure_exist(config)
     mode = ApplicationHelper.f_chmod(0666, config)
 
-    begin
-      f = File.open(config, 'w')
-      f.write(yaml.ya2yaml(:syck_compatible => true))
-      f.close
-    rescue => evar
-      logger.fatal(evar.to_s)
+    open(config, 'w') do |f|
+      YAML.dump(yaml, f)
     end
 
     ApplicationHelper.f_chmod(mode, config)
@@ -212,11 +208,10 @@ class Research < ApplicationRecord
 
     yaml = Research.get_config_yaml
 
-    unless yaml.nil? or yaml[:statistics].nil?
-      groups = yaml[:statistics][:groups]
-      unless groups.nil?
-        return groups.split('|')
-      end
+    groups = YamlHelper.get_value(yaml, 'statistics.groups', nil)
+
+    unless groups.nil?
+      return ApplicationHelper.attr_to_a(groups)
     end
 
     return []
@@ -232,21 +227,16 @@ class Research < ApplicationRecord
 
     yaml = Research.get_config_yaml
 
-    yaml = Hash.new if yaml.nil?
-
     if group_ids.nil?
 
-      unless yaml[:statistics].nil?
-        yaml[:statistics].delete(:groups)
+      statistics = YamlHelper.get_value(yaml, 'statistics', nil)
+
+      unless statistics.nil?
+        statistics.delete('groups')
       end
 
     else
-
-      if yaml[:statistics].nil?
-        yaml[:statistics] = Hash.new
-      end
-
-      yaml[:statistics][:groups] = group_ids.join('|')
+      YamlHelper.set_value(yaml, 'statistics.groups', ApplicationHelper.a_to_attr(group_ids))
     end
 
     Research.save_config_yaml(yaml)
@@ -263,28 +253,17 @@ class Research < ApplicationRecord
 
     yaml = Research.get_config_yaml
 
-    yaml = Hash.new if yaml.nil?
-
-    if yaml[:statistics].nil?
-      yaml[:statistics] = Hash.new
-    end
-
-    groups = yaml[:statistics][:groups]
+    groups = YamlHelper.get_value(yaml, 'statistics.groups', nil)
 
     if groups.nil?
 
-      yaml[:statistics][:groups] = group_id
       arr = [group_id.to_s]
-
+      YamlHelper.set_value(yaml, 'statistics.groups', ApplicationHelper.a_to_attr(arr))
     else
 
-      arr = groups.split('|')
+      arr = ApplicationHelper.attr_to_a(groups)
       arr << group_id
-
-      arr.compact!
-      arr.delete('')
-
-      yaml[:statistics][:groups] = arr.join('|')
+      YamlHelper.set_value(yaml, 'statistics.groups', ApplicationHelper.a_to_attr(arr))
     end
 
     Research.save_config_yaml(yaml)
@@ -302,22 +281,13 @@ class Research < ApplicationRecord
   def self.delete_statistics_group(group_id)
 
     yaml = Research.get_config_yaml
-
-    if yaml.nil? or yaml[:statistics].nil?
-      return []
-    end
-
-    groups = yaml[:statistics][:groups]
+    groups = YamlHelper.get_value(yaml, 'statistics.groups', nil)
 
     return [] if groups.nil?
 
-    arr = groups.split('|')
-    arr.delete group_id.to_s
-
-    arr.compact!
-    arr.delete('')
-
-    yaml[:statistics][:groups] = arr.join('|')
+    arr = ApplicationHelper.attr_to_a(groups)
+    arr.delete(group_id.to_s)
+    YamlHelper.set_value(yaml, 'statistics.groups', ApplicationHelper.a_to_attr(arr))
 
     Research.save_config_yaml(yaml)
 
@@ -463,7 +433,7 @@ class Research < ApplicationRecord
     return q_caps_h
   end
 
-  #=== self.replaceCtrl
+  #=== self.replace_ctrl
   #
   #Replaces tags on the page with proper input-controls.
   #
@@ -472,12 +442,12 @@ class Research < ApplicationRecord
   #_q_param_:: Control informations of the tag.
   #return:: Result HTML.
   #
-  def self.replaceCtrl(html, q_code, q_param)
+  def self.replace_ctrl(html, q_code, q_param)
 
     return html if html.nil? or q_param.nil?
 
-    q_type = q_param[:type]
-    q_vals = q_param[:values]
+    q_type = q_param['type']
+    q_vals = q_param['values']
 
     ctrl = ''
     ctrl_id = "research_#{q_code}"
@@ -487,7 +457,7 @@ class Research < ApplicationRecord
         ctrl_name << '[]' if q_type == 'checkbox'
         vals = q_vals.gsub(/\r\n/, "\n").split("\n")
         vals.each do |val|
-          ctrl += "<%= radio_button('research', '#{q_code}', h('#{val}')) %> <%= h('#{val}') %><br/>\n"
+          ctrl += "<%= radio_button('research', '#{q_code}', '#{val}') %> <%= '#{val}' %><br/>\n"
         end
 
       when 'checkbox'
@@ -499,16 +469,16 @@ class Research < ApplicationRecord
           ctrl += "  checked = 'checked'\n"
           ctrl += "end\n"
           ctrl += "%>\n"
-          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='<%= h('#{val}') %>' <%= checked %>> <%= h('#{val}') %><br/>\n"
+          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='<%= '#{val}' %>' <%= checked %>> <%= '#{val}' %><br/>\n"
           ctrl += "<input type='hidden' name='research[#{q_code}][]' value=''>\n"
         end
 
       when 'select'
         vals = q_vals.gsub(/\r\n/, "\n").split("\n")
         opts = []
-        opts << "[h('" + I18n.t('msg.select_item') + "'), h('')]"
+        opts << "['" + I18n.t('msg.select_item') + "', '']"
         vals.each do |val|
-          opts << "[h('#{val}'), h('#{val}')]"
+          opts << "['#{val}', '#{val}']"
         end
 
         ctrl += "<% opts = options_for_select([#{opts.join(',')}], @research.#{q_code}) %>\n"

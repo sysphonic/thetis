@@ -3,7 +3,7 @@
   <tr>
     <td id="sortable_header_menus" style="text-align:left; padding-left:10px;">
       <%
-      header_menus = @yaml[:general]['header_menus']
+      header_menus = YamlHelper.get_value(@yaml, 'general.header_menus', nil)
       unless header_menus.nil?
         header_menus.each do |header_menu|
           menu_name = header_menu[0]

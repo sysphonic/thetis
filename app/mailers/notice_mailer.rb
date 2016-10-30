@@ -25,9 +25,9 @@ class NoticeMailer < ActionMailer::Base
     @password = password
     @root_url = root_url
     mail(
-      :from => $thetis_config[:smtp]['from_address'],
+      :from => YamlHelper.get_value($thetis_config, 'smtp.from_address', nil),
       :to => user.email,
-      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_regist')
+      :subject => '[' + YamlHelper.get_value($thetis_config, 'general.app_title', nil) + '] ' + I18n.t('notification.subject.user_regist')
     )
   end
 
@@ -45,9 +45,9 @@ class NoticeMailer < ActionMailer::Base
     @user_passwords_h = user_passwords_h
     @root_url = root_url
     mail(
-      :from => $thetis_config[:smtp]['from_address'],
+      :from => YamlHelper.get_value($thetis_config, 'smtp.from_address', nil),
       :to => user_passwords_h.keys.first.email,
-      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.user_account')
+      :subject => '[' + YamlHelper.get_value($thetis_config, 'general.app_title', nil) + '] ' + I18n.t('notification.subject.user_account')
     )
   end
 
@@ -62,9 +62,9 @@ class NoticeMailer < ActionMailer::Base
     @user = user
     @root_url = root_url
     mail(
-      :from => $thetis_config[:smtp]['from_address'],
+      :from => YamlHelper.get_value($thetis_config, 'smtp.from_address', nil),
       :to => user.email,
-      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + I18n.t('notification.subject.message_arrived')
+      :subject => '[' + YamlHelper.get_value($thetis_config, 'general.app_title', nil) + '] ' + I18n.t('notification.subject.message_arrived')
     )
   end
 
@@ -85,9 +85,9 @@ class NoticeMailer < ActionMailer::Base
     @message = body
     @root_url = root_url
     mail(
-      :from => $thetis_config[:smtp]['from_address'],
+      :from => YamlHelper.get_value($thetis_config, 'smtp.from_address', nil),
       :to => user.email,
-      :subject => '[' + $thetis_config[:general]['app_title'] + '] ' + subject
+      :subject => '[' + YamlHelper.get_value($thetis_config, 'general.app_title', nil) + '] ' + subject
     )
   end
 end

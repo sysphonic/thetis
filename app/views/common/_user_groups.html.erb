@@ -8,7 +8,7 @@ unless @user_groups.nil?
   <% end %>
 
 <%
-if ($thetis_config[:menu]['disp_user_list'] == '1') and (!@login_user.nil?)
+if (YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) == '1') and (!@login_user.nil?)
 %>
   <%
   mail_account = MailAccount.get_default_for(@login_user.id, nil)
@@ -29,7 +29,7 @@ showUserGroups = function(user_id, user_name, groups, figure)
   content += "</div>";
 
 <%
-if ($thetis_config[:menu]['disp_user_list'] == '1') \
+if (YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) == '1') \
     and !@login_user.nil?
 %>
   if (user_id != "<%= @login_user.id %>") {
@@ -56,7 +56,7 @@ if ($thetis_config[:menu]['disp_user_list'] == '1') \
   thetisBox.show("CENTER", "", "MESSAGE", "", content, "");
 }
 
-<% if $thetis_config[:menu]['disp_user_list'] == '1' %>
+<% if YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) == '1' %>
 onSendMailUserGroupsClicked = function(elem, user_id)
 {
   var addParams = [];

@@ -25,7 +25,10 @@
 <br/>
 </form>
 
-<% if $thetis_config[:menu]['open_user_reg'] == '1' and params[:action] == 'new' %>
+<%
+if (YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) == '1') \
+    and (params[:action] == 'new')
+%>
 <script type="text/javascript">
 
 function showTips() {

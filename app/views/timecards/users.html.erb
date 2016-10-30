@@ -215,11 +215,7 @@ function showUpdateMulti()
   }
 
   <%
-  if yaml[:timecard].nil? or yaml[:timecard]['paidhld_per_year'].nil?
-    paidhld_per_year = 0
-  else
-    paidhld_per_year = yaml[:timecard]['paidhld_per_year']
-  end
+  paidhld_per_year = YamlHelper.get_value(yaml, 'timecard.paidhld_per_year', 0)
   %>
   var content = getUpdateMultiDialog(<%= fiscal_year %>, <%= paidhld_per_year %>, "onUpdateMultiOk()", "onUpdateMultiCancel()");
 

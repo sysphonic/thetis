@@ -1,7 +1,6 @@
 
 require File.join(File.dirname(__FILE__), '../../lib/util/feed_entry')
 require File.join(File.dirname(__FILE__), '../../lib/util/request_post_only_exception')
-require File.join(File.dirname(__FILE__), '../../lib/ya2yaml/lib/ya2yaml')
 
 THETIS_RELATIVE_URL_ROOT = '/thetis'
 

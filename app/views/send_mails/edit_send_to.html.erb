@@ -1,7 +1,7 @@
 <%
 mail_account_xtype = params[:mail_account_xtype]
 
-enable_users_tab = ($thetis_config[:menu]['disp_user_list'] == '1')
+enable_users_tab = (YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) == '1')
 %>
 
 <script type="text/javascript">

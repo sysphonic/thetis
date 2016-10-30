@@ -20,7 +20,7 @@
               </table>
             </a>
           </td>
-        <% if $thetis_config[:feed]['enabled'] == '1' %>
+        <% if YamlHelper.get_value($thetis_config, 'feed.enabled', nil) == '1' %>
           <td style="width:10px;"></td>
           <td style="text-align:center; vertical-align:middle;">
             <a href="javascript:this.onclick()" onclick="window.open('<%= ApplicationHelper.url_for(:controller => 'feeds', :action => 'index', :feed => 'all') %>', 'thetis_feeds'); return false;">
@@ -58,13 +58,13 @@
             <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= THETIS_NOTE_URL %>?'+((new Date()).getTime())); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>
             <%
             headlines = {}
-            header_menus = $thetis_config[:general]['header_menus']
+            header_menus = YamlHelper.get_value($thetis_config, 'general.header_menus', nil)
             unless header_menus.nil?
               header_menus.each do |link|
                 headlines[link[0]] = [link[1], link[2]]
               end
             end
-            if $thetis_config[:menu]['open_user_reg'] == '1'
+            if YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) == '1'
               headlines[t('menu.user_reg')] = ['main', url_for(:controller => 'users', :action => 'new')]
             end
 

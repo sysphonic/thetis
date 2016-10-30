@@ -90,9 +90,7 @@ class PaidHoliday < ApplicationRecord
     SqlHelper.validate_token([user_id, year])
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      paidhld_carry_over = yaml[:timecard]['paidhld_carry_over']
-    end
+    paidhld_carry_over = YamlHelper.get_value(yaml, 'timecard.paidhld_carry_over', nil)
 
     return 0 if paidhld_carry_over.nil? or paidhld_carry_over.empty? or paidhld_carry_over == PaidHoliday::CARRY_OVER_NONE
 

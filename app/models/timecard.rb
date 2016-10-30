@@ -430,9 +430,7 @@ class Timecard < ApplicationRecord
     return if self.start.nil? or self.end.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      default_breaks = yaml[:timecard]['default_breaks']
-    end
+    default_breaks = YamlHelper.get_value(yaml, 'timecard.default_breaks', nil)
 
     unless default_breaks.nil?
       cur_breaks = self.get_breaks_a
@@ -674,13 +672,11 @@ class Timecard < ApplicationRecord
   def self.get_standard_wktime
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      standard_wktime = yaml[:timecard]['standard_hours']
+    standard_wktime = YamlHelper.get_value(yaml, 'timecard.standard_hours', nil)
 
-      unless standard_wktime.nil?
-        hour_min = standard_wktime.split(':')
-        return (hour_min.first.to_i*60 + hour_min.last.to_i)
-      end
+    unless standard_wktime.nil?
+      hour_min = standard_wktime.split(':')
+      return (hour_min.first.to_i*60 + hour_min.last.to_i)
     end
 
     return 0
@@ -695,13 +691,11 @@ class Timecard < ApplicationRecord
   def self.get_standard_wktime_when_off_am
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      standard_wktime_when_off_am = yaml[:timecard]['standard_hours_when_off_am']
+    standard_wktime_when_off_am = YamlHelper.get_value(yaml, 'timecard.standard_hours_when_off_am', nil)
 
-      unless standard_wktime_when_off_am.nil?
-        hour_min = standard_wktime_when_off_am.split(':')
-        return (hour_min.first.to_i*60 + hour_min.last.to_i)
-      end
+    unless standard_wktime_when_off_am.nil?
+      hour_min = standard_wktime_when_off_am.split(':')
+      return (hour_min.first.to_i*60 + hour_min.last.to_i)
     end
 
     return 0
@@ -716,13 +710,11 @@ class Timecard < ApplicationRecord
   def self.get_standard_wktime_when_off_pm
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      standard_wktime_when_off_pm = yaml[:timecard]['standard_hours_when_off_pm']
+    standard_wktime_when_off_pm = YamlHelper.get_value(yaml, 'timecard.standard_hours_when_off_pm', nil)
 
-      unless standard_wktime_when_off_pm.nil?
-        hour_min = standard_wktime_when_off_pm.split(':')
-        return (hour_min.first.to_i*60 + hour_min.last.to_i)
-      end
+    unless standard_wktime_when_off_pm.nil?
+      hour_min = standard_wktime_when_off_pm.split(':')
+      return (hour_min.first.to_i*60 + hour_min.last.to_i)
     end
 
     return 0
@@ -740,13 +732,11 @@ class Timecard < ApplicationRecord
     date = Date.today if date.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      commence_at = yaml[:timecard]['commence_at']
+    commence_at = YamlHelper.get_value(yaml, 'timecard.commence_at', nil)
 
-      unless commence_at.nil? or commence_at.empty?
-        hour_min = commence_at.split(':')
-        return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
-      end
+    unless commence_at.nil? or commence_at.empty?
+      hour_min = commence_at.split(':')
+      return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
     end
 
     return nil
@@ -764,13 +754,11 @@ class Timecard < ApplicationRecord
     date = Date.today if date.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      commence_at_when_off_am = yaml[:timecard]['commence_at_when_off_am']
+    commence_at_when_off_am = YamlHelper.get_value(yaml, 'timecard.commence_at_when_off_am', nil)
 
-      unless commence_at_when_off_am.nil? or commence_at_when_off_am.empty?
-        hour_min = commence_at_when_off_am.split(':')
-        return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
-      end
+    unless commence_at_when_off_am.nil? or commence_at_when_off_am.empty?
+      hour_min = commence_at_when_off_am.split(':')
+      return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
     end
 
     return nil
@@ -788,13 +776,11 @@ class Timecard < ApplicationRecord
     date = Date.today if date.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      close_at = yaml[:timecard]['close_at']
+    close_at = YamlHelper.get_value(yaml, 'timecard.close_at', nil)
 
-      unless close_at.nil? or close_at.empty?
-        hour_min = close_at.split(':')
-        return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
-      end
+    unless close_at.nil? or close_at.empty?
+      hour_min = close_at.split(':')
+      return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
     end
 
     return nil
@@ -812,13 +798,11 @@ class Timecard < ApplicationRecord
     date = Date.today if date.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    unless yaml[:timecard].nil?
-      close_at_when_off_pm = yaml[:timecard]['close_at_when_off_pm']
+    close_at_when_off_pm = YamlHelper.get_value(yaml, 'timecard.close_at_when_off_pm', nil)
 
-      unless close_at_when_off_pm.nil? or close_at_when_off_pm.empty?
-        hour_min = close_at_when_off_pm.split(':')
-        return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
-      end
+    unless close_at_when_off_pm.nil? or close_at_when_off_pm.empty?
+      hour_min = close_at_when_off_pm.split(':')
+      return Time.local(date.year, date.month, date.day, hour_min.first.to_i, hour_min.last.to_i)
     end
 
     return nil
@@ -834,9 +818,8 @@ class Timecard < ApplicationRecord
     return nil if self.start.nil? or self.end.nil?
 
     yaml = ApplicationHelper.get_config_yaml
-    return nil if yaml[:timecard].nil?
 
-    conf_span = yaml[:timecard]['midnight_span']
+    conf_span = YamlHelper.get_value(yaml, 'timecard.midnight_span', nil)
     return nil if conf_span.nil? or conf_span.empty?
 
     conf_span = conf_span.split('~')

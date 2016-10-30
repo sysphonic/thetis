@@ -1,4 +1,4 @@
-Thetis
+![Thetis](http://sysphonic.com/img/thetis/thetis_symbol.png) Thetis
 ======
 
 Thetis is the World-Strongest Groupware / Web Collaboration Suite
@@ -7,6 +7,7 @@ With highly sophisticated functional GUI by Web2.0 / Ajax, it aims
 to be more than just a groupware, to be an information-sharing
 platform integrating know-hows and ideas in an organization.
 
+![Thetis](http://sysphonic.com/img/thetis/thetis_logo_org_mini.png)
 
 ## Initial Account
 

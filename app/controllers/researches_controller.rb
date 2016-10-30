@@ -62,8 +62,8 @@ class ResearchesController < ApplicationController
 
         hash.each do |q_code, q_params_h|
           q_params_h = Hash.new if q_params_h.nil?
-          q_params_h[:item_id] = item.id
-          q_params_h[:item_title] = item.title
+          q_params_h['item_id'] = item.id
+          q_params_h['item_title'] = item.title
           hash[q_code] = q_params_h
         end
 
@@ -164,7 +164,7 @@ class ResearchesController < ApplicationController
     type = q_param.split(':').first
     vals = q_param[type.length+1 .. -1]
 
-    yaml[q_code] = {:item_id => item_id, :type => type, :values => vals, :caption => cap.to_s }
+    yaml[q_code] = {'item_id' => item_id, 'type' => type, 'values' => vals, 'caption' => cap.to_s}
 
     Research.save_config_yaml(yaml)
 
@@ -185,7 +185,7 @@ class ResearchesController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    Research.trim_config_yaml nil
+    Research.trim_config_yaml(nil)
 
     settings
 
@@ -259,7 +259,7 @@ class ResearchesController < ApplicationController
     SqlHelper.validate_token([group_id])
 
     if group_id.blank?
-      @group_ids = Research.get_statistics_groups 
+      @group_ids = Research.get_statistics_groups
       render(:partial => 'ajax_statistics_groups', :layout => false)
       return
     end
@@ -311,18 +311,18 @@ class ResearchesController < ApplicationController
       return
     else
 
-      ApplicationHelper.delete_file_safe(Research.get_pages)
+      ApplicationHelper.f_delete_safe(Research.get_pages)
 
       items.each_with_index do |item, idx|
         desc = item.description
-        if desc.nil? or desc.empty?
+        if desc.blank?
           render(:plain => t('research.specify_page_content') + item.title.to_s)
           return
         end
 
         q_hash = Research.find_q_codes(desc)
         q_hash.each do |q_code, q_param|
-          desc = Research.replaceCtrl(desc, q_code, q_param)
+          desc = Research.replace_ctrl(desc, q_code, q_param)
         end
 
         FileUtils.mkdir_p(Research.page_dir)
@@ -362,7 +362,7 @@ class ResearchesController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    ApplicationHelper.delete_file_safe(Research.get_pages)
+    ApplicationHelper.f_delete_safe(Research.get_pages)
     render(:plain => '')
 
   rescue => evar
@@ -448,7 +448,7 @@ class ResearchesController < ApplicationController
       @research = Research.new
     else
       # Already accepted?
-      if !@research.status.nil? and @research.status != 0
+      if !@research.status.nil? and (@research.status != 0)
         render(:action => 'show_receipt')
         return
       end

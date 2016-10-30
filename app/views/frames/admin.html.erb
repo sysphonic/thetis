@@ -4,7 +4,7 @@ if @login_user.nil? or @login_user.auth.nil? or @login_user.auth.empty?
 
 <script type="text/javascript">
 
-setTimeout("location.href='<%= $thetis_config[:general]['default_page'] %>'", 1);
+setTimeout("location.href='<%= YamlHelper.get_value($thetis_config, 'general.default_page', nil) %>'", 1);
 
 </script>
 

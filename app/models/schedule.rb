@@ -294,7 +294,7 @@ class Schedule < ApplicationRecord
           end
         end
       else
-        if $thetis_config[:menu]['req_login_schedules'] == '1'
+        if YamlHelper.get_value($thetis_config, 'menu.req_login_schedules', nil) == '1'
           if user.nil?
             return false
           else
@@ -1366,7 +1366,8 @@ private
       feed_entry.content     = descript
       feed_entry.title       = title_pref + schedule.title
 
-      if $thetis_config[:feed]['feed_content'] == '1' and schedule.detail.nil?
+      if (YamlHelper.get_value($thetis_config, 'feed.feed_content', nil) == '1') \
+          and schedule.detail.nil?
         feed_entry.content_encoded = "<![CDATA[#{schedule.detail}]]>"
       end
       entries << feed_entry

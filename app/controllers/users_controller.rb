@@ -17,8 +17,8 @@ class UsersController < ApplicationController
   before_action(:check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet])
 
   auth_array = [:destroy, :add_to_group, :exclude_from_group, :notify, :update_auth, :export_csv, :import_csv, :configure, :create_title, :destroy_title, :rename_title, :update_titles_order, :update_zept_allowed]
-  auth_array.concat([:list, :show, :search]) if $thetis_config[:menu]['disp_user_list'] != '1'
-  auth_array.concat([:new, :create]) if $thetis_config[:menu]['open_user_reg'] != '1'
+  auth_array.concat([:list, :show, :search]) if YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) != '1'
+  auth_array.concat([:new, :create]) if YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) != '1'
   before_action :only => auth_array do |controller|
     controller.check_auth(User::AUTH_USER)
   end

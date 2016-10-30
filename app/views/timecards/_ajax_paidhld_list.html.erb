@@ -55,11 +55,7 @@ else
     year = start_year - 1
     i += 1
 
-    if yaml[:timecard].nil? or yaml[:timecard]['paidhld_per_year'].nil?
-      paidhld_per_year = 0
-    else
-      paidhld_per_year = yaml[:timecard]['paidhld_per_year']
-    end
+    paidhld_per_year = YamlHelper.get_value(yaml, 'timecard.paidhld_per_year', 0)
 %>
   <tr style="background-color:white;">
     <td style="text-align:center;" nowrap>

@@ -4,7 +4,7 @@
   <table style="width:85%; height:100%; padding:3% 0; margin:0px auto; border-spacing:5px;">
     <tr style="height:20%;">
       <td class="login_title">
-        <%= $thetis_config[:general]['app_title'] %>
+        <%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %>
       </td>
     </tr>
     <tr>
@@ -41,7 +41,7 @@
           </tr>
           <tr style="height:10%;">
             <td style="text-align:right;">
-            <% if $thetis_config[:menu]['open_user_reg'] == '1' %>
+            <% if YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) == '1' %>
               <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'users', :action => 'new') %>'; return false;">
                 <%= raw(t('login.to_user_reg')) %>
               </a>

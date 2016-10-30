@@ -282,40 +282,6 @@ module ApplicationHelper
     return ret
   end
 
-  #=== self.delete_file_safe
-  #
-  #Removes the specified files safe.
-  #
-  #_paths_:: Target file paths.
-  #return:: Number of deleted files.
-  #
-  def self.delete_file_safe(paths)
-
-    return if paths.nil?
-
-    paths = paths.to_a
-
-    ret = 0
-
-    paths.each do |path|
-      if FileTest.exist?(path)
-        begin
-          ret = File.delete(path)
-        rescue
-          mode = ApplicationHelper.chmod_parent(0666, path)
-          begin
-            ret = File.delete(path)
-          rescue => evar
-            Log.add_error(nil, evar)
-          end
-          ApplicationHelper.chmod_parent(mode, path)
-        end
-      end
-    end
-
-    return ret
-  end
-
   #=== self.config
   #
   #Gets path of the configuration file of Thetis.
@@ -338,7 +304,7 @@ module ApplicationHelper
     config = ApplicationHelper.config
 
     if FileTest.exist?(config) and !FileTest.zero?(config) 
-      yaml = YAML.load_file config
+      yaml = YAML.load_file(config)
     else
       yaml = Hash.new
     end
@@ -360,12 +326,8 @@ module ApplicationHelper
     ApplicationHelper.f_ensure_exist(config)
     mode = ApplicationHelper.f_chmod(0666, config)
 
-    begin
-      f = File.open(config, 'w')
-      f.write(yaml.ya2yaml(:syck_compatible => true))
-      f.close
-    rescue => evar
-      Log.add_error(nil, evar)
+    open(config, 'w') do |f|
+      YAML.dump(yaml, f)
     end
 
     ApplicationHelper.f_chmod(mode, config)
@@ -381,14 +343,16 @@ module ApplicationHelper
   #
   def self.touch_to_restart
 
-    restart_txt = "#{::Rails.root.to_s}/tmp/restart.txt"
+    file = "#{::Rails.root.to_s}/tmp/restart.txt"
 
-    ApplicationHelper.f_ensure_exist(restart_txt)
-    begin
-      File.chmod(0666, restart_txt)
-    rescue => evar
-      Log.add_error(nil, evar)
+    ApplicationHelper.f_ensure_exist(file)
+    mode = ApplicationHelper.f_chmod(0666, file)
+
+    open(file, 'w') do |f|
+      ;
     end
+
+    ApplicationHelper.f_chmod(mode, file)
   end
 
   #=== self.root_url
@@ -562,6 +526,40 @@ module ApplicationHelper
     }
 
     return line[0, comment_idx]
+  end
+
+  #=== self.f_delete_safe
+  #
+  #Removes the specified files safe.
+  #
+  #_paths_:: Target file paths.
+  #return:: Number of deleted files.
+  #
+  def self.f_delete_safe(paths)
+
+    return if paths.nil?
+
+    paths = [paths].flatten
+
+    ret = 0
+
+    paths.each do |path|
+      if FileTest.exist?(path)
+        begin
+          ret = File.delete(path)
+        rescue
+          mode = ApplicationHelper.chmod_parent(0666, path)
+          begin
+            ret = File.delete(path)
+          rescue => evar
+            Log.add_error(nil, evar)
+          end
+          ApplicationHelper.chmod_parent(mode, path)
+        end
+      end
+    end
+
+    return ret
   end
 
   #=== self.f_ensure_exist

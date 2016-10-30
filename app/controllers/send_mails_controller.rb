@@ -39,7 +39,7 @@ class SendMailsController < ApplicationController
       end
     end
 
-    if $thetis_config[:menu]['disp_user_list'] == '1'
+    if YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) == '1'
       unless params[:to_user_ids].blank?
         @email = Email.new
         to_addrs = []

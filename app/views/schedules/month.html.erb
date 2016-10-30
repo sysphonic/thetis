@@ -67,7 +67,7 @@
       &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
     </td>
     <td style="text-align:right; width:25%;">
-    <% if params[:user_id].nil? and !@login_user.nil? and $thetis_config[:menu]['disp_timecard'] == '1' %>
+    <% if params[:user_id].nil? and !@login_user.nil? and (YamlHelper.get_value($thetis_config, 'menu.disp_timecard', nil) == '1') %>
       <input type="hidden" name="timecard_icons" value="false" />
       <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
     <% end %>

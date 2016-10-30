@@ -201,7 +201,7 @@ class User < ApplicationRecord
   def self.get_config_titles
 
     yaml = ApplicationHelper.get_config_yaml
-    return yaml[:user_titles]
+    return YamlHelper.get_value(yaml, 'user_titles', nil)
   end
 
   #=== self.save_config_titles
@@ -213,7 +213,7 @@ class User < ApplicationRecord
   def self.save_config_titles(titles)
 
     yaml = ApplicationHelper.get_config_yaml
-    yaml[:user_titles] = titles
+    YamlHelper.set_value(yaml, 'user_titles', titles)
     ApplicationHelper.save_config_yaml(yaml)
   end
 
@@ -486,7 +486,7 @@ class User < ApplicationRecord
   #
   def get_name
 
-    if $thetis_config[:user]['by_full_name'] == '1' and !self.fullname.nil? and !self.fullname.empty?
+    if YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1' and !self.fullname.nil? and !self.fullname.empty?
       return self.fullname
     else
       return self.name
@@ -504,14 +504,14 @@ class User < ApplicationRecord
 
     return self.name if self.fullname.nil? or self.fullname.empty?
 
-    if $thetis_config[:user]['by_full_name'] == '1'
+    if YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1'
 
       return self.fullname
     else
 
       yaml = ApplicationHelper.get_config_yaml if yaml.nil?
 
-      if !yaml[:timecard].nil? and yaml[:timecard]['always_by_full_name'] == '1'
+      if YamlHelper.get_value(yaml, 'timecard.always_by_full_name', nil) == '1'
         return self.fullname
       else
         return self.name
