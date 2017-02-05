@@ -1340,3 +1340,31 @@ function getRandomInt(min, max)
 {
   return Math.floor( Math.random() * (max - min + 1) ) + min;
 }
+
+function addParamsToForm(params, frm)
+{
+  for (var i=0; i < params.length; i++) {
+    var arr = null;
+    var param = params[i];
+    if (param.indexOf("&") >= 0) {
+      arr = param.split("&");
+    } else {
+      arr = [param];
+    }
+    for (var k=0; k < arr.length; k++) {
+      var paramEntry = arr[k].split("=");
+      addInputHidden(frm, null, trim(paramEntry[0]), trim(paramEntry[1]));
+    }
+  }
+}
+
+function isBlankArray(arr)
+{
+  for (var i=0; arr && (i < arr.length); i++) {
+    if (arr[i]) {
+      return false;
+    }
+  }
+  return true
+}
+

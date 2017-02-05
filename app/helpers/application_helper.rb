@@ -253,7 +253,7 @@ module ApplicationHelper
   #
   def self.h_s_quote(str)
 
-    return nil if str.nil? or str.empty?
+    return nil if str.blank?
 
     return ERB::Util.html_escape(str).gsub("'"){"\\'"}
   end

@@ -11,7 +11,7 @@
 #* 
 #
 class Setting < ApplicationRecord
-  belongs_to :user
+  #belongs_to :user
 
   public::CATEGORY_SCHEDULE = 'schedule'
 
