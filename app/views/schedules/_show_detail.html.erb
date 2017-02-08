@@ -10,7 +10,7 @@
 
 <% else %>
 
-  <%= hidden_field('schedule', 'id') %>
+  <input type="hidden" value="<%= @schedule.id %>" name="schedule[id]" id="schedule_id" />
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>
       <td class="prim_cap_td" nowrap>

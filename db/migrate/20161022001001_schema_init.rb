@@ -1,4 +1,4 @@
-class SchemaInit < ActiveRecord::Migration
+class SchemaInit < ActiveRecord::Migration[4.2]
  def self.up
 
   force = :cascade
