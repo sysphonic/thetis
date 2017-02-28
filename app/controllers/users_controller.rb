@@ -375,7 +375,7 @@ class UsersController < ApplicationController
       auth_selected = params[:auth_selected]
 
       unless auth_selected.nil? or auth_selected.empty?
-        auth = '|' + auth_selected.join('|') + '|'
+        auth = ApplicationHelper.a_to_attr(auth_selected)
       end
 
       if auth_selected.nil? or !auth_selected.include?(User::AUTH_USER)

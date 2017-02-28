@@ -486,7 +486,7 @@ class FoldersController < ApplicationController
       if disp_ctrls.empty?
         @folder.update_attribute(:disp_ctrl, nil)
       else
-        @folder.update_attribute(:disp_ctrl, '|'+disp_ctrls.join('|')+'|')
+        @folder.update_attribute(:disp_ctrl, ApplicationHelper.a_to_attr(disp_ctrls))
       end
 
       flash[:notice] = t('msg.update_success')

@@ -48,13 +48,13 @@ module AddressbookHelper
       if group_ids.nil? or group_ids.empty?
         address.groups = nil
       else
-        address.groups = '|' + group_ids.join('|') + '|'
+        address.groups = ApplicationHelper.a_to_attr(group_ids)
       end
 
       if team_ids.nil? or team_ids.empty?
         address.teams = nil
       else
-        address.teams = '|' + team_ids.join('|') + '|'
+        address.teams = ApplicationHelper.a_to_attr(team_ids)
       end
     end
 

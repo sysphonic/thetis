@@ -357,12 +357,12 @@ class Timecard < ApplicationRecord
       begin
         spans = Timecard.sort_breaks(spans)
 
-        array = []
+        arr = []
         spans.each do |span|
-          array << span.first.strftime(Schedule::SYS_DATETIME_FORM) + '~' + span.last.strftime(Schedule::SYS_DATETIME_FORM)
+          arr << span.first.strftime(Schedule::SYS_DATETIME_FORM) + '~' + span.last.strftime(Schedule::SYS_DATETIME_FORM)
         end
 
-        self.update_attribute(:breaks, '|' + array.join('|') + '|')
+        self.update_attribute(:breaks, ApplicationHelper.a_to_attr(arr))
 
       rescue
         return false

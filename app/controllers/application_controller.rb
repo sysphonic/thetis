@@ -1,7 +1,7 @@
 #
 #= ApplicationController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #== Note:
@@ -32,13 +32,10 @@ class ApplicationController < ActionController::Base
 
   def set_locale
     if params[:locale]
-      cookies[:locale] = {
-        :value => params[:locale],
-        :expires => 1.year.from_now
-      }
+      session[:locale] = params[:locale]
     end
 
-    I18n.locale = params[:locale] || cookies[:locale] || request.compatible_language_from(I18n.available_locales)
+    I18n.locale = (params[:locale] || session[:locale] || request.compatible_language_from(I18n.available_locales))
 
     # logger.fatal "* Locale available : " + I18n.available_locales.inspect
     # logger.fatal "* Locale " + request.env['HTTP_ACCEPT_LANGUAGE'].inspect

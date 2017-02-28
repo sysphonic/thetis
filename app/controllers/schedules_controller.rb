@@ -157,7 +157,7 @@ class SchedulesController < ApplicationController
         if params[attr].blank?
           params[:schedule][attr] = nil
         else
-          params[:schedule][attr] = '|' + params[attr].join('|') + '|'
+          params[:schedule][attr] = ApplicationHelper.a_to_attr(params[attr])
         end
       end
 
@@ -179,7 +179,7 @@ class SchedulesController < ApplicationController
             return
           end
         end
-        params[:schedule][:equipment] = '|' + equipment_ids.join('|') + '|'
+        params[:schedule][:equipment] = ApplicationHelper.a_to_attr(equipment_ids)
       end
 
       if params[:is_repeat] == '1'
@@ -187,7 +187,7 @@ class SchedulesController < ApplicationController
         if params[:repeat_rules].blank?
           params[:schedule][:repeat_rule] = nil
         else
-          params[:schedule][:repeat_rule] = '|' + params[:repeat_rules].join('|') + '|'
+          params[:schedule][:repeat_rule] = ApplicationHelper.a_to_attr(params[:repeat_rules])
         end
 
         if params[:excepts].blank?
@@ -196,7 +196,7 @@ class SchedulesController < ApplicationController
           excepts = params[:excepts]
           excepts.sort!
           excepts.reverse!
-          params[:schedule][:except] = '|' + excepts.join('|') + '|'
+          params[:schedule][:except] = ApplicationHelper.a_to_attr(excepts)
         end
       else
         params[:schedule][:repeat_rule] = nil
@@ -251,7 +251,7 @@ class SchedulesController < ApplicationController
         excepts << params[:date]
         excepts.sort!
         excepts.reverse!
-        attrs[:except] = '|' + excepts.join('|') + '|'
+        attrs[:except] = ApplicationHelper.a_to_attr(excepts)
         org_schedule.update_attributes(attrs.permit(Schedule::PERMIT_BASE))
       end
 

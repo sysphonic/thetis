@@ -161,7 +161,7 @@ class TimecardsController < ApplicationController
     if options.nil?
       params[:timecard]['options'] = nil
     else
-      params[:timecard]['options'] = '|' + options.join('|') + '|'
+      params[:timecard]['options'] = ApplicationHelper.a_to_attr(options)
     end
 
     if params[:user_id].blank?

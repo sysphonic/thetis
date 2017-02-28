@@ -934,7 +934,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.read_users = '|' + users.uniq.join('|') + '|'
+    self.read_users = ApplicationHelper.a_to_attr(users.uniq)
   end
 
   #=== set_write_users
@@ -952,7 +952,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.write_users = '|' + users.uniq.join('|') + '|'
+    self.write_users = ApplicationHelper.a_to_attr(users.uniq)
   end
 
   #=== get_read_groups_a
@@ -1030,7 +1030,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.read_groups = '|' + groups.uniq.join('|') + '|'
+    self.read_groups = ApplicationHelper.a_to_attr(groups.uniq)
   end
 
   #=== set_write_groups
@@ -1048,7 +1048,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.write_groups = '|' + groups.uniq.join('|') + '|'
+    self.write_groups = ApplicationHelper.a_to_attr(groups.uniq)
   end
 
   #=== get_read_teams_a
@@ -1126,7 +1126,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.read_teams = '|' + teams.uniq.join('|') + '|'
+    self.read_teams = ApplicationHelper.a_to_attr(teams.uniq)
   end
 
   #=== set_write_teams
@@ -1144,7 +1144,7 @@ class Folder < ApplicationRecord
       return
     end
 
-    self.write_teams = '|' + teams.uniq.join('|') + '|'
+    self.write_teams = ApplicationHelper.a_to_attr(teams.uniq)
   end
 
   #=== remove_auth_user

@@ -46,13 +46,13 @@ class EquipmentController < ApplicationController
     if params[:groups].blank?
       params[:equipment][:groups] = nil
     else
-      params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
+      params[:equipment][:groups] = ApplicationHelper.a_to_attr(params[:groups])
     end
 
     if params[:teams].blank?
       params[:equipment][:teams] = nil
     else
-      params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
+      params[:equipment][:teams] = ApplicationHelper.a_to_attr(params[:teams])
     end
 
     @equipment = Equipment.new(params.require(:equipment).permit(Equipment::PERMIT_BASE))
@@ -111,13 +111,13 @@ class EquipmentController < ApplicationController
     if params[:groups].blank?
       params[:equipment][:groups] = nil
     else
-      params[:equipment][:groups] = '|' + params[:groups].join('|') + '|'
+      params[:equipment][:groups] = ApplicationHelper.a_to_attr(params[:groups])
     end
 
     if params[:teams].blank?
       params[:equipment][:teams] = nil
     else
-      params[:equipment][:teams] = '|' + params[:teams].join('|') + '|'
+      params[:equipment][:teams] = ApplicationHelper.a_to_attr(params[:teams])
     end
 
     if @equipment.update_attributes(params.require(:equipment).permit(Equipment::PERMIT_BASE))
