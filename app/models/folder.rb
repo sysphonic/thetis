@@ -782,10 +782,7 @@ class Folder < ApplicationRecord
 
     ret = {}
 
-    arr = self.disp_ctrl.split('|')
-    arr.compact!
-    arr.delete('')
-
+    arr = ApplicationHelper.attr_to_a(self.disp_ctrl)
     arr.each do |param|
       if param.include?('=')
         kv = param.split('=')
@@ -867,13 +864,7 @@ class Folder < ApplicationRecord
   #
   def get_read_users_a
 
-    return [] if self.read_users.nil? or self.read_users.empty?
-
-    arr = self.read_users.split('|')
-    arr.compact!
-    arr.delete('')
-
-    return arr
+    return ApplicationHelper.attr_to_a(self.read_users)
   end
 
   #=== get_write_users_a
@@ -909,11 +900,7 @@ class Folder < ApplicationRecord
 
     else
 
-      return [] if self.write_users.nil? or self.write_users.empty?
-
-      arr = self.write_users.split('|')
-      arr.compact!
-      arr.delete('')
+      arr = ApplicationHelper.attr_to_a(self.write_users)
     end
 
     return arr
@@ -963,13 +950,7 @@ class Folder < ApplicationRecord
   #
   def get_read_groups_a
 
-    return [] if self.read_groups.nil? or self.read_groups.empty?
-
-    arr = self.read_groups.split('|')
-    arr.compact!
-    arr.delete('')
-
-    return arr
+    return ApplicationHelper.attr_to_a(self.read_groups)
   end
 
   #=== get_write_groups_a
@@ -1005,11 +986,7 @@ class Folder < ApplicationRecord
 
     else
 
-      return [] if self.write_groups.nil? or self.write_groups.empty?
-
-      arr = self.write_groups.split('|')
-      arr.compact!
-      arr.delete('')
+      arr = ApplicationHelper.attr_to_a(self.write_groups)
     end
 
     return arr
@@ -1059,13 +1036,7 @@ class Folder < ApplicationRecord
   #
   def get_read_teams_a
 
-    return [] if self.read_teams.nil? or self.read_teams.empty?
-
-    arr = self.read_teams.split('|')
-    arr.compact!
-    arr.delete('')
-
-    return arr
+    return ApplicationHelper.attr_to_a(self.read_teams)
   end
 
   #=== get_write_teams_a
@@ -1101,11 +1072,7 @@ class Folder < ApplicationRecord
 
     else
 
-      return [] if self.write_teams.nil? or self.write_teams.empty?
-
-      arr = self.write_teams.split('|')
-      arr.compact!
-      arr.delete('')
+      arr = ApplicationHelper.attr_to_a(self.write_teams)
     end
 
     return arr

@@ -64,8 +64,8 @@ module ItemsHelper
         folder.parent_id = my_folder.id
         folder.owner_id = user_id.to_i
         folder.xtype = nil
-        folder.read_users = '|' + user_id.to_s + '|'
-        folder.write_users = '|' + user_id.to_s + '|'
+        folder.read_users = ApplicationHelper.a_to_attr([user_id])
+        folder.write_users = ApplicationHelper.a_to_attr([user_id])
         folder.save!
 
         copies_folder = folder

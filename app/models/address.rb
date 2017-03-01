@@ -388,13 +388,7 @@ class Address < ApplicationRecord
   #
   def get_groups_a
 
-    return [] if self.groups.nil? or self.groups.empty?
-
-    array = self.groups.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.groups)
   end
 
   #=== get_teams_a
@@ -405,13 +399,7 @@ class Address < ApplicationRecord
   #
   def get_teams_a
 
-    return [] if self.teams.nil? or self.teams.empty?
-
-    array = self.teams.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.teams)
   end
 
   #=== self.get_for

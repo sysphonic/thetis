@@ -450,7 +450,7 @@ class ItemsController < ApplicationController
       user_ids = value.split(',')
       SqlHelper.validate_token([user_ids])
 
-      orders << '|' + user_ids.join('|') + '|'
+      orders << ApplicationHelper.a_to_attr(user_ids)
     end
     @item.workflow.update_attribute(:users, orders.join(','))
 

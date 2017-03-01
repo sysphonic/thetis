@@ -1021,13 +1021,7 @@ private
   #
   def get_users_a
 
-    return [] if self.users.nil? or self.users.empty?
-
-    array = self.users.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.users)
   end
 
   #=== get_groups_a
@@ -1038,13 +1032,7 @@ private
   #
   def get_groups_a
 
-    return [] if self.groups.nil? or self.groups.empty?
-
-    array = self.groups.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.groups)
   end
 
   #=== get_teams_a
@@ -1055,13 +1043,7 @@ private
   #
   def get_teams_a
 
-    return [] if self.teams.nil? or self.teams.empty?
-
-    array = self.teams.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.teams)
   end
 
   #=== get_rules_a
@@ -1072,13 +1054,7 @@ private
   #
   def get_rules_a
 
-    return [] if self.repeat_rule.nil? or self.repeat_rule.empty?
-
-    array = self.repeat_rule.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.repeat_rule)
   end
 
   #=== get_excepts_a
@@ -1089,13 +1065,7 @@ private
   #
   def get_excepts_a
 
-    return [] if self.except.nil? or self.except.empty?
-
-    array = self.except.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.except)
   end
 
   #=== get_equipment_a
@@ -1106,13 +1076,7 @@ private
   #
   def get_equipment_a
 
-    return [] if self.equipment.nil? or self.equipment.empty?
-
-    array = self.equipment.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.equipment)
   end
 
   #=== get_items_a
@@ -1123,13 +1087,7 @@ private
   #
   def get_items_a
 
-    return [] if self.items.nil? or self.items.empty?
-
-    array = self.items.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.items)
   end
 
   #=== repeat?

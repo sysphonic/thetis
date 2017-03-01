@@ -274,13 +274,7 @@ class Team < ApplicationRecord
   #
   def get_users_a
 
-    return [] if self.users.nil? or self.users.empty?
-
-    array = self.users.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.users)
   end
 
   #=== clear_users
@@ -305,10 +299,11 @@ class Team < ApplicationRecord
   #
   def add_users(new_users)
 
-    return if new_users.nil?
+    return if new_users.nil? or new_users.empty?
 
-    self.users = '|' if self.users.nil? or self.users.empty?
-    self.users += new_users.join('|') + '|'
+    arr = ApplicationHelper.attr_to_a(self.users)
+    arr |= new_users
+    self.users = ApplicationHelper.a_to_attr(arr)
   end
 
   #=== self.get_name
@@ -384,8 +379,8 @@ class Team < ApplicationRecord
     folder.parent_id = 0
     folder.owner_id = self.id
     folder.xtype = Folder::XTYPE_TEAM
-    folder.read_teams = '|'+self.id.to_s+'|'
-    folder.write_teams = '|'+self.id.to_s+'|'
+    folder.read_teams = ApplicationHelper.a_to_attr([self.id])
+    folder.write_teams = ApplicationHelper.a_to_attr([self.id])
     folder.save!
 
     return folder

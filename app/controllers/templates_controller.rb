@@ -81,7 +81,7 @@ class TemplatesController < ApplicationController
       if @group_id == TreeElement::ROOT_ID.to_s
         workflow.groups = nil
       else
-        workflow.groups = '|' + @group_id + '|'
+        workflow.groups = ApplicationHelper.a_to_attr([@group_id])
       end
       workflow.save!
     else

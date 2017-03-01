@@ -412,9 +412,11 @@ class User < ApplicationRecord
 
     return false if self.groups.nil?
 
-    unless self.groups.index('|'+group_id.to_s+'|').nil?
-      self.groups = self.groups.gsub('|'+group_id.to_s+'|', '|')
-      self.groups = nil if self.groups == '|'
+    arr = ApplicationHelper.attr_to_a(self.groups)
+    if arr.include?(group_id.to_s)
+      arr.delete(group_id.to_s)
+      self.groups = ApplicationHelper.a_to_attr(arr)
+      self.groups = nil if self.groups.blank?
       return true
     else
       return false
@@ -431,13 +433,13 @@ class User < ApplicationRecord
 
     return false if group_id.nil?
 
-    self.groups = '|' if self.groups.nil?
-
-    if self.groups.index('|'+group_id.to_s+'|').nil?
-      self.groups += group_id.to_s + '|'
-      return true
-    else
+    arr = ApplicationHelper.attr_to_a(self.groups)
+    if arr.include?(group_id.to_s)
       return false
+    else
+      arr << group_id
+      self.groups = ApplicationHelper.a_to_attr(arr)
+      return true
     end
   end
 
@@ -551,9 +553,7 @@ class User < ApplicationRecord
 
     return [TreeElement::ROOT_ID.to_s] if self.groups.nil? or self.groups.empty?
 
-    arr = self.groups.split('|')
-    arr.compact!
-    arr.delete('')
+    arr = ApplicationHelper.attr_to_a(self.groups)
 
     if incl_parents
       parent_ids = []
@@ -584,10 +584,7 @@ class User < ApplicationRecord
 
     return group_branches if self.groups.nil? or self.groups.empty?
 
-    group_ids = self.groups.split('|')
-    group_ids.compact!
-    group_ids.delete('')
-
+    group_ids = ApplicationHelper.attr_to_a(self.groups)
     group_ids.each do |group_id|
       group = Group.find_with_cache(group_id, group_obj_cache)
 
@@ -687,13 +684,7 @@ class User < ApplicationRecord
   #
   def get_auth_a
 
-    return [] if self.auth.nil? or self.auth.empty?
-
-    arr = self.auth.split('|')
-    arr.compact!
-    arr.delete('')
-
-    return arr
+    return ApplicationHelper.attr_to_a(self.auth)
   end
 
   #=== get_profile_sheet
@@ -793,8 +784,8 @@ class User < ApplicationRecord
     folder.parent_id = 0
     folder.owner_id = self.id
     folder.xtype = Folder::XTYPE_USER
-    folder.read_users = '|'+self.id.to_s+'|'
-    folder.write_users = '|'+self.id.to_s+'|'
+    folder.read_users = ApplicationHelper.a_to_attr([self.id])
+    folder.write_users = ApplicationHelper.a_to_attr([self.id])
     folder.save!
 
     return folder

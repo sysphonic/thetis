@@ -51,13 +51,7 @@ class Equipment < ApplicationRecord
   #
   def get_users_a
 
-    return [] if self.users.nil? or self.users.empty?
-
-    array = self.users.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.users)
   end
 
   #=== get_groups_a
@@ -68,13 +62,7 @@ class Equipment < ApplicationRecord
   #
   def get_groups_a
 
-    return [] if self.groups.nil? or self.groups.empty?
-
-    array = self.groups.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.groups)
   end
 
   #=== get_teams_a
@@ -85,13 +73,7 @@ class Equipment < ApplicationRecord
   #
   def get_teams_a
 
-    return [] if self.teams.nil? or self.teams.empty?
-
-    array = self.teams.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.teams)
   end
 
   #=== self.get_for

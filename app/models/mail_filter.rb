@@ -127,14 +127,6 @@ class MailFilter < ApplicationRecord
   #
   def get_triggers_a
 
-    return [] if self.triggers.nil? or self.triggers.empty?
-
-    array = self.triggers.split('|')
-    array.compact!
-    array.delete('')
-
-    return array
+    return ApplicationHelper.attr_to_a(self.triggers)
   end
-
-
 end

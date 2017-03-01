@@ -40,8 +40,8 @@ module WorkflowsHelper
         folder.parent_id = my_folder.id
         folder.owner_id = user_id.to_i
         folder.xtype = Folder::XTYPE_SYSTEM
-        folder.read_users = '|' + user_id.to_s + '|'
-        folder.write_users = '|' + user_id.to_s + '|'
+        folder.read_users = ApplicationHelper.a_to_attr([user_id])
+        folder.write_users = ApplicationHelper.a_to_attr([user_id])
         folder.save!
 
         my_wf_folder = folder
@@ -76,8 +76,8 @@ module WorkflowsHelper
         folder.parent_id = my_folder.id
         folder.owner_id = user_id.to_i
         folder.xtype = nil
-        folder.read_users = '|' + user_id.to_s + '|'
-        folder.write_users = '|' + user_id.to_s + '|'
+        folder.read_users = ApplicationHelper.a_to_attr([user_id])
+        folder.write_users = ApplicationHelper.a_to_attr([user_id])
         folder.save!
 
         decided_inbox = folder

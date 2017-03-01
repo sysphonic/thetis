@@ -174,10 +174,7 @@ class Workflow < ApplicationRecord
     self.users.split(',').each do |order|
 
       orders << {}
-      users_a = order.split('|')
-      users_a.compact!
-      users_a.delete ''
-
+      users_a = ApplicationHelper.attr_to_a(order)
       users_a.each do |user_id|
         orders.last[user_id.to_i] = User.get_name(user_id)
       end

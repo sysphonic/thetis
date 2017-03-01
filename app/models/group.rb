@@ -440,8 +440,8 @@ class Group < ApplicationRecord
     folder.parent_id = 0
     folder.owner_id = self.id
     folder.xtype = Folder::XTYPE_GROUP
-    folder.read_groups = '|'+self.id.to_s+'|'
-    folder.write_groups = '|'+self.id.to_s+'|'
+    folder.read_groups = ApplicationHelper.a_to_attr([self.id])
+    folder.write_groups = ApplicationHelper.a_to_attr([self.id])
     folder.save!
 
     return folder
