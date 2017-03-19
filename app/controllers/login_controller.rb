@@ -1,7 +1,7 @@
 #
 #= LoginController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #The Action-Controller about LOGIN.
@@ -75,9 +75,6 @@ class LoginController < ApplicationController
   def logout
     Log.add_info(request, params.inspect)
 
-    session[:login_user_id] = nil
-    session[:settings] = nil
-    session[:folder_id] = nil
     reset_session
 
     prms = ApplicationHelper.get_fwd_params(params)

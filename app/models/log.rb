@@ -1,7 +1,7 @@
 #
 #= Log
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Log represents each access log, which can be shown only to administrators.
@@ -165,9 +165,7 @@ class Log < ApplicationRecord
     self.log_type = type.to_s
 
     user_agent = ((request.nil? or request.env['HTTP_USER_AGENT'].nil?)?'':(request.env['HTTP_USER_AGENT']+': '))
-    ['Googlebot', 'bingbot', 'Baiduspider'].each do |bot|
-      return false if user_agent.include?(bot)
-    end
+    return false if ['Googlebot', 'bingbot', 'Baiduspider'].any? {|bot| user_agent.include?(bot) }
 
     self.detail = user_agent + detail
     return true
