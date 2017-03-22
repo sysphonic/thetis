@@ -380,16 +380,16 @@ function inputBreak(org_start, org_end)
     thetisBox = null;
   }
 
-  var hours = new Array(
+  var hours = [
   <% THETIS_HOURS.each do |hour| %>
-        <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
+    <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
   <% end %>
-      );
-  var mins = new Array(
+  ];
+  var mins = [
   <% THETIS_MINUTES.each do |min| %>
-        <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
+    <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
   <% end %>
-      );
+  ];
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOk()", "onBreakCancel()", org_start, org_end);
 
   thetisBox = new ThetisBox;
@@ -492,19 +492,19 @@ function changeWorkcode(workcode)
 
 function checkOff(workcode)
 {
-  var holidays = new Array(
+  var holidays = [
   <%
   is_first = true
   Timecard.workcodes.each do |workcode, value|
     if value[Timecard::WKCODE_PARAM_LABORDAY] <= 0.0
   %>
-                    <%= (is_first)?'':',' %> "<%= workcode %>"
+    <%= (is_first)?'':',' %> "<%= workcode %>"
   <%
       is_first = false
     end
   end
   %>
-                );
+  ];
   var isOff = false;
   for (var i=0; i < holidays.length; i++) {
     if (holidays[i] == workcode) {

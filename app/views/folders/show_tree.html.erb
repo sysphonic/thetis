@@ -182,25 +182,25 @@ function onLoadSub()
   var array = [["0", " (root)", "", "selectFolder('0');", 0]];
   var folderImgs = [
   <% icons = Folder.get_icons(nil, false, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(Folder::XTYPE_USER, false, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(Folder::XTYPE_GROUP, false, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(Folder::XTYPE_TEAM, false, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(Folder::XTYPE_SYSTEM, false, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(nil, true, false) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(nil, false, true) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>"),
+    ["<%= icons[1] %>", "<%= icons[2] %>"],
   <% icons = Folder.get_icons(nil, true, true) %>
-    new Array("<%= icons[1] %>", "<%= icons[2] %>")
+    ["<%= icons[1] %>", "<%= icons[2] %>"]
   ];
   ThetisBox.buildTree("", array, "folderTree", folderImgs);
   <% @folder_tree.each do |parent_id, child_folders| %>
-  array = new Array(
+  array = [
     <%
     child_folders.each_with_index do |folder, idx|
 
@@ -238,7 +238,7 @@ function onLoadSub()
         end
       end
     %>
-    new Array("<%= folder.id %>", " <%= folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>)
+    ["<%= folder.id %>", " <%= folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>]
     <%
       if idx < (child_folders.length - 1)
     %>
@@ -247,7 +247,7 @@ function onLoadSub()
       end
     end
     %>
-        );
+  ];
   ThetisBox.buildTree("<%= parent_id %>", array, "folderTree", folderImgs, false);
   <% end %>
 

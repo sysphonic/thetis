@@ -230,10 +230,10 @@ function checkUpdateMulti()
   var year = document.form_update_multi.year.value;
   var num = document.form_update_multi.num.value;
 
-  var check_arr = new Array(year, num);
+  var arr = [year, num];
 
-  for (var i=0; i < check_arr.length; i++) {
-    if (check_arr[i].length <= 0) {
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i].length <= 0) {
       msg("<%= t('msg.specify_all_indispensable') %>");
       return false;
     }
@@ -390,10 +390,10 @@ function checkUpdateGivenDays()
 {
   var num = document.form_given_days.num.value;
 
-  var check_arr = new Array(num);
+  var arr = [num];
 
-  for (var i=0; i < check_arr.length; i++) {
-    if (check_arr[i].length <= 0) {
+  for (var i=0; i < arr.length; i++) {
+    if (arr[i].length <= 0) {
       msg("<%= t('msg.specify_all_indispensable') %>");
       return false;
     }

@@ -11,5 +11,5 @@
 .thetisbox_tip_dialog {border-spacing:7px; -webkit-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 .thetisbox_progress_dialog {border-spacing:7px; -webkit-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); box-shadow:2px 2px 5px rgba(100, 100, 100, 0.2); -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;}
 
-.thetisbox_resize_handle_r {background:url("../images/thetisbox/resize_handle_r.png"); repeat:none; position:center;}
-.thetisbox_resize_handle_l {background:url("../images/thetisbox/resize_handle_l.png"); repeat:none; position:center;}
+.thetisbox_resize_handle_r {background:url("../images/thetisbox/resize_handle_r.png") center no-repeat;}
+.thetisbox_resize_handle_l {background:url("../images/thetisbox/resize_handle_l.png") center no-repeat;}

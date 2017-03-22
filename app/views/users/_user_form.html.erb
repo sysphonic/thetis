@@ -264,7 +264,7 @@ showTitleSelector = function()
 
 getTitleSelector = function(onOk, onCancel)
 {
-  var titles = new Array(
+  var titles = [
   <%
   first = true
   titles = User.get_config_titles
@@ -272,17 +272,17 @@ getTitleSelector = function(onOk, onCancel)
     titles.each do |title|
       unless first
   %>
-                    ,
+    ,
   <%
       end
       first = false
   %>
-                    "<%= title %>"
+    "<%= title %>"
   <%
     end
   end
   %>
-                    );
+  ];
 
   var def = _z("user_title").value;
 

@@ -874,7 +874,7 @@ function _prepareShiftListItems(list)
   }
   deleteList(list);
 
-  return new Array(firstIdx, selOptions);
+  return [firstIdx, selOptions];
 }
 
 function shiftListUpper(list)

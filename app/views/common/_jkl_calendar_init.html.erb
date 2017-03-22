@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-var holidays = new Array(
+var holidays = [
 <%
 @holidays ||= Schedule.get_holidays
 
@@ -16,24 +16,24 @@ unless @holidays.nil?
 
     next if year < cur_year-1 or year > cur_year+1
 %>
-                    <% unless is_first %>,<% end %>
-                    new Array(new Date(<%= year %>, <%= month-1 %>, <%= day %>), "<%= schedule.title %>")
+  <% unless is_first %>,<% end %>
+  [new Date(<%= year %>, <%= month-1 %>, <%= day %>), "<%= schedule.title %>"]
 <%
     is_first = false
   end
 end
 %>
-                );
+];
 JKL.Calendar.setHolidays(holidays);
 
 JKL.Calendar.setWdayNames(
-    new Array('<%= t('wday.su') %>', '<%= t('wday.mo') %>', '<%= t('wday.tu') %>', '<%= t('wday.we') %>', '<%= t('wday.th') %>', '<%= t('wday.fr') %>', '<%= t('wday.sa') %>')
+    ['<%= t('wday.su') %>', '<%= t('wday.mo') %>', '<%= t('wday.tu') %>', '<%= t('wday.we') %>', '<%= t('wday.th') %>', '<%= t('wday.fr') %>', '<%= t('wday.sa') %>']
   );
 JKL.Calendar.setMonthNames(
-    new Array('<%= t('month.jan') %>', '<%= t('month.feb') %>', '<%= t('month.mar') %>', '<%= t('month.apr') %>', '<%= t('month.may') %>', '<%= t('month.jun') %>', '<%= t('month.jul') %>', '<%= t('month.aug') %>', '<%= t('month.sep') %>', '<%= t('month.oct') %>', '<%= t('month.nov') %>', '<%= t('month.dec') %>')
+    ['<%= t('month.jan') %>', '<%= t('month.feb') %>', '<%= t('month.mar') %>', '<%= t('month.apr') %>', '<%= t('month.may') %>', '<%= t('month.jun') %>', '<%= t('month.jul') %>', '<%= t('month.aug') %>', '<%= t('month.sep') %>', '<%= t('month.oct') %>', '<%= t('month.nov') %>', '<%= t('month.dec') %>']
   );
 JKL.Calendar.setCaptions(
-    new Array('<%= t('btn.prev_month') %>', '<%= t('btn.current_month') %>', '<%= t('btn.next_month') %>', '<%= t('btn.close') %>')
+    ['<%= t('btn.prev_month') %>', '<%= t('btn.current_month') %>', '<%= t('btn.next_month') %>', '<%= t('btn.close') %>']
   );
 
 </script>

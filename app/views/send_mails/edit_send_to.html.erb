@@ -6,7 +6,7 @@ enable_users_tab = (YamlHelper.get_value($thetis_config, 'menu.disp_user_list', 
 
 <script type="text/javascript">
 
-tabs_send_mail_address = new Array("direct", "addrbook");
+tabs_send_mail_address = ["direct", "addrbook"];
 <% if enable_users_tab %>
 tabs_send_mail_address.push("users");
 <% end %>

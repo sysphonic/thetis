@@ -121,7 +121,7 @@ onFilterConditionOptionChanged = function(elem, keepVal)
     switch (elem.value) {
       case "subject":
       case "message_body":
-        compares = new Array("include", "not_include", "equal", "not_equal", "begin_with", "end_with");
+        compares = ["include", "not_include", "equal", "not_equal", "begin_with", "end_with"];
         filter_condition_text.style.display = "";
         break;
       case "from":
@@ -129,24 +129,24 @@ onFilterConditionOptionChanged = function(elem, keepVal)
       case "cc":
       case "to_cc":
       case "from_to_cc_bcc":
-        compares = new Array("include", "not_include", "equal", "not_equal", "begin_with", "end_with", "in_addressbook", "not_in_addressbook");
+        compares = ["include", "not_include", "equal", "not_equal", "begin_with", "end_with", "in_addressbook", "not_in_addressbook"];
         filter_condition_text.style.display = "";
         break;
       case "sent_at":
-        compares = new Array("equal", "not_equal", "before", "after");
+        compares = ["equal", "not_equal", "before", "after"];
         filter_condition_date.style.display = "";
         break;
       case "priority":
-        compares = new Array("equal", "heigher_than", "lower_than");
+        compares = ["equal", "heigher_than", "lower_than"];
         filter_condition_priority.style.display = "";
         break;
       case "status":
-        compares = new Array("equal", "not_equal");
+        compares = ["equal", "not_equal"];
         filter_condition_status.style.display = "";
         break;
       case "days_from_sent_at":
       case "size":
-        compares = new Array("equal", "more_than", "less_than");
+        compares = ["equal", "more_than", "less_than"];
         filter_condition_text.style.display = "";
         break;
     }
@@ -238,7 +238,7 @@ onFilterConditionOkClicked = function(elem)
   var compare = filter_condition_compare.value;
   var val = "";
   var dispVal = null;
-  var valCtrls = new Array(filter_condition_text, filter_condition_priority, filter_condition_status, filter_condition_date);
+  var valCtrls = [filter_condition_text, filter_condition_priority, filter_condition_status, filter_condition_date];
   for (var i=0; i < valCtrls.length; i++) {
     var valCtrl = valCtrls[i];
     if (valCtrl.style.display != "none") {

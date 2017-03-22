@@ -702,16 +702,16 @@ function inputBreak(org_start, org_end)
     thetisBox = null;
   }
 
-  var hours = new Array(
+  var hours = [
   <% THETIS_HOURS.each do |hour| %>
-        <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
+    <%= hour.to_s + ((THETIS_HOURS.last==hour)?'':',') %>
   <% end %>
-      );
-  var mins = new Array(
+  ];
+  var mins = [
   <% THETIS_MINUTES.each do |min| %>
-        <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
+    <%= min.to_s + ((THETIS_MINUTES.last==min)?'':',') %>
   <% end %>
-      );
+  ];
   var content = ThetisBox.getTimeSpanDialog(hours, mins, "onBreakOk()", "onBreakCancel()", org_start, org_end);
 
   thetisBox = new ThetisBox;

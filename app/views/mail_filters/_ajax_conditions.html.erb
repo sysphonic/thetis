@@ -56,7 +56,7 @@ getFilterConditionEntryHtml = function(disp, point, compare, val, condition_id, 
   content += "  " + disp;
   content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png\" title=\"<%= t('btn.edit') %>\" onclick=\"editFilterCondition('"+condition_id+"', false);\" />";
   content += "  &nbsp;<img class=\"img_btn\" src=\"<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png\" title=\"<%= t('btn.delete') %>\" onclick=\"deleteFilterCondition('"+condition_id+"'); return false;\" />";
-  content += "  <input type=\"hidden\" id=\"filter_condition"+condition_id+"\" name=\"filter_condition["+condition_id+"]\" value=\""+new Array(point, compare, val).join("\n")+"\" />";
+  content += "  <input type=\"hidden\" id=\"filter_condition"+condition_id+"\" name=\"filter_condition["+condition_id+"]\" value=\""+[point, compare, val].join("\n")+"\" />";
   if (reqDivTag) {
     content += "</div>";
   }

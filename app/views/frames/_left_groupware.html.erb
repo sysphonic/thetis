@@ -185,7 +185,7 @@ function doUpdateTime()
   if (m < 10) {
     m = "0" + m;
   }
-  var time = new Array(h, m).join(":");
+  var time = [h, m].join(":");
   var date_disp = day + "<br/>("+getDay(date)+")<br/>"+time;
   eval("try{ div_time.innerHTML = date_disp }catch(e){}");
 }

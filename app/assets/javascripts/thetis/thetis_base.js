@@ -326,7 +326,7 @@ function getAxis(desktop, elem)
     yAxis = 9500;
   }
 
-  return new Array(xAxis, yAxis);
+  return [xAxis, yAxis];
 }
 
 function showTab(name, nameArray, bgcolor)
