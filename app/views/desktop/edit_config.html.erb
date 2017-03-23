@@ -14,11 +14,11 @@ tabs = ["basic", "admin"];
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
+          <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_item_tab" nowrap onclick="showTab('admin', tabs, 'forestgreen');">
+          <td id="tab_admin" class="td_tab" nowrap onclick="showTab('admin', tabs, 'forestgreen');">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>

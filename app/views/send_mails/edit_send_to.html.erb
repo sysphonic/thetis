@@ -20,17 +20,17 @@ tabs_send_mail_address.push("users");
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_direct" class="td_item_tab" nowrap onclick="showTab('direct', tabs_send_mail_address, 'cornflowerblue');">
+          <td id="tab_direct" class="td_tab" nowrap onclick="showTab('direct', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.direct_input') %>
           </td>
-          <td id="tab_addrbook" class="td_item_tab" nowrap onclick="showTab('addrbook', tabs_send_mail_address, 'cornflowerblue');">
+          <td id="tab_addrbook" class="td_tab" nowrap onclick="showTab('addrbook', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.address_book') %>
           </td>
-<% if enable_users_tab %>
-          <td id="tab_users" class="td_item_tab" nowrap onclick="showTab('users', tabs_send_mail_address, 'cornflowerblue');">
+        <% if enable_users_tab %>
+          <td id="tab_users" class="td_tab" nowrap onclick="showTab('users', tabs_send_mail_address, 'cornflowerblue');">
             <%= User.model_name.human %>
           </td>
-<% end %>
+        <% end %>
           <td><!-- SPACER --></td>
         </tr>
       </table>
@@ -117,7 +117,7 @@ tabs_send_mail_address.push("users");
       </div>
 
       <div id="tab_div_users" style="width:100%; text-align:center;">
-<% if enable_users_tab %>
+      <% if enable_users_tab %>
         <table style="width:100%; height:83%; border:outset 3px cornflowerblue;">
           <tr>
             <td id="div_selectUsers" style="text-align:center; padding:5px; height:100%;">
@@ -130,7 +130,7 @@ tabs_send_mail_address.push("users");
             </td>
           </tr>
         </table>
-<% end %>
+      <% end %>
       </div>
 
     </td>

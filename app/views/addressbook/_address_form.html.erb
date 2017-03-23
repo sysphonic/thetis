@@ -11,16 +11,16 @@ tabs = ["basic", "address", "memo", "scope"];
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'sienna');">
+          <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'sienna');">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_address" class="td_item_tab" nowrap onclick="showTab('address', tabs, 'sienna');">
+          <td id="tab_address" class="td_tab" nowrap onclick="showTab('address', tabs, 'sienna');">
             <%= Address.human_attribute_name('address') %>
           </td>
-          <td id="tab_memo" class="td_item_tab" nowrap onclick="showTab('memo', tabs, 'sienna');">
+          <td id="tab_memo" class="td_tab" nowrap onclick="showTab('memo', tabs, 'sienna');">
             <%= Address.human_attribute_name('memo') %>
           </td>
-          <td id="tab_scope" class="td_item_tab" nowrap onclick="showTab('scope', tabs, 'sienna');">
+          <td id="tab_scope" class="td_tab" nowrap onclick="showTab('scope', tabs, 'sienna');">
             <%= t('schedule.scope') %>
           </td>
           <td><!-- SPACER --></td>

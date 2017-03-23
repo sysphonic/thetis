@@ -22,13 +22,13 @@
     <td style="vertical-align:top;">
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_users" class="td_item_tab" nowrap onclick="selectTabUsers(<%= @folder.id %>);">
+          <td id="tab_users" class="td_tab" nowrap onclick="selectTabUsers(<%= @folder.id %>);">
               <%= t('user.plural') %>
           </td>
-          <td id="tab_groups" class="td_item_tab" nowrap onclick="selectTabGroups(<%= @folder.id %>);">
+          <td id="tab_groups" class="td_tab" nowrap onclick="selectTabGroups(<%= @folder.id %>);">
               <%= t('group.plural') %>
           </td>
-          <td id="tab_teams" class="td_item_tab selected" nowrap style="background-color:brown;">
+          <td id="tab_teams" class="td_tab selected" nowrap style="background-color:brown;">
               <%= t('team.plural') %>
           </td>
         </tr>

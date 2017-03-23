@@ -61,9 +61,9 @@ table.timecard td{padding:2px 5px;}
 
 .td_entry_info_cap {border:solid 1px #0066ff; font-size:13px; padding:0px 3px; line-height:1.5; text-align:center; vertical-align:middle;}
 .td_entry_info_val {font-size:13px; padding:0px 3px; line-height:1.5; text-align:center; vertical-align:middle;}
-.td_item_tab {width:120px; background-color:silver; color:white; cursor:pointer; padding:0px 10px; text-align:left;}
-.td_item_tab:hover {background-color:palegreen;}
-.td_item_tab.selected{background-color:blue; color:white; cursor:default;}
+.td_tab {width:120px; background:silver url('../images/controls/tab_cut.png') top left no-repeat; color:white; cursor:pointer; padding:0px 10px; text-align:left;}
+.td_tab:hover {background-color:palegreen;}
+.td_tab.selected{background-color:blue; color:white; cursor:default;}
 
 .img_title_td {text-align:center; color:navy; font-size:13px; line-height:1.4; padding:5px;}
 .img_memo_td {border:double 4px darkgoldenrod; padding:10px 15px; background-color:cornsilk; text-align:left;}

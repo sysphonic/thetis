@@ -35,20 +35,20 @@ var users_cache = [];
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-        <td id="tab_workflow" class="td_item_tab" nowrap onclick="showTab('workflow', tabs, 'orange');">
+        <td id="tab_workflow" class="td_tab" nowrap onclick="showTab('workflow', tabs, 'orange');">
           <%= Workflow.model_name.human %>
         </td>
       <% end %>
-        <td id="tab_basic" class="td_item_tab" nowrap onclick="showTab('basic', tabs, 'blue');">
+        <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'blue');">
           <%= t('cap.basic_info') %>
         </td>
-        <td id="tab_description" class="td_item_tab" nowrap onclick="showTab('description', tabs, 'forestgreen');">
+        <td id="tab_description" class="td_tab" nowrap onclick="showTab('description', tabs, 'forestgreen');">
           <%= Item.human_attribute_name('description') %>
         </td>
-        <td id="tab_image" class="td_item_tab" nowrap onclick="showTab('image', tabs, 'red');">
+        <td id="tab_image" class="td_tab" nowrap onclick="showTab('image', tabs, 'red');">
           <%= t('image.plural') %>
         </td>
-        <td id="tab_attachment" class="td_item_tab" nowrap onclick="showTab('attachment', tabs, 'brown');">
+        <td id="tab_attachment" class="td_tab" nowrap onclick="showTab('attachment', tabs, 'brown');">
           <%= t('attachment.plural_full') %>
         </td>
         <td>&nbsp;</td>
