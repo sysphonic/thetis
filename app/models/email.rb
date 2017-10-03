@@ -152,7 +152,7 @@ class Email < ApplicationRecord
     self.save!
 
     src_email.mail_attachments.each do |org_attach|
-      mail_attach = org_attach.clone
+      mail_attach = org_attach.dup
       self.mail_attachments << mail_attach
       mail_attach.copy_file_from(org_attach)
     end
@@ -526,7 +526,7 @@ EOT
         mail_attachment.name = EmailsHelper.decode_b(attach.filename)
     # for Platform dependent characters in ISO-2022-JP <<<
       end
-      mail_attachment.content_type = attach.content_type
+      mail_attachment.content_type = EmailsHelper.trim_content_type(attach.content_type)
 
       temp = Tempfile.new('thetis_mail_part', path)
       temp.binmode

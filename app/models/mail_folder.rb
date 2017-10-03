@@ -299,7 +299,7 @@ class MailFolder < ApplicationRecord
       end
     end
 
-    if mail_folder_id.to_s == '0'  # '0' for ROOT
+    if mail_folder_id.to_s == TreeElement::ROOT_ID.to_s
       path = '/(root)'
       folders_cache[mail_folder_id.to_i] = path unless folders_cache.nil?
       return path
@@ -308,7 +308,7 @@ class MailFolder < ApplicationRecord
     path = ''
     cached_path = nil
 
-    while mail_folder_id.to_s != '0'  # '0' for ROOT
+    while mail_folder_id.to_s != TreeElement::ROOT_ID.to_s
 
       unless folders_cache.nil?
         cached_path = folders_cache[mail_folder_id.to_i]

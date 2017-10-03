@@ -1092,9 +1092,9 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
   {
     return ("thetisBoxTree-"+this.id);
   },
-  buildTree: function(parentTreeId, nodes, open)
+  buildTree: function(parentTreeId, nodes, open, linkerTagName)
   {
-    return ThetisBox.buildTree(parentTreeId, nodes, this.getTreeRootDivId(), this.folderImg, open);
+    return ThetisBox.buildTree(parentTreeId, nodes, this.getTreeRootDivId(), this.folderImg, open, linkerTagName);
   },
   selectTree: function(nodeId, forceOpen)
   {
@@ -1669,7 +1669,7 @@ ThetisBox.getSelKeeperId = function(rootDiv)
   return (rootDiv+":selectedNode");
 }
 
-ThetisBox.buildTree = function(parentTreeId, nodes, rootDiv, folderImg, open)
+ThetisBox.buildTree = function(parentTreeId, nodes, rootDiv, folderImg, open, linkerTagName)
 {
   var selKeeperId = ThetisBox.getSelKeeperId(rootDiv);
   var selKeeper = _z(selKeeperId);
@@ -1701,7 +1701,7 @@ ThetisBox.buildTree = function(parentTreeId, nodes, rootDiv, folderImg, open)
     base.noWrap = true;
     parent.appendChild(base);
 
-    var linker = document.createElement("a");
+    var linker = document.createElement((linkerTagName || "a"));
     linker.id = ThetisBox.getLinkerIdFromDivId(divId);
     if (firstNodeId == null) {
       firstNodeId = nodeId;

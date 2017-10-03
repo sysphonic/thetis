@@ -11,6 +11,11 @@ if flash[:notice].starts_with?('ERROR:')
 %>
   setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);
 <%
+elsif flash[:notice].index('INFO:')
+  msg = flash[:notice]['INFO:'.length .. -1].gsub("\n", '<br/>').gsub("\"", '\'')
+%>
+  setTimeout("try{ msg(\"<%= raw(msg) %>\"); }catch(e){}", 100);
+<%
 else
   msg = flash[:notice].gsub("\n", '<br/>').gsub("\"", '\'')
 %>

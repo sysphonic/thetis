@@ -441,7 +441,7 @@ class Folder < ApplicationRecord
       end
     end
 
-    if folder_id.to_s == '0'  # '0' for ROOT
+    if folder_id.to_s == TreeElement::ROOT_ID.to_s
       path = '/(root)'
       folders_cache[folder_id.to_i] = path unless folders_cache.nil?
       return path
@@ -450,7 +450,7 @@ class Folder < ApplicationRecord
     path = ''
     cached_path = nil
 
-    while folder_id.to_s != '0'  # '0' for ROOT
+    while folder_id.to_s != TreeElement::ROOT_ID.to_s
 
       unless folders_cache.nil?
         cached_path = folders_cache[folder_id.to_i]
@@ -512,7 +512,7 @@ class Folder < ApplicationRecord
       return true
     end
 
-    return true if folder_id.to_s == '0'  # '0' for ROOT
+    return true if folder_id.to_s == TreeElement::ROOT_ID.to_s
 
     begin
       folder = Folder.find(folder_id)

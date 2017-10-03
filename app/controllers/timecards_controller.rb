@@ -224,6 +224,8 @@ class TimecardsController < ApplicationController
       unless @timecard.start.nil? or @timecard.end.nil?
         @timecard.set_default_breaks
       end
+    else
+      Rails.logger.error("Failed to save Timecard.\n"+@timecard.inspect)
     end
 
     render(:partial => 'ajax_update_break', :layout => false)

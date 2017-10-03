@@ -37,7 +37,7 @@ module ApplicationHelper
     paths.delete('')
     stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}
     if evar.message == 'THETIS_EXCEPTION'
-      stacktrace.pop  # Remove current stack.
+      stacktrace.shift  # Remove current stack.
     end
     return stacktrace
   end

@@ -12,6 +12,23 @@
 #
 module SqlHelper
 
+  #=== self.to_bool
+  #
+  #Gets SQL expression as boolean.
+  #
+  #_val_:: Target value
+  #return:: SQL expression as boolean.
+  #
+  def self.to_bool(val)
+
+    bool = false
+    unless val.blank?
+      bool = ['true', '1'].include?(val.to_s.downcase)
+    end
+
+    return (bool)?(1):(0)
+  end
+
   #=== self.validate_token
   #
   #Validates specified tokens.

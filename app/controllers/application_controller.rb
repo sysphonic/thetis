@@ -46,6 +46,8 @@ class ApplicationController < ActionController::Base
   #=== paginate_by_sql
   #
   def paginate_by_sql(model, sql, per_page, options={})
+
+    total = nil
     if options[:count].blank?
       total = model.count_by_sql_wrapping_select_query(sql)
     else
@@ -57,7 +59,12 @@ class ApplicationController < ActionController::Base
     end
 
     SqlHelper.validate_token([params['page']])
-    object_pages = model.paginate_by_sql(sql, {:page => params['page'], :per_page => per_page})
+    opts = {
+      :page => params['page'],
+      :per_page => per_page,
+      :total_entries => total
+    }
+    object_pages = model.paginate_by_sql(sql, opts)
     return [object_pages, object_pages, total]
   end
 

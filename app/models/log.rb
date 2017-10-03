@@ -159,7 +159,7 @@ class Log < ApplicationRecord
       unless request.session[:login_user_id].nil?
         self.user_id = request.session[:login_user_id]
       end
-      self.remote_ip = request.remote_ip
+      self.remote_ip = (request.env['HTTP_X_FORWARDED_FOR'] || request.remote_ip)
       self.access_path = request.path
     end
     self.log_type = type.to_s

@@ -12,6 +12,22 @@
 #
 module EmailsHelper
 
+  #=== self.get_message_id_from_header
+  #
+  #Gets Message-ID from mail header.
+  #
+  #_header_:: Mail header.
+  #return:: Message-ID.
+  #
+  def self.get_message_id_from_header(header)
+
+    message_id_matches = header.scan(/Message-ID:\s*[<]?([^>\n]+)[>]?/)
+    unless message_id_matches.nil? or message_id_matches.empty?
+      return message_id_matches.first.first
+    end
+    return nil
+  end
+
   #=== self.split_preserving_quot
   #
   #Splits string preserving quotations.
@@ -111,7 +127,53 @@ module EmailsHelper
 
     return nil if raw_source.nil?
 
-    return raw_source.split("\r\n\r\n").first
+    return raw_source.split("(\r\n\r\n|\n\n)", 2).first
+  end
+
+  #=== self.raw_body
+  #
+  #Gets raw body of the Email.
+  #
+  #_raw_source_:: Target raw source of the Email.
+  #return:: Raw body of the Email.
+  #
+  def self.raw_body(raw_source)
+
+    return nil if raw_source.nil?
+
+    return raw_source.split("(\r\n\r\n|\n\n)", 2).last
+  end
+
+  #=== self.raw_line_sep
+  #
+  #Gets raw line separator of the Email.
+  #
+  #_raw_source_:: Target raw source of the Email.
+  #return:: Raw line separator of the Email.
+  #
+  def self.raw_line_sep(raw_source)
+
+    return nil if raw_source.nil?
+
+    m = raw_source.match(/(\r\n\r\n|\n\n)/)
+    unless m.nil? or m[1].nil?
+      return m[1]
+    end
+    return nil
+  end
+
+  #=== self.remove_raw_addr
+  #
+  #Removes raw E-mail address from E-mail address expression.
+  #
+  #_exp_:: E-mail address expression.
+  #return:: E-mail address expression without raw E-mail address.
+  #
+  def self.remove_raw_addr(exp)
+
+    return nil if exp.nil?
+
+    return exp.gsub(/[ \t]*<[^>]+>[ \t]*/, '').gsub(/["]/, '')
   end
 
   #=== self.extract_addr
@@ -127,6 +189,23 @@ module EmailsHelper
 
     addr = exp.slice(/<(.+)>/, 1)
     return addr.strip unless addr.nil?
+
+    return exp
+  end
+
+  #=== self.extract_name
+  #
+  #Gets name in E-mail address expression.
+  #
+  #_exp_:: E-mail address expression.
+  #return:: Name in E-mail address expression.
+  #
+  def self.extract_name(exp)
+
+    return nil if exp.nil?
+
+    name = exp.slice(/([^<>]+)<.+>/, 1)
+    return name.strip unless name.nil?
 
     return exp
   end
@@ -158,10 +237,13 @@ module EmailsHelper
   #
   #Gets encoded expression of E-mail address.
   #
+  #_enc_:: Encoding to apply to sending Email.
   #_addr_exp_:: Target address expression.
   #return:: Encoded expression.
   #
-  def self.encode_disp_name(addr_exp)
+  def self.encode_disp_name(addr_exp, enc=nil)
+
+    return '' if addr_exp.nil?
 
     mail_addr = addr_exp.slice(/<([^>]+)>/, 1)
     return addr_exp if mail_addr.nil?
@@ -171,9 +253,9 @@ module EmailsHelper
     disp_name.strip! unless disp_name.nil?
     return addr_exp if disp_name.nil? or disp_name.empty?
 
-    disp_name = Mail::Encodings.decode_encode(disp_name, :encode)
+    enc_name = EmailsHelper.encode_b(disp_name, enc)
 
-    return EmailsHelper.format_address_exp(disp_name, mail_addr)
+    return EmailsHelper.format_address_exp(enc_name, mail_addr)
   end
 
   #=== self.get_list_sql
@@ -188,9 +270,11 @@ module EmailsHelper
   #_limit_num_:: Limit count to get. If without limit, specify 0.
   #_admin_:: Optional flag to apply Administrative Authority. Default = false.
   #_add_con_:: Additional condition. This parameter is added to 'where' clause with 'and'. Default = nil.
+  #_group_id_:: Target Group-ID.
+  #_group_obj_cache_:: Hash to accelerate response. {group.id, group}
   #return:: SQL for list of Emails.
   #
-  def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil)
+  def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil, group_id=nil, group_obj_cache=nil)
 
     SqlHelper.validate_token([folder_ids, sort_col, sort_type, limit_num])
 
@@ -209,7 +293,11 @@ module EmailsHelper
     unless folder_ids.nil?
       folder_cons = []
 
-      [folder_ids].flatten.each do |folder_id|
+      unless folder_ids.instance_of?(Array)
+        folder_ids = [folder_ids]
+      end
+
+      folder_ids.each do |folder_id|
         folder_cons << "(Email.mail_folder_id=#{folder_id})"
       end
 
@@ -245,22 +333,93 @@ module EmailsHelper
     return sql
   end
 
+  #=== self.get_send_email_by_message_id
+  #
+  #Gets Email which has 'Send' xtype and the specified Message-ID.
+  #
+  #_message_id_:: Target Message-ID.
+  #return:: Email which has 'Send' xtype and the specified Message-ID.
+  #
+  def self.get_send_email_by_message_id(message_id)
+
+    con = []
+    con << "(xtype='#{Email::XTYPE_SEND}')"
+    con << "(message_id='#{message_id}')"
+
+    return Email.where(con.join(' and ')).first
+  end
+
   #=== self.encode_b
   #
   #Gets B-Encoded String.
   #
   #_str_:: Target String.
-  #return:: Decoded String.
+  #_enc_:: Encoding to apply to sending Email.
+  #return:: Encoded String.
   #
-  def self.encode_b(str)
+  def self.encode_b(str, enc=nil)
     require 'nkf'
 
     return str if str.nil? or str.empty?
 
     # return Mail::Encodings.decode_encode(str, :encode)
     parts = str.scan(/.{16}|.+\Z/)
-    parts.collect!{|part| "=?UTF-8?B?#{NKF.nkf('-wWMB', part).gsub(/[\r\n]/, '')}?="}
+    enc = enc.upcase unless enc.nil?
+    case enc
+      when 'ISO-2022-JP'
+        parts.collect!{|part| "=?ISO-2022-JP?B?#{NKF.nkf('-jWMB', part).gsub(/[\r\n]/, '')}?="}
+      when 'UTF-8', nil
+        parts.collect!{|part| "=?UTF-8?B?#{NKF.nkf('-wWMB', part).gsub(/[\r\n]/, '')}?="}
+      else
+        parts.collect!{|part| "=?#{enc}?B?#{[EmailsHelper.encode(part, enc)].pack('m0')}?="}
+    end
     return parts.join("\r\n ")
+  end
+
+  #=== self.encode
+  #
+  #Gets encoded String.
+  #
+  #_str_:: Target String.
+  #_enc_:: Encoding to apply to sending Email.
+  #return:: Encoded String.
+  #
+  def self.encode(str, enc=nil)
+    require 'nkf'
+
+    return str if str.nil? or str.empty?
+
+    enc = enc.upcase unless enc.nil?
+    case enc
+      when 'ISO-2022-JP'
+        return NKF.nkf('-jW', str)
+      when 'UTF-8', nil
+        return str
+      else
+        return Iconv.conv(enc+'//IGNORE', 'utf-8', str)
+    end
+  end
+
+  #=== self.encode_b_raw
+  #
+  #Gets B-Encoded String in raw style.
+  #
+  #_str_:: Target String.
+  #_enc_:: Encoding to apply to sending Email.
+  #return:: Encoded String in raw style.
+  #
+  def self.encode_b_raw(str, enc=nil)
+    require 'nkf'
+
+    return str if str.nil? or str.empty?
+
+    enc = enc.upcase unless enc.nil?
+    case enc
+      when 'UTF-8', nil
+        return [str].pack('m')
+      else
+        return [EmailsHelper.encode(str, enc)].pack('m')
+    end
   end
 
   #=== self.decode_b
@@ -295,5 +454,113 @@ module EmailsHelper
       end
       return nil
     end
+  end
+
+  #=== self.get_message_part
+  #
+  #Gets message part of Mail.
+  #
+  #_mail_:: Target Mail (not Email).
+  #return:: Message part of Mail.
+  #
+  def self.get_message_part(mail)
+
+    plain_part = (mail.multipart?) ? ((mail.text_part) ? mail.text_part : nil) : nil
+    html_part = (mail.html_part) ? mail.html_part : nil
+    message_part = (plain_part || html_part)
+    message_part ||= mail unless mail.multipart?
+
+    return message_part
+  end
+
+  #=== self.get_message_charset
+  #
+  #Gets charset of message part.
+  #
+  #_message_part_:: Message part.
+  #_mail_charset_:: Mail charset.
+  #return:: Charset of message part.
+  #
+  def self.get_message_charset(message_part, mail_charset)
+
+    charset = nil
+
+    unless message_part.nil?
+
+      unless message_part.header.nil?
+        m = message_part.header.to_s.match(/charset=["']?([0-9a-zA-Z_-]+)["']?/)
+        unless m.nil? or m[1].nil?
+          charset = m[1]
+        end
+      end
+
+      if charset.nil?
+        unless message_part.body.nil? or message_part.body.match(/\e[$]B/).nil?
+          charset = 'ISO-2022-JP'
+        end
+      end
+
+      if charset.nil?
+        unless message_part.header.charset.blank?
+          charset = message_part.header.charset
+        end
+      end
+    end
+
+    charset ||= mail_charset
+
+    charset = 'CP50220' if !charset.nil? and (charset.casecmp('ISO-2022-JP') == 0)
+
+    return charset
+  end
+
+  #=== self.replace_jis_cp
+  #
+  #Replaces ISO-2022-JP with CP50220.
+  #
+  #_raw_org_:: Original raw source.
+  #return:: Replaced text.
+  #
+  def self.replace_jis_cp(raw_org)
+
+    lines = []
+    is_header = true
+    modified = false
+    raw_org.gsub(/\r\n/, "\n").split(/\n/).each do |line|
+      if is_header
+        if line.empty?
+          is_header = false
+        else
+          unless line.match(/=[?]ISO-2022-JP[?]/i).nil?
+            line = line.gsub(/=[?]ISO-2022-JP[?]/i, '=?CP50220?')
+            modified = true
+          end
+        end
+      end
+      lines << line
+    end
+    if modified
+      return lines.join("\r\n")
+    else
+      return raw_org
+    end
+  end
+
+  #=== self.trim_content_type
+  #
+  #Trims content-type.
+  #
+  #_content_type_:: Target content-type.
+  #return:: Trimmed content-type.
+  #
+  def self.trim_content_type(content_type)
+
+    return nil if content_type.nil?
+
+    content_type = content_type.strip.gsub(/\s*name=(["][^"]*["]|['][^']*[']|[^ ]*)[;]?/, '')
+    unless content_type.match(/\A[^;]+[;]\z/).nil?
+      content_type = content_type.gsub(/[;]\z/, '')
+    end
+    return content_type
   end
 end

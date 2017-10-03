@@ -171,7 +171,7 @@ class Group < ApplicationRecord
       end
     end
 
-    if group_id.to_s == '0'  # '0' for ROOT
+    if group_id.to_s == TreeElement::ROOT_ID.to_s
       path = '/(root)'
       groups_cache[group_id.to_i] = path unless groups_cache.nil?
       return path
@@ -180,7 +180,7 @@ class Group < ApplicationRecord
     path = ''
     cached_path = nil
 
-    while group_id.to_s != '0'  # '0' for ROOT
+    while group_id.to_s != TreeElement::ROOT_ID.to_s
 
       unless groups_cache.nil?
         cached_path = groups_cache[group_id.to_i]
@@ -385,7 +385,7 @@ class Group < ApplicationRecord
   #
   def self.get_name(group_id)
 
-    return '(root)' if group_id.to_s == '0'
+    return '(root)' if (group_id.to_s == TreeElement::ROOT_ID.to_s)
 
     begin
       group = Group.find(group_id)

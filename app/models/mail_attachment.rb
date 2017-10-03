@@ -43,7 +43,10 @@ class MailAttachment < ApplicationRecord
   def file=(file)
     write_attribute(:name, file.original_filename.force_encoding(Encoding::UTF_8))
     write_attribute(:size, file.size)
-    write_attribute(:content_type, file.content_type.strip) unless file.content_type.nil?
+    unless file.content_type.nil?
+      content_type = EmailsHelper.trim_content_type(file.content_type)
+      write_attribute(:content_type, content_type)
+    end
   end
 
   #=== self.create
@@ -96,7 +99,13 @@ class MailAttachment < ApplicationRecord
 
     filepaths = Dir.glob([File.join(path, self.id.to_s), File.join(path, self.id.to_s + '.*')].join("\0"))
 
-    return nil if filepaths.nil? or filepaths.empty?
+    if filepaths.nil? or filepaths.empty?
+      err_msg = "MailAttachment#get_path() FAILED. id=#{self.id}, path=#{path}"
+      stacktrace = ApplicationHelper.stacktrace
+      Rails.logger.error(err_msg+"\n"+stacktrace.join("\n"))
+      Log.add_error(nil, nil, err_msg+'<br/>'+stacktrace.join('<br/>'))
+      return nil
+    end
 
     return filepaths.first
   end
@@ -106,21 +115,26 @@ class MailAttachment < ApplicationRecord
   #Copies file from given MailAttachment.
   #
   #_src_attach_::Source MailAttachment.
+  #return:: true if succeeded, otherwise false.
   #
   def copy_file_from(src_attach)
 
-    begin
-      src_path = src_attach.get_path
+    src_path = src_attach.get_path
+    return false if src_path.nil?
 
+    begin
       dest_dir = self.email.get_dir
       FileUtils.mkdir_p(dest_dir)
 
       dest_path = File.join(dest_dir, self.id.to_s + File.extname(src_path))
 
       FileUtils.cp(src_path, dest_path)
+      return true
 
     rescue => evar
       Log.add_error(nil, evar)
+      Rails.logger.error(evar.to_s+"\n"+ApplicationHelper.stacktrace(evar).join("\n"))
+      return false
     end
   end
 end

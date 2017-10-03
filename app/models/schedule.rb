@@ -528,7 +528,7 @@ class Schedule < ApplicationRecord
             end
           end
 
-        elsif not (/^\d+$/ =~ rule).nil?
+        elsif not (/\A\d+\z/ =~ rule).nil?
 
           rule_day = rule.to_i
 
@@ -849,7 +849,7 @@ private
       con[0] << '('
 
         # for Once
-        con[0] << '(not (allday = 1))'
+        con[0] << "(not (allday = #{SqlHelper.to_bool(true)}))"
         con[0] << ' and ('
 
           con[0] << "((start >= '#{curday_begins_at}') and (start < '#{nextday_begins_at}'))"
@@ -862,7 +862,7 @@ private
 
       con[0] << ') or ('
 
-        con[0] << "(allday = 1) and (start <= '#{curday_str}') and (end >= '#{curday_str}')"
+        con[0] << "(allday = #{SqlHelper.to_bool(true)}) and (start <= '#{curday_str}') and (end >= '#{curday_str}')"
 
       con[0] << ')'
 
@@ -1208,10 +1208,10 @@ private
 
   #=== now?
   #
-  #Gets if the Schedule is ON at the specified time.
+  #Gets if Schedule is ON at the specified time.
   #
   #_time_:: Target Time.
-  #return:: true if the Schedule is ON, otherwise false.
+  #return:: true if Schedule is ON, otherwise false.
   #
   def now?(time=nil)
 

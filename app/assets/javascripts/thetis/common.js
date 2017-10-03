@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+ Copyright (c) 2007-2017, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
  This module is released under New BSD License.
  **-----------------**-----------------**-----------------**/
 
@@ -278,6 +278,9 @@ function getElemByClassNameInParentNodes(elem, className)
 
 function getElemByTagNameInParentNodes(elem, tagName)
 {
+  if (!elem || !tagName) {
+    return null;
+  }
   tagName = tagName.toLowerCase();
 
   var node = elem.parentNode;
@@ -304,16 +307,16 @@ function isElemDisplayed(elem)
   return true;
 }
 
-function floorDecimal(val, prec)
+function floorDecimal(val, scale)
 {
-  var precVal = Math.pow(10, prec);
-  return Math.floor(val*precVal) / precVal;
+  var scaleVal = Math.pow(10, scale);
+  return Math.floor(val*scaleVal) / scaleVal;
 }
 
-function roundDecimal(val, prec)
+function roundDecimal(val, scale)
 {
-  var precVal = Math.pow(10, prec);
-  return Math.round(val*precVal) / precVal;
+  var scaleVal = Math.pow(10, scale);
+  return Math.round(val*scaleVal) / scaleVal;
 }
 
 function checkInteger(str, signed)
@@ -325,7 +328,7 @@ function checkInteger(str, signed)
   }
 }
 
-function checkDecimal(str, signed, prec)
+function checkDecimal(str, signed, scale)
 {
   var checkOk = false;
 
@@ -339,8 +342,8 @@ function checkDecimal(str, signed, prec)
     return false;
   }
 
-  if (prec) {
-    var regexp = new RegExp("[.][0-9]{" + (prec+1) + "}");
+  if (scale) {
+    var regexp = new RegExp("[.][0-9]{" + (scale+1) + "}");
     if (str.match(regexp)) {
       checkOk = false;
     }
@@ -1366,5 +1369,33 @@ function isBlankArray(arr)
     }
   }
   return true
+}
+
+function selectAll(className)
+{
+  var modifiedElems = [];
+
+  var elems = document.getElementsByClassName(className);
+  var allSelected = true;
+  for (var i=0; i < elems.length; i++) {
+    if (!isElemDisplayed(elems[i])) {
+      continue;
+    }
+    if (!elems[i].checked) {
+      allSelected = false;
+      break;
+    }
+  }
+  var newSelected = !allSelected;
+  for (var i=0; i < elems.length; i++) {
+    if (!isElemDisplayed(elems[i])) {
+      continue;
+    }
+    if (elems[i].checked != newSelected) {
+      elems[i].checked = newSelected;
+      modifiedElems.push(elems[i]);
+    }
+  }
+  return modifiedElems;
 }
 
