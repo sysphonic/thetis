@@ -44,12 +44,12 @@
           <tr style="height:18px;">
             <td style="width:<%= cur_percent %>%; line-height:1.0; text-align:right; vertical-align:middle; background-color:limegreen;">
   <% if cur_percent > 50 %>
-              <span style="font-size:9pt; color:white; margin-right:5px;"><%= cur_percent %>%</span>
+              <span style="font-size:12px; color:white; margin-right:5px;"><%= cur_percent %>%</span>
   <% end %>
             </td>
             <td style="width:<%= 100 - cur_percent %>%; line-height:1.0; text-align:left; vertical-align:middle;">
   <% if cur_percent <= 50 %>
-              <span style="font-size:9pt; color:green; margin-left:3px;"><%= cur_percent %>%</span>
+              <span style="font-size:12px; color:green; margin-left:3px;"><%= cur_percent %>%</span>
   <% end %>
             </td>
           </tr>

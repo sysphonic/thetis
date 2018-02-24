@@ -313,6 +313,12 @@ function floorDecimal(val, scale)
   return Math.floor(val*scaleVal) / scaleVal;
 }
 
+function ceilDecimal(val, scale)
+{
+  var scaleVal = Math.pow(10, scale);
+  return Math.ceil(val*scaleVal) / scaleVal;
+}
+
 function roundDecimal(val, scale)
 {
   var scaleVal = Math.pow(10, scale);
@@ -501,8 +507,10 @@ function openWindow(url, width, height, name)
     options += ", width="+width+",height="+height;
   }
 
-  subwin=window.open(url, name, options);
+  var subwin = window.open(url, name, options);
   subwin.focus();
+
+  return subwin;
 }
 
 function replaceAll(str, from, to)
@@ -919,6 +927,39 @@ function shiftListLower(list)
     list.options.add(selOptions[i], insertIdx++);
   }
   return true;
+}
+
+function filterOptions(select, allOpts, filterFunc, filterVal)
+{
+  if (!allOpts) {
+    allOpts = [];
+    for (var i=0; i < select.options.length; i++) {
+      var opt = select.options[i];
+      allOpts.push(opt);
+    }
+  }
+  var selectedFound = false;
+  var curOpt = select.options[select.selectedIndex];
+  select.options.length = 0;
+  for (var i=0, idx=0; i < allOpts.length; i++) {
+    var opt = allOpts[i];
+    if (filterFunc(opt.value, filterVal)) {
+      select.options[idx] = opt;
+      select.options[idx].selected = (opt.value == curOpt.value);
+      if (select.options[idx].selected && opt.value) {
+        selectedFound = true;
+      }
+      idx++;
+    }
+  }
+  if (selectedFound) {
+    for (var i=0; i < select.options.length; i++) {
+      if (select.options[i].value == "") {
+        select.options[i] = null;
+      }
+    }
+  }
+  return allOpts;
 }
 
 function getClientRegion()

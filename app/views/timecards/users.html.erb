@@ -363,7 +363,7 @@ function showPaidHldByUser(user_id, name)
           thetisBoxPaidHldByUser.title = "<%= t('timecard.paid_holiday') %>";
           thetisBoxPaidHldByUser.bgcolor_title = "limegreen";
           thetisBoxPaidHldByUser.bgcolor_body = "lightcyan";
-          thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png'><b style='font-size:12pt; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
+          thetisBoxPaidHldByUser.show("CENTER", "500,360", "TRAY", "", "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png'><b style='font-size:16px; padding:0px 5px;'>" + name + "</b>", request.responseText.stripScripts());
           request.responseText.evalScripts();
         }
       }

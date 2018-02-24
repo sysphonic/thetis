@@ -39,20 +39,20 @@
           <td style="padding-left:10px;">
             <table>
               <tr>
-                <td onclick="onBtnModeBusinessClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:9pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle; padding-top:2px;">
+                <td onclick="onBtnModeBusinessClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:12px; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle; padding-top:2px;">
                   <img id="sign_mode_business" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/selected_blue.png" style="padding-bottom:2px; display:none;" />
                   <%= t('mode.business') %>
                 </td>
                 <td style="min-width:5px; width:5px;">
                 </td>
-                <td onclick="onBtnModeGroupwareClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:9pt; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle; padding-top:2px;">
+                <td onclick="onBtnModeGroupwareClicked(this);" style="border-radius:3px; min-width:100px; width:120px; height:90%; font-size:12px; line-height:1.0; color:black; background-color:papayawhip; text-align:center; vertical-align:middle; padding-top:2px;">
                   <img id="sign_mode_groupware" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/selected_red.png" style="padding-bottom:2px; display:none;" />
                   <%= t('mode.groupware') %>
                 </td>
               </tr>
             </table>
           </td>
-          <td style="padding-right:10px; font-size:11pt; font-weight:bold; line-height:1.0; text-align:right;">
+          <td style="padding-right:10px; font-size:15px; font-weight:bold; line-height:1.0; text-align:right;">
             <a href="javascript:this.onclick()" onclick="if (typeof(top.showTopicBox) != 'undefined') { top.showTopicBox(); }; return false;"><span style="color:white;"><%= t('topicbox.title') %></span></a>
               <span style="color:lightblue;">/ </span>
             <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= THETIS_NOTE_URL %>?'+((new Date()).getTime())); return false;"><span style="color:white;"><%= t('menu.note') %></span></a>

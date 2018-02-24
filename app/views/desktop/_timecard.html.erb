@@ -4,7 +4,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
 <table id="desktop_timecard" style="width:100%;">
   <tr>
-    <td nowrap style="text-align:center; padding:5px; font-size:14pt;">
+    <td nowrap style="text-align:center; padding:5px; font-size:19px;">
 
       <%
       sel_val = nil
@@ -25,7 +25,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 
       <%= form_tag( {:controller => 'timecards', :action => 'update'}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
 
-        <select id="start_hour" style="font-size:14pt;">
+        <select id="start_hour" style="font-size:19px;">
         <%
         THETIS_HOURS.each do |hour|
           selected = ''
@@ -37,7 +37,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         <% end %>
         </select>
         :
-        <select id="start_min" style="font-size:14pt;">
+        <select id="start_min" style="font-size:19px;">
         <%
         THETIS_MINUTES.each do |min|
           selected = ''

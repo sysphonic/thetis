@@ -28,7 +28,7 @@
         </table>
 
       <% else %>
-          <table style="width:95%; margin:10px auto 0px; font-size:10pt; padding:5px; line-height:2.0; border-spacing:5px;">
+          <table style="width:95%; margin:10px auto 0px; font-size:13px; padding:5px; line-height:2.0; border-spacing:5px;">
 <%
 groups_cache = Hash.new
 @sum_groups.each do |group_id|
@@ -40,9 +40,9 @@ users_cache = Hash.new    # user_id => Array of group_ids
 %>
             <% @ans_hash.each do |q_code, users_ans| %>
             <tr>
-              <td style="width:1%; font-size:1pt; background-color:khaki;">&nbsp;</td>
+              <td style="width:1%; font-size:1px; background-color:khaki;">&nbsp;</td>
               <td style="width:13%; color:brown; vertical-align:middle; text-align:center;" nowrap><%= q_code %>.</td>
-              <td style="width:1%; font-size:1pt; background-color:khaki;">&nbsp;</td>
+              <td style="width:1%; font-size:1px; background-color:khaki;">&nbsp;</td>
               <td style="width:1%;"></td>
               <td style="text-align:left;">
                 <%

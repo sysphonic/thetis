@@ -6,7 +6,7 @@
       <table class="border_collapse steelblue" style="width:100%;">
         <tr>
       <% @schedules_hash.each do |day, schedules| %>
-          <td style="width:14.28%; text-align:center; word-break:break-all; font-weight:400; font-size:11pt; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%= Schedule::wday_name(day.wday) %>)</td>
+          <td style="width:14.28%; text-align:center; word-break:break-all; font-weight:400; font-size:15px; background-color:<%= THETIS_WDAY_COLOR[day.wday] %>;"><%= day.day %> (<%= Schedule::wday_name(day.wday) %>)</td>
       <% end %>
         </tr>
         <tr>

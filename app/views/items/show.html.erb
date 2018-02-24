@@ -120,7 +120,7 @@ unless @for_print
     <td colspan="2" style="text-align:center; vertical-align:bottom;">
       <table style="margin:0px auto; width:95%; border-spacing:2px;">
         <tr>
-          <td style="width:50%; text-align:left; color:navy; font-size:14pt; line-height:1.0;  word-break:break-all;">
+          <td style="width:50%; text-align:left; color:navy; font-size:19px; line-height:1.0;  word-break:break-all;">
             <%= raw(t('paren.aquo_b.right')) %> <%= @item.title %>
           </td>
          <% unless @item.folder_id.nil? %>
@@ -130,7 +130,7 @@ unless @for_print
             in_system_folder = @item.in_system_folder?(@folder_obj_cache)
             %>
             <% unless in_system_folder %><a class="linked_item_dir" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => @item.folder_id) %>'; return false;"><% end %>
-              <span style="color:red; font-size:12pt; line-height:1.0;"><%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
+              <span style="color:red; font-size:16px; line-height:1.0;"><%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %></span>
             <% unless in_system_folder %></a><% end %>
           </td>
          <% end %>
@@ -372,7 +372,7 @@ function doWorkflowIssue()
 
   <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:19px; line-height:1.0;">
         <%= t('cap.information') %>
         <div class="hr"></div>
       </td>
@@ -391,7 +391,7 @@ function doWorkflowIssue()
 
   <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:19px; line-height:1.0;">
         <%= t('team.organize') %>
         <div class="hr"></div>
       </td>
@@ -494,7 +494,7 @@ else
 
   <table style="width:95%; margin:0px auto;">
     <tr>
-      <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
+      <td style="text-align:left; padding:5px; font-size:19px; line-height:1.0;">
         <%= t('team.application') %>
         <div class="hr"></div>
       </td>
@@ -575,7 +575,7 @@ end
   %>
       <table style="width:95%; margin:15px auto 0px;">
         <tr>
-          <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
+          <td style="text-align:left; padding:5px; font-size:19px; line-height:1.0;">
             <%= t('msg.myself') %>
             <div class="hr"></div>
           </td>
@@ -644,7 +644,7 @@ end
     <% if @login_user.admin?(User::AUTH_ZEPTAIR) %>
       <table style="width:95%; margin:0px auto;">
         <tr>
-          <td style="text-align:left; padding:5px; font-size:14pt; line-height:1.0;">
+          <td style="text-align:left; padding:5px; font-size:19px; line-height:1.0;">
             <%= t('msg.all_users') %>
             <div class="hr"></div>
           </td>

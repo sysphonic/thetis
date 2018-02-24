@@ -141,7 +141,7 @@
               created_at = ''
               created_at = @user.created_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') unless @user.created_at.nil?
               %>
-              <span style="font-size:10.5pt;"><%= created_at %></span>
+              <span style="font-size:14px;"><%= created_at %></span>
             </td>
           </tr>
           <tr>
@@ -153,7 +153,7 @@
               login_at = ''
               login_at = @user.login_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') unless @user.login_at.nil?
               %>
-              <span style="font-size:10.5pt;"><%= login_at %></span>
+              <span style="font-size:14px;"><%= login_at %></span>
             </td>
           </tr>
         <% end %>

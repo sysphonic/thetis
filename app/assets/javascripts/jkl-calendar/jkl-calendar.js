@@ -433,7 +433,7 @@ JKL.Calendar.prototype.write = function (x, y)
     html += '          <td id="__'+this.disp_id+'_btn_clear" title="'+JKL.Calendar.captions[4]+'" style="'+month_td_style+'; padding:0px 5px;"><img src="'+JKL.Calendar.buttons['clear']+'" /></td>\n';
   }
   html += '          <td id="__'+this.disp_id+'_btn_today" style="'+month_td_style+'"><nobr>'+JKL.Calendar.monthNames[mon]+'&nbsp;&nbsp;'+(year)+'</nobr></td>\n';
-  html += '          <td id="__'+this.disp_id+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:10.5pt; padding:0px 5px;">&times;</b></td>\n';
+  html += '          <td id="__'+this.disp_id+'_btn_close" title="'+JKL.Calendar.captions[3]+'" style="'+month_td_style+'"><b style="font-size:14px; padding:0px 5px;">&times;</b></td>\n';
   html += '          <td id="__'+this.disp_id+'_btn_next" title="'+JKL.Calendar.captions[2]+'" style="'+month_td_style+'">&raquo;&nbsp;</td>\n';
   html += "        </tr>\n";
   html += "      </table>\n";

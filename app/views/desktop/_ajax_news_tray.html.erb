@@ -3,7 +3,7 @@
 <div id="tray" style="text-align:left; width:100%;">
 <% @toys.each do |toy| %>
   <% toy_id = "#{toy.xtype}:#{toy.target_id}" %>
-  <div class="toy_tray" id="<%= toy_id %>" style="z-index:10000; padding:5px; font-size:9pt; word-break:break-all;">
+  <div class="toy_tray" id="<%= toy_id %>" style="z-index:10000; padding:5px; font-size:12px; word-break:break-all;">
     <%
     img_root = THETIS_RELATIVE_URL_ROOT + '/images/icons/'
     icon_img = ""

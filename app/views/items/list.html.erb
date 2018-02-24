@@ -165,7 +165,7 @@
         <tr>
           <td colspan="2">
             <div style="width:100%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
-              <span style="padding:5px; font-size:10pt;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
+              <span style="padding:5px; font-size:13px;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
           </td>
         </tr>
@@ -426,7 +426,7 @@ function sortList(col)
 <% if @login_user.nil? and params[:tip]=='true' %>
 function showTips()
 {
-  tip("<%= t('item.no_login_info1') %><br/><span style='font-size:14pt;color:firebrick;font-weight:800'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");
+  tip("<%= t('item.no_login_info1') %><br/><span style='font-size:19px; color:firebrick; font-weight:800;'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");
 }
 <% end %>
 

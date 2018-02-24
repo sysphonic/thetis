@@ -33,9 +33,12 @@ module ApplicationHelper
       end
     end
 
-    paths = Rails.root.to_s.split('/')
+    paths = Rails.root.to_s.split(File::SEPARATOR)
     paths.delete('')
-    stacktrace = evar.backtrace.select {|line| !(line.match(paths.last).nil?)}
+    regexp = Regexp.new(Regexp.escape(File::SEPARATOR+paths.last+File::SEPARATOR)+'(?!bundle)')
+    stacktrace = evar.backtrace.select {|line|
+      !(line.match(regexp).nil?)
+    }
     if evar.message == 'THETIS_EXCEPTION'
       stacktrace.shift  # Remove current stack.
     end
@@ -133,7 +136,7 @@ module ApplicationHelper
   #
   def self.get_linked_s(str)
 
-    regexp_url = /((http|https):\/\/([\w-]+\.)+[\w-]+(:\d+)?(\/[\w\- .\/?%&=;]*)?)/
+    regexp_url = /((http|https):\/\/([\w-]+\.)+[\w-]+(:\d+)?(\/[\w\- .\/?%~&=;]*)?)/
 
     return str.gsub(regexp_url, '<a target="_blank" href="\1">\1</a>')
   end
@@ -434,7 +437,11 @@ module ApplicationHelper
       end
     end
 
-    return [url, prms.join('&')].join('?')
+    if prms.empty?
+      return url
+    else
+      return [url, prms.join('&')].join('?')
+    end
   end
 
   #=== self.dup_hash

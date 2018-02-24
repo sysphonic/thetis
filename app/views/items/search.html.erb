@@ -93,7 +93,7 @@
     <td>
       <table style="width:100%;">
         <tr>
-          <td style="text-align:left; font-size:11pt;line-height:14pt;text-indent:5px;">
+          <td style="text-align:left; font-size:15px; line-height:19px; text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp;
             <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
               <%= truncate(item.title, :length => 20) %>
@@ -121,7 +121,7 @@
           </td>
         </tr>
         <tr>
-          <td style="text-align:left; font-size:11pt; padding:5px; line-height:14pt; text-indent:60px;">
+          <td style="text-align:left; font-size:15px; padding:5px; line-height:19px; text-indent:60px;">
             <%
             user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             unless u_groups.empty?
@@ -133,7 +133,7 @@
             </a>
             <% end %>
             <% unless item.updated_at.nil? %>
-            &nbsp;<span style="text-align:left; font-size:9pt; vertical-align:middle;">(<%= item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+            &nbsp;<span style="text-align:left; font-size:12px; vertical-align:middle;">(<%= item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
             <% end %>
           </td>
         </tr>
@@ -141,12 +141,12 @@
           <td>
             <table style="margin:0px auto; width:90%;">
               <tr>
-                <td style="text-align:left; background-color:#e0f7ff; font-size:10.5pt; padding:10px; line-height:15pt;">
+                <td style="text-align:left; background-color:#e0f7ff; font-size:14px; padding:10px; line-height:20px;">
 <div>
-  <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
+  <span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
   <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
 </div>
-<span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:8pt;vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
+<span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
 <br/>
 <% unless item.description.nil? or item.description.empty? %>
 <%= truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>

@@ -12,7 +12,7 @@ brief_view ||= false
   timecolor = THETIS_SCHEDULE_TIMECOLORS.find{|entry| entry[:range].include?(time)}
   bgcolor = timecolor[:color] unless timecolor.nil?
   %>
-    <td colspan="<%= THETIS_DIV_IN_HOUR %>" style="text-align:center; background-color:<%= bgcolor %>; font-weight:400; font-size:11pt;"><%= time%></td>
+    <td colspan="<%= THETIS_DIV_IN_HOUR %>" style="text-align:center; background-color:<%= bgcolor %>; font-weight:400; font-size:15px;"><%= time%></td>
 <% end %>
   </tr>
   <tr style="height:10px;">

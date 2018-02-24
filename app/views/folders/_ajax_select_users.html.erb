@@ -10,7 +10,7 @@
         <%= t('btn.select_group') %>
       </div>
     </td>
-    <td style="text-align:left; color:blue; font-size:10pt;">
+    <td style="text-align:left; color:blue; font-size:13px;">
       <% unless @group_id.nil? or @group_id == '' %>
         <%= Group.get_path(@group_id, @groups_cache, @group_obj_cache) %>
       <% end %>

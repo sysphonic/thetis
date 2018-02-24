@@ -8,7 +8,7 @@
 <table style="width:90%; margin:15px auto 0px; border-spacing:2px;">
 <% unless @item.nil? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_xtype"><%= Item.human_attribute_name('xtype') %></label>
     </td>
     <td class="item_value_td">
@@ -75,7 +75,7 @@
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_title"><%= Item.human_attribute_name('title') %></label>
     </td>
     <td class="item_value_td">
@@ -84,7 +84,7 @@
   </tr>
 <% if !@item.nil? and @item.is_a_copy? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <%= t('cap.original') %>
     </td>
     <td class="item_value_td">
@@ -104,7 +104,7 @@
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_folder_id"><%= Folder.model_name.human %></label>
     </td>
     <td class="item_value_td">
@@ -141,7 +141,7 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_summary"><%= Item.human_attribute_name('summary') %></label>
     </td>
     <td class="item_value_td">
@@ -149,7 +149,7 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_public">
         <%= Item.human_attribute_name('public') %>&nbsp;
         <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('item.public_info1') %><br/><%= t('item.public_info2') %>');">
@@ -165,7 +165,7 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF;">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_update_message"><%= t('item.update_message') %></label>
     </td>
     <td class="item_value_td">
@@ -173,13 +173,13 @@
       ---
       <%= hidden_field_tag('item[update_message]', '') %>
 <% else %>
-      <%= text_area 'item', 'update_message', :rows => "3", :wrap => "off", :style => 'width:100%', :onChange => 'modifiedBasic++' %>
-      &nbsp;<span style="color:blueviolet; font-size:9pt;"><%= t('item.update_message_info') %></span>
+      <%= text_area 'item', 'update_message', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++' %>
+      &nbsp;<span style="color:blueviolet; font-size:12px;"><%= t('item.update_message_info') %></span>
 <% end %>
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97DCFF">
+    <td class="item_cap_td" style="background-color:#97dcff;">
       <label for="item_layout"><%= Item.human_attribute_name('layout') %></label>
     </td>
     <td class="item_value_td">

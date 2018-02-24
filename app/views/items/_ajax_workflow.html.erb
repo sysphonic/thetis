@@ -28,9 +28,9 @@
           </td>
         <% end %>
           <td style="text-align:left; padding-left:10px">
-            <span style="color:red; font-size:11pt; font-weight:bold;"><%= @workflow.get_status_name %></span>
+            <span style="color:red; font-size:15px; font-weight:bold;"><%= @workflow.get_status_name %></span>
           <% unless @workflow.decided_at.nil? %>
-            &nbsp;<span style="font-size:10pt;">(<%= @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
+            &nbsp;<span style="font-size:13px;">(<%= @workflow.decided_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M') %>)</span>
           <% end %>
           </td>
         </tr>

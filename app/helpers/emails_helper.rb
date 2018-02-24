@@ -270,11 +270,9 @@ module EmailsHelper
   #_limit_num_:: Limit count to get. If without limit, specify 0.
   #_admin_:: Optional flag to apply Administrative Authority. Default = false.
   #_add_con_:: Additional condition. This parameter is added to 'where' clause with 'and'. Default = nil.
-  #_group_id_:: Target Group-ID.
-  #_group_obj_cache_:: Hash to accelerate response. {group.id, group}
   #return:: SQL for list of Emails.
   #
-  def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil, group_id=nil, group_obj_cache=nil)
+  def self.get_list_sql(user, keyword, folder_ids, sort_col, sort_type, limit_num, add_con=nil)
 
     SqlHelper.validate_token([folder_ids, sort_col, sort_type, limit_num])
 
