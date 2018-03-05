@@ -32,7 +32,7 @@ tabs = ["basic", "address", "memo", "scope"];
   <tr>
     <td style="text-align:center;">
 
-      <%= hidden_field('address', 'id') %>
+      <input type="hidden" id="address_id" name="address[id]" value="<%= (@address.nil?)?(nil):(@address.id) %>" />
 
       <div id="tab_div_basic">
         <table style="width:100%; border:outset 3px darkgoldenrod; margin-bottom:10px;">

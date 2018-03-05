@@ -4,9 +4,9 @@
     ---
 <% else %>
   <%= form_tag( {:controller => 'items', :action => 'add_comment', :id => @item.id }, :name => 'form_team_apply', :method => 'post') %>
-    <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-    <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
-    <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_APPLY) %>
+    <input type="hidden" id="comment_item_id" name="comment[item_id]" value="<%= @item.id %>" />
+    <input type="hidden" id="comment_user_id" name="comment[user_id]" value="<%= @login_user.id %>" />
+    <input type="hidden" id="comment_xtype" name="comment[xtype]" value="<%= Comment::XTYPE_APPLY %>" />
     <div style="padding-bottom:10px;">
       <%= t('team.apply_info') %><br/>
     </div>

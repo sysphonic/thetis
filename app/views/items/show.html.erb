@@ -763,9 +763,9 @@ function showZeptairDistUsers()
 
   <% unless @login_user.nil? or @for_print %>
     <%= form_tag( {:controller => 'items', :action => 'add_comment'}, :name => 'form_comment', :method => 'post', :enctype => 'multipart/form-data') %>
-      <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-      <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
-      <%= hidden_field('comment', 'xtype', :value => Comment::XTYPE_MSG) %>
+      <input type="hidden" id="comment_item_id" name="comment[item_id]" value="<%= @item.id %>" />
+      <input type="hidden" id="comment_user_id" name="comment[user_id]" value="<%= @login_user.id %>" />
+      <input type="hidden" id="comment_xtype" name="comment[xtype]" value="<%= Comment::XTYPE_MSG %>" />
     <table class="comment_body_td" style="width:90%; margin:0px auto; padding:0; -moz-border-radius:7px; -webkit-border-radius:7px; border-radius:7px;">
       <tr>
         <td class="comment_tab_td" style="padding:0; height:10px;">

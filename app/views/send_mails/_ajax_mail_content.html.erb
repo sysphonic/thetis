@@ -1,5 +1,5 @@
 
-<%= hidden_field('email', 'id') %>
+<input type="hidden" id="email_id" name="email[id]" value="<%= (@email.nil?)?(nil):(@email.id) %>" />
 
 <table style="width:100%; padding-top:15px;">
   <tr>

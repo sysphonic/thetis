@@ -78,8 +78,8 @@
             %>
             <% if !@login_user.nil? and user_id == @login_user.id and !expected_mark.empty? %>
             <%= form_tag( {:controller => 'items', :action => 'add_comment' }, :name => 'form_wf_respond', :method => 'post', :onsubmit => 'onWorkflowRespondClicked(); return false;') %>
-              <%= hidden_field('comment', 'item_id', :value => @item.id) %>
-              <%= hidden_field('comment', 'user_id', :value => @login_user.id) %>
+              <input type="hidden" id="comment_item_id" name="comment[item_id]" value="<%= @item.id %>" />
+              <input type="hidden" id="comment_user_id" name="comment[user_id]" value="<%= @login_user.id %>" />
               <table id="comment_box" style="width:95%; margin:0px auto; background-color:#b4d4fb; border-radius:7px; border-spacing:5px;">
                 <tr>
                   <td>

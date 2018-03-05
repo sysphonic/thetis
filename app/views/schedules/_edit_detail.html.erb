@@ -19,7 +19,7 @@ else
 <%= form_tag( {:controller => 'schedules', :action => 'save', :id => params[:id]}, :method => 'post', :name => 'form_detail', :id => 'form_detail') %>
   <input type="hidden" id="date" name="date" value="<%= date_s %>" />
   <input type="hidden" id="display" name="display" value="<%= params[:display] %>" />
-  <%= hidden_field('schedule', 'id') %>
+  <input type="hidden" id="schedule_id" name="schedule[id]" value="<%= (@schedule.nil?)?(nil):(@schedule.id) %>" />
 
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>

@@ -145,7 +145,7 @@ class AddressbookController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     @address = Address.find(params[:id])
-    @address.attributes = params[:address]
+    @address.attributes = params.require(:address).permit(Address::PERMIT_BASE)
 
     @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
     if @address.nil?

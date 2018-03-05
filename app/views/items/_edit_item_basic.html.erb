@@ -120,7 +120,7 @@
           <td style="text-align:left; width:20%;" nowrap>
             <span id="div_folderPath" style="color:red">
               <%= (@item.nil?)?'/(root)':@item.get_folder_path(@folders_cache, @folder_obj_cache) %>
-              <%= hidden_field_tag('item[folder_id]', (@item.nil?)?'0':@item.folder_id) %>
+              <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= (@item.nil?)?'0':(@item.folder_id) %>" />
             </span>
           </td>
           <td style="width:10px;"></td>

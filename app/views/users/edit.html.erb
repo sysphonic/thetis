@@ -6,7 +6,7 @@
         <%= render(:partial => 'user_form') %>
       </form>
       <div class="info_area" style="width:100%; padding-top:0px; padding-bottom:15px; text-align:center;">
-        <%= hidden_field('user', 'id') %>
+        <input type="hidden" id="user_id" name="user[id]" value="<%= (@user.nil?)?(nil):(@user.id) %>" />
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
             <td class="item_cap_td" nowrap>

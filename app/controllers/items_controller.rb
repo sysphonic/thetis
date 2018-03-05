@@ -561,7 +561,7 @@ class ItemsController < ApplicationController
         @item.zeptair_command = ZeptairCommand.new
       end
       params[:zeptair_command].delete(:item_id)
-      @item.zeptair_command.attributes = params[:zeptair_command]
+      @item.zeptair_command.attributes = params.require(:zeptair_command).permit(ZeptairCommand::PERMIT_BASE)
       if @item.zeptair_command.changed?
         @item.zeptair_command.save!
       end

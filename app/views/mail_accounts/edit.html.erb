@@ -4,7 +4,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 <%= form_tag({:controller => 'mail_accounts', :action => 'update', :id => @mail_account.id}, :method => 'post', :name => 'form_mail_account'+form_idx) %>
 
-  <%= hidden_field('mail_account', 'id') %>
+  <input type="hidden" id="mail_account_id" name="mail_account[id]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.id) %>" />
 
 <table style="width:100%; padding:10px 15px;">
   <tr>
