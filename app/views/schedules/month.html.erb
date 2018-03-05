@@ -173,7 +173,7 @@ end
 %>
 </table>
 
-<%= hidden_field_tag('sort_col', params[:sort_col]) %>
+<input type="hidden" id="sort_col" name="sort_col" value="<%= params[:sort_col] %>" />
 </form>
 
 

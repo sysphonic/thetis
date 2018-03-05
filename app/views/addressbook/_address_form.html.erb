@@ -187,7 +187,7 @@ tabs = ["basic", "address", "memo", "scope"];
               <ul>
                 <li><%= t('scope.private') %></li>
               </ul>
-              <%= hidden_field_tag('scope', 'private') %>
+              <input type="hidden" id="scope" name="scope" value="<%= 'private' %>" />
             <% else %>
               <%
               is_private = false
@@ -214,7 +214,7 @@ tabs = ["basic", "address", "memo", "scope"];
   </tr>
 </table>
 
-<%= hidden_field_tag('admin', params[:admin]) %>
+<input type="hidden" id="admin" name="admin" value="<%= params[:admin] %>" />
 
 
 <script type="text/javascript">

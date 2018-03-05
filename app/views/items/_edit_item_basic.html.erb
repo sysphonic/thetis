@@ -110,10 +110,10 @@
     <td class="item_value_td">
 <% if !@item.nil? and Folder.get_path(@item.folder_id, @folders_cache, @folder_obj_cache).include?('/$') %>
   ---
-  <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
+  <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= @item.folder_id %>" />
 <% elsif !@item.nil? and @item.xtype == Item::XTYPE_PROFILE %>
   <%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %>
-  <%= hidden_field_tag('item[folder_id]', @item.folder_id) %>
+  <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= @item.folder_id %>" />
 <% else %>
       <table style="width:100%;">
         <tr>
@@ -158,7 +158,7 @@
     <td class="item_value_td">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH) %>
       ---
-      <%= hidden_field_tag('item[public]', '0') %>
+      <input type="hidden" id="item_public" name="item[public]" value="<%= '0' %>" />
 <% else %>
       <%= check_box('item', 'public', :onChange => 'modifiedBasic++') %><label for="item_public"><%= t('item.set_public') %></label>
 <% end %>
@@ -171,7 +171,7 @@
     <td class="item_value_td">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH or @item.xtype == Item::XTYPE_PROFILE)  %>
       ---
-      <%= hidden_field_tag('item[update_message]', '') %>
+      <input type="hidden" id="item_update_message" name="item[update_message]" value="" />
 <% else %>
       <%= text_area 'item', 'update_message', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++' %>
       &nbsp;<span style="color:blueviolet; font-size:12px;"><%= t('item.update_message_info') %></span>

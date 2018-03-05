@@ -81,7 +81,7 @@ calDisp.setStyle("frame_color", "#3333cc");
       </td>
     </tr>
   </table>
-  <%= hidden_field_tag('display', params[:display]) %>
+  <input type="hidden" id="display" name="display" value="<%= params[:display] %>" />
 <% end %>
 
 <div style="text-align:center;">

@@ -45,7 +45,7 @@
       <div id="mail_header_<%= email.id %>" style="display:none;">
         <%= render(:partial => 'header_info',:locals => {:email => email}) %>
       </div>
-      <%= hidden_field_tag('email_status_' + email.id.to_s, email.status) %>
+      <input type="hidden" id="email_status_<%= email.id %>" name="email_status_<%= email.id %>" value="<%= email.status %>" />
     </td>
     <td nowrap style="text-align:center;">
       <% if email.mail_attachments.nil? or email.mail_attachments.empty? %>

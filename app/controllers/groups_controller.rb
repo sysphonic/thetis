@@ -1,7 +1,7 @@
 #
 #= GroupsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #The Action-Controller about Groups.
@@ -14,7 +14,7 @@ class GroupsController < ApplicationController
   layout 'base'
 
   before_action :check_login
-  before_action :except => [:get_tree, :ajax_get_tree, :get_path, :get_workflows, :get_map] do |controller|
+  before_action :except => [:get_tree, :ajax_get_tree, :get_workflows, :get_map] do |controller|
     controller.check_auth(User::AUTH_GROUP)
   end
   before_action :only => [:get_workflows] do |controller|
@@ -155,28 +155,6 @@ class GroupsController < ApplicationController
   rescue => evar
     Log.add_error(request, evar)
     redirect_to(:action => 'show_tree')
-  end
-
-  #=== get_path
-  #
-  #<Ajax>
-  #Gets path-string of group specified by id in access-path.
-  #
-  def get_path
-    Log.add_info(request, params.inspect)
-
-    if params[:tree_node_id].blank?
-      @group_path = '/' + t('paren.unknown')
-      render(:partial => 'ajax_group_path', :layout => false)
-      return
-    end
-
-    @selected_id = params[:tree_node_id]
-    SqlHelper.validate_token([@selected_id])
-
-    @group_path = Group.get_path(@selected_id)
-
-    render(:partial => 'ajax_group_path', :layout => false)
   end
 
   #=== ajax_exclude_users

@@ -14,8 +14,8 @@ var users_cache = [];
 </script>
 <% end %>
 
-<%= hidden_field_tag('item_id', @item.id) %>
-<%= hidden_field_tag('folder_id', @item.folder_id) %>
+<input type="hidden" id="item_id" name="item_id" value="<%= @item.id %>" />
+<input type="hidden" id="folder_id" name="folder_id" value="<%= @item.folder_id %>" />
 
 <table style="width:100%;">
   <tr style="height:5px;">

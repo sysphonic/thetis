@@ -55,13 +55,13 @@
           </tr>
         </table>
 
-        <%= hidden_field_tag('fwd_controller', params[:fwd_controller]) %>
-        <%= hidden_field_tag('fwd_action', params[:fwd_action]) %>
+        <input type="hidden" id="fwd_controller" name="fwd_controller" value="<%= params[:fwd_controller] %>" />
+        <input type="hidden" id="fwd_action" name="fwd_action" value="<%= params[:fwd_action] %>" />
         <%
         unless params[:fwd_params].nil?
           params[:fwd_params].each do |key, val|
         %>
-          <%= hidden_field_tag("fwd_params[#{key}]", val) %>
+          <input type="hidden" id="fwd_params_<%= key %>" name="fwd_params[<%= key %>]" value="<%= val %>" />
         <%
           end
         end

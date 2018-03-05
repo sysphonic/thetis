@@ -141,9 +141,9 @@ end
 </table>
 </div>
 
-<%= hidden_field_tag('sort_col', params[:sort_col]) %>
-<%= hidden_field_tag('sort_type', params[:sort_type]) %>
-<%= hidden_field_tag('group_id', @group_id) %>
+<input type="hidden" id="sort_col" name="sort_col" value="<%= params[:sort_col] %>" />
+<input type="hidden" id="sort_type" name="sort_type" value="<%= params[:sort_type] %>" />
+<input type="hidden" id="group_id" name="group_id" value="<%= @group_id %>" />
 
 </form>
 

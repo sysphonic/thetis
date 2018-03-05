@@ -52,7 +52,7 @@
     </div>
   </div>
 
-  <%= hidden_field_tag('user_id', @user.id) %>
+  <input type="hidden" id="user_id" name="user_id" value="<%= @user.id %>" />
 </form>
 
 <script type="text/javascript">

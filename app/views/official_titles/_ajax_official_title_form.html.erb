@@ -47,9 +47,8 @@
   </tr>
 </table>
 
-<%= hidden_field_tag('group_id', @group_id) %>
-<%= hidden_field_tag('id', (@official_title.nil?)?nil:@official_title.id) %>
-
+<input type="hidden" id="group_id" name="group_id" value="<%= @group_id %>" />
+<input type="hidden" id="id" name="id" value="<%= (@official_title.nil?)?(nil):(@official_title.id) %>" />
 <input type="hidden" name="authenticity_token" value="<%= form_authenticity_token %>" />
 
 </form>

@@ -39,8 +39,8 @@
 
     </table>
 
-    <%= hidden_field_tag('research_id', @research.id) %>
-    <%= hidden_field_tag('page', @page) %>
+    <input type="hidden" id="research_id" name="research_id" value="<%= @research.id %>" />
+    <input type="hidden" id="page" name="page" value="<%= @page %>" />
 
     <table style="margin:10px auto 40px; vertical-align:top;">
       <tr>
