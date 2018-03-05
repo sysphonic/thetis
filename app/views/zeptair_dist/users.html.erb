@@ -67,10 +67,10 @@ zept_cmd = @item.zeptair_command
     <th class="list_sort" style="width:22%;" nowrap onclick="sortList('name')"><%= t('user.u_name') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('name', @sort_col, @sort_type)) %></span></th>
     <th class="list_sort" style="width:25%;" nowrap onclick="sortList('Comment.updated_at')"><%= t('activerecord.attributes.updated_at') %><span class="sort_direction"><%= raw(ApplicationHelper.get_sort_direction_exp('Comment.updated_at', @sort_col, @sort_type)) %></span></th>
 <% attachments.each_with_index do |attach, attach_idx| %>
-    <td style="width:10px; background-color:#FFDFAD; padding:0px 3px; text-align:center;" nowrap><%= attach_idx+1 %></td>
+    <td style="width:10px; background-color:#ffdfad; padding:0px 3px; text-align:center;" nowrap><%= attach_idx+1 %></td>
 <% end %>
 <% unless zept_cmd.nil? %>
-    <td style="width:10px; background-color:#FFDFAD; padding:0px 3px; text-align:center;" nowrap><%= t('zeptair.dist.command_exec') %></td>
+    <td style="width:10px; background-color:#ffdfad; padding:0px 3px; text-align:center;" nowrap><%= t('zeptair.dist.command_exec') %></td>
 <% end %>
   </tr>
  </thead>

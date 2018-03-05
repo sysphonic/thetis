@@ -29,7 +29,7 @@ calDisp.setFunc(
       document.form_schedule.submit();
     }
   );
-calDisp.setStyle("frame_color", "#3333CC");
+calDisp.setStyle("frame_color", "#3333cc");
 
 </script>
 
@@ -48,35 +48,22 @@ calDisp.setStyle("frame_color", "#3333CC");
 <% end %>
 
 <div style="padding-bottom:5px;">
-  <%= render :partial => 'toolbar'%>
+  <%= render(:partial => 'toolbar') %>
 </div>
 
 <div class="info_area" style="width:98%; margin:0px 1%; padding-top:10px; padding-bottom:10px; background-color:lightcyan; text-align:center;">
 
 <%= form_tag( {:controller => 'timecards', :action => 'edit', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
-  <table style="width:100%; padding-bottom:10px;">
-    <tr>
-      <td style="text-align:center;">
-<%
-yesterday = @date - 1
-tomorrow = @date + 1
-last_week = @date - 7
-next_week = @date + 7
-%>
-        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <input id="cal_date" name="date" type="text" readonly style="text-decoration:underline; background-color:lightcyan; width:105px; text-align:center; font-size:14px; font-family:verdana,arial,helvetica,sans-serif; color:crimson; border:0px; cursor:pointer;" value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :user_id => @selected_user.id, :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
-      </td>
-    </tr>
-  </table>
+
+  <div style="text-align:center; margin-bottom:10px;">
+    <%= render(:partial => 'common/calendar_paging_day', :locals => {:date => @date}) %>
+  </div>
 </form>
 
 <table style="margin:0px auto; width:95%;">
   <tr>
     <td style="text-align:center;">
-      <%= render :partial => 'user_profile'%>
+      <%= render(:partial => 'user_profile') %>
     </td>
   </tr>
 </table>
@@ -91,7 +78,7 @@ end
 <%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
   <table class="timecard" style="width:95%; margin:0px auto;">
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('cap.classification') %>
       </td>
       <td class="item_value_td">
@@ -126,7 +113,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('timecard.labor_time') %>
       </td>
       <td class="item_value_td">
@@ -195,7 +182,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('cap.option') %>
       </td>
       <td class="item_value_td">
@@ -208,7 +195,7 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#D6ECFA; width:20%;">
+      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= Timecard.human_attribute_name('comment') %>
       </td>
       <td class="item_value_td">
@@ -306,6 +293,20 @@ function changeMin(value, hour)
   } else if (hour.value == "") {
     hour.value = new Date().getHours();
   }
+}
+
+function doPageDay(date)
+{
+  var addParams = [];
+  addParams.push("date="+date);
+  addParams.push("user_id=<%= @selected_user.id %>");
+  addParams.push("display=<%= params[:display] %>");
+
+  var url = "<%= url_for(:controller => 'timecards', :action => 'edit') %>";
+  url += "?" + addParams.join("&");
+
+  prog("TOP-RIGHT");
+  location.href = url;
 }
 
 function doRegister()

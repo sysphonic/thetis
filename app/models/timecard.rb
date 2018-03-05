@@ -1,7 +1,7 @@
 #
 #= Timecard
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Timecard represents a timecard's record by day and User.
@@ -17,14 +17,14 @@ class Timecard < ApplicationRecord
 
   require ::Rails.root.to_s+'/lib/util/util_datetime'
 
-  public::BGCOLOR_HOLIDAY = '#FFCCCB'
-  public::BGCOLOR_SUN = '#FFCCCB'
-  public::BGCOLOR_SAT = '#CBECFF'
+  public::BGCOLOR_HOLIDAY = '#ffcccb'
+  public::BGCOLOR_SUN = '#ffcccb'
+  public::BGCOLOR_SAT = '#cbecff'
 
   # Specify in hex digits to export *.xls by client applications.
-  public::BGCOLOR_XLS_HOLIDAY = '#FF99CC'
-  public::BGCOLOR_XLS_SUN = '#FF99CC'
-  public::BGCOLOR_XLS_SAT = '#CBECFF'
+  public::BGCOLOR_XLS_HOLIDAY = '#ff99cc'
+  public::BGCOLOR_XLS_SUN = '#ff99cc'
+  public::BGCOLOR_XLS_SAT = '#cbecff'
 
   public::MINUTES = [0, 15, 30, 45]
 

@@ -1,7 +1,7 @@
 #
 #= ApplicationHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Methods added to this helper will be available to all templates in the application.
@@ -92,10 +92,12 @@ module ApplicationHelper
   def self.split_preserving_quot(str, quot, delim)
 
     return nil if str.nil?
-    return str if quot.nil? or delim.nil?
+    return [str] if quot.nil? or delim.nil?
 
-    regexp = Regexp.new("([#{quot}](\\#{quot}|[^#{quot}])*[#{quot}])*#{delim}")
-    return str.split(regexp)
+    regexp = Regexp.new("[#{quot}](?:(?:\\\\#{quot})|[^#{quot}])+[#{quot}]")
+    str.gsub!(regexp) {|word| word.gsub(delim, "\0")}
+    arr = str.split(delim).collect {|word| word.gsub("\0", delim)}
+    return arr
   end
 
   #=== self.get_timestamp

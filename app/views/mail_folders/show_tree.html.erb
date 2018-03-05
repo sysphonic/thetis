@@ -1,7 +1,7 @@
 
 <%= render(:partial => 'common/plupload_init') %>
 
-<table id="tree_main" style="width:100%; background-color:#8DB7EB; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
+<table id="tree_main" style="width:100%; background-color:#8db7eb; border:solid 2px; border-top-color:lavender; border-left-color:lavender; border-bottom-color:dimgray; border-right-color:dimgray;"> 
   <tr>
     <td style="padding:2px 0px;">
       <table style="width:100%;">
@@ -54,7 +54,7 @@
                 </td>
               </tr>
               <tr style="height:22px">
-                <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
+                <td style="text-align:left; vertical-align:middle; background-color:#8db7eb;">
                   <div style="display:inline-block; padding-left:10px;">
                     <a href="javascript:this.onclick()" onclick="onMailAccountOptsClicked(this); return false;" onblur="onMailAccountOptsClicked(this, true);" style="color:white; font-weight:bold;">
                       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/account_close.png" />
@@ -76,7 +76,7 @@
                 </td>
               </tr>
               <tr style="height:22px">
-                <td style="text-align:left; vertical-align:middle; background-color:#8DB7EB;">
+                <td style="text-align:left; vertical-align:middle; background-color:#8db7eb;">
                   <div style="display:inline-block; padding-left:10px;">
                     <a href="javascript:this.onclick()" onclick="onMailFolderOptsClicked(this); return false;" onblur="onMailFolderOptsClicked(this, true);" style="color:white; font-weight:bold;">
                       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/tree_mail_open.png">
@@ -114,7 +114,7 @@
             </table>
           </td>
 
-          <td id="drag_v_border" style="width:5px; vertical-align:middle; background-color:#8DB7EB; cursor:w-resize;">
+          <td id="drag_v_border" style="width:5px; vertical-align:middle; background-color:#8db7eb; cursor:w-resize;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_vertical.png">
           </td>
 
@@ -126,7 +126,7 @@
                 </td>
               </tr>
               <tr style="height:5px">
-                <td id="drag_h_border" style="text-align:center; vertical-align:middle; background-color:#8DB7EB; cursor:s-resize; line-height:5px;">
+                <td id="drag_h_border" style="text-align:center; vertical-align:middle; background-color:#8db7eb; cursor:s-resize; line-height:5px;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_horizontal.png" style="vertical-align:top; height:5px;">
                 </td>
               </tr>
@@ -1099,7 +1099,7 @@ function showHeaderInfo(email_id, title)
   removeHeaderInfo();
 
   thetisBoxHeaderInfo = new ThetisBox;
-  thetisBoxHeaderInfo.bgcolor_title = "#8DB7EB";
+  thetisBoxHeaderInfo.bgcolor_title = "#8db7eb";
   thetisBoxHeaderInfo.bgcolor_body = "aliceblue";
   thetisBoxHeaderInfo.title = truncateStr(title, 28);
   thetisBoxHeaderInfo.border_content = "";

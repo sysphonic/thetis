@@ -1,7 +1,7 @@
 #
 #= MailAccount
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #== Note:
@@ -256,7 +256,7 @@ class MailAccount < ApplicationRecord
 
     con = []
     con << "(user_id=#{user_id.to_i})"
-    con << '(is_default=1)'
+    con << "(is_default=#{SqlHelper.to_bool(true)})"
     con << "(xtype='#{xtype}')" unless xtype.blank?
 
     where = ''

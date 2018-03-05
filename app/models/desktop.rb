@@ -1,7 +1,7 @@
 #
 #= Desktop
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Desktop preferences and configurations related to each User.
@@ -96,15 +96,15 @@ class Desktop < ApplicationRecord
   def self.background_color(bgcolor, highlight=false)
     case bgcolor
      when BGCOLOR_PINK
-      return (highlight)?'#F6D1F4':'#F1BEEE'
+      return (highlight)?'#f6d1f4':'#f1beee'
      when BGCOLOR_ORANGE
-      return (highlight)?'#FFC6A0':'#F9BF9C'
+      return (highlight)?'#ffc6a0':'#f9bf9c'
      when BGCOLOR_BROWN
-      return (highlight)?'#F9E1C1':'#F6CEAB'
+      return (highlight)?'#f9e1c1':'#f6ceab'
      when BGCOLOR_GREEN
-      return (highlight)?'#D7FFBF':'#BFF49F'
+      return (highlight)?'#d7ffbf':'#bff49f'
      else     # when BGCOLOR_BLUE
-      return (highlight)?'#A4DFF8':'#A9CDF9'
+      return (highlight)?'#a4dff8':'#a9cdf9'
     end
   end
 

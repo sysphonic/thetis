@@ -11,13 +11,11 @@ calDisp.setFunc(
       prog("TOP-RIGHT");
     }
   );
-calDisp.setStyle( "frame_color", "#3333CC" );
+calDisp.setStyle("frame_color", "#3333cc");
 
 </script>
 
 <%
-date_s = @date.strftime(Schedule::SYS_DATE_FORM)
-
 @groups_cache ||= {}
 @teams_cache ||= {}
 %>
@@ -64,9 +62,10 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
           display << [h(t('group.other_group')), 'group_other']
         end
         %>
-        <%= t('cap.display') %> <%= select_tag 'display',
-                                 options_for_select(display, params[:display]),
-                                 :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
+        <%= t('cap.display') %>
+        <%= select_tag 'display',
+              options_for_select(display, params[:display]),
+              :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
         %>
       </td>
     </tr>
@@ -86,17 +85,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 <% end %>
 
 <div style="text-align:center;">
-<%
-yesterday = @date - 1
-tomorrow = @date + 1
-last_week = @date - 7
-next_week = @date + 7
-%>
-  <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= last_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-  <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= yesterday.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-  <input class="date_label" id="cal_date" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-  &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= tomorrow.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&nbsp;</a>
-  &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageDay('<%= next_week.strftime(Schedule::SYS_DATE_FORM) %>'); return false;">&nbsp;&gt;&gt;&nbsp;</a>
+  <%= render(:partial => 'common/calendar_paging_day', :locals => {:date => @date}) %>
 </div>
 
 <% unless params[:user_id].nil? %>
@@ -147,19 +136,25 @@ function onLoadSub()
 
 function doUpdatePage()
 {
+  <%
+  date_s = @date.strftime(Schedule::SYS_DATE_FORM)
+  %>
   doPageDay("<%= date_s %>");
 }
 
 function doPageDay(date)
 {
-  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?date=" + date;
-
+  var addParams = [];
+  addParams.push("date="+date);
 <% unless params[:user_id].nil? %>
-  url += "&user_id=<%= params[:user_id] %>";
+  addParams.push("user_id=<%= params[:user_id] %>");
 <% end %>
 
+  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>";
+  url += "?" + addParams.join("&");
+
   prog("TOP-RIGHT");
-  document.location.href = url;
+  location.href = url;
 }
 
 function showNewDetail()

@@ -1,7 +1,7 @@
 #
 #= Email
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #== Note:
@@ -214,62 +214,59 @@ class Email < ApplicationRecord
     has_attach = !(self.mail_attachments.nil? or self.mail_attachments.empty?)
     boundary = Digest::SHA1.hexdigest(Time.now.to_f.to_s)
 
-    email_content = ''
-    email_content << "From: #{email_from}\n"
+    content = ''
+    content << "From: #{email_from}\r\n"
     unless email_to.nil?
-      email_content << "To: #{email_to.join(",\n ")}\n"
+      content << "To: #{email_to.join(",\r\n ")}\r\n"
     end
     unless email_cc.nil?
-      email_content << "Cc: #{email_cc.join(",\n ")}\n"
+      content << "Cc: #{email_cc.join(",\r\n ")}\r\n"
     end
     unless reply_to.nil?
-      email_content << "Reply-To: #{reply_to}\n"
+      content << "Reply-To: #{reply_to}\r\n"
     end
     unless organization.nil?
-      email_content << "Organization: #{organization}\n"
+      content << "Organization: #{organization}\r\n"
     end
-    email_content << "Subject: #{EmailsHelper.encode_b(self.subject)}\n"
-    email_content << "Date: #{Time::now.strftime('%a, %d %b %Y %X %z')}\n"
-    email_content << "Mime-Version: 1.0\n"
-    email_content << "User-Agent: Thetis\n"
+    content << "Subject: #{EmailsHelper.encode_b(self.subject)}\r\n"
+    content << "Date: #{Time::now.strftime('%a, %d %b %Y %X %z')}\r\n"
+    content << "Mime-Version: 1.0\r\n"
+    content << "User-Agent: Thetis\r\n"
     if has_attach
-      email_content << "Content-Type: multipart/mixed; boundary=#{boundary}\n"
-      email_content << "\n"
-      email_content <<  "--#{boundary}\n"
+      content << "Content-Type: multipart/mixed; boundary=#{boundary}\r\n"
+      content << "\r\n"
+      content <<  "--#{boundary}\r\n"
     end
-    email_content << "Content-Type: text/plain; charset=utf-8\n"
-    email_content << "Content-Transfer-Encoding: base64\n"
-    email_content << "\n"
-    email_content << "#{[self.message].pack('m')}\n"
-=begin
-    email_content << <<EOT
-#{Base64::encode64(self.message).scan(/.{1,60}/).join("\n")}
-EOT
-=end
-
-# logger.fatal email_content
+    content << "Content-Type: text/plain; charset=utf-8\r\n"
+    content << "Content-Transfer-Encoding: base64\r\n"
+    content << "\r\n"
+    content << "#{[self.message].pack('m').gsub(/(\r\n|\n)/){"\r\n"}}\r\n"
 
     if has_attach
-      email_content << "\n"
+      content << "\r\n"
       self.mail_attachments.each do |mail_attach|
         attach_name = EmailsHelper.encode_b(mail_attach.name)
 
         attach_content = File.open(mail_attach.get_path).readlines.join('')
 
-        email_content <<  "--#{boundary}\n"
-        email_content << "Content-Type: application/octet-stream;\n"
-        email_content << " name=\"#{attach_name}\"\n"
-        email_content << "Content-Disposition: attachment;\n"
-        email_content << " filename=\"#{attach_name}\"\n"
-        email_content << "Content-Transfer-Encoding: base64\n"
-        email_content << "\n"
-        email_content << "#{[attach_content].pack('m')}\n"
+        content <<  "--#{boundary}\r\n"
+        content << "Content-Type: application/octet-stream;\r\n"
+        content << " name=\"#{attach_name}\"\r\n"
+        content << "Content-Disposition: attachment;\r\n"
+        content << " filename=\"#{attach_name}\"\r\n"
+        content << "Content-Transfer-Encoding: base64\r\n"
+        content << "\r\n"
+        content << "#{[attach_content].pack('m').gsub(/(\r\n|\n)/){"\r\n"}}\r\n"
       end
-      email_content <<  "--#{boundary}--\n"
+      content <<  "--#{boundary}--\r\n"
     end
 
     # Do SMTP
+    if mail_account.smtp_server.blank?
+      raise('ERROR:' + I18n.t('msg.specify', :name => MailAccount.human_attribute_name('smtp_server')))
+    end
     smtp = Net::SMTP.new(mail_account.smtp_server, mail_account.smtp_port)
+    Rails.logger.debug("Email.do_smtp via #{smtp.address}:#{smtp.port}")
 
     case mail_account.smtp_secure_conn
       when MailAccount::SMTP_SECURE_CONN_STARTTLS
@@ -284,16 +281,16 @@ EOT
 
     if mail_account.smtp_auth
       smtp.start('localhost.localdomain', mail_account.smtp_username, mail_account.smtp_password, mail_account.smtp_auth_method) do |_smtp|
-        _smtp.sendmail(email_content, sender, recipients.uniq)
+        _smtp.sendmail(content, sender, recipients.uniq)
       end
     else
       smtp.start do |_smtp|
-        _smtp.sendmail(email_content, sender, recipients.uniq)
+        _smtp.sendmail(content, sender, recipients.uniq)
       end
     end
 
     begin
-      self.save_raw(email_content)
+      self.save_raw(content)
     rescue => evar
       Log.add_error(nil, evar)
     end
@@ -319,14 +316,17 @@ EOT
     emails = []
     new_uidl = []
 
-    pop.mails.select { |svr_mail|
+    pop.mails.select {|svr_mail|
 
       new_uidl << svr_mail.unique_id
       mail_account.need_pop?(svr_mail.unique_id)
 
     }.each do |svr_mail|
 
-      email = Email.parse_mail(Mail.new(svr_mail.pop))
+      raw_org = svr_mail.pop
+      raw_source = EmailsHelper.replace_jis_cp(raw_org)
+      raw_source = EmailsHelper.remove_invalid_headers(raw_source)
+      email = Email.parse_mail(Mail.new(raw_source))
       email.user_id = mail_account.user_id
       email.mail_account_id = mail_account.id
       inbox = MailFolder.get_for(mail_account.user_id, mail_account.id, MailFolder::XTYPE_INBOX)
@@ -339,7 +339,7 @@ EOT
       email.created_at = Time.now.strftime('%Y-%m-%d %H:%M:%S')
       email.save!
 
-      email.save_files
+      email.save_files(raw_org)
 
       if mail_account.remove_from_server
         svr_mail.delete
@@ -393,7 +393,7 @@ EOT
     unless mail.from.nil?
       begin
         addrs = mail[:from].to_s
-        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        addrs = ApplicationHelper.split_preserving_quot(addrs, '"', ',')
         self.from_address = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.from_address = mail.from.join(Email::ADDRESS_SEPARATOR)
@@ -403,7 +403,7 @@ EOT
     unless mail.to.nil?
       begin
         addrs = mail[:to].to_s
-        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        addrs = ApplicationHelper.split_preserving_quot(addrs, '"', ',')
         self.to_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.to_addresses = mail.to.join(Email::ADDRESS_SEPARATOR)
@@ -413,7 +413,7 @@ EOT
     unless mail.cc.nil?
       begin
         addrs = mail[:cc].to_s
-        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        addrs = ApplicationHelper.split_preserving_quot(addrs, '"', ',')
         self.cc_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.cc_addresses = mail.cc.join(Email::ADDRESS_SEPARATOR)
@@ -423,7 +423,7 @@ EOT
     unless mail.bcc.nil?
       begin
         addrs = mail[:bcc].to_s
-        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        addrs = ApplicationHelper.split_preserving_quot(addrs, '"', ',')
         self.bcc_addresses = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.bcc_addresses = mail.bcc.join(Email::ADDRESS_SEPARATOR)
@@ -433,7 +433,7 @@ EOT
     unless mail.reply_to.nil?
       begin
         addrs = mail[:reply_to].to_s
-        addrs = EmailsHelper.split_preserving_quot(addrs, '"', ',')
+        addrs = ApplicationHelper.split_preserving_quot(addrs, '"', ',')
         self.reply_to = addrs.join(Email::ADDRESS_SEPARATOR)
       rescue
         self.reply_to = mail.reply_to.join(Email::ADDRESS_SEPARATOR)
@@ -442,7 +442,6 @@ EOT
 
     self.subject = mail.subject
 
-    # Email Body ###
     plain_part = (@mail.multipart?) ? ((@mail.text_part) ? @mail.text_part : nil) : nil
     html_part = (@mail.html_part) ? @mail.html_part : nil
     message_part = (plain_part || html_part)
@@ -499,7 +498,9 @@ EOT
   #
   #Saves Email body and attachment files into directory.
   #
-  def save_files
+  #_raw_org_:: Original raw source.
+  #
+  def save_files(raw_org=nil)
 
     return if @mail.nil?
 
@@ -507,7 +508,7 @@ EOT
     FileUtils.mkdir_p(path)
 
     # Raw data
-    self.save_raw(@mail.raw_source)
+    self.save_raw((raw_org || @mail.raw_source))
 
     # Attachment files
 
@@ -522,9 +523,7 @@ EOT
       begin
         mail_attachment.name = Mail::Encodings.decode_encode(attach.filename, :decode)
       rescue => evar
-    # for Platform dependent characters in ISO-2022-JP >>>
-        mail_attachment.name = EmailsHelper.decode_b(attach.filename)
-    # for Platform dependent characters in ISO-2022-JP <<<
+        mail_attachment.name = attach.filename
       end
       mail_attachment.content_type = EmailsHelper.trim_content_type(attach.content_type)
 

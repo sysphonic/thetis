@@ -896,12 +896,12 @@ Object.extend(Object.extend(ThetisBox.prototype, ThetisBox.Base.prototype), {
 
     } else if (p_type == "IFRAME") {
       if (this.bgcolor_title == null) this.bgcolor_title = "royalblue";
-      if (this.bgcolor_body == null) this.bgcolor_body = "#7FD6FF";   // "skyblue"
+      if (this.bgcolor_body == null) this.bgcolor_body = "#7fd6ff";   // "skyblue"
       this.drawIFrame(hasTitlebar, p_def, p_caption);
 
     } else if (p_type == "TRAY") {
       if (this.bgcolor_title == null) this.bgcolor_title = "royalblue";
-      if (this.bgcolor_body == null) this.bgcolor_body = "#7FD6FF";   // "skyblue"
+      if (this.bgcolor_body == null) this.bgcolor_body = "#7fd6ff";   // "skyblue"
       this.drawTray(hasTitlebar, p_caption);
     }
 

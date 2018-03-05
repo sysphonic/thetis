@@ -94,7 +94,7 @@ unless @for_print
                 <td nowrap style="width:20%; background-color:orange; padding:0px 5px;">
                   <%= t('cap.original') %><%= t('cap.suffix') %>
                 </td>
-                <td nowrap style="background-color:#FBD320; padding:0px 5px;">
+                <td nowrap style="background-color:#fbd320; padding:0px 5px;">
                   <%
                   source_item = Item.find(@item.source_id)
                   if source_item.nil?
@@ -505,7 +505,7 @@ else
 
     <% if @login_user.nil? %>
 
-    <table style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
+    <table style="width:90%; background-color:#ffebcb; margin:0px auto; padding:15px 0px;">
       <tr><td style="text-align:center;"><%= t('team.application_info') %></td></tr>
     </table>
 
@@ -514,7 +514,7 @@ else
       if @comment.nil?
         if !@team.nil? and @team.get_users_a.include?(@login_user.id.to_s)
     %>
-        <table style="width:90%; background-color:#FFEBCB; margin:0px auto; padding:15px 0px;">
+        <table style="width:90%; background-color:#ffebcb; margin:0px auto; padding:15px 0px;">
           <tr>
             <td style="text-align:center;">
               <%= t('team.is_member') %>
@@ -590,10 +590,10 @@ end
                 <th class="list_th" style="width:22%;" nowrap><%= t('user.u_name') %></th>
                 <th class="list_th" style="width:25%;" nowrap><%= t('activerecord.attributes.updated_at') %></th>
             <% @attachments.each_with_index do |attach, attach_idx| %>
-                <td nowrap style="width:10px; text-align:center; background-color:#FFDFAD; padding:0px 3px;"><%= attach_idx+1 %></td>
+                <td nowrap style="width:10px; text-align:center; background-color:#ffdfad; padding:0px 3px;"><%= attach_idx+1 %></td>
             <% end %>
             <% unless zept_cmd.nil? %>
-                <td nowrap style="width:10px; text-align:center; background-color:#FFDFAD; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
+                <td nowrap style="width:10px; text-align:center; background-color:#ffdfad; padding:0px 3px;"><%= t('zeptair.dist.command_exec') %></td>
             <% end %>
               </tr>
               <tr style="height:33px;">

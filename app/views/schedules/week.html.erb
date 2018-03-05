@@ -10,7 +10,7 @@ calDisp.setFunc(
       doUpdatePage();
     }
   );
-calDisp.setStyle("frame_color", "#3333CC");
+calDisp.setStyle("frame_color", "#3333cc");
 
 </script>
 
@@ -64,23 +64,9 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
   </tr>
 </table>
 
-<table style="width:100%;">
-  <tr>
-    <td style="text-align:center;">
-<%
-yesterday = @date - 1
-tomorrow = @date + 1
-last_week = @date - 7
-next_week = @date + 7
-%>
-      <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => last_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => yesterday.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <input class="date_label" id="cal_date" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'schedules', :action => 'week', :date => next_week.strftime(Schedule::SYS_DATE_FORM)) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
-    </td>
-  </tr>
-</table>
+<div style="text-align:center;">
+  <%= render(:partial => 'common/calendar_paging_day', :locals => {:date => @date}) %>
+</div>
 
 </form>
 
@@ -123,6 +109,18 @@ end
 <%= render(:partial => 'common/schedule_func', :locals => {:from => 'schedules'}) %>
 
 <script type="text/javascript">
+
+function doPageDay(date)
+{
+  var addParams = [];
+  addParams.push("date="+date);
+
+  var url = "<%= url_for(:controller => 'schedules', :action => 'week') %>";
+  url += "?" + addParams.join("&");
+
+  prog("TOP-RIGHT");
+  location.href = url;
+}
 
 function editScheduleDetail(date, id)
 {

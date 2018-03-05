@@ -164,7 +164,7 @@
       <% if item.featured? and !item.update_message.nil? and !item.update_message.empty? %>
         <tr>
           <td colspan="2">
-            <div style="width:100%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
+            <div style="width:100%; background-color:#fff0fa; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
               <span style="padding:5px; font-size:13px;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
             </div>
           </td>

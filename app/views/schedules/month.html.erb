@@ -58,13 +58,7 @@
     <td style="width:25%;">
     </td>
     <td style="text-align:center; width:50%;">
-      <%
-      last_month = Date.new(@date.year, @date.month, 1) << 1
-      next_month = Date.new(@date.year, @date.month, 1) >> 1
-      %>
-      <a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageCalendar('<%= last_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <span style="color:crimson; cursor:pointer;" onclick="selectMonth(function(date){doPageCalendar(date);});"><u><%= sprintf('%4d - %02d', @date.year, @date.month) %></u></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="doPageCalendar('<%= next_month.strftime('%Y-%m-01') %>'); return false;">&nbsp;&gt;&nbsp;</a>
+      <%= render(:partial => 'common/calendar_paging_month', :locals => {:date => @date, :year => nil, :month => nil}) %>
     </td>
     <td style="text-align:right; width:25%;">
     <% if params[:user_id].nil? and !@login_user.nil? and (YamlHelper.get_value($thetis_config, 'menu.disp_timecard', nil) == '1') %>
@@ -95,11 +89,11 @@ for week in 0..5 do
   <tr>
 <%
 for wd in 0..6 do
-  day += 1 if day > 0
-  day = 1 if day == 0 and wd == first_day.wday
+  day += 1 if (day > 0)
+  day = 1 if ((day == 0) and (wd == first_day.wday))
 
-  if day >= 1 and day <= days
-    if params[:user_id].nil? or params[:user_id].empty?
+  if ((day >= 1) and (day <= days))
+    if params[:user_id].blank?
       schedules = Schedule.get_user_day(@login_user, first_day+(day-1))
     else
       schedules = Schedule.get_somebody_day(@login_user, params[:user_id], first_day+(day-1))
@@ -107,7 +101,7 @@ for wd in 0..6 do
 %>
     <%
       day_caption = day.to_s
-      if @date.year == today.year and @date.month == today.month and day == today.day
+      if (@date.year == today.year) and (@date.month == today.month) and (day == today.day)
         day_caption = '<div style="background-color:darkorange; color:white; width:95%;">&nbsp;<b>' + day_caption + '</b></div>'
       end
     %>
@@ -117,7 +111,7 @@ for wd in 0..6 do
       standard_num = 3
       if schedules.nil? or schedules.empty?
       %>
-        <%= raw('<br/>' * standard_num) %>
+      <%= raw('<br/>' * standard_num) %>
       <%
       else
         schedules.each do |schedule|
@@ -127,7 +121,7 @@ for wd in 0..6 do
       %>
             <div class="span_holiday" style="padding:1px; width:100%; text-align:center;"><%= title %></div>
           <% elsif schedule.repeat? %>
-            <b style="color:white; background-color:#0770E7;">&sub;</b>&nbsp;<%= title %><br/>
+            <b style="color:white; background-color:#0770e7;">&sub;</b>&nbsp;<%= title %><br/>
           <% else %>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" />&nbsp;<%= title %><br/>
         <%
@@ -174,7 +168,7 @@ for wd in 0..6 do
 <% end %>
   </tr>
 <%
-  break if day >= days
+  break if (day >= days)
 end
 %>
 </table>
@@ -183,37 +177,39 @@ end
 </form>
 
 
-<%= render(:partial => 'common/ym_selector', :locals => {:year => nil, :month => nil}) %>
-
 <script type="text/javascript">
 
 function doUpdatePage()
 {
-  doPageCalendar("<%= @date.strftime(Schedule::SYS_DATE_FORM) %>");
+  doPageMonth("<%= @date.strftime(Schedule::SYS_DATE_FORM) %>");
 }
 
-function doPageCalendar(date)
+function doPageMonth(date)
 {
-  var url = "<%= url_for(:controller => 'schedules', :action => 'month') %>?date=" + date;
-
+  var addParams = [];
+  addParams.push("date="+date);
 <% unless params[:user_id].nil? %>
-  url += "&user_id=<%= params[:user_id] %>";
+  addParams.push("user_id=<%= params[:user_id] %>");
 <% end %>
 
+  var url = "<%= url_for(:controller => 'schedules', :action => 'month') %>?"+addParams.join("&");
+
   prog("TOP-RIGHT");
-  document.location.href = url;
+  location.href = url;
 }
 
 function doMoveToDay(date)
 {
-  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?date=" + date;
-
+  var addParams = [];
+  addParams.push("date="+date);
 <% unless params[:user_id].nil? %>
-  url += "&user_id=<%= params[:user_id] %>";
+  addParams.push("user_id=<%= params[:user_id] %>");
 <% end %>
 
+  var url = "<%= url_for(:controller => 'schedules', :action => 'day') %>?"+addParams.join("&");
+
   prog("TOP-RIGHT");
-  document.location.href = url;
+  location.href = url;
 }
 
 function doSelectGroup(thetisBoxId)

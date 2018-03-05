@@ -17,7 +17,7 @@ else
   bg_img_style = ''
 end
 %>
-<table id="div_desktop" style="width:100%; height:100%; background-color:<%= @desktop.get_background_color %>; <%= raw(bg_img_style) %> border-left:#4E659A 2px solid; border-top:#4E659A 2px solid; border-right:lightcyan 2px solid; border-bottom:lightcyan 2px solid; display:none;">
+<table id="div_desktop" style="width:100%; height:100%; background-color:<%= @desktop.get_background_color %>; <%= raw(bg_img_style) %> border-left:#4e659a 2px solid; border-top:#4e659a 2px solid; border-right:lightcyan 2px solid; border-bottom:lightcyan 2px solid; display:none;">
   <tr class="desktop_tr" style="height:30%;">
     <% corner_img_style = "background-image:url('#{THETIS_RELATIVE_URL_ROOT}/images/desktop/#{@desktop.get_corner_image_name(:top, :left)}'); background-repeat:no-repeat; background-position:top left;" %>
     <td class="desktop_td" id="cell_0x0" style="text-align:left; vertical-align:top; min-width:30%; width:30%; height:100%; <%= raw(corner_img_style) %>">
@@ -493,73 +493,73 @@ createPostLabel = function()
     thetisBoxPostLabel = null;
   }
 
-  var content = getPostLabelEditor("if (!onPostLabelOk()) { return false; }", "onPostLabelCancel()");
+  var html = getPostLabelEditor("if (!onPostLabelOk()) { return false; }", "onPostLabelCancel()");
 
   thetisBoxPostLabel = new ThetisBox;
   thetisBoxPostLabel.bgcolor_title = "deeppink";
   thetisBoxPostLabel.bgcolor_body = "lightpink";
   thetisBoxPostLabel.title = "<%= t('desktop.label.post') %>";
   thetisBoxPostLabel.overflow = "hide";
-  thetisBoxPostLabel.show("CENTER", "540,380", "TRAY", "", "", content);
+  thetisBoxPostLabel.show("CENTER", "540,380", "TRAY", "", "", html);
 }
 
 getPostLabelEditor = function(onOk, onCancel)
 {
-  content = "<form name='form_postlabel' action=\"<%= url_for(:controller => 'desktop', :action => 'post_label') %>\" method=\"post\" onsubmit='"+onOk+"'>";
-  content += "<table style='width:100%; height:100%; background-color:#FFDDE3; padding:0px 5px; border-spacing:5px;'>";
-  content += "  <tr>";
-  content += "    <td>";
-  content += "      <div style='text-align:left; font-size:13px; line-height:1.8;'><%= t('desktop.label.to') %><%= t('cap.suffix') %></div>";
-  content += "      <table>";
-  content += "        <tr>";
-  content += "          <td>";
-  content += "            <select id='post_to' name='post_to[]' class='select_multi' size='4' multiple style='width:280px;'>";
-  content += "          </td>";
-  content += "          <td style='width:10px;'></td>";
-  content += "          <td style='vertical-align:top;'>";
-  content += "            <table style='width:100%;'>";
-  content += "              <tr>";
-  content += "                <td style='text-align:center;'>";
-  content += "                  <input type='button' value='<%= t('btn.add') %>' onclick='addPostTo();' style='width:80px;'>";
-  content += "                </td>";
-  content += "              </tr>";
-  content += "              <tr style='height:5px;'><td></td></tr>";
-  content += "              <tr>";
-  content += "                <td style='text-align:center;'>";
-  content += "                  <input type='button' value='<%= t('btn.remove') %>' onclick='removePostTo();' style='width:80px;'>";
-  content += "                </td>";
-  content += "              </tr>";
-  content += "            </table>";
-  content += "          </td>";
-  content += "        </tr>";
-  content += "      </table>";
-  content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr>";
-  content += "    <td>";
-  content += "      <div style='text-align:left; font-size:13px; line-height:1.8;'><%= t('cap.message') %></div>";
-  content += "      <textarea id='txaPostLabel' name='txaPostLabel' wrap='off' tabindex='1' style='width:99%; height:120px;'></textarea>";
-  content += "    </td>";
-  content += "  </tr>";
-  content += "  <tr style='height:40px;'>";
-  content += "    <td>";
-  content += "      <table style='width:10%; margin:0px auto;'>";
-  content += "        <tr>";
-  content += "          <td>";
-  content += "            <input type='submit' value='OK' tabindex='2' style='width:90px; height:25px'>";
-  content += "          </td>";
-  content += "          <td style='width:30px;'></td>";
-  content += "          <td>";
-  content += "            <input type='button' value='<%= t('btn.cancel')%>' tabindex='3' style='width:90px; height:25px' onClick='"+onCancel+"'>";
-  content += "          </td>";
-  content += "        </tr>";
-  content += "      </table>";
-  content += "    </td>";
-  content += "  </tr>";
-  content += "</table>";
-  content += "<input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>'>";
-  content += "</form>";
-  return content;
+  var html = "<form name='form_postlabel' action=\"<%= url_for(:controller => 'desktop', :action => 'post_label') %>\" method=\"post\" onsubmit='"+onOk+"'>";
+  html += "<table style='width:100%; height:100%; background-color:#ffdde3; padding:0px 5px; border-spacing:5px;'>";
+  html += "  <tr>";
+  html += "    <td>";
+  html += "      <div style='text-align:left; font-size:13px; line-height:1.8;'><%= t('desktop.label.to') %><%= t('cap.suffix') %></div>";
+  html += "      <table>";
+  html += "        <tr>";
+  html += "          <td>";
+  html += "            <select id='post_to' name='post_to[]' class='select_multi' size='4' multiple style='width:280px;'>";
+  html += "          </td>";
+  html += "          <td style='width:10px;'></td>";
+  html += "          <td style='vertical-align:top;'>";
+  html += "            <table style='width:100%;'>";
+  html += "              <tr>";
+  html += "                <td style='text-align:center;'>";
+  html += "                  <input type='button' value='<%= t('btn.add') %>' onclick='addPostTo();' style='width:80px;'>";
+  html += "                </td>";
+  html += "              </tr>";
+  html += "              <tr style='height:5px;'><td></td></tr>";
+  html += "              <tr>";
+  html += "                <td style='text-align:center;'>";
+  html += "                  <input type='button' value='<%= t('btn.remove') %>' onclick='removePostTo();' style='width:80px;'>";
+  html += "                </td>";
+  html += "              </tr>";
+  html += "            </table>";
+  html += "          </td>";
+  html += "        </tr>";
+  html += "      </table>";
+  html += "    </td>";
+  html += "  </tr>";
+  html += "  <tr>";
+  html += "    <td>";
+  html += "      <div style='text-align:left; font-size:13px; line-height:1.8;'><%= t('cap.message') %></div>";
+  html += "      <textarea id='txaPostLabel' name='txaPostLabel' wrap='off' tabindex='1' style='width:99%; height:120px;'></textarea>";
+  html += "    </td>";
+  html += "  </tr>";
+  html += "  <tr style='height:40px;'>";
+  html += "    <td>";
+  html += "      <table style='width:10%; margin:0px auto;'>";
+  html += "        <tr>";
+  html += "          <td>";
+  html += "            <input type='submit' value='OK' tabindex='2' style='width:90px; height:25px'>";
+  html += "          </td>";
+  html += "          <td style='width:30px;'></td>";
+  html += "          <td>";
+  html += "            <input type='button' value='<%= t('btn.cancel')%>' tabindex='3' style='width:90px; height:25px' onClick='"+onCancel+"'>";
+  html += "          </td>";
+  html += "        </tr>";
+  html += "      </table>";
+  html += "    </td>";
+  html += "  </tr>";
+  html += "</table>";
+  html += "<input type='hidden' name='authenticity_token' value='<%= form_authenticity_token %>'>";
+  html += "</form>";
+  return html;
 }
 
 onPostLabelOk = function()
@@ -754,7 +754,7 @@ tipsRecyclebox = function()
   var y = recycleboxPos.y - 50;
   
   var thetisBox = new ThetisBox;
-  thetisBox.bgcolor_body = "#FFFF80";
+  thetisBox.bgcolor_body = "#ffff80";
   thetisBox.show(x+","+y, "", "TIP", "", "<%= t('desktop.drop_to_remove')%>", "");
 }
 

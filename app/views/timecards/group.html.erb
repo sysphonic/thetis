@@ -14,55 +14,52 @@ calDisp.setFunc(
       document.form_schedule.submit();
     }
   );
-calDisp.setStyle( "frame_color", "#3333CC" );
+calDisp.setStyle("frame_color", "#3333cc");
+
+function doPageDay(date)
+{
+  var addParams = [];
+  addParams.push("date="+date);
+  addParams.push("display=<%= params[:display] %>");
+
+  var url = "<%= url_for(:controller => 'timecards', :action => 'group') %>";
+  url += "?" + addParams.join("&");
+
+  prog("TOP-RIGHT");
+  location.href = url;
+}
 
 </script>
 
-<%= render :partial => 'toolbar'%>
+<%= render(:partial => 'toolbar') %>
 
 <%= form_tag( {:controller => 'timecards', :action => 'group', :id => ''}, :method => 'get', :name => 'form_schedule', :id => 'form_schedule') %>
   <input type="hidden" name="display" value="<%= params[:display] %>" />
-  <table style="width:100%; padding:10px 0px;">
-    <tr>
-      <td style="text-align:center;">
-<%
-yesterday = @date - 1
-tomorrow = @date + 1
-last_week = @date - 7
-next_week = @date + 7
-%>
-        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => last_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => yesterday.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-        <input class="date_label" id="cal_date" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(@date.wday) %>)</span><span id="div_cal_disp"></span>
-        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => tomorrow.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&nbsp;</a>
-        &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :date => next_week.strftime(Schedule::SYS_DATE_FORM), :display => params[:display]) %>'; return false;">&nbsp;&gt;&gt;&nbsp;</a>
-      </td>
-    </tr>
-  </table>
+
+  <div style="text-align:center; margin-bottom:10px;">
+    <%= render(:partial => 'common/calendar_paging_day', :locals => {:date => @date}) %>
+  </div>
 </form>
 
-<div style="padding-bottom:10px; color:navy;">
-
-</div>
-<table class='timecard' style="width:100%;">
+<table class="timecard" style="width:100%;">
   <tr>
     <td style="text-align:center; width:10%;"  rowspan="2" nowrap><%= User.model_name.human %></th>
-    <td style="text-align:center; width:5%; background-color:#D6ECFA;"  rowspan="2" nowrap><%= t('cap.class') %></td>
-    <td style="text-align:center; width:10%; background-color:#B9FFBC;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
-    <td style="text-align:center; width:10%; background-color:#B9FFBC;"  rowspan="2" nowrap><%= t('cap.option') %></td>
-    <td style="text-align:center; width:24%; background-color:#D6ECFA;"  colspan="3" nowrap><%= t('timecard.labor_time') %></td>
-    <td style="text-align:center; width:25%; background-color:#D6ECFA;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
-    <td style="text-align:center; width:16%; background-color:#C6D3EF;"  colspan="2" nowrap><%= t('timecard.overtime') %></td>
+    <td style="text-align:center; width:5%; background-color:#d6ecfa;"  rowspan="2" nowrap><%= t('cap.class') %></td>
+    <td style="text-align:center; width:10%; background-color:#b9ffbc;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
+    <td style="text-align:center; width:10%; background-color:#b9ffbc;"  rowspan="2" nowrap><%= t('cap.option') %></td>
+    <td style="text-align:center; width:24%; background-color:#d6ecfa;"  colspan="3" nowrap><%= t('timecard.labor_time') %></td>
+    <td style="text-align:center; width:25%; background-color:#d6ecfa;"  rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
+    <td style="text-align:center; width:16%; background-color:#c6d3ef;"  colspan="2" nowrap><%= t('timecard.overtime') %></td>
 <% unless @selected_users.nil? or @selected_users.empty? %>
     <td style="text-align:center; width:1%; border-top:0px; border-right:0px; background-color:white;"   rowspan="2"></td>
 <% end %>
   </tr>
   <tr>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('timecard.from') %></td>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('timecard.to') %></td>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;"  nowrap><%= t('msg.hours_full') %></td>
-    <td style="text-align:center; width:8%; background-color:#C6D3EF;"  nowrap><%= t('timecard.usual') %></td>
-    <td style="text-align:center; width:8%; background-color:#C6D3EF;"  nowrap><%= t('timecard.midnight') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;"  nowrap><%= t('timecard.from') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;"  nowrap><%= t('timecard.to') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;"  nowrap><%= t('msg.hours_full') %></td>
+    <td style="text-align:center; width:8%; background-color:#c6d3ef;"  nowrap><%= t('timecard.usual') %></td>
+    <td style="text-align:center; width:8%; background-color:#c6d3ef;"  nowrap><%= t('timecard.midnight') %></td>
   </tr>
 <% if @selected_users.nil? or @selected_users.empty? %>
   <tr style="height:50px;">
@@ -89,17 +86,17 @@ else
     <%
     case timecard.workcode
       when Timecard::WKCODE_WK_NORMAL
-        color = '#FF9900'
+        color = '#ff9900'
       when Timecard::WKCODE_WK_ON_HOLIDAY
-        color = '#0099FF'
+        color = '#0099ff'
       when Timecard::WKCODE_HLD_AM
-        color = '#99FF00'
+        color = '#99ff00'
       when Timecard::WKCODE_HLD_PM
-        color = '#00FF99'
+        color = '#00ff99'
       when Timecard::WKCODE_HLD_SPECIAL
-        color = '#FF0099'
+        color = '#ff0099'
       when Timecard::WKCODE_HLD_MAKEUP
-        color = '#9900FF'
+        color = '#9900ff'
       when Timecard::WKCODE_ABSENCE
         color = 'red'
       else

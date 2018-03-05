@@ -63,7 +63,7 @@ var users_cache = [];
     <% if @item.xtype == Item::XTYPE_WORKFLOW %>
       <div id="tab_div_workflow">
         <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
-        <table style="width:100%; background-color:#FFF8D7; border:solid 5px gold; padding-bottom:15px;">
+        <table style="width:100%; background-color:#fff8d7; border:solid 5px gold; padding-bottom:15px;">
           <tr>
             <td>
               <div id="div_item_workflow" style="overflow:auto;">
@@ -174,7 +174,7 @@ var users_cache = [];
 
        <%= form_tag( {:controller => 'items', :action => 'set_image', :id => @item }, :id => 'form_image', :name => 'form_image', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table style="width:100%; padding-bottom:15px; background-color:#FFEEED; border:solid 5px salmon;">
+        <table style="width:100%; padding-bottom:15px; background-color:#ffeeed; border:solid 5px salmon;">
           <tr>
             <td>
               <div id="div_item_image" style="overflow:auto;">
@@ -211,7 +211,7 @@ var users_cache = [];
 
        <%= form_tag( {:controller => 'items', :action => 'set_attachment', :id => @item }, :id => 'form_attachment', :name => 'form_attachment', :method => 'post', :enctype => 'multipart/form-data') %>
 
-        <table style="width:100%; background-color:#FFF6DD; padding-bottom:15px; border:solid 5px tan;">
+        <table style="width:100%; background-color:#fff6dd; padding-bottom:15px; border:solid 5px tan;">
           <tr>
             <td>
               <div id="div_item_attachment" style="overflow:auto;">

@@ -1,0 +1,21 @@
+<%
+date ||= nil
+%>
+
+<%
+date_s = date.strftime(Schedule::SYS_DATE_FORM)
+yesterday_s = (date - 1).strftime(Schedule::SYS_DATE_FORM)
+tomorrow_s = (date + 1).strftime(Schedule::SYS_DATE_FORM)
+last_week_s = (date - 7).strftime(Schedule::SYS_DATE_FORM)
+next_week_s = (date + 7).strftime(Schedule::SYS_DATE_FORM)
+%>
+<a class="calendar_paging paging_day" href="javascript:this.onclick()" onclick="doPageDay('<%= last_week_s %>'); return false;">&lt;&lt;</a>
+<a class="calendar_paging paging_day" href="javascript:this.onclick()" onclick="doPageDay('<%= yesterday_s %>'); return false;">&lt;</a>
+<input class="date_label" id="cal_date" name="date" type="text" readonly value="<%= date_s %>" onclick="calDisp.write();" /> <span id="date_wday" style="color:crimson;">(<%= Schedule::wday_name(date.wday) %>)</span><span id="div_cal_disp"></span>
+<a class="calendar_paging paging_day" href="javascript:this.onclick()" onclick="doPageDay('<%= tomorrow_s %>'); return false;">&gt;</a>
+<a class="calendar_paging paging_day" href="javascript:this.onclick()" onclick="doPageDay('<%= next_week_s %>'); return false;">&gt;&gt;</a>
+
+
+<script type="text/javascript">
+
+</script>

@@ -69,7 +69,7 @@
     <%
     toy_xtype = Toy::XTYPE_FOLDER
     toy_target_id = @folder_id
-    if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id)
+    if (!@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id))
     %>
       <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/desktop.png" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop('<%= toy_xtype %>', <%= toy_target_id %>, '<%= ApplicationHelper.h_s_quote(truncate(Folder.get_name(@folder_id), :length => 20)) %>');">
     <% end %>
@@ -112,7 +112,7 @@
 
 <div class="base_list" id="div_list">
 
-<% if @items.empty? and @folder_id.nil? %>
+<% if (@items.empty? and @folder_id.nil?) %>
 
 <%= render(:partial => 'bbs_empty') %>
 
@@ -126,9 +126,9 @@
 <% @items.each do |item| %>
   <tr>
     <td>
-      <TABLE style="width:100%;">
-        <TR>
-          <TD style="font-size:15px; line-height:19px; text-align:left; text-indent:5px;">
+      <table style="width:100%;">
+        <tr>
+          <td style="font-size:15px; line-height:19px; text-align:left; text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="javascript:this.onclick()" onclick="doShowItem(<%= item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
 
             <% if !item.workflow.nil? and item.workflow.decided? %>
@@ -159,10 +159,10 @@
               %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteItemClicked(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(item.title, :length => 20)) %>', <%= del_type %>); return false;" />
             <% end %>
-          </TD>
-        </TR>
-        <TR>
-          <TD style="font-size:15px; text-align:left; padding:5px; line-height:19px; text-indent:60px;">
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size:15px; text-align:left; padding:5px; line-height:19px; text-indent:60px;">
             <%
             user_name, u_groups, figure = UsersHelper.get_groups_info(item.get_registrant_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)
             unless u_groups.empty?
@@ -180,7 +180,7 @@
             <% unless item.public %>
               <span style="color:blue"><%= raw(t('schedule.private')) %></span>
             <% end %>
-            <% if item.xtype == Item::XTYPE_PROJECT %>
+            <% if (item.xtype == Item::XTYPE_PROJECT) %>
               &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
               <%
               unless item.team.nil? or @login_user.nil?
@@ -198,22 +198,22 @@
                   end
                 end
               end
-            elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST
+            elsif (item.xtype == Item::XTYPE_ZEPTAIR_DIST)
             %>
-              &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" /><span style="color:#567EFF;"><%= t('item.type.zeptair_dist') %></span>
+              &nbsp;&nbsp;&nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" /><span style="color:#567eff;"><%= t('item.type.zeptair_dist') %></span>
             <% end %>
-          </TD>
-        </TR>
-      <% if item.featured? and !item.update_message.nil? and !item.update_message.empty? %>
-        <TR>
-          <TD style="text-align:center;">
-          <div style="width:90%; text-align:left; padding-bottom:5px;">
-            <div style="width:60%; background-color:#FFF0FA; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
-              <span style="padding:5px; font-size:13px;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
+          </td>
+        </tr>
+      <% if (item.featured? and !item.update_message.nil? and !item.update_message.empty?) %>
+        <tr>
+          <td style="text-align:center;">
+            <div style="width:90%; text-align:left; padding-bottom:5px;">
+              <div style="width:60%; background-color:#fff0fa; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
+                <span style="padding:5px; font-size:13px;"><%= raw(ApplicationHelper.format_text_block(h(truncate(item.update_message, :length => 200)))) %></span>
+              </div>
             </div>
-          </div>
-          </TD>
-        </TR>
+          </td>
+        </tr>
       <% end %>
 <%
 item_images = item.images_without_content
@@ -221,8 +221,8 @@ item_attachments = item.attachments_without_content
 images_num = item_images.length
 attachments_num = item_attachments.length
 %>
-        <TR>
-          <TD>
+        <tr>
+          <td>
 <% additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0)) %>
             <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" >
               <tr>
@@ -326,10 +326,10 @@ attachments_num = item_attachments.length
               <% end %>
               </tr>
             </table>
-          </TD>
-        </TR>
-        <TR>
-          <TD style="text-align:center;">
+          </td>
+        </tr>
+        <tr>
+          <td style="text-align:center;">
             <table style="width:90%; margin:0px auto 20px;">
               <tr>
                 <td style="text-align:center;">
@@ -341,9 +341,9 @@ attachments_num = item_attachments.length
                 </td>
               </tr>
             </table>
-          </TD>
-        </TR>
-      </TABLE>
+          </td>
+        </tr>
+      </table>
     </td>
   </tr>
 <% end %>

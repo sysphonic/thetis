@@ -322,7 +322,7 @@ else
         checked_public = (@schedule.public?)?'checked':''
         checked_private = (@schedule.private?)?'checked':''
         %>
-        <input type="radio" id="schedule_scope_all" name="schedule[scope]" value="<%= Schedule::SCOPE_ALL %>" onclick="reqTargetDay++" <%= checked_all %>><label for="schedule_scope_all"> <span style="color:#CE3636;"><%= raw(t('schedule.disp_to_all')) %></span></label>
+        <input type="radio" id="schedule_scope_all" name="schedule[scope]" value="<%= Schedule::SCOPE_ALL %>" onclick="reqTargetDay++" <%= checked_all %>><label for="schedule_scope_all"> <span style="color:#ce3636;"><%= raw(t('schedule.disp_to_all')) %></span></label>
         &nbsp;
         <input type="radio" id="schedule_scope_public" name="schedule[scope]" value="<%= Schedule::SCOPE_PUBLIC %>" onclick="reqTargetDay++" <%= checked_public %>><label for="schedule_scope_public"> <span style="color:darkgreen;"><%= raw(t('schedule.public')) %></span></label>
         &nbsp;

@@ -1,7 +1,7 @@
 #
 #= EmailsHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Provides utility methods and constants about Email.
@@ -26,27 +26,6 @@ module EmailsHelper
       return message_id_matches.first.first
     end
     return nil
-  end
-
-  #=== self.split_preserving_quot
-  #
-  #Splits string preserving quotations.
-  #
-  #_quot_:: Quotation character.
-  #_delim_:: Delimiter.
-  #return:: Array of the parts.
-  #
-  def self.split_preserving_quot(str, quot, delim)
-
-    return nil if str.nil?
-    return str if quot.nil? or delim.nil?
-
-    regexp = Regexp.new("([#{quot}](\\#{quot}|[^#{quot}])*[#{quot}])*#{delim}")
-    arr = str.split(regexp)
-    arr.collect!{|entry|
-      entry.strip
-    }
-    return arr
   end
 
   #=== self.format_address_exp
@@ -130,6 +109,36 @@ module EmailsHelper
     return raw_source.split("(\r\n\r\n|\n\n)", 2).first
   end
 
+  #=== self.raw_header_infos
+  #
+  #Gets raw header informations of the Email.
+  #
+  #_raw_source_:: Target raw source of the Email.
+  #return:: Array of raw header informations.
+  #
+  def self.raw_header_infos(raw_source)
+
+    header = EmailsHelper.raw_header(raw_source)
+    return nil if header.nil?
+
+    line_sep = (EmailsHelper.raw_line_sep(raw_source) || "\r\n")
+
+    infos = []
+    lines = []
+    modified = false
+    header.gsub(/\r\n/, "\n").split(/\n/).each do |line|
+      break if line.empty?
+
+      unless line.match(/\A[^:\s]+[:]/).nil? or lines.empty?
+        infos << lines.join(line_sep)
+        lines = []
+      end
+      lines << line
+    end
+    infos << lines.join(line_sep) unless lines.empty?
+    return infos
+  end
+
   #=== self.raw_body
   #
   #Gets raw body of the Email.
@@ -155,7 +164,7 @@ module EmailsHelper
 
     return nil if raw_source.nil?
 
-    m = raw_source.match(/(\r\n\r\n|\n\n)/)
+    m = raw_source.match(/(\r\n|\n)/)
     unless m.nil? or m[1].nil?
       return m[1]
     end
@@ -283,7 +292,7 @@ module EmailsHelper
 
     unless keyword.blank?
       key_array = keyword.split(nil)
-      key_array.each do |key| 
+      key_array.each do |key|
         where << ' and ' + SqlHelper.get_sql_like([:subject, :from_address, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message], key)
       end
     end
@@ -414,9 +423,9 @@ module EmailsHelper
     enc = enc.upcase unless enc.nil?
     case enc
       when 'UTF-8', nil
-        return [str].pack('m')
+        return [str].pack('m').gsub(/(\r\n|\n)/){"\r\n"}
       else
-        return [EmailsHelper.encode(str, enc)].pack('m')
+        return [EmailsHelper.encode(str, enc)].pack('m').gsub(/(\r\n|\n)/){"\r\n"}
     end
   end
 
@@ -516,15 +525,16 @@ module EmailsHelper
   #
   #Replaces ISO-2022-JP with CP50220.
   #
-  #_raw_org_:: Original raw source.
+  #_raw_source_:: Original raw source.
   #return:: Replaced text.
   #
-  def self.replace_jis_cp(raw_org)
+  def self.replace_jis_cp(raw_source)
 
     lines = []
     is_header = true
+    boundary = nil
     modified = false
-    raw_org.gsub(/\r\n/, "\n").split(/\n/).each do |line|
+    raw_source.gsub(/\r\n/, "\n").split(/\n/).each do |line|
       if is_header
         if line.empty?
           is_header = false
@@ -533,6 +543,14 @@ module EmailsHelper
             line = line.gsub(/=[?]ISO-2022-JP[?]/i, '=?CP50220?')
             modified = true
           end
+          m = line.match(/\AContent-Type:.*boundary=["']?([^"'\s]+)["']?/i)
+          unless m.nil? or m[1].nil?
+            boundary = m[1]
+          end
+        end
+      else
+        if (!boundary.nil? and (line == '--'+boundary))
+          is_header = true
         end
       end
       lines << line
@@ -540,7 +558,86 @@ module EmailsHelper
     if modified
       return lines.join("\r\n")
     else
-      return raw_org
+      return raw_source
+    end
+  end
+
+  #=== self.remove_invalid_dates
+  #
+  #Removes header informations which contain invalid dates.
+  #
+  #_raw_source_:: Original raw source.
+  #return:: Replaced text.
+  #
+  def self.remove_invalid_dates(raw_source)
+
+    target_keys = ['Date', 'Received']
+
+    header_infos = EmailsHelper.raw_header_infos(raw_source)
+    line_sep = (EmailsHelper.raw_line_sep(raw_source) || "\r\n")
+
+    modified = false
+    valid_infos = []
+    header_infos.each do |header_info|
+      is_valid = true
+      m = header_info.match(/\A([^:\s]+)[:]/)
+      key = nil
+      key = m[1] unless m.nil?
+      if target_keys.include?(key)
+        date_m = header_info.match(/([a-zA-Z\s\d+-]+\d\d[:]\d\d[:]\d\d[a-zA-Z\s\d+-]+)/)
+        unless date_m.nil? or date_m[1].nil?
+          begin
+            DateTime.parse(date_m[1])
+          rescue
+            is_valid = false
+            modified = true
+          end
+        end
+      end
+      valid_infos << header_info if is_valid
+    end
+    if modified
+      body = EmailsHelper.raw_body(raw_source)
+      return [valid_infos.join(line_sep), body].join(line_sep+line_sep)
+    else
+      return raw_source
+    end
+  end
+
+  #=== self.remove_invalid_headers
+  #
+  #Removes invalid header informations.
+  #
+  #_raw_source_:: Original raw source.
+  #return:: Replaced text.
+  #
+  def self.remove_invalid_headers(raw_source)
+
+    header_infos = EmailsHelper.raw_header_infos(raw_source)
+    line_sep = (EmailsHelper.raw_line_sep(raw_source) || "\r\n")
+
+    modified = false
+    valid_infos = []
+    header_infos.each do |header_info|
+      begin
+        # Test
+        mail = Mail.new(header_info+line_sep+line_sep+'dummy body'+line_sep)
+        [:header, :date, :from, :to, :cc, :bcc, :reply_to].each do |key|
+          mail.send(key.to_s)
+        end
+        message_part = EmailsHelper.get_message_part(mail)
+        message_part.header.to_s unless message_part.nil?
+
+        valid_infos << header_info
+      rescue
+        modified = true
+      end
+    end
+    if modified
+      body = EmailsHelper.raw_body(raw_source)
+      return [valid_infos.join(line_sep), body].join(line_sep+line_sep)
+    else
+      return raw_source
     end
   end
 

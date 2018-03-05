@@ -9,13 +9,13 @@ var modified_teams = 0;
 @group_obj_cache ||= {}
 %>
 
-<table id="tree_main" style="width:100%; background-color:#F9BF8B; border:solid 2px; border-top-color:#FBE2B1; border-left-color:#FBE2B1; border-bottom-color:dimgray; border-right-color:dimgray;">
+<table id="tree_main" style="width:100%; background-color:#f9bf8b; border:solid 2px; border-top-color:#fbe2b1; border-left-color:#fbe2b1; border-bottom-color:dimgray; border-right-color:dimgray;">
 <% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
   <tr id="tr_admin_panel">
     <td style="padding:5px 5px 2px; text-align:right;">
       <table style="width:100%;">
          <tr>
-            <td style="text-align:left; background-color:white; border:solid 1px; border-bottom-color:#FBE2B1; border-right-color:#FBE2B1; border-top-color:dimgray; border-left-color:dimgray;">
+            <td style="text-align:left; background-color:white; border:solid 1px; border-bottom-color:#fbe2b1; border-right-color:#fbe2b1; border-top-color:dimgray; border-left-color:dimgray;">
             <% if @group_id.blank? %>
               <div class="button_gray" style="width:110px;" onclick="showGroupTreeToSelect('<%= TreeElement::ROOT_ID %>');">
                 <%= t('btn.select_group') %>
@@ -79,7 +79,7 @@ var modified_teams = 0;
               <div id="divFolderTree" style="overflow:auto;"><div id="folderTree" style="text-align:left; margin:10px;"></div></div>
             </form>
           </td>
-          <td id="drag_border" style="width:5px; background-color:#F9BF8B; cursor:w-resize; vertical-align:middle;">
+          <td id="drag_border" style="width:5px; background-color:#f9bf8b; cursor:w-resize; vertical-align:middle;">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/controls/grip_vertical.png">
           </td>
           <td id="td_view" style="width:63%; border:inset 2px silver; text-align:center; vertical-align:top;">

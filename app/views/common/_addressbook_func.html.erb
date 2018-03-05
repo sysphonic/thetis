@@ -8,8 +8,8 @@ showAddress = function(address_id, address_name)
 {
   var thetisBox = new ThetisBox;
   thetisBox.resizable = true;
-  thetisBox.bgcolor_title = "#FF9D11";
-  thetisBox.bgcolor_body = "#FFDA8B";
+  thetisBox.bgcolor_title = "#ff9d11";
+  thetisBox.bgcolor_body = "#ffda8b";
 
   var addParams = [];
   addParams.push("id="+address_id);
@@ -66,8 +66,8 @@ showAddressNew = function()
         onComplete:function(request) {
           thetisBoxAddressEdit = new ThetisBox;
           thetisBoxAddressEdit.resizable = true;
-          thetisBoxAddressEdit.bgcolor_title = "#FF9D11";
-          thetisBoxAddressEdit.bgcolor_body = "#FFDA8B";
+          thetisBoxAddressEdit.bgcolor_title = "#ff9d11";
+          thetisBoxAddressEdit.bgcolor_body = "#ffda8b";
           thetisBoxAddressEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> <%= t('address.new') %>";
           thetisBoxAddressEdit.overflow = "auto";
           thetisBoxAddressEdit.show(
@@ -117,8 +117,8 @@ showAddressEdit = function(address_id, address_name, admin, elemOnShow)
         onComplete:function(request) {
           thetisBoxAddressEdit = new ThetisBox;
           thetisBoxAddressEdit.resizable = true;
-          thetisBoxAddressEdit.bgcolor_title = "#FF9D11";
-          thetisBoxAddressEdit.bgcolor_body = "#FFDA8B";
+          thetisBoxAddressEdit.bgcolor_title = "#ff9d11";
+          thetisBoxAddressEdit.bgcolor_body = "#ffda8b";
           thetisBoxAddressEdit.title = "&nbsp;<img src='<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png'> " + address_name;
           thetisBoxAddressEdit.overflow = "auto";
           thetisBoxAddressEdit.show(
@@ -155,8 +155,8 @@ queryAddressEmail = function(email, dispName)
         onComplete:function(request) {
           var thetisBox = new ThetisBox;
           thetisBox.resizable = true;
-          thetisBox.bgcolor_title = "#FF9D11";
-          thetisBox.bgcolor_body = "#FFDA8B";
+          thetisBox.bgcolor_title = "#ff9d11";
+          thetisBox.bgcolor_body = "#ffda8b";
           var content = request.responseText.stripScripts();
           var isEdit = (content.indexOf("$ADDRESSBOOK_QUERY:EDIT") >= 0);
           thetisBox.title = dispName;

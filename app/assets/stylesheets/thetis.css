@@ -29,15 +29,19 @@ table.timecard th, table.timecard td{border-right:1px solid black; border-bottom
 table.timecard th{background-color:#eee; font-weight:normal; padding:0px 10px;}
 table.timecard td{padding:2px 5px;}
 .span_holiday {background-color:red; color:white; padding:3px 10px;}
-.info_area {background-color:#FFF0FA;}
+.info_area {background-color:#fff0fa;}
 .info_section_header {color:dimgray; padding:2px; line-height:1.7; text-align:center; background-color:#dfdfdf; font-weight:bold;}
 .treeBlock {padding-left:30px; border-left:1px dotted navy;}
 
-.date_label {text-decoration:underline; width:105px; text-align:center; color:crimson; border:0px; cursor:pointer;}
-.calendar_paging:link {color:white; background-color:salmon;}
-.calendar_paging:visited {color:white; background-color:salmon;}
-.calendar_paging:active {color:white; background-color:salmon;}
-.calendar_paging:hover {color:white; background-color:salmon;}
+.date_label {text-decoration:underline; width:105px; font-size:16px; text-align:center; color:crimson; border:0px; cursor:pointer; background-color:transparent;}
+a.calendar_paging.paging_day {color:white; background-color:salmon; padding:0px 3px;}
+a.calendar_paging.paging_day:nth-of-type(1) {margin-right:7px;}
+a.calendar_paging.paging_day:nth-of-type(2) {margin-right:7px;}
+a.calendar_paging.paging_day:nth-of-type(3) {margin-left:7px;}
+a.calendar_paging.paging_day:nth-of-type(4) {margin-left:7px;}
+a.calendar_paging.paging_month {color:white; background-color:salmon; padding:0px 3px;}
+a.calendar_paging.paging_month:nth-of-type(1) {margin-right:7px;}
+a.calendar_paging.paging_month:nth-of-type(2) {margin-left:7px;}
 
 .email_subject_unread {font-weight:bold; color:sienna;}
 
@@ -53,7 +57,7 @@ table.timecard td{padding:2px 5px;}
 
 .font_msg_bold {font-size:16px; font-weight:800;}
 
-.td_attachment_name {color:white; font-size:12px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#6B6E7A;}
+.td_attachment_name {color:white; font-size:12px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#6b6e7a;}
 .td_attachment_title {color:white; font-size:12px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:gray;}
 .td_attachment_memo {color:black; font-size:12px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:gainsboro; text-align:left;}
 
@@ -70,18 +74,18 @@ table.timecard td{padding:2px 5px;}
 .img_td {color:navy;}
 .img_btn {border-right:solid 1px darkgray; border-bottom:solid 1px darkgray; padding-right:2px; padding-bottom:2px; cursor:pointer;}
 
-.comment_body_td {border:solid 1px #965100; font-size:13px; padding:5px; line-height:1.7; background-color:#FFFBED;}
+.comment_body_td {border:solid 1px #965100; font-size:13px; padding:5px; line-height:1.7; background-color:#fffbed;}
 .comment_tab_td {color:white; font-size:13px; vertical-align:middle; padding-left:10px; padding-right:20px; line-height:1.0; height:20px; background:url("../images/background/comment_tab.png") top left repeat-x;}
-.comment_sys_body_td {border:solid 1px #EA3C50; font-size:13px; padding:5px; line-height:1.7; background-color:#FFEDED;}
-.comment_sys_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#EA3C50;}
+.comment_sys_body_td {border:solid 1px #ea3c50; font-size:13px; padding:5px; line-height:1.7; background-color:#ffeded;}
+.comment_sys_tab_td {color:white; font-size:13px; padding:3px; padding-left:10px; padding-right:20px; line-height:1.0; background-color:#ea3c50;}
 
 .img_button_td {background-image:url("../images/controls/button.png"); vertical-align:middle; background-repeat:no-repeat; cursor:pointer; text-align:center; width:103px; height:35px; font-weight:600; color:white;}
 .menu_td {cursor:pointer; font-size:14px; line-height:1.0; background:url("../images/menu/menu_bg_off.png") repeat-x center; padding:0px; color:#404040; border:solid 1px silver; text-align:center; box-shadow:1px 1px 2px rgba(100, 100, 100, 0.2); border-radius:13px;}
 .menu_td.hovered {color:forestgreen;}
 .menu_td.selected {background:url("../images/menu/menu_bg_on.png") repeat-x center; color:deeppink; border:solid 1px pink; box-shadow:1px 1px 2px rgba(50, 50, 100, 0.2);}
-.cap_td {background-color:#FFCBCF; padding:5px; text-align:center;}
-.item_cap_td {background-color:#FFCBCF; padding:5px; width:110px; text-align:center;}
-.prim_cap_td {white-space:nowrap; background-color:#7FE8FF; padding:5px; width:110px; text-align:center;}
+.cap_td {background-color:#ffcbcf; padding:5px; text-align:center;}
+.item_cap_td {background-color:#ffcbcf; padding:5px; width:110px; text-align:center;}
+.prim_cap_td {white-space:nowrap; background-color:#7fe8ff; padding:5px; width:110px; text-align:center;}
 .item_value_td {padding:5px; text-align:left;}
 
 .list_th,.list_sort{background-image:url("../images/controls/list_th_off.png"); background-repeat:repeat-x; white-space:nowrap;}

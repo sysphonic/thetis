@@ -6,16 +6,13 @@
     <td style="width:20%;"></td>
     <td style="width:60%; text-align:center; vertical-align:top;">
       <%
-      last_month = Date.new(@year, @month, 1) << 1
-      next_month = Date.new(@year, @month, 1) >> 1
+      date = Date.new(@year, @month, 1)
       %>
-      <a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => last_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&lt;&nbsp;</a>&nbsp;&nbsp;
-      <span style="color:crimson; cursor:pointer;" onclick="selectMonth(function(date){doUpdatePage(date);});"><u><%= sprintf('%4d - %02d', @year, @month) %></u></span>
-      &nbsp;&nbsp;<a class="calendar_paging" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for :controller => 'timecards', :action => 'month', :date => next_month.strftime('%Y-%m'), :user_id => @selected_user.id, :display => params[:display] %>'; return false;">&nbsp;&gt;&nbsp;</a>
+      <%= render(:partial => 'common/calendar_paging_month', :locals => {:date => date}) %>
     </td>
     <td style="width:20%; text-align:right; padding-top:5px;">
     <% unless params[:display].blank? or (params[:display] == 'mine') %>
-      <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'group', :user_id => @selected_user.id, :display => params[:display]) %>'; return false;"><%= raw(t('btn.arrow_back')) %></a>
+      <a href="javascript:this.onclick()" onclick="onGoBackClicked(this); return false;"><%= raw(t('btn.arrow_back')) %></a>
     <% else %>
       &nbsp;
     <% end %>
@@ -29,19 +26,19 @@
 <table class="timecard" style="width:100%;">
   <tr>
     <td style="text-align:center; width:8%;" rowspan="2" nowrap><%= t('msg.date') %></th>
-    <td style="text-align:center; width:5%; background-color:#D6ECFA;" rowspan="2" nowrap><%= t('cap.class') %></td>
-    <td style="text-align:center; width:5%; background-color:#B9FFBC;" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
-    <td style="text-align:center; width:5%; background-color:#B9FFBC;" rowspan="2" nowrap><%= t('cap.option') %></td>
-    <td style="text-align:center; width:24%; background-color:#D6ECFA;" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
-    <td style="text-align:center; width:35%; background-color:#D6ECFA;" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
-    <td style="text-align:center; width:16%; background-color:#C6D3EF;" colspan="2" nowrap><%= t('timecard.overtime') %></td>
+    <td style="text-align:center; width:5%; background-color:#d6ecfa;" rowspan="2" nowrap><%= t('cap.class') %></td>
+    <td style="text-align:center; width:5%; background-color:#b9ffbc;" rowspan="2" nowrap><%= Timecard.human_attribute_name('status') %></td>
+    <td style="text-align:center; width:5%; background-color:#b9ffbc;" rowspan="2" nowrap><%= t('cap.option') %></td>
+    <td style="text-align:center; width:24%; background-color:#d6ecfa;" colspan="3" nowrap><%= t('timecard.labor_time') %></td>
+    <td style="text-align:center; width:35%; background-color:#d6ecfa;" rowspan="2" nowrap><%= Timecard.human_attribute_name('comment') %></td>
+    <td style="text-align:center; width:16%; background-color:#c6d3ef;" colspan="2" nowrap><%= t('timecard.overtime') %></td>
   </tr>
   <tr>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('timecard.from') %></td>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('timecard.to') %></td>
-    <td style="text-align:center; width:8%; background-color:#D6ECFA;" nowrap><%= t('msg.hours_full') %></td>
-    <td style="text-align:center; width:8%; background-color:#C6D3EF;" nowrap><%= t('timecard.usual') %></td>
-    <td style="text-align:center; width:8%; background-color:#C6D3EF;" nowrap><%= t('timecard.midnight') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;" nowrap><%= t('timecard.from') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;" nowrap><%= t('timecard.to') %></td>
+    <td style="text-align:center; width:8%; background-color:#d6ecfa;" nowrap><%= t('msg.hours_full') %></td>
+    <td style="text-align:center; width:8%; background-color:#c6d3ef;" nowrap><%= t('timecard.usual') %></td>
+    <td style="text-align:center; width:8%; background-color:#c6d3ef;" nowrap><%= t('timecard.midnight') %></td>
   </tr>
 <%
 today = Date.today
@@ -81,7 +78,7 @@ days.times do
         bgcolor = Timecard::BGCOLOR_SAT
         i = 0
       else
-        bgcolor = (i%2 == 1) ? '#EDEDED' : 'white'
+        bgcolor = (i%2 == 1) ? '#ededed' : 'white'
         i += 1
     end
   end
@@ -103,7 +100,7 @@ days.times do
       <% if @start_date.day != 1 and (day == @start_date or day.day == 1) %>
         <sup><%= day.month.to_s %>/</sup>
       <% end %>
-      <a class="a_underline" <%= raw(today_txt_style) %> href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'timecards', :action => 'edit', :date => date_s, :user_id => params[:user_id], :display => params[:display]) %>'; return false;">
+      <a class="a_underline" <%= raw(today_txt_style) %> href="javascript:this.onclick()" onclick="onEditTimecardClicked('<%= date_s %>'); return false;">
         <%= day.day.to_s + ' (' + Schedule.wday_name(day.wday) + ')' %>
       </a>
     </td>
@@ -241,7 +238,7 @@ end
 %>
 </table>
 
-<table style="width:100%; padding-top:15px;">
+<table style="width:100%; margin:15px 0px 20px;">
   <tr>
     <td style="text-align:left; vertical-align:top; width:49%;">
       <table class="timecard" style="width:100%;">
@@ -374,18 +371,58 @@ end
   </tr>
 </table>
 
-<br/>
-<br/>
-
-
-<%= render(:partial => 'common/ym_selector', :locals => {:year => @year, :month => @month}) %>
 
 <script type="text/javascript">
 
 function doUpdatePage(date)
 {
+  doPageMonth(date);
+}
+
+function doPageMonth(date)
+{
+  var addParams = [];
+  addParams.push("date="+date);
+  addParams.push("user_id=<%= @selected_user.id %>");
+<% unless params[:display].nil? %>
+  addParams.push("display=<%= params[:display] %>");
+<% end %>
+
+  var url = "<%= url_for(:controller => 'timecards', :action => 'month') %>?"+addParams.join("&");
+
   prog("TOP-RIGHT");
-  location.href = "<%= url_for(:controller => 'timecards', :action => 'month') %>?date=" + date + "&user_id=<%= @selected_user.id %>&display=<%= params[:display] %>";
+  location.href = url;
+}
+
+function onGoBackClicked(elem)
+{
+  var addParams = [];
+  addParams.push("user_id=<%= @selected_user.id %>");
+<% unless params[:display].nil? %>
+  addParams.push("display=<%= params[:display] %>");
+<% end %>
+
+  var url = "<%= url_for(:controller => 'timecards', :action => 'group') %>?"+addParams.join("&");
+
+  prog("TOP-RIGHT");
+  location.href = url;
+}
+
+function onEditTimecardClicked(date)
+{
+  var addParams = [];
+  addParams.push("date="+date);
+<% unless params[:user_id].nil? %>
+  addParams.push("user_id=<%= params[:user_id] %>");
+<% end %>
+<% unless params[:display].nil? %>
+  addParams.push("display=<%= params[:display] %>");
+<% end %>
+
+  var url = "<%= url_for(:controller => 'timecards', :action => 'edit') %>?"+addParams.join("&");
+
+  prog("TOP-RIGHT");
+  location.href = url;
 }
 
 var thetisBoxPaidHldByUser = null;

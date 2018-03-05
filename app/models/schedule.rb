@@ -1,7 +1,7 @@
 #
 #= Schedule
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Schedule is related to date (or rules) and Users. It can be also related to Equipment and Items.
@@ -41,11 +41,11 @@ class Schedule < ApplicationRecord
   def self.scope_colors(scope)
     case scope
       when Schedule::SCOPE_ALL
-        return ['orangered', '#FFD5C5']
+        return ['orangered', '#ffd5c5']
       when Schedule::SCOPE_PRIVATE
         return ['mediumblue', 'lightcyan']
       when Schedule::SCOPE_PUBLIC
-        return ['darkgreen', '#DEF9A3']
+        return ['darkgreen', '#def9a3']
       else
         return ['', '']
     end

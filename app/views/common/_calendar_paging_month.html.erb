@@ -1,0 +1,15 @@
+<%
+date ||= nil
+%>
+
+<%
+month_s = sprintf('%4d - %02d', date.year, date.month)
+last_month_s = (Date.new(date.year, date.month, 1) << 1).strftime('%Y-%m-01')
+next_month_s = (Date.new(date.year, date.month, 1) >> 1).strftime('%Y-%m-01')
+%>
+<a class="calendar_paging paging_month" href="javascript:this.onclick()" onclick="doPageMonth('<%= last_month_s %>'); return false;">&lt;</a>
+<span style="color:crimson; cursor:pointer; text-decoration:underline;" onclick="selectMonth(function(date){doPageMonth(date);});"><%= month_s %></span>
+<a class="calendar_paging paging_month" href="javascript:this.onclick()" onclick="doPageMonth('<%= next_month_s %>'); return false;">&gt;</a>
+
+<%= render(:partial => 'common/ym_selector', :locals => {:year => date.year, :month => date.month}) %>
+
