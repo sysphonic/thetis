@@ -27,7 +27,7 @@ else
         <label for="schedule_title"><%= Schedule.human_attribute_name('title') %></label><sup style="color:red">*</sup>
       </td>
       <td class="item_value_td">
-        <%= text_field('schedule', 'title', :style => 'width:70%', :onChange => 'reqTargetDay++') %>
+        <input type="text" id="schedule_title" name="schedule[title]" value="<%= (@schedule.nil?)?(nil):(@schedule.title) %>" style="width:70%" onchange="reqTargetDay++" />
       </td>
     </tr>
     <tr>
@@ -306,7 +306,7 @@ else
         <label for="schedule_detail"><%= t('btn.detail') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_area('schedule', 'detail', :rows => '4', :style => 'width:100%', :onChange => 'reqTargetDay++') %>
+        <textarea id="schedule_detail" name="schedule[detail]" style="width:100%;" rows="4" onchange="reqTargetDay++"><%= (@schedule.nil?)?(nil):(@schedule.detail) %></textarea>
       </td>
     </tr>
     <tr>

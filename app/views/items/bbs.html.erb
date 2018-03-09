@@ -22,13 +22,16 @@
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/url.png" title="<%= t('item.show_url') %>" onclick="showURL();">
     </td>
     <td nowrap style="text-align:right;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag('keyword', params[:keyword]) %>
-      <%= t('msg.search_in') %> <%= select_tag 'find_in',
-                               options_for_select([[h(t('folder.current')),Item::FOLDER_CURRENT],
-                                                  [h(t('folder.all')),Item::FOLDER_ALL],
-                                                  [h(t('folder.lower')), Item::FOLDER_LOWER]], 
-                                                  params[:find_in])
-                %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<input type="text" id="keyword" name="keyword" value="<%= params[:keyword] %>" />
+      <%= t('msg.search_in') %>
+      <%
+      opts = [
+        [t('folder.current'), Item::FOLDER_CURRENT],
+        [t('folder.all'), Item::FOLDER_ALL],
+        [t('folder.lower'), Item::FOLDER_LOWER]
+      ]
+      %>
+      <%= select_tag('find_in', options_for_select(opts, params[:find_in])) %>
       <input type="submit" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); form_list.action='<%= url_for(:controller => 'items', :action => 'search') %>'; form_list.submit(); return false;"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs') %>';"/>
     </td>

@@ -39,7 +39,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
     </td>
     <td style="text-align:right; width:30px;" nowrap>
       <%
-      display = [[h(t('equipment.all')), 'all']]
+      opts = [[t('equipment.all'), 'all']]
       unless @login_user.nil?
         group_obj_cache = {}
         groups_a = @login_user.get_groups_a(true, group_obj_cache)
@@ -49,16 +49,16 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
           else
             group_name = group_obj_cache[group_id].name
           end
-          display << [h(group_name), 'group_'+group_id]
+          opts << [group_name, 'group_'+group_id]
         end
         teams_a = @login_user.get_teams_a
         teams_a.each do |team_id|
-          display << [h(Team.get_name(team_id)), 'team_'+team_id]
+          opts << [Team.get_name(team_id), 'team_'+team_id]
         end
       end
       %>
       <%= t('cap.display') %>
-      <%= select_tag('display', options_for_select(display, params[:display]), :onchange => "prog('TOP-RIGHT'); submit();") %>
+      <%= select_tag('display', options_for_select(opts, params[:display]), :onchange => "prog('TOP-RIGHT'); submit();") %>
     </td>
   </tr>
 </table>

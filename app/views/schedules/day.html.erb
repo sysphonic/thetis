@@ -49,22 +49,26 @@ calDisp.setStyle("frame_color", "#3333cc");
       </td>
       <td nowrap style="width:30%; text-align:right;">
         <%
-        display = [[h(t('schedule.calendar')), 'month'], [h(t('schedule.unit_week')), 'week'], [h(t('schedule.unit_day')), 'day']]
+        opts = [
+          [t('schedule.calendar'), 'month'],
+          [t('schedule.unit_week'), 'week'],
+          [t('schedule.unit_day'), 'day']
+        ]
         unless @login_user.nil?
           groups_a = @login_user.get_groups_a
           groups_a.each do |group_id|
-            display << [h(Group.get_name(group_id)), 'group_'+group_id]
+            opts << [Group.get_name(group_id), 'group_'+group_id]
           end
           teams_a = @login_user.get_teams_a
           teams_a.each do |team_id|
-            display << [h(Team.get_name(team_id, @teams_cache)), 'team_'+team_id]
+            opts << [Team.get_name(team_id, @teams_cache), 'team_'+team_id]
           end
-          display << [h(t('group.other_group')), 'group_other']
+          opts << [t('group.other_group'), 'group_other']
         end
         %>
         <%= t('cap.display') %>
         <%= select_tag 'display',
-              options_for_select(display, params[:display]),
+              options_for_select(opts, params[:display]),
               :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
         %>
       </td>

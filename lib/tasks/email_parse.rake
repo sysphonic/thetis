@@ -1,12 +1,12 @@
-# bundle exec rake thetis:email_parse[username] RAILS_ENV=production THETIS_DATABASE_PASSWORD=
+# bundle exec rake thetis:email_parse[filename, username] RAILS_ENV=production THETIS_DATABASE_PASSWORD=
 
 namespace :thetis do
-  task(:email_parse, [:username] => :environment) do |task, args|
+  task(:email_parse, [:filename, :username] => :environment) do |task, args|
 
     #
     # Configuration
     #
-    email_path = File.join(Rails.root.to_s, 'test.eml')
+    email_path = File.join(Rails.root.to_s, args[:filename])
     if args[:username].blank?
       user_id = nil
       mail_account = nil
@@ -38,6 +38,9 @@ puts('<<< '+header_infos.inspect)
     message_part = EmailsHelper.get_message_part(mail)
     puts('charset of message_part = ' + EmailsHelper.get_message_charset(message_part, mail.header.charset))
     puts('mail.multipart? = ' + (mail.multipart?).to_s)
+    if mail.multipart?
+      puts("  boundary = #{EmailsHelper.get_multipart_boundary(raw_source)}")
+    end
     unless mail.text_part.nil?
       puts('mail.text_part.header = ' + mail.text_part.header.to_s)
       puts('mail.text_part = ' + mail.text_part.to_s)

@@ -21,15 +21,19 @@
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= Item.human_attribute_name('title') %></td>
+          <td class="item_cap_td" style="background-color:pink">
+            <%= Item.human_attribute_name('title') %>
+          </td>
           <td class="item_value_td">
-            <%= text_field(:image, :title, :style => 'width:70%') %><br/>
+            <input type="text" id="image_title" name="image[title]" value="<%= (@image.nil?)?(nil):(@image.title) %>" style="width:70%" /><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= Image.human_attribute_name('memo') %></td>
+          <td class="item_cap_td" style="background-color:pink">
+            <%= Image.human_attribute_name('memo') %>
+          </td>
           <td class="item_value_td">
-            <%= text_area(:image, :memo, :rows => '3', :wrap => 'off', :style => 'width:100%') %><br/>
+            <textarea id="image_memo" name="image[memo]" style="width:100%;" rows="3" wrap="off"><%= (@image.nil?)?(nil):(@image.memo) %></textarea><br/>
           </td>
         </tr>
         <tr style="height:10px;"><td></td></tr>

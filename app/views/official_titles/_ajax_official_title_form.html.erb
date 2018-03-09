@@ -22,7 +22,7 @@
       <%= OfficialTitle.human_attribute_name('name') %>
     </td>
     <td class="item_value_td">
-      <%= text_field('official_title', 'name', :style => 'width:90%') %>
+      <input type="text" id="official_title_name" name="official_title[name]" value="<%= (@official_title.nil?)?(nil):(@official_title.name) %>" style="width:90%" />
     </td>
   </tr>
   <tr style="height:10px;"><td></td></tr>

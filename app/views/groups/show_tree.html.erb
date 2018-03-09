@@ -18,14 +18,14 @@
           </td>
           <td style="padding:5px 20px; text-align:right;">
             <%
-            options = []
-            options << [h(User.model_name.human), 'user']
-            options << [t('group.opt.subgroups_order'), 'groups_order']
-            options << [h(OfficialTitle.model_name.human), 'official_title']
-            options << [h(Workflow.model_name.human), 'workflow']
-            options << [h(OfficeMap.model_name.human), 'office_map']
+            opts = []
+            opts << [User.model_name.human, 'user']
+            opts << [t('group.opt.subgroups_order'), 'groups_order']
+            opts << [OfficialTitle.model_name.human, 'official_title']
+            opts << [Workflow.model_name.human, 'workflow']
+            opts << [OfficeMap.model_name.human, 'office_map']
             %>
-            <%= select_tag('select_opt', options_for_select(options, session[:group_option]), :onChange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
+            <%= select_tag('select_opt', options_for_select(opts, session[:group_option]), :onchange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
           </td>
         </tr>
       </table>

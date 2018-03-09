@@ -44,7 +44,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <%= Address.human_attribute_name('name') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'name', :style => 'width:90%') %><sup style="color:red">*</sup>
+                    <input type="text" id="address_name" name="address[name]" value="<%= (@address.nil?)?(nil):(@address.name) %>" style="width:90%" /><sup style="color:red">*</sup>
                   </td>
                 </tr>
                 <tr>
@@ -52,7 +52,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_email1"><%= Address.human_attribute_name('email1') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'email1', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_email1" name="address[email1]" value="<%= (@address.nil?)?(nil):(@address.email1) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -60,7 +60,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_email2"><%= Address.human_attribute_name('email2') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'email2', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_email2" name="address[email2]" value="<%= (@address.nil?)?(nil):(@address.email2) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -68,7 +68,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_email3"><%= Address.human_attribute_name('email3') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'email3', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_email3" name="address[email3]" value="<%= (@address.nil?)?(nil):(@address.email3) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -76,7 +76,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'tel1', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_tel1" name="address[tel1]" value="<%= (@address.nil?)?(nil):(@address.tel1) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -84,7 +84,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'tel2', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_tel2" name="address[tel2]" value="<%= (@address.nil?)?(nil):(@address.tel2) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -92,7 +92,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'tel3', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_tel3" name="address[tel3]" value="<%= (@address.nil?)?(nil):(@address.tel3) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -100,7 +100,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_fax"><%= Address.human_attribute_name('fax') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'fax', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_fax" name="address[fax]" value="<%= (@address.nil?)?(nil):(@address.fax) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
               </table>
@@ -119,7 +119,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'postalcode') %>
+                    <input type="text" id="address_postalcode" name="address[postalcode]" value="<%= (@address.nil?)?(nil):(@address.postalcode) %>" />
                   </td>
                 </tr>
                 <tr>
@@ -127,7 +127,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_address"><%= Address.human_attribute_name('address') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_area('address', 'address', :style => 'width:100%', :rows => '4') %>
+                    <textarea id="address_address" name="address[address]" style="width:100%;" rows="4"><%= (@address.nil?)?(nil):(@address.address) %></textarea>
                   </td>
                 </tr>
                 <tr>
@@ -135,7 +135,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_url"><%= Address.human_attribute_name('url') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'url', :style => 'ime-mode:disabled; width:100%;') %>
+                    <input type="text" id="address_url" name="address[url]" value="<%= (@address.nil?)?(nil):(@address.url) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
@@ -143,7 +143,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_area('address', 'organization', :style => 'width:100%', :rows => '3') %>
+                    <textarea id="address_organization" name="address[organization]" style="width:100%;" rows="3"><%= (@address.nil?)?(nil):(@address.organization) %></textarea>
                   </td>
                 </tr>
                 <tr>
@@ -151,7 +151,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_title"><%= Address.human_attribute_name('title') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('address', 'title', :style => 'width:100%') %>
+                    <input type="text" id="address_title" name="address[title]" value="<%= (@address.nil?)?(nil):(@address.title) %>" style="width:100%" />
                   </td>
                 </tr>
               </table>
@@ -170,7 +170,7 @@ tabs = ["basic", "address", "memo", "scope"];
                     <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_area('address', 'memo', :style => 'width:100%', :rows => '5') %>
+                    <textarea id="address_memo" name="address[memo]" style="width:100%;" rows="5"><%= (@address.nil?)?(nil):(@address.memo) %></textarea>
                   </td>
                 </tr>
               </table>

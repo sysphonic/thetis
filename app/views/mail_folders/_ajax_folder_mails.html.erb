@@ -65,7 +65,8 @@
       <%= sent_at %>
     </td>
     <td nowrap style="text-align:center;" onclick="onCheckBoxCellClicked(this, '<%= email.id %>');">
-      <%= check_box(:check_mail, email.id, :class => 'check_mail') %>
+      <input type="hidden" name="check_mail[<%= email.id %>]" value="0" />
+      <input type="checkbox" class="check_mail" id="check_mail_<%= email.id %>" name="check_mail[<%= email.id %>]" value="1" />
     </td>
   </tr>
 <% end %>

@@ -4,7 +4,7 @@
 <table style="width:98%; margin:10px auto 0px; border-spacing:2px;">
   <tr>
     <td>
-      <%= text_area('item', 'description', :cols => '60', :rows => '20', :wrap => 'off', :style => 'display:none;') %>
+      <textarea id="item_description" name="item[description]" style="display:none;" rows="20" cols="60" wrap="off"><%= (@item.nil?)?(nil):(@item.description) %></textarea>
     </td>
   </tr>
 </table>

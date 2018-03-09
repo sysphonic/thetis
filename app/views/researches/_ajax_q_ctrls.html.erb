@@ -22,10 +22,11 @@
       <%
       @q_hash.each do |q_code, q_params_h|
         q_id = "#{q_params_h['item_id']}:#{q_code}"
+        q_param = nil
         unless q_params_h['type'].nil?
           q_param = q_params_h['type'] + ':' + q_params_h['values']
         end
-        cap = q_params_h['caption']
+        cap = q_params_h[:caption]
       %>
         <textarea id="<%= q_id %>" style="display:none;"><%= (q_param.nil?)?'':q_param %></textarea>
         <div id="<%= q_id %>_cap" style="display:none;"><%= (cap.nil?)?'':cap %></div>

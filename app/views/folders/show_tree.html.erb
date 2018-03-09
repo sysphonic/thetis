@@ -55,14 +55,14 @@ var modified_teams = 0;
           <td style="padding:5px 20px; text-align:right;">
         <% unless @login_user.nil? %>
             <%
-            options = []
-            options << [h(t('folder.opt.items_list')), 'items']
-            options << [h(t('folder.opt.items_order')), 'items_order']
-            options << [h(t('folder.opt.folders_order')), 'folders_order']
-            options << [h(t('folder.opt.authorities')), 'auth']
-            options << [h(t('folder.opt.display_control')), 'disp']
+            opts = []
+            opts << [t('folder.opt.items_list'), 'items']
+            opts << [t('folder.opt.items_order'), 'items_order']
+            opts << [t('folder.opt.folders_order'), 'folders_order']
+            opts << [t('folder.opt.authorities'), 'auth']
+            opts << [t('folder.opt.display_control'), 'disp']
             %>
-            <%= select_tag('select_opt', options_for_select(options, nil), :onChange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
+            <%= select_tag('select_opt', options_for_select(opts, nil), :onchange => 'changeOption(this.value);', :style => 'width:200px; color:chocolate; font-weight:bold;') %>
         <% end %>
           </td>
         </tr>

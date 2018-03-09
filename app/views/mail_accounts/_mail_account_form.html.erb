@@ -36,7 +36,7 @@
                     <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('mail_account.title_info')%>');">
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'title') %><sup style="color:red">*</sup>
+                    <input type="text" id="mail_account_title" name="mail_account[title]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.title) %>" /><sup style="color:red">*</sup>
                   </td>
                 </tr>
 <!--
@@ -45,17 +45,29 @@
                     <label for="mail_account_is_default"><%= t('mail_account.default') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= check_box('mail_account', 'is_default') %> <label for="mail_account_is_default"><%= MailAccount.human_attribute_name('is_default') %></label>
+                    <%
+                    checked = ''
+                    checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.is_default?))
+                    %>
+                    <input type="hidden" name="mail_account[is_default]" value="0" />
+                    <input type="checkbox" id="mail_account_is_default" name="mail_account[is_default]" value="1" <%= checked %> />
+                    <label for="mail_account_is_default"><%= MailAccount.human_attribute_name('is_default') %></label>
                   </td>
                 </tr>
---><%= check_box('mail_account', 'is_default', :style => 'display:none;') %>
+-->
+<%
+checked = ''
+checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.is_default?))
+%>
+<input type="hidden" name="mail_account[is_default]" value="0" />
+<input type="checkbox" id="mail_account_is_default" name="mail_account[is_default]" value="1" <%= checked %> style="display:none;" />
                 <tr style="height:10px;"><td colspan="2"></td></tr>
                 <tr>
                   <td class="prim_cap_td" style="background-color:#c1bfff;" nowrap>
                     <label for="mail_account_from_name"><%= MailAccount.human_attribute_name('from_name') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'from_name') %>
+                    <input type="text" id="mail_account_from_name" name="mail_account[from_name]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.from_name) %>" />
                   </td>
                 </tr>
                 <tr>
@@ -63,7 +75,7 @@
                     <label for="mail_account_from_address"><%= MailAccount.human_attribute_name('from_address') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'from_address', :style => 'ime-mode:disabled') %>
+                    <input type="text" id="mail_account_from_address" name="mail_account[from_address]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.from_address) %>" style="ime-mode:disabled" />
                   </td>
                 </tr>
                 <tr>
@@ -71,7 +83,7 @@
                     <label for="mail_account_reply_to"><%= MailAccount.human_attribute_name('reply_to') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'reply_to', :style => 'ime-mode:disabled') %>
+                    <input type="text" id="mail_account_reply_to" name="mail_account[reply_to]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.reply_to) %>" style="ime-mode:disabled" />
                   </td>
                 </tr>
                 <tr>
@@ -79,7 +91,7 @@
                     <label for="mail_account_organization"><%= MailAccount.human_attribute_name('organization') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'organization') %>
+                    <input type="text" id="mail_account_organization" name="mail_account[organization]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.organization) %>" />
                   </td>
                 </tr>
               <% if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0 %>
@@ -133,7 +145,7 @@
                     <label for="mail_account_pop_server"><%= MailAccount.human_attribute_name('pop_server') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'pop_server', :style => 'ime-mode:disabled') %>
+                    <input type="text" id="mail_account_pop_server" name="mail_account[pop_server]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.pop_server) %>" style="ime-mode:disabled" />
                   </td>
                 </tr>
                 <tr>
@@ -141,7 +153,7 @@
                     <label for="mail_account_pop_port"><%= MailAccount.human_attribute_name('pop_port') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'pop_port', :style => 'ime-mode:disabled; width:80px;') %>
+                    <input type="text" id="mail_account_pop_port" name="mail_account[pop_port]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.pop_port) %>" style="ime-mode:disabled; width:80px;" />
                   </td>
                 </tr>
                 <tr style="height:10px;"><td colspan="2"></td></tr>
@@ -150,7 +162,7 @@
                     <label for="mail_account_pop_username"><%= MailAccount.human_attribute_name('pop_username') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'pop_username', :style => 'ime-mode:disabled') %>
+                    <input type="text" id="mail_account_pop_username" name="mail_account[pop_username]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.pop_username) %>" style="ime-mode:disabled" />
                   </td>
                 </tr>
                 <tr>
@@ -167,11 +179,11 @@
                     <label for="mail_account_pop_secure_conn"><%= t('mail_account.secure_connection') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= radio_button('mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_NONE) %><label for="mail_account_pop_secure_conn_none"> <%= t('msg.none') %></label><br/>
+                    <input type="radio" id="mail_account_pop_secure_conn_<%= MailAccount::POP_SECURE_CONN_NONE %>" name="mail_account[pop_secure_conn]" value="<%= MailAccount::POP_SECURE_CONN_NONE %>" <%= ((!@mail_account.nil?) and (@mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_NONE))?'checked':'' %> /><label for="mail_account_pop_secure_conn_none"> <%= t('msg.none') %></label><br/>
 <!--
-                    <%= radio_button('mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_STARTTLS) %><label for="mail_account_pop_secure_conn_starttls"> STARTTLS</label><br/>
+                    <input type="radio" id="mail_account_pop_secure_conn_<%= MailAccount::POP_SECURE_CONN_STARTTLS %>" name="mail_account[pop_secure_conn]" value="<%= MailAccount::POP_SECURE_CONN_STARTTLS %>" <%= ((!@mail_account.nil?) and (@mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_STARTTLS))?'checked':'' %> /><label for="mail_account_pop_secure_conn_starttls"> STARTTLS</label><br/>
 -->
-                    <%= radio_button('mail_account', 'pop_secure_conn', MailAccount::POP_SECURE_CONN_SSL_TLS) %><label for="mail_account_pop_secure_conn_ssl_tls"> SSL/TLS</label><br/>
+                    <input type="radio" id="mail_account_pop_secure_conn_<%= MailAccount::POP_SECURE_CONN_SSL_TLS %>" name="mail_account[pop_secure_conn]" value="<%= MailAccount::POP_SECURE_CONN_SSL_TLS %>" <%= ((!@mail_account.nil?) and (@mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_SSL_TLS))?'checked':'' %> /><label for="mail_account_pop_secure_conn_ssl_tls"> SSL/TLS</label><br/>
                   </td>
                 </tr>
                 <tr>
@@ -179,8 +191,8 @@
                     <label for="mail_account_pop_secure_auth"><%= t('mail_account.secure_auth') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= radio_button('mail_account', 'pop_secure_auth', false) %><label for="mail_account_pop_secure_auth_false"> <%= t('msg.none') %></label><br/>
-                    <%= radio_button('mail_account', 'pop_secure_auth', true) %><label for="mail_account_pop_secure_auth_true"> APOP</label><br/>
+                    <input type="radio" id="mail_account_pop_secure_auth_false" name="mail_account[pop_secure_auth]" value="false" <%= ((!@mail_account.nil?) and (@mail_account.pop_secure_auth == 'false'))?'checked':'' %> /><label for="mail_account_pop_secure_auth_false"> <%= t('msg.none') %></label><br/>
+                    <input type="radio" id="mail_account_pop_secure_auth_true" name="mail_account[pop_secure_auth]" value="true" <%= ((!@mail_account.nil?) and (@mail_account.pop_secure_auth == 'true'))?'checked':'' %> /><label for="mail_account_pop_secure_auth_true"> APOP</label><br/>
                   </td>
                 </tr>
                 <tr style="height:10px;"><td colspan="2"></td></tr>
@@ -189,7 +201,13 @@
                     <label for="mail_account_remove_from_server"><%= t('mail.messages') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= check_box('mail_account', 'remove_from_server', :disabled => true) %> <label for="mail_account_remove_from_server"><%= MailAccount.human_attribute_name('remove_from_server') %></label>
+                    <%
+                    checked = ''
+                    checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.remove_from_server?))
+                    %>
+                    <input type="hidden" name="mail_account[remove_from_server]" value="0" />
+                    <input type="checkbox" id="mail_account_remove_from_server" name="mail_account[remove_from_server]" disabled value="1" <%= checked %> />
+                    <label for="mail_account_remove_from_server"><%= MailAccount.human_attribute_name('remove_from_server') %></label>
                     <span style="color:dimgray;">(Disabled)</span>
                   </td>
                 </tr>
@@ -209,7 +227,7 @@
                     <label for="mail_account_smtp_server"><%= MailAccount.human_attribute_name('smtp_server') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'smtp_server', :style => 'ime-mode:disabled') %>
+                    <input type="text" id="mail_account_smtp_server" name="mail_account[smtp_server]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.smtp_server) %>" style="ime-mode:disabled" />
                   </td>
                 </tr>
                 <tr>
@@ -217,7 +235,7 @@
                     <label for="mail_account_smtp_port"><%= MailAccount.human_attribute_name('smtp_port') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= text_field('mail_account', 'smtp_port', :style => 'ime-mode:disabled; width:80px;') %>
+                    <input type="text" id="mail_account_smtp_port" name="mail_account[smtp_port]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.smtp_port) %>" style="ime-mode:disabled; width:80px;" />
                   </td>
                 </tr>
                 <tr style="height:10px;"><td colspan="2"></td></tr>
@@ -226,9 +244,9 @@
                     <label for="mail_account_smtp_secure_conn"><%= t('mail_account.secure_connection') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_NONE) %><label for="mail_account_smtp_secure_conn_none"> <%= t('msg.none') %></label><br/>
-                    <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_STARTTLS) %><label for="mail_account_smtp_secure_conn_starttls"> STARTTLS</label><br/>
-                    <%= radio_button('mail_account', 'smtp_secure_conn', MailAccount::SMTP_SECURE_CONN_SSL_TLS) %><label for="mail_account_smtp_secure_conn_ssl_tls"> SSL/TLS</label><br/>
+                    <input type="radio" id="mail_account_smtp_secure_conn_<%= MailAccount::SMTP_SECURE_CONN_NONE %>" name="mail_account[smtp_secure_conn]" value="<%= MailAccount::SMTP_SECURE_CONN_NONE %>" <%= ((!@mail_account.nil?) and (@mail_account.smtp_secure_conn == MailAccount::SMTP_SECURE_CONN_NONE))?'checked':'' %> /><label for="mail_account_smtp_secure_conn_none"> <%= t('msg.none') %></label><br/>
+                    <input type="radio" id="mail_account_smtp_secure_conn_<%= MailAccount::SMTP_SECURE_CONN_STARTTLS %>" name="mail_account[smtp_secure_conn]" value="<%= MailAccount::SMTP_SECURE_CONN_STARTTLS %>" <%= ((!@mail_account.nil?) and (@mail_account.smtp_secure_conn == MailAccount::SMTP_SECURE_CONN_STARTTLS))?'checked':'' %> /><label for="mail_account_smtp_secure_conn_starttls"> STARTTLS</label><br/>
+                    <input type="radio" id="mail_account_smtp_secure_conn_<%= MailAccount::SMTP_SECURE_CONN_SSL_TLS %>" name="mail_account[smtp_secure_conn]" value="<%= MailAccount::SMTP_SECURE_CONN_SSL_TLS %>" <%= ((!@mail_account.nil?) and (@mail_account.smtp_secure_conn == MailAccount::SMTP_SECURE_CONN_SSL_TLS))?'checked':'' %> /><label for="mail_account_smtp_secure_conn_ssl_tls"> SSL/TLS</label><br/>
                   </td>
                 </tr>
                 <tr style="height:10px;"><td colspan="2"></td></tr>
@@ -237,16 +255,22 @@
                     <label for="mail_account_smtp_auth"><%= MailAccount.human_attribute_name('smtp_auth') %></label>
                   </td>
                   <td class="item_value_td">
-                    <%= check_box('mail_account', 'smtp_auth', :onclick => '_z("div_smtp_auth").style.display=this.checked?"block":"none";') %> <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
+                    <%
+                    checked = ''
+                    checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.smtp_auth?))
+                    %>
+                    <input type="hidden" name="mail_account[smtp_auth]" value="0" />
+                    <input type="checkbox" id="mail_account_smtp_auth" name="mail_account[smtp_auth]" value="1" <%= checked %> onclick="onCheckSmtpAuthClicked(this);" />
+                    <label for="mail_account_smtp_auth"><%= t('mail_account.enable_auth') %></label>
                   </td>
                 </tr>
                 <tr>
                   <td colspan="2" style="padding-left:20px;">
                     <div id="div_smtp_auth" style="display:<%= (!@mail_account.nil? and @mail_account.smtp_auth)?'block':'none' %>">
                       <div style="padding-bottom:5px;">
-                        <%= radio_button('mail_account', 'smtp_auth_method', 'plain') %><label for="mail_account_smtp_auth_method_plain">Plain</label>
-                        <%= radio_button('mail_account', 'smtp_auth_method', 'login') %><label for="mail_account_smtp_auth_method_login">Login</label>
-                        <%= radio_button('mail_account', 'smtp_auth_method', 'cram_md5') %><label for="mail_account_smtp_auth_method_cram_md5">CRAM MD5</label>
+                        <input type="radio" id="mail_account_smtp_auth_method_plain" name="mail_account[smtp_auth_method]" value="plain" <%= ((!@mail_account.nil?) and (@mail_account.smtp_auth_method == 'plain'))?'checked':'' %> /><label for="mail_account_smtp_auth_method_plain">Plain</label>
+                        <input type="radio" id="mail_account_smtp_auth_method_login" name="mail_account[smtp_auth_method]" value="login" <%= ((!@mail_account.nil?) and (@mail_account.smtp_auth_method == 'login'))?'checked':'' %> /><label for="mail_account_smtp_auth_method_login">Login</label>
+                        <input type="radio" id="mail_account_smtp_auth_method_cram_md5" name="mail_account[smtp_auth_method]" value="cram_md5" <%= ((!@mail_account.nil?) and (@mail_account.smtp_auth_method == 'cram_md5'))?'checked':'' %> /><label for="mail_account_smtp_auth_method_cram_md5">CRAM MD5</label>
                       </div>
 
                       <table style="width:100%; border-spacing:2px;">
@@ -255,7 +279,7 @@
                             <label for="mail_account_smtp_username"><%= t('user.u_name') %></label>
                           </td>
                           <td class="item_value_td">
-                            <%= text_field('mail_account', 'smtp_username', :style => 'ime-mode:disabled;') %>
+                            <input type="text" id="mail_account_smtp_username" name="mail_account[smtp_username]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.smtp_username) %>" style="ime-mode:disabled;" />
                           </td>
                         </tr>
                         <tr>
@@ -294,9 +318,12 @@ showAddressTab = function(name)
 
   showTab(name, arr, "slateblue");
 }
-
 showAddressTab("basic");
 
+onCheckSmtpAuthClicked = function(elem)
+{
+  _z("div_smtp_auth").style.display = (elem.checked)?"block":"none";
+}
 
 doRegisterAccount = function()
 {

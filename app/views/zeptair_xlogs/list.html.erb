@@ -8,22 +8,23 @@
     </td>
     <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">
-      &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-<% unless @login_user.nil? %>
-  <%= t('cap.targets') %> <%= select_tag 'filter',
-                           options_for_select([
-                                                [t('log.all'),'all'],
-                                                ['HTTP','HTTP'],
-                                                ['HTTP(PROXY)', 'HTTP(PROXY)'],
-                                                ['HTTPS','HTTPS'],
-                                                ['POP3','POP3'],
-                                                ['SMTP','SMTP'],
-                                                ['FTP','FTP'],
-                                                [t('paren.unknown'),'UNKNOWN']
-                                              ],
-                                              params[:filter])
-            %>
-<% end %>
+      &nbsp;<input type="text" id="keyword" name="keyword" value="<%= params[:keyword] %>" />
+    <% unless @login_user.nil? %>
+      <%= t('cap.targets') %>
+      <%
+      opts = [
+        [t('log.all'), 'all'],
+        ['HTTP', 'HTTP'],
+        ['HTTP(PROXY)', 'HTTP(PROXY)'],
+        ['HTTPS', 'HTTPS'],
+        ['POP3', 'POP3'],
+        ['SMTP', 'SMTP'],
+        ['FTP', 'FTP'],
+        [t('paren.unknown'), 'UNKNOWN']
+      ]
+      %>
+      <%= select_tag('filter', options_for_select(opts, params[:filter])) %>
+    <% end %>
       <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'zeptair_xlogs', :action => 'list') %>';"/>
     </td>
@@ -137,7 +138,8 @@ exist_cache = {}
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.detail') %>" onclick="msg('<%= ApplicationHelper.h_s_quote(xlog.get_detail.gsub('<', '').gsub('>', '')) %>');">
     </td>
     <td nowrap style="text-align:center;">
-      <%= check_box(:check_xlog, xlog.id, :class => 'check_xlog') %>
+      <input type="hidden" name="check_xlog[<%= xlog.id %>]" value="0" />
+      <input type="checkbox" class="check_xlog" id="check_xlog_<%= xlog.id %>" name="check_xlog[<%= xlog.id %>]" value="1" />
     </td>
   </tr>
 <% end %>

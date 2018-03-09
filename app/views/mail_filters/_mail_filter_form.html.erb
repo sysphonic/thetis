@@ -34,7 +34,7 @@ mail_account = MailAccount.find(mail_account_id)
       <label for="mail_filter_title"><%= MailFilter.human_attribute_name('title') %></label>
     </td>
     <td class="item_value_td">
-      <%= text_field('mail_filter', 'title', :style => 'width:90%') %><sup style="color:red">*</sup>
+      <input type="text" id="mail_filter_title" name="mail_filter[title]" value="<%= (@mail_filter.nil?)?(nil):(@mail_filter.title) %>" style="width:90%" /><sup style="color:red">*</sup>
     </td>
   </tr>
   <tr>

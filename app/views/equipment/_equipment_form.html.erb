@@ -8,7 +8,7 @@
         <label for="equipment_name"><%= Equipment.human_attribute_name('name') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_field('equipment', 'name', :style => 'width:80%') %><sup style="color:red">*</sup>
+        <input type="text" id="equipment_name" name="equipment[name]" value="<%= (@equipment.nil?)?(nil):(@equipment.name) %>" style="width:80%" /><sup style="color:red">*</sup>
       </td>
     </tr>
     <tr>
@@ -16,7 +16,7 @@
         <label for="equipment_note"><%= Equipment.human_attribute_name('note') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_area('equipment', 'note', :rows => '4', :style => 'width:80%') %>
+        <textarea id="equipment_note" name="equipment[note]" style="width:80%;" rows="4"><%= (@equipment.nil?)?(nil):(@equipment.note) %></textarea>
       </td>
     </tr>
     <tr>

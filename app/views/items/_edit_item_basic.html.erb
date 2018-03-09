@@ -22,13 +22,13 @@
   <% when Item::XTYPE_RESEARCH %>
       <%= Research.model_name.human %>
   <% else   # XTYPE_INFO, XTYPE_PROJECT, XTYPE_ZEPTAIR_DIST, XTYPE_UNKNOWN %>
-      <%= radio_button('item', 'xtype', Item::XTYPE_INFO, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
-      <%= radio_button('item', 'xtype', Item::XTYPE_PROJECT, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
+      <input type="radio" id="item_xtype_<%= Item::XTYPE_INFO %>" name="item[xtype]" value="<%= Item::XTYPE_INFO %>" <%= ((!@item.nil?) and (@item.xtype == Item::XTYPE_INFO))?'checked':'' %> onclick="onItemXtypeClicked(this)" /><label for="item_xtype_<%= Item::XTYPE_INFO %>"> <%= t('item.type.normal') %></label><br/>
+      <input type="radio" id="item_xtype_<%= Item::XTYPE_PROJECT %>" name="item[xtype]" value="<%= Item::XTYPE_PROJECT %>" <%= ((!@item.nil?) and (@item.xtype == Item::XTYPE_PROJECT))?'checked':'' %> onclick="onItemXtypeClicked(this)" /><label for="item_xtype_<%= Item::XTYPE_PROJECT %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" /> <%= t('item.type.project') %></label><br/>
     <%
 =begin
 #    if @login_user.admin?(User::AUTH_ZEPTAIR)
     %>
-#      <%= radio_button('item', 'xtype', Item::XTYPE_ZEPTAIR_DIST, :onClick => 'onItemXtypeClicked(this)') %><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
+#      <input type="radio" id="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>" name="item[xtype]" value="<%= Item::XTYPE_ZEPTAIR_DIST %>" <%= ((!@item.nil?) and (@item.xtype == Item::XTYPE_ZEPTAIR_DIST))?'checked':'' %> onclick="onItemXtypeClicked(this)" /><label for="item_xtype_<%= Item::XTYPE_ZEPTAIR_DIST %>"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" /> <%= t('item.type.zeptair_dist') %></label>
 #      &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('item.zeptair_dist_info') %>');">
 #
 #      <div id="div_zept_cmd" style="padding-left:20px; display:<%= (@item.xtype == Item::XTYPE_ZEPTAIR_DIST)?'block':'none' %>;">
@@ -79,7 +79,7 @@
       <label for="item_title"><%= Item.human_attribute_name('title') %></label>
     </td>
     <td class="item_value_td">
-      <%= text_field('item', 'title', :style => 'width:400px', :onChange => 'modifiedBasic++') %>
+      <input type="text" id="item_title" name="item[title]" value="<%= (@item.nil?)?(nil):(@item.title) %>" style="width:400px" onchange="modifiedBasic++" />
     </td>
   </tr>
 <% if !@item.nil? and @item.is_a_copy? %>
@@ -145,7 +145,7 @@
       <label for="item_summary"><%= Item.human_attribute_name('summary') %></label>
     </td>
     <td class="item_value_td">
-      <%= text_area('item', 'summary', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++') %>
+      <textarea id="item_summary" name="item[summary]" style="width:100%" rows="3" wrap="off" onchange="modifiedBasic++"><%= (@item.nil?)?(nil):(@item.summary) %></textarea>
     </td>
   </tr>
   <tr>
@@ -156,11 +156,16 @@
       </label>
     </td>
     <td class="item_value_td">
-<% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH) %>
+<% if ((!@item.nil?) and ((@item.xtype == Item::XTYPE_WORKFLOW) or (@item.xtype == Item::XTYPE_RESEARCH))) %>
       ---
       <input type="hidden" id="item_public" name="item[public]" value="<%= '0' %>" />
 <% else %>
-      <%= check_box('item', 'public', :onChange => 'modifiedBasic++') %><label for="item_public"><%= t('item.set_public') %></label>
+      <%
+      checked = ''
+      checked = 'checked' if ((!@item.nil?) and (@item.public?))
+      %>
+      <input type="hidden" name="item[public]" value="0" />
+      <input type="checkbox" id="item_public" name="item[public]" value="1" <%= checked %> onchange="modifiedBasic++" /><label for="item_public"><%= t('item.set_public') %></label>
 <% end %>
     </td>
   </tr>
@@ -173,7 +178,7 @@
       ---
       <input type="hidden" id="item_update_message" name="item[update_message]" value="" />
 <% else %>
-      <%= text_area 'item', 'update_message', :rows => '3', :wrap => 'off', :style => 'width:100%', :onChange => 'modifiedBasic++' %>
+      <textarea id="item_update_message" name="item[update_message]" style="width:100%;" rows="3" wrap="off" onchange="modifiedBasic++"><%= (@item.nil?)?(nil):(@item.update_message) %></textarea>
       &nbsp;<span style="color:blueviolet; font-size:12px;"><%= t('item.update_message_info') %></span>
 <% end %>
     </td>
@@ -187,7 +192,7 @@
         <tr>
           <td style="width:10px;"></td>
           <td style="vertical-align:top;">
-            <%= radio_button('item', 'layout', 'A', :onClick => 'modifiedBasic++') %><label for="item_layout_a"> A</label>
+            <input type="radio" id="item_layout_a" name="item[layout]" value="A" <%= ((!@item.nil?) and (@item.layout == 'A'))?'checked':'' %> onclick="modifiedBasic++" /><label for="item_layout_a"> A</label>
             <table border="1" style="width:50px;">
               <tr>
                 <td>
@@ -213,7 +218,7 @@
           </td>
           <td style="width:20px;"></td>
           <td style="vertical-align:top;">
-            <%= radio_button('item', 'layout', 'B', :onClick => 'modifiedBasic++') %><label for="item_layout_b"> B</label>
+            <input type="radio" id="item_layout_b" name="item[layout]" value="B" <%= ((!@item.nil?) and (@item.layout == 'B'))?'checked':'' %> onclick="modifiedBasic++" /><label for="item_layout_b"> B</label>
             <table border="1" style="width:50px;">
               <tr>
                 <td>
@@ -241,7 +246,7 @@
           </td>
           <td style="width:20px;"></td>
           <td style="vertical-align:top;">
-            <%= radio_button('item', 'layout', 'C', :onClick => 'modifiedBasic++') %><label for="item_layout_c"> C</label>
+            <input type="radio" id="item_layout_c" name="item[layout]" value="C" <%= ((!@item.nil?) and (@item.layout == 'C'))?'checked':'' %> onclick="modifiedBasic++" /><label for="item_layout_c"> C</label>
             <table border="1" style="width:50px;">
               <tr>
                 <td style="text-align:center;" colspan="2">

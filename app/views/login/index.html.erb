@@ -19,7 +19,7 @@
                     <label for="user_name"><%= t('user.u_name') %><%= t('msg.colon') %></label>
                   </td>
                   <td style="text-align:left;">
-                    <%= text_field('user', 'name', :style => 'width:200px; ime-mode:disabled;') %>
+                    <input type="text" id="user_name" name="user[name]" value="<%= (@user.nil?)?(nil):(@user.name) %>" style="width:200px; ime-mode:disabled;" />
                   </td>
                 </tr>
                 <tr>

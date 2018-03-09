@@ -61,7 +61,7 @@ class ResearchesController < ApplicationController
         hash = Research.find_q_codes(item.description)
 
         hash.each do |q_code, q_params_h|
-          q_params_h = Hash.new if q_params_h.nil?
+          q_params_h ||= {}
           q_params_h['item_id'] = item.id
           q_params_h['item_title'] = item.title
           hash[q_code] = q_params_h
@@ -164,8 +164,12 @@ class ResearchesController < ApplicationController
     type = q_param.split(':').first
     vals = q_param[type.length+1 .. -1]
 
-    yaml[q_code] = {'item_id' => item_id, 'type' => type, 'values' => vals, 'caption' => cap.to_s}
-
+    yaml[q_code] = {
+      'item_id' => item_id,
+      'type' => type,
+      'values' => vals,
+      'caption' => cap.to_s
+    }
     Research.save_config_yaml(yaml)
 
     render(:plain => '')

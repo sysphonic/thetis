@@ -9,7 +9,7 @@
         <label for="user_name"><%= t('user.u_name') %></label><sup style="color:red">*</sup>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'name', :style => 'ime-mode:disabled') %>
+        <input type="text" id="user_name" name="user[name]" value="<%= (@user.nil?)?(nil):(@user.name) %>" style="ime-mode:disabled" />
       </td>
     </tr>
   <%
@@ -51,7 +51,7 @@
         <label for="user_email"><%= User.human_attribute_name('email') %></label><sup style="color:red">*</sup>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'email', :style => 'ime-mode:disabled') %>
+        <input type="text" id="user_email" name="user[email]" value="<%= (@user.nil?)?(nil):(@user.email) %>" style="ime-mode:disabled" />
       </td>
     </tr>
     <tr>
@@ -59,7 +59,7 @@
         <label for="user_fullname"><%= User.human_attribute_name('fullname') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'fullname') %>
+        <input type="text" id="user_fullname" name="user[fullname]" value="<%= (@user.nil?)?(nil):(@user.fullname) %>" />
       </td>
     </tr>
     <tr>
@@ -67,8 +67,8 @@
         <label for="user_address"><%= User.human_attribute_name('address') %></label>
       </td>
       <td class="item_value_td">
-        <%= t('cap.postalcode') %> <%= text_field('user', 'postalcode', :style => 'width:100px; ime-mode:disabled;') %><br/>
-        <%= text_area('user', 'address', :style => 'width:100%', :rows => '3') %>
+        <%= t('cap.postalcode') %> <input type="text" id="user_postalcode" name="user[postalcode]" value="<%= (@user.nil?)?(nil):(@user.postalcode) %>" style="width:100px; ime-mode:disabled;" /><br/>
+        <textarea id="user_address" name="user[address]" style="width:100%;" rows="3"><%= (@user.nil?)?(nil):(@user.address) %></textarea>
       </td>
     </tr>
     <tr>
@@ -100,10 +100,10 @@ end
       </td>
       <td class="item_value_td">
         <%
-        options = []
+        opts = []
         THETIS_TEL_TYPES.each do |type|
           val = User.get_tel_type_name(type)
-          options << [val, val]
+          opts << [val, val]
         end
 
         tel1_note = ''
@@ -115,12 +115,12 @@ end
           tel3_note = @user.tel3_note
         end
         %>
-        <%= select_tag('user[tel1_note]', options_for_select(options, tel1_note)) %>
-        <%= text_field('user', 'tel1', :style => 'ime-mode:disabled') %><br/>
-        <%= select_tag('user[tel2_note]', options_for_select(options, tel2_note)) %>
-        <%= text_field('user', 'tel2', :style => 'ime-mode:disabled') %><br/>
-        <%= select_tag('user[tel3_note]', options_for_select(options, tel3_note)) %>
-        <%= text_field('user', 'tel3', :style => 'ime-mode:disabled') %><br/>
+        <%= select_tag('user[tel1_note]', options_for_select(opts, tel1_note)) %>
+        <input type="text" id="user_tel1" name="user[tel1]" value="<%= (@user.nil?)?(nil):(@user.tel1) %>" style="ime-mode:disabled" /><br/>
+        <%= select_tag('user[tel2_note]', options_for_select(opts, tel2_note)) %>
+        <input type="text" id="user_tel2" name="user[tel2]" value="<%= (@user.nil?)?(nil):(@user.tel2) %>" style="ime-mode:disabled" /><br/>
+        <%= select_tag('user[tel3_note]', options_for_select(opts, tel3_note)) %>
+        <input type="text" id="user_tel3" name="user[tel3]" value="<%= (@user.nil?)?(nil):(@user.tel3) %>" style="ime-mode:disabled" /><br/>
       </td>
     </tr>
     <tr>
@@ -128,7 +128,7 @@ end
         <label for="user_fax"><%= User.human_attribute_name('fax') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'fax', :style => 'ime-mode:disabled') %>
+        <input type="text" id="user_fax" name="user[fax]" value="<%= (@user.nil?)?(nil):(@user.fax) %>" style="ime-mode:disabled" />
       </td>
     </tr>
     <tr>
@@ -136,7 +136,7 @@ end
         <label for="user_organization"><%= User.human_attribute_name('organization') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_area('user', 'organization', :style => 'width:100%', :rows => '3') %>
+        <textarea id="user_organization" name="user[organization]" style="width:100%;" rows="3"><%= (@user.nil?)?(nil):(@user.organization) %></textarea>
       </td>
     </tr>
     <tr>
@@ -144,7 +144,7 @@ end
         <label for="user_url"><%= User.human_attribute_name('url') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'url', :style => 'width:100%; ime-mode:disabled;') %>
+        <input type="text" id="user_url" name="user[url]" value="<%= (@user.nil?)?(nil):(@user.url) %>" style="width:100%; ime-mode:disabled;" />
       </td>
     </tr>
     <tr>
@@ -152,7 +152,7 @@ end
         <label for="user_title"><%= User.human_attribute_name('title') %></label>
       </td>
       <td class="item_value_td">
-        <%= text_field('user', 'title', :style => 'width:80%; vertical-align:middle;') %><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropleft.png" onclick="showTitleSelector();" style="cursor:pointer;" />
+        <input type="text" id="user_title" name="user[title]" value="<%= (@user.nil?)?(nil):(@user.title) %>" style="width:80%; vertical-align:middle;" /><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropleft.png" onclick="showTitleSelector();" style="cursor:pointer;" />
       </td>
     </tr>
     <tr>
@@ -160,12 +160,12 @@ end
         <label for="user_figure"><%= User.human_attribute_name('figure') %></label>
       </td>
       <td class="item_value_td">
-        <%= radio_button('user', 'figure', 'boy_green') %><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/boy_green.png" title="Boy green" /></label>
+        <input type="radio" id="user_figure_boy_green" name="user[figure]" value="boy_green" <%= ((!@user.nil?) and (@user.figure == 'boy_green'))?'checked':'' %> /><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/boy_green.png" title="Boy green" /></label>
         &nbsp;&nbsp;
-        <%= radio_button('user', 'figure', 'girl_pink') %><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/girl_pink.png" title="Girl pink" /></label>
+        <input type="radio" id="user_figure_girl_pink" name="user[figure]" value="girl_pink" <%= ((!@user.nil?) and (@user.figure == 'girl_pink'))?'checked':'' %> /><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/girl_pink.png" title="Girl pink" /></label>
       </td>
     </tr>
-  <% if params[:action] == 'edit' and @login_user.id == @user.id %>
+  <% if (params[:action] == 'edit') and (@login_user.id == @user.id) %>
     <tr>
       <%
       def_birth_y = ''
@@ -183,19 +183,19 @@ end
       <td class="item_value_td">
         <input type="text" id="user_birthday_y" name="user[birthday_y]" value="<%= def_birth_y %>" size="30" style="width:50px; ime-mode:disabled">
         <%
-        options = []
+        opts = []
         (1..12).each do |month|
-          options << [month, month]
+          opts << [month, month]
         end
         %>
-        <%= select_tag('user[birthday_m]', options_for_select(options, def_birth_m.to_i)) %>
+        <%= select_tag('user[birthday_m]', options_for_select(opts, def_birth_m.to_i)) %>
         <%
-        options = []
+        opts = []
         (1..31).each do |day|
-          options << [day, day]
+          opts << [day, day]
         end
         %>
-        <%= select_tag('user[birthday_d]', options_for_select(options, def_birth_d.to_i)) %>
+        <%= select_tag('user[birthday_d]', options_for_select(opts, def_birth_d.to_i)) %>
       </td>
     </tr>
   <% end %>

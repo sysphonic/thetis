@@ -16,34 +16,34 @@
       <td style="text-align:center; width:40%;" nowrap></td>
       <td style="text-align:right; width:30%;" nowrap>
         <%
-        display = []
+        opts = []
         unless @user.nil?
           user_name = @user.get_name_for_timecard
           if @login_user != @user
-            display << [h(user_name), 'user_'+@user.id.to_s]
+            opts << [user_name, 'user_'+@user.id.to_s]
           end
         end
-        display << [h(t('timecard.my_timecard')), 'mine']
+        opts << [t('timecard.my_timecard'), 'mine']
         unless @login_user.nil?
           groups_a = @login_user.get_groups_a
           groups_a.each do |group_id|
-            display << [h(Group.get_name(group_id)), 'group_'+group_id]
+            opts << [Group.get_name(group_id), 'group_'+group_id]
           end
           # teams_a = @login_user.get_teams_a
           # teams_a.each do |team_id|
-          #   display << [h(Team.get_name(team_id)), 'team_'+team_id]
+          #   opts << [Team.get_name(team_id), 'team_'+team_id]
           # end
           if !@group_id.nil? and !groups_a.include?(@group_id)
-            display << [h(Group.get_name(@group_id)), 'group_'+@group_id]
+            opts << [Group.get_name(@group_id), 'group_'+@group_id]
           end
           if !@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD)
-            display << [h(t('group.other_group')), 'group_other']
+            opts << [t('group.other_group'), 'group_other']
           end
         end
         %>
         <%= t('cap.display') %>
         <%= select_tag 'display',
-             options_for_select(display, params[:display]),
+             options_for_select(opts, params[:display]),
              :onchange => "if (this.options[this.selectedIndex].value=='group_other') { showGroupTree(); } else { submit(); prog('TOP-RIGHT'); }"
         %>
       </td>

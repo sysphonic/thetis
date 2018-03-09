@@ -100,13 +100,10 @@ end
         <%
         opts = []
         Timecard.workcodes.each do |workcode, value|
-          opts << [h(Timecard.workcode_names[workcode]), workcode]
+          opts << [Timecard.workcode_names[workcode], workcode]
         end
         %>
-        <%= select_tag 'timecard[workcode]',
-                     options_for_select(opts, (@timecard.nil?)?nil:(@timecard.workcode)),
-                     :onChange => 'changeWorkcode(this.value);'
-                  %>
+        <%= select_tag('timecard[workcode]', options_for_select(opts, (@timecard.nil?)?nil:(@timecard.workcode)), :onchange => 'changeWorkcode(this.value);') %>
       <% elsif !@timecard.nil? %>
         <%= @timecard.workcode_name %>
       <% end %>
@@ -203,7 +200,7 @@ end
         <table style="width:100%;">
           <tr>
             <td style="border:none;">
-              <%= text_area('timecard', 'comment', :rows => 3, :style => 'width:100%;') %>
+              <textarea id="timecard_comment" name="timecard[comment]" style="width:100%;" rows="3"><%= (@timecard.nil?)?(nil):(@timecard.comment) %></textarea>
             </td>
             <td style="width:25px; text-align:center; border:none;">
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropleft.png" onclick="showDescSelector();" style="cursor:pointer; vertical-align:middle;" />

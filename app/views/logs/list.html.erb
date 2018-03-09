@@ -8,28 +8,29 @@
     </td>
     <td style="text-align:right;">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">
-      &nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
+      &nbsp;<input type="text" id="keyword" name="keyword" value="<%= params[:keyword] %>" />
 <%
 unless @login_user.nil?
   opts = []
-  opts << [h(t('log.all')),'all']
-  opts << [h(t('btn.login')),'login']
-  opts << [h(t('menu.desktop')),'desktop']
-  opts << [h(t('menu.items')),'items']
-  opts << [h(t('folder.plural')),'folders']
-  opts << [h(t('menu.schedules')),'schedules']
-  opts << [h(t('menu.equipment')),'equipment']
-  opts << [h(t('user.plural')),'users']
-  opts << [h(t('group.plural')),'groups']
-  opts << [h(t('team.plural')),'teams']
-  opts << [h(t('template.plural')),'templates']
-  opts << [h(t('workflow.plural')),'workflows']
-  opts << [h(t('research.plural')), 'researches']
-  opts << [h(t('menu.mail')), 'emails']
-  opts << [h(t('address.book')), 'addressbook']
-  opts << [h(t('feed.cap')), 'feeds']
+  opts << [t('log.all'), 'all']
+  opts << [t('btn.login'), 'login']
+  opts << [t('menu.desktop'), 'desktop']
+  opts << [t('menu.items'), 'items']
+  opts << [t('folder.plural'), 'folders']
+  opts << [t('menu.schedules'), 'schedules']
+  opts << [t('menu.equipment'), 'equipment']
+  opts << [t('user.plural'), 'users']
+  opts << [t('group.plural'), 'groups']
+  opts << [t('team.plural'), 'teams']
+  opts << [t('template.plural'), 'templates']
+  opts << [t('workflow.plural'), 'workflows']
+  opts << [t('research.plural'), 'researches']
+  opts << [t('menu.mail'), 'emails']
+  opts << [t('address.book'), 'addressbook']
+  opts << [t('feed.cap'), 'feeds']
 %>
-  <%= t('cap.targets') %> <%= select_tag 'filter', options_for_select(opts, params[:filter]) %>
+  <%= t('cap.targets') %>
+  <%= select_tag('filter', options_for_select(opts, params[:filter])) %>
 <% end %>
       <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'logs', :action => 'list') %>';"/>
@@ -119,7 +120,8 @@ user_obj_cache = {}
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.detail') %>" onclick="msg('<%= log.detail %>');">
     </td>
     <td nowrap style="text-align:center;">
-      <%= check_box(:check_log, log.id, :class => 'check_log') %>
+      <input type="hidden" name="check_log[<%= log.id %>]" value="0" />
+      <input type="checkbox" class="check_log" id="check_log_<%= log.id %>" name="check_log[<%= log.id %>]" value="1" />
     </td>
   </tr>
 <% end %>

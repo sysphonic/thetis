@@ -1,7 +1,7 @@
 #
 #= Research
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Research represents each answer (including not commited) to the questionnaire.
@@ -192,10 +192,10 @@ class Research < ApplicationRecord
     end
 
     delete_keys.each do |key|
-      yaml.delete key
+      yaml.delete(key)
     end
 
-    Research.save_config_yaml yaml
+    Research.save_config_yaml(yaml)
   end
 
   #=== self.get_statistics_groups
@@ -387,11 +387,11 @@ class Research < ApplicationRecord
   #Selects question-captions in the specified HTML.
   #
   #_html_:: Target HTML.
-  #return:: Hash of found question-codes and its captions |q_code, q_cap|.
+  #return:: Hash of found question-codes and its captions {q_code => q_cap}.
   #
   def self.select_q_caps(html)
 
-    q_caps_h = {}   # |q_code, q_cap|
+    q_caps_h = {}   # {q_code => q_cap}
 
     return q_caps_h if html.nil?
 
@@ -413,16 +413,11 @@ class Research < ApplicationRecord
 #File.open(Research.page_dir+"/#{trimmed.gsub(/[<>\/\\\"'%*]/, '')[0,10]}", 'w') do |file|
 #  file.write(trimmed);
 #end
-
-          #x pattern = "([$]q\d{2}_\d{2})??.*?>([^<>]+?)<.+?[$]#{q_code}"
-          #x pattern = ">([^<>]+?)<(?:(?!>[^<>]+<).)*[$]#{q_code}"
-          #pattern = ">([^<>]+?)<.+?[$]#{q_code}"
+          q_cap = nil
           pattern = "(?:^|<)([^<]+?)[<\s]*?[$]#{q_code}"
-          founds = trimmed.scan(Regexp.new(pattern, Regexp::MULTILINE))
-          if founds.nil? or founds.empty?
-            q_cap = nil
-          else
-            q_caps = founds.first
+          m = trimmed.scan(Regexp.new(pattern, Regexp::MULTILINE))
+          unless m.nil? or m.empty?
+            q_caps = m.first
             q_cap = q_caps[0].strip
           end
           q_caps_h[q_code] = q_cap
@@ -450,14 +445,12 @@ class Research < ApplicationRecord
     q_vals = q_param['values']
 
     ctrl = ''
-    ctrl_id = "research_#{q_code}"
-    ctrl_name = "research[#{q_code}]"
     case q_type
       when 'radio'
-        ctrl_name << '[]' if q_type == 'checkbox'
         vals = q_vals.gsub(/\r\n/, "\n").split("\n")
         vals.each do |val|
-          ctrl += "<%= radio_button('research', '#{q_code}', '#{val}') %> <%= '#{val}' %><br/>\n"
+          ctrl += "<input type=\"radio\" id=\"research_#{q_code}_#{val}\" name=\"research[#{q_code}]\" value=\"#{val}\" <%= ((!@research.nil?) and (@research.#{q_code} == '#{val}'))?'checked':'' %> />\n"
+          ctrl += "#{val}<br/>\n"
         end
 
       when 'checkbox'
@@ -469,8 +462,8 @@ class Research < ApplicationRecord
           ctrl += "  checked = 'checked'\n"
           ctrl += "end\n"
           ctrl += "%>\n"
-          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='<%= '#{val}' %>' <%= checked %>> <%= '#{val}' %><br/>\n"
           ctrl += "<input type='hidden' name='research[#{q_code}][]' value=''>\n"
+          ctrl += "<input type='checkbox' name='research[#{q_code}][]' value='#{val}' <%= checked %>> #{val}<br/>\n"
         end
 
       when 'select'
@@ -485,10 +478,10 @@ class Research < ApplicationRecord
         ctrl += "<%= select_tag('research[#{q_code}]', opts) %>\n"
 
       when 'textarea'
-        if q_vals.to_i == 1
-          ctrl += "<%= text_field('research', '#{q_code}', :style => 'width:100%') %><br/>\n"
+        if (q_vals.to_i == 1)
+          ctrl += "<input type=\"text\" id=\"research_#{q_code}\" name=\"research[#{q_code}]\" value=\"<%= (@research.nil?)?(nil):(@research.#{q_code}) %>\" style=\"width:100%;\" /><br/>\n"
         else
-          ctrl += "<%= text_area('research', '#{q_code}', :rows => '#{q_vals}', :style => 'width:100%') %><br/>\n"
+          ctrl += "<textarea id=\"research_#{q_code}\" name=\"research[#{q_code}]\" style=\"width:100%;\" rows=\"#{q_vals}\"><%= (@research.nil?)?(nil):(@research.#{q_code}) %></textarea><br/>\n"
         end
     end
 
@@ -497,5 +490,4 @@ class Research < ApplicationRecord
 
     return html
   end
-
 end

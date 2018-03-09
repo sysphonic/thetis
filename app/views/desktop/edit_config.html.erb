@@ -36,7 +36,7 @@ tabs = ["basic", "admin"];
           <tr>
             <td style="text-align:center; padding:20px 0px;" >
 
-              <%= form_tag( {:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
+              <%= form_tag({:controller => 'desktop', :action => 'update_pref'}, :name => 'form_desktop_pref', :method => 'post', :enctype => 'multipart/form-data') %>
 
                 <table style="margin:0px auto; width:90%; border-spacing:2px;">
                   <tr>
@@ -45,11 +45,11 @@ tabs = ["basic", "admin"];
                     </td>
                     <td class="item_value_td">
                       <%
-                      options = []
-                      options << [h(t('desktop.theme.bolt')), Desktop::THEME_BOLT]
-                      options << [h(t('desktop.theme.grape')), Desktop::THEME_GRAPE]
+                      opts = []
+                      opts << [t('desktop.theme.bolt'), Desktop::THEME_BOLT]
+                      opts << [t('desktop.theme.grape'), Desktop::THEME_GRAPE]
                       %>
-                      <%= select_tag('desktop[theme]', options_for_select(options, (@desktop.nil?)?(nil):(@desktop.theme)), :style => 'width:200px;') %>
+                      <%= select_tag('desktop[theme]', options_for_select(opts, (@desktop.nil?)?(nil):(@desktop.theme)), :style => 'width:200px;') %>
                     </td>
                   </tr>
                   <tr>
@@ -86,9 +86,24 @@ tabs = ["basic", "admin"];
                       <label for="desktop_options"><%= t('desktop.pop_up') %></label>
                     </td>
                     <td class="item_value_td">
-                      <%= check_box(:desktop, :popup_news) %><label for="desktop_popup_news"><%= t('desktop.news.tray') %></label><br/>
-                      <%= check_box(:desktop, :popup_timecard) %><label for="desktop_popup_timecard"><%= Timecard.model_name.human %> <%= t('paren.round.enclose', :name => t('timecard.commence_at')) %></label><br/>
-                      <%= check_box(:desktop, :popup_schedule) %><label for="desktop_popup_schedule"><%= Schedule.model_name.human %> <%= t('paren.round.enclose', :name => t('login.name')) %></label><br/>
+                      <%
+                      checked = ''
+                      checked = 'checked' if ((!@desktop.nil?) and (@desktop.popup_news?))
+                      %>
+                      <input type="hidden" name="desktop[popup_news]" value="0" />
+                      <input type="checkbox" id="desktop_popup_news" name="desktop[popup_news]" value="1" <%= checked %> /><label for="desktop_popup_news"><%= t('desktop.news.tray') %></label><br/>
+                      <%
+                      checked = ''
+                      checked = 'checked' if ((!@desktop.nil?) and (@desktop.popup_timecard?))
+                      %>
+                      <input type="hidden" name="desktop[popup_timecard]" value="0" />
+                      <input type="checkbox" id="desktop_popup_timecard" name="desktop[popup_timecard]" value="1" <%= checked %> /><label for="desktop_popup_timecard"><%= Timecard.model_name.human %> <%= t('paren.round.enclose', :name => t('timecard.commence_at')) %></label><br/>
+                      <%
+                      checked = ''
+                      checked = 'checked' if ((!@desktop.nil?) and (@desktop.popup_schedule?))
+                      %>
+                      <input type="hidden" name="desktop[popup_schedule]" value="0" />
+                      <input type="checkbox" id="desktop_popup_schedule" name="desktop[popup_schedule]" value="1" <%= checked %> /><label for="desktop_popup_schedule"><%= Schedule.model_name.human %> <%= t('paren.round.enclose', :name => t('login.name')) %></label><br/>
                     </td>
                   </tr>
                   <tr>
@@ -96,7 +111,12 @@ tabs = ["basic", "admin"];
                       <label for="desktop_image"><%= Image.model_name.human %></label>
                     </td>
                     <td class="item_value_td">
-                      <%= check_box(:desktop, :img_enabled) %><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
+                      <%
+                      checked = ''
+                      checked = 'checked' if ((!@desktop.nil?) and (@desktop.img_enabled?))
+                      %>
+                      <input type="hidden" name="desktop[img_enabled]" value="0" />
+                      <input type="checkbox" id="desktop_img_enabled" name="desktop[img_enabled]" value="1" <%= checked %> /><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
                       <div style="text-align:left; padding:5px 0px 5px 30px;" >
                       <% if !@desktop.img_size.nil? and @desktop.img_size > 0 %>
                         <img style="max-width:120px; max-height:100px;" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />

@@ -19,13 +19,16 @@ end
 <table style="width:100%; border-spacing:3px;">
   <tr>
     <td style="text-align:right;" nowrap>
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<%= text_field_tag 'keyword', params[:keyword] %>
-      <%= t('cap.status') %><%= select_tag 'filter_status',
-                               options_for_select([[h(t('msg.all')), ''],
-                                                  [h(t('research.no_action')), '-1'],
-                                                  [h(t('research.in_action')), Research::U_STATUS_IN_ACTON.to_s],
-                                                  [h(t('research.committed')), Research::U_STATUS_COMMITTED.to_s]], 
-                                                  params[:filter_status])  %>
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<input type="text" id="keyword" name="keyword" value="<%= params[:keyword] %>" />
+      <%
+      opts = [
+        [t('msg.all'), ''],
+        [t('research.no_action'), '-1'],
+        [t('research.in_action'), Research::U_STATUS_IN_ACTON.to_s],
+        [t('research.committed'), Research::U_STATUS_COMMITTED.to_s]
+      ]
+      %>
+      <%= t('cap.status') %><%= select_tag('filter_status', options_for_select(opts, params[:filter_status])) %>
       <input type="button" value="<%= t('btn.search') %>" onclick="prog('TOP-RIGHT'); submit();"/>
       <input type="button" value="<%= t('btn.reset') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'researches', :action => 'users') %>';"/>
     </td>
@@ -133,7 +136,8 @@ end
     </td>
    -->
     <td nowrap style="text-align:center;">
-      <%= check_box(:check_user, user.id, :class => 'check_user') %>
+      <input type="hidden" name="check_user[<%= user.id %>]" value="0" />
+      <input type="checkbox" class="check_user" id="check_user_<%= user.id %>" name="check_user[<%= user.id %>]" value="1" />
     </td>
   </tr>
 <% end %>
@@ -199,11 +203,11 @@ function onNotifyClicked()
 
   var thetisBox = new ThetisBox;
   thetisBox.show(
-                "CENTER", "540,200", "TEXTAREA",
-                "doNotify("+thetisBox.id+")",
-                "<%= t('msg.notify_info1') %>"+count+"<%= t('msg.notify_info2') %>\n<%= t('msg.notify_info3') %>",
-                ""
-              );
+      "CENTER", "540,200", "TEXTAREA",
+      "doNotify("+thetisBox.id+")",
+      "<%= t('msg.notify_info1') %>"+count+"<%= t('msg.notify_info2') %>\n<%= t('msg.notify_info3') %>",
+      ""
+    );
 }
 
 function doNotify(thetisBoxId)
@@ -288,18 +292,18 @@ function onResetSatusClicked()
 function doResetSatus()
 {
   var addParams = getCheckedUsersParam();
-
   var count = addParams.length;
-
   if (count <= 0) {
     msg("<%= t('msg.select_users_to_notify') %>");
     return false;
   }
 
+  addInputHidden(form_list, null, "authenticity_token", getCsrfToken(), null);
+
   prog("TOP-RIGHT");
-  document.form_list.action = "<%= url_for(:controller => 'researches', :action => 'reset_users') %>";
-  document.form_list.method = "post";
-  document.form_list.submit();
+  form_list.action = "<%= url_for(:controller => 'researches', :action => 'reset_users') %>";
+  form_list.method = "post";
+  form_list.submit();
 }
 
 </script>

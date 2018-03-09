@@ -532,7 +532,7 @@ module EmailsHelper
 
     lines = []
     is_header = true
-    boundary = nil
+    boundary = EmailsHelper.get_multipart_boundary(raw_source)
     modified = false
     raw_source.gsub(/\r\n/, "\n").split(/\n/).each do |line|
       if is_header
@@ -542,10 +542,6 @@ module EmailsHelper
           unless line.match(/=[?]ISO-2022-JP[?]/i).nil?
             line = line.gsub(/=[?]ISO-2022-JP[?]/i, '=?CP50220?')
             modified = true
-          end
-          m = line.match(/\AContent-Type:.*boundary=["']?([^"'\s]+)["']?/i)
-          unless m.nil? or m[1].nil?
-            boundary = m[1]
           end
         end
       else
@@ -560,6 +556,26 @@ module EmailsHelper
     else
       return raw_source
     end
+  end
+
+  #=== self.get_multipart_boundary
+  #
+  #Gets multipart boundary.
+  #
+  #_raw_source_:: Original raw source.
+  #return:: Multipart boundary token.
+  #
+  def self.get_multipart_boundary(raw_source)
+    header_infos = EmailsHelper.raw_header_infos(raw_source)
+    header_infos.each do |header_info|
+      next if header_info.match(/\AContent-Type:/i).nil?
+
+      m = header_info.match(/boundary=["']?([^"'\s]+)["']?/i)
+      unless m.nil? or m[1].nil?
+        return m[1]
+      end
+    end
+    return nil
   end
 
   #=== self.remove_invalid_dates
