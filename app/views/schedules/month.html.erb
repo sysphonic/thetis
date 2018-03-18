@@ -59,15 +59,15 @@
 
 <table style="width:100%;">
   <tr style="height:25px;">
-    <td style="width:25%;">
+    <td style="width:35%;">
     </td>
-    <td style="text-align:center; width:50%;">
+    <td nowrap style="text-align:center; width:30%;">
       <%= render(:partial => 'common/calendar_paging_month', :locals => {:date => @date, :year => nil, :month => nil}) %>
     </td>
-    <td style="text-align:right; width:25%;">
+    <td style="text-align:right; width:35%;">
     <% if params[:user_id].nil? and !@login_user.nil? and (YamlHelper.get_value($thetis_config, 'menu.disp_timecard', nil) == '1') %>
       <input type="hidden" name="timecard_icons" value="false" />
-      <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="document.form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; document.form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
+      <input type="checkbox" id="timecard_icons" name="timecard_icons" value="true" <%= (params[:timecard_icons]!='false')?'checked':'' %> onclick="form_schedule.action='<%= url_for(:controller => 'schedules', :action => 'month') %>'; form_schedule.submit(); prog('TOP-RIGHT');"><label for="timecard_icons"><%= t('timecard.show_icons') %></label>
     <% end %>
     </td>
   </tr>
@@ -109,8 +109,8 @@ for wd in 0..6 do
         day_caption = '<div style="background-color:darkorange; color:white; width:95%;">&nbsp;<b>' + day_caption + '</b></div>'
       end
     %>
-    <td class="calendar_cell" style="vertical-align:top;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
-      <%= raw(day_caption) %><br/>
+    <td class="calendar_cell" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
+      <div style="color:dimgray;"><%= raw(day_caption) %></div>
       <%
       standard_num = 3
       if schedules.nil? or schedules.empty?

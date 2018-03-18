@@ -506,7 +506,7 @@ class SchedulesController < ApplicationController
         end
       end
 
-      if params[:timecard_icons] == 'true'
+      if (params[:timecard_icons] != 'false')
         start_date, end_date = TimecardsHelper.get_month_span(@date, 1)
         @timecards = Timecard.find_term(@login_user.id, start_date, end_date)
       end
