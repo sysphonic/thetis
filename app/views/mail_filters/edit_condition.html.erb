@@ -13,19 +13,19 @@ val = params[:val]
     <td style="vertical-align:top;">
       <table style="width:90%; margin:10px auto; border-spacing:2px;">
         <tr>
-          <td class="item_value_td" style="width:33%;">
+          <td class="spec_value" style="width:33%;">
             <%
             opts = MailFiltersHelper.opts_condition_point(true)
             %>
             <%= select_tag('filter_condition_point', options_for_select(opts, point), :style => 'min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
           </td>
-          <td class="item_value_td" style="width:33%;">
+          <td class="spec_value" style="width:33%;">
             <%
             opts = MailFiltersHelper.opts_condition_compare(true)
             %>
             <%= select_tag('filter_condition_compare', options_for_select(opts, compare), :style => 'display:none; min-width:150px;', :onchange => 'onFilterConditionOptionChanged(this);') %>
           </td>
-          <td class="item_value_td" style="width:33%;">
+          <td class="spec_value" style="width:33%;">
             <input type="text" id="filter_condition_text" name="filter_condition_text" value="<%= val %>" style="display:none; width:100%;" />
 
             <%

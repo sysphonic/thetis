@@ -14,11 +14,11 @@ tabs = ["basic", "admin"];
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
+          <td id="tab_basic" class="tab_strip" nowrap onclick="showTab('basic', tabs, 'forestgreen');">
             <%= t('cap.basic_info') %>
           </td>
         <% if is_admin %>
-          <td id="tab_admin" class="td_tab" nowrap onclick="showTab('admin', tabs, 'forestgreen');">
+          <td id="tab_admin" class="tab_strip" nowrap onclick="showTab('admin', tabs, 'forestgreen');">
             <%= t('menu.for_admin') %>
           </td>
         <% end %>
@@ -40,10 +40,10 @@ tabs = ["basic", "admin"];
 
                 <table style="margin:0px auto; width:90%; border-spacing:2px;">
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#a2f3a2;" nowrap>
+                    <td class="prim_cap" style="background-color:#a2f3a2;" nowrap>
                       <label for="desktop_theme"><%= Desktop.human_attribute_name('theme') %></label>
                     </td>
-                    <td class="item_value_td">
+                    <td class="spec_value">
                       <%
                       opts = []
                       opts << [t('desktop.theme.bolt'), Desktop::THEME_BOLT]
@@ -53,10 +53,10 @@ tabs = ["basic", "admin"];
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#a2f3a2;" nowrap>
+                    <td class="prim_cap" style="background-color:#a2f3a2;" nowrap>
                       <label for="desktop_background_color"><%= Desktop.human_attribute_name('background_color') %></label>
                     </td>
-                    <td class="item_value_td">
+                    <td class="spec_value">
 
                       <table style="margin:0px auto 0px 0px; border-spacing:5px;">
                         <tr style="height:40px;">
@@ -82,10 +82,10 @@ tabs = ["basic", "admin"];
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#a2f3a2;" nowrap>
+                    <td class="prim_cap" style="background-color:#a2f3a2;" nowrap>
                       <label for="desktop_options"><%= t('desktop.pop_up') %></label>
                     </td>
-                    <td class="item_value_td">
+                    <td class="spec_value">
                       <%
                       checked = ''
                       checked = 'checked' if ((!@desktop.nil?) and (@desktop.popup_news?))
@@ -107,10 +107,10 @@ tabs = ["basic", "admin"];
                     </td>
                   </tr>
                   <tr>
-                    <td class="prim_cap_td" style="background-color:#a2f3a2;" nowrap>
+                    <td class="prim_cap" style="background-color:#a2f3a2;" nowrap>
                       <label for="desktop_image"><%= Image.model_name.human %></label>
                     </td>
-                    <td class="item_value_td">
+                    <td class="spec_value">
                       <%
                       checked = ''
                       checked = 'checked' if ((!@desktop.nil?) and (@desktop.img_enabled?))
@@ -133,7 +133,7 @@ tabs = ["basic", "admin"];
 
               <table style="margin:10px auto 0px;">
                 <tr>
-                  <td class="img_button_td" onclick="doUpdatePref();">
+                  <td class="prim_btn" onclick="doUpdatePref();">
                     <%= t('btn.update')%>
                   </td>
                 </tr>

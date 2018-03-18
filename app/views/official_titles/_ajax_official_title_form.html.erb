@@ -3,10 +3,10 @@
 
 <table style="width:100%; margin:10px 0px 20px; border-spacing:1px;">
   <tr>
-    <td class="item_cap_td" nowrap>
+    <td class="spec_cap" nowrap>
       <%= Group.model_name.human %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
     <% if @group_id.nil? %>
       <%= t('paren.not_specified') %>
     <%
@@ -18,10 +18,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" nowrap>
+    <td class="spec_cap" nowrap>
       <%= OfficialTitle.human_attribute_name('name') %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <input type="text" id="official_title_name" name="official_title[name]" value="<%= (@official_title.nil?)?(nil):(@official_title.name) %>" style="width:90%" />
     </td>
   </tr>
@@ -30,7 +30,7 @@
     <td colspan="2">
       <table style="margin:0px auto;">
         <tr>
-          <td class="img_button_td" id="official_title_ok" onclick="onOfficialTitleOk();">
+          <td class="prim_btn" id="official_title_ok" onclick="onOfficialTitleOk();">
         <% if @official_title.nil? %>
             <%= t('btn.register') %>
         <% else %>
@@ -38,7 +38,7 @@
         <% end %>
           </td>
           <td style="min-width:10px; width:10px;"></td>
-          <td class="img_button_td" id="official_title_cancel" onclick="onOfficialTitleCancel();">
+          <td class="prim_btn" id="official_title_cancel" onclick="onOfficialTitleCancel();">
             <%= t('btn.cancel') %>
           </td>
         </tr>

@@ -12,12 +12,12 @@
 <table style="margin:20px auto 10px;">
   <tr>
   <% if params[:from] == 'users_list' %>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
     <td style="width:15px;"></td>
   <% end %>
-    <td class="img_button_td" onclick="doRegisterUser(document.form_user);">
+    <td class="prim_btn" onclick="doRegisterUser(document.form_user);">
       <%= t('btn.register')%>
     </td>
   </tr>
@@ -33,7 +33,7 @@ if (YamlHelper.get_value($thetis_config, 'menu.open_user_reg', nil) == '1') \
 
 function showTips() {
   var thetisBox = new ThetisBox;
-  thetisBox.show("TOP-RIGHT", "", "MESSAGE", "", "<span class='font_msg_bold'><%= t('user.u_name')%></span> <%= t('msg.and')%> <span class='font_msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.required_for_registration')%><br/><span class='font_msg_bold' style='color:firebrick;'><%= t('user.initial_password')%></span><%= t('user.will_be_sent_by1')%><span class='font_msg_bold'><%= Email.model_name.human %></span><%= t('user.will_be_sent_by2')%><br/><%= t('user.login_update_pwd_within1')%><span class='font_msg_bold'><%= t('user.within_3_days')%></span><%= t('user.login_update_pwd_within2')%>", "");
+  thetisBox.show("TOP-RIGHT", "", "MESSAGE", "", "<span class='msg_bold'><%= t('user.u_name')%></span> <%= t('msg.and')%> <span class='msg_bold'><%= User.human_attribute_name('email')%></span><%= t('user.required_for_registration')%><br/><span class='msg_bold' style='color:firebrick;'><%= t('user.initial_password')%></span><%= t('user.will_be_sent_by1')%><span class='msg_bold'><%= Email.model_name.human %></span><%= t('user.will_be_sent_by2')%><br/><%= t('user.login_update_pwd_within1')%><span class='msg_bold'><%= t('user.within_3_days')%></span><%= t('user.login_update_pwd_within2')%>", "");
 }
 
 </script>

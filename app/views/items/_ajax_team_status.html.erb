@@ -21,11 +21,11 @@ if team.nil?
         <table>
           <tr>
         <% if team.status == Team::STATUS_ACTIVATED %>
-            <td class="img_button_td" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_DEACTIVATED %>');">
+            <td class="prim_btn" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_DEACTIVATED %>');">
               <%= t('btn.deactivate') %>
             </td>
         <% else %>
-            <td class="img_button_td" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_ACTIVATED %>');">
+            <td class="prim_btn" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_ACTIVATED %>');">
               <%= t('btn.activate') %>
             </td>
         <% end %>

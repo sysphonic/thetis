@@ -11,16 +11,16 @@ tabs = ["basic", "address", "memo", "scope"];
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'sienna');">
+          <td id="tab_basic" class="tab_strip" nowrap onclick="showTab('basic', tabs, 'sienna');">
             <%= t('cap.basic_info') %>
           </td>
-          <td id="tab_address" class="td_tab" nowrap onclick="showTab('address', tabs, 'sienna');">
+          <td id="tab_address" class="tab_strip" nowrap onclick="showTab('address', tabs, 'sienna');">
             <%= Address.human_attribute_name('address') %>
           </td>
-          <td id="tab_memo" class="td_tab" nowrap onclick="showTab('memo', tabs, 'sienna');">
+          <td id="tab_memo" class="tab_strip" nowrap onclick="showTab('memo', tabs, 'sienna');">
             <%= Address.human_attribute_name('memo') %>
           </td>
-          <td id="tab_scope" class="td_tab" nowrap onclick="showTab('scope', tabs, 'sienna');">
+          <td id="tab_scope" class="tab_strip" nowrap onclick="showTab('scope', tabs, 'sienna');">
             <%= t('schedule.scope') %>
           </td>
           <td><!-- SPACER --></td>
@@ -40,66 +40,66 @@ tabs = ["basic", "address", "memo", "scope"];
             <td style="text-align:center; padding:10px 0px;">
               <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap><label for="address_name">
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap><label for="address_name">
                     <%= Address.human_attribute_name('name') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_name" name="address[name]" value="<%= (@address.nil?)?(nil):(@address.name) %>" style="width:90%" /><sup style="color:red">*</sup>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_email1"><%= Address.human_attribute_name('email1') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_email1" name="address[email1]" value="<%= (@address.nil?)?(nil):(@address.email1) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_email2"><%= Address.human_attribute_name('email2') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_email2" name="address[email2]" value="<%= (@address.nil?)?(nil):(@address.email2) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_email3"><%= Address.human_attribute_name('email3') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_email3" name="address[email3]" value="<%= (@address.nil?)?(nil):(@address.email3) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_tel1" name="address[tel1]" value="<%= (@address.nil?)?(nil):(@address.tel1) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_tel2" name="address[tel2]" value="<%= (@address.nil?)?(nil):(@address.tel2) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_tel3" name="address[tel3]" value="<%= (@address.nil?)?(nil):(@address.tel3) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_fax"><%= Address.human_attribute_name('fax') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_fax" name="address[fax]" value="<%= (@address.nil?)?(nil):(@address.fax) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
@@ -115,42 +115,42 @@ tabs = ["basic", "address", "memo", "scope"];
             <td style="text-align:center; padding:10px 0px;">
               <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_postalcode" name="address[postalcode]" value="<%= (@address.nil?)?(nil):(@address.postalcode) %>" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_address"><%= Address.human_attribute_name('address') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <textarea id="address_address" name="address[address]" style="width:100%;" rows="4"><%= (@address.nil?)?(nil):(@address.address) %></textarea>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_url"><%= Address.human_attribute_name('url') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_url" name="address[url]" value="<%= (@address.nil?)?(nil):(@address.url) %>" style="ime-mode:disabled; width:100%;" />
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <textarea id="address_organization" name="address[organization]" style="width:100%;" rows="3"><%= (@address.nil?)?(nil):(@address.organization) %></textarea>
                   </td>
                 </tr>
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_title"><%= Address.human_attribute_name('title') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <input type="text" id="address_title" name="address[title]" value="<%= (@address.nil?)?(nil):(@address.title) %>" style="width:100%" />
                   </td>
                 </tr>
@@ -166,10 +166,10 @@ tabs = ["basic", "address", "memo", "scope"];
             <td style="text-align:center; padding:10px 0px;">
               <table style="margin:0px auto; width:85%; border-spacing:2px;">
                 <tr>
-                  <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+                  <td class="prim_cap" style="background-color:#ffe033;" nowrap>
                     <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
                   </td>
-                  <td class="item_value_td">
+                  <td class="spec_value">
                     <textarea id="address_memo" name="address[memo]" style="width:100%;" rows="5"><%= (@address.nil?)?(nil):(@address.memo) %></textarea>
                   </td>
                 </tr>

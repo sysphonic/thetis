@@ -15,80 +15,80 @@
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
   <% unless @address.name.nil? or @address.name.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_name"><%= Address.human_attribute_name('name') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.name %>
       </td>
     </tr>
   <% end %>
   <% unless @address.email1.nil? or @address.email1.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_email1"><%= Address.human_attribute_name('email1') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.email1 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.email2.nil? or @address.email2.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_email2"><%= Address.human_attribute_name('email2') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.email2 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.email3.nil? or @address.email3.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_email3"><%= Address.human_attribute_name('email3') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.email3 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.tel1.nil? or @address.tel1.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_tel1"><%= Address.human_attribute_name('tel1') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.tel1 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.tel2.nil? or @address.tel2.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_tel2"><%= Address.human_attribute_name('tel2') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.tel2 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.tel3.nil? or @address.tel3.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_tel3"><%= Address.human_attribute_name('tel3') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.tel3 %>
       </td>
     </tr>
   <% end %>
   <% unless @address.fax.nil? or @address.fax.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_fax"><%= Address.human_attribute_name('fax') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.fax %>
       </td>
     </tr>
@@ -115,30 +115,30 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
   <% unless @address.postalcode.nil? or @address.postalcode.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_postalcode"><%= Address.human_attribute_name('postalcode') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.postalcode %>
       </td>
     </tr>
   <% end %>
   <% unless @address.address.nil? or @address.address.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_address"><%= Address.human_attribute_name('address') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.address %>
       </td>
     </tr>
   <% end %>
   <% unless @address.url.nil? or @address.url.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_url"><%= Address.human_attribute_name('url') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <%
       urls = ApplicationHelper.extract_uri_a(@address.url)
       if urls.nil?
@@ -154,20 +154,20 @@ if (!@address.postalcode.nil? and !@address.postalcode.empty?) \
   <% end %>
   <% unless @address.organization.nil? or @address.organization.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_organization"><%= Address.human_attribute_name('organization') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.organization %>
       </td>
     </tr>
   <% end %>
   <% unless @address.title.nil? or @address.title.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_title"><%= Address.human_attribute_name('title') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.title %>
       </td>
     </tr>
@@ -189,10 +189,10 @@ if (!@address.memo.nil? and !@address.memo.empty?)
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
   <% unless @address.memo.nil? or @address.memo.empty? %>
     <tr>
-      <td class="prim_cap_td" style="background-color:#ffe033;" nowrap>
+      <td class="prim_cap" style="background-color:#ffe033;" nowrap>
         <label for="address_memo"><%= Address.human_attribute_name('memo') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @address.memo %>
       </td>
     </tr>

@@ -23,7 +23,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 
 <table style="margin:0px auto 20px;">
   <tr>
-    <td class="img_button_td" onclick="onRegisterAddressClicked();">
+    <td class="prim_btn" onclick="onRegisterAddressClicked();">
     <% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
       <%= t('btn.register')%>
     <% else %>

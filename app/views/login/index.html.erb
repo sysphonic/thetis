@@ -161,7 +161,7 @@ function tabByEnterLogin(evt)
 function showSendPassword()
 {
   var thetisBox = new ThetisBox;
-  thetisBox.show("TOP-RIGHT", "", "INPUT", "doSendPassword("+thetisBox.id+")", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='font_msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
+  thetisBox.show("TOP-RIGHT", "", "INPUT", "doSendPassword("+thetisBox.id+")", "<%= t('login.send_password_info1') %><%= t('login.send_password_info2') %><span class='msg_bold'><%= t('login.mail_address') %></span><%= t('login.send_password_info3') %>", "");
 }
 
 function doSendPassword(thetisBoxId)

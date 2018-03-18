@@ -11,12 +11,12 @@
 <table style="width:100%; padding:20px 20px 0px;">
   <tr>
   <%
-  body_class = (@comment.user_id == 0)?'comment_sys_body_td':'comment_body_td'
+  body_class = (@comment.user_id == 0)?'comment_sys_body':'comment_body'
   %>
   <% if @comment.user_id == 0 %>
-    <td class="comment_sys_tab_td" style="text-align:left; width:25%;" nowrap >
+    <td class="comment_sys_tab" style="text-align:left; width:25%;" nowrap >
   <% else %>
-    <td class="comment_tab_td" style="text-align:left; width:25%;" nowrap >
+    <td class="comment_tab" style="text-align:left; width:25%;" nowrap >
   <% end %>
       <%
       user_name, u_groups, figure = UsersHelper.get_groups_info(@comment.user_id, @user_groups, @users_cache, @user_obj_cache, @groups_cache, @group_obj_cache)

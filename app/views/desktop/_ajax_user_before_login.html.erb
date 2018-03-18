@@ -1,14 +1,14 @@
 
 <table style="margin:0px auto; width:85%; border-spacing:2px;">
   <tr>
-    <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
+    <td class="spec_cap" nowrap style="width:100%;" colspan="2">
       <%= t('desktop.before_login') %>&nbsp;
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('desktop.before_login_info1') %><br/><%= t('desktop.before_login_info2') %><br/><%= t('desktop.before_login_info3') %>');">
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" nowrap><%= t('desktop.currently_selected') %></td>
-    <td class="item_value_td" style="width:70%;">
+    <td class="prim_cap" nowrap><%= t('desktop.currently_selected') %></td>
+    <td class="spec_value" style="width:70%;">
       <%
       user_before_login = YamlHelper.get_value(@yaml, 'desktop.user_before_login', nil)
 
@@ -21,8 +21,8 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" nowrap><%= t('desktop.select_mine') %></td>
-    <td class="item_value_td">
+    <td class="spec_cap" nowrap><%= t('desktop.select_mine') %></td>
+    <td class="spec_value">
       <%
       disabled = ''
       if user_before_login == @login_user.id.to_s
@@ -33,8 +33,8 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" nowrap><%= t('btn.deselect') %></td>
-    <td class="item_value_td">
+    <td class="spec_cap" nowrap><%= t('btn.deselect') %></td>
+    <td class="spec_value">
       <%
       disabled = ''
       if user_before_login.nil? or user_before_login.empty?

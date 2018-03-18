@@ -1,10 +1,10 @@
 
 <table style="width:100%; margin:10px 0px 20px;">
   <tr>
-    <td class="item_cap_td" nowrap>
+    <td class="spec_cap" nowrap>
       <%= Group.model_name.human %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
     <% if @group_id.nil? %>
       <%= t('paren.not_specified') %>
     <%
@@ -16,10 +16,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" nowrap>
+    <td class="spec_cap" nowrap>
       <%= OfficialTitle.human_attribute_name('name') %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <%= @official_title.name %>
     </td>
   </tr>

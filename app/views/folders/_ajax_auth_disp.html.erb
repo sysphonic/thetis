@@ -58,10 +58,10 @@
 
             <table style="width:100%; border-spacing:2px;">
               <tr>
-                <td class="prim_cap_td">
+                <td class="prim_cap">
                   <%= t('cap.users') %>
                 </td>
-                <td class="item_value_td" style="background-color:white;">
+                <td class="spec_value" style="background-color:white;">
                   <%
                    read_write = read_users & write_users
                    read_only = read_users - write_users
@@ -79,10 +79,10 @@
                 </td>
               </tr>
               <tr>
-                <td class="prim_cap_td">
+                <td class="prim_cap">
                   <%= t('cap.groups') %>
                 </td>
-                <td class="item_value_td" style="background-color:white;">
+                <td class="spec_value" style="background-color:white;">
                   <%
                   read_write = read_groups & write_groups
                   read_only = read_groups - write_groups
@@ -103,10 +103,10 @@
                 </td>
               </tr>
               <tr>
-                <td class="prim_cap_td">
+                <td class="prim_cap">
                   <%= t('cap.teams') %>
                 </td>
-                <td class="item_value_td" style="background-color:white;">
+                <td class="spec_value" style="background-color:white;">
                   <%
                    read_write = read_teams & write_teams
                    read_only = read_teams - write_teams

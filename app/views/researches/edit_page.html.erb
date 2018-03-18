@@ -12,12 +12,12 @@
     <table style="margin:10px auto 40px;">
       <tr>
       <% if @page.to_i > 1 %>
-        <td class="img_button_td" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
+        <td class="prim_btn" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
           <%= raw(t('btn.page_back')) %>
         </td>
           <td style="width:20px;"></td>
       <% end %>
-        <td class="img_button_td" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
+        <td class="prim_btn" onclick="try { document.form_research.submit(); }catch(e){ msg('<%= raw(t('research.error_commit')) %>'); }">
           <%= raw(t('btn.page_next')) %>
         </td>
       </tr>

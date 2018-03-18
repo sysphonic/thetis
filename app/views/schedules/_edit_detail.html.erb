@@ -23,18 +23,18 @@ else
 
   <table style="width:95%; margin:10px auto; border-spacing:2px;">
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <label for="schedule_title"><%= Schedule.human_attribute_name('title') %></label><sup style="color:red">*</sup>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="schedule_title" name="schedule[title]" value="<%= (@schedule.nil?)?(nil):(@schedule.title) %>" style="width:70%" onchange="reqTargetDay++" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="schedule_start"><%= t('schedule.time') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
 
         <input name="schedule[allday]" type="hidden" value="0" />
         <input type="checkbox" id="schedule_allday" name="schedule[allday]" value="1" onclick="setAllDay(this.checked);" <%= (@schedule.allday)?'checked':'' %> /><label for="schedule_allday"><%= t('schedule.without_time_spec') %></label>
@@ -302,21 +302,21 @@ else
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="schedule_detail"><%= t('btn.detail') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <textarea id="schedule_detail" name="schedule[detail]" style="width:100%;" rows="4" onchange="reqTargetDay++"><%= (@schedule.nil?)?(nil):(@schedule.detail) %></textarea>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('schedule.scope') %>
         <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<b style=\'color:orangered; font-size:15px;\'><%= raw(t('schedule.disp_to_all')) %></b><br/><%= t('schedule.disp_to_all_info')%><br/>'
                 + '<b style=\'color:darkgreen; font-size:15px;\'><%= raw(t('schedule.public')) %></b><br/><%= t('schedule.public_info') %><br/>'
                 + '<b style=\'color:mediumblue; font-size:15px;\'><%= raw(t('schedule.private')) %></b><br/><%= t('schedule.private_info') %><br/>');">
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%
         checked_all = (@schedule.for_all?)?'checked':''
         checked_public = (@schedule.public?)?'checked':''
@@ -330,20 +330,20 @@ else
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="schedule_members"><%= t('msg.members') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
 
         <%= render(:partial => 'edit_members') %>
 
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('menu.equipment') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
 
       <%
       equipment_selected = @schedule.get_equipment_a
@@ -391,10 +391,10 @@ _z("div_equipment").style.display = "block";
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('menu.items') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
 
       <%
       items_selected = @schedule.get_items_a
@@ -446,19 +446,19 @@ _z("div_items").style.display = "block";
     users_cache = {}
   %>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('msg.created_by') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <b style="color:darkgreen;"><%= User.get_name(@schedule.created_by, users_cache) %></b>
         &nbsp;<span style="font-size:13px; vertical-align:middle;">(<%= @schedule.created_at.strftime(THETIS_DATE_FORMAT_YMD+" %H:%M") %>)</span>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('msg.updated_by') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <% unless @schedule.updated_by.nil? %>
         <b style="color:darkgreen;"><%= User.get_name(@schedule.updated_by, users_cache) %></b>
         &nbsp;<span style="font-size:13px; vertical-align:middle;">(<%= @schedule.updated_at.strftime(THETIS_DATE_FORMAT_YMD+" %H:%M") %>)</span>
@@ -469,10 +469,10 @@ _z("div_items").style.display = "block";
 
   <% if ((params[:action] == 'edit') or (params[:action] == 'day' and !params[:edit_id].nil?)) and is_repeat %>
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <%= t('msg.update_target') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <div id="update_target">
           <input type="radio" id="repeat_update_target_all" name="repeat_update_target" value="all" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=true; is_repeat.disabled=false; forceRepeat(true);" /><label for="repeat_update_target_all"><%= t('schedule.all_repeated') %></label>
           <input type="radio" id="repeat_update_target_each" name="repeat_update_target" value="each" onclick="var is_repeat=form_detail.is_repeat; is_repeat.checked=false; is_repeat.disabled=true; forceRepeat(false); " /><label for="repeat_update_target_each"><%= disp_date_s+t('msg.only') %></label>
@@ -486,7 +486,7 @@ _z("div_items").style.display = "block";
 
   <table style="margin:20px auto 40px;">
     <tr>
-      <td class="img_button_td" onclick="doRegisterSchedule('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
+      <td class="prim_btn" onclick="doRegisterSchedule('<%= (@schedule.id.nil?)?'':@schedule.id %>');">
         <%= t('btn.register')%>
       </td>
     </tr>

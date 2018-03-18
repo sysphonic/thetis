@@ -8,10 +8,10 @@
 <table style="width:90%; margin:15px auto 0px; border-spacing:2px;">
 <% unless @item.nil? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_xtype"><%= Item.human_attribute_name('xtype') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
   <%
   case @item.xtype
     when Item::XTYPE_PROFILE
@@ -75,19 +75,19 @@
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_title"><%= Item.human_attribute_name('title') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <input type="text" id="item_title" name="item[title]" value="<%= (@item.nil?)?(nil):(@item.title) %>" style="width:400px" onchange="modifiedBasic++" />
     </td>
   </tr>
 <% if !@item.nil? and @item.is_a_copy? %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <%= t('cap.original') %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
     <%
     source_item = Item.find(@item.source_id)
     if source_item.nil?
@@ -104,10 +104,10 @@
   </tr>
 <% end %>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_folder_id"><%= Folder.model_name.human %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
 <% if !@item.nil? and Folder.get_path(@item.folder_id, @folders_cache, @folder_obj_cache).include?('/$') %>
   ---
   <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= @item.folder_id %>" />
@@ -141,21 +141,21 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_summary"><%= Item.human_attribute_name('summary') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <textarea id="item_summary" name="item[summary]" style="width:100%" rows="3" wrap="off" onchange="modifiedBasic++"><%= (@item.nil?)?(nil):(@item.summary) %></textarea>
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_public">
         <%= Item.human_attribute_name('public') %>&nbsp;
         <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('item.public_info1') %><br/><%= t('item.public_info2') %>');">
       </label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
 <% if ((!@item.nil?) and ((@item.xtype == Item::XTYPE_WORKFLOW) or (@item.xtype == Item::XTYPE_RESEARCH))) %>
       ---
       <input type="hidden" id="item_public" name="item[public]" value="<%= '0' %>" />
@@ -170,10 +170,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_update_message"><%= t('item.update_message') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
 <% if !@item.nil? and (@item.xtype == Item::XTYPE_WORKFLOW or @item.xtype == Item::XTYPE_RESEARCH or @item.xtype == Item::XTYPE_PROFILE)  %>
       ---
       <input type="hidden" id="item_update_message" name="item[update_message]" value="" />
@@ -184,10 +184,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="background-color:#97dcff;">
+    <td class="spec_cap" style="background-color:#97dcff;">
       <label for="item_layout"><%= Item.human_attribute_name('layout') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <table>
         <tr>
           <td style="width:10px;"></td>

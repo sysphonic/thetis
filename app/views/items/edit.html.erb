@@ -35,20 +35,20 @@ var users_cache = [];
       <tr>
         <!-- style.backgroundColor is for initial display. -->
       <% if @item.xtype == Item::XTYPE_WORKFLOW %>
-        <td id="tab_workflow" class="td_tab" nowrap onclick="showTab('workflow', tabs, 'orange');">
+        <td id="tab_workflow" class="tab_strip" nowrap onclick="showTab('workflow', tabs, 'orange');">
           <%= Workflow.model_name.human %>
         </td>
       <% end %>
-        <td id="tab_basic" class="td_tab" nowrap onclick="showTab('basic', tabs, 'blue');">
+        <td id="tab_basic" class="tab_strip" nowrap onclick="showTab('basic', tabs, 'blue');">
           <%= t('cap.basic_info') %>
         </td>
-        <td id="tab_description" class="td_tab" nowrap onclick="showTab('description', tabs, 'forestgreen');">
+        <td id="tab_description" class="tab_strip" nowrap onclick="showTab('description', tabs, 'forestgreen');">
           <%= Item.human_attribute_name('description') %>
         </td>
-        <td id="tab_image" class="td_tab" nowrap onclick="showTab('image', tabs, 'red');">
+        <td id="tab_image" class="tab_strip" nowrap onclick="showTab('image', tabs, 'red');">
           <%= t('image.plural') %>
         </td>
-        <td id="tab_attachment" class="td_tab" nowrap onclick="showTab('attachment', tabs, 'brown');">
+        <td id="tab_attachment" class="tab_strip" nowrap onclick="showTab('attachment', tabs, 'brown');">
           <%= t('attachment.plural_full') %>
         </td>
         <td>&nbsp;</td>
@@ -76,15 +76,15 @@ var users_cache = [];
             <td>
               <table style="margin:0px auto;">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                  <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doSave();">
+                  <td class="prim_btn" onclick="doSave();">
                     <%= t('btn.save') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="onShowItemClicked();">
+                  <td class="prim_btn" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -111,15 +111,15 @@ var users_cache = [];
             <td>
               <table style="margin:0px auto;">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                  <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doSave();">
+                  <td class="prim_btn" onclick="doSave();">
                     <%= t('btn.save') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="onShowItemClicked();">
+                  <td class="prim_btn" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -145,21 +145,21 @@ var users_cache = [];
           <td>
             <table style="margin:0px auto;">
               <tr>
-                <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                   <%= t('btn.back') %>
                 </td>
               <% unless @item.id.nil? %>
                 <td style="width:15px;"></td>
-                <td class="img_button_td" onclick="showRestoreSelector();">
+                <td class="prim_btn" onclick="showRestoreSelector();">
                   <%= t('btn.restore') %>
                 </td>
               <% end %>
                 <td style="width:15px;"></td>
-                <td class="img_button_td" onclick="doSave();">
+                <td class="prim_btn" onclick="doSave();">
                   <%= t('btn.save') %>
                 </td>
                 <td style="width:15px;"></td>
-                <td class="img_button_td" onclick="onShowItemClicked();">
+                <td class="prim_btn" onclick="onShowItemClicked();">
                   <%= t('btn.show') %>
                 </td>
               </tr>
@@ -187,15 +187,15 @@ var users_cache = [];
             <td>
               <table style="margin:0px auto;">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                  <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doSave();">
+                  <td class="prim_btn" onclick="doSave();">
                     <%= t('btn.register') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="onShowItemClicked();">
+                  <td class="prim_btn" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>
@@ -224,15 +224,15 @@ var users_cache = [];
             <td>
               <table style="margin:0px auto;">
                 <tr>
-                  <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+                  <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
                     <%= t('btn.back') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="doSave();">
+                  <td class="prim_btn" onclick="doSave();">
                     <%= t('btn.register') %>
                   </td>
                   <td style="width:15px;"></td>
-                  <td class="img_button_td" onclick="onShowItemClicked();">
+                  <td class="prim_btn" onclick="onShowItemClicked();">
                     <%= t('btn.show') %>
                   </td>
                 </tr>

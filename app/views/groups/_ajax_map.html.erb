@@ -10,12 +10,12 @@
 
       <table style="margin:20px auto 0px;">
         <tr>
-          <td class="img_button_td" onclick="doRegister();">
+          <td class="prim_btn" onclick="doRegister();">
             <%= t('btn.register') %>
           </td>
         <% unless @office_map.nil? %>
           <td style="width:10px;"></td>
-          <td class="img_button_td" onclick="onClearClicked();">
+          <td class="prim_btn" onclick="onClearClicked();">
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/erase.png" /> <%= t('btn.clear') %>
           </td>
         <% end %>

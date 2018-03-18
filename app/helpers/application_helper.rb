@@ -129,6 +129,25 @@ module ApplicationHelper
     return URI.extract(str)
   end
 
+  #=== self.remove_html_tag
+  #
+  #Removes HTML tags from string.
+  #
+  #_str_:: Target string.
+  #_replace_with_:: String to replace with.
+  #return:: Result string.
+  #
+  def self.remove_html_tag(str, replace_with)
+
+    return nil if str.nil?
+
+    regexp = /[<][^<>]+[>]/
+    while str.match(regexp)
+      str = str.gsub(regexp, replace_with)
+    end
+    return str
+  end
+
   #=== self.get_linked_s
   #
   #Encloses URL expressions in the specified string with anchor tags.

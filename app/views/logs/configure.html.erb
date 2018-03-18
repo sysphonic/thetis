@@ -8,15 +8,15 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;" >
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%;" colspan="2">
+            <td class="spec_cap" nowrap style="width:100%;" colspan="2">
               <%= t('menu.settings') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('log.max_num') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <input type="text" id="log_max_num" name="log[max_num]" value="<%= YamlHelper.get_value(@yaml, 'log.max_num', nil) %>" style="ime-mode:disabled" />
             </td>
           </tr>
@@ -42,7 +42,7 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>

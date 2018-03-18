@@ -1,15 +1,15 @@
 
 <table style="width:85%; margin:0px auto 15px; border-spacing:2px;">
   <tr>
-    <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+    <td class="spec_cap" colspan="2" nowrap style="width:100%;">
       <%= @item.title %>
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" style="width:20%;" nowrap>
+    <td class="prim_cap" style="width:20%;" nowrap>
       <%= Team.human_attribute_name('status') %>
     </td>
-    <td class="item_value_td" id="status">
+    <td class="spec_value" id="status">
       <div id="div_team_status">
 
         <%= render(:partial => 'ajax_team_status') %>
@@ -18,10 +18,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="width:20%;" nowrap>
+    <td class="spec_cap" style="width:20%;" nowrap>
       <%= t('msg.members') %>
     </td>
-    <td class="item_value_td" nowrap>
+    <td class="spec_value" nowrap>
     <%
     unless @team.nil?
       @users_cache ||= {}
@@ -53,10 +53,10 @@
     </td>
   </tr>
   <tr>
-    <td class="item_cap_td" style="width:20%;" nowrap>
+    <td class="spec_cap" style="width:20%;" nowrap>
       <%= t('team.team_folder') %>
     </td>
-    <td class="item_value_td" nowrap>
+    <td class="spec_value" nowrap>
     <%
     @folders_cache ||= {}
     @folder_obj_cache ||= {}

@@ -10,14 +10,14 @@ end
     <td style="text-align:right;">
       <table style="width:100%; padding-top:20px; border-spacing:1px;">
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_name') %></td>
-          <td class="item_value_td">
+          <td class="spec_cap" style="background-color:pink"><%= t('config.menu_name') %></td>
+          <td class="spec_value">
             <input type="text" name="header_menu[name]" value="<%= @header_menu_param[0] %>" style="width:95%" /><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_target') %></td>
-          <td class="item_value_td">
+          <td class="spec_cap" style="background-color:pink"><%= t('config.menu_target') %></td>
+          <td class="spec_value">
             <%
             [['main', t('config.menu_inside_thetis')], ['_blank', t('config.menu_new_window')]].each do |choice|
               checked = ''
@@ -29,8 +29,8 @@ end
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink"><%= t('config.menu_url') %></td>
-          <td class="item_value_td">
+          <td class="spec_cap" style="background-color:pink"><%= t('config.menu_url') %></td>
+          <td class="spec_value">
             <input type="text" name="header_menu[url]" value="<%= @header_menu_param[2] %>" style="width:95%" /><br/>
           </td>
         </tr>

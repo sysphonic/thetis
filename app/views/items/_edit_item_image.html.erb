@@ -16,11 +16,13 @@
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/up_down.png" title="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
-            <td class="img_td" style="text-align:center; padding-left:5px; padding-right:5px; cursor:move;">
+            <td style="color:navy; text-align:center; padding:0px 5px; cursor:move;">
               <table style="width:100%;">
                 <tr>
                   <td style="text-align:center;">
-                    <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img)) %>
+                    <%
+                    img_url = url_for(:controller => 'items', :action => 'get_image', :id => img.id, :ts => ApplicationHelper.get_timestamp(img))
+                    %>
                     <img id="img<%= img.id %>" src="<%= img_url %>" style="max-width:90px; max-height:60px;" />
                   </td>
                 </tr>

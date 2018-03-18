@@ -11,28 +11,28 @@
         </tr>
         <tr style="height:5px;"><td></td></tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink">
+          <td class="spec_cap" style="background-color:pink">
             <%= t('item.new_file') %>
           </td>
-          <td class="item_value_td">
+          <td class="spec_value">
             <div id="img_info_uploader">
               <p>Your browser doesn't have HTML5 support.</p>
             </div>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink">
+          <td class="spec_cap" style="background-color:pink">
             <%= Item.human_attribute_name('title') %>
           </td>
-          <td class="item_value_td">
+          <td class="spec_value">
             <input type="text" id="image_title" name="image[title]" value="<%= (@image.nil?)?(nil):(@image.title) %>" style="width:70%" /><br/>
           </td>
         </tr>
         <tr>
-          <td class="item_cap_td" style="background-color:pink">
+          <td class="spec_cap" style="background-color:pink">
             <%= Image.human_attribute_name('memo') %>
           </td>
-          <td class="item_value_td">
+          <td class="spec_value">
             <textarea id="image_memo" name="image[memo]" style="width:100%;" rows="3" wrap="off"><%= (@image.nil?)?(nil):(@image.memo) %></textarea><br/>
           </td>
         </tr>

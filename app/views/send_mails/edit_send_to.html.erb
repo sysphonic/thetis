@@ -20,14 +20,14 @@ tabs_send_mail_address.push("users");
 
       <table style="width:100%; border-spacing:2px;">
         <tr>
-          <td id="tab_direct" class="td_tab" nowrap onclick="showTab('direct', tabs_send_mail_address, 'cornflowerblue');">
+          <td id="tab_direct" class="tab_strip" nowrap onclick="showTab('direct', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.direct_input') %>
           </td>
-          <td id="tab_addrbook" class="td_tab" nowrap onclick="showTab('addrbook', tabs_send_mail_address, 'cornflowerblue');">
+          <td id="tab_addrbook" class="tab_strip" nowrap onclick="showTab('addrbook', tabs_send_mail_address, 'cornflowerblue');">
             <%= t('btn.address_book') %>
           </td>
         <% if enable_users_tab %>
-          <td id="tab_users" class="td_tab" nowrap onclick="showTab('users', tabs_send_mail_address, 'cornflowerblue');">
+          <td id="tab_users" class="tab_strip" nowrap onclick="showTab('users', tabs_send_mail_address, 'cornflowerblue');">
             <%= User.model_name.human %>
           </td>
         <% end %>

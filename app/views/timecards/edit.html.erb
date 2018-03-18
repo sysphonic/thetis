@@ -78,10 +78,10 @@ end
 <%= form_tag( {:controller => 'timecards', :action => 'update', :id => (@timecard.nil?)?'':(@timecard.id)}, :method => 'post', :name => 'form_timecard', :id => 'form_timecard') %>
   <table class="timecard" style="width:95%; margin:0px auto;">
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
+      <td class="spec_cap" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('cap.classification') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <% if editable or !@timecard.nil? %>
         <span style="padding:0px 5px;">
         <%
@@ -110,10 +110,10 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
+      <td class="spec_cap" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('timecard.labor_time') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <% if editable %>
         <select id="start_hour" onchange="changeHour(this.value, _z('start_min'));">
           <option value=""></option>
@@ -179,10 +179,10 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
+      <td class="spec_cap" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= t('cap.option') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <% if editable %>
         <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
         <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.png" /> <%= t('timecard.business_trip') %></label>
@@ -192,10 +192,10 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap style="background-color:#d6ecfa; width:20%;">
+      <td class="spec_cap" nowrap style="background-color:#d6ecfa; width:20%;">
         <%= Timecard.human_attribute_name('comment') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
       <% if editable %>
         <table style="width:100%;">
           <tr>
@@ -223,16 +223,16 @@ end
   %>
   <table id="buttons_with_clear" style="margin:0px auto; padding:10px; display:<%= display_with_clear %>;">
     <tr>
-      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>
       </td>
     <% if editable %>
       <td style="width:10px;"></td>
-      <td class="img_button_td" onclick="doRegister();">
+      <td class="prim_btn" onclick="doRegister();">
         <%= t('btn.register') %>
       </td>
       <td style="width:10px;"></td>
-      <td class="img_button_td" onclick="onClearTimecardClicked();">
+      <td class="prim_btn" onclick="onClearTimecardClicked();">
         <%= t('btn.clear') %>
       </td>
     <% end %>
@@ -240,12 +240,12 @@ end
   </table>
   <table id="buttons_without_clear" style="margin:0px auto; padding:10px; display:<%= display_without_clear %>;">
     <tr>
-      <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+      <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
         <%= t('btn.back') %>
       </td>
     <% if editable %>
       <td style="width:10px;"></td>
-      <td class="img_button_td" onclick="doRegister();">
+      <td class="prim_btn" onclick="doRegister();">
         <%= t('btn.register') %>
       </td>
     <% end %>

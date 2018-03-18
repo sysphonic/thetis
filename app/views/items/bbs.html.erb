@@ -99,7 +99,7 @@
 
 <table style="width:100%; padding-bottom:7px;">
   <tr>
-    <td class="pagination_td" style="text-align:center;">
+    <td class="pagination_bar">
       <%= t('cap.total') %><%= t('item', :count => @total_num) %>
       <%
       prms = ApplicationHelper.dup_hash(params)
@@ -223,49 +223,49 @@ item_images = item.images_without_content
 item_attachments = item.attachments_without_content
 images_num = item_images.length
 attachments_num = item_attachments.length
+additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0))
 %>
         <tr>
           <td>
-<% additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachments_num > 0)) %>
             <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" >
               <tr>
                 <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public)?'#fff5f0':'lightcyan' %>; font-size:14px; padding:10px; line-height:20px;">
-<% unless item.summary.blank? %>
-<div>
-  <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
-  <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
-</div>
-<div style="height:5px;">&nbsp;</div>
-<% end %>
+                <% unless item.summary.blank? %>
+                  <div>
+                    <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
+                    <%= raw(ApplicationHelper.format_text_block(h(truncate(item.summary, :length => 100)))) %>
+                  </div>
+                  <div style="height:5px;">&nbsp;</div>
+                <% end %>
                   <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
                   <br/>
-                  <% unless item.description.blank? %>
-                    <table style="width:100%; border-spacing:2px;">
-                      <tr>
-                        <td>
-                        <script type="text/javascript">
-                          document.write('<div id="div_description_<%= item.id %>" style="padding:5px; width:'+(_mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
-                        </script>
-                        <%= raw(item.description) %></div>
-                        </td>
-                      </tr>
-                    </table>
-                  <% end %>
-                  <%
-                  max_bbs_img = 2
-                  max_bbs_attach = 2
-                  show_num = false
-                  show_num = true if params[:thumbnails] == 'false'
-                  show_num = true if images_num > max_bbs_img
-                  show_num = true if attachments_num > max_bbs_attach
-                  if show_num
-                  %>
-                    <div style="text-align:right; padding:5px;">
-                      <a href="javascript:this.onclick()" onclick="doShowItem(<%= item.id %>); return false;">
-                        ( <%= t('image.plural') %>: <%= images_num %>, <%= t('attachment.plural_full') %>: <%= attachments_num %> )
-                      </a>
-                    </div>
-                  <% end %>
+                <% unless item.description.blank? %>
+                  <table style="width:100%; border-spacing:2px;">
+                    <tr>
+                      <td>
+                      <script type="text/javascript">
+                        document.write('<div id="div_description_<%= item.id %>" style="padding:5px; width:'+(_mainWidth*<%= (additionalCol)?'6':'8' %>/10)+'px; height:200px; overflow:scroll;">');
+                      </script>
+                      <%= raw(item.description) %></div>
+                      </td>
+                    </tr>
+                  </table>
+                <% end %>
+                <%
+                max_bbs_img = 2
+                max_bbs_attach = 2
+                show_num = false
+                show_num = true if params[:thumbnails] == 'false'
+                show_num = true if images_num > max_bbs_img
+                show_num = true if attachments_num > max_bbs_attach
+                if show_num
+                %>
+                  <div style="text-align:right; padding:5px;">
+                    <a href="javascript:this.onclick()" onclick="doShowItem(<%= item.id %>); return false;">
+                      ( <%= t('image.plural') %>: <%= images_num %>, <%= t('attachment.plural_full') %>: <%= attachments_num %> )
+                    </a>
+                  </div>
+                <% end %>
 
                 </td>
               <% if additionalCol %>
@@ -299,23 +299,23 @@ attachments_num = item_attachments.length
                    attach_cnt += 1
                    break if attach_cnt > max_bbs_attach
                   %>
-                         <table style="width:120px; margin:0px auto; cursor:pointer; border:2px solid white; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onmouseover="this.style.borderColor='lime'" onmouseout="this.style.borderColor='white'">
+                         <table class="attachment_block" style="width:120px; margin:0px auto;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'">
                            <tr>
-                             <td class="td_attachment_name" style="text-align:center;">
+                             <td class="attachment_block_name">
                                <%= attach.name %>
                              </td>
                            </tr>
                     <% unless attach.title.blank? %>
                            <tr>
-                             <td class="td_attachment_title" style="text-align:center;">
+                             <td class="attachment_block_title">
                                <%= attach.title %>
                              </td>
                            </tr>
                     <% end %>
                     <% unless attach.memo.blank? %>
                        <tr>
-                         <td class="td_attachment_memo">
-                            <%= attach.memo %>
+                         <td class="attachment_block_memo">
+                           <%= attach.memo %>
                          </td>
                        </tr>
                     <% end %>
@@ -398,7 +398,7 @@ function showURL()
 function doShowItem(item_id)
 {
   prog("TOP-RIGHT");
-  var params = Form.serialize(document.form_list);
+  var params = Form.serialize(form_list);
   location.href = "<%= url_for(:controller => 'items', :action => 'show') %>?id=" + item_id + "&" + params;
 }
 
@@ -414,20 +414,20 @@ function onDeleteItemClicked(item_id, title, del_type)
 function doDelete(item_id)
 {
   prog("TOP-RIGHT");
-  addInputHidden(document.form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
-  document.form_list.action = "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+item_id;
-  document.form_list.method = "post";
-  document.form_list.submit();
+  addInputHidden(form_list, null, "authenticity_token", "<%= form_authenticity_token %>");
+  form_list.action = "<%= url_for(:controller => 'items', :action => 'destroy') %>?id="+item_id;
+  form_list.method = "post";
+  form_list.submit();
 }
 
 function clearFolder()
 {
-  document.form_list.action = "<%= url_for(:controller => 'items', :action => 'bbs') %>";
-  document.form_list.folder_id.value = "";
-  document.form_list.select_sorting.disabled = true;
-  document.form_list.sort_col.disabled = true;
-  document.form_list.sort_type.disabled = true;
-  document.form_list.submit();
+  form_list.action = "<%= url_for(:controller => 'items', :action => 'bbs') %>";
+  form_list.folder_id.value = "";
+  form_list.select_sorting.disabled = true;
+  form_list.sort_col.disabled = true;
+  form_list.sort_type.disabled = true;
+  form_list.submit();
   prog("TOP-RIGHT");
 }
 

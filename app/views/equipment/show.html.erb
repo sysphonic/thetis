@@ -22,26 +22,26 @@
 <% else %>
   <table style="margin:0px auto; width:85%; border-spacing:2px;">
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <%= Equipment.human_attribute_name('name') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= @equipment.name %>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= Equipment.human_attribute_name('note') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <pre><%= @equipment.note %></pre>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('equipment.belongs_to') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= render(:partial => 'common/show_scope', :locals => {:obj => @equipment, :empty_msg => t('msg.all')}) %>
       </td>
     </tr>
@@ -51,7 +51,7 @@
 <% if params[:popup] != 'true' %>
 <table style="margin:10px auto;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); history.back();">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); history.back();">
       <%= t('btn.back') %>
     </td>
   </tr>

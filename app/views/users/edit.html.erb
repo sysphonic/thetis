@@ -9,10 +9,10 @@
         <input type="hidden" id="user_id" name="user[id]" value="<%= (@user.nil?)?(nil):(@user.id) %>" />
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('item.profile_sheet') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_ajax_userItem" style="padding-left:10px;">
                 <%= render(:partial => 'ajax_profile_sheet') %>
               </div>
@@ -34,10 +34,10 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:95%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('group.plural') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_user_groups">
                 <%= render(:partial => 'ajax_groups') %>
               </div>
@@ -58,10 +58,10 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table class="info_area" style="width:95%; margin:0px auto;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= OfficialTitle.model_name.human %>
             </td>
-            <td class="item_value_td" style="padding-top:0px; padding-bottom:0px;">
+            <td class="spec_value" style="padding-top:0px; padding-bottom:0px;">
               <div id="div_ajax_user_titles">
                 <%= render(:partial => 'ajax_user_titles') %>
               </div>
@@ -76,10 +76,10 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:95%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('team.plural') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_user_teams">
                 <ul style="padding-left:15px;">
                 <%
@@ -110,10 +110,10 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:95%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('zeptair.vpn_connection') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <form name="form_zept_allowed">
                 <%
                 checked_zept_allowed_true = ''
@@ -153,11 +153,11 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
     <td style="width:15px;"></td>
-    <td class="img_button_td" onclick="doRegisterUser(document.form_user_basic);">
+    <td class="prim_btn" onclick="doRegisterUser(document.form_user_basic);">
       <%= t('btn.register') %>
     </td>
   </tr>

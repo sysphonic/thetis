@@ -7,15 +7,15 @@
       <div class="info_area" style="width:100%; margin:0px auto; padding:15px 0px;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+            <td class="spec_cap" colspan="2" nowrap style="width:100%;">
               <%= t('cap.control') %>
             </td>
           </tr>
           <tr>
-            <td class="prim_cap_td" style="width:40%;" nowrap>
+            <td class="prim_cap" style="width:40%;" nowrap>
               <%= Research.human_attribute_name('status') %>
             </td>
-            <td class="item_value_td" id="status">
+            <td class="spec_value" id="status">
               <%
               status = Research.get_status
               status_started = t('msg.started')
@@ -35,19 +35,19 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" style="width:40%;" nowrap>
+            <td class="spec_cap" style="width:40%;" nowrap>
               <%= t('research.reception') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <input type="button" id="button_start" style="display:<%= disp_button_start %>; width:100px;" value="<%= t('btn.start') %>" onclick="doStart()">
               <input type="button" id="button_stop" style="display:<%= disp_button_stop %>; width:100px;" value="<%= t('btn.stop') %>" onclick="onStopResearchClicked()">
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" style="width:40%;">
+            <td class="spec_cap" style="width:40%;">
               <%= t('btn.reset_all_users') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <input type="button" value="<%= t('btn.reset') %>" onclick="onResetResearchClicked()" style="width:100px;">
             </td>
           </tr>
@@ -60,13 +60,13 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%;">
+            <td class="spec_cap" nowrap style="width:100%;">
               <%= t('research.pages') %>&nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= raw(t('research.pages_info')) %>');">
             </td>
           </tr>
           <tr>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_ajax_page">
                 <%= render(:partial => 'ajax_q_page') %>
               </div>
@@ -84,12 +84,12 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('research.groups_for_statistics') %>
             </td>
           </tr>
           <tr>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_statistics_groups">
                 <%= render(:partial => 'ajax_statistics_groups') %>
               </div>
@@ -119,7 +119,7 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>

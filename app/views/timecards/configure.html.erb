@@ -8,15 +8,15 @@
       <div class="info_area" style="width:100%; padding:20px 0px 10px; text-align:center;" >
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+            <td class="spec_cap" colspan="2" nowrap style="width:100%;">
               <%= t('config.general_settings') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('timecard.year_begins_from') %>
             </td>
-            <td class="item_value_td" style="width:70%;">
+            <td class="spec_value" style="width:70%;">
               <select id="year_begins_from" name="timecard[year_begins_from]">
               <%
               year_begins_from = @yaml_timecard['year_begins_from']
@@ -33,10 +33,10 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('timecard.month_begins_at') %>
             </td>
-            <td class="item_value_td" style="width:70%;">
+            <td class="spec_value" style="width:70%;">
               <select id="month_begins_at" name="timecard[month_begins_at]">
               <%
               month_begins_at = @yaml_timecard['month_begins_at']
@@ -53,10 +53,10 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('user.u_name') %>
             </td>
-            <td class="item_value_td" style="width:70%;">
+            <td class="spec_value" style="width:70%;">
               <% checked = (@yaml_timecard['always_by_full_name']=='1')?'checked':'' %>
               <input name="timecard[always_by_full_name]" type="hidden" value="0" />
               <input type="checkbox" id="always_by_full_name" name="timecard[always_by_full_name]" value="1" <%= checked %>><label for="always_by_full_name"><%= t('timecard.always_fullname') %></label>
@@ -68,15 +68,15 @@
       <div class="info_area" style="width:100%; padding:20px 0px; text-align:center;" >
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+            <td class="spec_cap" colspan="2" nowrap style="width:100%;">
               <%= t('menu.paid_holidays') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('timecard.default_days') %>
             </td>
-            <td class="item_value_td" style="width:70%">
+            <td class="spec_value" style="width:70%">
               <%
               days = 0
               unless @yaml_timecard['paidhld_per_year'].nil?
@@ -87,10 +87,10 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td" nowrap>
+            <td class="spec_cap" nowrap>
               <%= t('timecard.carry_over') %>
             </td>
-            <td class="item_value_td">
+            <td class="spec_value">
               <%
               paidhld_carry_over = @yaml_timecard['paidhld_carry_over']
               checked_none = (paidhld_carry_over == PaidHoliday::CARRY_OVER_NONE)?'checked':''
@@ -112,26 +112,26 @@
       <div class="info_area" style="width:100%; padding:10px 0px 20px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;">
+            <td class="spec_cap" colspan="2" nowrap style="width:100%;">
               <%= t('timecard.working_rules') %>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td">
+            <td class="spec_cap">
               <%= t('timecard.default_breaks') %>
             </td>
-            <td class="item_value_td" style="width:70%;">
+            <td class="spec_value" style="width:70%;">
               <div id="div_break">
                 <%= render(:partial => 'ajax_config_break') %>
               </div>
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td">
+            <td class="spec_cap">
               <%= t('timecard.standard_labor_time') %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('timecard.standard_labor_time_info')%><br/>');">
             </td>
-            <td class="item_value_td" style="width:70%">
+            <td class="spec_value" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
                 <select id="standard_hours_hour">
                 <%
@@ -248,11 +248,11 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td">
+            <td class="spec_cap">
               <%= t('timecard.commence_at') %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('timecard.commence_at_info')%><br/>');">
             </td>
-            <td class="item_value_td" style="width:70%">
+            <td class="spec_value" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
                 <select id="commence_at_hour" onchange="changeHour(this.value, _z('commence_at_min'));">
                   <option value=""></option>
@@ -333,11 +333,11 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td">
+            <td class="spec_cap">
               <%= t('timecard.close_at') %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('timecard.close_at_info')%><br/>');">
             </td>
-            <td class="item_value_td" style="width:70%">
+            <td class="spec_value" style="width:70%">
               <div class="time_select" style="padding-bottom:5px;">
                 <select id="close_at_hour" onchange="changeHour(this.value, _z('close_at_min'));">
                   <option value=""></option>
@@ -418,11 +418,11 @@
             </td>
           </tr>
           <tr>
-            <td class="item_cap_td">
+            <td class="spec_cap">
               <%= t('timecard.midnight_span') %>
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/info.png" onclick="msg('<%= t('timecard.midnight_span_info')%><br/>');">
             </td>
-            <td class="item_value_td" style="width:70%">
+            <td class="spec_value" style="width:70%">
               <span class="time_select">
                 <select id="midnight_from_hour" onchange="changeHour(this.value, _z('midnight_from_min'));">
                   <option value=""></option>
@@ -525,11 +525,11 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
     <td style="width:15px;"></td>
-    <td class="img_button_td" onclick="doRegister();">
+    <td class="prim_btn" onclick="doRegister();">
       <%= t('btn.register') %>
     </td>
   </tr>

@@ -9,10 +9,10 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;" >
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" nowrap style="width:100%;"><%= t('template.item_templates') %></td>
+            <td class="spec_cap" nowrap style="width:100%;"><%= t('template.item_templates') %></td>
           </tr>
           <tr>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_ajax_local">
                 <%= render(:partial => 'ajax_local') %>
               </div>
@@ -33,11 +33,11 @@
       <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_cap_td" colspan="2" nowrap style="width:100%;"><%= t('template.system_templates') %></td>
+            <td class="spec_cap" colspan="2" nowrap style="width:100%;"><%= t('template.system_templates') %></td>
           </tr>
           <tr>
-            <td class="item_cap_td" style="width:40%;" nowrap><%= t('item.profile_sheet') %></td>
-            <td class="item_value_td">
+            <td class="spec_cap" style="width:40%;" nowrap><%= t('item.profile_sheet') %></td>
+            <td class="spec_value">
               <%= render(:partial => 'system') %>
             </td>
           </tr>
@@ -50,7 +50,7 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'history', :action => 'back') %>';">
       <%= t('btn.back') %>
     </td>
   </tr>

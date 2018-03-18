@@ -22,26 +22,26 @@ mail_account = MailAccount.find(mail_account_id)
 
 <table style="width:90%; margin:10px auto; border-spacing:2px;">
   <tr>
-    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+    <td class="prim_cap" style="background-color:#d6ecfa;" nowrap>
       <%= MailAccount.model_name.human %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <%= mail_account.get_title %>
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+    <td class="prim_cap" style="background-color:#d6ecfa;" nowrap>
       <label for="mail_filter_title"><%= MailFilter.human_attribute_name('title') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <input type="text" id="mail_filter_title" name="mail_filter[title]" value="<%= (@mail_filter.nil?)?(nil):(@mail_filter.title) %>" style="width:90%" /><sup style="color:red">*</sup>
     </td>
   </tr>
   <tr>
-    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+    <td class="prim_cap" style="background-color:#d6ecfa;" nowrap>
       <label for="mail_filter_triggers"><%= t('mail_filter.trigger.cap') %></label>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <%
       opts = []
       opts << [t('mail_filter.trigger.checking_and_manual'), "|#{MailFilter::TRIGGER_CHECKING}|#{MailFilter::TRIGGER_MANUAL}|"]
@@ -53,10 +53,10 @@ mail_account = MailAccount.find(mail_account_id)
   </tr>
   <tr style="height:5px;"><td></td></tr>
   <tr>
-    <td class="prim_cap_td" style="background-color:#d6ecfa;" nowrap>
+    <td class="prim_cap" style="background-color:#d6ecfa;" nowrap>
       <%= t('cap.enabled_disabled') %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <%
       checked = (@mail_filter.nil? or @mail_filter.enabled)?'checked':''
       %>
@@ -92,7 +92,7 @@ mail_account = MailAccount.find(mail_account_id)
       <div class="info_area" style="background-color:aliceblue; width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_filter_conditions">
                 <%= render(:partial => 'ajax_conditions') %>
               </div>
@@ -122,7 +122,7 @@ mail_account = MailAccount.find(mail_account_id)
       <div class="info_area" style="background-color:aliceblue; width:100%; padding:15px 0px; text-align:center;">
         <table style="margin:0px auto; width:85%; border-spacing:2px;">
           <tr>
-            <td class="item_value_td">
+            <td class="spec_value">
               <div id="div_filter_actions">
                 <%= render(:partial => 'ajax_actions') %>
               </div>

@@ -1,10 +1,10 @@
 
 <table style="margin:2px auto 0px 0px; border-spacing:2px;">
   <tr>
-    <td id="tab_statistics" class="td_tab" nowrap style="width:180px;" onclick="showResearchTab('statistics', 'brown');">
+    <td id="tab_statistics" class="tab_strip" nowrap style="width:180px;" onclick="showResearchTab('statistics', 'brown');">
       <%= t('menu.statistics') %>
     </td>
-    <td id="tab_all" class="td_tab" nowrap style="width:180px;" onclick="showResearchTab('all', 'blue');">
+    <td id="tab_all" class="tab_strip" nowrap style="width:180px;" onclick="showResearchTab('all', 'blue');">
       <%= t('msg.all_records') %>
     </td>
   </tr>
@@ -146,7 +146,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
       <td>
         <table style="margin:0px auto 10px;">
           <tr>
-            <td class="img_button_td" onclick="onHistoryBackClicked();">
+            <td class="prim_btn" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>
             </td>
           </tr>
@@ -170,7 +170,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
       <td>
         <table style="margin:0px auto 10px;">
           <tr>
-            <td class="img_button_td" onclick="onHistoryBackClicked();">
+            <td class="prim_btn" onclick="onHistoryBackClicked();">
               <%= t('btn.back') %>
             </td>
           </tr>

@@ -32,7 +32,7 @@ class LoginController < ApplicationController
 
     if user.nil?
 
-      flash[:notice] = '<span class=\'font_msg_bold\'>'+t('user.u_name')+'</span>'+t('msg.or')+'<span class=\'font_msg_bold\'>'+t('password.name')+'</span>'+t('msg.is_invalid')
+      flash[:notice] = '<span class=\'msg_bold\'>'+t('user.u_name')+'</span>'+t('msg.or')+'<span class=\'msg_bold\'>'+t('password.name')+'</span>'+t('msg.is_invalid')
 
       if params[:fwd_controller].blank?
 

@@ -61,7 +61,7 @@ mode = 'groupware'
       menus.each do |menu_name, menu_attrs|
       %>
         <tr style="height:28px;">
-          <td class="menu_td" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
+          <td class="menu_btn" onclick="<%= raw(menu_attrs[:action]) %> return false;" onmouseover="activateMenu('<%= menu_attrs[:icon_tag] %>', this);" onmouseout="deactivateMenu(this);">
             <a id="menu_<%= menu_name %>" href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= menu_attrs[:disp] %></a>
           </td>
         </tr>
@@ -106,13 +106,13 @@ mode = 'groupware'
     <td style="text-align:center; padding:5px 7px;">
       <table style="width:150px; margin:0px auto; border-spacing:1px;">
         <tr style="height:28px;">
-          <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
+          <td class="menu_btn" onclick="doUpdateIframe('<%= url_for(:controller => 'frames', :action => 'admin') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_menu', this);" onmouseout="deactivateMenu(this);">
             <a href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= t('menu.admin_menu') %></a>
           </td>
         </tr>
         <tr style="height:3px;"><td></td></tr>
         <tr style="height:28px;">
-          <td class="menu_td" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
+          <td class="menu_btn" onclick="doUpdateIframe('<%= url_for(:controller => 'logs', :action => 'list') %>', '<%= mode %>'); return false;" onmouseover="activateMenu('admin_log', this);" onmouseout="deactivateMenu(this);">
             <a href="javascript:this.onclick()" onclick="return false;" style="color:inherit;"><%= t('menu.access_logs') %></a>
           </td>
         </tr>
@@ -232,7 +232,7 @@ function doLogin()
 
 function clearSelectedGroupwareMenu()
 {
-  var elems = document.getElementsByClassName("menu_td selected");
+  var elems = document.getElementsByClassName("menu_btn selected");
   for (var i=0; i < elems.length; i++) {
     removeClassName(elems[i], "selected");
   }

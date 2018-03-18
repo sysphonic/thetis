@@ -78,7 +78,7 @@
   <%
   ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].each_with_index do |wday_name, idx|
   %>
-    <td class="td_calendar_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[idx] %>; width:14%; text-align:center;">
+    <td class="calendar_cell_wday" style="background-color:<%= THETIS_CALENDAR_COLOR[idx] %>; width:14%; text-align:center;">
       <%= wday_name %>
     </td>
   <% end %>
@@ -109,7 +109,7 @@ for wd in 0..6 do
         day_caption = '<div style="background-color:darkorange; color:white; width:95%;">&nbsp;<b>' + day_caption + '</b></div>'
       end
     %>
-    <td class="td_calendar" style="vertical-align:top;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
+    <td class="calendar_cell" style="vertical-align:top;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doMoveToDay('<%= sprintf('%4d-%02d-%02d', @date.year, @date.month, day) %>');">
       <%= raw(day_caption) %><br/>
       <%
       standard_num = 3
@@ -165,7 +165,7 @@ for wd in 0..6 do
     %>
     </td>
   <% else %>
-    <td class="td_calendar_empty">
+    <td class="calendar_cell_empty">
       &nbsp;
     </td>
   <% end %>

@@ -4,26 +4,26 @@
 <div class="info_area" style="width:100%; padding:15px 0px; text-align:center;">
   <table style="margin:0px auto; width:85%; border-spacing:2px;">
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <label for="equipment_name"><%= Equipment.human_attribute_name('name') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="equipment_name" name="equipment[name]" value="<%= (@equipment.nil?)?(nil):(@equipment.name) %>" style="width:80%" /><sup style="color:red">*</sup>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="equipment_note"><%= Equipment.human_attribute_name('note') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <textarea id="equipment_note" name="equipment[note]" style="width:80%;" rows="4"><%= (@equipment.nil?)?(nil):(@equipment.note) %></textarea>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <%= t('equipment.belongs_to') %>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= render(:partial => 'common/edit_scope', :locals => {:obj => @equipment}) %>
       </td>
     </tr>

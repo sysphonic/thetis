@@ -69,7 +69,7 @@ class UsersController < ApplicationController
       redirect_to(:controller => 'users', :action => 'list')
     else
       NoticeMailer.welcome(@user, password, ApplicationHelper.root_url(request)).deliver
-      flash[:notice] << '<br/><span class=\'font_msg_bold\' style=\'color:firebrick;\'>'+t('user.initial_password')+'</span>'+t('msg.sent_by')+'<span class=\'font_msg_bold\'>'+t('email.name')+'</span>'+t('msg.check_it')
+      flash[:notice] << '<br/><span class=\'msg_bold\' style=\'color:firebrick;\'>'+t('user.initial_password')+'</span>'+t('msg.sent_by')+'<span class=\'msg_bold\'>'+t('email.name')+'</span>'+t('msg.check_it')
       redirect_to(:controller => 'login', :action => 'index')
     end
   end

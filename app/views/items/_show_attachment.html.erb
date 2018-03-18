@@ -1,6 +1,6 @@
 <table style="width:100%; border-spacing:2px;">
   <tr>
-    <td class="td_show_cap_bar" nowrap>
+    <td class="cap_bar" nowrap>
       <%= t('attachment.plural_full') %>
     </td>
   </tr>
@@ -10,22 +10,22 @@
     @attachments = @item.attachments_without_content
     @attachments.each do |attach|
     %>
-      <table style="width:100%; cursor:pointer; border:2px solid white; padding-bottom:2px; border-spacing:1px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'" onmouseover="this.style.borderColor='lime'" onmouseout="this.style.borderColor='white'">
+      <table class="attachment_block" style="width:100%; padding-bottom:2px;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'">
         <tr>
-          <td class="td_attachment_name" nowrap style="text-align:center;">
+          <td class="attachment_block_name" nowrap>
             <%= attach.name %>
           </td>
         </tr>
       <% unless attach.title.blank? %>
         <tr>
-          <td class="td_attachment_title" style="text-align:center;">
+          <td class="attachment_block_title">
             <%= attach.title %>
           </td>
         </tr>
       <% end %>
       <% unless attach.memo.blank? %>
         <tr>
-          <td class="td_attachment_memo">
+          <td class="attachment_block_memo">
             <%= attach.memo %>
           </td>
         </tr>

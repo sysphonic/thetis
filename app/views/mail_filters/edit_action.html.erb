@@ -9,13 +9,13 @@ val = params[:val]
 
 <table style="width:90%; margin:15px auto; border-spacing:2px;">
   <tr>
-    <td class="item_value_td" style="width:40%">
+    <td class="spec_value" style="width:40%">
       <%
       opts = MailFiltersHelper.opts_action_verb(true)
       %>
       <%= select_tag('filter_action_verb', options_for_select(opts, verb), :style => 'min-width:150px;', :onchange => 'onFilterActionOptionChanged(this);') %>
     </td>
-    <td class="item_value_td" style="width:60%">
+    <td class="spec_value" style="width:60%">
       <div id="filter_action_dest">
         <div class="button_gray" style="display:inline-block;" onclick="showFolderTreeToSelect('');">
           <%= t('btn.select_folder') %>

@@ -23,13 +23,13 @@
     <td style="vertical-align:top;">
       <table style="width:100%; border-spacing:2px;">
         <tr style="height:20px;">
-          <td id="tab_users" class="td_tab selected" nowrap style="background-color:blue;">
+          <td id="tab_users" class="tab_strip selected" nowrap style="background-color:blue;">
               <%= t('user.plural') %>
           </td>
-          <td id="tab_groups" class="td_tab" nowrap onclick="selectTabGroups(<%= @folder.id %>);">
+          <td id="tab_groups" class="tab_strip" nowrap onclick="selectTabGroups(<%= @folder.id %>);">
               <%= t('group.plural') %>
           </td>
-          <td id="tab_teams" class="td_tab" nowrap onclick="selectTabTeams(<%= @folder.id %>);">
+          <td id="tab_teams" class="tab_strip" nowrap onclick="selectTabTeams(<%= @folder.id %>);">
               <%= t('team.plural') %>
           </td>
         </tr>
@@ -95,7 +95,7 @@
             <td>
               <table style="margin:20px auto 0px;">
                 <tr>
-                  <td class="img_button_td" onclick="doApplyAuthUsers(<%= @folder.id %>);">
+                  <td class="prim_btn" onclick="doApplyAuthUsers(<%= @folder.id %>);">
                     <%= t('btn.apply') %>
                   </td>
                 </tr>

@@ -55,7 +55,7 @@ module LoginChecker
     if @login_user.nil?
       Log.add_check(request, '[check_login]'+params.inspect)
 
-      flash[:notice] = t('msg.need_to')+'<span class=\'font_msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
+      flash[:notice] = t('msg.need_to')+'<span class=\'msg_bold\'>'+t('login.name')+'</span>'+t('msg.need_to_suffix')
       if request.xhr?
         @redirect_url = url_for(:controller => 'login', :action => 'index')
         render(:partial => 'common/redirect_top_to')

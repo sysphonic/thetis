@@ -1,7 +1,7 @@
 
 <table style="margin:0px auto; width:95%; border-spacing:2px;">
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:#ffde00;">
+    <td class="spec_cap" nowrap style="background-color:#ffde00;">
       <%= Workflow.human_attribute_name('status') %>
     </td>
     <td style="padding-left:5px;">
@@ -44,10 +44,10 @@
   @orders.each do |order|
   %>
   <tr>
-    <td class="item_cap_td" nowrap style="background-color:#aaeaff;">
+    <td class="spec_cap" nowrap style="background-color:#aaeaff;">
       <%= t('workflow.order_prefix')+(order_idx+1).to_s %>
     </td>
-    <td class="item_value_td">
+    <td class="spec_value">
       <table style="width:100%;">
         <tr>
           <td>

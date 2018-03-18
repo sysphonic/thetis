@@ -5,10 +5,10 @@
   <input type="hidden" id="user_id" name="user[id]" value="<%= (@user.nil?)?(nil):(@user.id) %>" />
   <table style="margin:0px auto; width:85%; border-spacing:2px;">
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <label for="user_name"><%= t('user.u_name') %></label><sup style="color:red">*</sup>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_name" name="user[name]" value="<%= (@user.nil?)?(nil):(@user.name) %>" style="ime-mode:disabled" />
       </td>
     </tr>
@@ -24,10 +24,10 @@
   if req_pass
   %>
      <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <label for="user_password"><%= t('password.name') %></label><sup style="color:red">*</sup>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%
         passwd = ''
         unless @user.nil? or @user.pass_md5.nil? or @user.pass_md5.empty?
@@ -38,44 +38,44 @@
       </td>
     </tr>
     <tr>
-      <td class="prim_cap_td" nowrap>
+      <td class="prim_cap" nowrap>
         <label for="user_password_confirmation"><%= t('password.confirm') %></label><sup style="color:red">*</sup>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="password" id="user_password_confirmation" size="30" value="<%= passwd %>" onfocus="this.select();" />
       </td>
     </tr>
   <% end %>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_email"><%= User.human_attribute_name('email') %></label><sup style="color:red">*</sup>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_email" name="user[email]" value="<%= (@user.nil?)?(nil):(@user.email) %>" style="ime-mode:disabled" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_fullname"><%= User.human_attribute_name('fullname') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_fullname" name="user[fullname]" value="<%= (@user.nil?)?(nil):(@user.fullname) %>" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_address"><%= User.human_attribute_name('address') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%= t('cap.postalcode') %> <input type="text" id="user_postalcode" name="user[postalcode]" value="<%= (@user.nil?)?(nil):(@user.postalcode) %>" style="width:100px; ime-mode:disabled;" /><br/>
         <textarea id="user_address" name="user[address]" style="width:100%;" rows="3"><%= (@user.nil?)?(nil):(@user.address) %></textarea>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
 <%
 if THETIS_USER_TIMEZONE_SELECTABLE \
     or (!@login_user.nil? and @login_user.admin?(User::AUTH_USER))
@@ -95,10 +95,10 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_tel"><%= t('cap.tel') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <%
         opts = []
         THETIS_TEL_TYPES.each do |type|
@@ -124,42 +124,42 @@ end
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_fax"><%= User.human_attribute_name('fax') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_fax" name="user[fax]" value="<%= (@user.nil?)?(nil):(@user.fax) %>" style="ime-mode:disabled" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_organization"><%= User.human_attribute_name('organization') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <textarea id="user_organization" name="user[organization]" style="width:100%;" rows="3"><%= (@user.nil?)?(nil):(@user.organization) %></textarea>
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_url"><%= User.human_attribute_name('url') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_url" name="user[url]" value="<%= (@user.nil?)?(nil):(@user.url) %>" style="width:100%; ime-mode:disabled;" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_title"><%= User.human_attribute_name('title') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_title" name="user[title]" value="<%= (@user.nil?)?(nil):(@user.title) %>" style="width:80%; vertical-align:middle;" /><img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/dropleft.png" onclick="showTitleSelector();" style="cursor:pointer;" />
       </td>
     </tr>
     <tr>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_figure"><%= User.human_attribute_name('figure') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="radio" id="user_figure_boy_green" name="user[figure]" value="boy_green" <%= ((!@user.nil?) and (@user.figure == 'boy_green'))?'checked':'' %> /><label for="user_figure_boy_green"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/boy_green.png" title="Boy green" /></label>
         &nbsp;&nbsp;
         <input type="radio" id="user_figure_girl_pink" name="user[figure]" value="girl_pink" <%= ((!@user.nil?) and (@user.figure == 'girl_pink'))?'checked':'' %> /><label for="user_figure_girl_pink"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/figures/girl_pink.png" title="Girl pink" /></label>
@@ -177,10 +177,10 @@ end
         def_birth_d = @user.birthday.strftime('%d')
       end
       %>
-      <td class="item_cap_td" nowrap>
+      <td class="spec_cap" nowrap>
         <label for="user_birthday"><%= User.human_attribute_name('birthday') %></label>
       </td>
-      <td class="item_value_td">
+      <td class="spec_value">
         <input type="text" id="user_birthday_y" name="user[birthday_y]" value="<%= def_birth_y %>" size="30" style="width:50px; ime-mode:disabled">
         <%
         opts = []

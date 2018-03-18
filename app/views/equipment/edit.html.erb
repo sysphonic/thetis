@@ -15,11 +15,11 @@
 
 <table style="margin:20px auto 10px;">
   <tr>
-    <td class="img_button_td" onclick="prog('TOP-RIGHT'); history.back();">
+    <td class="prim_btn" onclick="prog('TOP-RIGHT'); history.back();">
       <%= t('btn.back') %>
     </td>
     <td style="min-width:15px; width:15px;"></td>
-    <td class="img_button_td" onclick="doRegister();">
+    <td class="prim_btn" onclick="doRegister();">
     <% if (@equipment.nil? or @equipment.id == 0) %>
       <%= t('btn.register')%>
     <% else %>
