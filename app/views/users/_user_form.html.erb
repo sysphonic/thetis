@@ -9,7 +9,7 @@
         <label for="user_name"><%= t('user.u_name') %></label><sup style="color:red">*</sup>
       </td>
       <td class="spec_value">
-        <input type="text" id="user_name" name="user[name]" value="<%= (@user.nil?)?(nil):(@user.name) %>" style="ime-mode:disabled" />
+        <input type="text" id="user_name" name="user[name]" value="<%= (@user.nil?)?(nil):(@user.name) %>" style="ime-mode:disabled;" />
       </td>
     </tr>
   <%
@@ -51,7 +51,7 @@
         <label for="user_email"><%= User.human_attribute_name('email') %></label><sup style="color:red">*</sup>
       </td>
       <td class="spec_value">
-        <input type="text" id="user_email" name="user[email]" value="<%= (@user.nil?)?(nil):(@user.email) %>" style="ime-mode:disabled" />
+        <input type="text" id="user_email" name="user[email]" value="<%= (@user.nil?)?(nil):(@user.email) %>" style="ime-mode:disabled;" />
       </td>
     </tr>
     <tr>
