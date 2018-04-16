@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2017, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+ Copyright (c) 2007-2018, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
  This module is released under New BSD License.
  **-----------------**-----------------**-----------------**/
 
@@ -1438,5 +1438,18 @@ function selectAll(className)
     }
   }
   return modifiedElems;
+}
+
+function getCheckedArray(className)
+{
+  var checkedArray = [];
+  var elems = document.getElementsByClassName(className);
+  for (var i=0; i < elems.length; i++) {
+    var elem = elems[i];
+    if (elem.checked) {
+      checkedArray.push(elem);
+    }
+  }
+  return checkedArray;
 }
 

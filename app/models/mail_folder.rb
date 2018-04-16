@@ -1,12 +1,8 @@
 #
 #= MailFolder
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#== Note:
-#
-#* 
 #
 class MailFolder < ApplicationRecord
   has_many(:emails, {:dependent => :destroy})
@@ -81,9 +77,9 @@ class MailFolder < ApplicationRecord
 
     return folder_tree if folder_tree.nil? or folder_tree.empty?
 
-    folder_tree['0'].sort! { |folder_a, folder_b|
+    folder_tree[TreeElement::ROOT_ID.to_s].sort! { |folder_a, folder_b|
 
-      if folder_a.xtype == folder_b.xtype
+      if (folder_a.xtype == folder_b.xtype)
           idx_a = folder_a.name.to_i
           idx_b = folder_b.name.to_i
       else
@@ -197,8 +193,7 @@ class MailFolder < ApplicationRecord
 
     con = MailFolder.get_condtions_for(user, mail_account_ids)
 
-    # '0' for ROOT
-    folder_tree = MailFolder.get_tree(Hash.new, con, '0')
+    folder_tree = MailFolder.get_tree(Hash.new, con, TreeElement::ROOT_ID.to_s)
     return MailFolder.sort_tree(folder_tree)
   end
 
@@ -264,7 +259,7 @@ class MailFolder < ApplicationRecord
   #
   def self.get_name(mail_folder_id)
 
-    return '(root)' if mail_folder_id.to_s == '0'
+    return '(root)' if (mail_folder_id.to_s == TreeElement::ROOT_ID.to_s)
 
     begin
       folder = MailFolder.find(mail_folder_id)
@@ -472,7 +467,7 @@ class MailFolder < ApplicationRecord
 
     return false if mail_folder_id.nil?
 
-    return true if mail_folder_id.to_s == '0'
+    return true if (mail_folder_id.to_s == TreeElement::ROOT_ID.to_s)
 
     folder = nil
     begin

@@ -91,11 +91,12 @@ else
                 <% if !@login_user.nil? and (@login_user.admin?(User::AUTH_FOLDER) or @folder.in_my_folder_of?(@login_user.id)) %>
                   <select name="select_sorting">
                   <%
-                  opts = [['', '']]
-                  opts.concat Item.sort_opts([:folder_id])
+                  opts = []
+                  opts << ['', '']
+                  opts += ItemsHelper.sort_opts([:folder_id])
                   opts.each do |opt|
                     selected = ''
-                    selected = 'selected' if def_sort == opt.last
+                    selected = 'selected' if (def_sort == opt.last)
                   %>
                     <option value="<%= opt.last %>" <%= selected %>><%= raw(opt.first) %></option>
                   <% end %>
@@ -103,8 +104,8 @@ else
                 <% else %>
                   <%
                   disp = ''
-                  Item.sort_opts([:folder_id]).each do |opt|
-                    if def_sort == opt.last
+                  ItemsHelper.sort_opts([:folder_id]).each do |opt|
+                    if (def_sort == opt.last)
                       disp = opt.first
                       break
                     end

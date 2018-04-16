@@ -1,10 +1,8 @@
 #
 #= Group
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Group contains Users and sub Groups, and represents the unit in the organization.
 #
 #== Note:
 #
@@ -17,35 +15,16 @@ class Group < ApplicationRecord
   extend CachedRecord
   include TreeElement
 
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target Group-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
+  before_destroy do |rec|
     # Group Folder
-    folder = Group.get_group_folder(self.id)
+    folder = Group.get_group_folder(rec.id)
 
     unless folder.nil?
 
-      if folder.count_items(true) <= 0
-
+      if (folder.count_items(true) <= 0)
         folder.force_destroy
-
       else
-
-        folder.slice_auth_group(self)
+        folder.slice_auth_group(rec)
         folder.owner_id = 0
         folder.xtype = nil
         folder.save
@@ -53,84 +32,39 @@ class Group < ApplicationRecord
     end
 
     # General Folders
-    con = SqlHelper.get_sql_like([:read_groups, :write_groups], "|#{self.id}|")
+    con = SqlHelper.get_sql_like([:read_groups, :write_groups], "|#{rec.id}|")
     folders = Folder.where(con).to_a
 
     unless folders.nil?
       folders.each do |folder|
-        folder.slice_auth_group(self)
+        folder.slice_auth_group(rec)
         folder.save
       end
     end
 
     # Users
-    users = Group.get_users(self.id)
-
+    users = Group.get_users(rec.id)
     unless users.nil?
       users.each do |user|
-        user.exclude_from(self.id)
+        user.exclude_from(rec.id)
         user.save
       end
     end
 
     # Subgroups
-    self.get_childs(false, true).each do |group|
+    rec.get_childs(false, true).each do |group|
       group.destroy
     end
 
     # Schedules
-    Schedule.trim_on_destroy_member(:group, self.id)
+    Schedule.trim_on_destroy_member(:group, rec.id)
 
     # Locations and OfficeMaps
-    Location.where("(group_id=#{self.id})").destroy_all
-    OfficeMap.where("(group_id=#{self.id})").destroy_all
+    Location.where("(group_id=#{rec.id})").destroy_all
+    OfficeMap.where("(group_id=#{rec.id})").destroy_all
 
     # Settings
-    Setting.where("(group_id=#{self.id})").destroy_all
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Group-ID.
-  #
-  def self.delete(id)
-
-    Group.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    Group.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Group.destroy() instead of Group.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Group.destroy() instead of Group.delete_all()!'
+    Setting.where("(group_id=#{rec.id})").destroy_all
   end
 
   #=== rename

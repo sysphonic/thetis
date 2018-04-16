@@ -1,19 +1,12 @@
 #
 #= TreeElement
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants for classes which have tree composition.
-#
-#== Note:
-#
-#* 
 #
 module TreeElement
 
   public::ROOT_ID = 0
-
 
   #=== get_parents
   #

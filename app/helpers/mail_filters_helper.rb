@@ -1,14 +1,8 @@
 #
 #= MailFiltersHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants about MailFolders.
-#
-#== Note:
-#
-#*
 #
 module MailFiltersHelper
 
@@ -18,7 +12,6 @@ module MailFiltersHelper
   public::CONDITION_COMPARES = [:include, :not_include, :equal, :not_equal, :begin_with, :end_with, :in_addressbook, :not_in_addressbook, :before, :after, :more_than, :less_than, :heigher_than, :lower_than]
 
   public::ACITION_VERBS = [:move, :delete, :read, :abort]
-
 
   #=== self.match_conditions?
   #

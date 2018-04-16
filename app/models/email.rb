@@ -4,10 +4,6 @@
 #Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#== Note:
-#
-#* 
-#
 class Email < ApplicationRecord
   public::PERMIT_BASE = [:user_id, :mail_account_id, :mail_folder_id, :from_address, :subject, :to_addresses, :cc_addresses, :bcc_addresses, :reply_to, :message, :priority, :sent_at, :status, :xtype, :size]
 
@@ -38,7 +34,6 @@ class Email < ApplicationRecord
 
   public::EXT_RAW = '.eml'
 
-
   before_save do |email|
 
 # FEATURE_MAIL_STRICT_CAPACITY >>>
@@ -59,6 +54,12 @@ class Email < ApplicationRecord
       end
     end
 # FEATURE_MAIL_STRICT_CAPACITY <<<
+  end
+
+  before_destroy do |rec|
+    path = rec.get_dir
+    FileUtils.remove_entry_secure(path, true)
+    rec.clean_dir(File.dirname(path))
   end
 
   #=== unread?
@@ -736,17 +737,6 @@ class Email < ApplicationRecord
     return self.get_timestamp_exp(req_full, :sent_at)
   end
 
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target Email-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
   #=== self.destroy_by_user
   #
   #Destroy all Emails of specified User's.
@@ -767,68 +757,15 @@ class Email < ApplicationRecord
     end
   end
 
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    path = self.get_dir
-    FileUtils.remove_entry_secure(path, true)
-    _clean_dir(File.dirname(path))
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Email-ID.
-  #
-  def self.delete(id)
-
-    Email.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    Email.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Email.destroy() instead of Email.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Email.destroy() instead of Email.delete_all()!'
-  end
-
   #=== clean_dir
   #
   #Cleans directories where related files are stored.
   #
-  def clean_dir
+  #_path_:: Target path.
+  #
+  def clean_dir(path=nil)
 
-    path = self.get_dir
+    path ||= self.get_dir
     _clean_dir(path)
   end
 
@@ -836,6 +773,8 @@ class Email < ApplicationRecord
   #=== _clean_dir
   #
   #Cleans directories where related files are stored.
+  #
+  #_path_:: Target path.
   #
   def _clean_dir(path)
 

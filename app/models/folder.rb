@@ -1,7 +1,7 @@
 #
 #= Folder
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Folder contains Items and sub Folders.
@@ -24,7 +24,6 @@ class Folder < ApplicationRecord
   public::XTYPE_GROUP = 'group'
   public::XTYPE_TEAM = 'team'
   public::XTYPE_SYSTEM = 'system'
-
 
   #=== get_icons
   #
@@ -103,9 +102,9 @@ class Folder < ApplicationRecord
 
     return folder_tree if folder_tree.nil? or folder_tree.empty?
 
-    folder_tree['0'].sort! { |folder_a, folder_b|
+    folder_tree[TreeElement::ROOT_ID.to_s].sort! { |folder_a, folder_b|
 
-      if folder_a.xtype == folder_b.xtype
+      if (folder_a.xtype == folder_b.xtype)
 
         if folder_a.xorder.nil? or folder_b.xorder.nil?
           idx_a = folder_a.id
@@ -215,8 +214,7 @@ class Folder < ApplicationRecord
 
     con = Folder.get_condtions_for(user, admin)
 
-    # '0' for ROOT
-    folder_tree = Folder.get_tree(Hash.new, con, '0', admin)
+    folder_tree = Folder.get_tree(Hash.new, con, TreeElement::ROOT_ID.to_s, admin)
     return Folder.sort_tree(folder_tree)
   end
 
@@ -232,9 +230,9 @@ class Folder < ApplicationRecord
     SqlHelper.validate_token([group_id])
 
     folder_tree = {}
-    tree_id = '0'
+    tree_id = TreeElement::ROOT_ID.to_s
 
-    if group_id.to_s == '0'
+    if (group_id.to_s == TreeElement::ROOT_ID.to_s)
       sql = 'select distinct * from folders'
 
       where = " where (parent_id=#{tree_id.to_i})"
@@ -283,7 +281,7 @@ class Folder < ApplicationRecord
     else
       tree_id = parent.to_s
       parent = nil
-      if tree_id != '0'
+      if (tree_id != TreeElement::ROOT_ID.to_s)
         begin
           parent = Folder.find(tree_id)
         rescue
@@ -333,10 +331,10 @@ class Folder < ApplicationRecord
         next
       end
 
-      if (tree_id == '0') and (folder.xtype == Folder::XTYPE_GROUP)
+      if (tree_id == TreeElement::ROOT_ID.to_s) and (folder.xtype == Folder::XTYPE_GROUP)
         group = Group.find_with_cache(folder.owner_id, group_obj_cache)
         unless group.nil?
-          if group.parent_id != 0
+          if (group.parent_id != TreeElement::ROOT_ID)
             delete_arr << folder
             next
           end
@@ -406,7 +404,7 @@ class Folder < ApplicationRecord
   #
   def self.get_name(folder_id)
 
-    return '(root)' if folder_id.to_s == '0'
+    return '(root)' if (folder_id.to_s == TreeElement::ROOT_ID.to_s)
 
     begin
       folder = Folder.find(folder_id)
@@ -504,7 +502,7 @@ class Folder < ApplicationRecord
   #
   def self.check_user_auth(folder_id, user, rxw, check_admin)
 
-    if user.nil? and rxw == 'w'
+    if user.nil? and (rxw == 'w')
       return false
     end
 
@@ -512,7 +510,7 @@ class Folder < ApplicationRecord
       return true
     end
 
-    return true if folder_id.to_s == TreeElement::ROOT_ID.to_s
+    return true if (folder_id.to_s == TreeElement::ROOT_ID.to_s)
 
     begin
       folder = Folder.find(folder_id)
@@ -521,7 +519,7 @@ class Folder < ApplicationRecord
       return false
     end
 
-    if rxw == 'r'
+    if (rxw == 'r')
       users = folder.get_read_users_a
       groups = folder.get_read_groups_a
       teams = folder.get_read_teams_a
@@ -778,7 +776,7 @@ class Folder < ApplicationRecord
   #
   def get_disp_ctrl_h
 
-    return {} if self.disp_ctrl.nil? or self.disp_ctrl.empty?
+    return {} if self.disp_ctrl.blank?
 
     ret = {}
 
@@ -822,7 +820,7 @@ class Folder < ApplicationRecord
     my_folder = User.get_my_folder(user_id)
     return false if my_folder.nil?
 
-    return true if my_folder.id == self.id
+    return true if (my_folder.id == self.id)
 
     return self.get_parents(false).include?(my_folder.id.to_s)
   end
@@ -884,7 +882,7 @@ class Folder < ApplicationRecord
         users = folder.get_write_users_a(false)
         next if users.nil? or users.length <= 0
 
-        if arr.length <= 0
+        if (arr.length <= 0)
           arr = users
         else
           arr = arr & users
@@ -892,7 +890,7 @@ class Folder < ApplicationRecord
       end
 
       users = self.get_write_users_a(false)
-      if arr.length <= 0
+      if (arr.length <= 0)
         arr = users
       else
         arr = arr & users
@@ -970,7 +968,7 @@ class Folder < ApplicationRecord
         groups =folder.get_write_groups_a(false)
         next if groups.nil? or groups.length <= 0
 
-        if arr.length <= 0
+        if (arr.length <= 0)
           arr = groups
         else
           arr = arr & groups
@@ -978,7 +976,7 @@ class Folder < ApplicationRecord
       end
 
       groups = self.get_write_groups_a(false)
-      if arr.length <= 0
+      if (arr.length <= 0)
         arr = groups
       else
         arr = arr & groups
@@ -1054,9 +1052,9 @@ class Folder < ApplicationRecord
       parents = self.get_parents(true)
       parents.each do |folder|
         teams = folder.get_write_teams_a(false)
-        next if teams.nil? or teams.length <= 0
+        next if teams.nil? or (teams.length <= 0)
 
-        if arr.length <= 0
+        if (arr.length <= 0)
           arr = teams
         else
           arr = arr & teams
@@ -1064,7 +1062,7 @@ class Folder < ApplicationRecord
       end
 
       teams = self.get_write_teams_a(false)
-      if arr.length <= 0
+      if (arr.length <= 0)
         arr = teams
       else
         arr = arr & teams
@@ -1225,7 +1223,7 @@ class Folder < ApplicationRecord
 
     return false if folder_id.nil?
 
-    return true if folder_id.to_s == '0'
+    return true if (folder_id.to_s == TreeElement::ROOT_ID.to_s)
 
     folder = nil
     begin

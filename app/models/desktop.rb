@@ -6,10 +6,6 @@
 #
 #Desktop preferences and configurations related to each User.
 #
-#== Note:
-#
-#* 
-#
 class Desktop < ApplicationRecord
   public::PERMIT_BASE = [:theme, :background_color, :popup_news, :popup_timecard, :popup_schedule, :img_enabled, :file]
 
@@ -24,7 +20,6 @@ class Desktop < ApplicationRecord
   public::BGCOLOR_ORANGE = 'orange'
   public::BGCOLOR_BROWN = 'brown'
   public::BGCOLOR_GREEN = 'green'
-
 
   #=== self.get_for
   #

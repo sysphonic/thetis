@@ -75,12 +75,10 @@ onDeleteMultiClicked = function()
   if (teams.length > 0) {
     msg += "<br/>";
     msg += "<%= t('item.confirm_to_delete_teams') %><br/>";
-    msg += "<%= t('folder.delete_team_folder_info2') %>";
-    msg += "<ul>";
+    msg += "<%= t('folder.delete_team_folder_info2') %><br/>";
     for (var i=0; i < teams.length; i++) {
-      msg += "<li>" + teams[i] + "</li>";
+      msg += "&nbsp;&bull;&nbsp;" + teams[i] + "<br/>";
     }
-    msg += "</ul>";
   }
   confm(msg, "doDeleteMulti()");
 }
@@ -110,15 +108,17 @@ onMoveMultiClicked = function()
 
 doMoveItems = function(thetisBoxId)
 {
-  var container = ThetisBox.getContainer(thetisBoxId);
-  if (container) {
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    thetisBox.remove();
+    if (treeNodeId) {
+      var addParams = getCheckedItemsParam();
+      addParams.push(Form.serialize(document.form_list));
+      addParams.push("tree_node_id="+treeNodeId);
 
-    var addParams = getCheckedItemsParam();
-    addParams.push(Form.serialize(document.form_list));
-    addParams.push(Form.serialize(container));
-
-    doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'ajax_move_items') %>", addParams);
+      doUpdateView("post", "<%= url_for(:controller => 'folders', :action => 'ajax_move_items') %>", addParams);
+    }
   }
 }
 
@@ -129,8 +129,8 @@ getCheckedItemsParam = function()
   var elems = document.getElementsByClassName("check_item");
   for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
-      var item_id = elems[i].id.split("_")[2];
-      params[params.length] = "check_item["+item_id+"]=1";
+      var itemId = elems[i].id.split("_")[2];
+      params[params.length] = "check_item["+itemId+"]=1";
     }
   }
   return params;
@@ -193,7 +193,7 @@ onPaginate = function(url)
       prms.delete('authenticity_token')
       prms.delete('check_item')
       prms['action'] = 'get_items'
-      pagination = will_paginate(@item_pages, :params => prms)
+      pagination = will_paginate(@item_pages, {:params => prms})
       pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
       %>
       <%= raw(pagination) %>

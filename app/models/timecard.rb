@@ -6,10 +6,6 @@
 #
 #Timecard represents a timecard's record by day and User.
 #
-#== Note:
-#
-#* 
-#
 class Timecard < ApplicationRecord
   public::PERMIT_BASE = [:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options]
 

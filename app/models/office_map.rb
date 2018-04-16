@@ -1,21 +1,16 @@
 #
 #= OfficeMap
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #OfficeMap preferences and configurations related to each User.
-#
-#== Note:
-#
-#* 
 #
 class OfficeMap < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :img_enabled, :file]
 
   validates_length_of(:img_content, :within => 1..THETIS_IMAGE_MAX_KB*1024, :allow_nil => true)
   validates_format_of(:img_content_type, :with => /\Aimage\/(p?jpeg|gif|(x-)?png)\z/i, :allow_nil => true)
-
 
   #=== self.get_for_group
   #

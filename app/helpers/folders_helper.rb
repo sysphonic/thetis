@@ -1,14 +1,8 @@
 #
 #= FoldersHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants about Folders.
-#
-#== Note:
-#
-#* 
 #
 module FoldersHelper
 
@@ -24,14 +18,14 @@ module FoldersHelper
 
     if order_by.nil?
 
-      if folder_id.nil? or folder_id.empty? or folder_id.to_s == '0'
+      if folder_id.blank? or (folder_id.to_s == TreeElement::ROOT_ID.to_s)
         default_sort = nil
       else
         disp_ctrl = Folder.find(folder_id).get_disp_ctrl_h
         default_sort = disp_ctrl[Folder::DISPCTRL_DEF_SORT]
       end
 
-      if default_sort.nil? or default_sort.empty?
+      if default_sort.blank?
         sort_field = Item::SORT_FIELD_DEFAULT
         sort_direction = Item::SORT_DIRECTION_DEFAULT
       else
@@ -45,7 +39,7 @@ module FoldersHelper
 
       sort_field = arr.first
 
-      if arr.length <= 1
+      if (arr.length <= 1)
         sort_direction = 'ASC'
       else
         sort_direction = arr.last
@@ -70,14 +64,14 @@ module FoldersHelper
     if group_id.nil?
 
       top_childs.each do |folder|
-        if folder.xtype == Folder::XTYPE_USER or folder.xtype == Folder::XTYPE_GROUP
+        if (folder.xtype == Folder::XTYPE_USER) or (folder.xtype == Folder::XTYPE_GROUP)
           delete_arr << folder
         end
       end
 
     else
 
-      users_cache = Hash.new
+      users_cache = {}
       all_users = User.where(nil).to_a
       unless all_users.nil?
         all_users.each do |user|
@@ -85,10 +79,10 @@ module FoldersHelper
         end
       end
 
-      if group_id == '0'
+      if (group_id == TreeElement::ROOT_ID.to_s)
 
         top_childs.each do |folder|
-          if folder.xtype == Folder::XTYPE_USER
+          if (folder.xtype == Folder::XTYPE_USER)
 
             user = users_cache.delete(folder.owner_id)
 
@@ -110,9 +104,9 @@ module FoldersHelper
               delete_arr << folder
             end
 
-          elsif folder.xtype == Folder::XTYPE_GROUP
+          elsif (folder.xtype == Folder::XTYPE_GROUP)
 
-            if folder.owner_id.to_s != group_id
+            if (folder.owner_id.to_s != group_id)
               delete_arr << folder
             end
           else

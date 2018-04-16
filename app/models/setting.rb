@@ -1,18 +1,12 @@
 #
 #= Setting
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Setting represents a setting of User.
 #
-#== Note:
-#
-#* 
-#
 class Setting < ApplicationRecord
-  #belongs_to :user
-
   public::CATEGORY_SCHEDULE = 'schedule'
 
   public::KEY_CALENDAR_WITH_TIMECARD_ICONS = 'calendar_with_timecard_icons'

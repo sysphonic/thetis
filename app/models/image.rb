@@ -1,14 +1,10 @@
 #
 #= Image
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#Each Image is related to an Item, and shown on displays of the Item.
-#
-#== Note:
-#
-#* 
+#Each Image is related to an Item, and shown on Item screen.
 #
 class Image < ApplicationRecord
   public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :file]

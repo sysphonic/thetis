@@ -270,12 +270,10 @@ function onDeleteMultiClicked()
   if (teams.length > 0) {
     msg += "<br/>";
     msg += "<%= t('item.confirm_to_delete_teams') %><br/>";
-    msg += "<%= t('folder.delete_team_folder_info2') %>";
-    msg += "<ul>";
+    msg += "<%= t('folder.delete_team_folder_info2') %><br/>";
     for (var i=0; i < teams.length; i++) {
-      msg += "<li>" + teams[i] + "</li>";
+      msg += "&nbsp;&bull;&nbsp;" + teams[i] + "<br/>";
     }
-    msg += "</ul>";
   }
   confm(msg, "doDeleteMulti()");
 }

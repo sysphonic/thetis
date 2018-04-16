@@ -82,10 +82,10 @@
       <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_list.submit();">
       <%
       excepts = nil
-      excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
-      Item.sort_opts(excepts).each do |text_val|
+      excepts = [:xorder] if @folder_id.blank?
+      ItemsHelper.sort_opts(excepts).each do |text_val|
         selected = ''
-        selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
+        selected = 'selected' if (text_val.last == @sort_col+' '+@sort_type)
       %>
         <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
       <% end %>

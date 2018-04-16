@@ -1,14 +1,10 @@
 #
 #= Comment
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Comment represents each response to an Item, and has partly different means by Item's type(=Item.xtype).
-#
-#== Note:
-#
-#* 
 #
 class Comment < ApplicationRecord
   public::PERMIT_BASE = [:user_id, :item_id, :message, :xtype]
@@ -22,7 +18,6 @@ class Comment < ApplicationRecord
   public::XTYPE_NAK = 'nak'
   public::XTYPE_APPLY = 'apply'
   public::XTYPE_DIST_ACK = 'dist_ack'
-
 
   #=== self.get_xtype_name
   #

@@ -1,7 +1,7 @@
 #
 #= Item
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Item is the most elemental object on this system.
@@ -10,14 +10,10 @@
 #Items can have different means by its xtype attribute, such as a workflow
 #or a project (this type of Item is often called 'Mission' on this system).
 #
-#== Note:
-#
-#* 
-#
 class Item < ApplicationRecord
   public::PERMIT_BASE = [:title, :summary, :folder_id, :description, :public, :layout, :update_message, :xtype, :xorder]
 
-  has_one(:team, {:dependent => :destroy})
+  has_one(:team, {})  # See after_destroy
   has_one(:workflow, {:dependent => :destroy})
   has_one(:zeptair_command, {:dependent => :destroy})
   has_many(:comments, {:dependent => :destroy})
@@ -42,6 +38,13 @@ class Item < ApplicationRecord
 
   validates_presence_of(:title)
 
+  after_destroy do |rec|
+    team_folder = nil
+    unless rec.team.nil?
+      team_folder = rec.team.get_team_folder
+      rec.team.destroy
+    end
+  end
 
   #=== self.copies_folder
   #
@@ -65,11 +68,7 @@ class Item < ApplicationRecord
     return false if self.source_id.nil?
 
     # Exclude those created from system templates.
-    begin
-      src_item = Item.find(self.source_id)
-    rescue => evar
-      src_item = nil
-    end
+    src_item = Item.find_by_id(self.source_id)
     if src_item.nil?
       return true
     else
@@ -132,47 +131,6 @@ class Item < ApplicationRecord
     return disp
   end
 
-  #=== self.sort_opts
-  #
-  #Returns sort options of the Items.
-  #
-  #_excepts_:: Array of the fields to exclude (ex. [:xorder]).
-  #return:: Array of options.
-  #
-  def self.sort_opts(excepts)
-    excepts ||= []
-    opts = []
-    unless excepts.include?(:xorder)
-      opts << [I18n.t('sort.specified')+I18n.t('sort.asc'), 'xorder ASC']
-      opts << [I18n.t('sort.specified')+I18n.t('sort.desc'), 'xorder DESC']
-    end
-    unless excepts.include?(:id)
-      opts << [I18n.t('activerecord.attributes.id')+I18n.t('sort.asc'), 'Item.id ASC']
-      opts << [I18n.t('activerecord.attributes.id')+I18n.t('sort.desc'), 'Item.id DESC']
-    end
-    unless excepts.include?(:title)
-      opts << [Item.human_attribute_name('title')+I18n.t('sort.asc'), 'title ASC']
-      opts << [Item.human_attribute_name('title')+I18n.t('sort.desc'), 'title DESC']
-    end
-    unless excepts.include?(:folder_id)
-      opts << [I18n.t('item.folder')+I18n.t('sort.asc'), 'folder_id ASC']
-      opts << [I18n.t('item.folder')+I18n.t('sort.desc'), 'folder_id DESC']
-    end
-    unless excepts.include?(:updated_at)
-      opts << [I18n.t('activerecord.attributes.updated_at')+I18n.t('sort.asc'), 'updated_at ASC']
-      opts << [I18n.t('activerecord.attributes.updated_at')+I18n.t('sort.desc'), 'updated_at DESC']
-    end
-    unless excepts.include?(:public)
-      opts << [Item.human_attribute_name('public')+I18n.t('sort.asc'), 'public ASC']
-      opts << [Item.human_attribute_name('public')+I18n.t('sort.desc'), 'public DESC']
-    end
-    unless excepts.include?(:user_id)
-      opts << [I18n.t('item.registered_by')+I18n.t('sort.asc'), 'Item.user_id ASC']
-      opts << [I18n.t('item.registered_by')+I18n.t('sort.desc'), 'Item.user_id DESC']
-    end
-    return opts
-  end
-
   #=== self.check_user_auth
   #
   #Checks user authority to read or write contents
@@ -209,7 +167,7 @@ class Item < ApplicationRecord
   #
   def check_user_auth(user, rxw, check_admin)
 
-    if user.nil? and rxw == 'w'
+    if user.nil? and (rxw == 'w')
       return false
     end
 
@@ -217,9 +175,9 @@ class Item < ApplicationRecord
       return true
     end
 
-    if !user.nil? and rxw == 'r'
+    if !user.nil? and (rxw == 'r')
 
-      if self.public and self.xtype == Item::XTYPE_PROFILE
+      if self.public and (self.xtype == Item::XTYPE_PROFILE)
         return true
       end
 
@@ -234,11 +192,11 @@ class Item < ApplicationRecord
       return false
     end
 
-    if rxw == 'r' and self.public
+    if (rxw == 'r') and self.public
       return true
     end
 
-    if !user.nil? and user.id == self.user_id
+    if !user.nil? and (user.id == self.user_id)
       return true
     end
 
@@ -266,7 +224,7 @@ class Item < ApplicationRecord
     item.updated_at = self.updated_at
     item.created_at = self.created_at
     item.source_id = self.id
-    if self.original_by.nil? and self.user_id != 0
+    if self.original_by.nil? and (self.user_id != 0)
       item.original_by = self.user_id
     else
       item.original_by = self.original_by
@@ -440,7 +398,7 @@ class Item < ApplicationRecord
       self.updated_at = Time.now
     end
 
-    if attrs.key?(:folder_id) and self.folder_id.to_s != attrs[:folder_id].to_s
+    if attrs.key?(:folder_id) and (self.folder_id.to_s != attrs[:folder_id].to_s)
       self.xorder = Item.get_order_max(attrs[:folder_id]) + 1
     end
 
@@ -464,7 +422,7 @@ class Item < ApplicationRecord
   #control updating 'update_at' attribute. We need to change
   #orders to display (xorder) without updating it.
   #
-  #And also calicurates order(xorder) in the parent Folder if required.
+  #And also calcurates order(xorder) in the parent Folder if required.
   #
   #_name_:: Name of the attribute to update.
   #_value_:: New value of the attribute.
@@ -475,7 +433,7 @@ class Item < ApplicationRecord
       self.updated_at = Time.now
     end
 
-    if name == :folder_id and self.folder_id.to_s != value.to_s
+    if (name == :folder_id) and (self.folder_id.to_s != value.to_s)
       self.xorder = Item.get_order_max(value) + 1
     end
 
@@ -489,82 +447,6 @@ class Item < ApplicationRecord
     class << self
       remove_method :record_timestamps
     end
-  end
-
-  #=== self.destroy
-  #
-  #Updates attributes of the Item.
-  #
-  #This method overrides ActionRecord::Base.destroy() to
-  #handle the related attributes.
-  #
-  #_id_:: Target Item-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    team_folder = nil
-    unless self.team.nil?
-      team_folder = self.team.get_team_folder
-    end
-
-    # Team and Team Folder will be deleted automatically.
-    super()
-
-    # .. but when the item was in Team Folder, it remains.
-    if !team_folder.nil? and team_folder.exists? and team_folder.count_items(true) <= 0
-      team_folder.force_destroy
-    end
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Item-ID.
-  #
-  def self.delete(id)
-
-    Item.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    self.destroy
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Item.destroy() instead of Item.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Item.destroy() instead of Item.delete_all()!'
   end
 
   #=== self.get_order_max
@@ -660,11 +542,11 @@ class Item < ApplicationRecord
       user = nil
     end
 
-    if self.xtype == Item::XTYPE_WORKFLOW
+    if (self.xtype == Item::XTYPE_WORKFLOW)
       if !self.workflow.nil? and self.workflow.status != Workflow::STATUS_NOT_ISSUED
         return false
       end
-    elsif self.xtype == Item::XTYPE_RESEARCH
+    elsif (self.xtype == Item::XTYPE_RESEARCH)
       begin
         user ||= User.find(user_id)
       rescue => evar
@@ -693,7 +575,7 @@ class Item < ApplicationRecord
       user = nil
     end
 
-    if self.xtype == Item::XTYPE_WORKFLOW
+    if (self.xtype == Item::XTYPE_WORKFLOW)
       unless self.workflow.nil?
         if self.workflow.decided?
           return (self.user_id == user_id.to_i)
@@ -701,7 +583,7 @@ class Item < ApplicationRecord
           return false
         end
       end
-    elsif self.xtype == Item::XTYPE_RESEARCH
+    elsif (self.xtype == Item::XTYPE_RESEARCH)
       return false
     end
 
@@ -747,7 +629,7 @@ class Item < ApplicationRecord
 
     return true if admin
 
-    if self.xtype == Item::XTYPE_WORKFLOW
+    if (self.xtype == Item::XTYPE_WORKFLOW)
       if !self.workflow.nil? and (self.workflow.status == Workflow::STATUS_ACTIVE)
         return false
       end
@@ -826,7 +708,7 @@ class Item < ApplicationRecord
     arr = []
 
     self.comments.each do |comment|
-      next unless comment.xtype == Comment::XTYPE_APPLY
+      next unless (comment.xtype == Comment::XTYPE_APPLY)
 
       arr << comment.user_id.to_s
     end
@@ -884,7 +766,7 @@ class Item < ApplicationRecord
       end
 
       images = item.images_without_content
-      if !images.nil? and images.length > 0
+      if !images.nil? and (images.length > 0)
         feed_entry.enclosures = []
 
         img = images.first

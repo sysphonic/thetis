@@ -12,11 +12,15 @@
 
 <script type="text/javascript">
 
-ThetisBox.setTitle("<%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %>");
-ThetisBox.setOk("<%= t('btn.ok') %>");
-ThetisBox.setCancel("<%= t('btn.cancel') %>");
-ThetisBox.setClose("<%= t('btn.close') %>");
-ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/close.png");
+function initThetisBox()
+{
+  ThetisBox.setTitle("<%= YamlHelper.get_value($thetis_config, 'general.app_title', nil) %>");
+  ThetisBox.setOk("<%= t('btn.ok') %>");
+  ThetisBox.setCancel("<%= t('btn.cancel') %>");
+  ThetisBox.setClose("<%= t('btn.close') %>");
+  ThetisBox.setCloseImg("<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/close.png");
+}
+initThetisBox();
 
 function setLoginName(name)
 {

@@ -1,14 +1,10 @@
 #
 #= Location
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Location of each User.
-#
-#== Note:
-#
-#* 
 #
 class Location < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :x, :y, :memo]

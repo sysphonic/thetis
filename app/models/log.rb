@@ -1,14 +1,10 @@
 #
 #= Log
 #
-#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Log represents each access log, which can be shown only to administrators.
-#
-#== Note:
-#
-#* 
 #
 class Log < ApplicationRecord
 

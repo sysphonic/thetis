@@ -1,17 +1,13 @@
 #
 #= MailAttachment
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#== Note:
-#
-#* 
 #
 class MailAttachment < ApplicationRecord
   public::PERMIT_BASE = [:email_id, :xorder, :file]
 
-  belongs_to :email
+  belongs_to(:email)
 
   require 'tempfile'
   require 'fileutils'
@@ -21,9 +17,8 @@ class MailAttachment < ApplicationRecord
 #See SendMailsController#add_attachment
 # validates_length_of :content, :maximum => THETIS_MAIL_SEND_ATTACHMENT_MAX_KB*1024, :allow_nil => true
 
-  before_destroy do |mail_attach|
-
-    path = mail_attach.get_path
+  before_destroy do |rec|
+    path = rec.get_path
     unless path.nil? or path.empty?
       FileUtils.rm(path, {:force => true})
     end

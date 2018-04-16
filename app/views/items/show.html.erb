@@ -411,10 +411,10 @@ function doWorkflowIssue()
 
     <%= form_tag( {:controller => 'items', :action => 'team_organize', :id => @item.id}, :name => 'form_team', :method => 'post') %>
       <input type="hidden" id="team_id" name="team_id" value="<%= (@team.nil?)?'':@team.id %>" />
-      <table style="width:90%; background-color:lightcyan; margin:20px auto;">
+      <table style="width:90%; background-color:lightcyan; margin:10px auto; padding:10px 0px;">
         <tr>
-          <td style="padding-left:20px;">
-            <table align="left" style="width:450px;">
+          <td style="text-align:left; padding-left:20px;">
+            <table style="width:450px;">
               <tr>
                 <td style="text-align:left;">
                   <%= t('team.cap.applicants') %><br/>
@@ -851,7 +851,7 @@ function onPrintItemClicked()
 
 function onDuplicateItemClicked()
 {
-  confm("<%= t('item.confirm_to_duplicate') %>\n&nbsp;&nbsp;/<%= t('folder.my_folder') %>/<%= Item.copies_folder %>", "doDuplicate()");
+  confm("<%= t('item.confirm_to_duplicate') %><br/>&nbsp;&nbsp;/<%= t('folder.my_folder') %>/<%= Item.copies_folder %>", "doDuplicate()");
 }
 
 function doDuplicate()

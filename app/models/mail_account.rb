@@ -4,10 +4,6 @@
 #Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#== Note:
-#
-#* 
-#
 class MailAccount < ApplicationRecord
   public::PERMIT_BASE = [:title, :user_id, :is_default, :smtp_server, :smtp_port, :smtp_secure_conn, :smtp_auth, :smtp_auth_method, :smtp_username, :smtp_password, :pop_server, :pop_port, :pop_username, :pop_password, :pop_secure_conn, :pop_secure_auth, :from_name, :from_address, :reply_to, :organization, :remove_from_server, :xorder, :xtype]
 
@@ -160,68 +156,6 @@ class MailAccount < ApplicationRecord
     mail_accounts.each do |mail_account|
       mail_account.destroy
     end
-  end
-
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target User-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target MailAccount-ID.
-  #
-  def self.delete(id)
-
-    MailAccount.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    MailAccount.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use MailAccount.destroy() instead of MailAccount.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use MailAccount.destroy() instead of MailAccount.delete_all()!'
   end
 
   #=== self.find_all

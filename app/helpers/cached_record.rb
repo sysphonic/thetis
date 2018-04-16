@@ -1,14 +1,8 @@
 #
 #= CachedRecord
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants for classes which can be cached.
-#
-#== Note:
-#
-#* 
 #
 module CachedRecord
 

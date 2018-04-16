@@ -1,15 +1,11 @@
 #
 #= Workflow
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Workflow is related to Item whose xtype attribute is XTYPE_WORKFLOW, and
 #has information of its status and users to require confirmation.
-#
-#== Note:
-#
-#* 
 #
 class Workflow < ApplicationRecord
   public::PERMIT_BASE = [:status, :issued_at]

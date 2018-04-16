@@ -5,7 +5,7 @@
 form_idx = Time.now.to_f.to_s.gsub('.', '_')
 %>
 
-<% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
+<% if (@address.nil? or @address.id.nil?) %>
 <%= form_tag({:controller => 'addressbook', :action => 'create'}, :method => 'post', :name => 'form_address'+form_idx) %>
 <% else %>
 <%= form_tag({:controller => 'addressbook', :action => 'update', :id => @address.id}, :method => 'post', :name => 'form_address'+form_idx) %>
@@ -24,7 +24,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 <table style="margin:0px auto 20px;">
   <tr>
     <td class="prim_btn" onclick="onRegisterAddressClicked();">
-    <% if (@address.nil? or @address.id.nil? or @address.id == 0) %>
+    <% if (@address.nil? or @address.id.nil?) %>
       <%= t('btn.register')%>
     <% else %>
       <%= t('btn.update')%>

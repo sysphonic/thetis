@@ -1,14 +1,8 @@
 #
 #= User
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#User represents LOGIN-account and its personal information.
-#
-#== Note:
-#
-#* 
 #
 class User < ApplicationRecord
   public::PERMIT_BASE = [:name, :fullname, :pass_md5, :address, :organization, :email, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :postalcode, :birthday, :time_zone, :figure, :email_sub1, :email_sub1_type, :email_sub2, :email_sub2_type, :title, :xorder]
@@ -51,6 +45,49 @@ class User < ApplicationRecord
 
   public::ZEPTID_PLACE_HOLDER = '#'
 
+  before_destroy do |rec|
+    # General Folders
+    con = SqlHelper.get_sql_like([:read_users, :write_users], "|#{rec.id}|")
+    folders = Folder.where(con).to_a
+    unless folders.nil?
+      folders.each do |folder|
+        folder.remove_auth_user(rec)
+        folder.save
+      end
+    end
+
+    # My Folder and its contents
+    folder = User.get_my_folder(rec.id)
+    folder.force_destroy unless folder.nil?
+
+    # Application for Teams
+    Comment.where("(user_id=#{rec.id}) and (xtype='#{Comment::XTYPE_APPLY}')").destroy_all
+
+    Toy.where("(user_id=#{rec.id})").destroy_all
+    Research.where("(user_id=#{rec.id})").destroy_all
+    Desktop.where("(user_id=#{rec.id})").destroy_all
+
+    # Timecards and PaidHolidays
+    Timecard.where("(user_id=#{rec.id})").destroy_all
+    PaidHoliday.where("(user_id=#{rec.id})").destroy_all
+
+    # MailFolders, Emails and MailAccounts
+    MailFolder.where("(user_id=#{rec.id})").destroy_all
+    Email.destroy_by_user(rec.id)
+    MailAccount.destroy_by_user(rec.id)
+
+    # Addresses in private Addressbook
+    Address.where("(owner_id=#{rec.id})").destroy_all
+
+    # Settings
+    Setting.where("(user_id=#{rec.id})").destroy_all
+
+    # Schedules
+    Schedule.trim_on_destroy_member(:user, rec.id)
+
+    # Locations
+    Location.where("(user_id=#{rec.id})").destroy_all
+  end
 
   #=== get_emails_by_type
   #
@@ -267,7 +304,7 @@ class User < ApplicationRecord
   #
   def self.authenticate(attrs)
 
-    return nil if attrs.nil? or attrs[:name].nil? or attrs[:password].nil?
+    return nil if (attrs.nil? or attrs[:name].nil? or attrs[:password].nil?)
 
     name = attrs[:name]
     password = attrs[:password]
@@ -277,111 +314,6 @@ class User < ApplicationRecord
     pass_md5 = UsersHelper.generate_digest_pass(name, password)
 
     return User.where("(name='#{name}') and (pass_md5='#{pass_md5}')").first
-  end
-
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target User-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    # General Folders
-    con = SqlHelper.get_sql_like([:read_users, :write_users], "|#{self.id}|")
-    folders = Folder.where(con).to_a
-
-    unless folders.nil?
-      folders.each do |folder|
-        folder.remove_auth_user(self)
-        folder.save
-      end
-    end
-
-    # My Folder and its contents
-    folder = User.get_my_folder(self.id)
-    folder.force_destroy unless folder.nil?
-
-    # Application for Teams
-    Comment.where("(user_id=#{self.id}) and (xtype='#{Comment::XTYPE_APPLY}')").destroy_all
-
-    Toy.where("(user_id=#{self.id})").destroy_all
-    Research.where("(user_id=#{self.id})").destroy_all
-    Desktop.where("(user_id=#{self.id})").destroy_all
-
-    # Timecards and PaidHolidays
-    Timecard.where("(user_id=#{self.id})").destroy_all
-    PaidHoliday.where("(user_id=#{self.id})").destroy_all
-
-    # MailFolders, Emails and MailAccounts
-    MailFolder.where("(user_id=#{self.id})").destroy_all
-    Email.destroy_by_user(self.id)
-    MailAccount.destroy_by_user(self.id)
-
-    # Addresses in private Addressbook
-    Address.where("(owner_id=#{self.id})").destroy_all
-
-    # Settings
-    Setting.where("(user_id=#{self.id})").destroy_all
-
-    # Schedules
-    Schedule.trim_on_destroy_member(:user, self.id)
-
-    # Locations
-    Location.where("(user_id=#{self.id})").destroy_all
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target User-ID.
-  #
-  def self.delete(id)
-
-    User.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    User.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use User.destroy() instead of User.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use User.destroy() instead of User.delete_all()!'
   end
 
   #=== self.find_all
@@ -461,7 +393,7 @@ class User < ApplicationRecord
       return user_name unless user_name.nil?
     end
 
-    if user_id.to_s == '0'
+    if (user_id.to_s == '0')
       user_name = I18n.t('user.system')
     else
       user = User.find_with_cache(user_id, user_obj_cache)
@@ -488,7 +420,8 @@ class User < ApplicationRecord
   #
   def get_name
 
-    if YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1' and !self.fullname.nil? and !self.fullname.empty?
+    if (YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1') \
+        and !self.fullname.blank?
       return self.fullname
     else
       return self.name
@@ -504,16 +437,14 @@ class User < ApplicationRecord
   #
   def get_name_for_timecard(yaml=nil)
 
-    return self.name if self.fullname.nil? or self.fullname.empty?
+    return self.name if self.fullname.blank?
 
-    if YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1'
-
+    if (YamlHelper.get_value($thetis_config, 'user.by_full_name', nil) == '1')
       return self.fullname
     else
-
       yaml = ApplicationHelper.get_config_yaml if yaml.nil?
 
-      if YamlHelper.get_value(yaml, 'timecard.always_by_full_name', nil) == '1'
+      if (YamlHelper.get_value(yaml, 'timecard.always_by_full_name', nil) == '1')
         return self.fullname
       else
         return self.name

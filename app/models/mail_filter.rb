@@ -1,12 +1,8 @@
 #
 #= MailFilter
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#== Note:
-#
-#* 
 #
 class MailFilter < ApplicationRecord
   public::PERMIT_BASE = [:title, :enabled, :triggers, :and_or, :conditions, :actions, :xorder]
@@ -17,7 +13,6 @@ class MailFilter < ApplicationRecord
 
   public::TRIGGER_CHECKING = 'checking'
   public::TRIGGER_MANUAL = 'manual'
-
 
   #=== execute
   #
@@ -82,7 +77,14 @@ class MailFilter < ApplicationRecord
     conditions = []
 
     unless self.conditions.nil? or self.conditions.empty?
-      conditions = self.conditions.split("\n").collect {|entry| entry.split('-') }
+      conditions = self.conditions.split("\n").collect {|entry|
+        m = entry.match(/\A([a-z_0-9]+)-([a-z_0-9]+)(?:-(.+))?\z/)
+        if m.nil?
+          []
+        else
+          [m[1], m[2], m[3]]
+        end
+      }
     end
     return conditions
   end

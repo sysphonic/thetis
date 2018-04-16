@@ -6,10 +6,6 @@
 #
 #Schedule is related to date (or rules) and Users. It can be also related to Equipment and Items.
 #
-#== Note:
-#
-#*
-#
 class Schedule < ApplicationRecord
   public::PERMIT_BASE = [:title, :detail, :users, :equipment, :start, :end, :scope, :repeat_start, :repeat_end, :repeat_rule, :except, :allday, :items, :xtype, :groups, :teams]
 
@@ -29,7 +25,6 @@ class Schedule < ApplicationRecord
   public::SCOPE_ALL = 'all'
 
   public::XTYPE_HOLIDAY = 'holiday'
-
 
   #=== self.scope_colors
   #

@@ -1,19 +1,12 @@
 #
 #= WorkflowsHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants about Workflows.
-#
-#== Note:
-#
-#* 
 #
 module WorkflowsHelper
 
   private::MY_WF_ROOT = '$Workflows'
-
 
   #=== self.get_my_wf_folder
   #
@@ -156,7 +149,7 @@ module WorkflowsHelper
     unless group_ids.blank?
       scope_con = []
       [group_ids].flatten.each do |group_id|
-        if group_id.to_s == '0'
+        if (group_id.to_s == TreeElement::ROOT_ID.to_s)
           scope_con << "(Workflow.groups is null)"
         else
           scope_con << SqlHelper.get_sql_like(['Workflow.groups'], "|#{group_id}|")

@@ -1,14 +1,8 @@
 #
 #= OfficialTitle
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Category of Equipment.
-#
-#== Note:
-#
-#* 
 #
 class OfficialTitle < ApplicationRecord
   public::PERMIT_BASE = [:name]
@@ -16,7 +10,6 @@ class OfficialTitle < ApplicationRecord
   extend CachedRecord
 
   public::XORDER_MAX = 9999
-
 
   #=== self.get_name
   #
@@ -27,7 +20,7 @@ class OfficialTitle < ApplicationRecord
   #
   def self.get_name(official_title_id, official_title_obj_cache=nil)
 
-    return '(root)' if official_title_id.to_s == '0'
+    return '(root)' if (official_title_id.to_s == '0')
 
     official_title = OfficialTitle.find_with_cache(official_title_id, official_title_obj_cache)
 
@@ -54,20 +47,23 @@ class OfficialTitle < ApplicationRecord
     con = []
     #con << "(disabled=#{!enabled})" unless enabled.nil?
 
-    if include_parents
-      group_con = '(group_id is null)'
+    if group_id.nil? or (group_id.to_s == TreeElement::ROOT_ID.to_s)
+      con << "((group_id is null) or (group_id=#{TreeElement::ROOT_ID}))"
+    else
+      if include_parents
+        group_con = '(group_id is null)'
 
-      unless group_id.nil? or group_id.to_s == '0'
         group_obj_cache = {}
         group = Group.find_with_cache(group_id, group_obj_cache)
         group_ids = group.get_parents(false, group_obj_cache)
         group_ids << group_id
+        group_ids << TreeElement::ROOT_ID
         group_con << " or (group_id in (#{group_ids.join(',')}))"
-      end
 
-      con << '(' + group_con + ')'
-    else
-      con << "(group_id=#{group_id.to_i})"
+        con << '(' + group_con + ')'
+      else
+        con << "(group_id=#{group_id})"
+      end
     end
 
     order_by = 'order by xorder ASC, id ASC'

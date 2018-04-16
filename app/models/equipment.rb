@@ -1,14 +1,10 @@
 #
 #= Equipment
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Equipment is related to Schedules, in other words, 'reserved'.
-#
-#== Note:
-#
-#*
 #
 class Equipment < ApplicationRecord
   public::PERMIT_BASE = [:name, :note, :users, :groups, :teams]

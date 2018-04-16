@@ -1,14 +1,8 @@
 #
 #= SqlHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants about SQL.
-#
-#== Note:
-#
-#* 
 #
 module SqlHelper
 
@@ -63,11 +57,23 @@ module SqlHelper
   #
   #_attr_names_:: Attribute names.
   #_keyword_:: Target keyword.
+  #_as_:: One of :both, :prefix and :suffix.
   #return:: Query condition.
   #
-  def self.get_sql_like(attr_names, keyword)
+  def self.get_sql_like(attr_names, keyword, as=:both)
 
     key = SqlHelper.quote("%#{SqlHelper.escape_for_like(keyword)}%")
+
+    escaped = SqlHelper.escape_for_like(keyword)
+    key = nil
+    case as.to_sym
+      when :both
+        key = SqlHelper.quote("%#{escaped}%")
+      when :prefix
+        key = SqlHelper.quote("#{escaped}%")
+      when :suffix
+        key = SqlHelper.quote("%#{escaped}")
+    end
 
     con = []
     attr_names.each do |attr_name|

@@ -1,12 +1,8 @@
 #
 #= Address
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#== Note:
-#
-#* 
 #
 class Address < ApplicationRecord
   public::PERMIT_BASE = [:name, :name_ruby, :nickname, :screenname, :email1, :email2, :email3, :postalcode, :address, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :organization, :title, :memo]
@@ -20,7 +16,6 @@ class Address < ApplicationRecord
   public::BOOK_BOTH = 'book_both'
 
   public::EXP_IMP_FOR_ALL = 'all'
-
 
   #=== self.get_by_email
   #

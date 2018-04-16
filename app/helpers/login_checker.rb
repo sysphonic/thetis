@@ -1,15 +1,8 @@
 #
 #= LoginChecker
 #
-#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants for classes which need to
-#filter unlogged-in User.
-#
-#== Note:
-#
-#* 
 #
 module LoginChecker
 

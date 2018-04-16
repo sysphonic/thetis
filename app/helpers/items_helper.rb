@@ -1,14 +1,8 @@
 #
 #= ItemsHelper
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Provides utility methods and constants about Items.
-#
-#== Note:
-#
-#* 
 #
 module ItemsHelper
 
@@ -242,5 +236,46 @@ module ItemsHelper
     sql = 'select distinct Item.* from items Item, folders Folder' + where + order_by + limit
 
     return sql
+  end
+
+  #=== self.sort_opts
+  #
+  #Returns sort options of the Items.
+  #
+  #_excepts_:: Array of the fields to exclude (ex. [:xorder]).
+  #return:: Array of options.
+  #
+  def self.sort_opts(excepts)
+    excepts ||= []
+    opts = []
+    unless excepts.include?(:xorder)
+      opts << [I18n.t('sort.specified')+I18n.t('sort.asc'), 'xorder ASC']
+      opts << [I18n.t('sort.specified')+I18n.t('sort.desc'), 'xorder DESC']
+    end
+    unless excepts.include?(:id)
+      opts << [I18n.t('activerecord.attributes.id')+I18n.t('sort.asc'), 'Item.id ASC']
+      opts << [I18n.t('activerecord.attributes.id')+I18n.t('sort.desc'), 'Item.id DESC']
+    end
+    unless excepts.include?(:title)
+      opts << [Item.human_attribute_name('title')+I18n.t('sort.asc'), 'title ASC']
+      opts << [Item.human_attribute_name('title')+I18n.t('sort.desc'), 'title DESC']
+    end
+    unless excepts.include?(:folder_id)
+      opts << [I18n.t('item.folder')+I18n.t('sort.asc'), 'folder_id ASC']
+      opts << [I18n.t('item.folder')+I18n.t('sort.desc'), 'folder_id DESC']
+    end
+    unless excepts.include?(:updated_at)
+      opts << [I18n.t('activerecord.attributes.updated_at')+I18n.t('sort.asc'), 'updated_at ASC']
+      opts << [I18n.t('activerecord.attributes.updated_at')+I18n.t('sort.desc'), 'updated_at DESC']
+    end
+    unless excepts.include?(:public)
+      opts << [Item.human_attribute_name('public')+I18n.t('sort.asc'), 'public ASC']
+      opts << [Item.human_attribute_name('public')+I18n.t('sort.desc'), 'public DESC']
+    end
+    unless excepts.include?(:user_id)
+      opts << [I18n.t('item.registered_by')+I18n.t('sort.asc'), 'Item.user_id ASC']
+      opts << [I18n.t('item.registered_by')+I18n.t('sort.desc'), 'Item.user_id DESC']
+    end
+    return opts
   end
 end

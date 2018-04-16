@@ -1,14 +1,10 @@
 #
 #= Team
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Team is the unit to take on a mission (= Item whose xtype attribute is XTYPE_PROJECT).
-#
-#== Note:
-#
-#*
 #
 class Team < ApplicationRecord
   public::PERMIT_BASE = [:name, :item_id, :users, :status, :req_to_del_at]
@@ -18,6 +14,35 @@ class Team < ApplicationRecord
   public::STATUS_STANDBY = 'standby'
   public::STATUS_ACTIVATED = 'activated'
   public::STATUS_DEACTIVATED = 'deactivated'
+
+  before_destroy do |rec|
+    # Team Folder
+    folder = Team.get_team_folder(rec.id)
+
+    unless folder.nil?
+      if (folder.count_items(true) <= 0)
+        folder.force_destroy
+      else
+        folder.slice_auth_team(rec)
+        folder.owner_id = 0
+        folder.xtype = nil
+        folder.save
+      end
+    end
+
+    # General Folders
+    con = SqlHelper.get_sql_like([:read_teams, :write_teams], "|#{rec.id}|")
+    folders = Folder.where(con).to_a
+    unless folders.nil?
+      folders.each do |folder|
+        folder.slice_auth_team(rec)
+        folder.save
+      end
+    end
+
+    # Schedules
+    Schedule.trim_on_destroy_member(:team, rec.id)
+  end
 
  public
 
@@ -153,100 +178,6 @@ class Team < ApplicationRecord
     con << SqlHelper.get_sql_like([:users], "|#{user_id}|") unless user_id.nil? or user_id.to_s.empty?
     con << "(status != '#{Team::STATUS_DEACTIVATED}')" if exclude_deact
     return Team.where(con.join(' and ')).to_a
-  end
-
-  #=== self.destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  #_id_:: Target Team-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    # Team Folder
-    folder = Team.get_team_folder(self.id)
-
-    unless folder.nil?
-
-      if folder.count_items(true) <= 0
-
-        folder.force_destroy
-
-      else
-
-        folder.slice_auth_team(self)
-        folder.owner_id = 0
-        folder.xtype = nil
-        folder.save
-      end
-    end
-
-    # General Folders
-    con = SqlHelper.get_sql_like([:read_teams, :write_teams], "|#{self.id}|")
-    folders = Folder.where(con).to_a
-
-    unless folders.nil?
-      folders.each do |folder|
-        folder.slice_auth_team(self)
-        folder.save
-      end
-    end
-
-    # Schedules
-    Schedule.trim_on_destroy_member(:team, self.id)
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Team-ID.
-  #
-  def self.delete(id)
-
-    Team.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    Team.destroy(self.id)
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Team.destroy() instead of Team.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Team.destroy() instead of Team.delete_all()!'
   end
 
   #=== rename

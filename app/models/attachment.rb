@@ -1,14 +1,8 @@
 #
 #= Attachment
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Each Attachment is related to an Item, and downloaded from displays of the Item.
-#
-#== Note:
-#
-#* 
 #
 class Attachment < ApplicationRecord
   public::PERMIT_BASE = [:title, :memo, :item_id, :xorder, :location, :comment_id, :file]
@@ -25,6 +19,17 @@ class Attachment < ApplicationRecord
 
   public::LOCATION_DB = 'DB'
   public::LOCATION_DIR = 'DIR'
+
+  before_destroy do |rec|
+    if (rec.location == Attachment::LOCATION_DIR)
+      path = AttachmentsHelper.get_path(rec)
+      unless path.nil?
+        FileUtils.rm(path, :force => true)
+      end
+
+      AttachmentsHelper.clean_dir(rec)
+    end
+  end
 
   #=== file
   #
@@ -136,80 +141,6 @@ class Attachment < ApplicationRecord
     end
 
     return attachment
-  end
-
-  #=== self.destroy
-  #
-  #Updates attributes of the Item.
-  #
-  #This method overrides ActionRecord::Base.destroy() to
-  #handle the related attributes.
-  #
-  #_id_:: Target Item-ID.
-  #
-  def self.destroy(id)
-
-    id.is_a?(Array) ? id.each { |id| destroy(id) } : find(id).destroy
-  end
-
-  #=== destroy
-  #
-  #Overrides ActionRecord::Base.destroy().
-  #
-  def destroy()
-
-    if self.location == Attachment::LOCATION_DIR
-      path = AttachmentsHelper.get_path(self)
-      unless path.nil?
-        FileUtils.rm(path, :force => true)
-      end
-
-      AttachmentsHelper.clean_dir(self)
-    end
-
-    super()
-  end
-
-  #=== self.delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  #_id_:: Target Item-ID.
-  #
-  def self.delete(id)
-
-    Attachment.destroy(id)
-  end
-
-  #=== delete
-  #
-  #Overrides ActionRecord::Base.delete().
-  #
-  def delete()
-
-    self.destroy
-  end
-
-  #=== self.destroy_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.destroy_all(conditions = nil)
-
-    raise 'Use Attachment.destroy() instead of Attachment.destroy_all()!'
-  end
-
-  #=== self.delete_all
-  #
-  #Overrides ActionRecord::Base.delete_all().
-  #
-  #_conditions_:: Conditions.
-  #
-  def self.delete_all(conditions = nil)
-
-    raise 'Use Attachment.destroy() instead of Attachment.delete_all()!'
   end
 
   #=== update_attributes

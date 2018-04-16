@@ -1,14 +1,10 @@
 #
 #= Toy
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Toy class represents a desktop item.
-#
-#== Note:
-#
-#* 
 #
 class Toy < ApplicationRecord
   public::PERMIT_BASE = [:name, :xtype, :target_id, :address, :x, :y, :memo, :message]
@@ -21,7 +17,6 @@ class Toy < ApplicationRecord
   public::XTYPE_LABEL = 'label'
   public::XTYPE_POSTLABEL = 'postlabel'
   public::XTYPE_FOLDER = 'folder'
-
 
   #=== self.copy
   #

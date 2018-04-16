@@ -4,17 +4,10 @@
 #Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#Methods added to this helper will be available to all templates in the application.
-#
-#== Note:
-#
-#* 
-#
 module ApplicationHelper
   require ::Rails.root.to_s+'/lib/util/sym_hash'
   require 'tempfile'
   require 'uri'     # for URI.extract()
-
 
   #=== self.stacktrace
   #

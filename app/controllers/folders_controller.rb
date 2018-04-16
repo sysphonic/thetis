@@ -243,7 +243,7 @@ class FoldersController < ApplicationController
       @sort_col = params[:sort_col]
       @sort_type = params[:sort_type]
 
-      if @sort_col.blank? or @sort_type.blank?
+      if (@sort_col.blank? or @sort_type.blank?)
         @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
       end
       SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
@@ -403,7 +403,7 @@ class FoldersController < ApplicationController
     folders = Folder.get_childs(params[:id], nil, false, true, false)
     # folders must be ordered by xorder ASC.
 
-    folders.sort! { |id_a, id_b|
+    folders.sort! {|id_a, id_b|
 
       idx_a = order_arr.index(id_a)
       idx_b = order_arr.index(id_b)
@@ -442,7 +442,7 @@ class FoldersController < ApplicationController
     folder_id = params[:id]
     SqlHelper.validate_token([folder_id])
 
-    if folder_id != TreeElement::ROOT_ID.to_s
+    if (folder_id != TreeElement::ROOT_ID.to_s)
       begin
         @folder = Folder.find(folder_id)
       rescue => evar
@@ -474,7 +474,7 @@ class FoldersController < ApplicationController
 
       disp_ctrls = []
       check_bbs_top = params[:check_bbs_top]
-      if check_bbs_top == '1'
+      if (check_bbs_top == '1')
         disp_ctrls << Folder::DISPCTRL_BBS_TOP
       end
 
@@ -771,21 +771,18 @@ class FoldersController < ApplicationController
 
       count = 0
       params[:check_item].each do |item_id, value|
-        if value == '1'
+        next if (value != '1')
 
-          begin
-            item = Item.find(item_id)
-            next if !is_admin and item.user_id != @login_user.id
+        item = nil
+        begin
+          item = Item.find(item_id)
+          next if !is_admin and (item.user_id != @login_user.id)
 
-            item.destroy
-
-          rescue => evar
-            item = nil
-            Log.add_error(request, evar)
-          end
-
-          count += 1
+          item.destroy
+        rescue => evar
+          Log.add_error(request, evar)
         end
+        count += 1
       end
       flash[:notice] = t('item.deleted', :count => count)
     end
@@ -815,21 +812,18 @@ class FoldersController < ApplicationController
 
       count = 0
       params[:check_item].each do |item_id, value|
-        if value == '1'
+        next if (value != '1')
 
-          begin
-            item = Item.find(item_id)
-            next if !is_admin and item.user_id != @login_user.id
+        item = nil
+        begin
+          item = Item.find(item_id)
+          next if !is_admin and (item.user_id != @login_user.id)
 
-            item.update_attribute(:folder_id, folder_id)
-
-          rescue => evar
-            item = nil
-            Log.add_error(request, evar)
-          end
-
-          count += 1
+          item.update_attribute(:folder_id, folder_id)
+        rescue => evar
+          Log.add_error(request, evar)
         end
+        count += 1
       end
       flash[:notice] = t('item.moved', :count => count)
     end

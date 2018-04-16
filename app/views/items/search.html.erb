@@ -27,10 +27,10 @@
 
 <table style="width:100%; margin-bottom:5px;">
   <tr>
-    <td style="text-align:left; color:sienna" nowrap >
+    <td style="text-align:left; color:sienna;" nowrap>
     <%
     folder_id = params[:folder_id]
-    if folder_id.nil? or folder_id.empty?
+    if folder_id.blank?
     %>
 
     <% else %>
@@ -41,8 +41,8 @@
       <select name="select_sorting" onchange="prog('TOP-RIGHT'); form_search.submit();">
       <%
       excepts = nil
-      excepts = [:xorder] if @folder_id.nil? or @folder_id.empty?
-      Item.sort_opts(excepts).each do |text_val|
+      excepts = [:xorder] if @folder_id.blank?
+      ItemsHelper.sort_opts(excepts).each do |text_val|
         selected = ''
         selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
       %>
@@ -151,7 +151,7 @@
 </div>
 <span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('description') %> <span style="color:blueviolet; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span>
 <br/>
-<% unless item.description.nil? or item.description.empty? %>
+<% unless item.description.blank? %>
 <%= truncate(item.description.gsub(/<[^>]*>/, "").gsub(/&nbsp;/, " ").gsub(/(\xE3\x80\x80|\s)+/, " ").gsub(/^\s*$|^(\xE3\x80\x80|\s)+/, "").gsub('&lt;', '<').gsub('&gt;', '>').gsub('&amp;', '&'), :length => 200) %>
 <% end %>
                 </td>

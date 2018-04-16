@@ -85,15 +85,17 @@ doMoveMulti = function()
 
 doMoveUsers = function(thetisBoxId)
 {
-  var container = ThetisBox.getContainer(thetisBoxId);
-  if (container) {
-    ThetisBox.remove(thetisBoxId);
+  var thetisBox = ThetisBox.getInstance(thetisBoxId);
+  if (thetisBox) {
+    var treeNodeId = thetisBox.getSelectedTreeNodeId();
+    thetisBox.remove();
+    if (treeNodeId) {
+      var addParams = getCheckedUsersParam();
+      addParams.push(Form.serialize(document.form_list));
+      addParams.push("tree_node_id="+treeNodeId);
 
-    var addParams = getCheckedUsersParam();
-    addParams.push(Form.serialize(document.form_list));
-    addParams.push(Form.serialize(container));
-
-    doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>", addParams);
+      doUpdateView("post", "<%= url_for(:controller => 'groups', :action => 'ajax_move_users') %>", addParams);
+    }
   }
 }
 
@@ -104,8 +106,8 @@ getCheckedUsersParam = function()
   var elems = document.getElementsByClassName("check_user");
   for (var i=0; elems != null && i < elems.length; i++) {
     if (elems[i].checked) {
-      var user_id = elems[i].id.split("_")[2];
-      params[params.length] = "check_user["+user_id+"]=1";
+      var userId = elems[i].id.split("_")[2];
+      params[params.length] = "check_user["+userId+"]=1";
     }
   }
   return params;
@@ -168,7 +170,7 @@ onPaginate = function(url)
       prms.delete('authenticity_token')
       prms.delete('check_user')
       prms['action'] = 'get_users'
-      pagination = will_paginate(@user_pages, :params => prms)
+      pagination = will_paginate(@user_pages, {:params => prms})
       pagination = ApplicationHelper.ajax_pagination(pagination, 'onPaginate')
       %>
       <%= raw(pagination) %>

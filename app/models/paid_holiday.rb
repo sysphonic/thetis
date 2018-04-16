@@ -1,17 +1,13 @@
 #
 #= PaidHoliday
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #PaidHoliday represents settings about paid holiday by year.
 #
-#== Note:
-#
-#* 
-#
 class PaidHoliday < ApplicationRecord
-  belongs_to :user
+  belongs_to(:user)
 
   public::CARRY_OVER_NONE = 'none'
   public::CARRY_OVER_1_YEAR = '1_year'
@@ -56,7 +52,7 @@ class PaidHoliday < ApplicationRecord
 
     SqlHelper.validate_token([user_id, fiscal_year])
 
-    if num <= 0
+    if (num <= 0)
       con = []
       con << "(user_id=#{user_id.to_i})"
       con << "(year=#{fiscal_year.to_i})"
@@ -104,7 +100,7 @@ class PaidHoliday < ApplicationRecord
     sum = 0
     year_begins_from, month_begins_at = TimecardsHelper.get_fiscal_params
 
-    if paidhld_carry_over == PaidHoliday::CARRY_OVER_1_YEAR
+    if (paidhld_carry_over == PaidHoliday::CARRY_OVER_1_YEAR)
 
       last_carried_out = 0
 
@@ -124,7 +120,7 @@ class PaidHoliday < ApplicationRecord
 
       return last_carried_out
 
-    elsif paidhld_carry_over == PaidHoliday::CARRY_OVER_NO_EXPIRATION
+    elsif (paidhld_carry_over == PaidHoliday::CARRY_OVER_NO_EXPIRATION)
 
       paidhlds.each do |paidhld|
         sum += paidhld.num
