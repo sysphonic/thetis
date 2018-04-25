@@ -11,18 +11,18 @@ platform integrating know-hows and ideas in an organization.
 
 ## Initial Account
 
-    User name: **admin**
+    User name: admin
 
-    Password:  **admin**
+    Password:  admin
 
 * This user has full administrative authority. Change its password at first!
 
 
-## ThetisCore ![ThetisCore](http://sysphonic.com/img/feed-icon-28x28.png)
+## ![ThetisCore](http://sysphonic.com/img/feed-icon-28x28.png) ThetisCore
 
-Use free opensource Feed (RSS) notification app on Windows.
-
-![ThetisCore](http://sysphonic.com/img/thetiscore/thetiscore2.png)
+Use free opensource Feed (RSS) notification app on Windows:
 
 https://github.com/sysphonic/ThetisCore
+
+![ThetisCore](http://sysphonic.com/img/thetiscore/thetiscore2.png)
 
