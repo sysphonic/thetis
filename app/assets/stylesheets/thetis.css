@@ -101,10 +101,10 @@ table {padding:0px; border-width:0px; border-spacing:0px;}
 form {display:inline;}
 img {border:0px; vertical-align:middle;}
 
-a:link {text-decoration:none; color:navy }
-a:visited {color:navy }
-a:active {text-decoration:none; color:blue }
-a:hover  {text-decoration:none; color:limegreen }
+a:link {text-decoration:none; color:navy;}
+a:visited {color:navy;}
+a:active {text-decoration:none; color:blue;}
+a:hover  {text-decoration:none; color:limegreen;}
 
 a.linked_path {text-decoration:underline; color:red; background-color:inherit;}
 a.linked_path:hover {background-color:palegreen;}
@@ -112,15 +112,15 @@ a.linked_path:hover {background-color:palegreen;}
 a.linked_item_dir {text-decoration:none; color:red; background-color:inherit;}
 a.linked_item_dir:hover {background-color:cornsilk;}
 
-.a_underline:link {text-decoration:underline; color:navy }
-.a_underline:visited {color:navy }
-.a_underline:active {text-decoration:underline; color:blue }
-.a_underline:hover{text-decoration:underline; color:limegreen }
+.a_underline:link {text-decoration:underline; color:navy;}
+.a_underline:visited {color:navy;}
+.a_underline:active {text-decoration:underline; color:blue;}
+.a_underline:hover{text-decoration:underline; color:limegreen;}
 
-.a_pagination:link {text-decoration:underline; color:red }
-.a_pagination:visited {color:red }
-.a_pagination:active {text-decoration:underline; color:orange }
-.a_pagination:hover{text-decoration:underline; color:limegreen }
+.a_pagination:link {text-decoration:underline; color:red;}
+.a_pagination:visited {color:red;}
+.a_pagination:active {text-decoration:underline; color:orange;}
+.a_pagination:hover{text-decoration:underline; color:limegreen;}
 
 .fieldWithErrors {padding:2px; background-color:red; display:table;}
 #errorExplanation {display:none; width:400px; border:2px solid red; padding:7px; padding-bottom:12px; margin-bottom:20px; background-color:#f0f0f0;}

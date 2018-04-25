@@ -11,22 +11,18 @@ platform integrating know-hows and ideas in an organization.
 
 ## Initial Account
 
-   User name: admin
-   Password:  admin
+    User name: **admin**
+
+    Password:  **admin**
 
 * This user has full administrative authority. Change its password at first!
 
 
-## Links
+## ThetisCore ![ThetisCore](http://sysphonic.com/img/feed-icon-28x28.png)
 
-All about Thetis is in the following Web sites.
+Use free opensource Feed (RSS) notification app on Windows.
 
-<< Thetis Users' Manual >>
+![ThetisCore](http://sysphonic.com/img/thetiscore/thetiscore2.png)
 
-* English
-  http://sysphonic.com/en/thetis_manual.html
-* Japanese
-  http://sysphonic.com/ja/thetis_manual.html
-* German
-  http://sysphonic.com/de/thetis_manual.html
+https://github.com/sysphonic/ThetisCore
 
