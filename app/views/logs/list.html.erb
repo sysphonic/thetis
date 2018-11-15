@@ -39,10 +39,10 @@ unless @login_user.nil?
   <tr style="height:5px;"><td></td></tr>
   <tr>
     <td colspan="2" style="text-align:right;" nowrap>
-        <input type="button" value="<%= t('btn.delete_all')%>" onclick="onClearLogClicked(); return false;">&nbsp;&nbsp;
-        <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;">
-        <span style="color:silver;">|</span>
-        <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteLogClicked(); return false;">
+      <input type="button" value="<%= t('btn.delete_all')%>" onclick="onClearLogClicked(); return false;" />
+      <span style="display:inline-block; width:14px; color:silver; text-align:center;">|</span>
+      <input type="button" value="<%= t('btn.select_deselect_all')%>" onclick="selectAll(); return false;" />
+      <input type="button" value="<%= t('btn.delete')%>" onclick="onDeleteLogClicked(); return false;" />
     </td>
   </tr>
 </table>

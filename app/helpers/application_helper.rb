@@ -9,6 +9,28 @@ module ApplicationHelper
   require 'tempfile'
   require 'uri'     # for URI.extract()
 
+  #=== self.tail
+  #
+  #Gets tail lines of a File.
+  #
+  #_fpath_:: File path.
+  #_lines_max_:: Max lines.
+  #_keywords_:: Target keywords.
+  #return:: Tail lines of a File.
+  #
+  def self.tail(fpath, lines_max, keywords=nil)
+
+    lines = []
+    File.foreach(fpath) do |line|
+      unless keywords.nil?
+        next if keywords.find {|keyword| line.include?(keyword)}.nil?
+      end
+      lines << line.chomp
+      lines.shift if (lines.size > lines_max)
+    end
+    return lines
+  end
+
   #=== self.stacktrace
   #
   #Gets backtrace.
@@ -285,7 +307,7 @@ module ApplicationHelper
   #
   def self.chmod_parent(mode, path)
 
-    return nil if path.nil? or mode.nil?
+    return nil if (path.nil? or mode.nil?)
 
     ret = nil
     begin
@@ -496,7 +518,7 @@ module ApplicationHelper
 
     return nil if params.nil?
 
-    prms = params
+    prms = params.permit!
     if prms.respond_to?('to_h')
       prms = prms.to_h
     end
@@ -565,16 +587,22 @@ module ApplicationHelper
     ret = 0
 
     paths.each do |path|
-      if FileTest.exist?(path)
+      next unless FileTest.exist?(path)
+
+      begin
+        ret = File.delete(path)
+      rescue
+        parent_path = File.dirname(path)
+        mode = nil
+        unless File.writable?(parent_path)
+          mode = ApplicationHelper.chmod_parent(0666, path)
+        end
         begin
           ret = File.delete(path)
-        rescue
-          mode = ApplicationHelper.chmod_parent(0666, path)
-          begin
-            ret = File.delete(path)
-          rescue => evar
-            Log.add_error(nil, evar)
-          end
+        rescue => evar
+          Log.add_error(nil, evar)
+        end
+        unless mode.nil?
           ApplicationHelper.chmod_parent(mode, path)
         end
       end
@@ -587,22 +615,30 @@ module ApplicationHelper
   #
   #Ensures existing of the specified file.
   #
-  #_file_:: Path of the file.
+  #_path_:: Path of the file.
   #
-  def self.f_ensure_exist(file)
+  def self.f_ensure_exist(path)
 
-    return if FileTest.exist?(file)
+    return if FileTest.exist?(path)
 
-    mode = ApplicationHelper.chmod_parent(0666, file)
+    parent_path = File.dirname(path)
+    FileUtils.mkdir_p(parent_path)
+
+    mode = nil
+    unless File.writable?(parent_path)
+      mode = ApplicationHelper.chmod_parent(0666, path)
+    end
 
     begin
-      f = File.open(file, 'w')
+      f = File.open(path, 'w')
       f.close
     rescue => evar
       Log.add_error(nil, evar)
     end
 
-    ApplicationHelper.chmod_parent(mode, file)
+    unless mode.nil?
+      ApplicationHelper.chmod_parent(mode, path)
+    end
   end
 
   #=== self.f_chmod

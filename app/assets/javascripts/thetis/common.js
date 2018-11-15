@@ -483,8 +483,10 @@ function addInputHidden(frm, id, name, value, parentElem)
   elem.value = value;
   if (parentElem) {
     parentElem.appendChild(elem);
-  } else {
+  } else if (frm) {
     frm.appendChild(elem);
+  } else {
+    document.body.appendChild(elem);
   }
   return elem;
 }
@@ -568,6 +570,14 @@ function getListSelected(list, reqText)
     }
   }
   return entries;
+}
+
+function getListValues(list)
+{
+  if (!list) {
+    return [];
+  }
+  return collectionToArray(list.options).map(function(opt){ return opt.value; });
 }
 
 function getListText(list, val)
@@ -1378,6 +1388,42 @@ function mergeHash(hashOrg, hashNew)
     }
   }
   return ret;
+}
+
+function inspectHash(hash, keys)
+{
+  if (keys) {
+    keys = Object.keys(hash).intersect(keys);
+  } else {
+    keys = (Object.keys(hash) || []);
+  }
+  var entries = [];
+  for (var i=0; i < keys.length; i++) {
+    var key = keys[i];
+    var val = hash[key];
+    if (getTypeExp(val) == "string") {
+      val = "\"" + val + "\"";
+//  } else if (String(val) == "[object Object]") {
+//    val = "{"+inspectHash(val).join(", ")+"}";
+    }
+    entries.push(key+": "+val);
+  }
+  //entries = entries.join(","+((reqMultiLines)?"\n":" "));
+  return entries;
+}
+
+function inspectHashArray(arr, sepInArray, sepInHash)
+{
+  sepInArray = (sepInArray || ", ");
+  sepInHash = (sepInHash || ", ");
+
+  var arrExps = [];
+  for (var i=0; i < arr.length; i++) {
+    var hash = arr[i];
+    var hashExp = inspectHash(hash).join(sepInHash);
+    arrExps.push("{"+hashExp+"}");
+  }
+  return "["+arrExps.join(sepInArray)+"]";
 }
 
 function getRandomInt(min, max)
