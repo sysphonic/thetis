@@ -1,4 +1,4 @@
-![Thetis](https://sysphonic.github.io/thetis/img/thetis/thetis_symbol.png) Thetis
+![Thetis](https://sysphonic.github.io/thetis/img/thetis_symbol.png) Thetis
 ======
 
 Thetis is the World-Strongest Groupware / Web Collaboration Suite
@@ -7,7 +7,7 @@ With highly sophisticated functional GUI by Web2.0 / Ajax, it aims
 to be more than just a groupware, to be an information-sharing
 platform integrating know-hows and ideas in an organization.
 
-![Thetis](https://sysphonic.github.io/thetis/img/thetis/thetis_logo_org_mini.png)
+![Thetis](https://sysphonic.github.io/thetis/img/thetis_logo_org_mini.png)
 
 ## Initial Account
 
@@ -24,5 +24,5 @@ Use free opensource Feed (RSS) notification app on Windows:
 
 https://github.com/sysphonic/ThetisCore
 
-![ThetisCore](https://sysphonic.github.io/thetis/img/thetiscore/thetiscore2.png)
+![ThetisCore](https://sysphonic.github.io/thetis/img/thetiscore2.png)
 
