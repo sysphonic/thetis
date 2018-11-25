@@ -1279,3 +1279,7 @@ ja:
     oct: "10月"
     nov: "11月"
     dec: "12月"
+  will_paginate:
+    previous_label: "＜"
+    page_gap: "..."
+    next_label: "＞"

@@ -1275,3 +1275,7 @@ en:
     oct: "Oct."
     nov: "Nov."
     dec: "Dec."
+  will_paginate:
+    previous_label: " < "
+    page_gap: "..."
+    next_label: " > "
