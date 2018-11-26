@@ -6,9 +6,10 @@
 <title>Plupload - Events example</title>
 
 <!-- production -->
-<script type="text/javascript" src="../js/plupload.min.js"></script>
+<script type="text/javascript" src="../js/plupload.full.min.js"></script>
 
 <!-- debug
+<script type="text/javascript" src="../js/moxie.js"></script>
 <script type="text/javascript" src="../js/plupload.dev.js"></script>
 -->
 
@@ -18,7 +19,7 @@
 <h1>Events example</h1>
 
 <div id="container">
-    <a id="pickfiles" href="javascript:;">[Select files]</a> 
+    <a id="pickfiles" href="javascript:;">[Select files]</a>
     <a id="uploadfiles" href="javascript:;">[Upload files]</a>
 </div>
 
@@ -70,7 +71,7 @@
 			PostInit: function() {
 				// Called after initialization is finished and internal event handlers bound
 				log('[PostInit]');
-				
+
 				document.getElementById('uploadfiles').onclick = function() {
 					uploader.start();
 					return false;
