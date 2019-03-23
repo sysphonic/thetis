@@ -80,7 +80,7 @@ module SqlHelper
       con << "(#{attr_name} like #{key})"
     end
     sql = con.join(' or ')
-    sql = '(' + sql + ')' if con.length > 1
+    sql = '(' + sql + ')' if (con.length > 1)
     return sql
   end
 

@@ -192,39 +192,45 @@ module ApplicationHelper
 
   #=== self.sort_by
   #
-  #Sorts array of model records by the specified attribute.
+  #Sorts Array of model records by the specified attribute.
   #
-  #_model_recs_:: The target array of model records.
+  #_arr_:: The target array of model records.
   #_attr_:: Target attribute.
   #_direction_:: Sort direction (:asc or :desc).
+  #return:: Sorted Array.
   #
-  def self.sort_by(model_recs, attr, direction=:asc)
+  def self.sort_by(arr, attr, direction=:asc)
 
-    return if model_recs.nil?
+    return nil if arr.nil?
 
-    model_recs.sort! { |rec_a, rec_b|
+    return arr.sort { |rec_a, rec_b|
 
-      val_a = rec_a.send(attr) || ''
-      val_b = rec_b.send(attr) || ''
+      val_a = (rec_a.send(attr) || '').to_s
+      val_b = (rec_b.send(attr) || '').to_s
 
       (direction.to_s.downcase == 'asc')?(val_a <=> val_b):(val_b <=> val_a)
     }
   end
 
-  #=== self.sort_updated_at
+  #=== self.sort_by_datetime
   #
   #Sorts an array by updated_at field.
   #
   #_arr_:: Target array.
+  #_attr_:: Target attribute.
+  #_direction_:: Sort direction (:asc or :desc).
+  #return:: Sorted Array.
   #
-  def self.sort_updated_at(arr)
+  def self.sort_by_datetime(arr, attr, direction=:asc)
 
-    arr.sort! { |elem_a, elem_b|
+    return nil if arr.nil?
 
-      idx_a = elem_a.updated_at || DateTime.new
-      idx_b = elem_b.updated_at || DateTime.new
+    return arr.sort { |elem_a, elem_b|
 
-      idx_b - idx_a
+      dt_a = (elem_a.send(attr) || DateTime.new)
+      dt_b = (elem_b.send(attr) || DateTime.new)
+
+      (direction.to_s.downcase == 'asc')?(dt_a <=> dt_b):(dt_b <=> dt_a)
     }
   end
 

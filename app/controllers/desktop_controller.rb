@@ -282,7 +282,7 @@ class DesktopController < ApplicationController
       @toys.delete(toy)
     end
 
-    ApplicationHelper.sort_updated_at(@toys)
+    @toys = ApplicationHelper.sort_by_datetime(@toys, 'updated_at', :desc)
 
     render(:partial => 'ajax_news_tray', :layout => false)
   end

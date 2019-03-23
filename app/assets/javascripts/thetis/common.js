@@ -1,5 +1,5 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2018, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+ Copyright (c) 2007-2019, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
  This module is released under New BSD License.
  **-----------------**-----------------**-----------------**/
 
@@ -702,8 +702,19 @@ function _sortTextDESC(a, b)
   return _sortTextASC(a, b) * (-1);
 }
 
-function moveList(src, dst)
+function moveList(src, dst, reqInsert)
 {
+  var insertIdx = -1;
+  if (reqInsert) {
+    for (var i=0; i < dst.options.length; i++) {
+      var option = dst.options[i];
+      if (option.selected == true) {
+        insertIdx = i;
+        break;
+      }
+    }
+  }
+
   var arr = [];
   for (var i=0; i < src.length; i++) {
     var option = src.options[i];
@@ -717,8 +728,13 @@ function moveList(src, dst)
         }
       }
       if (!duplex) {
-        dst.options[dst.length++] = new Option(option.text, option.value);
-        arr[arr.length] = option.value;
+        var newOpt = new Option(option.text, option.value);
+        if (insertIdx >= 0) {
+          dst.add(newOpt, insertIdx++);
+        } else {
+          dst.add(newOpt);
+        }
+        arr.push(option.value);
       }
       src.options[i] = null;
       i--;
@@ -1081,6 +1097,23 @@ function getDateFromString(date_s)
     return new Date(m[1], parseInt(m[2], 10)-1, m[3]);
   }
   return null;
+}
+
+function addDays(date, days)
+{
+  var result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
+
+function dateDiffInDays(dateA, dateB)
+{
+  var _MS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  var utc1 = Date.UTC(dateA.getFullYear(), dateA.getMonth(), dateA.getDate());
+  var utc2 = Date.UTC(dateB.getFullYear(), dateB.getMonth(), dateB.getDate());
+
+  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
 }
 
 function getByteSize(str)
