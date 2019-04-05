@@ -1,7 +1,7 @@
 #
 #= TreeElement
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module TreeElement
@@ -36,7 +36,7 @@ module TreeElement
 
       node_id = node.parent_id
 
-      break if node_id == TreeElement::ROOT_ID
+      break if (node_id == TreeElement::ROOT_ID)
 
       node = nil
       unless cache.nil?

@@ -1,17 +1,11 @@
 #
 #= UsersController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Users.
-#
-#== Note:
-#
-#* 
-#
 class UsersController < ApplicationController
-  layout 'base'
+  layout('base')
 
   before_action(:check_login, :except => [:new, :create])
   before_action(:check_owner, :only => [:edit, :update, :create_profile_sheet, :destroy_profile_sheet])
@@ -23,10 +17,9 @@ class UsersController < ApplicationController
     controller.check_auth(User::AUTH_USER)
   end
 
-  require 'digest/md5'
-  require 'cgi'
-  require 'csv'
-
+  require('digest/md5')
+  require('cgi')
+  require('csv')
 
   #=== new
   #
@@ -51,8 +44,8 @@ class UsersController < ApplicationController
     password = attrs[:password]
     attrs.delete(:password)
 
-    @user = UsersHelper.get_initialized_user(attrs.permit(User::PERMIT_BASE))
-    @user.auth = User::AUTH_ALL if User.count <= 0
+    @user = UsersHelper.get_initialized_user(User.permit_base(attrs))
+    @user.auth = User::AUTH_ALL if (User.count <= 0)
 
     begin
       @user.save!
@@ -65,7 +58,7 @@ class UsersController < ApplicationController
 
     flash[:notice] = t('msg.register_success')
 
-    if params[:from] == 'users_list'
+    if (params[:from] == 'users_list')
       redirect_to(:controller => 'users', :action => 'list')
     else
       NoticeMailer.welcome(@user, password, ApplicationHelper.root_url(request)).deliver
@@ -126,19 +119,19 @@ class UsersController < ApplicationController
       attrs[:xorder] = User::XORDER_MAX
 
       titles = User.get_config_titles
-      if !titles.nil? and titles.include?(title)
+      if (!titles.nil? and titles.include?(title))
         attrs[:xorder] = titles.index(title)
       end
     end
 
-    if @user.update_attributes(attrs.except(:id).permit(User::PERMIT_BASE))
+    if @user.update_attributes(User.permit_base(attrs.except(:id)))
 
       flash[:notice] = t('msg.update_success')
 
-      if @user.id == @login_user.id
+      if (@user.id == @login_user.id)
         @login_user = @user
       end
-      if params[:from] == 'users_list'
+      if (params[:from] == 'users_list')
         redirect_to(:controller => 'users', :action => 'list')
       else
         redirect_to(:controller => 'desktop', :action => 'show')
@@ -153,7 +146,7 @@ class UsersController < ApplicationController
   #Shows Users list.
   #
   def list
-    if params[:action] == 'list'
+    if (params[:action] == 'list')
       Log.add_info(request, params.inspect)
     end
 
@@ -169,7 +162,7 @@ class UsersController < ApplicationController
     con = ['User.id > 0']
 
     unless @group_id.nil?
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         con << "((User.groups like '%|#{@group_id}|%') or (User.groups is null))"
       else
         con << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
@@ -192,7 +185,7 @@ class UsersController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
@@ -200,12 +193,12 @@ class UsersController < ApplicationController
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = @sort_col + ' ' + @sort_type
 
-    if @sort_col == 'OfficialTitle.xorder'
+    if (@sort_col == 'OfficialTitle.xorder')
       order_by = '(OfficialTitle.xorder is null) ' + @sort_type + ', ' + order_by
     else
       order_by << ', (OfficialTitle.xorder is null) ASC, OfficialTitle.xorder ASC'
     end
-    if @sort_col != 'User.name'
+    if (@sort_col != 'User.name')
       order_by << ', User.name ASC'
     end
 
@@ -246,7 +239,7 @@ class UsersController < ApplicationController
 
     count = 0
     params[:check_user].each do |user_id, value|
-      if value == '1'
+      if (value == '1')
         SqlHelper.validate_token([user_id])
         begin
           User.destroy(user_id)
@@ -297,7 +290,7 @@ class UsersController < ApplicationController
 
     unless params[:official_titles].nil?
       params[:official_titles].each do |official_title_id|
-        if @user.user_titles.index{|user_title| user_title.official_title_id.to_s == official_title_id}.nil?
+        if (@user.user_titles.index{|user_title| user_title.official_title_id.to_s == official_title_id}.nil?)
           user_title = UserTitle.new
           user_title.user_id = @user.id
           user_title.official_title_id = official_title_id
@@ -347,7 +340,7 @@ class UsersController < ApplicationController
     root_url = ApplicationHelper.root_url(request)
     count = UsersHelper.send_notification(params[:check_user], params[:thetisBoxEdit], root_url)
 
-    if count > 0
+    if (count > 0)
       flash[:notice] = t('user.notification_sent')+ count.to_s + t('user.notification_sent_suffix')
     end
 
@@ -356,7 +349,6 @@ class UsersController < ApplicationController
 
   #=== update_auth
   #
-  #<Ajax>
   #Updates User's authority.
   #
   def update_auth
@@ -366,7 +358,7 @@ class UsersController < ApplicationController
 
     auth = nil
 
-    if params[:check_auth_all] == '1'
+    if (params[:check_auth_all] == '1')
 
       auth = User::AUTH_ALL
 
@@ -378,14 +370,14 @@ class UsersController < ApplicationController
         auth = ApplicationHelper.a_to_attr(auth_selected)
       end
 
-      if auth_selected.nil? or !auth_selected.include?(User::AUTH_USER)
+      if (auth_selected.nil? or !auth_selected.include?(User::AUTH_USER))
         user_admin_err = false
         user_admins = User.where("auth like '%|#{User::AUTH_USER}|%' or auth='#{User::AUTH_ALL}'").to_a
 
-        if user_admins.nil? or user_admins.empty?
+        if (user_admins.nil? or user_admins.empty?)
           user_admin_err = true
-        elsif user_admins.length == 1
-          if user_admins.first.id.to_s == params[:id]
+        elsif (user_admins.length == 1)
+          if (user_admins.first.id.to_s == params[:id])
             user_admin_err = true
           end
         end
@@ -408,7 +400,7 @@ class UsersController < ApplicationController
     else
       user.update_attribute(:auth, auth)
 
-      if user.id == @login_user.id
+      if (user.id == @login_user.id)
         @login_user = user
       end
       render(:plain => '')
@@ -417,7 +409,6 @@ class UsersController < ApplicationController
 
   #=== add_to_group
   #
-  #<Ajax>
   #Adds User to specified Group.
   #If current_id parameter is specified, this method will Change Group,
   #that is, excludes User from current_id, then adds it to specified Group.
@@ -465,10 +456,10 @@ class UsersController < ApplicationController
 
       is_modified = true if @user.add_to(group_id)
 
-      if is_modified == true
+      if (is_modified == true)
         @user.save!
 
-        if @user.id == @login_user.id
+        if (@user.id == @login_user.id)
           @login_user = @user
         end
       end
@@ -479,7 +470,6 @@ class UsersController < ApplicationController
 
   #=== exclude_from_group
   #
-  #<Ajax>
   #Excludes User from specified Group.
   #
   def exclude_from_group
@@ -500,7 +490,7 @@ class UsersController < ApplicationController
         if @user.exclude_from(group_id)
           @user.save
 
-          if @user.id == @login_user.id
+          if (@user.id == @login_user.id)
             @login_user = @user
           end
         end
@@ -514,7 +504,6 @@ class UsersController < ApplicationController
 
   #=== create_profile_sheet
   #
-  #<Ajax>
   #Creates Profile-sheet ("About Me").
   #
   def create_profile_sheet
@@ -534,7 +523,6 @@ class UsersController < ApplicationController
 
   #=== destroy_profile_sheet
   #
-  #<Ajax>
   #Destroys Profile-sheet ("About Me").
   #
   def destroy_profile_sheet
@@ -589,7 +577,7 @@ class UsersController < ApplicationController
 
     user_names = []
 #   user_emails = []
-    if mode == 'add'
+    if (mode == 'add')
       all_users.each do |user|
         user_names << user.name
 #       user_emails << user.email
@@ -630,7 +618,7 @@ class UsersController < ApplicationController
 
       users << user
 
-      if mode == 'update'
+      if (mode == 'update')
         update_user = all_users.find do |u|
           u.id == user.id
         end
@@ -644,7 +632,7 @@ class UsersController < ApplicationController
     if users.empty?
       @imp_errs[0] = [t('user.nothing_to_import')]
     else
-      if mode == 'update'
+      if (mode == 'update')
         if found_update
           user_admin = users.find do |user|
             user.admin?(User::AUTH_USER)
@@ -691,7 +679,7 @@ class UsersController < ApplicationController
     # user's miss-operation. We can avoid this case with
     # 'opposite' process.
     del_cnt = 0
-    if @imp_errs.empty? and mode == 'update'
+    if (@imp_errs.empty? and mode == 'update')
       all_users.each do |user|
         user.destroy
         del_cnt += 1
@@ -712,7 +700,7 @@ class UsersController < ApplicationController
 
     if @imp_errs.empty?
       flash[:notice] = users.length.to_s + t('user.imported')
-      if del_cnt > 0
+      if (del_cnt > 0)
         flash[:notice] << '<br/>' + del_cnt.to_s + t('user.deleted')
       end
     end
@@ -733,7 +721,6 @@ class UsersController < ApplicationController
 
   #=== create_title
   #
-  #<Ajax>
   #Creates a title with default name.
   #
   def create_title
@@ -750,7 +737,6 @@ class UsersController < ApplicationController
 
   #=== destroy_title
   #
-  #<Ajax>
   #Destroys the specified title.
   #
   def destroy_title
@@ -780,7 +766,6 @@ class UsersController < ApplicationController
 
   #=== rename_title
   #
-  #<Ajax>
   #Renames the specified title.
   #
   def rename_title
@@ -791,7 +776,7 @@ class UsersController < ApplicationController
     org_title = params[:org_title]
     new_title = params[:new_title]
 
-    if org_title.nil? or new_title.nil? or org_title == new_title
+    if (org_title.nil? or new_title.nil? or org_title == new_title)
       render(:partial => 'ajax_title', :layout => false)
       return
     end
@@ -817,7 +802,6 @@ class UsersController < ApplicationController
 
   #=== update_titles_order
   #
-  #<Ajax>
   #Updates titles' order.
   #
   def update_titles_order
@@ -834,7 +818,7 @@ class UsersController < ApplicationController
 
     idx = 0
     titles.each do |title|
-      if title != org_order[idx]
+      if (title != org_order[idx])
         User.update_xorder(title, idx)
       end
       idx += 1
@@ -844,7 +828,6 @@ class UsersController < ApplicationController
 
   #=== update_zept_allowed
   #
-  #<Ajax>
   #Updates availability of Zeptair VPN Connection for User.
   #
   def update_zept_allowed
@@ -855,7 +838,7 @@ class UsersController < ApplicationController
     user = User.find(params[:id])
     zept_allowed = params[:zept_allowed]
 
-    if zept_allowed == 'true'
+    if (zept_allowed == 'true')
       unless user.allowed_zept_connect?
         user.update_attribute(:zeptair_id, User::ZEPTID_PLACE_HOLDER)
       end
@@ -891,7 +874,7 @@ class UsersController < ApplicationController
       attrs.delete(:birthday_d)
     end
 
-    if !attrs[:name].nil? or !attrs[:password].nil?
+    if (!attrs[:name].nil? or !attrs[:password].nil?)
       user_name = attrs[:name]
       user_name ||= user.name unless user.nil?
       password = attrs[:password]
@@ -910,7 +893,7 @@ class UsersController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     if !@login_user.admin?(User::AUTH_USER) and (params[:id] != @login_user.id.to_s)
       Log.add_check(request, '[check_owner]'+params.inspect)

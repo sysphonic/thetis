@@ -9,7 +9,7 @@
           item = workflow.item
           expected_users = workflow.get_current_expected
           expected_mark = ''
-          if !expected_users.nil? and expected_users.include?(@login_user.id)
+          if (!expected_users.nil? and expected_users.include?(@login_user.id))
             expected_mark = '<img src="'+THETIS_RELATIVE_URL_ROOT+'/images/icons/red_flag.png" title="'+h(t('workflow.expected_icon_alt'))+'" />'
           end
       %>

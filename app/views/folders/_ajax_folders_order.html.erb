@@ -5,7 +5,7 @@
 
 <% if Folder.check_user_auth(@folder_id, @login_user, 'w', true) %>
 
-  <% if @folders.nil? or @folders.empty? %>
+  <% if (@folders.nil? or @folders.empty?) %>
 
       <table style="width:80%; margin:30px auto 0px;">
         <tr>

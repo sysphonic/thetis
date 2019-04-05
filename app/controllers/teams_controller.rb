@@ -1,23 +1,16 @@
 #
 #= TeamsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Teams.
-#
-#== Note:
-#
-#* 
-#
 class TeamsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action do |controller|
     controller.check_auth(User::AUTH_TEAM)
   end
-
 
   #=== index
   #
@@ -37,12 +30,12 @@ class TeamsController < ApplicationController
   #and pagination parameters.
   #
   def list
-    if params[:action] == 'list'
+    if (params[:action] == 'list')
       Log.add_info(request, params.inspect)
     end
 
     SqlHelper.validate_token([params[:filter]])
-    if params[:filter].nil? or params[:filter] == 'all'
+    if (params[:filter].nil? or params[:filter] == 'all')
       con = ['Team.id > 0']
     else
       con = ["(Team.status='#{params[:filter]}')"]
@@ -65,7 +58,7 @@ class TeamsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = "Team.id"
       @sort_type = "ASC"
     end
@@ -118,7 +111,7 @@ class TeamsController < ApplicationController
   #
   def check_member
 
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     if Item.find(params[:id]).user_id != @login_user.id
       Log.add_check(request, '[check_member]'+params.inspect)

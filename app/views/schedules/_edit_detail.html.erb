@@ -68,7 +68,7 @@ else
             <%
             THETIS_HOURS.each do |hour|
               selected = ''
-              if !@schedule.start.nil? and hour == @schedule.start.hour
+              if (!@schedule.start.nil? and (hour == @schedule.start.hour))
                 selected = 'selected'
               end
             %>
@@ -79,7 +79,7 @@ else
             <%
             THETIS_MINUTES.each do |min|
               selected = ''
-              if !@schedule.start.nil? and min == @schedule.start.min
+              if (!@schedule.start.nil? and (min == @schedule.start.min))
                 selected = 'selected'
               end
             %>
@@ -99,7 +99,7 @@ else
             <%
             THETIS_HOURS.each do |hour|
               selected = ''
-              if !@schedule.end.nil? and hour == @schedule.end.hour
+              if (!@schedule.end.nil? and (hour == @schedule.end.hour))
                 selected = 'selected'
               end
             %>
@@ -110,7 +110,7 @@ else
             <%
             THETIS_MINUTES.each do |min|
               selected = ''
-              if !@schedule.end.nil? and min == @schedule.end.min
+              if (!@schedule.end.nil? and (min == @schedule.end.min))
                 selected = 'selected'
               end
             %>
@@ -128,7 +128,7 @@ else
             <%
             THETIS_HOURS.each do |hour|
               selected = ''
-              if !@schedule.start.nil? and hour == @schedule.start.hour
+              if (!@schedule.start.nil? and (hour == @schedule.start.hour))
                 selected = 'selected'
               end
             %>
@@ -139,7 +139,7 @@ else
             <%
             THETIS_MINUTES.each do |min|
               selected = ''
-              if !@schedule.start.nil? and min == @schedule.start.min
+              if (!@schedule.start.nil? and (min == @schedule.start.min))
                 selected = 'selected'
               end
             %>
@@ -153,7 +153,7 @@ else
             <%
             THETIS_HOURS.each do |hour|
               selected = ''
-              if !@schedule.end.nil? and hour == @schedule.end.hour
+              if (!@schedule.end.nil? and (hour == @schedule.end.hour))
                 selected = 'selected'
               end
             %>
@@ -164,7 +164,7 @@ else
             <%
             THETIS_MINUTES.each do |min|
               selected = ''
-              if !@schedule.end.nil? and min == @schedule.end.min
+              if (!@schedule.end.nil? and (min == @schedule.end.min))
                 selected = 'selected'
               end
             %>

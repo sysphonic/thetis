@@ -1,7 +1,7 @@
 #
 #= YamlHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module YamlHelper
@@ -19,7 +19,7 @@ module YamlHelper
 
     unless yaml.nil?
       key_path.to_s.split(/[.]/).each do |key|
-        if yaml[key].nil? and !yaml[key.to_sym].nil?
+        if (yaml[key].nil? and !yaml[key.to_sym].nil?)
           # for Backward compatibility
           yaml[key] = yaml[key.to_sym]
           yaml.delete(key.to_sym)

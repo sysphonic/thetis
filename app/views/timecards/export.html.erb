@@ -73,7 +73,7 @@ days.times do
   vals << ((timecard.workcode.nil?)?'':timecard.workcode_name)
 
   status = []
-  if !timecard.start.nil? and timecard.end.nil?
+  if (!timecard.start.nil? and timecard.end.nil?)
     status << t('msg.not_fulfilled')
   elsif !timecard.start.nil?
     check_ok = true
@@ -120,7 +120,7 @@ days.times do
   # Note that "overtime != usual_overtime + midnight_overtime".
   overtime_sum += timecard.get_overtime unless timecard.work_on_holiday?
 
-  if timecard.start.nil? or timecard.end.nil?
+  if (timecard.start.nil? or timecard.end.nil?)
       vals << ''
   else
     usual_overtime = timecard.get_usual_overtime
@@ -135,7 +135,7 @@ days.times do
     vals << exp_usual_overtime
   end
 
-  if timecard.start.nil? or timecard.end.nil?
+  if (timecard.start.nil? or timecard.end.nil?)
       vals << ''
   else
     midnight_overtime = timecard.get_midnight_overtime
@@ -151,7 +151,7 @@ days.times do
     vals << exp_midnight_overtime
   end
 
-  if timecard.start.nil? or timecard.end.nil?
+  if (timecard.start.nil? or timecard.end.nil?)
     vals << ''
   else
     vals << ApplicationHelper.float_exp(timecard.get_break / 60.0, 2)

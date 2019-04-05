@@ -1,13 +1,13 @@
 #
 #= ApplicationHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module ApplicationHelper
-  require ::Rails.root.to_s+'/lib/util/sym_hash'
-  require 'tempfile'
-  require 'uri'     # for URI.extract()
+  require(Rails.root.to_s+'/lib/util/sym_hash')
+  require('tempfile')
+  require('uri')     # for URI.extract()
 
   #=== self.tail
   #
@@ -54,7 +54,7 @@ module ApplicationHelper
     stacktrace = evar.backtrace.select {|line|
       !(line.match(regexp).nil?)
     }
-    if evar.message == 'THETIS_EXCEPTION'
+    if (evar.message == 'THETIS_EXCEPTION')
       stacktrace.shift  # Remove current stack.
     end
     return stacktrace
@@ -69,7 +69,7 @@ module ApplicationHelper
   #
   def self.a_to_attr(arr)
 
-    if arr.nil? or arr.empty?
+    if (arr.nil? or arr.empty?)
       attr = ''
     else
       attr = '|'+arr.join('|')+'|'
@@ -107,7 +107,7 @@ module ApplicationHelper
   def self.split_preserving_quot(str, quot, delim)
 
     return nil if str.nil?
-    return [str] if quot.nil? or delim.nil?
+    return [str] if (quot.nil? or delim.nil?)
 
     regexp = Regexp.new("[#{quot}](?:(?:\\\\#{quot})|[^#{quot}])+[#{quot}]")
     str.gsub!(regexp) {|word| word.gsub(delim, "\0")}
@@ -279,7 +279,7 @@ module ApplicationHelper
 
     exp = f.to_s
     vals = exp.split('.')
-    if vals.length <= 1 or vals.last.length <= max_prec
+    if (vals.length <= 1 or vals.last.length <= max_prec)
       return exp
     else
       prec_val = 10 ** max_prec
@@ -335,7 +335,7 @@ module ApplicationHelper
   #
   def self.config
 
-    return "#{::Rails.root.to_s}/config/_config.yml"
+    return "#{Rails.root.to_s}/config/_config.yml"
   end
 
   #=== self.get_config_yaml
@@ -388,7 +388,7 @@ module ApplicationHelper
   #
   def self.touch_to_restart
 
-    file = "#{::Rails.root.to_s}/tmp/restart.txt"
+    file = "#{Rails.root.to_s}/tmp/restart.txt"
 
     ApplicationHelper.f_ensure_exist(file)
     mode = ApplicationHelper.f_chmod(0666, file)
@@ -544,7 +544,7 @@ module ApplicationHelper
   #return:: Path of the config directory.
   #
   def self.config_dir
-    "#{::Rails.root.to_s}/config"
+    "#{Rails.root.to_s}/config"
   end
 
   #=== self.trim_comment
@@ -556,13 +556,13 @@ module ApplicationHelper
   #
   def self.trim_comment(line)
 
-    return line if line.nil? or line.empty?
+    return line if (line.nil? or line.empty?)
 
     quot = nil
     last_ch = nil
     comment_idx = 0
     line.scan(/./m){ |ch|
-      if last_ch != '\\' and ch == quot
+      if (last_ch != '\\' and ch == quot)
         quot = nil
       elsif last_ch != '\\' and (ch == '"' or ch == '\'')
         quot = ch
@@ -658,7 +658,7 @@ module ApplicationHelper
   #
   def self.f_chmod(mode, path)
 
-    return nil if path.nil? or mode.nil?
+    return nil if (path.nil? or mode.nil?)
 
     ret = nil
     begin
@@ -682,7 +682,7 @@ module ApplicationHelper
   #
   def self.f_insert(path, line_idx, data)
 
-    return if path.nil? or data.nil? or data.to_s.empty?
+    return if (path.nil? or data.nil? or data.to_s.empty?)
 
     mode = ApplicationHelper.f_chmod(0666, path)
 
@@ -690,7 +690,7 @@ module ApplicationHelper
       temp = Tempfile.new('_thetis')
 
       File.open(path){ |file|
-        if line_idx < 0
+        if (line_idx < 0)
           while line = file.gets
             temp.write(line)
           end
@@ -745,7 +745,7 @@ module ApplicationHelper
         }
         temp.write(data)
         while line = file.gets
-          if line_num > 0
+          if (line_num > 0)
             line_num -= 1
             next
           end 
@@ -772,7 +772,7 @@ module ApplicationHelper
   #
   def self.f_find(path, exp)
 
-    return -1 if path.nil? or exp.nil?
+    return -1 if (path.nil? or exp.nil?)
 
     line_idx = -1
 
@@ -837,11 +837,11 @@ module ApplicationHelper
   def self.take_nbytes(str, n, dots)
     buf = ''
     str.split(//).each do |ch|
-      break if buf.size + ch.size > n
+      break if (buf.size + ch.size > n)
       buf << ch
     end
 
-    buf << dots if !dots.nil? and buf.length < str.length
+    buf << dots if (!dots.nil? and (buf.length < str.length))
 
     return buf
   end
@@ -860,11 +860,11 @@ module ApplicationHelper
     cols = 0
     str.split(//).each do |ch|
       cols += (ch.size > 1)?2:1
-      break if cols > n
+      break if (cols > n)
       buf << ch
     end
 
-    buf << dots if !dots.nil? and buf.length < str.length
+    buf << dots if (!dots.nil? and (buf.length < str.length))
 
     return buf
   end

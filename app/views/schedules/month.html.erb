@@ -113,7 +113,7 @@ for wd in 0..6 do
       <div style="color:dimgray;"><%= raw(day_caption) %></div>
       <%
       standard_num = 3
-      if schedules.nil? or schedules.empty?
+      if (schedules.nil? or schedules.empty?)
       %>
       <%= raw('<br/>' * standard_num) %>
       <%
@@ -132,7 +132,7 @@ for wd in 0..6 do
           end
         end
         br = ''
-        if schedules.length < standard_num
+        if (schedules.length < standard_num)
           br = '<br/>' * (standard_num - schedules.length)
         end
         %>
@@ -155,7 +155,7 @@ for wd in 0..6 do
           end
           %>
           <%= raw(options) %>
-          <% if !timecard.start.nil? and timecard.end.nil? %>
+          <% if (!timecard.start.nil? and timecard.end.nil?) %>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png" title="<%= t('msg.not_fulfilled') %>" />
           <% end %>
         </a>

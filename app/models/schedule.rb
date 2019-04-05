@@ -1,15 +1,13 @@
 #
 #= Schedule
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Schedule is related to date (or rules) and Users. It can be also related to Equipment and Items.
 #
 class Schedule < ApplicationRecord
   public::PERMIT_BASE = [:title, :detail, :users, :equipment, :start, :end, :scope, :repeat_start, :repeat_end, :repeat_rule, :except, :allday, :items, :xtype, :groups, :teams]
 
-  require ::Rails.root.to_s+'/lib/util/util_date'
+  require(Rails.root.to_s+'/lib/util/util_date')
 
   validates_presence_of(:title)
 
@@ -171,7 +169,7 @@ class Schedule < ApplicationRecord
 
     holidays.each do |schedule|
       holiday = schedule.start.utc
-      if holiday.year == date.year and holiday.month == date.month and holiday.day == date.day
+      if (holiday.year == date.year and holiday.month == date.month and holiday.day == date.day)
         return schedule
       end
     end
@@ -273,11 +271,11 @@ class Schedule < ApplicationRecord
   #
   def check_user_auth(user, rxw, check_admin)
 
-    if check_admin and !user.nil? and user.admin?(User::AUTH_SCHEDULE)
+    if (check_admin and !user.nil? and user.admin?(User::AUTH_SCHEDULE))
       return true
     end
 
-    if rxw == 'r'
+    if (rxw == 'r')
       if self.private?
         if user.nil?
           return false
@@ -304,7 +302,7 @@ class Schedule < ApplicationRecord
       if user.nil?
         return false
       else
-        if self.for_all? or self.is_member?(user)
+        if (self.for_all? or self.is_member?(user))
           return true
         else
           return false
@@ -337,9 +335,9 @@ class Schedule < ApplicationRecord
       self.get_rules_a.each do |rule|
 
         backward = false
-        if !self.repeat_start.nil? and date.before?(self.repeat_start)
+        if (!self.repeat_start.nil? and date.before?(self.repeat_start))
           date = UtilDate.create(self.repeat_start)
-        elsif !self.repeat_end.nil? and date.after?(self.repeat_end)
+        elsif (!self.repeat_end.nil? and date.after?(self.repeat_end))
           if self.repeat_start.nil?
             date = UtilDate.create(self.repeat_end)
             backward = true
@@ -353,7 +351,7 @@ class Schedule < ApplicationRecord
           unless backward
             d = date.dup
             loop do
-              if !self.repeat_end.nil? and d.after?(self.repeat_end)
+              if (!self.repeat_end.nil? and d.after?(self.repeat_end))
                 backward = true
                 break
               end
@@ -361,7 +359,7 @@ class Schedule < ApplicationRecord
                 d += 1
                 next
               end
-              if Schedule::WDAYS[d.wday] == rule
+              if (Schedule::WDAYS[d.wday] == rule)
                 break
               end
               d += 1
@@ -370,7 +368,7 @@ class Schedule < ApplicationRecord
           if backward
             d = date.dup
             loop do
-              if !self.repeat_start.nil? and d.before?(self.repeat_start)
+              if (!self.repeat_start.nil? and d.before?(self.repeat_start))
                 d = nil
                 break
               end
@@ -378,14 +376,14 @@ class Schedule < ApplicationRecord
                 d -= 1
                 next
               end
-              if Schedule::WDAYS[d.wday] == rule
+              if (Schedule::WDAYS[d.wday] == rule)
                 break
               end
               d -= 1
             end
           end
 
-        elsif rule == Schedule::LAST_DAY_OF_MONTH
+        elsif (rule == Schedule::LAST_DAY_OF_MONTH)
 
           found = false
           unless backward
@@ -393,7 +391,7 @@ class Schedule < ApplicationRecord
             loop do
               d = date.dup >> forward
               d = UtilDate.new(d.year, d.month, -1)
-              if !self.repeat_end.nil? and d.after?(self.repeat_end)
+              if (!self.repeat_end.nil? and d.after?(self.repeat_end))
                 backward = true
                 break
               end
@@ -412,7 +410,7 @@ class Schedule < ApplicationRecord
                 backward += 1
                 next
               end
-              if !self.repeat_start.nil? and d.before?(self.repeat_start)
+              if (!self.repeat_start.nil? and d.before?(self.repeat_start))
                 d = nil
                 break
               end
@@ -423,7 +421,7 @@ class Schedule < ApplicationRecord
             end
           end
 
-        elsif rule == Schedule::FIRST_WEEKDAY_OF_MONTH
+        elsif (rule == Schedule::FIRST_WEEKDAY_OF_MONTH)
 
           holidays = Schedule.get_holidays
           found = false
@@ -441,12 +439,12 @@ class Schedule < ApplicationRecord
                   break
                 end
                 d += 1
-                if !self.repeat_end.nil? and d.after?(self.repeat_end)
+                if (!self.repeat_end.nil? and d.after?(self.repeat_end))
                   backward = true
                   break
                 end
               end
-              break if found or backward
+              break if (found or backward)
               forward += 1
             end
           end
@@ -457,7 +455,7 @@ class Schedule < ApplicationRecord
               loop do
                 if THETIS_WEEKDAYS.include?(WDAYS[d.wday]) and Schedule.check_holiday(d, holidays).nil?
                   break if d.after?(date)
-                  if !self.repeat_start.nil? and d.before?(self.repeat_start)
+                  if (!self.repeat_start.nil? and d.before?(self.repeat_start))
                     d = nil
                     break
                   end
@@ -468,12 +466,12 @@ class Schedule < ApplicationRecord
                 end
                 d += 1
               end
-              break if found or d.nil?
+              break if (found or d.nil?)
               backward += 1
             end
           end
 
-        elsif rule == Schedule::LAST_WEEKDAY_OF_MONTH
+        elsif (rule == Schedule::LAST_WEEKDAY_OF_MONTH)
 
           found = false
           unless backward
@@ -484,7 +482,7 @@ class Schedule < ApplicationRecord
               loop do
                 break if date.after?(d)
                 if THETIS_WEEKDAYS.include?(WDAYS[d.wday]) and Schedule.check_holiday(d, holidays).nil?
-                  if !self.repeat_end.nil? and d.after?(self.repeat_end)
+                  if (!self.repeat_end.nil? and d.after?(self.repeat_end))
                     backward = true
                     break
                   end
@@ -495,7 +493,7 @@ class Schedule < ApplicationRecord
                 end
                 d -= 1
               end
-              break if found or backward
+              break if (found or backward)
               forward += 1
             end
           end
@@ -507,7 +505,7 @@ class Schedule < ApplicationRecord
               loop do
                 break if d.after?(date)
                 if THETIS_WEEKDAYS.include?(WDAYS[d.wday]) and Schedule.check_holiday(d, holidays).nil?
-                  if !self.repeat_start.nil? and d.before?(self.repeat_start)
+                  if (!self.repeat_start.nil? and d.before?(self.repeat_start))
                     d = nil
                     break
                   end
@@ -518,7 +516,7 @@ class Schedule < ApplicationRecord
                 end
                 d -= 1
               end
-              break if found or d.nil?
+              break if (found or d.nil?)
               backward += 1
             end
           end
@@ -537,7 +535,7 @@ class Schedule < ApplicationRecord
                   forward += 1
                   next
                 end
-                if !self.repeat_end.nil? and d.after?(self.repeat_end)
+                if (!self.repeat_end.nil? and d.after?(self.repeat_end))
                   backward = true
                   break
                 end
@@ -555,7 +553,7 @@ class Schedule < ApplicationRecord
               d = date.dup << backward
               d = UtilDate.new(d.year, d.month, rule_day)
               begin
-                if !self.repeat_start.nil? and d.before?(self.repeat_start)
+                if (!self.repeat_start.nil? and d.before?(self.repeat_start))
                   d = nil
                   break
                 end
@@ -571,7 +569,7 @@ class Schedule < ApplicationRecord
         end
 
         unless d.nil?
-          if nearest_day.nil? or d.before?(nearest_day)
+          if (nearest_day.nil? or d.before?(nearest_day))
             nearest_day = d.get_date
           end
         end
@@ -596,7 +594,7 @@ class Schedule < ApplicationRecord
   #
   def self.check_overlap_equipment(equipment_id, schedules, date)
 
-    return [] if equipment_id.nil? or schedules.nil? or date.nil?
+    return [] if (equipment_id.nil? or schedules.nil? or date.nil?)
 
     target_arr = []
     ret_arr = []
@@ -626,10 +624,10 @@ class Schedule < ApplicationRecord
   #
   def overlap?(other, date)
 
-    return false if other.nil? or date.nil?
+    return false if (other.nil? or date.nil?)
 
     t_src = self.start
-    if self.repeat? or t_src.nil?
+    if (self.repeat? or t_src.nil?)
       year = date.year; month = date.month; day = date.day
     else
       year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
@@ -640,7 +638,7 @@ class Schedule < ApplicationRecord
     a_start = Time.local(year, month, day, hour, min, sec)
 
     t_src = self.end
-    if self.repeat? or t_src.nil?
+    if (self.repeat? or t_src.nil?)
       year = date.year; month = date.month; day = date.day
     else
       year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
@@ -651,7 +649,7 @@ class Schedule < ApplicationRecord
     a_end = Time.local(year, month, day, hour, min, sec)
 
     t_src = other.start
-    if other.repeat? or t_src.nil?
+    if (other.repeat? or t_src.nil?)
       year = date.year; month = date.month; day = date.day
     else
       year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
@@ -662,7 +660,7 @@ class Schedule < ApplicationRecord
     b_start = Time.local(year, month, day, hour, min, sec)
 
     t_src = other.end
-    if other.repeat? or t_src.nil?
+    if (other.repeat? or t_src.nil?)
       year = date.year; month = date.month; day = date.day
     else
       year = t_src.year; month = t_src.month; day = t_src.day; hour = t_src.hour; min = t_src.min; sec = t_src.sec;
@@ -674,7 +672,7 @@ class Schedule < ApplicationRecord
 
 # logger.fatal("#{a_start} ~ #{a_end} vs #{b_start} ~ #{b_end}")
 
-    if a_end <= b_start or b_end <= a_start
+    if (a_end <= b_start or b_end <= a_start)
       return false
     else
       return true
@@ -691,10 +689,10 @@ class Schedule < ApplicationRecord
 
     user_ids = self.get_users_a
 
-    if !self.created_by.nil? and user_ids.include?(self.created_by.to_s)
+    if (!self.created_by.nil? and user_ids.include?(self.created_by.to_s))
       return self.created_by.to_s
     end
-    if !self.updated_by.nil? and user_ids.include?(self.updated_by.to_s)
+    if (!self.updated_by.nil? and user_ids.include?(self.updated_by.to_s))
       return self.updated_by.to_s
     end
     unless user_ids.empty?
@@ -868,15 +866,15 @@ private
       con[0] << '(repeat_rule like \'%|' + curday.day.to_s + '|%\')'
       con[0] << ' or '
       con[0] << '(repeat_rule like \'%|' + WDAYS[curday.wday] + '|%\')'
-      if date.day == first_weekday.day
+      if (date.day == first_weekday.day)
         con[0] << ' or '
         con[0] << '(repeat_rule like \'%|' + FIRST_WEEKDAY_OF_MONTH + '|%\')'
       end
-      if date.day == last_weekday.day
+      if (date.day == last_weekday.day)
         con[0] << ' or '
         con[0] << '(repeat_rule like \'%|' + LAST_WEEKDAY_OF_MONTH + '|%\')'
       end
-      if date.day == last_day.day
+      if (date.day == last_day.day)
         con[0] << ' or '
         con[0] << '(repeat_rule like \'%|' + LAST_DAY_OF_MONTH + '|%\')'
       end
@@ -1105,7 +1103,7 @@ private
   def within_a_day?
 
      # Repeat and Allday
-     return true if self.start.nil? or self.end.nil?
+     return true if (self.start.nil? or self.end.nil?)
 
      self.start.strftime(Schedule::SYS_DATE_FORM) == self.end.strftime(Schedule::SYS_DATE_FORM)
   end
@@ -1190,7 +1188,7 @@ private
           s = schedule.start
           start_time = Time.mktime(today.year, today.month, today.day, s.hour, s.min, s.sec)
 
-          if now - margin_after <= start_time and start_time <= scope
+          if (now - margin_after <= start_time and start_time <= scope)
             schedule.updated_at = start_time - margin_before
             alarms << schedule
           end
@@ -1269,7 +1267,7 @@ private
 
         descript << ' / '
         descript << I18n.t('schedule.cap_term') + ' '
-        if schedule.repeat_start.nil? and schedule.repeat_end.nil?
+        if (schedule.repeat_start.nil? and schedule.repeat_end.nil?)
           descript << I18n.t('paren.not_specified')
         else
           unless schedule.repeat_start.nil?

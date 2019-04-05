@@ -1,19 +1,14 @@
 #
 #= MailAccountsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#== Note:
-#
-#* 
-#
 class MailAccountsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
-  before_action :check_owner, :only => [:edit, :update, :show_summary]
-
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:edit, :update, :show_summary])
 
   #=== new
   #
@@ -33,12 +28,12 @@ class MailAccountsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
+    if (params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1')
       params[:mail_account].delete(:smtp_username)
       params[:mail_account].delete(:smtp_password)
     end
 
-    @mail_account = MailAccount.new(params.require(:mail_account).permit(MailAccount::PERMIT_BASE))
+    @mail_account = MailAccount.new(MailAccount.permit_base(params.require(:mail_account)))
     @mail_account.user_id = @login_user.id
 
     @mail_account.is_default = true
@@ -93,12 +88,12 @@ class MailAccountsController < ApplicationController
 
     @mail_account = MailAccount.find(params[:id])
 
-    if params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1'
+    if (params[:mail_account][:smtp_auth].nil? or params[:mail_account][:smtp_auth] != '1')
       params[:mail_account].delete(:smtp_username)
       params[:mail_account].delete(:smtp_password)
     end
 
-    if @mail_account.update_attributes(params.require(:mail_account).permit(MailAccount::PERMIT_BASE))
+    if @mail_account.update_attributes(MailAccount.permit_base(params.require(:mail_account)))
 
       flash[:notice] = t('msg.update_success')
       if request.xhr?
@@ -184,7 +179,7 @@ class MailAccountsController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     mail_account = MailAccount.find(params[:id])
 

@@ -1,7 +1,7 @@
 #
 #= Email
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class Email < ApplicationRecord
@@ -9,9 +9,9 @@ class Email < ApplicationRecord
 
   has_many(:mail_attachments, ->(rec) {order('mail_attachments.xorder asc')}, {:dependent => :destroy})
 
-  require 'net/pop'
-  require 'base64'
-  require 'digest/sha1'
+  require('net/pop')
+  require('base64')
+  require('digest/sha1')
 
   public::XTYPE_UNKNOWN = nil
   public::XTYPE_RECV = 'recv'
@@ -90,9 +90,9 @@ class Email < ApplicationRecord
   #Recalcurates E-mail size.
   #
   def recalc_size
-    if @mail.nil? or @mail.raw_source.nil?
+    if (@mail.nil? or @mail.raw_source.nil?)
       new_size = self.get_raw.length
-      if new_size == 0
+      if (new_size == 0)
         new_size += self.subject.length unless self.subject.nil?
         new_size += self.message.length unless self.message.nil?
         new_size += self.get_attach_size
@@ -112,9 +112,9 @@ class Email < ApplicationRecord
   #
   def zip_attachments(enc)
 
-    return nil if self.mail_attachments.nil? or self.mail_attachments.empty?
+    return nil if (self.mail_attachments.nil? or self.mail_attachments.empty?)
 
-    require 'zipruby'
+    require('zipruby')
 
     temp = Tempfile.new('thetis_mail_attachments')
     temp.binmode
@@ -147,7 +147,7 @@ class Email < ApplicationRecord
   #
   def copy_attachments_from(src_email)
 
-    return if src_email.mail_attachments.nil? or src_email.mail_attachments.empty?
+    return if (src_email.mail_attachments.nil? or src_email.mail_attachments.empty?)
 
     self.status = Email::STATUS_TEMPORARY
     self.save!
@@ -170,7 +170,7 @@ class Email < ApplicationRecord
 
     recipients = []
 
-    if self.to_addresses.nil? or self.to_addresses.empty?
+    if (self.to_addresses.nil? or self.to_addresses.empty?)
       email_to = nil
     else
       email_to = self.get_to_addresses
@@ -179,7 +179,7 @@ class Email < ApplicationRecord
         EmailsHelper.encode_disp_name(addr)
       }
     end
-    if self.cc_addresses.nil? or self.cc_addresses.empty?
+    if (self.cc_addresses.nil? or self.cc_addresses.empty?)
       email_cc = nil
     else
       email_cc = self.get_cc_addresses
@@ -188,7 +188,7 @@ class Email < ApplicationRecord
         EmailsHelper.encode_disp_name(addr)
       }
     end
-    if self.bcc_addresses.nil? or self.bcc_addresses.empty?
+    if (self.bcc_addresses.nil? or self.bcc_addresses.empty?)
       email_bcc = nil
     else
       email_bcc = self.get_bcc_addresses
@@ -198,15 +198,15 @@ class Email < ApplicationRecord
     sender = self.from_address
     email_from = EmailsHelper.encode_disp_name(sender)
 
-    if !self.reply_to.nil? and !self.reply_to.empty?
+    if (!self.reply_to.nil? and !self.reply_to.empty?)
       reply_to = self.reply_to
-    elsif !mail_account.reply_to.nil? and !mail_account.reply_to.empty?
+    elsif (!mail_account.reply_to.nil? and !mail_account.reply_to.empty?)
       reply_to = EmailsHelper.encode_disp_name(mail_account.reply_to)
     else
       reply_to = nil
     end
 
-    if mail_account.organization.nil? or mail_account.organization.empty?
+    if (mail_account.organization.nil? or mail_account.organization.empty?)
       organization = nil
     else
       organization = EmailsHelper.encode_b(mail_account.organization)
@@ -309,7 +309,7 @@ class Email < ApplicationRecord
     return nil if mail_account.nil?
 
     pop = Net::POP3.APOP(mail_account.pop_secure_auth).new(mail_account.pop_server, mail_account.pop_port)
-    if mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_SSL_TLS
+    if (mail_account.pop_secure_conn == MailAccount::POP_SECURE_CONN_SSL_TLS)
       pop.enable_ssl
     end
     pop.start(mail_account.pop_username, mail_account.pop_password)
@@ -353,10 +353,10 @@ class Email < ApplicationRecord
 
     mail_account.update_attribute(:uidl, new_uidl.join(MailAccount::UIDL_SEPARATOR))
 
-    if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0
+    if (THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0)
       Email.trim(mail_account.user_id, mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
     end
-    if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
+    if (THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0)
       Email.trim_by_capacity(mail_account.user_id, mail_account.id, mail_account.get_capacity_mb)
     end
 
@@ -620,7 +620,7 @@ class Email < ApplicationRecord
 
     begin
       count = Email.where("mail_account_id=#{mail_account_id.to_i}").count
-      if count > max
+      if (count > max)
 #logger.fatal("[INFO] Email.trim(user_id:#{user_id}, mail_account_id:#{mail_account_id}, max:#{max})")
         over_num = count - max
         emails = []
@@ -634,7 +634,7 @@ class Email < ApplicationRecord
         emails = Email.where(con).order('updated_at ASC').limit(over_num).to_a
 
         # Now, remove others
-        if emails.length < over_num
+        if (emails.length < over_num)
           over_num -= emails.length
           emails += Email.where("mail_account_id=#{mail_account_id.to_i}").order('updated_at ASC').limit(over_num).to_a
         end
@@ -662,7 +662,7 @@ class Email < ApplicationRecord
 #    max_size = capacity_mb * 1024 * 1024
 #    cur_size = MailAccount.get_using_size(mail_account_id)
 #
-#    if cur_size > max_size
+#    if (cur_size > max_size)
 #      over_size = cur_size - max_size
 #      emails = []
 #
@@ -678,18 +678,18 @@ class Email < ApplicationRecord
 #
 #        email.destroy
 #        over_size -= email.size
-#        break if over_size <= 0
+#        break if (over_size <= 0)
 #      end
 #
 #      # Now, remove others
-#      if over_size > 0
+#      if (over_size > 0)
 #        emails = Email.where("mail_account_id=#{mail_account_id.to_i}").order('updated_at ASC').to_a
 #        emails.each do |email|
 #          next if email.size.nil?
 #
 #          email.destroy
 #          over_size -= email.size
-#          break if over_size <= 0
+#          break if (over_size <= 0)
 #        end
 #      end
 #    end
@@ -703,7 +703,7 @@ class Email < ApplicationRecord
   #
   def get_attach_size
 
-    return 0 if self.mail_attachments.nil? or self.mail_attachments.empty?
+    return 0 if (self.mail_attachments.nil? or self.mail_attachments.empty?)
 
     sum = 0
 
@@ -783,7 +783,7 @@ class Email < ApplicationRecord
     end
 
     files_dirs = Dir.glob(File.join(path, '**/*'))
-    if files_dirs.nil? or files_dirs.empty?
+    if (files_dirs.nil? or files_dirs.empty?)
       FileUtils.remove_entry_secure(path, true)
       _clean_dir(File.dirname(path))
     end

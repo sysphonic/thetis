@@ -1,7 +1,7 @@
 #
 #= ZeptairXlog
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #ZeptairXlog represents each network log of Zeptair VPN,
@@ -18,7 +18,7 @@ class ZeptairXlog < ApplicationRecord
   def self.trim(max)
     begin
       count = ZeptairXlog.count
-      if count > max
+      if (count > max)
         over_num = count - max
         logs = ZeptairXlog.where(nil).limit(over_num).order('id ASC').to_a
         logs.each do |log|

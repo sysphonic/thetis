@@ -19,7 +19,7 @@
           </td>
           <td style="text-align:right;" nowrap>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/search.png" title="<%= t('cap.search_keywords') %>">&nbsp;<input type="text" id="keyword" name="keyword" value="<%= params[:keyword] %>" />
-          <% if params[:admin] == 'true' %>
+          <% if (params[:admin] == 'true') %>
             <%= t('address.book') %><%= t('cap.suffix') %><%= t('scope.common') %>
           <% else %>
             <%
@@ -348,10 +348,10 @@ unless @imp_errs.nil? or @imp_errs.empty?
 <%
 err_cnt = 0
 @imp_errs.each do |address_cnt, errs|
-  if err_cnt < 20
+  if (err_cnt < 20)
 %>
         <tr>
-        <% if address_cnt > 0 %>
+        <% if (address_cnt > 0) %>
           <td style="text-align:right; padding-left:3px; padding-right:3px; vertical-align:top;">
             <%= t('address.cap_with_num', :num => address_cnt) %>
           </td>

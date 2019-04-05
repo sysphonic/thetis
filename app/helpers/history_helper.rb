@@ -1,7 +1,7 @@
 #
 #= HistoryHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module HistoryHelper
@@ -69,7 +69,7 @@ module HistoryHelper
     if session[:history].nil? or (session[:history].length < 2)
       return nil
     else
-      if avoid_paths.nil? or avoid_paths.empty?
+      if (avoid_paths.nil? or avoid_paths.empty?)
         last_req = session[:history][-2]
         session[:history].slice!(-2..-1)
       else
@@ -103,7 +103,7 @@ module HistoryHelper
       prms.delete('authenticity_token')
 
       histories = request.session[:history] unless request.session.nil?
-      if histories.nil? or histories.empty?
+      if (histories.nil? or histories.empty?)
         histories = [prms]
       else
         if HistoryHelper.get_path_token(histories.last) == HistoryHelper.get_path_token(request)
@@ -111,7 +111,7 @@ module HistoryHelper
         else
           histories = HistoryHelper.avoid_duplex_patterns(histories, prms)
 
-          histories.delete_at(0) if histories.length > HISTORY_MAX
+          histories.delete_at(0) if (histories.length > HISTORY_MAX)
         end
       end
 
@@ -173,7 +173,7 @@ module HistoryHelper
   #
   def self.avoid_duplex_patterns(entries, last_req)
 
-    if entries.length > 2
+    if (entries.length > 2)
       cur_order = ''
       idx = -1
       entries.each do |prms|

@@ -20,7 +20,7 @@ if team.nil?
       <td style="text-align:left;">
         <table>
           <tr>
-        <% if team.status == Team::STATUS_ACTIVATED %>
+        <% if (team.status == Team::STATUS_ACTIVATED) %>
             <td class="prim_btn" onclick="doChangeTeamStatus(<%= team.id %>, '<%= Team::STATUS_DEACTIVATED %>');">
               <%= t('btn.deactivate') %>
             </td>

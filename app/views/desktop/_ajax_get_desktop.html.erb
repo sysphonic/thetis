@@ -2,7 +2,7 @@
 <%
 is_def_desktop = false
 
-if !@login_user.nil? and @login_user.admin?(User::AUTH_DESKTOP)
+if (!@login_user.nil? and @login_user.admin?(User::AUTH_DESKTOP))
   yaml = ApplicationHelper.get_config_yaml
   is_def_desktop = (YamlHelper.get_value(yaml, 'desktop.user_before_login', nil) == @login_user.id.to_s)
 end
@@ -105,7 +105,7 @@ end
             <%
             unless params[:biorhythm] == 'false'
               req_birth = "false"
-              if !@login_user.nil? and @login_user.birthday.nil?
+              if (!@login_user.nil? and @login_user.birthday.nil?)
                 req_birth = "true"
               end
             %>
@@ -144,19 +144,19 @@ unless @toys.nil?
   @toys.each do |toy|
     toy_id = "toy_#{toy.id}"
 
-    if toy.xtype == Toy::XTYPE_LABEL
+    if (toy.xtype == Toy::XTYPE_LABEL)
       @toy = toy
 %>
   <%= render(:partial => 'ajax_label') %>
 <%
-    elsif toy.xtype == Toy::XTYPE_POSTLABEL
+    elsif (toy.xtype == Toy::XTYPE_POSTLABEL)
       @toy = toy
 %>
   <%= render(:partial => 'ajax_postlabel') %>
 <%
     else
       width_limit = '';
-      width_limit = 'width:200px;' if toy.name.length >= 30;
+      width_limit = 'width:200px;' if (toy.name.length >= 30)
 %>
   <div class="toy_desktop" id="<%= toy_id %>" style="text-align:left; position:absolute; z-index:1000; display:none; <%= width_limit %>">
     <%
@@ -182,7 +182,7 @@ unless @toys.nil?
     %>
     <img src="<%= icon_img %>" style="cursor:move;" />
 
-  <% if toy.xtype == Toy::XTYPE_SCHEDULE %>
+  <% if (toy.xtype == Toy::XTYPE_SCHEDULE) %>
     <a href="javascript:this.onclick()" onclick="showScheduleDetail(null, '<%= toy.target_id %>', '<%= ApplicationHelper.h_s_quote(truncate(toy.name, :length => 20)) %>'); return false;">
   <% else %>
     <a href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= toy.address %>'; return false;">
@@ -792,7 +792,7 @@ doShowLocations = function()
 <% if @login_user.nil? %>
   <%= render(:partial => 'warning_login') %>
 <% end %>
-<% if !@ie_ver.nil? and @ie_ver < 8.0 %>
+<% if (!@ie_ver.nil? and (@ie_ver < 8.0)) %>
   <%= render(:partial => 'warning_browser') %>
 <% end %>
 

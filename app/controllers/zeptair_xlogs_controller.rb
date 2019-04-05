@@ -1,23 +1,16 @@
 #
 #= ZeptairXlogsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about ZeptairXlogs.
-#
-#== Note:
-#
-#* 
-#
 class ZeptairXlogsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)
   end
-
 
   #=== list
   #
@@ -26,7 +19,7 @@ class ZeptairXlogsController < ApplicationController
   #and pagination parameters.
   #
   def list
-    if params[:action] == 'list'
+    if (params[:action] == 'list')
       Log.add_info(request, params.inspect)
     end
 
@@ -63,7 +56,7 @@ class ZeptairXlogsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'fin_at'
       @sort_type = 'DESC'
     end
@@ -109,7 +102,7 @@ class ZeptairXlogsController < ApplicationController
     count = 0
     SqlHelper.validate_token([params[:check_xlog].keys])
     params[:check_xlog].each do |key, value|
-      if value == '1'
+      if (value == '1')
         ZeptairXlog.delete(key)
         count += 1
       end

@@ -5,7 +5,7 @@ getEncodingSelector = function(onOk, type)
 <%
 opts = []
 langs = request.env['HTTP_ACCEPT_LANGUAGE']
-if !langs.nil? and langs.split(',').first.downcase.index('ja') == 0
+if (!langs.nil? and (langs.split(',').first.downcase.index('ja') == 0))
   opts << [t('msg.enc_utf8'), 'UTF-8']
   opts << [t('msg.enc_sjis'), 'CP932']
 else
@@ -77,9 +77,9 @@ opts.each do |opt|
   disp, val = opt
   selected = ''
   if !langs.nil? and langs.split(',').first.downcase.index('ja') == 0
-    selected = 'selected' if val == 'CP932'
+    selected = 'selected' if (val == 'CP932')
   else
-    selected = 'selected' if val == 'ISO-8859-1'
+    selected = 'selected' if (val == 'ISO-8859-1')
   end
 %>
   content += "        <option <%= selected %> value='<%= val %>'><%= disp %></option>";

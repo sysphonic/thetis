@@ -1,7 +1,7 @@
 #
 #= User
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class User < ApplicationRecord
@@ -10,9 +10,9 @@ class User < ApplicationRecord
   has_many(:user_titles, {:dependent => :destroy})
   has_one(:paintmail, {:dependent => :destroy})
 
-  require 'csv'
+  require('csv')
 
-  extend CachedRecord
+  extend(CachedRecord)
 
   validates_uniqueness_of(:name)
 # Comment out considering about administrative users.
@@ -107,8 +107,8 @@ class User < ApplicationRecord
         [self.email_sub2, self.email_sub2_type]
       ].each do |sub_entry|
         sub_addr, sub_type = sub_entry
-        if sub_type == email_type
-          unless sub_addr.nil? or sub_addr.empty?
+        if (sub_type == email_type)
+          unless (sub_addr.nil? or sub_addr.empty?)
             ret << sub_addr
           end
         end
@@ -126,7 +126,7 @@ class User < ApplicationRecord
   #
   def self.get_email_type_name(email_type)
 
-    return '' if email_type.nil? or email_type.empty?
+    return '' if (email_type.nil? or email_type.empty?)
 
     return I18n.t('email.type.' + email_type.to_s)
   end
@@ -162,7 +162,7 @@ class User < ApplicationRecord
     else
       group_ids = [TreeElement::ROOT_ID.to_s]
 
-      if group_id.to_s != TreeElement::ROOT_ID.to_s
+      if (group_id.to_s != TreeElement::ROOT_ID.to_s)
         group_obj_cache = {}
         group = Group.find_with_cache(group_id, group_obj_cache)
         unless group.nil?
@@ -178,8 +178,8 @@ class User < ApplicationRecord
       official_title = OfficialTitle.find(user_title.official_title_id)
       next if official_title.nil?
 
-      if group_ids.nil? or group_ids.include?(official_title.group_id.to_s)
-        if ret.nil? or ret.xorder > official_title.xorder
+      if (group_ids.nil? or group_ids.include?(official_title.group_id.to_s))
+        if (ret.nil? or ret.xorder > official_title.xorder)
           ret = official_title
         end
       end
@@ -195,7 +195,7 @@ class User < ApplicationRecord
   #return:: User's figure.
   #
   def get_figure
-    if self.figure.nil? or self.figure.empty?
+    if (self.figure.nil? or self.figure.empty?)
       return 'boy_green'
     else
       return self.figure
@@ -482,7 +482,7 @@ class User < ApplicationRecord
   #
   def get_groups_a(incl_parents=false, group_obj_cache=nil)
 
-    return [TreeElement::ROOT_ID.to_s] if self.groups.nil? or self.groups.empty?
+    return [TreeElement::ROOT_ID.to_s] if (self.groups.nil? or self.groups.empty?)
 
     arr = ApplicationHelper.attr_to_a(self.groups)
 
@@ -513,7 +513,7 @@ class User < ApplicationRecord
 
     group_branches = []
 
-    return group_branches if self.groups.nil? or self.groups.empty?
+    return group_branches if (self.groups.nil? or self.groups.empty?)
 
     group_ids = ApplicationHelper.attr_to_a(self.groups)
     group_ids.each do |group_id|
@@ -559,11 +559,11 @@ class User < ApplicationRecord
   #
   def self.get_admins(auth)
 
-    if auth.nil? or auth.empty?
+    if (auth.nil? or auth.empty?)
 
       admins = User.find_all('auth is not null')
 
-    elsif auth == User::AUTH_ALL
+    elsif (auth == User::AUTH_ALL)
 
       admins = User.find_all("auth='#{User::AUTH_ALL}'")
 
@@ -587,11 +587,11 @@ class User < ApplicationRecord
   def admin?(auth=nil)
 
     return false if self.auth.nil?
-    return true if self.auth == AUTH_ALL
+    return true if (self.auth == AUTH_ALL)
 
     if auth.nil?
 
-      if !self.auth.nil? and !self.auth.empty?
+      if (!self.auth.nil? and !self.auth.empty?)
         return true
       else
         return false
@@ -934,8 +934,8 @@ class User < ApplicationRecord
     user.id =           imp_id
     user.name =         (row[1].nil?)?nil:(row[1].strip)
     password =          (row[2].nil?)?nil:(row[2].strip)
-    if user.name.nil? or user.name.empty? \
-            or password.nil? or password.empty?
+    if (user.name.nil? or user.name.empty? \
+            or password.nil? or password.empty?)
       user.pass_md5 = nil
     else
       user.pass_md5 = UsersHelper.generate_digest_pass(user.name, password)
@@ -977,7 +977,7 @@ class User < ApplicationRecord
 
     # Existing Users
     unless self.id.nil? or self.id == 0 or self.id == ''
-      if mode == 'add'
+      if (mode == 'add')
         err_msgs << I18n.t('user.import.dont_specify_id')
       else
         begin
@@ -991,31 +991,31 @@ class User < ApplicationRecord
     end
 
     # Required
-    if self.name.nil? or self.name.empty?
+    if (self.name.nil? or self.name.empty?)
       err_msgs <<  User.human_attribute_name('name') + I18n.t('msg.is_required')
     end
-    if self.pass_md5.nil? or self.pass_md5.empty?
-      if mode == 'update' and !org_user.nil?
+    if (self.pass_md5.nil? or self.pass_md5.empty?)
+      if (mode == 'update' and !org_user.nil?)
         self.pass_md5 = org_user.pass_md5
       end
     end
-    if self.pass_md5.nil? or self.pass_md5.empty?
+    if (self.pass_md5.nil? or self.pass_md5.empty?)
       err_msgs << I18n.t('password.name') + I18n.t('msg.is_required')
     end
-    if self.email.nil? or self.email.empty?
+    if (self.email.nil? or self.email.empty?)
       err_msgs <<  User.human_attribute_name('email') + I18n.t('msg.is_required')
     end
 
     # Duplicated
     if user_names.include?(self.name)
       err_msgs << User.human_attribute_name('name') + I18n.t('msg.is_duplicated')
-    elsif !self.name.nil? and !self.name.empty?
+    elsif (!self.name.nil? and !self.name.empty?)
       user_names << self.name
     end
 # Comment out considering about administrative users.
 #    if user_emails.include?(self.email)
 #      err_msgs << User.human_attribute_name('email') + I18n.t('msg.is_duplicated')
-#    elsif !self.email.nil? and !self.email.empty?
+#    elsif (!self.email.nil? and !self.email.empty?)
 #      user_emails << self.email
 #    end
 

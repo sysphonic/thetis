@@ -13,7 +13,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
         THETIS_HOURS.each do |hour|
           THETIS_MINUTES.each do |min|
             ref_val = hour * 100 + min
-            if time_val <= ref_val
+            if (time_val <= ref_val)
               sel_val = ref_val
               break
             end

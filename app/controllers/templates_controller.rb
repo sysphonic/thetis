@@ -1,23 +1,16 @@
 #
 #= FoldersController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about templates of Items.
-#
-#== Note:
-#
-#* 
-#
 class TemplatesController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action :except => [:copy, :ajax_get_tree] do |controller|
     controller.check_auth(User::AUTH_TEMPLATE)
   end
-
 
   #=== list
   #
@@ -39,7 +32,6 @@ class TemplatesController < ApplicationController
 
   #=== create_workflow
   #
-  #<Ajax>
   #Creates a template in 'Workflows' Folder with default name.
   #
   def create_workflow
@@ -78,7 +70,7 @@ class TemplatesController < ApplicationController
       workflow.item_id = item.id
       workflow.user_id = 0
       workflow.status = Workflow::STATUS_NOT_APPLIED
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         workflow.groups = nil
       else
         workflow.groups = ApplicationHelper.a_to_attr([@group_id])
@@ -93,7 +85,6 @@ class TemplatesController < ApplicationController
 
   #=== destroy_workflow
   #
-  #<Ajax>
   #Destroys specified Workflow.
   #
   def destroy_workflow
@@ -117,7 +108,6 @@ class TemplatesController < ApplicationController
 
   #=== create_local
   #
-  #<Ajax>
   #Creates a template in 'Local' Folder with default name.
   #
   def create_local
@@ -141,7 +131,6 @@ class TemplatesController < ApplicationController
 
   #=== destroy_local
   #
-  #<Ajax>
   #Destroys specified local template.
   #
   def destroy_local
@@ -171,7 +160,7 @@ class TemplatesController < ApplicationController
     tmpl_item = Item.find(tmpl_id)
 
     item = tmpl_item.copy(@login_user.id, @login_user.get_my_folder.id)
-    if item.public != false
+    if (item.public != false)
       item.update_attribute(:public, false)
     end
 
@@ -185,7 +174,6 @@ class TemplatesController < ApplicationController
 
   #=== ajax_get_tree
   #
-  #<Ajax>
   #Gets Template tree by Ajax.
   #
   def ajax_get_tree

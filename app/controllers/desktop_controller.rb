@@ -1,30 +1,23 @@
 #
 #= DesktopController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#The Action-Controller about Desktop.
-#
-#== Note:
-#
-#* 
 #
 class DesktopController < ApplicationController
   protect_from_forgery :except => :drop_file
-  layout 'base'
+  layout('base')
 
   if YamlHelper.get_value($thetis_config, 'menu.req_login_desktop', nil) == '1'
-    before_action :check_login
+    before_action(:check_login)
   else
-    before_action :check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file]
+    before_action(:check_login, :only => [:edit_config, :update_pref, :post_label, :select_users, :get_group_users, :drop_file])
   end
-  before_action :check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label]
+  before_action(:check_toy_owner, :only => [:drop_on_recyclebox, :on_toys_moved, :update_label])
 
   before_action :only => [:update_config] do |controller|
     controller.check_auth(User::AUTH_DESKTOP)
   end
-
 
   #=== drop_file
   #
@@ -35,7 +28,7 @@ class DesktopController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:file].nil? or params[:file].size <= 0
+    if (params[:file].nil? or params[:file].size <= 0)
       render(:plain => '')
       return
     end
@@ -131,7 +124,7 @@ class DesktopController < ApplicationController
 
     params[:desktop].delete(:user_id)
 
-    desktop.update_attributes(params.require(:desktop).permit(Desktop::PERMIT_BASE))
+    desktop.update_attributes(Desktop.permit_base(params.require(:desktop)))
 
     params.delete(:desktop)
 
@@ -177,7 +170,6 @@ class DesktopController < ApplicationController
 
   #=== open_desktop
   #
-  #<Ajax>
   #Gets Toys (desktop items) for Login User.
   #
   def open_desktop
@@ -196,13 +188,13 @@ class DesktopController < ApplicationController
     if is_config_desktop
       @toys.delete_if {|toy|
         ret = false
-        if toy.xtype == Toy::XTYPE_FOLDER
+        if (toy.xtype == Toy::XTYPE_FOLDER)
           begin
             folder = Folder.find(toy.target_id)
             ret = folder.my_folder?
           rescue
           end
-        elsif toy.xtype == Toy::XTYPE_POSTLABEL
+        elsif (toy.xtype == Toy::XTYPE_POSTLABEL)
           ret = true
         end
         ret == true
@@ -247,7 +239,6 @@ class DesktopController < ApplicationController
 
   #=== get_news_tray
   #
-  #<Ajax>
   #Gets Toys (desktop items) for Login User.
   #
   def get_news_tray
@@ -289,7 +280,6 @@ class DesktopController < ApplicationController
 
   #=== drop_on_desktop
   #
-  #<Ajax>
   #Receives dropped event on the desktop by Ajax.
   #
   def drop_on_desktop
@@ -316,7 +306,6 @@ class DesktopController < ApplicationController
 
   #=== add_toy
   #
-  #<Ajax>
   #Adds Toy on the desktop by Ajax.
   #
   def add_toy
@@ -342,7 +331,6 @@ class DesktopController < ApplicationController
 
   #=== drop_on_recyclebox
   #
-  #<Ajax>
   #Receives dropped event on the recyclebox by Ajax.
   #
   def drop_on_recyclebox
@@ -360,7 +348,6 @@ class DesktopController < ApplicationController
 
   #=== on_toys_moved
   #
-  #<Ajax>
   #Saves toys' new position by Ajax.
   #
   def on_toys_moved
@@ -377,7 +364,7 @@ class DesktopController < ApplicationController
 
       unless toy.nil?
         attrs = ActionController::Parameters.new({x: params[:x], y: params[:y]})
-        toy.update_attributes(attrs.permit(Toy::PERMIT_BASE))
+        toy.update_attributes(Toy.permit_base(attrs))
       end
     end
 
@@ -386,7 +373,6 @@ class DesktopController < ApplicationController
 
   #=== create_label
   #
-  #<Ajax>
   #Creates a label as Toy instance.
   #
   def create_label
@@ -418,7 +404,6 @@ class DesktopController < ApplicationController
 
   #=== update_label
   #
-  #<Ajax>
   #Updates the label.
   #
   def update_label
@@ -464,7 +449,6 @@ class DesktopController < ApplicationController
 
   #=== post_label
   #
-  #<Ajax>
   #Posts a label to specified users.
   #
   def post_label
@@ -472,7 +456,7 @@ class DesktopController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:txaPostLabel].empty? or params[:post_to].empty?
+    if (params[:txaPostLabel].empty? or params[:post_to].empty?)
       render(:plain => '')
       return
     end
@@ -495,7 +479,6 @@ class DesktopController < ApplicationController
 
   #=== select_users
   #
-  #<Ajax>
   #Shows popup-window to select Users on Groups-Tree.
   #
   def select_users
@@ -506,7 +489,6 @@ class DesktopController < ApplicationController
 
   #=== get_group_users
   #
-  #<Ajax>
   #Gets Users in specified Group.
   #
   def get_group_users
@@ -530,7 +512,7 @@ class DesktopController < ApplicationController
   #Filter method to check if current User is owner of the specified Toy.
   #
   def check_toy_owner
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     begin
       owner_id = Toy.find(params[:id]).user_id

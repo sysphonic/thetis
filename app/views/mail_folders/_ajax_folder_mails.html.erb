@@ -48,7 +48,7 @@
       <input type="hidden" id="email_status_<%= email.id %>" name="email_status_<%= email.id %>" value="<%= email.status %>" />
     </td>
     <td nowrap style="text-align:center;">
-      <% if email.mail_attachments.nil? or email.mail_attachments.empty? %>
+      <% if (email.mail_attachments.nil? or email.mail_attachments.empty?) %>
         &nbsp;
       <% else %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/mail/clip.png" />

@@ -9,22 +9,10 @@ html {font-family:'Hiragino Kaku Gothic Pro',Meiryo,sans-serif,verdana,arial,hel
 </style>
 
 <script language="JavaScript">
-<!--
 
-url_base = "";
-
-var lang;
-lang = window.navigator.systemLanguage;
+var lang = window.navigator.systemLanguage;
 if (lang == null) {
   lang = window.navigator.language;
-}
-
-if (lang.indexOf("ja") >= 0) {
-  url_base = "http://sysphonic.com/ja/";
-} else if (lang.indexOf("de") >= 0) {
-  url_base = "http://sysphonic.com/de/";
-} else {
-  url_base = "http://sysphonic.com/en/";
 }
 
 function doOnLoad()
@@ -37,7 +25,7 @@ function doOnLoad()
     document.getElementById("div_en").style.display = "block";
   }
 }
-//-->
+
 </script>
 </head>
 
@@ -82,7 +70,7 @@ function doOnLoad()
         <tr>
           <td style="text-align:center;">
             <b>Thetis</b><br/>
-            URL: <a href="javascript:this.onclick()" onclick="window.open(url_base+'thetis.html').focus(); return false;"><u><script language="JavaScript">document.write(url_base);</script>thetis.html</u></a>
+            URL: <a href="javascript:this.onclick()" onclick="window.open('https://sphered.info/sites/view/sphered/thetis/thetis').focus(); return false;"><u>https://sphered.info/sites/view/sphered/thetis/thetis</u></a>
           </td>
         </tr>
       </table>

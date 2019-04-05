@@ -26,7 +26,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 <table style="margin:0px auto; width:98%;">
   <tr>
     <td style="width:30%; text-align:left;">
-    <% if !@login_user.nil? and @login_user.admin? User::AUTH_SCHEDULE %>
+    <% if (!@login_user.nil? and @login_user.admin? User::AUTH_SCHEDULE) %>
       <table style="margin:0px auto 0px 0px; width:65px;">
         <tr>
           <td nowrap style="width:30px; text-align:left;">

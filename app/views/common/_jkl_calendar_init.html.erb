@@ -14,7 +14,7 @@ unless @holidays.nil?
     month = schedule.start.month
     day = schedule.start.day
 
-    next if year < cur_year-1 or year > cur_year+1
+    next if ((year < cur_year-1) or (year > cur_year+1))
 %>
   <% unless is_first %>,<% end %>
   [new Date(<%= year %>, <%= month-1 %>, <%= day %>), "<%= schedule.title %>"]

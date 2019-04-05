@@ -12,7 +12,7 @@
       <%
       user_before_login = YamlHelper.get_value(@yaml, 'desktop.user_before_login', nil)
 
-      if user_before_login.nil? or user_before_login.empty?
+      if (user_before_login.nil? or user_before_login.empty?)
       %>
         <%= t('paren.not_selected') %><br/>
       <% else %>
@@ -25,7 +25,7 @@
     <td class="spec_value">
       <%
       disabled = ''
-      if user_before_login == @login_user.id.to_s
+      if (user_before_login == @login_user.id.to_s)
         disabled = 'disabled'
       end
       %>
@@ -37,7 +37,7 @@
     <td class="spec_value">
       <%
       disabled = ''
-      if user_before_login.nil? or user_before_login.empty?
+      if (user_before_login.nil? or user_before_login.empty?)
         disabled = 'disabled'
       end
       %>

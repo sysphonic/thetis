@@ -1,10 +1,8 @@
 #
 #= PaidHoliday
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#PaidHoliday represents settings about paid holiday by year.
 #
 class PaidHoliday < ApplicationRecord
   belongs_to(:user)
@@ -88,14 +86,14 @@ class PaidHoliday < ApplicationRecord
     yaml = ApplicationHelper.get_config_yaml
     paidhld_carry_over = YamlHelper.get_value(yaml, 'timecard.paidhld_carry_over', nil)
 
-    return 0 if paidhld_carry_over.nil? or paidhld_carry_over.empty? or paidhld_carry_over == PaidHoliday::CARRY_OVER_NONE
+    return 0 if (paidhld_carry_over.nil? or paidhld_carry_over.empty? or paidhld_carry_over == PaidHoliday::CARRY_OVER_NONE)
 
     begin
       con = "(user_id=#{user_id.to_i}) and (year < #{year.to_i})"
       paidhlds = PaidHoliday.where(con).order('year ASC').to_a
     rescue
     end
-    return 0 if paidhlds.nil? or paidhlds.empty?
+    return 0 if (paidhlds.nil? or paidhlds.empty?)
 
     sum = 0
     year_begins_from, month_begins_at = TimecardsHelper.get_fiscal_params
@@ -111,7 +109,7 @@ class PaidHoliday < ApplicationRecord
         start_date, end_date = TimecardsHelper.get_year_span(y, year_begins_from, month_begins_at)
         applied_paid_hlds = Timecard.applied_paid_hlds(user_id, start_date, end_date)
 
-        if applied_paid_hlds >= last_carried_out
+        if (applied_paid_hlds >= last_carried_out)
           last_carried_out = given_num - (applied_paid_hlds - last_carried_out)
         else
           last_carried_out = given_num

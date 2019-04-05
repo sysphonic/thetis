@@ -54,7 +54,7 @@ clearPrevModelErrors("<%= model_error_class %>", "<%= model_error_id %>");
     <%
     obj.errors.full_messages.each do |msg|
       msg_parts = msg.scan(/^([^ ]+)[ ](.+)/)
-      if msg_parts.nil? or msg_parts.empty? or msg_parts.first.nil?
+      if (msg_parts.nil? or msg_parts.empty? or msg_parts.first.nil?)
     %>
       <li><%= msg %></li>
       <% else %>

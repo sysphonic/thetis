@@ -25,7 +25,7 @@ selectMonth = function(func)
 
 getYmSelector = function(onOk, onCancel)
 {
-<% if year.nil? or month.nil? %>
+<% if (year.nil? or month.nil?) %>
   var date = new Date();
 <% end %>
 <% if year.nil? %>

@@ -1,10 +1,8 @@
 #
 #= Setting
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Setting represents a setting of User.
 #
 class Setting < ApplicationRecord
   public::CATEGORY_SCHEDULE = 'schedule'
@@ -29,7 +27,7 @@ class Setting < ApplicationRecord
 
     settings = Setting.where(con.join(' and ')).to_a
 
-    return nil if settings.nil? or settings.empty?
+    return nil if (settings.nil? or settings.empty?)
 
     hash = Hash.new
 
@@ -123,7 +121,7 @@ class Setting < ApplicationRecord
 
     settings = Setting.where(con.join(' and ')).to_a
 
-    return nil if settings.nil? or settings.empty?
+    return nil if (settings.nil? or settings.empty?)
 
     hash = Hash.new
 

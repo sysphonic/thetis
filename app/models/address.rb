@@ -1,13 +1,13 @@
 #
 #= Address
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class Address < ApplicationRecord
   public::PERMIT_BASE = [:name, :name_ruby, :nickname, :screenname, :email1, :email2, :email3, :postalcode, :address, :tel1, :tel1_note, :tel2, :tel2_note, :tel3, :tel3_note, :fax, :url, :organization, :title, :memo]
 
-  require 'csv'
+  require('csv')
 
   validates_presence_of(:name)
 
@@ -72,7 +72,7 @@ class Address < ApplicationRecord
     arr << Address.human_attribute_name('title')
     arr << Address.human_attribute_name('memo')
     arr << Address.human_attribute_name('xorder')
-    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+    if (book == Address::BOOK_COMMON or book == Address::BOOK_BOTH)
       arr << I18n.t('schedule.scope') + I18n.t('cap.suffix') + User.human_attribute_name('groups')
       arr << I18n.t('schedule.scope') + I18n.t('cap.suffix') + I18n.t('team.plural')
     end
@@ -89,15 +89,15 @@ class Address < ApplicationRecord
   #
   def self.export_csv(user, book)
 
-    return nil if user.nil? or book.nil?
+    return nil if (user.nil? or book.nil?)
 
     book = Address::BOOK_PRIVATE unless user.admin?(User::AUTH_ADDRESSBOOK)
 
     con_or = []
-    if book == Address::BOOK_PRIVATE or book == Address::BOOK_BOTH
+    if (book == Address::BOOK_PRIVATE or book == Address::BOOK_BOTH)
       con_or << "owner_id=#{user.id}"
     end
-    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+    if (book == Address::BOOK_COMMON or book == Address::BOOK_BOTH)
       con_or << "owner_id=0"
     end
 
@@ -105,7 +105,7 @@ class Address < ApplicationRecord
 
     csv_line = ''
 
-    if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+    if (book == Address::BOOK_COMMON or book == Address::BOOK_BOTH)
       csv_line << I18n.t('address.export.rem1') + "\n"
       csv_line << I18n.t('address.export.rem2') + "\n"
       csv_line << I18n.t('address.export.rem3') + "\n"
@@ -160,7 +160,7 @@ class Address < ApplicationRecord
         arr << address.title
         arr << address.memo
         arr << address.xorder
-        if book == Address::BOOK_COMMON or book == Address::BOOK_BOTH
+        if (book == Address::BOOK_COMMON or book == Address::BOOK_BOTH)
           if address.for_all?
             arr << Address::EXP_IMP_FOR_ALL
           else
@@ -255,7 +255,7 @@ class Address < ApplicationRecord
       address.groups = nil
       address.teams = nil
       address.owner_id = 0
-    elsif !address.groups.blank? or !address.teams.blank?
+    elsif (!address.groups.blank? or !address.teams.blank?)
       address.owner_id = 0
     else
       address.owner_id = user.id
@@ -277,8 +277,8 @@ class Address < ApplicationRecord
     err_msgs = []
 
     # Existing Addresss
-    unless self.id.nil? or self.id == 0 or self.id == ''
-      if mode == 'add'
+    unless (self.id.nil? or (self.id == 0) or (self.id == ''))
+      if (mode == 'add')
         err_msgs << I18n.t('address.import.dont_specify_id')
       else
         begin
@@ -292,7 +292,7 @@ class Address < ApplicationRecord
     end
 
     # Requierd
-    if self.name.nil? or self.name.empty?
+    if (self.name.nil? or self.name.empty?)
       err_msgs <<  Address.human_attribute_name('name') + I18n.t('msg.is_required')
     end
 

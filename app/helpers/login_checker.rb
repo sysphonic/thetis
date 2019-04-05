@@ -1,7 +1,7 @@
 #
 #= LoginChecker
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module LoginChecker
@@ -68,10 +68,9 @@ module LoginChecker
   #
   def check_auth(required_auth)
 
-    return if @login_user.nil? and self.performed?
+    return if (@login_user.nil? and self.performed?)
 
-    if @login_user.nil? \
-        or !@login_user.admin?(required_auth)
+    if (@login_user.nil? or !@login_user.admin?(required_auth))
       Log.add_check(request, '[check_auth]'+params.inspect)
 
       flash[:notice] = t('msg.need_to_be_admin')

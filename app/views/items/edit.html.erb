@@ -8,7 +8,7 @@ var oEditor;
 tabs = ["workflow", "basic", "description", "image", "attachment"];
 </script>
 
-<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+<% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
 <script type="text/javascript">
 var users_cache = [];
 </script>
@@ -34,7 +34,7 @@ var users_cache = [];
     <table style="width:100%; border-spacing:2px;">
       <tr>
         <!-- style.backgroundColor is for initial display. -->
-      <% if @item.xtype == Item::XTYPE_WORKFLOW %>
+      <% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
         <td id="tab_workflow" class="tab_strip" nowrap onclick="showTab('workflow', tabs, 'orange');">
           <%= Workflow.model_name.human %>
         </td>
@@ -60,7 +60,7 @@ var users_cache = [];
   <tr>
     <td style="text-align:center;" colspan="2">
 
-    <% if @item.xtype == Item::XTYPE_WORKFLOW %>
+    <% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
       <div id="tab_div_workflow">
         <%= form_tag( {:controller => 'items', :action => 'set_workflow', :id => @item }, :id => 'form_workflow', :method => 'post') %>
         <table style="width:100%; background-color:#fff8d7; border:solid 5px gold; padding-bottom:15px;">
@@ -254,7 +254,7 @@ var users_cache = [];
 
 <script type="text/javascript">
 
-<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+<% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
   showTab("workflow", tabs, "orange");
 <% else %>
   showTab("basic", tabs, "blue");
@@ -315,7 +315,7 @@ function isModifiedAttachment()
   return (jQuery("#attachment_uploader").plupload("getFiles").length > 0);
 }
 
-<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+<% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
 
 function onSelectWfOrder()
 {
@@ -507,7 +507,7 @@ function doSave()
 
   saveFuncs = [];
 
-<% if @item.xtype == Item::XTYPE_WORKFLOW %>
+<% if (@item.xtype == Item::XTYPE_WORKFLOW) %>
   // Workflow
   if (isModifiedWorkflow()) {
     if (!checkWorkflow()) {

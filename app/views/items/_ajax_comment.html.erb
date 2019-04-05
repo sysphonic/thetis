@@ -13,7 +13,7 @@
   <%
   body_class = (@comment.user_id == 0)?'comment_sys_body':'comment_body'
   %>
-  <% if @comment.user_id == 0 %>
+  <% if (@comment.user_id == 0) %>
     <td class="comment_sys_tab" style="text-align:left; width:25%;" nowrap >
   <% else %>
     <td class="comment_tab" style="text-align:left; width:25%;" nowrap >
@@ -39,7 +39,7 @@
     %>
       <table style="width:75px; margin:0px auto 0px 0px;">
         <tr>
-        <% if @login_user.id == @comment.user_id %>
+        <% if (@login_user.id == @comment.user_id) %>
           <td>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="editComment(<%= @comment.id %>);" />
           </td>
@@ -74,7 +74,7 @@ unless comment_attachments.nil? or comment_attachments.empty?
         <a href="<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>">
           <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/file.png"> <%= attach.name %>
         </a>
-      <% if params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id %>
+      <% if (params[:action] != 'bbs' and !@login_user.nil? and @comment.user_id == @login_user.id) %>
         &nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" onclick="onDeleteCommentAttachmentClicked('div_comment_attach_<%= attach.id %>', <%= @comment.id %>, <%= attach.id %>, '<%= ApplicationHelper.h_s_quote(attach.name) %>'); return false;" />
       <% end %>
       </div>
@@ -84,7 +84,7 @@ unless comment_attachments.nil? or comment_attachments.empty?
 <%
 end
 
-if @for_print.nil? or @for_print == false
+if (@for_print.nil? or @for_print == false)
 
   profiles_cache ||= {}
   profile_sheet = profiles_cache[@comment.user_id]
@@ -99,8 +99,8 @@ if @for_print.nil? or @for_print == false
   end
 
   @item ||= @comment.item
-  if !@login_user.nil? and @login_user.id == @item.user_id \
-      and !profile_sheet.nil? and profile_sheet.public
+  if (!@login_user.nil? and (@login_user.id == @item.user_id) \
+      and !profile_sheet.nil? and profile_sheet.public)
 %>
   <tr>
     <td colspan="2" style="text-align:right;">

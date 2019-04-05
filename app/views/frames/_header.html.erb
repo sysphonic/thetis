@@ -72,7 +72,7 @@
               target, url = args
             %>
               <span style="color:lightblue;">/ </span>
-              <% if target == 'main' %>
+              <% if (target == 'main') %>
               <a href="javascript:this.onclick()" onclick="doUpdateIframe('<%= url %>'); return false;" style="color:white;">
               <% else %>
               <a href="<%= url %>" target="<%= target %>" style="color:white;">

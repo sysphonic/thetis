@@ -1,7 +1,7 @@
 #
 #= DesktopsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module DesktopsHelper
@@ -95,11 +95,11 @@ module DesktopsHelper
     min_block = nil
     min_count = 0
     blocks.each do |block|
-      if min_block == nil
+      if (min_block == nil)
         min_block = block
         min_count = count[block]
       else
-        if count[block] < min_count
+        if (count[block] < min_count)
           min_block = block
           min_count = count[block]
         end

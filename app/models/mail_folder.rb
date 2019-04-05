@@ -1,14 +1,14 @@
 #
 #= MailFolder
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class MailFolder < ApplicationRecord
   has_many(:emails, {:dependent => :destroy})
 
-  extend CachedRecord
-  include TreeElement
+  extend(CachedRecord)
+  include(TreeElement)
 
   public::XTYPE_INBOX = 'inbox'
   public::XTYPE_SENT = 'sent'
@@ -75,7 +75,7 @@ class MailFolder < ApplicationRecord
   #
   def self.sort_tree(folder_tree)
 
-    return folder_tree if folder_tree.nil? or folder_tree.empty?
+    return folder_tree if (folder_tree.nil? or folder_tree.empty?)
 
     folder_tree[TreeElement::ROOT_ID.to_s].sort! { |folder_a, folder_b|
 
@@ -117,7 +117,7 @@ class MailFolder < ApplicationRecord
 
     SqlHelper.validate_token([mail_account_ids])
 
-    if mail_account_ids.nil? or mail_account_ids.empty?
+    if (mail_account_ids.nil? or mail_account_ids.empty?)
       return "(user_id=#{user.id} and (mail_account_id is null))"
     else
       return "(user_id=#{user.id} and (mail_account_id is null or mail_account_id in (#{mail_account_ids.join(',')})))"
@@ -135,7 +135,7 @@ class MailFolder < ApplicationRecord
   #
   def self.get_for(user, mail_account_id, xtype)
 
-    return nil if user.nil? or mail_account_id.blank?
+    return nil if (user.nil? or mail_account_id.blank?)
 
     if user.kind_of?(User)
       user_id = user.id
@@ -238,7 +238,7 @@ class MailFolder < ApplicationRecord
   #
   def self.delete_tree(folder_tree, parent_id, delete_arr)
 
-    return folder_tree if delete_arr.nil? or delete_arr.empty?
+    return folder_tree if (delete_arr.nil? or delete_arr.empty?)
 
     delete_arr.each do |folder|
       folder_tree = MailFolder.delete_tree(folder_tree, folder.id, folder_tree[folder.id.to_s])
@@ -294,7 +294,7 @@ class MailFolder < ApplicationRecord
       end
     end
 
-    if mail_folder_id.to_s == TreeElement::ROOT_ID.to_s
+    if (mail_folder_id.to_s == TreeElement::ROOT_ID.to_s)
       path = '/(root)'
       folders_cache[mail_folder_id.to_i] = path unless folders_cache.nil?
       return path

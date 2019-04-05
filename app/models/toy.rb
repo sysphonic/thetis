@@ -1,10 +1,8 @@
 #
 #= Toy
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Toy class represents a desktop item.
 #
 class Toy < ApplicationRecord
   public::PERMIT_BASE = [:name, :xtype, :target_id, :address, :x, :y, :memo, :message]
@@ -46,11 +44,11 @@ class Toy < ApplicationRecord
     elsif src_obj.instance_of?(Comment)
 
       comment = src_obj
-      if comment.xtype == Comment::XTYPE_MSG
+      if (comment.xtype == Comment::XTYPE_MSG)
         xtype_name = ''
       else
         xtype_name = comment.get_xtype_name + ': '
-        if comment.xtype == Comment::XTYPE_APPLY
+        if (comment.xtype == Comment::XTYPE_APPLY)
           xtype_name << Item.get_title(comment.item_id)
         end
       end
@@ -184,7 +182,7 @@ class Toy < ApplicationRecord
   #
   def self.on_desktop?(user, xtype, target_id)
 
-    return false if user.nil? or xtype.nil? or target_id.nil?
+    return false if (user.nil? or xtype.nil? or target_id.nil?)
 
     SqlHelper.validate_token([xtype, target_id])
 

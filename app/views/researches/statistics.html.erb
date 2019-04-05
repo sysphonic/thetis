@@ -15,7 +15,7 @@
     <tr>
       <td>
         <div id="div_research_lists" style="overflow:auto;">
-      <% if @ans_hash.nil? or @ans_hash.empty? %>
+      <% if (@ans_hash.nil? or @ans_hash.empty?) %>
 
         <table style="width:100%; height:80%;">
           <tr style="height:20%;"><td>&nbsp;</td></tr>
@@ -46,7 +46,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
               <td style="width:1%;"></td>
               <td style="text-align:left;">
                 <%
-                if !@q_hash.nil? and !@q_hash[q_code].nil?
+                if (!@q_hash.nil? and !@q_hash[q_code].nil?)
                   q_cap = @q_hash[q_code][:caption]
                   unless q_cap.nil? or q_cap.empty?
                 %>
@@ -56,7 +56,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
                 end
                 users_ans.delete_if {|user_id, ans| ans.nil? or ans.empty? }
 
-                if users_ans.nil? or users_ans.empty?
+                if (users_ans.nil? or users_ans.empty?)
                 %>
                   <%= t('paren.no_valid_values')%>
                 <%
@@ -84,7 +84,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
                   @votes_hash = {}
                   users_ans.each do |user_id, ans|
 
-                    if q_type == 'checkbox'
+                    if (q_type == 'checkbox')
 
                       ans.split("\n").each do |choice|
                         @votes_hash[choice] = Hash.new(0) if @votes_hash[choice].nil?
@@ -110,7 +110,7 @@ users_cache = Hash.new    # user_id => Array of group_ids
 
                   @votes_hash = @votes_hash.sort_by { |key, hash| -1*(hash[0]) }
 
-                  if q_type == 'textarea'
+                  if (q_type == 'textarea')
                 %>
                 <ul style="padding-left:15px;">
                 <%

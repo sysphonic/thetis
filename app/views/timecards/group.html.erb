@@ -61,7 +61,7 @@ function doPageDay(date)
     <td style="text-align:center; width:8%; background-color:#c6d3ef;"  nowrap><%= t('timecard.usual') %></td>
     <td style="text-align:center; width:8%; background-color:#c6d3ef;"  nowrap><%= t('timecard.midnight') %></td>
   </tr>
-<% if @selected_users.nil? or @selected_users.empty? %>
+<% if (@selected_users.nil? or @selected_users.empty?) %>
   <tr style="height:50px;">
     <td style="text-align:center; color:mediumblue;"  colspan="10">
       <%= t('paren.no_users') %>
@@ -110,7 +110,7 @@ else
     <% end %>
     </td>
     <td style="text-align:center;" nowrap>
-      <% if !timecard.start.nil? and timecard.end.nil? %>
+      <% if (!timecard.start.nil? and timecard.end.nil?) %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png" title="<%= t('msg.not_fulfilled') %>">
       <%
       elsif !timecard.start.nil?
@@ -166,10 +166,10 @@ else
           exp_usual_overtime = '(' + exp_usual_overtime + ')'
         end
 
-        if usual_overtime < 0.0
+        if (usual_overtime < 0.0)
       %>
         <span style="color:darkgreen;"><%= exp_usual_overtime %></span>
-      <% elsif usual_overtime == 0.0 %>
+      <% elsif (usual_overtime == 0.0) %>
         -
       <% else %>
         <span style="color:orangered;"><%= exp_usual_overtime %></span>

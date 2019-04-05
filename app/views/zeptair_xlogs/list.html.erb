@@ -97,7 +97,7 @@ exist_cache = {}
         user_exist = exist_cache[xlog.user_id]
       end
     end
-    if user_exist == false
+    if (user_exist == false)
     %>
       <td style="color:crimson"><%= user_name %></td>
     <% else %>
@@ -116,7 +116,7 @@ exist_cache = {}
     <td nowrap style="text-align:center;">
       <%
       disp_s_addr = xlog.s_addr
-      if !xlog.s_addr.nil? and xlog.s_addr.length > 20
+      if (!xlog.s_addr.nil? and xlog.s_addr.length > 20)
         disp_s_addr = truncate(xlog.s_addr, :length => 10)
         disp_s_addr += xlog.s_addr[-10..-1]
       end
@@ -126,7 +126,7 @@ exist_cache = {}
     <%
     type_color = 'black'
     type_color = 'blue' unless xlog.cs_protocol.index('HTTP').nil?
-    type_color = 'red' if xlog.cs_protocol == 'SMTP' or xlog.cs_protocol == 'POP3'
+    type_color = 'red' if (xlog.cs_protocol == 'SMTP' or xlog.cs_protocol == 'POP3')
     %>
     <td nowrap style="text-align:center; color:<%= type_color %>">
       <%= xlog.cs_protocol %>

@@ -1,7 +1,7 @@
 #
 #= MailAccount
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class MailAccount < ApplicationRecord
@@ -101,7 +101,7 @@ class MailAccount < ApplicationRecord
 
     ret = self.title
 
-    if ret.nil? or ret.empty?
+    if (ret.nil? or ret.empty?)
       ret = MailAccount.get_xtype_name(self.xtype)
     end
 
@@ -200,7 +200,7 @@ class MailAccount < ApplicationRecord
 
     mail_accounts = MailAccount.find_by_sql('select * from mail_accounts ' + where + ' order by xorder ASC, title ASC')
 
-    if mail_accounts.nil? or mail_accounts.empty?
+    if (mail_accounts.nil? or mail_accounts.empty?)
       return nil
     else
       return mail_accounts.first

@@ -1,7 +1,7 @@
 #
 #= Workflow
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Workflow is related to Item whose xtype attribute is XTYPE_WORKFLOW, and
@@ -124,7 +124,7 @@ class Workflow < ApplicationRecord
     workflow.status = self.status
     workflow.issued_at = self.issued_at
     workflow.decided_at = self.decided_at
-    if self.original_by.nil? and self.user_id != 0
+    if (self.original_by.nil? and self.user_id != 0)
       workflow.original_by = self.user_id
     else
       workflow.original_by = self.original_by
@@ -144,7 +144,7 @@ class Workflow < ApplicationRecord
   def distribute_cc
 
     self.get_target_users.each do |user_id|
-      next if self.user_id == user_id
+      next if (self.user_id == user_id)
 
       decided_inbox = WorkflowsHelper.get_decided_inbox(user_id)
       copied_item = self.item.copy(user_id, decided_inbox.id)
@@ -208,7 +208,7 @@ class Workflow < ApplicationRecord
   #
   def get_current_expected
 
-    return nil if self.item.nil? or self.status != STATUS_ACTIVE
+    return nil if (self.item.nil? or self.status != STATUS_ACTIVE)
 
     orders = self.get_orders
 
@@ -231,14 +231,14 @@ class Workflow < ApplicationRecord
 
         nak_order_idx = self.get_order_idx last_nak.user_id
 
-        if nak_order_idx <= 0
+        if (nak_order_idx <= 0)
           # Denied
           return nil
         else
 
           comments = self.item.comments
           comments.delete_if { |comment|
-            comment.updated_at <= last_nak.updated_at
+            (comment.updated_at <= last_nak.updated_at)
           }
 
           (nak_order_idx-1).times do
@@ -265,7 +265,7 @@ class Workflow < ApplicationRecord
 
       users = user_hash.keys
 
-      if users.nil? or users.empty?
+      if (users.nil? or users.empty?)
 
         next
 
@@ -309,12 +309,12 @@ class Workflow < ApplicationRecord
 
       self.item.comments.each do |comment|
 
-        next if xtype != nil and comment.xtype != xtype
+        next if (xtype != nil and comment.xtype != xtype)
 
         if last_comment.nil?
           last_comment = comment
         else
-          if last_comment.updated_at < comment.updated_at
+          if (last_comment.updated_at < comment.updated_at)
             last_comment = comment
           end
         end
@@ -397,7 +397,7 @@ class Workflow < ApplicationRecord
       received_wfs.each do |workflow|
         item = workflow.item
         expected_users = workflow.get_current_expected
-        if !expected_users.nil? and expected_users.include?(user_id)
+        if (!expected_users.nil? and expected_users.include?(user_id))
           workflows << workflow
         end
       end
@@ -475,7 +475,7 @@ class Workflow < ApplicationRecord
   #
   def self.get_comments_for(orders, comments, user_id, order)
 
-    return nil if orders.nil? or comments.nil?
+    return nil if (orders.nil? or comments.nil?)
 
     user_comments = comments.select{ |comment|
                         comment.user_id == user_id
@@ -487,7 +487,7 @@ class Workflow < ApplicationRecord
     order_cnt = 0
     orders.each do |user_hash|
       if user_hash.keys.include?(user_id)
-        if order_cnt < order
+        if (order_cnt < order)
           order_idx += 1
         end
         user_cnt += 1
@@ -495,7 +495,7 @@ class Workflow < ApplicationRecord
       order_cnt += 1
     end
 
-    return [] if user_cnt == 0
+    return [] if (user_cnt == 0)
 
     num = user_comments.length / user_cnt
     num += 1 if (user_comments.length % user_cnt) >= (order_idx + 1)

@@ -82,10 +82,10 @@ end
         <%= t('cap.classification') %>
       </td>
       <td class="spec_value">
-      <% if editable or !@timecard.nil? %>
+      <% if (editable or !@timecard.nil?) %>
         <span style="padding:0px 5px;">
         <%
-        if @timecard.nil? or @timecard.workcode.nil?
+        if (@timecard.nil? or @timecard.workcode.nil?)
           cur_workcode = Timecard::WKCODE_WK_NORMAL
         else
           cur_workcode = @timecard.workcode
@@ -120,7 +120,7 @@ end
         <%
         THETIS_HOURS.each do |hour|
           selected = ''
-          if !@timecard.nil? and !@timecard.start.nil? and hour == @timecard.start.hour
+          if (!@timecard.nil? and !@timecard.start.nil? and (hour == @timecard.start.hour))
             selected = 'selected'
           end
         %>
@@ -132,14 +132,14 @@ end
         <%
         THETIS_MINUTES.each do |min|
           selected = ''
-          if !@timecard.nil? and !@timecard.start.nil? and min == @timecard.start.min
+          if (!@timecard.nil? and !@timecard.start.nil? and (min == @timecard.start.min))
             selected = 'selected'
           end
         %>
           <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
         <% end %>
         </select>
-        <% if @timecard.nil? or @timecard.start.nil? %>
+        <% if (@timecard.nil? or @timecard.start.nil?) %>
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/laquo.png" title="<%= User.human_attribute_name('login_at') %>" onclick="setAppropriateTime('start', '<%= @login_user.login_at.hour %>', '<%= @login_user.login_at.min %>');">
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/time.png" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('start', null, null);">
         <% end %>
@@ -149,7 +149,7 @@ end
         <%
         THETIS_HOURS.each do |hour|
           selected = ''
-          if !@timecard.nil? and !@timecard.end.nil? and hour == @timecard.end.hour
+          if (!@timecard.nil? and !@timecard.end.nil? and (hour == @timecard.end.hour))
             selected = 'selected'
           end
         %>
@@ -161,14 +161,14 @@ end
         <%
         THETIS_MINUTES.each do |min|
           selected = ''
-          if !@timecard.nil? and !@timecard.end.nil? and min == @timecard.end.min
+          if (!@timecard.nil? and !@timecard.end.nil? and (min == @timecard.end.min))
             selected = 'selected'
           end
         %>
           <option value= "<%= min %>" <%= selected %>><%= sprintf('%02d', min) %></option>
         <% end %>
         </select>
-        <% if !@timecard.nil? and @timecard.end.nil? %>
+        <% if (!@timecard.nil? and @timecard.end.nil?) %>
           <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/time.png" title="<%= t('msg.current_time') %>" onclick="setAppropriateTime('end', null, null);">
         <% end %>
       <% elsif !@timecard.nil? %>
@@ -186,7 +186,7 @@ end
       <% if editable %>
         <% checked = (!@timecard.nil? and @timecard.business_trip?)?'checked':'' %>
         <input type="checkbox" id="timecard_options_business_trip" name="timecard[options][]" value="<%= Timecard::OPT_BUSINESS_TRIP %>" <%= checked %>><label for="timecard_options_business_trip"> <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.png" /> <%= t('timecard.business_trip') %></label>
-      <% elsif !@timecard.nil? and @timecard.business_trip? %>
+      <% elsif (!@timecard.nil? and @timecard.business_trip?) %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/timecard/business_trip.png" /> <%= t('timecard.business_trip') %>
       <% end %>
       </td>
@@ -494,7 +494,7 @@ function checkOff(workcode)
   <%
   is_first = true
   Timecard.workcodes.each do |workcode, value|
-    if value[Timecard::WKCODE_PARAM_LABORDAY] <= 0.0
+    if (value[Timecard::WKCODE_PARAM_LABORDAY] <= 0.0)
   %>
     <%= (is_first)?'':',' %> "<%= workcode %>"
   <%

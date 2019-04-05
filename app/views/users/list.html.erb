@@ -511,10 +511,10 @@ unless @imp_errs.nil? or @imp_errs.empty?
 <%
 err_cnt = 0
 @imp_errs.each do |user_cnt, errs|
-  if err_cnt < 20
+  if (err_cnt < 20)
 %>
         <tr>
-        <% if user_cnt > 0 %>
+        <% if (user_cnt > 0) %>
           <td style="text-align:right; vertical-align:top; padding:0px 3px;">
             <%= user_cnt.to_s + t('user.err_list_cap') %>
           </td>

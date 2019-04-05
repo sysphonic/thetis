@@ -1,7 +1,7 @@
 #
 #= OfficialTitlesHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module OfficialTitlesHelper
@@ -29,7 +29,7 @@ module OfficialTitlesHelper
       xorder_a ||= OfficialTitle::XORDER_MAX
       xorder_b ||= OfficialTitle::XORDER_MAX
 
-      if xorder_a != xorder_b
+      if (xorder_a != xorder_b)
         (direction.to_s.downcase == 'asc')?(xorder_a - xorder_b):(xorder_b - xorder_a)
 #     elsif (user_a.fullname_kana || '') != (user_b.fullname_kana || '')
 #       kana_a = user_a.fullname_kana || ''

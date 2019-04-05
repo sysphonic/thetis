@@ -1,19 +1,13 @@
 #
 #= GroupsController
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Groups.
-#
-#== Note:
-#
-#* 
-#
 class GroupsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action :except => [:get_tree, :ajax_get_tree, :get_workflows, :get_map] do |controller|
     controller.check_auth(User::AUTH_GROUP)
   end
@@ -23,7 +17,6 @@ class GroupsController < ApplicationController
   before_action :only => [:get_map] do |controller|
     controller.check_auth(User::AUTH_LOCATION)
   end
-
 
   #=== show_tree
   #
@@ -47,7 +40,6 @@ class GroupsController < ApplicationController
 
   #=== ajax_get_tree
   #
-  #<Ajax>
   #Gets Group tree by Ajax.
   #
   def ajax_get_tree
@@ -59,7 +51,6 @@ class GroupsController < ApplicationController
 
   #=== create
   #
-  #<Ajax>
   #Creates Group.
   #Receives Group name from ThetisBox.
   #
@@ -83,7 +74,6 @@ class GroupsController < ApplicationController
 
   #=== rename
   #
-  #<Ajax>
   #Renames Group.
   #Receives Group name from ThetisBox.
   #
@@ -105,7 +95,6 @@ class GroupsController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Deletes Group.
   #
   def destroy
@@ -159,7 +148,6 @@ class GroupsController < ApplicationController
 
   #=== ajax_exclude_users
   #
-  #<Ajax>
   #Excludes specified Users.
   #
   def ajax_exclude_users
@@ -173,7 +161,7 @@ class GroupsController < ApplicationController
     unless params[:check_user].blank?
       count = 0
       params[:check_user].each do |user_id, value|
-        if value == '1'
+        if (value == '1')
 
           begin
             user = User.find(user_id)
@@ -195,7 +183,6 @@ class GroupsController < ApplicationController
 
   #=== ajax_move_users
   #
-  #<Ajax>
   #Moves specified Users.
   #
   def ajax_move_users
@@ -211,7 +198,7 @@ class GroupsController < ApplicationController
 
       count = 0
       params[:check_user].each do |user_id, value|
-        if value == '1'
+        if (value == '1')
 
           begin
             user = User.find(user_id)
@@ -234,11 +221,10 @@ class GroupsController < ApplicationController
 
   #=== get_users
   #
-  #<Ajax>
   #Gets Users in the specified Group.
   #
   def get_users
-    if params[:action] == 'get_users'
+    if (params[:action] == 'get_users')
       Log.add_info(request, params.inspect)
     end
 
@@ -253,7 +239,7 @@ class GroupsController < ApplicationController
     con = ['User.id > 0']
 
     unless @group_id.nil?
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         con << "((groups like '%|#{@group_id}|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
@@ -276,7 +262,7 @@ class GroupsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'OfficialTitle.xorder'
       @sort_type = 'ASC'
     end
@@ -284,12 +270,12 @@ class GroupsController < ApplicationController
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = @sort_col + ' ' + @sort_type
 
-    if @sort_col == 'OfficialTitle.xorder'
+    if (@sort_col == 'OfficialTitle.xorder')
       order_by = '(OfficialTitle.xorder is null) ' + @sort_type + ', ' + order_by
     else
       order_by << ', (OfficialTitle.xorder is null) ASC, OfficialTitle.xorder ASC'
     end
-    if @sort_col != 'name'
+    if (@sort_col != 'name')
       order_by << ', name ASC'
     end
 
@@ -309,7 +295,6 @@ class GroupsController < ApplicationController
 
   #=== get_groups_order
   #
-  #<Ajax>
   #Gets child Groups' order in specified Group.
   #
   def get_groups_order
@@ -318,7 +303,7 @@ class GroupsController < ApplicationController
     @group_id = params[:id]
     SqlHelper.validate_token([@group_id])
 
-    if @group_id != TreeElement::ROOT_ID.to_s
+    if (@group_id != TreeElement::ROOT_ID.to_s)
       @group = Group.find(@group_id)
     end
 
@@ -336,7 +321,6 @@ class GroupsController < ApplicationController
 
   #=== update_groups_order
   #
-  #<Ajax>
   #Updates groups' order by Ajax.
   #
   def update_groups_order
@@ -354,7 +338,7 @@ class GroupsController < ApplicationController
       idx_a = order_arr.index(id_a)
       idx_b = order_arr.index(id_b)
 
-      if idx_a.nil? or idx_b.nil?
+      if (idx_a.nil? or idx_b.nil?)
         idx_a = groups.index(id_a)
         idx_b = groups.index(id_b)
       end
@@ -379,7 +363,6 @@ class GroupsController < ApplicationController
 
   #=== get_official_titles
   #
-  #<Ajax>
   #Gets OfficialTitles which belong to the specified Group.
   #
   def get_official_titles
@@ -396,7 +379,6 @@ class GroupsController < ApplicationController
 
   #=== get_workflows
   #
-  #<Ajax>
   #Gets Workflows which belong to the specified Group.
   #
   def get_workflows
@@ -419,7 +401,6 @@ class GroupsController < ApplicationController
 
   #=== get_map
   #
-  #<Ajax>
   #Gets OfficeMap related to the specified Group.
   #
   def get_map

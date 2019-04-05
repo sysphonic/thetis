@@ -13,7 +13,7 @@ unless @mail_filter.nil? or @mail_filter.actions.nil?
 
     disp_val = val
     disp_title = nil
-    if verb == 'move'
+    if (verb == 'move')
       unless val.blank?
         @folders_cache ||= {}
         @folder_obj_cache ||= {}

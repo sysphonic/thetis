@@ -3,7 +3,7 @@ committed = []
 research_cache = {}
 @users.each do |user|
   research = Research.get_for(user.id)
-  if !research.nil? and research.status == Research::U_STATUS_COMMITTED
+  if (!research.nil? and (research.status == Research::U_STATUS_COMMITTED))
     committed << user.id.to_s
   end
   research_cache[user.id.to_s] = research

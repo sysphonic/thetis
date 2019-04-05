@@ -34,7 +34,7 @@ end
   items_available = Hash.new
 
   items_available.each do |item_id, org_names|
-    if !@items_selected.nil? and @items_selected.include?(item_id)
+    if (!@items_selected.nil? and @items_selected.include?(item_id))
       next
     end
 
@@ -70,7 +70,7 @@ end
     end
 
     items_available.each do |item_id, title|
-      next if !@items_selected.nil? and @items_selected.include?(item_id)
+      next if (!@items_selected.nil? and @items_selected.include?(item_id))
 
       entries = []
 

@@ -42,7 +42,7 @@
             <%= t('item.storage_location') %>
           </td>
           <td class="spec_value">
-          <% if @attachment.location == Attachment::LOCATION_DIR %>
+          <% if (@attachment.location == Attachment::LOCATION_DIR) %>
             <%= t('item.location_file') %>
           <% else %>
             <%= t('item.location_db') %>

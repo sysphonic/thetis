@@ -1,17 +1,11 @@
 #
 #= LoginController
 #
-#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about LOGIN.
-#
-#== Note:
-#
-#* 
-#
 class LoginController < ApplicationController
-  layout 'base'
+  layout('base')
 
   #=== index
   #
@@ -98,7 +92,7 @@ class LoginController < ApplicationController
     rescue => evar
     end
 
-    if users.nil? or users.empty?
+    if (users.nil? or users.empty?)
       Log.add_error(request, evar)
       flash[:notice] = 'ERROR:' + t('email.address_not_found')
     else

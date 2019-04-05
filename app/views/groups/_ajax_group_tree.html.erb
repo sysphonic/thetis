@@ -24,7 +24,7 @@ hide_root = (params[:hide_root] == 'true')
         ["<%= group.id %>", "/<%= group.name %>", "", "", 0]
       <%
         count += 1
-        if count < child_groups.length
+        if (count < child_groups.length)
       %>
         ,
       <% end %>

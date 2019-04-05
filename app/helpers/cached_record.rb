@@ -1,7 +1,7 @@
 #
 #= CachedRecord
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module CachedRecord
@@ -15,7 +15,7 @@ module CachedRecord
   #
   def find_with_cache(obj_id, obj_cache)
 
-    if !obj_cache.nil? and obj_cache.keys.include?(obj_id.to_i)
+    if (!obj_cache.nil? and obj_cache.keys.include?(obj_id.to_i))
       obj = obj_cache[obj_id.to_i]
     else
       begin

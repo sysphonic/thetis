@@ -9,7 +9,7 @@
 %>
 
 <%
-if !@office_map.nil? and @office_map.img_enabled
+if (!@office_map.nil? and @office_map.img_enabled)
   img_url = url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :ts => ApplicationHelper.get_timestamp(@office_map))
 else
   img_url = THETIS_RELATIVE_URL_ROOT + '/images/location/default_map.png'
@@ -103,7 +103,7 @@ unless @locations.nil?
     location_id = "location_#{location.id}"
 
     width_limit = '';
-    width_limit = 'width:200px;' if location.get_name.length >= 30;
+    width_limit = 'width:200px;' if (location.get_name.length >= 30)
 
     unless location.updated_at.nil?
       location_at = location.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')

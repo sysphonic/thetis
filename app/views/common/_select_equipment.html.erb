@@ -50,7 +50,7 @@ rows = 5
   end
 
   equipment_available.each do |equipment_id, org_names|
-    if !@equipment_selected.nil? and @equipment_selected.include?(equipment_id)
+    if (!@equipment_selected.nil? and @equipment_selected.include?(equipment_id))
       next
     end
 
@@ -87,7 +87,7 @@ rows = 5
     end
 
     equipment_available.each do |equipment_id, name|
-      next if !@equipment_selected.nil? and @equipment_selected.include?(equipment_id)
+      next if (!@equipment_selected.nil? and @equipment_selected.include?(equipment_id))
 
       entries = []
 

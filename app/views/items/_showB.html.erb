@@ -29,7 +29,7 @@ function getDescriptionWidth()
       <table style="width:100%;">
         <tr>
           <td style="vertical-align:top; width:30%;">
-            <% if @item.attachments_without_content.length > 0 %>
+            <% if (@item.attachments_without_content.length > 0) %>
              <%= render(:partial => 'show_attachment') %>
             <% end %>
           </td>
@@ -37,7 +37,7 @@ function getDescriptionWidth()
         <tr style="height:10px;"><td></td></tr>
         <tr>
           <td>
-            <% if @item.images_without_content.length > 0 %>
+            <% if (@item.images_without_content.length > 0) %>
               <%= render(:partial => 'show_image') %>
             <% end %>
           </td>

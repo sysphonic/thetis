@@ -1,27 +1,20 @@
 #
 #= ItemsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Items.
-#
-#== Note:
-#
-#* 
-#
 class ItemsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  if YamlHelper.get_value($thetis_config, 'menu.req_login_items', nil) == '1'
-    before_action :check_login
+  if (YamlHelper.get_value($thetis_config, 'menu.req_login_items', nil) == '1')
+    before_action(:check_login)
   else
-    before_action :check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment]
-    before_action :allow_midair_login, :only => [:get_attachment]
+    before_action(:check_login, :except => [:index, :list, :search, :bbs, :show, :show_for_print, :get_image, :get_attachment])
+    before_action(:allow_midair_login, :only => [:get_attachment])
   end
-  before_action :check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize]  # :move_in_team_folder
-  before_action :check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment]
-
+  before_action(:check_owner, :only => [:edit, :move, :destroy, :set_basic, :set_description, :set_image, :set_attachment, :wf_issue, :update_images_order, :update_attachments_order, :team_organize])  # :move_in_team_folder
+  before_action(:check_comment_registrant, :only => [:update_comment, :add_comment_attachment, :delete_comment_attachment])
 
   #=== index
   #
@@ -62,7 +55,7 @@ class ItemsController < ApplicationController
   #and pagination parameters.
   #
   def list
-    if params[:action] == 'list'
+    if (params[:action] == 'list')
       Log.add_info(request, params.inspect)
     end
 
@@ -91,14 +84,14 @@ class ItemsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col, @sort_type = FoldersHelper.get_sort_params(@folder_id)
     end
 
     folder_ids = nil
     add_con = nil
 
-    if @folder_id.nil? and params[:find_in] != Item::FOLDER_ALL
+    if (@folder_id.nil? and params[:find_in] != Item::FOLDER_ALL)
       add_con = "(Item.folder_id != 0) and (Folder.disp_ctrl like '%|#{Folder::DISPCTRL_BBS_TOP}|%')"
     else
       case params[:find_in]
@@ -145,7 +138,7 @@ class ItemsController < ApplicationController
     list
 
     if params[:keyword].blank?
-      if params[:from_action].nil? or params[:from_action] == 'bbs'
+      if (params[:from_action].nil? or (params[:from_action] == 'bbs'))
         render(:action => 'bbs')
       else
         render(:action => 'list')
@@ -246,7 +239,6 @@ class ItemsController < ApplicationController
 
   #=== move
   #
-  #<Ajax>
   #Moves Item to the specified Folder.
   #
   def move
@@ -287,7 +279,7 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:check_item].nil? or params[:tree_node_id].nil?
+    if (params[:check_item].nil? or params[:tree_node_id].nil?)
       list
       render(:action => 'list')
       return
@@ -308,11 +300,11 @@ class ItemsController < ApplicationController
 
     count = 0
     params[:check_item].each do |item_id, value|
-      if value == '1'
+      if (value == '1')
 
         begin
           item = Item.find(item_id)
-          next if !is_admin and item.user_id != @login_user.id
+          next if (!is_admin and item.user_id != @login_user.id)
 
           item.update_attribute(:folder_id, folder_id)
 
@@ -372,11 +364,11 @@ class ItemsController < ApplicationController
 
     count = 0
     params[:check_item].each do |item_id, value|
-      if value == '1'
+      if (value == '1')
 
         begin
           item = Item.find(item_id)
-          next if !is_admin and item.user_id != @login_user.id
+          next if (!is_admin and item.user_id != @login_user.id)
 
           item.destroy
 
@@ -396,7 +388,6 @@ class ItemsController < ApplicationController
 
   #=== duplicate
   #
-  #<Ajax>
   #Duplicates Item.
   #
   def duplicate
@@ -427,7 +418,6 @@ class ItemsController < ApplicationController
 
   #=== set_workflow
   #
-  #<Ajax>
   #Registers Workflow information of the Item.
   #
   def set_workflow
@@ -464,7 +454,6 @@ class ItemsController < ApplicationController
 
   #=== set_basic
   #
-  #<Ajax>
   #Registers basic information of the Item.
   #
   def set_basic
@@ -472,8 +461,8 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST \
-        and !@login_user.admin?(User::AUTH_ZEPTAIR)
+    if ((params[:item][:xtype] == Item::XTYPE_ZEPTAIR_DIST) \
+        and !@login_user.admin?(User::AUTH_ZEPTAIR))
       render(:plain => t('msg.need_to_be_admin'))
       return
     end
@@ -481,8 +470,8 @@ class ItemsController < ApplicationController
     folder_id = params[:item][:folder_id]
 
     unless Folder.check_user_auth(folder_id, @login_user, 'w', true)
-      @item = Item.new(params.require(:item).permit(Item::PERMIT_BASE))
-      @item.errors.add_to_base t('folder.need_auth_to_write_in')
+      @item = Item.new(Item.permit_base(params.require(:item)))
+      @item.errors[:base] << t('folder.need_auth_to_write_in')
       render(:partial => 'edit_item_basic', :layout => false)
       return
     end
@@ -497,14 +486,14 @@ class ItemsController < ApplicationController
       params[:item][:folder_id] = folder.id
     end
 
-    if params[:check_clear_original] == '1'
+    if (params[:check_clear_original] == '1')
       params[:item][:original_by] = nil
       params[:item][:source_id] = nil
     end
 
     if params[:id].blank?
       @item = Item.new_info(folder_id)
-      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
+      @item.attributes = Item.permit_base(params.require(:item))
       @item.user_id = @login_user.id
       @item.save
     else
@@ -514,22 +503,22 @@ class ItemsController < ApplicationController
       delete_team = false
       delete_zept_cmd = false
 
-      if @item.xtype == Item::XTYPE_PROJECT
+      if (@item.xtype == Item::XTYPE_PROJECT)
 
-        if params[:item][:xtype] == Item::XTYPE_PROJECT
-          if params[:item][:title] != @item.title
+        if (params[:item][:xtype] == Item::XTYPE_PROJECT)
+          if (params[:item][:title] != @item.title)
             rename_team = true
           end
         else
           # No more Project
           delete_team = true
         end
-      elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST \
-              and params[:item][:xtype] != Item::XTYPE_ZEPTAIR_DIST
+      elsif ((@item.xtype == Item::XTYPE_ZEPTAIR_DIST) \
+              and (params[:item][:xtype] != Item::XTYPE_ZEPTAIR_DIST))
         delete_zept_cmd = true
       end
 
-      @item.update_attributes(params.require(:item).permit(Item::PERMIT_BASE))
+      @item.update_attributes(Item.permit_base(params.require(:item)))
 
       unless @item.team.nil?
         if rename_team
@@ -556,12 +545,12 @@ class ItemsController < ApplicationController
       end
     end
 
-    if @item.xtype == Item::XTYPE_ZEPTAIR_DIST
+    if (@item.xtype == Item::XTYPE_ZEPTAIR_DIST)
       if @item.zeptair_command.nil?
         @item.zeptair_command = ZeptairCommand.new
       end
       params[:zeptair_command].delete(:item_id)
-      @item.zeptair_command.attributes = params.require(:zeptair_command).permit(ZeptairCommand::PERMIT_BASE)
+      @item.zeptair_command.attributes = ZeptairCommand.permit_base(params.require(:zeptair_command))
       if @item.zeptair_command.changed?
         @item.zeptair_command.save!
       end
@@ -576,7 +565,6 @@ class ItemsController < ApplicationController
 
   #=== set_description
   #
-  #<Ajax>
   #Registers desctiption of the Item.
   #
   def set_description
@@ -586,13 +574,13 @@ class ItemsController < ApplicationController
 
     if params[:id].blank?
       @item = Item.new_info(0)
-      @item.attributes = params.require(:item).permit(Item::PERMIT_BASE)
+      @item.attributes = Item.permit_base(params.require(:item))
       @item.user_id = @login_user.id
       @item.title = t('paren.no_title')
       @item.save
     else
       @item = Item.find(params[:id])
-      @item.update_attributes(params.require(:item).permit(Item::PERMIT_BASE))
+      @item.update_attributes(Item.permit_base(params.require(:item)))
     end
 
     render(:partial => 'edit_item_description', :layout => false)
@@ -604,7 +592,6 @@ class ItemsController < ApplicationController
 
   #=== recent_descriptions
   #
-  #<Ajax>
   #Gets recent descriptions to select.
   #
   def recent_descriptions
@@ -619,7 +606,6 @@ class ItemsController < ApplicationController
 
   #=== set_image
   #
-  #<Ajax>
   #Registers images of the Item.
   #
   def set_image
@@ -640,7 +626,7 @@ class ItemsController < ApplicationController
       attrs = params.fetch(:item, nil)
       unless attrs.nil? or img_attrs.nil?
         @item = Item.new_info(0)
-        @item.attributes = attrs.permit(Item::PERMIT_BASE)
+        @item.attributes = Item.permit_base(attrs)
         @item.user_id = @login_user.id
         @item.title ||= t('paren.no_title')
         @item.save!
@@ -673,7 +659,7 @@ class ItemsController < ApplicationController
     Log.add_error(request, evar)
 
     @image = Image.new
-    @image.errors.add_to_base(evar.to_s[0, 256])
+    @image.errors[:base] << evar.to_s[0, 256]
 
     render(:partial => 'edit_item_image', :layout => false)
   end
@@ -704,7 +690,6 @@ class ItemsController < ApplicationController
 
   #=== delete_image
   #
-  #<Ajax>
   #Deletes Image.
   #
   def delete_image
@@ -734,7 +719,6 @@ class ItemsController < ApplicationController
 
   #=== edit_image_info
   #
-  #<Ajax>
   #Gets Image information to edit.
   #
   def edit_image_info
@@ -756,7 +740,6 @@ class ItemsController < ApplicationController
 
   #=== update_image_info
   #
-  #<Ajax>
   #Updates Image information.
   #
   def update_image_info
@@ -799,14 +782,13 @@ class ItemsController < ApplicationController
     Log.add_error(request, evar)
 
     @image = Image.new
-    @image.errors.add_to_base(evar.to_s[0, 256])
+    @image.errors[:base] << evar.to_s[0, 256]
 
     render(:partial => 'edit_item_image', :layout => false)
   end
 
   #=== update_images_order
   #
-  #<Ajax>
   #Updates Images' order by Ajax.
   #
   def update_images_order
@@ -839,7 +821,6 @@ class ItemsController < ApplicationController
 
   #=== set_attachment
   #
-  #<Ajax>
   #Registers attachment-files of the Item.
   #
   def set_attachment
@@ -860,7 +841,7 @@ class ItemsController < ApplicationController
       attrs = params.fetch(:item, nil)
       unless attrs.nil? or attach_attrs.nil?
         @item = Item.new_info(0)
-        @item.attributes = attrs.permit(Item::PERMIT_BASE)
+        @item.attributes = Item.permit_base(attrs)
         @item.user_id = @login_user.id
         @item.title ||= t('paren.no_title')
         @item.save!
@@ -891,7 +872,7 @@ class ItemsController < ApplicationController
     Log.add_error(request, evar)
 
     @attachment = Attachment.new
-    @attachment.errors.add_to_base(evar.to_s[0, 256])
+    @attachment.errors[:base] << evar.to_s[0, 256]
 
     render(:partial => 'edit_item_attachment', :layout => false)
   end
@@ -933,7 +914,7 @@ class ItemsController < ApplicationController
       attach_location = Attachment::LOCATION_DB   # for lower versions
     end
 
-    if attach_location == Attachment::LOCATION_DIR
+    if (attach_location == Attachment::LOCATION_DIR)
 
       filepath = AttachmentsHelper.get_path(attach)
 
@@ -945,7 +926,6 @@ class ItemsController < ApplicationController
 
   #=== delete_attachment
   #
-  #<Ajax>
   #Deletes Attachment.
   #
   def delete_attachment
@@ -975,7 +955,6 @@ class ItemsController < ApplicationController
 
   #=== edit_attachment_info
   #
-  #<Ajax>
   #Gets Attachment information to edit.
   #
   def edit_attachment_info
@@ -997,7 +976,6 @@ class ItemsController < ApplicationController
 
   #=== update_attachment_info
   #
-  #<Ajax>
   #Updates Attachment information.
   #
   def update_attachment_info
@@ -1044,14 +1022,13 @@ class ItemsController < ApplicationController
     Log.add_error(request, evar)
 
     @attachment = Attachment.new
-    @attachment.errors.add_to_base(evar.to_s[0, 256])
+    @attachment.errors[:base] << evar.to_s[0, 256]
 
     render(:partial => 'edit_item_attachment', :layout => false)
   end
 
   #=== update_attachments_order
   #
-  #<Ajax>
   #Updates Attachments' order by Ajax.
   #
   def update_attachments_order
@@ -1084,7 +1061,6 @@ class ItemsController < ApplicationController
 
   #=== add_comment
   #
-  #<Ajax>
   #Adds a message to the Item.
   #
   def add_comment
@@ -1092,14 +1068,14 @@ class ItemsController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    @comment = Comment.new(params.require(:comment).permit(Comment::PERMIT_BASE))
+    @comment = Comment.new(Comment.permit_base(params.require(:comment)))
     @comment.save!
     @item = @comment.item
 
     case @item.xtype
       when Item::XTYPE_WORKFLOW
         @workflow = @item.workflow
-        if @workflow.update_status and @workflow.decided?
+        if (@workflow.update_status and @workflow.decided?)
           @workflow.distribute_cc
         end
         @orders = @workflow.get_orders
@@ -1107,7 +1083,7 @@ class ItemsController < ApplicationController
         render(:partial => 'ajax_workflow', :layout => false)
 
       when Item::XTYPE_PROJECT
-        if @comment.xtype == Comment::XTYPE_APPLY
+        if (@comment.xtype == Comment::XTYPE_APPLY)
 
           flash[:notice] = t('msg.done_success')
           render(:partial => 'ajax_team_cancel', :layout => false)
@@ -1122,7 +1098,6 @@ class ItemsController < ApplicationController
 
   #=== update_comment
   #
-  #<Ajax>
   #Updates a message of the Item.
   #
   def update_comment
@@ -1146,7 +1121,6 @@ class ItemsController < ApplicationController
 
   #=== destroy_comment
   #
-  #<Ajax>
   #Deletes a message of the Item.
   #
   def destroy_comment
@@ -1168,7 +1142,7 @@ class ItemsController < ApplicationController
 
     case @item.xtype
       when Item::XTYPE_PROJECT
-        if comment.xtype == Comment::XTYPE_APPLY
+        if (comment.xtype == Comment::XTYPE_APPLY)
 
           flash[:notice] = t('msg.cancel_success')
           render(:partial => 'ajax_team_apply')
@@ -1184,7 +1158,6 @@ class ItemsController < ApplicationController
 
   #=== add_comment_attachment
   #
-  #<Ajax>
   #Attaches a file to the Comment.
   #
   def add_comment_attachment
@@ -1210,7 +1183,6 @@ class ItemsController < ApplicationController
 
   #=== delete_comment_attachment
   #
-  #<Ajax>
   #Deletes Attachment of the Comment.
   #
   def delete_comment_attachment
@@ -1222,7 +1194,7 @@ class ItemsController < ApplicationController
       attachment = Attachment.find(params[:attachment_id])
       @comment = Comment.find(params[:comment_id])
 
-      if attachment.comment_id == @comment.id
+      if (attachment.comment_id == @comment.id)
         attachment.destroy
         @comment.update_attribute(:updated_at, Time.now)
       end
@@ -1235,7 +1207,6 @@ class ItemsController < ApplicationController
 
   #=== get_group_users
   #
-  #<Ajax>
   #Gets Users in specified Group.
   #
   def get_group_users
@@ -1256,7 +1227,6 @@ class ItemsController < ApplicationController
 
   #=== wf_issue
   #
-  #<Ajax>
   #Issues specified Workflow.
   #
   def wf_issue
@@ -1272,7 +1242,7 @@ class ItemsController < ApplicationController
     end
  
     attrs = ActionController::Parameters.new({status: Workflow::STATUS_ACTIVE, issued_at: Time.now})
-    @workflow.update_attributes(attrs.permit(Workflow::PERMIT_BASE))
+    @workflow.update_attributes(Workflow.permit_base(attrs))
 
     @orders = @workflow.get_orders
 
@@ -1281,7 +1251,6 @@ class ItemsController < ApplicationController
 
   #=== team_organize
   #
-  #<Ajax>
   #Organizes Team.
   #
   def team_organize
@@ -1310,7 +1279,7 @@ class ItemsController < ApplicationController
     created = false
     modified = false
 
-    if team_members.nil? or team_members.empty?
+    if (team_members.nil? or team_members.empty?)
 
       unless team_id.blank?
         # @team must not be nil.
@@ -1320,7 +1289,7 @@ class ItemsController < ApplicationController
 
     else
 
-      if team_members != users
+      if (team_members != users)
 
         if team_id.blank?
 
@@ -1362,7 +1331,6 @@ class ItemsController < ApplicationController
 =begin
 #  #=== move_in_team_folder
 #  #
-#  #<Ajax>
 #  #Moves the Item in the Team Folder.
 #  #
 #  def move_in_team_folder
@@ -1388,7 +1356,6 @@ class ItemsController < ApplicationController
 
   #=== change_team_status
   #
-  #<Ajax>
   #Changes status of the Team.
   #
   def change_team_status
@@ -1421,7 +1388,7 @@ class ItemsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Item.
   #
   def check_owner
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     begin
       owner_id = Item.find(params[:id]).user_id

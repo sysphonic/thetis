@@ -49,7 +49,7 @@ function onLoad()
 
   setTimeout("doResize(true)", 10);
 
-<% if params[:topicBox] == 'true' %>
+<% if (params[:topicBox] == 'true') %>
   if (typeof(top.showTopicBox) == "function") {
     setTimeout(top.showTopicBox, 10);
   }

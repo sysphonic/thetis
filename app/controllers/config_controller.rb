@@ -1,23 +1,16 @@
 #
 #= ConfigController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Configuration of Thetis.
-#
-#== Note:
-#
-#*
-#
 class ConfigController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action :except => [:update_by_ajax] do |controller|
     controller.check_auth(User::AUTH_ALL)
   end
-
 
   #=== edit
   #
@@ -75,32 +68,32 @@ class ConfigController < ApplicationController
     yaml = ApplicationHelper.get_config_yaml
 
     categories.each do |cat|
-      next if params[cat].nil? or params[cat].empty?
+      next if (params[cat].nil? or params[cat].empty?)
 
       params[cat].each do |key, val|
-        if cat == 'general'
+        if (cat == 'general')
           case key
             when 'symbol_image'
               ConfigHelper.save_img('symbol.png', val) if val.size > 0
             else
               YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
-        elsif cat == 'topic'
+        elsif (cat == 'topic')
           case key
             when 'src'
-              ConfigHelper.save_html('topics.html', val) if val.size > 0
+              ConfigHelper.save_html('topics.html', val) if (val.size > 0)
             else
               YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
-        elsif cat == 'note'
+        elsif (cat == 'note')
           case key
             when 'src'
-              ConfigHelper.save_html('note.html', val) if val.size > 0
+              ConfigHelper.save_html('note.html', val) if (val.size > 0)
             else
               YamlHelper.set_value(yaml, [cat, key].join('.'), val)
           end
         else
-          if params[:smtp]['auth_enabled'] == '0'
+          if (params[:smtp]['auth_enabled'] == '0')
             val = nil if ['auth', 'user_name', 'password'].include?(key)
           end
           YamlHelper.set_value(yaml, [cat, key].join('.'), val)
@@ -116,7 +109,6 @@ class ConfigController < ApplicationController
 
   #=== edit_header_menu
   #
-  #<Ajax>
   #Shows form to edit the specified header menu.
   #
   def edit_header_menu
@@ -127,7 +119,7 @@ class ConfigController < ApplicationController
 
       unless YamlHelper.get_value(yaml, 'general.header_menus', nil).nil?
         YamlHelper.get_value(yaml, 'general.header_menus', nil).each do |header_menu|
-          if header_menu[0] == params[:org_name]
+          if (header_menu[0] == params[:org_name])
             @header_menu_param = header_menu
             break
           end
@@ -140,7 +132,6 @@ class ConfigController < ApplicationController
 
   #=== destroy_header_menu
   #
-  #<Ajax>
   #Destroys the specified header menu.
   #
   def destroy_header_menu
@@ -153,7 +144,7 @@ class ConfigController < ApplicationController
     unless params[:org_name].nil?
       header_menus = YamlHelper.get_value(@yaml, 'general.header_menus', [])
       header_menus.each do |header_menu|
-        if header_menu[0] == params[:org_name]
+        if (header_menu[0] == params[:org_name])
           header_menus.delete(header_menu)
           ApplicationHelper.save_config_yaml(@yaml)
           break
@@ -166,7 +157,6 @@ class ConfigController < ApplicationController
 
   #=== updates_header_menu
   #
-  #<Ajax>
   #Updates the specified header menu.
   #
   def update_header_menu
@@ -181,7 +171,7 @@ class ConfigController < ApplicationController
 
     if params[:org_name].nil? or (params[:org_name] != entry[0])
       header_menus.each do |header_menu|
-        if header_menu[0] == entry[0]
+        if (header_menu[0] == entry[0])
           flash[:notice] = 'ERROR:' + t('msg.menu_duplicated')
           render(:partial => 'ajax_header_menu', :layout => false)
           return
@@ -193,7 +183,7 @@ class ConfigController < ApplicationController
     unless params[:org_name].nil?
       i = 0
       header_menus.each do |header_menu|
-        if header_menu[0] == params[:org_name]
+        if (header_menu[0] == params[:org_name])
           idx = i
           break
         end
@@ -215,7 +205,6 @@ class ConfigController < ApplicationController
 
   #=== update_header_menus_order
   #
-  #<Ajax>
   #Updates header menus' order.
   #
   def update_header_menus_order

@@ -1,10 +1,8 @@
 #
 #= Comment
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Comment represents each response to an Item, and has partly different means by Item's type(=Item.xtype).
 #
 class Comment < ApplicationRecord
   public::PERMIT_BASE = [:user_id, :item_id, :message, :xtype]

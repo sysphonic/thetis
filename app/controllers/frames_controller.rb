@@ -1,23 +1,16 @@
 #
 #= FramesController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about frames.
-#
-#== Note:
-#
-#* 
-#
 class FramesController < ApplicationController
-  layout 'title', :only => [:admin]
+  layout('title', :only => [:admin])
 
-  before_action :check_login, :only => [:admin]
+  before_action(:check_login, :only => [:admin])
   before_action :only => [:admin] do |controller|
     controller.check_auth(nil)
   end
-
 
   #=== index
   #

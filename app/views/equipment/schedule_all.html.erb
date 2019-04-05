@@ -68,7 +68,7 @@ date_s = @date.strftime(Schedule::SYS_DATE_FORM)
 </div>
 </form>
 
-<% if @equip_schedule_hash.nil? or @equip_schedule_hash.empty? %>
+<% if (@equip_schedule_hash.nil? or @equip_schedule_hash.empty?) %>
   <div style="padding-top:10px;">
     <table class="border_collapse green" style="width:95%; margin:0px auto;">
       <tr style="height:50px;">

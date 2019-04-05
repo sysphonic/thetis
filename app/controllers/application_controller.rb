@@ -1,27 +1,21 @@
 #
 #= ApplicationController
 #
-#Copyright::(c)2007-2017 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#== Note:
-#
-#* Filters added to this controller will be run for all controllers in the application.
-#* Likewise, all the methods added will be available for all controllers.
-#
-
 class ApplicationController < ActionController::Base
 
-  require 'will_paginate'
-  require ::Rails.root.to_s+'/lib/iain-http_accept_language/lib/http_accept_language'
+  require('will_paginate')
+  require(Rails.root.to_s+'/lib/iain-http_accept_language/lib/http_accept_language')
 
   protect_from_forgery(with: :exception)
   config.filter_parameters(:password)
 
-  before_action :set_locale
-  before_action :gate_proc
+  before_action(:set_locale)
+  before_action(:gate_proc)
 
-  include LoginChecker
+  include(LoginChecker)
 
   begin
     if (User.count <= 0)
@@ -93,7 +87,7 @@ class ApplicationController < ActionController::Base
     end
 
     begin
-      if @login_user.nil? or @login_user.time_zone.blank?
+      if (@login_user.nil? or @login_user.time_zone.blank?)
         Time.zone = THETIS_USER_TIMEZONE_DEFAULT unless THETIS_USER_TIMEZONE_DEFAULT.blank?
       else
         Time.zone = @login_user.time_zone

@@ -1,7 +1,7 @@
 #
 #= Group
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #== Note:
@@ -12,8 +12,8 @@ class Group < ApplicationRecord
 
   has_many(:official_titles, {:dependent => :destroy})
 
-  extend CachedRecord
-  include TreeElement
+  extend(CachedRecord)
+  include(TreeElement)
 
   before_destroy do |rec|
     # Group Folder
@@ -105,7 +105,7 @@ class Group < ApplicationRecord
       end
     end
 
-    if group_id.to_s == TreeElement::ROOT_ID.to_s
+    if (group_id.to_s == TreeElement::ROOT_ID.to_s)
       path = '/(root)'
       groups_cache[group_id.to_i] = path unless groups_cache.nil?
       return path
@@ -176,7 +176,7 @@ class Group < ApplicationRecord
 
     group_id = group_id.to_s
 
-    if group_id == TreeElement::ROOT_ID.to_s
+    if (group_id == TreeElement::ROOT_ID.to_s)
       con = "((groups like '%|#{TreeElement::ROOT_ID}|%') or (groups is null))"
     else
       con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
@@ -199,7 +199,7 @@ class Group < ApplicationRecord
 
     group_id = group_id.to_s
 
-    if group_id == TreeElement::ROOT_ID.to_s
+    if (group_id == TreeElement::ROOT_ID.to_s)
       con = "((groups like '%|#{TreeElement::ROOT_ID}|%') or (groups is null))"
     else
       con = SqlHelper.get_sql_like([:groups], "|#{group_id}|")
@@ -256,7 +256,7 @@ class Group < ApplicationRecord
   #
   def self.get_branches(grp_ids, group_id=nil, group_obj_cache=nil)
 
-    return [] if grp_ids.nil? or grp_ids.empty?
+    return [] if (grp_ids.nil? or grp_ids.empty?)
 
     group_branches = []
     grp_ids.sort{|a, b| a.to_i <=> b.to_i}.each do |grp_id|
@@ -270,7 +270,7 @@ class Group < ApplicationRecord
     end
 
     if group_id.nil?
-    elsif group_id.to_s == TreeElement::ROOT_ID.to_s
+    elsif (group_id.to_s == TreeElement::ROOT_ID.to_s)
       group_branches = [[]]
     else
       target_group = Group.find_with_cache(group_id, group_obj_cache)
@@ -282,7 +282,7 @@ class Group < ApplicationRecord
       group_branches.map!{|group_branch| target_branch & group_branch}
       max_branch = []
       group_branches.each do |group_branch|
-        if max_branch.length < group_branch.length
+        if (max_branch.length < group_branch.length)
           max_branch = group_branch
         end
       end

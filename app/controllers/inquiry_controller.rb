@@ -1,21 +1,14 @@
 #
 #= InquiryController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Handles inquiries from client applications.
-#
-#== Note:
-#
-#* 
 #
 class InquiryController < ApplicationController
 
-  require 'csv'
+  require('csv')
 
-  before_action :check_login
-
+  before_action(:check_login)
 
   #=== auth
   #
@@ -69,7 +62,7 @@ class InquiryController < ApplicationController
       end
     end
 
-    if params[:recursive] == 'true'
+    if (params[:recursive] == 'true')
       child_ids = Group.get_childs(group_id, true, false)
 
       child_ids.each do |child_id|

@@ -6,7 +6,7 @@
 </div>
 
 <table class="border_collapse dimgray" style="width:100%;">
-<% if @logs.nil? or @logs.empty? %>
+<% if (@logs.nil? or @logs.empty?) %>
   <tr>
     <td style="text-align:center; padding:10px;">
       <%= t('paren.no_entries') %>
@@ -18,7 +18,7 @@
     <td style="text-align:left; padding:10px; cursor:pointer;" onmouseover="this.style.backgroundColor='aquamarine';" onmouseout="this.style.backgroundColor='white';" onclick="doSelectDesc('desc_<%= idx %>')">
       <%
       desc_arr = log.detail.scan(/["]description["]=>["]((\\"|[^"])*)["]/)
-      next if desc_arr.nil? or desc_arr.empty? or desc_arr.first.nil?
+      next if (desc_arr.nil? or desc_arr.empty? or desc_arr.first.nil?)
       desc = desc_arr.first.to_a.first
       %>
       <%= log.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M:%S') %> <span style="color:gray;">(<%= desc.length %> byte)</span>

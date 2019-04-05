@@ -1,13 +1,13 @@
 #
 #= TimecardsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module TimecardsHelper
 
-  require ::Rails.root.to_s+'/lib/util/util_date'
-  require ::Rails.root.to_s+'/lib/util/util_datetime'
+  require(Rails.root.to_s+'/lib/util/util_date')
+  require(Rails.root.to_s+'/lib/util/util_datetime')
 
   #=== self.get_month_span
   #
@@ -20,12 +20,12 @@ module TimecardsHelper
   def self.get_month_span(date, month_begins_at) 
     start_date = Date.new(date.year, date.month, month_begins_at)
 
-    if month_begins_at <= 1
+    if (month_begins_at <= 1)
       end_date = Date.new(date.year, date.month, -1)
     else
       end_date = Date.new(date.year, date.month, month_begins_at - 1)
 
-      if date.day < month_begins_at
+      if (date.day < month_begins_at)
         start_date = start_date << 1
       else
         end_date = end_date >> 1
@@ -61,7 +61,7 @@ module TimecardsHelper
   #return:: Fiscal year.
   #
   def self.get_fiscal_year(date, year_begins_from, month_begins_at)
-    if year_begins_from <= 6
+    if (year_begins_from <= 6)
       if UtilDate.new(2000, date.month, date.day).before? Date.new(2000, year_begins_from, month_begins_at)
         return date.year - 1
       else
@@ -85,14 +85,14 @@ module TimecardsHelper
   #return:: Fiscal month.
   #
   def self.get_fiscal_month(date, month_begins_at) 
-    if month_begins_at <= 15
-      if date.day < month_begins_at
+    if (month_begins_at <= 15)
+      if (date.day < month_begins_at)
         return (date.month > 1)?(date.month - 1):(12)
       else
         return date.month
       end
     else
-      if date.day < month_begins_at
+      if (date.day < month_begins_at)
         return date.month
       else
         return (date.month < 12)?(date.month + 1):(1)
@@ -113,11 +113,11 @@ module TimecardsHelper
     test_date = Date.new(fiscal_year, fiscal_month, month_begins_at)
     test_fiscal_month = TimecardsHelper.get_fiscal_month(test_date, month_begins_at)
 
-    if test_fiscal_month == fiscal_month
+    if (test_fiscal_month == fiscal_month)
       year = fiscal_year
       month = fiscal_month
-    else  # if test_fiscal_month > fiscal_month
-      if fiscal_month > 1
+    else  # if (test_fiscal_month > fiscal_month)
+      if (fiscal_month > 1)
         year = fiscal_year
         month = fiscal_month - 1
       else

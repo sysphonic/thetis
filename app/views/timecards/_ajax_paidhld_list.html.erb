@@ -14,8 +14,8 @@ yaml = ApplicationHelper.get_config_yaml
 edit = (params[:edit] == 'true')
 start_date, end_date = Timecard.get_exist_span(@selected_user.id)
 
-if @paid_holidays.nil? or @paid_holidays.empty?
-  if start_date.nil? or end_date.nil?
+if (@paid_holidays.nil? or @paid_holidays.empty?)
+  if (start_date.nil? or end_date.nil?)
     if edit
       year_begins_from, month_begins_at = TimecardsHelper.get_fiscal_params(yaml)
       fiscal_year = TimecardsHelper.get_fiscal_year(Date.today, year_begins_from, month_begins_at)
@@ -30,7 +30,7 @@ if @paid_holidays.nil? or @paid_holidays.empty?
     end_year = end_date.year
   end
 else
-  if start_date.nil? or end_date.nil?
+  if (start_date.nil? or end_date.nil?)
     start_year = @paid_holidays.first.year
     end_year = @paid_holidays.last.year
   else
@@ -39,7 +39,7 @@ else
   end
 end
 
-if start_year > end_year and !edit
+if (start_year > end_year and !edit)
 %>
   <tr style="height:50px;">
     <td style="text-align:center; color:mediumblue;" colspan="6">
@@ -114,7 +114,7 @@ else
     <%
     remainder_num = total - applied_paid_hlds
     style = ''
-    style = 'color:red;' if remainder_num < 0
+    style = 'color:red;' if (remainder_num < 0)
     %>
     <td style="text-align:center; <%= raw(style) %>">
       <%= remainder_num %>

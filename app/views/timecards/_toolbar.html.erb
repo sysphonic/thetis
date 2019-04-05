@@ -3,7 +3,7 @@
   <table style="margin:0px auto; width:98%;">
     <tr>
       <td style="text-align:left; width:30%;">
-      <% if !@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD) %>
+      <% if (!@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD)) %>
         <table style="margin:0px auto 0px 0px; width:65px;">
           <tr>
             <td style="text-align:left; width:30px;" nowrap >
@@ -19,7 +19,7 @@
         opts = []
         unless @user.nil?
           user_name = @user.get_name_for_timecard
-          if @login_user != @user
+          if (@login_user != @user)
             opts << [user_name, 'user_'+@user.id.to_s]
           end
         end
@@ -33,10 +33,10 @@
           # teams_a.each do |team_id|
           #   opts << [Team.get_name(team_id), 'team_'+team_id]
           # end
-          if !@group_id.nil? and !groups_a.include?(@group_id)
+          if (!@group_id.nil? and !groups_a.include?(@group_id))
             opts << [Group.get_name(@group_id), 'group_'+@group_id]
           end
-          if !@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD)
+          if (!@login_user.nil? and @login_user.admin?(User::AUTH_TIMECARD))
             opts << [t('group.other_group'), 'group_other']
           end
         end

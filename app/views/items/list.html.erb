@@ -110,7 +110,7 @@
 
 <div class="base_list" id="div_list" style="background-color:white;">
 
-<% if @items.empty? and @folder_id.nil? %>
+<% if (@items.empty? and @folder_id.nil?) %>
 
 <%= render(:partial => 'bbs_empty') %>
 
@@ -146,25 +146,25 @@
               <%= truncate(item.title, :length => 20) %>
             </a>
 
-            <% if !item.workflow.nil? and item.workflow.decided? %>
+            <% if (!item.workflow.nil? and item.workflow.decided?) %>
               &nbsp;<span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
             <% end %>
 
-            <% if item.xtype == Item::XTYPE_PROJECT %>
+            <% if (item.xtype == Item::XTYPE_PROJECT) %>
               &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
               <div id="div_project_<%= item.id %>" style="display:none;"><%= item.title %></div>
-            <% elsif item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
+            <% elsif (item.xtype == Item::XTYPE_ZEPTAIR_DIST) %>
               &nbsp;<img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" />
             <% end %>
           </td>
-        <% if params[:thumbnails]!='false' and !item_images.nil? and item_images.length > 0 %>
+        <% if (params[:thumbnails]!='false' and !item_images.nil? and item_images.length > 0) %>
           <td style="width:90px;">
             <% img_url = url_for(:controller => 'items', :action => 'get_image', :id => item_images[0].id, :ts => ApplicationHelper.get_timestamp(item_images[0])) %>
             <img style="max-width:90px; max-height:60px; cursor:pointer" src="<%= img_url %>" style="height:60px;" onclick="doShowItem(<%= item.id %>);" />
           </td>
         <% end %>
         </tr>
-      <% if item.featured? and !item.update_message.nil? and !item.update_message.empty? %>
+      <% if (item.featured? and !item.update_message.nil? and !item.update_message.empty?) %>
         <tr>
           <td colspan="2">
             <div style="width:100%; background-color:#fff0fa; cursor:pointer; border:2px dashed red" onclick="doShowItem(<%= item.id %>);">
@@ -195,7 +195,7 @@
       <%= updated_at %>
     </td>
     <td nowrap style="text-align:center;">
-      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= item.public ? 'check_ok.png' : 'check_ng.png' %>">
+      <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= (item.public?)?'check_ok.png':'check_ng.png' %>">
     </td>
     <td>
       <%
@@ -210,12 +210,12 @@
       <% end %>
     </td>
 
-  <% if !@login_user.nil? and item.editable?(@login_user.id) %>
+  <% if (!@login_user.nil? and item.editable?(@login_user.id)) %>
     <td nowrap style="text-align:center;">
       <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';">
     </td>
   <% end %>
-  <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
+  <% if (!@login_user.nil? and item.deletable?(@login_user.id)) %>
     <td nowrap style="text-align:center;">
       <input type="hidden" name="check_item[<%= item.id %>]" value="0" />
       <input type="checkbox" class="check_item" id="check_item_<%= item.id %>" name="check_item[<%= item.id %>]" value="1" />
@@ -425,7 +425,7 @@ function sortList(col)
   prog("TOP-RIGHT");
 }
 
-<% if @login_user.nil? and params[:tip]=='true' %>
+<% if (@login_user.nil? and params[:tip]=='true') %>
 function showTips()
 {
   tip("<%= t('item.no_login_info1') %><br/><span style='font-size:19px; color:firebrick; font-weight:800;'><%= t('login.name') %></span><%= t('item.no_login_info2') %>");
@@ -457,7 +457,7 @@ function onFolderTreeNodeSelected(thetisBoxId)
   }
 }
 
-<% if !params[:folderTree].nil? and @folder_id.nil? %>
+<% if (!params[:folderTree].nil? and @folder_id.nil?) %>
 function onLoadSub()
 {
   showFolderTreeToSelect("<%= params[:folderTree] %>");

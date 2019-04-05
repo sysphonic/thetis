@@ -37,7 +37,7 @@ unless params[:from].blank?
   <%
   toy_xtype = Toy::XTYPE_SCHEDULE
   toy_target_id = @schedule.id
-  if !@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s))
+  if (!@login_user.nil? and !Toy.on_desktop?(@login_user, toy_xtype, toy_target_id) and (@schedule.for_all? or @schedule.get_users_a.include?(@login_user.id.to_s)))
   %>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
         <img class="img_btn" id="add_to_desktop" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/desktop.png" title="<%= t('btn.add_to_desktop') %>" onclick="addToDesktop();">
@@ -117,7 +117,7 @@ end
                 <%= t('schedule.cap_term') %>
               </td>
               <td>
-                <% if @schedule.repeat_start.nil? and @schedule.repeat_end.nil? %>
+                <% if (@schedule.repeat_start.nil? and @schedule.repeat_end.nil?) %>
 
                   <%= t('paren.not_specified') %>
 
@@ -309,7 +309,7 @@ end
           <% if auth_read %><a class="a_underline" href="javascript:this.onclick()" onclick="showItem(<%= item.id %>, '<%= ApplicationHelper.h_s_quote(disp) %>'); return false;"><% end %>
             <%= disp %>
           <% if auth_read %></a><% end %>
-          <% if !@login_user.nil? and !item.nil? and item.editable?(@login_user.id) %>
+          <% if (!@login_user.nil? and !item.nil? and item.editable?(@login_user.id)) %>
           &nbsp;&nbsp;<img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item.id) %>';" />
           <% end %>
         </li>

@@ -1,23 +1,16 @@
 #
 #= ZeptairDistController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Zeptair Distribution feature.
-#
-#== Note:
-#
-#* 
-#
 class ZeptairDistController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action :only => [:users] do |controller|
     controller.check_auth(User::AUTH_ZEPTAIR)
   end
-
 
   #=== users
   #
@@ -85,7 +78,7 @@ class ZeptairDistController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
@@ -134,11 +127,12 @@ class ZeptairDistController < ApplicationController
     unless params[:cmd_id].blank?
       target = ZeptairCommand.find(params[:cmd_id])
     end
-    if target.nil? or target.item.nil? \
-        or target.item.xtype != Item::XTYPE_ZEPTAIR_DIST
+    if (target.nil? or target.item.nil? \
+        or (target.item.xtype != Item::XTYPE_ZEPTAIR_DIST))
       render(:plain => 'ERROR:' + t('msg.system_error'))
       return
     end
+    
     item = target.item
 
     comment = ZeptairDistHelper.get_comment_of(item.id, @login_user.id)
@@ -165,19 +159,19 @@ class ZeptairDistController < ApplicationController
             inserted = false
 
             entries.each do |entry|
-              next if entry.nil? or entry.empty?
+              next if (entry.nil? or entry.empty?)
 
               regexp = Regexp.new("^([a-zA-Z]+)#{ZeptairDistHelper::ACK_CLASS_SEP}(\\d+)[#{ZeptairDistHelper::ACK_ID_SEP}]")
               matched_arr = entry.scan(regexp)
               next if matched_arr.nil?
               matched_arr = matched_arr.flatten
-              next if matched_arr.length < 2
+              next if (matched_arr.length < 2)
 
               entry_class = matched_arr.first
               entry_order = class_order[entry_class]
               entry_id = matched_arr.last.to_i
-              if entry_class == target.class.to_s \
-                  and entry_id == target.id
+              if ((entry_class == target.class.to_s) \
+                  and (entry_id == target.id))
                 msg << new_entry + "\n"
                 inserted = true
               elsif !inserted \
@@ -208,7 +202,7 @@ class ZeptairDistController < ApplicationController
           exp = "^#{target.class}#{ZeptairDistHelper::ACK_CLASS_SEP}#{target.id}#{ZeptairDistHelper::ACK_ID_SEP}"
 
           entries.each do |entry|
-            next if entry.nil? or entry.empty?
+            next if (entry.nil? or entry.empty?)
 
             if entry.match(exp).nil?
               msg << entry + "\n"

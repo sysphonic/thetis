@@ -13,7 +13,7 @@ end
       <%= Timecard.human_attribute_name('status') %>
     </td>
     <td class="spec_value" style="padding-left:20px;">
-      <% if !@timecard.start.nil? and @timecard.end.nil? %>
+      <% if (!@timecard.start.nil? and @timecard.end.nil?) %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png"/>
         &nbsp;<span style="color:crimson;"><%= t('msg.not_fulfilled') %></span>
       <%
@@ -44,7 +44,7 @@ end
       <%
       standard_wktime = Timecard.get_standard_wktime
       actual_wktime = @timecard.get_actual_wktime
-      if standard_wktime > 0 and actual_wktime > standard_wktime
+      if (standard_wktime > 0 and actual_wktime > standard_wktime)
         within_standard = standard_wktime / 60.0
       else
         within_standard = actual_wktime / 60.0
@@ -81,7 +81,7 @@ end
       <%= ApplicationHelper.float_exp(midnight_overtime / 60.0, 2) %>
       <span style="color:orangered;">
       <%
-      if midnight_overtime > 0
+      if (midnight_overtime > 0)
         midnight_spans = @timecard.get_midnight_spans
         unless midnight_spans.nil?
           midnight_spans.each do |span|
@@ -143,7 +143,7 @@ end
 _z("buttons_with_clear").style.display = "";
 _z("buttons_without_clear").style.display = "none";
 
-<% if params[:action] != 'edit' %>
+<% if (params[:action] != 'edit') %>
 changeWorkcode(_z("timecard_workcode").value);
 <% end %>
 

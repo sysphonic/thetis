@@ -1,6 +1,6 @@
 
 <%
-if @email.nil? or @email.id.nil?
+if (@email.nil? or @email.id.nil?)
   mail_attachments = nil
 else
   mail_attachments = @email.mail_attachments
@@ -19,7 +19,7 @@ end
   <tr style="height:5px;"><td></td></tr>
   <tr>
     <td colspan="2" style="border:solid 1px gray; padding:5px; text-align:left; background-color:white;  word-break:break-all;">
-      <% if mail_attachments.nil? or mail_attachments.empty? %>
+      <% if (mail_attachments.nil? or mail_attachments.empty?) %>
         <span style="color:dimgray;"><%= t('paren.not_specified') %></span><br/>
       <% else %>
         <% mail_attachments.each do |attach| %>

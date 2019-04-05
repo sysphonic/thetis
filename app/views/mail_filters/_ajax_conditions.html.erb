@@ -17,11 +17,11 @@ unless @mail_filter.nil? or @mail_filter.conditions.nil?
     opt_compare = opts_compare.find{|opt| opt.last == compare}
     disp_compare = (opt_compare.nil?)?(nil):(opt_compare.first)
 
-    if point == 'priority'
-      opt_priority = opts_priority.find{|opt| opt.last == val}
+    if (point == 'priority')
+      opt_priority = opts_priority.find{|opt| (opt.last == val)}
       disp_val = (opt_priority.nil?)?(nil):(opt_priority.first)
-    elsif point == 'status'
-      opt_status = opts_status.find{|opt| opt.last == val}
+    elsif (point == 'status')
+      opt_status = opts_status.find{|opt| (opt.last == val)}
       disp_val = (opt_status.nil?)?(nil):(opt_status.first)
     else
       disp_val = val

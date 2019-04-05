@@ -20,7 +20,7 @@
 else
   disp_ctrl = @folder.get_disp_ctrl_h
   def_sort = disp_ctrl[Folder::DISPCTRL_DEF_SORT]
-  if def_sort.nil? or def_sort.empty?
+  if (def_sort.nil? or def_sort.empty?)
     def_sort = Item::SORT_FIELD_DEFAULT + ' ' + Item::SORT_DIRECTION_DEFAULT
   end
 %>
@@ -60,7 +60,7 @@ else
                   <%
                   checked = (@folder.bbs_top?) ? 'checked' : ''
 
-                  if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
+                  if (!@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER))
                   %>
                     <input type="checkbox" id="check_bbs_top" name="check_bbs_top" value="1" <%= checked %>>
                   <% else %>

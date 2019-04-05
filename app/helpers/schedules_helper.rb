@@ -1,7 +1,7 @@
 #
 #= SchedulesHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module SchedulesHelper
@@ -91,14 +91,14 @@ module SchedulesHelper
   #
   def self.regularize(date)
 
-    return date if date.nil? or date.empty?
+    return date if (date.nil? or date.empty?)
 
     _date = date.split(' ').first
     time = date.split(' ').last
     hour = time.split(':').first
     min = time.split(':').last
 
-    if hour.to_i >= 24
+    if (hour.to_i >= 24)
 
       reg_str = _date + ' ' + (hour.to_i-24).to_s + ':' + min
       dt = DateTime.parse(reg_str) + 1
@@ -120,10 +120,10 @@ module SchedulesHelper
   #
   def self.get_somebody_conditions(login_user, user_id)
 
-    if login_user.nil? or user_id.nil?
+    if (login_user.nil? or user_id.nil?)
       con = ["(scope='#{Schedule::SCOPE_ALL}')"]
     elsif login_user.admin?(User::AUTH_SCHEDULE) or login_user.id.to_s == user_id.to_s
-      if login_user.id.to_s == user_id.to_s
+      if (login_user.id.to_s == user_id.to_s)
         target_user = login_user
       else
         target_user = User.find(user_id)

@@ -21,7 +21,7 @@ end
             <%
             [['main', t('config.menu_inside_thetis')], ['_blank', t('config.menu_new_window')]].each do |choice|
               checked = ''
-              checked = 'checked' if choice.first == @header_menu_param[1]
+              checked = 'checked' if (choice.first == @header_menu_param[1])
             %>
               <input type="radio" id="target_<%= choice.first %>" name="header_menu[target]" value="<%= choice.first %>" <%= checked %> /><label for="target_<%= choice.first %>"><%= choice.last %></label>
             <% end %>

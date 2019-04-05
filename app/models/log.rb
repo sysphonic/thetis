@@ -1,10 +1,8 @@
 #
 #= Log
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Log represents each access log, which can be shown only to administrators.
 #
 class Log < ApplicationRecord
 
@@ -22,7 +20,7 @@ class Log < ApplicationRecord
   def self.trim(max)
     begin
       count = Log.count
-      if count > max
+      if (count > max)
         over_num = count - max
         logs = Log.where(nil).limit(over_num).order('id ASC').to_a
         logs.each do |log|

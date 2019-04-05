@@ -1,7 +1,7 @@
 #
 #= MailAttachment
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class MailAttachment < ApplicationRecord
@@ -9,8 +9,8 @@ class MailAttachment < ApplicationRecord
 
   belongs_to(:email)
 
-  require 'tempfile'
-  require 'fileutils'
+  require('tempfile')
+  require('fileutils')
 
   validates_presence_of(:name)
 
@@ -92,9 +92,9 @@ class MailAttachment < ApplicationRecord
 
     path = self.email.get_dir
 
-    filepaths = Dir.glob([File.join(path, self.id.to_s), File.join(path, self.id.to_s + '.*')].join("\0"))
+    filepaths = Dir.glob([File.join(path, self.id.to_s), File.join(path, self.id.to_s + '.*')])
 
-    if filepaths.nil? or filepaths.empty?
+    if (filepaths.nil? or filepaths.empty?)
       err_msg = "MailAttachment#get_path() FAILED. id=#{self.id}, path=#{path}"
       stacktrace = ApplicationHelper.stacktrace
       Rails.logger.error(err_msg+"\n"+stacktrace.join("\n"))

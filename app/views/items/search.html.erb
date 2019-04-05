@@ -44,7 +44,7 @@
       excepts = [:xorder] if @folder_id.blank?
       ItemsHelper.sort_opts(excepts).each do |text_val|
         selected = ''
-        selected = 'selected' if text_val.last == @sort_col+' '+@sort_type
+        selected = 'selected' if (text_val.last == @sort_col+' '+@sort_type)
       %>
         <option value="<%= text_val.last %>" <%= selected %>><%= raw(text_val.first) %></option>
       <% end %>
@@ -101,7 +101,7 @@
             <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
               <%= truncate(item.title, :length => 20) %>
             </a>
-            <% if !item.workflow.nil? and item.workflow.decided? %>
+            <% if (!item.workflow.nil? and item.workflow.decided?) %>
               <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
             <% end %>
             &nbsp;&nbsp;
@@ -111,11 +111,11 @@
             </a>
           <% end %>
           &nbsp;&nbsp;
-          <% if !@login_user.nil? and item.editable?(@login_user.id) %>
+          <% if (!@login_user.nil? and item.editable?(@login_user.id)) %>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
           <% end %>
           <%
-          if !@login_user.nil? and item.deletable?(@login_user.id)
+          if (!@login_user.nil? and item.deletable?(@login_user.id))
             del_type = 'null'
             del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
           %>

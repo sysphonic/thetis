@@ -1,7 +1,7 @@
 #
 #= ZeptairDistHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module ZeptairDistHelper
@@ -29,7 +29,7 @@ module ZeptairDistHelper
   #
   def self.get_ack_entry_for(target)
 
-    return nil if target.nil? or target.updated_at.nil?
+    return nil if (target.nil? or target.updated_at.nil?)
 
     completed_status = ''
     if target.instance_of?(Attachment)
@@ -215,7 +215,7 @@ module ZeptairDistHelper
       feed_entry.content_encoded = "<![CDATA[#{item.description}]]>"
 
       attachments = item.attachments_without_content
-      if !attachments.nil? and attachments.length > 0
+      if (!attachments.nil? and attachments.length > 0)
         feed_entry.enclosures = []
         attachments.each do |attach|
           feed_enclosure = FeedEntry::FeedEnclosure.new

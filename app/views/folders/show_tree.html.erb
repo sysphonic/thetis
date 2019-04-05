@@ -10,7 +10,7 @@ var modified_teams = 0;
 %>
 
 <table id="tree_main" style="width:100%; background-color:#f9bf8b; border:solid 2px; border-top-color:#fbe2b1; border-left-color:#fbe2b1; border-bottom-color:dimgray; border-right-color:dimgray;">
-<% if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER) %>
+<% if (!@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)) %>
   <tr id="tr_admin_panel">
     <td style="padding:5px 5px 2px; text-align:right;">
       <table style="width:100%;">
@@ -98,7 +98,7 @@ var modified_teams = 0;
     folder_xtype = folder.xtype
 
     # >>>  Only for ver.0.9.1
-    if folder_xtype == Folder::XTYPE_USER
+    if (folder_xtype == Folder::XTYPE_USER)
       begin
         user = User.find(folder.owner_id)
       rescue
@@ -107,14 +107,14 @@ var modified_teams = 0;
     end
     # <<<
     # >>>  To make sure
-    if folder_xtype == Folder::XTYPE_GROUP
+    if (folder_xtype == Folder::XTYPE_GROUP)
       begin
         group = Group.find(folder.owner_id)
       rescue
       end
       folder_xtype = '' if group.nil?
     end
-    if folder_xtype == Folder::XTYPE_TEAM
+    if (folder_xtype == Folder::XTYPE_TEAM)
       begin
         team = Team.find(folder.owner_id)
       rescue
@@ -230,10 +230,10 @@ function onLoadSub()
       end
 
       folder_name = folder.name
-      if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
-        if folder.xtype == Folder::XTYPE_USER
+      if (!@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER))
+        if (folder.xtype == Folder::XTYPE_USER)
           folder_name = folder.name + ' : ' + User.get_name(folder.owner_id)
-        elsif folder.xtype == Folder::XTYPE_GROUP
+        elsif (folder.xtype == Folder::XTYPE_GROUP)
           folder_name = Group.get_path(folder.owner_id, @groups_cache, @group_obj_cache)
         end
       end

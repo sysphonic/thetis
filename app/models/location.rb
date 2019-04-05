@@ -1,10 +1,8 @@
 #
 #= Location
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Location of each User.
 #
 class Location < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :x, :y, :memo]
@@ -20,7 +18,7 @@ class Location < ApplicationRecord
 
     location = Location.where("user_id=#{user.id}").first
 
-    if !location.nil? and location.expired?
+    if (!location.nil? and location.expired?)
       location.destroy
       location = nil
     end

@@ -1,19 +1,13 @@
 #
 #= PaintmailController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about PaintMail.
-#
-#== Note:
-#
-#* 
-#
 class PaintmailController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
 
   #=== index
   #
@@ -35,11 +29,11 @@ class PaintmailController < ApplicationController
     unless @login_user.nil?
 
       if @login_user.paintmail.nil?
-        paintmail = Paintmail.new(params.require(:paintmail).permit(Paintmail::PERMIT_BASE))
+        paintmail = Paintmail.new(Paintmail.permit_base(params.require(:paintmail)))
         paintmail.user_id = @login_user.id
         paintmail.save
       else
-        @login_user.paintmail.update_attributes(params.require(:paintmail).permit(Paintmail::PERMIT_BASE))
+        @login_user.paintmail.update_attributes(Paintmail.permit_base(params.require(:paintmail)))
       end
     end
 

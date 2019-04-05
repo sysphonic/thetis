@@ -48,8 +48,8 @@
       &nbsp;
       <%
       session_folder = session[:folder_id]
-      if !session_folder.nil? and Folder.exists?(session_folder)
-        if session_folder != '0'
+      if (!session_folder.nil? and Folder.exists?(session_folder))
+        if (session_folder != '0')
       %>
         <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/folder_shortcut.png" title="<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'bbs', :folder_id => session_folder) %>';">
       <%
@@ -134,7 +134,7 @@
           <td style="font-size:15px; line-height:19px; text-align:left; text-indent:5px;">
             <%= item.id %>.&nbsp;&nbsp; <a class="a_underline" href="javascript:this.onclick()" onclick="doShowItem(<%= item.id %>); return false;"><%= truncate(item.title, :length => 60) %></a>
 
-            <% if !item.workflow.nil? and item.workflow.decided? %>
+            <% if (!item.workflow.nil? and item.workflow.decided?) %>
               <span style="color:sienna;"><%= raw(t('paren.aquo.left')) %><%= item.workflow.get_status_name %><%= raw(t('paren.aquo.right')) %></span>
             <% end %>
 
@@ -151,11 +151,11 @@
               </a>
               <% end %>
             <% end %>
-            <% if !@login_user.nil? and item.editable?(@login_user.id) %>
+            <% if (!@login_user.nil? and item.editable?(@login_user.id)) %>
             &nbsp;
               <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => item) %>';" />&nbsp;
             <% end %>
-            <% if !@login_user.nil? and item.deletable?(@login_user.id) %>
+            <% if (!@login_user.nil? and item.deletable?(@login_user.id)) %>
               <%
               del_type = 'null'
               del_type = '\''+Item::XTYPE_PROJECT+'\'' unless item.team.nil?
@@ -180,7 +180,7 @@
             updated_at = (item.updated_at.nil?)?'':('('+item.updated_at.strftime(THETIS_DATE_FORMAT_YMD+' %H:%M')+')')
             %>
             &nbsp;<span style="font-size:12px; vertical-align:middle;"><%= updated_at %></span>
-            <% unless item.public %>
+            <% unless item.public? %>
               <span style="color:blue"><%= raw(t('schedule.private')) %></span>
             <% end %>
             <% if (item.xtype == Item::XTYPE_PROJECT) %>
@@ -229,7 +229,7 @@ additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachmen
           <td>
             <table style="margin:0px auto; width:90%; border:1px solid goldenrod;" >
               <tr>
-                <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public)?'#fff5f0':'lightcyan' %>; font-size:14px; padding:10px; line-height:20px;">
+                <td style="text-align:left; vertical-align:top; width:<%= (additionalCol)?'70%':'100%' %>; background-color:<%= (item.public?)?'#fff5f0':'lightcyan' %>; font-size:14px; padding:10px; line-height:20px;">
                 <% unless item.summary.blank? %>
                   <div>
                     <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.left')) %></span> <%= Item.human_attribute_name('summary') %> <span style="color:orangered; font-size:11px; vertical-align:middle;"><%= raw(t('paren.aquo_b.right')) %></span><br/>
@@ -255,9 +255,9 @@ additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachmen
                 max_bbs_img = 2
                 max_bbs_attach = 2
                 show_num = false
-                show_num = true if params[:thumbnails] == 'false'
-                show_num = true if images_num > max_bbs_img
-                show_num = true if attachments_num > max_bbs_attach
+                show_num = true if (params[:thumbnails] == 'false')
+                show_num = true if (images_num > max_bbs_img)
+                show_num = true if (attachments_num > max_bbs_attach)
                 if show_num
                 %>
                   <div style="text-align:right; padding:5px;">
@@ -269,15 +269,15 @@ additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachmen
 
                 </td>
               <% if additionalCol %>
-                <td style="background-color:<%= (item.public)?'#fff5f0':'lightcyan' %>;">
+                <td style="background-color:<%= (item.public?)?'#fff5f0':'lightcyan' %>;">
                    <table style="margin:0px auto; width:100px;">
-                <% if params[:thumbnails]!='false' and images_num > 0 %>
+                <% if (params[:thumbnails]!='false' and images_num > 0) %>
                      <tr>
                        <td>
                          <table style="margin:0px auto; width:100px;">
                   <%
                   item_images.each_with_index do |image, idx|
-                    break if idx >= max_bbs_img
+                    break if (idx >= max_bbs_img)
                   %>
                            <tr>
                              <td style="width:130px; padding:5px">
@@ -290,14 +290,14 @@ additionalCol = ((params[:thumbnails]!='false' and images_num > 0) or (attachmen
                        </td>
                      </tr>
               <% end %>
-              <% if attachments_num > 0 %>
+              <% if (attachments_num > 0) %>
                      <tr>
                        <td>
                   <%
                   attach_cnt = 0
                   item_attachments.each do |attach|
                    attach_cnt += 1
-                   break if attach_cnt > max_bbs_attach
+                   break if (attach_cnt > max_bbs_attach)
                   %>
                          <table class="attachment_block" style="width:120px; margin:0px auto;" onclick="location='<%= url_for(:controller => 'items', :action => :get_attachment, :id => attach.id) %>'">
                            <tr>
@@ -495,7 +495,7 @@ function onFolderNodeSelected(thetisBoxId)
   }
 }
 
-<% if !params[:folderTree].nil? and @folder_id.nil? %>
+<% if (!params[:folderTree].nil? and @folder_id.nil?) %>
 function onLoadSub()
 {
   showFolderTreeToSelect("<%= params[:folderTree] %>");

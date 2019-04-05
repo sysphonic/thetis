@@ -1,7 +1,7 @@
 #
 #= AddressbookHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module AddressbookHelper
@@ -39,13 +39,13 @@ module AddressbookHelper
 
       address.owner_id = 0
 
-      if group_ids.nil? or group_ids.empty?
+      if (group_ids.nil? or group_ids.empty?)
         address.groups = nil
       else
         address.groups = ApplicationHelper.a_to_attr(group_ids)
       end
 
-      if team_ids.nil? or team_ids.empty?
+      if (team_ids.nil? or team_ids.empty?)
         address.teams = nil
       else
         address.teams = ApplicationHelper.a_to_attr(team_ids)

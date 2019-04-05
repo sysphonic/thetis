@@ -1,17 +1,15 @@
 #
 #= Timecard
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Timecard represents a timecard's record by day and User.
 #
 class Timecard < ApplicationRecord
   public::PERMIT_BASE = [:date, :user_id, :item_id, :workcode, :start, :end, :breaks, :comment, :status, :options]
 
   belongs_to(:user)
 
-  require ::Rails.root.to_s+'/lib/util/util_datetime'
+  require(Rails.root.to_s+'/lib/util/util_datetime')
 
   public::BGCOLOR_HOLIDAY = '#ffcccb'
   public::BGCOLOR_SUN = '#ffcccb'
@@ -122,7 +120,7 @@ class Timecard < ApplicationRecord
   #
   def self.get_by_key(user_id, date)
 
-    return nil if user_id.nil? or date.nil?
+    return nil if (user_id.nil? or date.nil?)
 
     if date.kind_of?(Date)
       date_s = Schedule.sys_date_form(date)
@@ -210,7 +208,7 @@ class Timecard < ApplicationRecord
   #return:: true if lateness, false otherwise.
   #
   def calc_lateness?
-    return false if self.start.nil? or self.work_on_holiday?
+    return false if (self.start.nil? or self.work_on_holiday?)
 
     if self.off_am?
       commence_at = Timecard.get_commence_at_when_off_am(self.date)
@@ -247,7 +245,7 @@ class Timecard < ApplicationRecord
   #return:: true if leaving early, false otherwise.
   #
   def calc_leaving_early?
-    return false if self.end.nil? or self.work_on_holiday?
+    return false if (self.end.nil? or self.work_on_holiday?)
 
     if self.off_pm?
       close_at = Timecard.get_close_at_when_off_pm(self.date)
@@ -284,7 +282,7 @@ class Timecard < ApplicationRecord
   #
   def get_breaks_a
 
-    return [] if self.breaks.nil? or self.breaks.empty?
+    return [] if (self.breaks.nil? or self.breaks.empty?)
 
     arr = ApplicationHelper.attr_to_a(self.breaks)
 
@@ -327,7 +325,7 @@ class Timecard < ApplicationRecord
     spans = self.get_breaks_a
 
     spans.each do |span|
-      if span.first == org_start
+      if (span.first == org_start)
         span[0] = start_t
         span[1] = end_t
         return self.update_breaks(spans)
@@ -347,7 +345,7 @@ class Timecard < ApplicationRecord
   #
   def update_breaks(spans)
 
-    if spans.nil? or spans.empty?
+    if (spans.nil? or spans.empty?)
       self.update_attribute(:breaks, nil)
     else
       begin
@@ -410,7 +408,7 @@ class Timecard < ApplicationRecord
     spans = self.get_breaks_a
 
     spans.each do |span|
-      if span.first == org_start
+      if (span.first == org_start)
         spans.delete(span)
         self.update_breaks(spans)
         return
@@ -423,7 +421,7 @@ class Timecard < ApplicationRecord
   #Sets default breaks.
   #
   def set_default_breaks
-    return if self.start.nil? or self.end.nil?
+    return if (self.start.nil? or self.end.nil?)
 
     yaml = ApplicationHelper.get_config_yaml
     default_breaks = YamlHelper.get_value(yaml, 'timecard.default_breaks', nil)
@@ -436,7 +434,7 @@ class Timecard < ApplicationRecord
         def_brk = _get_break_span(span.first, span.last)
 
         unless def_brk.nil?
-          next if !cur_breaks.empty? and def_brk.first <= cur_breaks.last.last
+          next if (!cur_breaks.empty? and def_brk.first <= cur_breaks.last.last)
 
           def_brks << def_brk
         end
@@ -456,15 +454,15 @@ class Timecard < ApplicationRecord
   #return:: Array of start and end time.
   #
   def _get_break_span(break_start, break_end)
-    return nil if self.start.nil? or self.end.nil?
+    return nil if (self.start.nil? or self.end.nil?)
 
     start_dt = UtilDateTime.new(self.start.year, self.start.month, self.start.day, break_start.hour, break_start.min)
     end_dt = UtilDateTime.new(self.start.year, self.start.month, self.start.day, break_end.hour, break_end.min)
 
-    if end_dt.to_time <= start_dt.to_time
+    if (end_dt.to_time <= start_dt.to_time)
       end_dt += 1
     else
-      if end_dt.to_time <= self.start
+      if (end_dt.to_time <= self.start)
         start_dt += 1
         end_dt += 1
       end
@@ -541,7 +539,7 @@ class Timecard < ApplicationRecord
     sum = 0.0
     self.workcodes.each do |key, params|
       paidhld_rate = params[WKCODE_PARAM_PAIDHLD]
-      if paidhld_rate > 0.0
+      if (paidhld_rate > 0.0)
         num = Timecard.count_by_sql(sql + " AND workcode='#{key}'")
         sum += num * paidhld_rate
       end
@@ -557,7 +555,7 @@ class Timecard < ApplicationRecord
   #return:: Overtime (min).
   #
   def get_overtime
-    return 0 if self.start.nil? or self.end.nil?
+    return 0 if (self.start.nil? or self.end.nil?)
 
     if self.off_am?
       standard_wktime = Timecard.get_standard_wktime_when_off_am
@@ -567,13 +565,13 @@ class Timecard < ApplicationRecord
       standard_wktime = Timecard.get_standard_wktime
     end
 
-    return 0 if standard_wktime <= 0
+    return 0 if (standard_wktime <= 0)
 
     return self.get_actual_wktime - standard_wktime
 
 #    overtime = self.get_actual_wktime - standard_wktime
 #
-#    if overtime >= 0
+#    if (overtime >= 0)
 #      return overtime
 #    else
 #      return 0
@@ -591,9 +589,9 @@ class Timecard < ApplicationRecord
     overtime = self.get_overtime
     midnight_overtime = self.get_midnight_overtime
 
-    if overtime <= 0
+    if (overtime <= 0)
       return overtime
-    elsif overtime <= midnight_overtime
+    elsif (overtime <= midnight_overtime)
       return 0
     else
       return (overtime - midnight_overtime)
@@ -601,7 +599,7 @@ class Timecard < ApplicationRecord
 
 #    usual_overtime = self.get_overtime - self.get_midnight_overtime
 #
-#    if usual_overtime >= 0
+#    if (usual_overtime >= 0)
 #      return usual_overtime
 #    else
 #      return 0
@@ -615,7 +613,7 @@ class Timecard < ApplicationRecord
   #return:: Midnight overtime (min).
   #
   def get_midnight_overtime
-    return 0 if self.start.nil? or self.end.nil?
+    return 0 if (self.start.nil? or self.end.nil?)
 
     midnight_spans = self.get_midnight_spans
 
@@ -637,11 +635,11 @@ class Timecard < ApplicationRecord
   #return:: Start time of the overtime.
   #
   def get_overtime_start
-    return nil if self.start.nil? or self.end.nil? or self.get_overtime <= 0
+    return nil if (self.start.nil? or self.end.nil? or self.get_overtime <= 0)
 
     standard_wktime = Timecard.get_standard_wktime
 
-    return nil if standard_wktime <= 0
+    return nil if (standard_wktime <= 0)
 
     overtime_start = self.start + standard_wktime * 60
 
@@ -649,9 +647,9 @@ class Timecard < ApplicationRecord
       span_start = span.first
       span_end = span.last
 
-      next if span_start > span_end or span_start > self.end
+      next if (span_start > span_end or span_start > self.end)
 
-      if overtime_start > span_end
+      if (overtime_start > span_end)
         overtime_start += (span_end - span_start)
       end
     end
@@ -811,12 +809,12 @@ class Timecard < ApplicationRecord
   #return:: Array of the start and end time of the midnight span.
   #
   def get_midnight_spans
-    return nil if self.start.nil? or self.end.nil?
+    return nil if (self.start.nil? or self.end.nil?)
 
     yaml = ApplicationHelper.get_config_yaml
 
     conf_span = YamlHelper.get_value(yaml, 'timecard.midnight_span', nil)
-    return nil if conf_span.nil? or conf_span.empty?
+    return nil if (conf_span.nil? or conf_span.empty?)
 
     conf_span = conf_span.split('~')
     from = conf_span.first.split(':')
@@ -824,7 +822,7 @@ class Timecard < ApplicationRecord
     to = conf_span.last.split(':')
     to = UtilDateTime.new(self.date.year, self.date.month, self.date.day, to.first.to_i, to.last.to_i)
 
-    from -= 1 if from.to_time > to.to_time
+    from -= 1 if (from.to_time > to.to_time)
 
     spans = []
 
@@ -832,7 +830,7 @@ class Timecard < ApplicationRecord
       span = ApplicationHelper.get_overlapped_span(from.to_time, to.to_time, self.start, self.end)
       spans << span unless span.nil?
 
-      if from.day != to.day or self.start.day != self.end.day
+      if (from.day != to.day or self.start.day != self.end.day)
         from += 1
         to += 1
       else
@@ -853,7 +851,7 @@ class Timecard < ApplicationRecord
   #
   def get_actual_wktime(start_t=self.start, end_t=self.end)
 
-    return 0 if start_t.nil? or end_t.nil? or start_t > end_t
+    return 0 if (start_t.nil? or end_t.nil? or start_t > end_t)
 
     wksec = end_t - start_t
 
@@ -885,9 +883,9 @@ class Timecard < ApplicationRecord
 
         return [nil, nil] if value.nil?
 
-        if key == 'MIN(date)'
+        if (key == 'MIN(date)')
           ret[0] = Date.parse(value.to_s)
-        elsif key == 'MAX(date)'
+        elsif (key == 'MAX(date)')
           ret[1] = Date.parse(value.to_s)
         end
       end

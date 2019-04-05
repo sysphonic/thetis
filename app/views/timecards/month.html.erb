@@ -91,7 +91,7 @@ days.times do
     <%
     today_bg_style = ''
     today_txt_style = ''
-    if day.year == today.year and day.month == today.month and day.day == today.day
+    if (day.year == today.year and day.month == today.month and day.day == today.day)
       today_bg_style = 'background-color:darkorange;'
       today_txt_style = 'color:white;'
     end
@@ -130,7 +130,7 @@ days.times do
     <% end %>
     </td>
     <td style="text-align:center;" nowrap>
-      <% if !timecard.start.nil? and timecard.end.nil? %>
+      <% if (!timecard.start.nil? and timecard.end.nil?) %>
         <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/pencil.png" title="<%= t('msg.not_fulfilled') %>">
       <%
       elsif !timecard.start.nil?
@@ -193,7 +193,7 @@ days.times do
       # Note that "overtime != usual_overtime + midnight_overtime".
       overtime_sum += timecard.get_overtime unless timecard.work_on_holiday?
 
-      unless timecard.start.nil? or timecard.end.nil?
+      unless (timecard.start.nil? or timecard.end.nil?)
         usual_overtime = timecard.get_usual_overtime
         exp_usual_overtime = ApplicationHelper.float_exp(usual_overtime / 60.0, 2)
 
@@ -203,10 +203,10 @@ days.times do
           usual_overtime_sum += usual_overtime
         end
 
-        if usual_overtime < 0.0
+        if (usual_overtime < 0.0)
       %>
         <span style="color:darkgreen;"><%= exp_usual_overtime %></span>
-      <% elsif usual_overtime == 0.0 %>
+      <% elsif (usual_overtime == 0.0) %>
         -
       <% else %>
         <span style="color:orangered;"><%= exp_usual_overtime %></span>
@@ -327,7 +327,7 @@ end
             carried_over = PaidHoliday.get_carried_over(@selected_user.id, @fiscal_year)
             %>
             <%= (given_num + carried_over - @applied_paid_hlds - paid_holidays) %>
-          <% if @login_user.id == @selected_user.id or @login_user.admin?(User::AUTH_TIMECARD) %>
+          <% if (@login_user.id == @selected_user.id or @login_user.admin?(User::AUTH_TIMECARD)) %>
             <img class="img_btn" src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/zoom.png" title="<%= t('btn.detail') %>" onclick="showPaidHldByUser(<%= @selected_user.id %>, '<%= ApplicationHelper.h_s_quote(@selected_user.get_name_for_timecard) %>');" />
           <% end %>
           </td>

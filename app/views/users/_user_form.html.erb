@@ -83,7 +83,7 @@ if THETIS_USER_TIMEZONE_SELECTABLE \
         <%= time_zone_select('user', 'time_zone', nil, :default => THETIS_USER_TIMEZONE_DEFAULT) %>
 <%
 else
-  if @user.nil? or @user.time_zone.nil? or @user.time_zone.empty?
+  if (@user.nil? or @user.time_zone.nil? or @user.time_zone.empty?)
 %>
         <%= t('paren.not_specified') %>
   <% else %>

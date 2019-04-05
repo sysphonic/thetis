@@ -1,7 +1,7 @@
 #
 #= ItemsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module ItemsHelper
@@ -154,9 +154,9 @@ module ItemsHelper
       where << ' (Item.id > 0)' # Dummy
     else
       if user.nil?
-        where << ' (Item.public=true)'
+        where << " (Item.public=#{SqlHelper.to_bool(true)})"
       else
-        where << " (Item.user_id=#{user.id} or Item.public=true)"
+        where << " (Item.user_id=#{user.id} or Item.public=#{SqlHelper.to_bool(true)})"
       end
     end
 

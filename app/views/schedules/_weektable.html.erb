@@ -16,7 +16,7 @@
 
       <table style="width:100%; border-spacing:1px;">
   <%
-  if schedules.length > 0
+  if (schedules.length > 0)
     overlap_arr = Schedule.check_overlap_equipment(@equipment_id, schedules, @day)
     schedules.each do |_schedule|
       @schedule = _schedule

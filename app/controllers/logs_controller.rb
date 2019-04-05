@@ -1,23 +1,16 @@
 #
 #= LogsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Logs.
-#
-#== Note:
-#
-#*
-#
 class LogsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
+  before_action(:check_login)
   before_action do |controller|
     controller.check_auth(User::AUTH_LOG)
   end
-
 
   #=== configure
   #
@@ -78,13 +71,13 @@ class LogsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = "updated_at"
       @sort_type = "DESC"
     end
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + " " + @sort_type
-    if @sort_col != 'Log.id'
+    if (@sort_col != 'Log.id')
       order_by << ', Log.id ' + @sort_type
     end
 
@@ -123,7 +116,7 @@ class LogsController < ApplicationController
 
     count = 0
     params[:check_log].each do |key, value|
-      if value == '1'
+      if (value == '1')
         Log.delete(key)
         count += 1
       end

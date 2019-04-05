@@ -1,21 +1,14 @@
 #
 #= ZeptairPostController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#The Action-Controller about ZeptairPost.
-#
-#== Note:
-#
-#* 
 #
 class ZeptairPostController < ApplicationController
 
-  require 'csv'
+  require('csv')
 
-  before_action :check_login
-
+  before_action(:check_login)
 
   #=== upload
   #
@@ -26,7 +19,7 @@ class ZeptairPostController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    if params[:file].nil? or params[:file].size <= 0
+    if (params[:file].nil? or params[:file].size <= 0)
       render(:plain => '')
       return
     end
@@ -51,12 +44,12 @@ class ZeptairPostController < ApplicationController
 
     post_item = ZeptairPostHelper.get_item_for(@login_user)
 
-    if post_item.id != attach.item_id
+    if (post_item.id != attach.item_id)
       render(:plain => 'ERROR:' + t('msg.system_error'))
       return
     end
 
-    if attach.location == Attachment::LOCATION_DIR
+    if (attach.location == Attachment::LOCATION_DIR)
 
       filepath = AttachmentsHelper.get_path(attach)
 
@@ -102,7 +95,7 @@ class ZeptairPostController < ApplicationController
       else
         group_ids = [group_id]
 
-        if params[:recursive] == 'true'
+        if (params[:recursive] == 'true')
           group_ids += Group.get_childs(group_id, true, false)
         end
 
@@ -178,7 +171,7 @@ class ZeptairPostController < ApplicationController
           raise t('msg.need_to_be_owner')
         end
 
-        if item.xtype != Item::XTYPE_ZEPTAIR_POST
+        if (item.xtype != Item::XTYPE_ZEPTAIR_POST)
           raise t('msg.system_error')
         end
 

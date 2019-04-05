@@ -1,7 +1,7 @@
 #
 #= ZeptairPostHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module ZeptairPostHelper
@@ -20,7 +20,7 @@ module ZeptairPostHelper
 
     post_item = Item.where("(user_id=#{user.id}) and (xtype='#{Item::XTYPE_ZEPTAIR_POST}')").first
 
-    if post_item.nil? and auto_create
+    if (post_item.nil? and auto_create)
       post_item = Item.new_by_type(Item::XTYPE_ZEPTAIR_POST, user.get_my_folder.id)
       post_item.save!
     end

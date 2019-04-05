@@ -1,7 +1,7 @@
 #
 #= AttachmentsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module AttachmentsHelper
@@ -41,9 +41,9 @@ module AttachmentsHelper
 
     path = AttachmentsHelper.get_parent_path(attachment)
 
-    filepaths = Dir.glob([File.join(path, attachment.id.to_s), File.join(path, attachment.id.to_s + '.*')].join("\0"))
+    filepaths = Dir.glob([File.join(path, attachment.id.to_s), File.join(path, attachment.id.to_s + '.*')])
 
-    return nil if filepaths.nil? or filepaths.empty?
+    return nil if (filepaths.nil? or filepaths.empty?)
 
     return filepaths.first
   end
@@ -74,7 +74,7 @@ module AttachmentsHelper
     end
 
     files_dirs = Dir.glob(File.join(path, '**/*'))
-    if files_dirs.nil? or files_dirs.empty?
+    if (files_dirs.nil? or files_dirs.empty?)
       FileUtils.remove_entry_secure(path, true)
       _clean_dir(File.dirname(path))
     end

@@ -1,14 +1,8 @@
 #
 #= NoticeMailer
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#NoticeMailer sends E-mails to Users.
-#
-#== Note:
-#
-#* 
 #
 class NoticeMailer < ActionMailer::Base
 
@@ -40,7 +34,7 @@ class NoticeMailer < ActionMailer::Base
   #
   def password(user_passwords_h, root_url)
 
-    return if user_passwords_h.nil? or user_passwords_h.empty?
+    return if (user_passwords_h.nil? or user_passwords_h.empty?)
 
     @user_passwords_h = user_passwords_h
     @root_url = root_url
@@ -78,7 +72,7 @@ class NoticeMailer < ActionMailer::Base
   #_root_url_:: Root URL.
   #
   def notice(user, subject, body, root_url)
-    if subject.nil? or subject.empty?
+    if (subject.nil? or subject.empty?)
       subject = I18n.t('notification.name')
     end
     @user = user

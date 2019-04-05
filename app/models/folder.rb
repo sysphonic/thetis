@@ -1,7 +1,7 @@
 #
 #= Folder
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Folder contains Items and sub Folders.
@@ -14,8 +14,8 @@
 #
 class Folder < ApplicationRecord
 
-  extend CachedRecord
-  include TreeElement
+  extend(CachedRecord)
+  include(TreeElement)
 
   public::DISPCTRL_BBS_TOP = 'bbs_top'
   public::DISPCTRL_DEF_SORT = 'def_sort'
@@ -100,13 +100,13 @@ class Folder < ApplicationRecord
   #
   def self.sort_tree(folder_tree)
 
-    return folder_tree if folder_tree.nil? or folder_tree.empty?
+    return folder_tree if (folder_tree.nil? or folder_tree.empty?)
 
     folder_tree[TreeElement::ROOT_ID.to_s].sort! { |folder_a, folder_b|
 
       if (folder_a.xtype == folder_b.xtype)
 
-        if folder_a.xorder.nil? or folder_b.xorder.nil?
+        if (folder_a.xorder.nil? or folder_b.xorder.nil?)
           idx_a = folder_a.id
           idx_b = folder_b.id
         else
@@ -361,7 +361,7 @@ class Folder < ApplicationRecord
   #
   def self.delete_tree(folder_tree, parent_id, delete_arr)
 
-    return folder_tree if delete_arr.nil? or delete_arr.empty?
+    return folder_tree if (delete_arr.nil? or delete_arr.empty?)
 
     delete_arr.each do |folder|
       folder_tree = Folder.delete_tree(folder_tree, folder.id, folder_tree[folder.id.to_s])
@@ -439,7 +439,7 @@ class Folder < ApplicationRecord
       end
     end
 
-    if folder_id.to_s == TreeElement::ROOT_ID.to_s
+    if (folder_id.to_s == TreeElement::ROOT_ID.to_s)
       path = '/(root)'
       folders_cache[folder_id.to_i] = path unless folders_cache.nil?
       return path
@@ -506,7 +506,7 @@ class Folder < ApplicationRecord
       return false
     end
 
-    if check_admin and !user.nil? and user.admin?(User::AUTH_FOLDER)
+    if (check_admin and !user.nil? and user.admin?(User::AUTH_FOLDER))
       return true
     end
 
@@ -530,7 +530,7 @@ class Folder < ApplicationRecord
     end
 
     # If set no authorities, it will be public.
-    if users.empty? and groups.empty? and teams.empty?
+    if (users.empty? and groups.empty? and teams.empty?)
       return true
     elsif user.nil?
       return false
@@ -576,7 +576,7 @@ class Folder < ApplicationRecord
   #
   def inherit_parent_auth
 
-    return if self.parent_id == 0
+    return if (self.parent_id == 0)
 
     begin
       parent = Folder.find(self.parent_id)
@@ -880,7 +880,7 @@ class Folder < ApplicationRecord
       parents = self.get_parents(true)
       parents.each do |folder|
         users = folder.get_write_users_a(false)
-        next if users.nil? or users.length <= 0
+        next if (users.nil? or users.length <= 0)
 
         if (arr.length <= 0)
           arr = users
@@ -914,7 +914,7 @@ class Folder < ApplicationRecord
 
     users = users.to_a unless users.nil?
 
-    if users.nil? or users.empty?
+    if (users.nil? or users.empty?)
       self.read_users = nil
       return
     end
@@ -932,7 +932,7 @@ class Folder < ApplicationRecord
 
     users = users.to_a unless users.nil?
 
-    if users.nil? or users.empty?
+    if (users.nil? or users.empty?)
       self.write_users = nil
       return
     end
@@ -966,7 +966,7 @@ class Folder < ApplicationRecord
       parents = self.get_parents(true)
       parents.each do |folder|
         groups =folder.get_write_groups_a(false)
-        next if groups.nil? or groups.length <= 0
+        next if (groups.nil? or groups.length <= 0)
 
         if (arr.length <= 0)
           arr = groups
@@ -1000,7 +1000,7 @@ class Folder < ApplicationRecord
 
     groups = groups.to_a unless groups.nil?
 
-    if groups.nil? or groups.empty?
+    if (groups.nil? or groups.empty?)
       self.read_groups = nil
       return
     end
@@ -1018,7 +1018,7 @@ class Folder < ApplicationRecord
 
     groups = groups.to_a unless groups.nil?
 
-    if groups.nil? or groups.empty?
+    if (groups.nil? or groups.empty?)
       self.write_groups = nil
       return
     end
@@ -1086,7 +1086,7 @@ class Folder < ApplicationRecord
 
     teams = teams.to_a unless teams.nil?
 
-    if teams.nil? or teams.empty?
+    if (teams.nil? or teams.empty?)
       self.read_teams = nil
       return
     end
@@ -1104,7 +1104,7 @@ class Folder < ApplicationRecord
 
     teams = teams.to_a unless teams.nil?
 
-    if teams.nil? or teams.empty?
+    if (teams.nil? or teams.empty?)
       self.write_teams = nil
       return
     end

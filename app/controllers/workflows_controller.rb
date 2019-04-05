@@ -1,21 +1,14 @@
 #
 #= WorkflowsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Workflows.
-#
-#== Note:
-#
-#* 
-#
 class WorkflowsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
-  before_action :check_owner, :only => [:move, :destroy]
-
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:move, :destroy])
 
   #=== list
   #
@@ -39,7 +32,6 @@ class WorkflowsController < ApplicationController
 
   #=== create
   #
-  #<Ajax>
   #Creates a Workflow Item in 'My Folder/$Workflows'.
   #
   def create
@@ -54,7 +46,7 @@ class WorkflowsController < ApplicationController
     item = tmpl_item.copy(@login_user.id, my_wf_folder.id)
 
     attrs = ActionController::Parameters.new({title: tmpl_item.title + t('msg.colon') + User.get_name(@login_user.id), public: false})
-    item.update_attributes(attrs.permit(Item::PERMIT_BASE))
+    item.update_attributes(Item.permit_base(attrs))
 
     item.workflow.update_attribute(:status, Workflow::STATUS_NOT_ISSUED)
 
@@ -70,7 +62,6 @@ class WorkflowsController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Destroys specified local template.
   #
   def destroy
@@ -96,7 +87,6 @@ class WorkflowsController < ApplicationController
 
   #=== move
   #
-  #<Ajax>
   #Moves Workflow to the specified Folder.
   #
   def move
@@ -135,7 +125,7 @@ class WorkflowsController < ApplicationController
   #Filter method to check if the current User is owner of the specified Workflow.
   #
   def check_owner
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     begin
       owner_id = Workflow.find(params[:id]).user_id

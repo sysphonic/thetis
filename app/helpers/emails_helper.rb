@@ -1,7 +1,7 @@
 #
 #= EmailsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module EmailsHelper
@@ -33,7 +33,7 @@ module EmailsHelper
   #
   def self.format_address_exp(disp_name, mail_addr, quoted=true)
 
-    if disp_name.nil? or disp_name.empty?
+    if (disp_name.nil? or disp_name.empty?)
       return "<#{mail_addr}>"
     elsif quoted
       return "\"#{disp_name}\" <#{mail_addr}>"
@@ -68,7 +68,7 @@ module EmailsHelper
         unless header.nil?
           header.each_line {|line|
             line.chomp!
-            if !parsed_header.empty? and line.match(/^\s/).nil?
+            if (!parsed_header.empty? and line.match(/^\s/).nil?)
               parsed_header << "\r\n"
             end
             parsed_header << line
@@ -254,7 +254,7 @@ module EmailsHelper
     disp_name = addr_exp.slice(/"(.+)"\s*</, 1) \
                 || addr_exp.slice(/(.+)</, 1)
     disp_name.strip! unless disp_name.nil?
-    return addr_exp if disp_name.nil? or disp_name.empty?
+    return addr_exp if (disp_name.nil? or disp_name.empty?)
 
     enc_name = EmailsHelper.encode_b(disp_name, enc)
 
@@ -319,7 +319,7 @@ module EmailsHelper
       else
         sql = 'select distinct Email.* from emails Email'
         order_by = " order by #{sort_col} #{sort_type}"
-        if sort_col == 'sent_at'
+        if (sort_col == 'sent_at')
           order_by << ", updated_at #{sort_type}"
         end
     end
@@ -359,9 +359,9 @@ module EmailsHelper
   #return:: Encoded String.
   #
   def self.encode_b(str, enc=nil)
-    require 'nkf'
+    require('nkf')
 
-    return str if str.nil? or str.empty?
+    return str if (str.nil? or str.empty?)
 
     # return Mail::Encodings.decode_encode(str, :encode)
     parts = str.scan(/.{16}|.+\Z/)
@@ -386,9 +386,9 @@ module EmailsHelper
   #return:: Encoded String.
   #
   def self.encode(str, enc=nil)
-    require 'nkf'
+    require('nkf')
 
-    return str if str.nil? or str.empty?
+    return str if (str.nil? or str.empty?)
 
     enc = enc.upcase unless enc.nil?
     case enc
@@ -410,9 +410,9 @@ module EmailsHelper
   #return:: Encoded String in raw style.
   #
   def self.encode_b_raw(str, enc=nil)
-    require 'nkf'
+    require('nkf')
 
-    return str if str.nil? or str.empty?
+    return str if (str.nil? or str.empty?)
 
     enc = enc.upcase unless enc.nil?
     case enc
@@ -432,7 +432,7 @@ module EmailsHelper
   #return:: Decoded String.
   #
   def self.decode_b(header, key=nil)
-    require 'nkf'
+    require('nkf')
 
     if key.nil?
       return NKF.nkf('-w', header)
@@ -440,7 +440,7 @@ module EmailsHelper
       parsed_header = ''
       header.each_line {|line|
         line.chomp!
-        if !parsed_header.empty? and line.match(/^\s/).nil?
+        if (!parsed_header.empty? and line.match(/^\s/).nil?)
           parsed_header << "\r\n"
         end
         parsed_header << line

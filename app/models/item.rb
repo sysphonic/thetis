@@ -1,7 +1,7 @@
 #
 #= Item
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 #Item is the most elemental object on this system.
@@ -171,13 +171,13 @@ class Item < ApplicationRecord
       return false
     end
 
-    if check_admin and !user.nil? and user.admin?(User::AUTH_ITEM)
+    if (check_admin and !user.nil? and user.admin?(User::AUTH_ITEM))
       return true
     end
 
     if !user.nil? and (rxw == 'r')
 
-      if self.public and (self.xtype == Item::XTYPE_PROFILE)
+      if self.public? and (self.xtype == Item::XTYPE_PROFILE)
         return true
       end
 
@@ -192,7 +192,7 @@ class Item < ApplicationRecord
       return false
     end
 
-    if (rxw == 'r') and self.public
+    if (rxw == 'r') and self.public?
       return true
     end
 
@@ -242,14 +242,14 @@ class Item < ApplicationRecord
     end
 
     # Workflow
-    if attrs.nil? or attrs.include?(:workflow)
+    if (attrs.nil? or attrs.include?(:workflow))
       unless self.workflow.nil?
         copied_workflow = self.workflow.copy(user_id, item.id)
       end
     end
 
     # Comments
-    if attrs.nil? or attrs.include?(:comment)
+    if (attrs.nil? or attrs.include?(:comment))
       unless self.comments.nil?
         self.comments.each do |comment|
           comment.copy(item.id)
@@ -258,7 +258,7 @@ class Item < ApplicationRecord
     end
 
     # Images
-    if attrs.nil? or attrs.include?(:image)
+    if (attrs.nil? or attrs.include?(:image))
       unless self.images.nil?
         self.images.each do |image|
           image.copy(item.id)
@@ -267,7 +267,7 @@ class Item < ApplicationRecord
     end
 
     # Attachments
-    if attrs.nil? or attrs.include?(:attachment)
+    if (attrs.nil? or attrs.include?(:attachment))
       unless self.attachments.nil?
         self.attachments.each do |attachment|
           attachment.copy(item.id, item.user_id)
@@ -543,7 +543,7 @@ class Item < ApplicationRecord
     end
 
     if (self.xtype == Item::XTYPE_WORKFLOW)
-      if !self.workflow.nil? and self.workflow.status != Workflow::STATUS_NOT_ISSUED
+      if (!self.workflow.nil? and self.workflow.status != Workflow::STATUS_NOT_ISSUED)
         return false
       end
     elsif (self.xtype == Item::XTYPE_RESEARCH)

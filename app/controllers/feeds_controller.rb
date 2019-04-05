@@ -1,26 +1,19 @@
 #
 #= FeedsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#The Action-Controller about Feeds.
-#
-#== Note:
-#
-#* 
 #
 class FeedsController < ApplicationController
 
 # FEATURE_DIGEST_AUTH_FEEDS >>>
-  require 'digest/md5'
+  require('digest/md5')
   before_action(:digest_auth)
 
 #  before_action(:basic_auth)
 # FEATURE_DIGEST_AUTH_FEEDS <<<
 
   before_action(:check_enabled)
-
 
   #=== index
   #
@@ -88,7 +81,7 @@ class FeedsController < ApplicationController
     _build_site_info(root_url)
     @site_title = t('zeptair.dist.title')
 
-    if params[:admins].nil? or params[:admins].empty?
+    if (params[:admins].nil? or params[:admins].empty?)
       admins = nil
     else
       admins = params[:admins].split(',')
@@ -151,7 +144,7 @@ class FeedsController < ApplicationController
 #      user = User.get_from_name(user_name)
 #
 #      unless user.nil?
-#        if user.password == password
+#        if (user.password == password)
 #          @login_user = user
 #          check = true
 #        end

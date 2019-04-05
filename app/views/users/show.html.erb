@@ -48,7 +48,7 @@
               <label for="user_time_zone"><%= User.human_attribute_name('time_zone') %></label>
             </td>
             <td class="spec_value">
-              <% if @user.nil? or @user.time_zone.nil? or @user.time_zone.empty? %>
+              <% if (@user.nil? or @user.time_zone.nil? or @user.time_zone.empty?) %>
                 <%= t('paren.not_specified') %>
               <% else %>
                 <%= ActiveSupport::TimeZone[@user.time_zone] %>
@@ -120,7 +120,7 @@
               <!-- Profile Sheet -->
               <%
               item = @user.get_profile_sheet
-              if !item.nil? and item.public
+              if (!item.nil? and item.public?)
               %>
               <a class="a_underline" href="javascript:this.onclick()" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'show', :id => item.id) %>'; return false;">
                 <%= truncate(item.title, :length => 20) %>

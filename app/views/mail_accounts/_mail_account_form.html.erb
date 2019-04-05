@@ -94,7 +94,7 @@ checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.is_default?))
                     <input type="text" id="mail_account_organization" name="mail_account[organization]" value="<%= (@mail_account.nil?)?(nil):(@mail_account.organization) %>" />
                   </td>
                 </tr>
-              <% if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0 %>
+              <% if (THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0) %>
                 <tr>
                   <td class="prim_cap" style="background-color:#c1bfff;" nowrap>
                     <%= t('mail.limit_num_per_account') %>
@@ -104,7 +104,7 @@ checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.is_default?))
                   </td>
                 </tr>
               <% end %>
-              <% if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0 %>
+              <% if (THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0) %>
                 <tr>
                   <td class="prim_cap" style="background-color:#c1bfff;" nowrap>
                     <%= t('mail.capacity_per_account') %>
@@ -119,7 +119,7 @@ checked = 'checked' if ((!@mail_account.nil?) and (@mail_account.is_default?))
                       cur_mb = MailAccount.get_using_size(@mail_account.id)/(1024*1024)
                     end
 
-                    if capacity_mb == 0
+                    if (capacity_mb == 0)
                       cur_percent = 100
                     else
                       cur_percent = ((cur_mb * 100) / capacity_mb)

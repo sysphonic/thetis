@@ -1,27 +1,22 @@
 #
 #= MailFoldersController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#== Note:
-#
-#* 
-#
 class MailFoldersController < ApplicationController
-  layout 'base'
+  layout('base')
 
   before_action(:check_login)
   before_action(:check_owner, :only => [:rename, :destroy, :move, :get_mails, :empty])
   before_action(:check_mail_owner, :only => [:get_mail_content, :get_mail_raw])
-
 
   #=== show_tree
   #
   #Shows MailFolder tree.
   #
   def show_tree
-    if params[:action] == 'show_tree'
+    if (params[:action] == 'show_tree')
       Log.add_info(request, params.inspect)
     end
 
@@ -53,7 +48,6 @@ class MailFoldersController < ApplicationController
 
   #=== ajax_get_tree
   #
-  #<Ajax>
   #Gets MailFolder tree by Ajax.
   #
   def ajax_get_tree
@@ -66,7 +60,6 @@ class MailFoldersController < ApplicationController
 
   #=== create
   #
-  #<Ajax>
   #Creates MailFolder.
   #Receives MailFolder name from ThetisBox.
   #
@@ -92,7 +85,6 @@ class MailFoldersController < ApplicationController
 
   #=== rename
   #
-  #<Ajax>
   #Renames MailFolder.
   #Receives MailFolder name from ThetisBox.
   #
@@ -112,7 +104,6 @@ class MailFoldersController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Deletes MailFolder.
   #
   def destroy
@@ -169,7 +160,7 @@ class MailFoldersController < ApplicationController
     parent_id = params[:tree_node_id]
     SqlHelper.validate_token([parent_id])
 
-    if parent_id == TreeElement::ROOT_ID.to_s
+    if (parent_id == TreeElement::ROOT_ID.to_s)
       flash[:notice] = 'ERROR:' + t('mail_folder.root_cannot_have_folders')
     else
       # Check if specified parent is not one of subfolders.
@@ -196,15 +187,14 @@ class MailFoldersController < ApplicationController
 
   #=== get_mails
   #
-  #<Ajax>
   #Gets Mails in specified MailFolder.
   #
   def get_mails
-    if params[:action] == 'get_mails'
+    if (params[:action] == 'get_mails')
       Log.add_info(request, params.inspect)
     end
 
-    if !params[:pop].nil? and params[:pop] == 'true'
+    if (!params[:pop].nil? and params[:pop] == 'true')
 
       mail_account_id = params[:mail_account_id]
       SqlHelper.validate_token([mail_account_id])
@@ -261,7 +251,7 @@ class MailFoldersController < ApplicationController
     @folder_id = params[:id]
     SqlHelper.validate_token([@folder_id])
 
-    if @folder_id == TreeElement::ROOT_ID.to_s
+    if (@folder_id == TreeElement::ROOT_ID.to_s)
       @emails = nil
     else
 =begin
@@ -284,7 +274,6 @@ class MailFoldersController < ApplicationController
 
   #=== get_mail_content
   #
-  #<Ajax>
   #Gets Email content.
   #
   def get_mail_content
@@ -311,7 +300,7 @@ class MailFoldersController < ApplicationController
     email_id = params[:id]
 
     email = Email.find(email_id)
-    if email.nil? or email.user_id != @login_user.id
+    if (email.nil? or email.user_id != @login_user.id)
       render(:plain => '')
       return
     end
@@ -349,7 +338,7 @@ class MailFoldersController < ApplicationController
       email = Email.find(mail_attach.email_id)
     rescue => evar
     end
-    if email.nil? or email.user_id != @login_user.id
+    if (email.nil? or email.user_id != @login_user.id)
       render(:plain => '')
       return
     end
@@ -366,7 +355,7 @@ class MailFoldersController < ApplicationController
     end
 
     filepath = mail_attach.get_path
-    if FileTest.exist?(filepath)
+    if (!filepath.nil? and FileTest.exist?(filepath))
       send_file(filepath, :filename => mail_attach_name, :stream => true, :disposition => 'attachment')
     else
       send_data('', :type => 'application/octet-stream;', :disposition => 'attachment;filename="'+mail_attach_name+'"')
@@ -393,7 +382,7 @@ class MailFoldersController < ApplicationController
     end
 
     filepath = File.join(email.get_dir, email.id.to_s + Email::EXT_RAW)
-    if FileTest.exist?(filepath)
+    if (!filepath.nil? and FileTest.exist?(filepath))
       send_file(filepath, :filename => email_name, :stream => true, :disposition => 'attachment')
     else
       send_data('', :type => 'application/octet-stream;', :disposition => 'attachment;filename="'+email_name+'"')
@@ -402,7 +391,6 @@ class MailFoldersController < ApplicationController
 
   #=== empty
   #
-  #<Ajax>
   #Deletes all Emails in specified MailFolder.
   #
   def empty
@@ -419,8 +407,8 @@ class MailFoldersController < ApplicationController
     mail_folder = MailFolder.find(@folder_id)
     emails = (MailFolder.get_mails(mail_folder.id, @login_user) || [])
 
-    if mail_folder.id == trash_folder.id \
-        or mail_folder.get_parents(false).include?(trash_folder.id.to_s)
+    if ((mail_folder.id == trash_folder.id) \
+        or mail_folder.get_parents(false).include?(trash_folder.id.to_s))
       emails.each do |email|
         email.destroy
       end
@@ -437,7 +425,6 @@ class MailFoldersController < ApplicationController
 
   #=== ajax_delete_mails
   #
-  #<Ajax>
   #Deletes specified Emails.
   #
   def ajax_delete_mails
@@ -455,7 +442,7 @@ class MailFoldersController < ApplicationController
 
       count = 0
       params[:check_mail].each do |email_id, value|
-        next if value != '1'
+        next if (value != '1')
 
         begin
           email = Email.find(email_id)
@@ -488,7 +475,6 @@ class MailFoldersController < ApplicationController
 
   #=== ajax_move_mails
   #
-  #<Ajax>
   #Moves specified Emails.
   #
   def ajax_move_mails
@@ -514,11 +500,11 @@ class MailFoldersController < ApplicationController
     unless params[:check_mail].blank?
       count = 0
       params[:check_mail].each do |email_id, value|
-        if value == '1'
+        if (value == '1')
 
           begin
             email = Email.find(email_id)
-            next if email.user_id != @login_user.id
+            next if (email.user_id != @login_user.id)
 
             email.update_attribute(:mail_folder_id, folder_id)
 
@@ -537,7 +523,6 @@ class MailFoldersController < ApplicationController
 
   #=== get_folders_order
   #
-  #<Ajax>
   #Gets child MailFolders' order in specified MailFolder.
   #
   def get_folders_order
@@ -546,11 +531,11 @@ class MailFoldersController < ApplicationController
     @folder_id = params[:id]
     SqlHelper.validate_token([@folder_id])
 
-    if @folder_id == TreeElement::ROOT_ID.to_s
+    if (@folder_id == TreeElement::ROOT_ID.to_s)
       @folders = MailFolder.get_account_roots_for(@login_user)
     else
       mail_folder = MailFolder.find(@folder_id)
-      if mail_folder.user_id == @login_user.id
+      if (mail_folder.user_id == @login_user.id)
         @folders = MailFolder.get_childs(@folder_id, false, true)
       end
     end
@@ -560,7 +545,6 @@ class MailFoldersController < ApplicationController
 
   #=== update_folders_order
   #
-  #<Ajax>
   #Updates folders' order by Ajax.
   #
   def update_folders_order
@@ -579,7 +563,7 @@ class MailFoldersController < ApplicationController
       idx_a = order_arr.index(id_a)
       idx_b = order_arr.index(id_b)
 
-      if idx_a.nil? or idx_b.nil?
+      if (idx_a.nil? or idx_b.nil?)
         idx_a = folders.index(id_a)
         idx_b = folders.index(id_b)
       end
@@ -591,11 +575,11 @@ class MailFoldersController < ApplicationController
     folders.each do |folder_id|
       begin
         folder = MailFolder.find(folder_id)
-        next if folder.user_id != @login_user.id
+        next if (folder.user_id != @login_user.id)
 
         folder.update_attribute(:xorder, idx)
 
-        if folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT
+        if (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
           mail_account = MailAccount.find_by_id(folder.mail_account_id)
           unless mail_account.nil?
             mail_account.update_attribute(:xorder, idx)
@@ -613,7 +597,6 @@ class MailFoldersController < ApplicationController
 
   #=== update_mail_unread
   #
-  #<Ajax>
   #Updates unread flag of the E-mail by Ajax.
   #
   def update_mail_unread
@@ -627,7 +610,7 @@ class MailFoldersController < ApplicationController
     begin
       email = Email.find(email_id)
       if !email.nil? and (email.user_id == @login_user.id)
-        if email.xtype == Email::XTYPE_RECV
+        if (email.xtype == Email::XTYPE_RECV)
           status = (unread)?(Email::STATUS_UNREAD):(Email::STATUS_NONE)
           email.update_attribute(:status, status)
         end
@@ -668,7 +651,7 @@ class MailFoldersController < ApplicationController
   #Filter method to check if current User is owner of the specified Email.
   #
   def check_mail_owner
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     begin
       owner_id = Email.find(params[:id]).user_id

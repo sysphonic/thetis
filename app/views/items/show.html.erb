@@ -40,11 +40,11 @@ unless @for_print
           <td>
             <table style="margin:0px 0px 0px auto; width:40%; border-spacing:1px;">
               <tr style="height:18px;">
-              <% if @item.xtype == Item::XTYPE_PROJECT %>
+              <% if (@item.xtype == Item::XTYPE_PROJECT) %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/team_folder.png" title="<%= t('item.project') %>" />
                 </td>
-              <% elsif @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
+              <% elsif (@item.xtype == Item::XTYPE_ZEPTAIR_DIST) %>
                 <td rowspan="2" style="padding-right:10px; vertical-align:middle;">
                   <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/zeptair/zeptair_icon.png" title="<%= t('item.type.zeptair_dist') %>" />
                 </td>
@@ -80,7 +80,7 @@ unless @for_print
                 </td>
               <% end %>
                 <td class="entry_view_val" nowrap>
-                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= (@item.public) ? 'check_ok.png' : 'check_ng.png' %>">
+                  <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/<%= (@item.public?)?'check_ok.png':'check_ng.png' %>">
                 </td>
               </tr>
             </table>
@@ -172,13 +172,13 @@ end
       <%= t('btn.duplicate') %>
     </td>
   <% end %>
-  <% if !@login_user.nil? and @item.editable?(@login_user) %>
+  <% if (!@login_user.nil? and @item.editable?(@login_user)) %>
     <td style="width:10px;"></td>
     <td id="edit_button" class="prim_btn" onclick="prog('TOP-RIGHT'); location.href='<%= url_for(:controller => 'items', :action => 'edit', :id => @item.id) %>'">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/edit.png" title="<%= t('btn.edit') %>" /> <%= h truncate(t('btn.edit'), :length => 8) %>
     </td>
   <% end %>
-  <% if !@login_user.nil? and @item.movable?(@login_user) %>
+  <% if (!@login_user.nil? and @item.movable?(@login_user)) %>
     <td style="width:10px;"></td>
     <td class="prim_btn" onclick="showFolderTreeToSelect(<%= @item.folder_id %>, <%= @item.id %>, '<%= ApplicationHelper.h_s_quote(@item.title) %>');">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/folder/tree_folder_open.png" title="<%= t('btn.move') %>" /> <%= h truncate(t('btn.move'), :length => 8) %>
@@ -230,7 +230,7 @@ function showFolderTreeToSelect(folder_id, item_id, title)
 
 </script>
   <% end %>
-  <% if !@login_user.nil? and @item.deletable?(@login_user) %>
+  <% if (!@login_user.nil? and @item.deletable?(@login_user)) %>
     <td style="width:10px;"></td>
     <td id="delete_button" class="prim_btn" onclick="onDeleteItemClicked(<%= @item.id %>, '<%= ApplicationHelper.h_s_quote(truncate(@item.title, :length => 20)) %>');">
       <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/delete.png" title="<%= t('btn.delete') %>" /> <%= t('btn.delete') %>
@@ -357,7 +357,7 @@ function doWorkflowIssue()
 <% end %>
 
 <!-- Team -->
-<% if @item.xtype == Item::XTYPE_PROJECT %>
+<% if (@item.xtype == Item::XTYPE_PROJECT) %>
 <a name="team_apply"></a>
 
 <table style="width:100%;">
@@ -385,7 +385,7 @@ function doWorkflowIssue()
 
   </div>
 
-<% if !@login_user.nil? and @login_user.id == @item.user_id %>
+<% if (!@login_user.nil? and @login_user.id == @item.user_id) %>
 
   <a name="team_organize"></a>
 
@@ -549,7 +549,7 @@ end
 
 
 <!-- Response for Zeptair Distribution Package -->
-<% if @item.xtype == Item::XTYPE_ZEPTAIR_DIST %>
+<% if (@item.xtype == Item::XTYPE_ZEPTAIR_DIST) %>
 <a name="zeptair_dist_res"></a>
 <table style="width:100%;">
   <tr>
@@ -742,7 +742,7 @@ function showZeptairDistUsers()
 
     <%
     style_display = ''
-    style_display = 'display:none;' if @item.comments.nil? or @item.comments.empty?
+    style_display = 'display:none;' if (@item.comments.nil? or @item.comments.empty?)
     %>
     <table id="comments_table" style="width:90%; margin:0px auto; <%= style_display %> background-color:white;">
       <tr>
@@ -753,7 +753,7 @@ function showZeptairDistUsers()
         </td>
       </tr>
     </table>
-  <% if @login_user.nil? and !@for_print %>
+  <% if (@login_user.nil? and !@for_print) %>
     <div style="padding:20px 0px; text-align:center; color:gray;">
       <%= t('item.login_to_register_messages') %>
     </div>

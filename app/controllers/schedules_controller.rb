@@ -1,28 +1,21 @@
 #
 #= SchedulesController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Schedules.
-#
-#== Note:
-#
-#* 
-#
 class SchedulesController < ApplicationController
-  layout 'base'
+  layout('base')
 
   if YamlHelper.get_value($thetis_config, 'menu.req_login_schedules', nil) == '1'
-    before_action :check_login
+    before_action(:check_login)
   else
-    before_action :check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment]
+    before_action(:check_login, :only => [:new, :destroy, :save, :edit, :select_users, :get_group_users, :select_items, :get_folder_items, :select_equipment, :get_group_equipment])
   end
 
   before_action :only => [:configure, :add_holidays, :delete_holidays] do |controller|
     controller.check_auth(User::AUTH_SCHEDULE)
   end
-
 
   #=== configure
   #
@@ -36,7 +29,6 @@ class SchedulesController < ApplicationController
 
   #=== add_holidays
   #
-  #<Ajax>
   #Adds holidays.
   #
   def add_holidays
@@ -76,7 +68,6 @@ class SchedulesController < ApplicationController
 
   #=== delete_holidays
   #
-  #<Ajax>
   #Deletes holidays.
   #
   def delete_holidays
@@ -98,7 +89,6 @@ class SchedulesController < ApplicationController
 
   #=== new
   #
-  #<Ajax>
   #Shows the page to register new Schedule.
   #
   def new
@@ -173,7 +163,7 @@ class SchedulesController < ApplicationController
           rescue => evar
             equipment = nil
           end
-          if equipment.nil? or !equipment.is_accessible_by(@login_user)
+          if (equipment.nil? or !equipment.is_accessible_by(@login_user))
             flash[:notice] = 'ERROR:' + t('msg.need_auth_to_access') + t('cap.suffix') + Equipment.get_name(equipment_id)
             redirect_to(:action => 'day', :date => params[:date])
             return
@@ -182,7 +172,7 @@ class SchedulesController < ApplicationController
         params[:schedule][:equipment] = ApplicationHelper.a_to_attr(equipment_ids)
       end
 
-      if params[:is_repeat] == '1'
+      if (params[:is_repeat] == '1')
 
         if params[:repeat_rules].blank?
           params[:schedule][:repeat_rule] = nil
@@ -207,7 +197,7 @@ class SchedulesController < ApplicationController
 
       params[:schedule][:end] = SchedulesHelper.regularize(params[:schedule][:end])
 
-      check_schedule = Schedule.new(params.require(:schedule).permit(Schedule::PERMIT_BASE))
+      check_schedule = Schedule.new(Schedule.permit_base(params.require(:schedule)))
       nearest_day = check_schedule.get_nearest_day(date)
       if nearest_day.nil?
         check_schedule.id = params[:id].to_i unless params[:id].blank?
@@ -231,17 +221,17 @@ class SchedulesController < ApplicationController
         # Create
         params[:schedule][:created_by] = @login_user.id
         params[:schedule][:created_at] = Time.now
-        schedule = Schedule.new(params.require(:schedule).permit(Schedule::PERMIT_BASE))
+        schedule = Schedule.new(Schedule.permit_base(params.require(:schedule)))
         schedule.save!
         created = true
       else
         # Update
         params[:schedule][:updated_by] = @login_user.id
         params[:schedule][:updated_at] = Time.now
-        schedule.update_attributes(params.require(:schedule).permit(Schedule::PERMIT_BASE))
+        schedule.update_attributes(Schedule.permit_base(params.require(:schedule)))
       end
 
-      if params[:repeat_update_target] == 'each'
+      if (params[:repeat_update_target] == 'each')
         # Update original repeated schedule
         org_schedule = Schedule.find(params[:id])
         attrs = ActionController::Parameters.new()
@@ -252,7 +242,7 @@ class SchedulesController < ApplicationController
         excepts.sort!
         excepts.reverse!
         attrs[:except] = ApplicationHelper.a_to_attr(excepts)
-        org_schedule.update_attributes(attrs.permit(Schedule::PERMIT_BASE))
+        org_schedule.update_attributes(Schedule.permit_base(attrs))
       end
 
       # prms = {:show_id => schedule.id}
@@ -287,7 +277,6 @@ class SchedulesController < ApplicationController
 
   #=== edit
   #
-  #<Ajax>
   #Shows the page to edit Schedule.
   #
   def edit
@@ -328,7 +317,6 @@ class SchedulesController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Destroys specified Schedule.
   #
   def destroy
@@ -376,7 +364,6 @@ class SchedulesController < ApplicationController
 
   #=== show
   #
-  #<Ajax>
   #Shows detail of specified Schedule.
   #
   def show
@@ -433,7 +420,7 @@ class SchedulesController < ApplicationController
   #Shows Schedules for specified diplay type.
   #
   def index
-    if params[:action] == 'index'
+    if (params[:action] == 'index')
       Log.add_info(request, params.inspect)
     end
 
@@ -488,19 +475,19 @@ class SchedulesController < ApplicationController
 
     date_s = params[:date]
 
-    if date_s.nil? or date_s.empty?
+    if (date_s.nil? or date_s.empty?)
       @date = Date.today
     else
       @date = Date.parse(date_s)
     end
 
-    if params[:user_id].nil? and !@login_user.nil? and !session[:settings].nil?
+    if (params[:user_id].nil? and !@login_user.nil? and !session[:settings].nil?)
       timecard_icons = params[:timecard_icons]
 
       if timecard_icons.nil?
         params[:timecard_icons] = session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS]
       else
-        if timecard_icons != session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS]
+        if (timecard_icons != session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS])
           Setting.save_value(@login_user.id, Setting::CATEGORY_SCHEDULE, Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS, timecard_icons)
           session[:settings][Setting::KEY_CALENDAR_WITH_TIMECARD_ICONS] = timecard_icons
         end
@@ -577,7 +564,7 @@ class SchedulesController < ApplicationController
       end
     end
 
-    if !@login_user.nil? and user_id == @login_user.id and !@schedules.nil?
+    if (!@login_user.nil? and user_id == @login_user.id and !@schedules.nil?)
       equip_arr = []
       @schedules.each do |schedule|
         equip_arr = equip_arr | schedule.get_equipment_a
@@ -670,7 +657,6 @@ class SchedulesController < ApplicationController
 
   #=== select_users
   #
-  #<Ajax>
   #Shows popup-window to select Users on Groups-Tree.
   #
   def select_users
@@ -681,7 +667,6 @@ class SchedulesController < ApplicationController
 
   #=== get_group_users
   #
-  #<Ajax>
   #Gets Users in specified Group.
   #
   def get_group_users
@@ -701,7 +686,6 @@ class SchedulesController < ApplicationController
 
   #=== select_equipment
   #
-  #<Ajax>
   #Shows popup-window to select Equipment on Groups-Tree.
   #
   def select_equipment
@@ -712,7 +696,6 @@ class SchedulesController < ApplicationController
 
   #=== get_group_equipment
   #
-  #<Ajax>
   #Gets Equipment in specified Group.
   #
   def get_group_equipment
@@ -732,7 +715,6 @@ class SchedulesController < ApplicationController
 
   #=== select_items
   #
-  #<Ajax>
   #Shows popup-window to select Items on Folders-Tree.
   #
   def select_items
@@ -743,7 +725,6 @@ class SchedulesController < ApplicationController
 
   #=== get_folder_items
   #
-  #<Ajax>
   #Gets Items in specified Folder.
   #
   def get_folder_items

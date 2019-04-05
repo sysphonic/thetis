@@ -33,7 +33,7 @@ tabs = ["users", "groups", "teams"];
               <select id="users_selected" name="users[]" class="select_multi" size="5" multiple="multiple">
               <%
               @users_selected = @schedule.get_users_a
-              if params[:action] == 'new'
+              if (params[:action] == 'new')
                 @users_selected << @login_user.id.to_s
               end
 

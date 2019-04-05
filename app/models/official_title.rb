@@ -1,13 +1,13 @@
 #
 #= OfficialTitle
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class OfficialTitle < ApplicationRecord
   public::PERMIT_BASE = [:name]
 
-  extend CachedRecord
+  extend(CachedRecord)
 
   public::XORDER_MAX = 9999
 

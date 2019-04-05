@@ -1,10 +1,8 @@
 #
 #= Research
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Research represents each answer (including not commited) to the questionnaire.
 #
 class Research < ApplicationRecord
   public::PERMIT_BASE = [:status, :q01_01, :q01_02, :q01_03, :q01_04, :q01_05, :q01_06, :q01_07, :q01_08, :q01_09, :q01_10, :q01_11, :q01_12, :q01_13, :q01_14, :q01_15, :q01_16, :q01_17, :q01_18, :q01_19, :q01_20, :q02_01, :q02_02, :q02_03, :q02_04, :q02_05, :q02_06, :q02_07, :q02_08, :q02_09, :q02_10, :q02_11, :q02_12, :q02_13, :q02_14, :q02_15, :q02_16, :q02_17, :q02_18, :q02_19, :q02_20, :q03_01, :q03_02, :q03_03, :q03_04, :q03_05, :q03_06, :q03_07, :q03_08, :q03_09, :q03_10, :q03_11, :q03_12, :q03_13, :q03_14, :q03_15, :q03_16, :q03_17, :q03_18, :q03_19, :q03_20]
@@ -121,7 +119,7 @@ class Research < ApplicationRecord
   #
   def self.config
 
-    return "#{::Rails.root.to_s}/config/_research.yml"
+    return "#{Rails.root.to_s}/config/_research.yml"
   end
 
   #=== self.get_config_yaml
@@ -299,7 +297,7 @@ class Research < ApplicationRecord
 
     pages = Research.get_pages
 
-    if pages.nil? or pages.empty?
+    if (pages.nil? or pages.empty?)
       return STATUS_STOPPED
     else
       return STATUS_STARTED
@@ -434,7 +432,7 @@ class Research < ApplicationRecord
   #
   def self.replace_ctrl(html, q_code, q_param)
 
-    return html if html.nil? or q_param.nil?
+    return html if (html.nil? or q_param.nil?)
 
     q_type = q_param['type']
     q_vals = q_param['values']

@@ -1,6 +1,6 @@
 
 <div class="info_area" style="width:90%; margin:0px auto; padding:15px 0px; background-color:#ffebcb; text-align:center;">
-<% if !@item.team.nil? and @item.team.status == Team::STATUS_DEACTIVATED %>
+<% if (!@item.team.nil? and @item.team.status == Team::STATUS_DEACTIVATED) %>
     ---
 <% else %>
   <%= form_tag( {:controller => 'items', :action => 'add_comment', :id => @item.id }, :name => 'form_team_apply', :method => 'post') %>

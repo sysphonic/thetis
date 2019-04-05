@@ -1,25 +1,18 @@
 #
 #= AddressbookController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Addressbook.
-#
-#== Note:
-#
-#* 
-#
 class AddressbookController < ApplicationController
-  layout 'base'
+  layout('base')
 
   before_action(:check_login)
   before_action(:check_owner, :only => [:edit, :update])
 
-  require 'digest/md5'
-  require 'cgi'
-  require 'csv'
-
+  require('digest/md5')
+  require('cgi')
+  require('csv')
 
   #=== query
   #
@@ -51,7 +44,7 @@ class AddressbookController < ApplicationController
   #Does nothing about showing empty form to create User.
   #
   def new
-    if params[:action] == 'new'
+    if (params[:action] == 'new')
       Log.add_info(request, params.inspect)
     end
 
@@ -67,7 +60,7 @@ class AddressbookController < ApplicationController
 
     raise(RequestPostOnlyException) unless request.post?
 
-    @address = Address.new(params.require(:address).permit(Address::PERMIT_BASE))
+    @address = Address.new(Address.permit_base(params.require(:address)))
 
     @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
     if @address.nil?
@@ -118,7 +111,7 @@ class AddressbookController < ApplicationController
   #Shows Address information.
   #
   def show
-    if params[:action] == 'show'
+    if (params[:action] == 'show')
       Log.add_info(request, params.inspect)
     end
 
@@ -145,7 +138,7 @@ class AddressbookController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     @address = Address.find(params[:id])
-    @address.attributes = params.require(:address).permit(Address::PERMIT_BASE)
+    @address.attributes = Address.permit_base(params.require(:address))
 
     @address = AddressbookHelper.arrange_per_scope(@address, @login_user, params[:scope], params[:groups], params[:teams])
     if @address.nil?
@@ -213,10 +206,10 @@ class AddressbookController < ApplicationController
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
-    if @sort_col != 'xorder'
+    if (@sort_col != 'xorder')
       order_by << ', xorder ASC'
     end
-    if @sort_col != 'name'
+    if (@sort_col != 'name')
       order_by << ', name ASC'
     end
 
@@ -254,7 +247,7 @@ class AddressbookController < ApplicationController
 
     count = 0
     params[:check_address].each do |address_id, value|
-      if value == '1'
+      if (value == '1')
 
         begin
           address = Address.find(address_id)
@@ -343,9 +336,9 @@ class AddressbookController < ApplicationController
       next if row.compact.empty?
 
       count += 1
-      if count == 0  # for Header Line
+      if (count == 0)  # for Header Line
         err_col_names = Address.check_csv_header(row, book)
-        if err_col_names.nil? or err_col_names.empty?
+        if (err_col_names.nil? or err_col_names.empty?)
           header_cols = Address.csv_header_cols(book)
           col_idxs = header_cols.collect{|col_name| row.index(col_name)}
           next
@@ -369,7 +362,7 @@ class AddressbookController < ApplicationController
 
       if (mode == 'update')
         update_address = all_addresses.find do |rec|
-          rec.id == address.id
+          (rec.id == address.id)
         end
         unless update_address.nil?
           all_addresses.delete(update_address)
@@ -378,7 +371,7 @@ class AddressbookController < ApplicationController
       end
     end
 
-    if err_col_names.nil? or err_col_names.empty?
+    if (err_col_names.nil? or err_col_names.empty?)
       if addresses.empty?
         @imp_errs[0] = [t('address.nothing_to_import')]
       else

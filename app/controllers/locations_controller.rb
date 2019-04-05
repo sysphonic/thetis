@@ -1,25 +1,18 @@
 #
 #= LocationsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Desktop.
-#
-#== Note:
-#
-#* 
-#
 class LocationsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
-  before_action :check_owner, :only => [:drop_on_exit, :on_moved]
+  before_action(:check_login)
+  before_action(:check_owner, :only => [:drop_on_exit, :on_moved])
 
   before_action :only => [:update_map, :delete_map] do |controller|
     controller.check_auth(User::AUTH_LOCATION)
   end
-
 
   #=== open_map
   #
@@ -70,12 +63,12 @@ class LocationsController < ApplicationController
 
     group_ids = []
     @group_obj_cache = {}
-    if @location.nil? and @group_id.nil?
+    if (@location.nil? and @group_id.nil?)
       group_ids = @login_user.get_groups_a(true, @group_obj_cache)
       group_ids << TreeElement::ROOT_ID.to_s
     elsif !@group_id.nil?
       group_ids << @group_id
-      if @group_id.to_i != TreeElement::ROOT_ID
+      if (@group_id.to_i != TreeElement::ROOT_ID)
         group = Group.find_with_cache(@group_id, @group_obj_cache)
         group_ids |= group.get_parents(false, @group_obj_cache)
       end
@@ -93,7 +86,7 @@ class LocationsController < ApplicationController
     @locations = Location.get_for_group(@map_group_id)
 
     unless @location.nil?
-      if @location.group_id == @map_group_id
+      if (@location.group_id == @map_group_id)
         @location.update_attribute(:updated_at, Time.now)
       else
         @location = nil
@@ -147,7 +140,7 @@ class LocationsController < ApplicationController
     @office_map = OfficeMap.get_for_group(group_id, true)
     params[:office_map].delete(:group_id)
 
-    attrs = params.require(:office_map).permit(OfficeMap::PERMIT_BASE)
+    attrs = OfficeMap.permit_base(params.require(:office_map))
 
     unless params[:file].blank?
       params[:file].original_filename = params[:name] unless params[:name].blank?
@@ -191,7 +184,6 @@ class LocationsController < ApplicationController
 
   #=== drop_on_exit
   #
-  #<Ajax>
   #Receives dropped event on the exit by Ajax.
   #
   def drop_on_exit
@@ -210,7 +202,6 @@ class LocationsController < ApplicationController
 
   #=== on_moved
   #
-  #<Ajax>
   #Saves Locations' new position by Ajax.
   #
   def on_moved
@@ -240,7 +231,7 @@ class LocationsController < ApplicationController
       group_id = nil if group_id.empty?
       SqlHelper.validate_token([group_id])
       attrs = ActionController::Parameters.new({group_id: group_id, x: params[:x], y: params[:y]})
-      location.update_attributes(attrs.permit(Location::PERMIT_BASE))
+      location.update_attributes(Location.permit_base(attrs))
     end
 
     render(:plain => (location.nil?)?'':location.id.to_s)
@@ -252,7 +243,7 @@ class LocationsController < ApplicationController
   #Filter method to check if current User is owner of the specified Location.
   #
   def check_owner
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     begin
       owner_id = Location.find(params[:id]).user_id

@@ -1,25 +1,18 @@
 #
 #= ResearchesController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Researches.
-#
-#== Note:
-#
-#* 
-#
 class ResearchesController < ApplicationController
-  layout 'base', :except => :index
+  layout('base', :except => :index)
 
-  before_action :check_login, :except => [:index]
+  before_action(:check_login, :except => [:index])
   before_action :except => [:index, :show_receipt, :edit_page, :save_page, :do_confirm] do |controller|
     controller.check_auth(User::AUTH_RESEARCH)
   end
 
-  require 'fileutils'
-
+  require('fileutils')
 
   #=== index
   #
@@ -28,7 +21,7 @@ class ResearchesController < ApplicationController
   def index
     Log.add_info(request, params.inspect)
 
-    if Research.get_status == Research::STATUS_STARTED
+    if (Research.get_status == Research::STATUS_STARTED)
       redirect_to(:action => 'edit_page')
     else
       render(:action => 'index', :layout => 'title')
@@ -40,7 +33,7 @@ class ResearchesController < ApplicationController
   #Shows setting-page.
   #
   def settings
-    if params[:action] == 'settings'
+    if (params[:action] == 'settings')
       Log.add_info(request, params.inspect)
     end
 
@@ -87,7 +80,6 @@ class ResearchesController < ApplicationController
 
   #=== create_q_page
   #
-  #<Ajax>
   #Creates a template in 'Research' Folder with default name.
   #
   def create_q_page
@@ -101,7 +93,7 @@ class ResearchesController < ApplicationController
 
       @items = Folder.get_items_admin(@tmpl_q_folder.id, 'xorder ASC')
 
-      if !@items.nil? and @items.length >= ResearchesHelper::MAX_PAGES
+      if (!@items.nil? and @items.length >= ResearchesHelper::MAX_PAGES)
         flash[:notice] = 'ERROR:' + t('research.max_pages')
         render(:partial => 'ajax_q_page', :layout => false)
         return
@@ -123,7 +115,6 @@ class ResearchesController < ApplicationController
 
   #=== destroy_q_page
   #
-  #<Ajax>
   #Destroys specified research page template.
   #
   def destroy_q_page
@@ -146,7 +137,6 @@ class ResearchesController < ApplicationController
 
   #=== update_q_ctrl
   #
-  #<Ajax>
   #Updates controls of choices.
   #
   def update_q_ctrl
@@ -181,7 +171,6 @@ class ResearchesController < ApplicationController
 
   #=== reset_q_ctrl
   #
-  #<Ajax>
   #Resets controls of choices.
   #
   def reset_q_ctrl
@@ -202,7 +191,6 @@ class ResearchesController < ApplicationController
 
   #=== renew_q_ctrl
   #
-  #<Ajax>
   #Renews controls of choices.
   #
   def renew_q_ctrl
@@ -219,7 +207,6 @@ class ResearchesController < ApplicationController
 
   #=== add_statistics_group
   #
-  #<Ajax>
   #Adds Group for statistics.
   #
   def add_statistics_group
@@ -251,7 +238,6 @@ class ResearchesController < ApplicationController
 
   #=== delete_statistics_group
   #
-  #<Ajax>
   #Deletes Group for statistics.
   #
   def delete_statistics_group
@@ -275,7 +261,6 @@ class ResearchesController < ApplicationController
 
   #=== update_groups_order
   #
-  #<Ajax>
   #Updates Groups' order for statistics.
   #
   def update_groups_order
@@ -292,7 +277,6 @@ class ResearchesController < ApplicationController
 
   #=== start
   #
-  #<Ajax>
   #Starts the questionnaire.
   #
   def start
@@ -309,7 +293,7 @@ class ResearchesController < ApplicationController
 
     items = Folder.get_items_admin(tmpl_q_folder.id, 'xorder ASC')
  
-    if items.nil? or items.empty?
+    if (items.nil? or items.empty?)
 
       render(:plain => t('research.create_page_first'))
       return
@@ -358,7 +342,6 @@ class ResearchesController < ApplicationController
 
   #=== stop
   #
-  #<Ajax>
   #Stops the questionnaire.
   #
   def stop
@@ -376,7 +359,6 @@ class ResearchesController < ApplicationController
 
   #=== reset
   #
-  #<Ajax>
   #Resets all Users' status.
   #
   def reset
@@ -407,7 +389,7 @@ class ResearchesController < ApplicationController
     unless params[:check_user].nil?
 
       params[:check_user].each do |user_id, value|
-        if value == '1'
+        if (value == '1')
           SqlHelper.validate_token([user_id])
           begin
             Research.where("user_id=#{user_id.to_i}").destroy_all
@@ -419,7 +401,7 @@ class ResearchesController < ApplicationController
       end
     end
 
-    if count > 0
+    if (count > 0)
       flash[:notice] = t('msg.status_of')+ count.to_s + t('user.status_reset')
     end
 
@@ -498,15 +480,15 @@ class ResearchesController < ApplicationController
     research_id = params[:research_id]
     SqlHelper.validate_token([research_id])
     if research_id.blank?
-      @research = Research.new(params.require(:research).permit(Research::PERMIT_BASE))
+      @research = Research.new(Research.permit_base(params.require(:research)))
       @research.status = Research::U_STATUS_IN_ACTON
       @research.update_attribute(:user_id, @login_user.id)
     else
       @research = Research.find(research_id)
-      @research.update_attributes(params.require(:research).permit(Research::PERMIT_BASE))
+      @research.update_attributes(Research.permit_base(params.require(:research)))
     end
 
-    if pave_val <= page_num
+    if (pave_val <= page_num)
 
       render(:action => 'edit_page')
 
@@ -526,7 +508,7 @@ class ResearchesController < ApplicationController
         items.each do |item|
 
           desc = item.description
-          next if desc.nil? or desc.empty?
+          next if (desc.nil? or desc.empty?)
 
           hash = Research.select_q_caps(desc)
           hash.each do |key, val|
@@ -588,7 +570,7 @@ class ResearchesController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         con << "((groups like '%|#{@group_id}|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
@@ -630,7 +612,7 @@ class ResearchesController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
@@ -658,7 +640,7 @@ class ResearchesController < ApplicationController
     root_url = ApplicationHelper.root_url(request)
     count = UsersHelper.send_notification(params[:check_user], params[:thetisBoxEdit], root_url)
 
-    if count > 0
+    if (count > 0)
       flash[:notice] = t('user.notification_sent')+ count.to_s + t('user.notification_sent_suffix')
     end
 
@@ -683,7 +665,7 @@ class ResearchesController < ApplicationController
 
     items = Folder.get_items_admin(tmpl_q_folder.id, 'xorder ASC')
 
-    if items.nil? or items.empty?
+    if (items.nil? or items.empty?)
 
       @q_codes = Research.get_q_codes
     else
@@ -721,7 +703,6 @@ class ResearchesController < ApplicationController
 
   #=== get_records_group
   #
-  #<Ajax>
   #Gets records by Group.
   #
   def get_records_group
@@ -735,7 +716,7 @@ class ResearchesController < ApplicationController
 
       group_cons = []
 
-      if @group_id != TreeElement::ROOT_ID.to_s
+      if (@group_id != TreeElement::ROOT_ID.to_s)
         group_cons << SqlHelper.get_sql_like(['User.groups'], "|#{@group_id}|")
 
         where << ' and (Research.user_id = User.id)'
@@ -768,7 +749,7 @@ class ResearchesController < ApplicationController
     Log.add_info(request, params.inspect)
 
     begin
-      require 'gruff'
+      require('gruff')
     rescue => evar
       Log.add_error(request, evar)
       return

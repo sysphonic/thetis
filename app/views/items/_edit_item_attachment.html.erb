@@ -13,7 +13,7 @@
         <table style="width:100%; margin-bottom:10px;">
           <tr>
             <td style="text-align:right; vertical-align:middle; cursor:move;" >
-            <% if item_attachments.length > 1 %>
+            <% if (item_attachments.length > 1) %>
               <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/up_down.png" title="<%= t('msg.drag_to_change_orger') %>" />
             <% end %>
             </td>
@@ -97,7 +97,7 @@ setSortableAttach = function() {
     );
 }
 
-<% if item_attachments.length > 1 and params[:action] == 'edit' %>
+<% if ((item_attachments.length > 1) and (params[:action] == 'edit')) %>
 setTimeout(setSortableAttach, 100);
 <% end %>
 

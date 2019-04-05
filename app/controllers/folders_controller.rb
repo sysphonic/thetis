@@ -1,24 +1,17 @@
 #
 #= FoldersController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Folders.
-#
-#== Note:
-#
-#* 
-#
 class FoldersController < ApplicationController
-  layout 'base'
+  layout('base')
 
   if YamlHelper.get_value($thetis_config, 'menu.req_login_items', nil) == '1'
     before_action(:check_login)
   else
     before_action(:check_login, :except => [:show_tree, :show_url, :get_items, :get_tree, :ajax_get_tree])
   end
-
 
   #=== show_tree
   #
@@ -27,7 +20,7 @@ class FoldersController < ApplicationController
   def show_tree
     Log.add_info(request, params.inspect)
 
-    if !@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER)
+    if (!@login_user.nil? and @login_user.admin?(User::AUTH_FOLDER))
 
       @group_id = nil
       if !params[:tree_node_id].nil?
@@ -45,7 +38,6 @@ class FoldersController < ApplicationController
 
   #=== ajax_get_tree
   #
-  #<Ajax>
   #Gets Folder tree by Ajax.
   #
   def ajax_get_tree
@@ -60,7 +52,6 @@ class FoldersController < ApplicationController
 
   #=== create
   #
-  #<Ajax>
   #Creates Folder.
   #Receives Folder name from ThetisBox.
   #
@@ -92,7 +83,6 @@ class FoldersController < ApplicationController
 
   #=== rename
   #
-  #<Ajax>
   #Renames Folder.
   #Receives Folder name from ThetisBox.
   #
@@ -118,7 +108,6 @@ class FoldersController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Deletes Folder.
   #
   def destroy
@@ -197,7 +186,6 @@ class FoldersController < ApplicationController
 
   #=== get_path
   #
-  #<Ajax>
   #Gets path-string of specified Folder.
   #
   def get_path
@@ -219,11 +207,10 @@ class FoldersController < ApplicationController
 
   #=== get_items
   #
-  #<Ajax>
   #Gets Items in specified Folder.
   #
   def get_items
-    if params[:action] == 'get_items'
+    if (params[:action] == 'get_items')
       Log.add_info(request, params.inspect)
     end
 
@@ -232,7 +219,7 @@ class FoldersController < ApplicationController
 
     if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
 =begin
-#      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
+#      if (!@login_user.nil? and @login_user.admin?(User::AUTH_ITEM))
 #        @items = Folder.get_items_admin(@folder_id)
 #      else
 #        @items = Folder.get_items(@login_user, @folder_id)
@@ -294,7 +281,6 @@ class FoldersController < ApplicationController
 
   #=== get_items_order
   #
-  #<Ajax>
   #Gets Items' order in specified Folder.
   #
   def get_items_order
@@ -303,7 +289,7 @@ class FoldersController < ApplicationController
     @folder_id = params[:id]
     SqlHelper.validate_token([@folder_id])
 
-    if @folder_id != TreeElement::ROOT_ID.to_s
+    if (@folder_id != TreeElement::ROOT_ID.to_s)
       begin
         @folder = Folder.find(@folder_id)
       rescue => evar
@@ -313,7 +299,7 @@ class FoldersController < ApplicationController
     end
 
     if Folder.check_user_auth(@folder_id, @login_user, 'r', true)
-      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
+      if (!@login_user.nil? and @login_user.admin?(User::AUTH_ITEM))
         @items = Folder.get_items_admin(@folder_id, 'xorder ASC')
       else
         @items = Folder.get_items(@login_user, @folder_id, 'xorder ASC')
@@ -327,7 +313,6 @@ class FoldersController < ApplicationController
 
   #=== update_items_order
   #
-  #<Ajax>
   #Updates Items' order by Ajax.
   #
   def update_items_order
@@ -341,7 +326,7 @@ class FoldersController < ApplicationController
 
       order_arr = params[:items_order]
 
-      if !@login_user.nil? and @login_user.admin?(User::AUTH_ITEM)
+      if (!@login_user.nil? and @login_user.admin?(User::AUTH_ITEM))
         items = Folder.get_items_admin(folder_id)
       else
         items = Folder.get_items(@login_user, folder_id)
@@ -358,7 +343,6 @@ class FoldersController < ApplicationController
 
   #=== get_folders_order
   #
-  #<Ajax>
   #Gets child Folders' order in specified Folder.
   #
   def get_folders_order
@@ -368,13 +352,13 @@ class FoldersController < ApplicationController
     @group_id = params[:group_id]
     SqlHelper.validate_token([@folder_id, @group_id])
 
-    if @folder_id != TreeElement::ROOT_ID.to_s
+    if (@folder_id != TreeElement::ROOT_ID.to_s)
       @folder = Folder.find(@folder_id)
     end
 
     @folders = Folder.get_childs_for(@login_user, @folder_id, false, nil, true)
 
-    if @folder_id == TreeElement::ROOT_ID.to_s
+    if (@folder_id == TreeElement::ROOT_ID.to_s)
       del_arr = FoldersHelper.get_except_top_for_admin(@folders, @group_id)
       @folders -= del_arr
     end
@@ -390,7 +374,6 @@ class FoldersController < ApplicationController
 
   #=== update_folders_order
   #
-  #<Ajax>
   #Updates folders' order by Ajax.
   #
   def update_folders_order
@@ -408,7 +391,7 @@ class FoldersController < ApplicationController
       idx_a = order_arr.index(id_a)
       idx_b = order_arr.index(id_b)
 
-      if idx_a.nil? or idx_b.nil?
+      if (idx_a.nil? or idx_b.nil?)
         idx_a = folders.index(id_a)
         idx_b = folders.index(id_b)
       end
@@ -433,7 +416,6 @@ class FoldersController < ApplicationController
 
   #=== get_disp_ctrl
   #
-  #<Ajax>
   #Gets display control of specified Folder.
   #
   def get_disp_ctrl
@@ -457,7 +439,6 @@ class FoldersController < ApplicationController
 
   #=== set_disp_ctrl
   #
-  #<Ajax>
   #Sets display control of specified Folder.
   #
   def set_disp_ctrl
@@ -499,7 +480,6 @@ class FoldersController < ApplicationController
 
   #=== get_auth_users
   #
-  #<Ajax>
   #Gets authorities of specified Folder.
   #
   def get_auth_users
@@ -527,7 +507,6 @@ class FoldersController < ApplicationController
 
   #=== get_group_users
   #
-  #<Ajax>
   #Gets Users in specified Group.
   #
   def get_group_users
@@ -556,7 +535,6 @@ class FoldersController < ApplicationController
 
   #=== set_auth_users
   #
-  #<Ajax>
   #Sets authorities of specified Folder.
   #
   def set_auth_users
@@ -616,7 +594,6 @@ class FoldersController < ApplicationController
 
   #=== get_auth_groups
   #
-  #<Ajax>
   #Gets authorities of specified Folder.
   #
   def get_auth_groups
@@ -640,7 +617,6 @@ class FoldersController < ApplicationController
 
   #=== set_auth_groups
   #
-  #<Ajax>
   #Sets authorities of specified Folder.
   #
   def set_auth_groups
@@ -687,7 +663,6 @@ class FoldersController < ApplicationController
 
   #=== get_auth_teams
   #
-  #<Ajax>
   #Gets authorities of specified Folder.
   #
   def get_auth_teams
@@ -712,7 +687,6 @@ class FoldersController < ApplicationController
 
   #=== set_auth_teams
   #
-  #<Ajax>
   #Sets authorities of specified Folder.
   #
   def set_auth_teams
@@ -760,7 +734,6 @@ class FoldersController < ApplicationController
 
   #=== ajax_delete_items
   #
-  #<Ajax>
   #Deletes specified Items.
   #
   def ajax_delete_items
@@ -792,7 +765,6 @@ class FoldersController < ApplicationController
 
   #=== ajax_move_items
   #
-  #<Ajax>
   #Moves specified Items.
   #
   def ajax_move_items

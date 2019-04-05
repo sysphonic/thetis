@@ -11,7 +11,7 @@
 
     <table style="margin:10px auto 40px;">
       <tr>
-      <% if @page.to_i > 1 %>
+      <% if (@page.to_i > 1) %>
         <td class="prim_btn" onclick="location.href='<%= url_for(:controller => 'researches', :action => 'edit_page', :page => sprintf('%02d', @page.to_i-1)) %>'">
           <%= raw(t('btn.page_back')) %>
         </td>

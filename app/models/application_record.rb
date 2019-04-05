@@ -6,6 +6,24 @@ class ApplicationRecord < ActiveRecord::Base
     count_by_sql("select count(*) from (#{sql}) as my_table")
   end
 
+  #=== self.permit_base
+  #
+  #Permits white listed attributes.
+  #
+  #_attrs_:: Request parameters or Hash of attributes.
+  #return:: Permitted attributes.
+  #
+  def self.permit_base(attrs)
+    if attrs.respond_to?('permit')
+      if self.const_defined?(:PERMIT_BASE)
+        attrs = attrs.permit(self::PERMIT_BASE)
+      else
+        Rails.logger.error("ApplicationRecord.permit_base(): PERMIT_BASE not defined for #{self.name}.")
+      end
+    end
+    return attrs
+  end
+
   #=== get_timestamp_exp
   #
   #Gets expression of timestamp.

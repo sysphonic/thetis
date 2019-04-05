@@ -1,21 +1,14 @@
 #
 #= MailFiltersController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about MailFilters.
-#
-#== Note:
-#
-#* 
-#
 class MailFiltersController < ApplicationController
-  layout 'base'
+  layout('base')
 
   before_action(:check_login)
   before_action(:check_owner, :only => [:edit, :update, :show])
-
 
   #=== list
   #
@@ -70,7 +63,7 @@ class MailFiltersController < ApplicationController
   #Does nothing about showing empty form to create User.
   #
   def new
-    if params[:action] == 'new'
+    if (params[:action] == 'new')
       Log.add_info(request, params.inspect)
     end
 
@@ -101,7 +94,7 @@ class MailFiltersController < ApplicationController
   #Shows MailFilter information.
   #
   def show
-    if params[:action] == 'show'
+    if (params[:action] == 'show')
       Log.add_info(request, params.inspect)
     end
 
@@ -113,7 +106,7 @@ class MailFiltersController < ApplicationController
       render(:plain => 'ERROR:' + t('msg.already_deleted', :name => MailFilter.model_name.human))
       return
     else
-      if @mail_filter.mail_account.user_id != @login_user.id
+      if (@mail_filter.mail_account.user_id != @login_user.id)
         render(:plain => 'ERROR:' + t('msg.need_to_be_owner'))
         return
       end
@@ -131,7 +124,7 @@ class MailFiltersController < ApplicationController
     raise(RequestPostOnlyException) unless request.post?
 
     attrs = params[:mail_filter]
-    if attrs['and_or'] == 'none'
+    if (attrs['and_or'] == 'none')
       attrs['and_or'] = nil
       attrs['conditions'] = nil
     else
@@ -139,7 +132,7 @@ class MailFiltersController < ApplicationController
       condition_entries = []
       filter_conditions.each do |condition_id, entry|
         point, compare, val = entry.split("\n")
-        if val.nil? or val.empty?
+        if (val.nil? or val.empty?)
           condition_entries << [point, compare].join('-')
         else
           condition_entries << [point, compare, val].join('-')
@@ -152,7 +145,7 @@ class MailFiltersController < ApplicationController
     action_entries = []
     filter_actions.each do |action_id, entry|
       verb, val = entry.split("\n")
-      if val.nil? or val.empty?
+      if (val.nil? or val.empty?)
         action_entries << verb
       else
         action_entries << [verb, val].join('-')
@@ -162,12 +155,12 @@ class MailFiltersController < ApplicationController
 
     mail_filter_id = params[:id]
     if mail_filter_id.blank?
-      @mail_filter = MailFilter.new(attrs.permit(MailFilter::PERMIT_BASE))
+      @mail_filter = MailFilter.new(MailFilter.permit_base(attrs))
       @mail_filter.mail_account_id = params[:mail_account_id]
     else
       @mail_filter = MailFilter.find(mail_filter_id)
 
-      if @mail_filter.mail_account.user_id != @login_user.id
+      if (@mail_filter.mail_account.user_id != @login_user.id)
         flash[:notice] = t('msg.need_to_be_owner')
         redirect_to(:controller => 'desktop', :action => 'show')
         return
@@ -178,7 +171,7 @@ class MailFiltersController < ApplicationController
       @mail_filter.save!
       flash[:notice] = t('msg.register_success')
     else
-      @mail_filter.update_attributes(attrs.permit(MailFilter::PERMIT_BASE))
+      @mail_filter.update_attributes(MailFilter.permit_base(attrs))
       flash[:notice] = t('msg.update_success')
     end
 
@@ -203,7 +196,7 @@ class MailFiltersController < ApplicationController
 
     count = 0
     params[:check_filter].each do |filter_id, value|
-      if value == '1'
+      if (value == '1')
 
         begin
           filter = MailFilter.find(filter_id)
@@ -224,7 +217,6 @@ class MailFiltersController < ApplicationController
 
   #=== do_execute
   #
-  #<Ajax>
   #Does execute MailFilters of the specified MailAccount.
   #
   def do_execute
@@ -235,8 +227,8 @@ class MailFiltersController < ApplicationController
     mail_account = MailAccount.find(params[:mail_account_id])
     mail_folder = MailFolder.find(params[:mail_folder_id])
 
-    if mail_account.user_id != @login_user.id \
-        or mail_folder.user_id != @login_user.id
+    if ((mail_account.user_id != @login_user.id) \
+        or (mail_folder.user_id != @login_user.id))
       render(:plain => t('msg.need_to_be_owner'))
       return
     end
@@ -258,7 +250,6 @@ class MailFiltersController < ApplicationController
 
   #=== get_order
   #
-  #<Ajax>
   #Gets MailFilters' order of the specified MailAccount.
   #
   def get_order
@@ -269,7 +260,7 @@ class MailFiltersController < ApplicationController
 
     @mail_account = MailAccount.find(mail_account_id)
 
-    if @mail_account.user_id != @login_user.id
+    if (@mail_account.user_id != @login_user.id)
       flash[:notice] = t('msg.need_to_be_owner')
       redirect_to(:controller => 'desktop', :action => 'show')
       return
@@ -286,7 +277,6 @@ class MailFiltersController < ApplicationController
 
   #=== update_order
   #
-  #<Ajax>
   #Updates folders' order by Ajax.
   #
   def update_order
@@ -301,7 +291,7 @@ class MailFiltersController < ApplicationController
 
     @mail_account = MailAccount.find(mail_account_id)
 
-    if @mail_account.user_id != @login_user.id
+    if (@mail_account.user_id != @login_user.id)
       render(:plain => 'ERROR:' + t('msg.need_to_be_owner'))
       return
     end
@@ -316,7 +306,7 @@ class MailFiltersController < ApplicationController
       idx_a = order_arr.index(id_a)
       idx_b = order_arr.index(id_b)
 
-      if idx_a.nil? or idx_b.nil?
+      if (idx_a.nil? or idx_b.nil?)
         idx_a = filters.index(id_a)
         idx_b = filters.index(id_b)
       end
@@ -326,7 +316,7 @@ class MailFiltersController < ApplicationController
 
     idx = 1
     filters.each do |filter|
-      next if filter.mail_account_id != mail_account_id.to_i
+      next if (filter.mail_account_id != mail_account_id.to_i)
 
       filter.update_attribute(:xorder, idx)
 

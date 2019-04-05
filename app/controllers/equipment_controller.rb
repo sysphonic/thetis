@@ -1,26 +1,19 @@
 #
 #= EquipmentController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Equipment.
-#
-#== Note:
-#
-#* 
-#
 class EquipmentController < ApplicationController
-  layout 'base'
+  layout('base')
 
   if YamlHelper.get_value($thetis_config, 'menu.req_login_equipment', nil) == '1'
-    before_action :check_login
+    before_action(:check_login)
   end
 
   before_action :except => [:show, :list, :schedule_all] do |controller|
     controller.check_auth(User::AUTH_EQUIPMENT)
   end
-
 
   #=== new
   #
@@ -55,7 +48,7 @@ class EquipmentController < ApplicationController
       params[:equipment][:teams] = ApplicationHelper.a_to_attr(params[:teams])
     end
 
-    @equipment = Equipment.new(params.require(:equipment).permit(Equipment::PERMIT_BASE))
+    @equipment = Equipment.new(Equipment.permit_base(params.require(:equipment)))
 
     begin
       @equipment.save!
@@ -120,7 +113,7 @@ class EquipmentController < ApplicationController
       params[:equipment][:teams] = ApplicationHelper.a_to_attr(params[:teams])
     end
 
-    if @equipment.update_attributes(params.require(:equipment).permit(Equipment::PERMIT_BASE))
+    if @equipment.update_attributes(Equipment.permit_base(params.require(:equipment)))
       flash[:notice] = t('msg.update_success')
       list
       render(:action => 'list')
@@ -147,7 +140,7 @@ class EquipmentController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         con << "((groups like '%|0|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
@@ -163,7 +156,7 @@ class EquipmentController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = 'id'
       @sort_type = 'ASC'
     end
@@ -194,7 +187,7 @@ class EquipmentController < ApplicationController
     count = 0
     params[:check_equipment].each do |equipment_id, value|
       SqlHelper.validate_token([equipment_id])
-      if value == '1'
+      if (value == '1')
         Equipment.delete(equipment_id)
 
         count += 1
@@ -219,7 +212,7 @@ class EquipmentController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    if @login_user.nil? or params[:display].nil? or params[:display] == 'all'
+    if (@login_user.nil? or params[:display].nil? or params[:display] == 'all')
       params[:display] = 'all'
       con = EquipmentHelper.get_scope_condition_for(@login_user)
     else

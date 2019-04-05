@@ -1,12 +1,12 @@
 #
 #= UsersHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module UsersHelper
 
-  require 'digest/md5'
+  require('digest/md5')
 
   #=== self.get_initialized_user
   #
@@ -23,7 +23,7 @@ module UsersHelper
 
     # Official title and order to display
     titles = User.get_config_titles
-    if !titles.nil? and titles.include?(user.title)
+    if (!titles.nil? and titles.include?(user.title))
       user.xorder = titles.index(user.title)
     end
 
@@ -105,7 +105,7 @@ module UsersHelper
 
     lines = message.strip.to_a
     subject = lines[0].strip
-    if lines.length > 1
+    if (lines.length > 1)
       lines.shift
       body = lines.join
     else
@@ -113,7 +113,7 @@ module UsersHelper
     end
 
     users_hash.each do |user_id, value|
-      if value == '1'
+      if (value == '1')
 
         begin
           user = User.find(user_id)

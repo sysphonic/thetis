@@ -333,7 +333,7 @@ function onLoadSub()
           img_idx = 0
       end
 
-      if folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT
+      if (folder.xtype == MailFolder::XTYPE_ACCOUNT_ROOT)
         folder_accounts_h[folder.id] = folder.mail_account_id
       else
         folder_accounts_h[folder.id] = folder_accounts_h[parent_id.to_i]
@@ -348,7 +348,7 @@ function onLoadSub()
     ["<%= folder.id %>", " <%= folder_name %>", "", "selectFolder('<%= folder.id %>');", <%= img_idx %>]
     <%
       count += 1
-      if count < child_folders.length
+      if (count < child_folders.length)
     %>
     ,
     <%

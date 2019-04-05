@@ -82,7 +82,7 @@
       <input type="text" id="item_title" name="item[title]" value="<%= (@item.nil?)?(nil):(@item.title) %>" style="width:400px" onchange="modifiedBasic++" />
     </td>
   </tr>
-<% if !@item.nil? and @item.is_a_copy? %>
+<% if (!@item.nil? and @item.is_a_copy?) %>
   <tr>
     <td class="spec_cap" style="background-color:#97dcff;">
       <%= t('cap.original') %>
@@ -108,10 +108,10 @@
       <label for="item_folder_id"><%= Folder.model_name.human %></label>
     </td>
     <td class="spec_value">
-<% if !@item.nil? and Folder.get_path(@item.folder_id, @folders_cache, @folder_obj_cache).include?('/$') %>
+<% if (!@item.nil? and Folder.get_path(@item.folder_id, @folders_cache, @folder_obj_cache).include?('/$')) %>
   ---
   <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= @item.folder_id %>" />
-<% elsif !@item.nil? and @item.xtype == Item::XTYPE_PROFILE %>
+<% elsif (!@item.nil? and @item.xtype == Item::XTYPE_PROFILE) %>
   <%= @item.get_folder_path(@folders_cache, @folder_obj_cache) %>
   <input type="hidden" id="item_folder_id" name="item[folder_id]" value="<%= @item.folder_id %>" />
 <% else %>

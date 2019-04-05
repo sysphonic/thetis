@@ -1,7 +1,7 @@
 <%
 target_attr ||= :id
 
-if target_attr.to_s == 'email'
+if (target_attr.to_s == 'email')
   if YamlHelper.get_value($thetis_config, 'menu.disp_user_list', nil) != '1'
     raise('*** ACCESS NOT PERMITTED!! ***')
   end
@@ -35,7 +35,7 @@ end
 </table>
 
 <%
-if target_attr.to_s == 'email'
+if (target_attr.to_s == 'email')
   email_type = params[:email_type]
   email_sub_type = (email_type == 'main') ? nil : email_type
 %>
@@ -101,12 +101,12 @@ if target_attr.to_s == 'email'
     end
   end
 
-  if login_groups.empty? and login_teams.empty?
+  if (login_groups.empty? and login_teams.empty?)
     users_available[@login_user.id.to_s] = []
   end
 
   users_available.each do |user_id, org_names|
-    if !@users_selected.nil? and @users_selected.include?(user_id)
+    if (!@users_selected.nil? and @users_selected.include?(user_id))
       next
     end
 
@@ -158,7 +158,7 @@ if target_attr.to_s == 'email'
     end
 
     users_available.each do |user_id, name|
-      next if !@users_selected.nil? and @users_selected.include?(user_id)
+      next if (!@users_selected.nil? and @users_selected.include?(user_id))
 
       entries = []
 
@@ -194,7 +194,7 @@ if target_attr.to_s == 'email'
 
 <script type="text/javascript">
 
-<% if target_attr.to_s == 'email' %>
+<% if (target_attr.to_s == 'email') %>
 
 onUserEmailTypeChanged = function()
 {

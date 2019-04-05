@@ -1,7 +1,7 @@
 #
 #= SendMailsHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module SendMailsHelper
@@ -19,7 +19,7 @@ module SendMailsHelper
 
     params ||= {}
 
-    if params[:id].nil? or params[:id].empty?
+    if (params[:id].nil? or params[:id].empty?)
       email = Email.new
       email.user_id = user.id
       email.created_at = Time.now

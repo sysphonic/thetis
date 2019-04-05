@@ -1,21 +1,14 @@
 #
 #= SendMailsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Sending Emails.
-#
-#== Note:
-#
-#* 
-#
 class SendMailsController < ApplicationController
-  layout 'base'
+  layout('base')
 
-  before_action :check_login
-  before_action :check_owner, :except => [:new]
-
+  before_action(:check_login)
+  before_action(:check_owner, :except => [:new])
 
   #=== new
   #
@@ -32,7 +25,7 @@ class SendMailsController < ApplicationController
       @mail_account = MailAccount.get_default_for(@login_user.id, account_xtype)
     else
       @mail_account = MailAccount.find(mail_account_id)
-      if @mail_account.user_id != @login_user.id
+      if (@mail_account.user_id != @login_user.id)
         flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
         render(:partial => 'common/flash_notice', :layout => false)
         return
@@ -79,7 +72,7 @@ class SendMailsController < ApplicationController
     end
 
     @mail_account = MailAccount.find(org_email.mail_account_id)
-    if @mail_account.user_id != @login_user.id
+    if (@mail_account.user_id != @login_user.id)
       flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
       render(:partial => 'common/flash_notice', :layout => false)
       return
@@ -102,7 +95,7 @@ class SendMailsController < ApplicationController
         @email.message = EmailsHelper.quote_message(org_email)
         @email.mail_account_id = @mail_account.id
 
-        if org_email.xtype == Email::XTYPE_SEND
+        if (org_email.xtype == Email::XTYPE_SEND)
           @email.to_addresses = org_email.to_addresses
           @email.cc_addresses = org_email.cc_addresses
         else
@@ -163,7 +156,6 @@ class SendMailsController < ApplicationController
 
   #=== do_send
   #
-  #<Ajax>
   #Does send E-mail.
   #
   def do_send
@@ -174,13 +166,13 @@ class SendMailsController < ApplicationController
     begin
       email = Email.find(params[:id])
 
-      if email.status != Email::STATUS_DRAFT
+      if (email.status != Email::STATUS_DRAFT)
         # Ignore clicked Send button twice or more at once.
         raise('ERROR:' + 'Specified E-mail is not a draft.')
       end
 
       mail_account = MailAccount.find(email.mail_account_id)
-      if mail_account.user_id != @login_user.id
+      if (mail_account.user_id != @login_user.id)
         raise('ERROR:' + t('msg.need_to_be_owner'))
       end
 
@@ -188,7 +180,7 @@ class SendMailsController < ApplicationController
       email.do_smtp(mail_account)
 
       attrs = ActionController::Parameters.new({status: Email::STATUS_TRANSMITTED, mail_folder_id: sent_folder.id, sent_at: Time.now})
-      email.update_attributes(attrs.permit(Email::PERMIT_BASE))
+      email.update_attributes(Email.permit_base(attrs))
 
       flash[:notice] = t('msg.transmit_success')
     rescue => evar
@@ -201,7 +193,6 @@ class SendMailsController < ApplicationController
 
   #=== save
   #
-  #<Ajax>
   #Saves draft Email.
   #
   def save
@@ -215,7 +206,7 @@ class SendMailsController < ApplicationController
     end
 
     @mail_account = MailAccount.find(params[:mail_account_id])
-    if @mail_account.user_id != @login_user.id
+    if (@mail_account.user_id != @login_user.id)
       flash[:notice] = 'ERROR:' + t('msg.need_to_be_owner')
       render(:partial => 'common/flash_notice', :layout => false)
       return
@@ -233,10 +224,10 @@ class SendMailsController < ApplicationController
         @email.save!  # To recalcurate size
       end
 
-      if THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0
+      if (THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT > 0)
         Email.trim(@login_user.id, @mail_account.id, THETIS_MAIL_LIMIT_NUM_PER_ACCOUNT)
       end
-      if THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0
+      if (THETIS_MAIL_CAPACITY_MB_PER_ACCOUNT > 0)
         Email.trim_by_capacity(@login_user.id, @mail_account.id, @mail_account.get_capacity_mb)
       end
       # flash[:notice] = t('msg.save_success')
@@ -254,7 +245,6 @@ class SendMailsController < ApplicationController
 
   #=== add_attachment
   #
-  #<Ajax>
   #Attaches a file to the Email.
   #
   def add_attachment
@@ -294,8 +284,8 @@ class SendMailsController < ApplicationController
         @email.mail_attachments << @mail_attachment
 
         mail_attrs = {updated_at: Time.now}
-        if @email.status == Email::STATUS_TEMPORARY \
-            and !@email.mail_account_id.nil?
+        if ((@email.status == Email::STATUS_TEMPORARY) \
+            and !@email.mail_account_id.nil?)
           mail_attrs[:status] = Email::STATUS_DRAFT
         end
         @email.update_attributes(mail_attrs)
@@ -322,7 +312,6 @@ class SendMailsController < ApplicationController
 
   #=== delete_attachment
   #
-  #<Ajax>
   #Deletes MailAttachment of the Email.
   #
   def delete_attachment
@@ -334,11 +323,11 @@ class SendMailsController < ApplicationController
       attachment = MailAttachment.find(params[:attachment_id])
       @email = Email.find(params[:id])
 
-      if attachment.email_id == @email.id
+      if (attachment.email_id == @email.id)
         attachment.destroy
 
         mail_attrs = {updated_at: Time.now}
-        if @email.status == Email::STATUS_TEMPORARY
+        if (@email.status == Email::STATUS_TEMPORARY)
           mail_attrs[:status] = Email::STATUS_DRAFT
         end
         @email.update_attributes(mail_attrs)
@@ -352,7 +341,6 @@ class SendMailsController < ApplicationController
 
   #=== get_group_users
   #
-  #<Ajax>
   #Gets Users in specified Group.
   #
   def get_group_users
@@ -377,7 +365,7 @@ class SendMailsController < ApplicationController
   #
   def check_owner
 
-    return if params[:id].blank? or @login_user.nil?
+    return if (params[:id].blank? or @login_user.nil?)
 
     email = Email.find(params[:id])
 

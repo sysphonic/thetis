@@ -21,7 +21,7 @@ form_idx = Time.now.to_f.to_s.gsub('.', '_')
 <table style="margin:0px auto 20px;">
   <tr>
     <td class="prim_btn nodrag" onclick="onRegisterFilterClicked();">
-    <% if @mail_filter.nil? or @mail_filter.id.nil? %>
+    <% if (@mail_filter.nil? or @mail_filter.id.nil?) %>
       <%= t('btn.register')%>
     <% else %>
       <%= t('btn.update')%>

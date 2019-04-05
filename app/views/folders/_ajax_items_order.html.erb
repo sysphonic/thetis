@@ -4,7 +4,7 @@
 
 <% if Folder.check_user_auth(@folder_id, @login_user, 'w', true) %>
 
-  <% if @items.nil? or @items.empty? %>
+  <% if (@items.nil? or @items.empty?) %>
 
       <table style="width:80%; margin:30px auto 0px;">
         <tr>
@@ -21,7 +21,7 @@
     <%
     users_cache = {}
     @items.each_with_index do |item, idx|
-      if item.user_id.nil? or item.user_id == 0
+      if (item.user_id.nil? or (item.user_id == 0))
         user_name = ''
       else
         user_name = User.get_name(item.user_id, users_cache)
@@ -37,7 +37,7 @@
             %>
             <img src="<%= THETIS_RELATIVE_URL_ROOT %>/images/icons/up_down.png" title="<%= t('msg.drag_to_change_orger') %>" style="cursor:move" />
             <%
-            if item.public
+            if item.public?
               scope = '<span style="color:orangered;">' + t('schedule.public') + "</span>"
             else
               scope = '<span style="color:mediumblue;">' + t('schedule.private') + "</span>"

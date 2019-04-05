@@ -118,7 +118,7 @@ tabs = ["basic", "admin"];
                       <input type="hidden" name="desktop[img_enabled]" value="0" />
                       <input type="checkbox" id="desktop_img_enabled" name="desktop[img_enabled]" value="1" <%= checked %> /><label for="desktop_img_enabled"><%= t('desktop.show_backgound_image') %></label><br/>
                       <div style="text-align:left; padding:5px 0px 5px 30px;" >
-                      <% if !@desktop.img_size.nil? and @desktop.img_size > 0 %>
+                      <% if (!@desktop.img_size.nil? and (@desktop.img_size > 0)) %>
                         <img style="max-width:120px; max-height:100px;" src="<%= url_for(:controller => 'desktop', :action => 'get_image', :ts => ApplicationHelper.get_timestamp(@desktop)) %>" />
                       <% end %>
                       </div>

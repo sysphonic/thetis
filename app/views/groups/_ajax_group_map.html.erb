@@ -9,7 +9,7 @@
   <input type="hidden" name="office_map[img_enabled]" value="0" />
   <input type="checkbox" id="office_map_img_enabled" name="office_map[img_enabled]" value="1" <%= checked %> /><label for="office_map_img_enabled"><%= t('office_map.enable_map') %></label><br/>
   <div style="text-align:left; padding:5px 0px 5px 30px;">
-  <% if !@office_map.img_size.nil? and @office_map.img_size > 0 %>
+  <% if (!@office_map.img_size.nil? and @office_map.img_size > 0) %>
     <img style="width:120px;" src="<%= url_for(:controller => 'locations', :action => 'get_image', :id => @office_map.id, :ts => ApplicationHelper.get_timestamp(@office_map)) %>" />
   <% end %>
   </div>

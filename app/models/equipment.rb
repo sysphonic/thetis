@@ -1,15 +1,13 @@
 #
 #= Equipment
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Equipment is related to Schedules, in other words, 'reserved'.
 #
 class Equipment < ApplicationRecord
   public::PERMIT_BASE = [:name, :note, :users, :groups, :teams]
 
-  extend CachedRecord
+  extend(CachedRecord)
 
   validates_presence_of(:name)
 
@@ -99,7 +97,7 @@ class Equipment < ApplicationRecord
     groups = self.get_groups_a
     teams = self.get_teams_a
 
-    return true if users.empty? and groups.empty? and teams.empty?
+    return true if (users.empty? and groups.empty? and teams.empty?)
 
     unless user.nil?
 

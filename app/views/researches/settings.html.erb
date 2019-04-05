@@ -22,7 +22,7 @@
               status_stopped = t('msg.stopped')
               disp_button_start = 'block'
               disp_button_stop = 'block'
-              if status == Research::STATUS_STARTED
+              if (status == Research::STATUS_STARTED)
                 disp_button_start = 'none'
               %>
                 <%= status_started %>

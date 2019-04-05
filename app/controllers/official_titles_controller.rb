@@ -1,17 +1,11 @@
 #
 #= OfficialTitlesController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about OfficialTitles.
-#
-#== Note:
-#
-#* 
-#
 class OfficialTitlesController < ApplicationController
-  layout 'base'
+  layout('base')
 
   before_action(:check_login)
 
@@ -65,13 +59,13 @@ class OfficialTitlesController < ApplicationController
     SqlHelper.validate_token([@group_id, official_title_id])
 
     if official_title_id.blank?
-      @official_title = OfficialTitle.new(params.require(:official_title).permit(OfficialTitle::PERMIT_BASE))
+      @official_title = OfficialTitle.new(OfficialTitle.permit_base(params.require(:official_title)))
       @official_title.group_id = @group_id
 
       @official_title.save!
     else
       @official_title = OfficialTitle.find(official_title_id)
-      @official_title.update_attributes(params.require(:official_title).permit(OfficialTitle::PERMIT_BASE))
+      @official_title.update_attributes(OfficialTitle.permit_base(params.require(:official_title)))
     end
 
     @official_titles = OfficialTitle.get_for(@group_id, false, true)
@@ -81,7 +75,6 @@ class OfficialTitlesController < ApplicationController
 
   #=== destroy
   #
-  #<Ajax>
   #Destroys the specified OfficialTitle.
   #
   def destroy
@@ -107,7 +100,6 @@ class OfficialTitlesController < ApplicationController
 
   #=== update_order
   #
-  #<Ajax>
   #Updates OfficialTitles' order.
   #
   def update_order

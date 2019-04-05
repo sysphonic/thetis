@@ -1,32 +1,25 @@
 #
 #= TimecardsController
 #
-#Copyright::(c)2007-2016 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
-#The Action-Controller about Timecards.
-#
-#== Note:
-#
-#* 
-#
 class TimecardsController < ApplicationController
-  layout 'base', :except => [:export]
+  layout('base', :except => [:export])
 
-  before_action :check_login
+  before_action(:check_login)
   before_action :only => [:configure, :update_config, :update_default_break, :delete_default_break, :paidhld_update, :paidhld_update_multi, :search, :users] do |controller|
     controller.check_auth(User::AUTH_TIMECARD)
   end
 
-  require ::Rails.root.to_s+'/lib/util/util_datetime'
-
+  require(Rails.root.to_s+'/lib/util/util_datetime')
 
   #=== month
   #
   #Shows timecards of the specified User by month.
   #
   def month
-    if params[:action] == 'month'
+    if (params[:action] == 'month')
       Log.add_info(request, params.inspect)
     end
 
@@ -39,7 +32,7 @@ class TimecardsController < ApplicationController
     else
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (@selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD))
         if (@selected_user.get_groups_a & @login_user.get_groups_a).empty?
           Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
           redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
@@ -56,7 +49,7 @@ class TimecardsController < ApplicationController
       date = Date.today
     else
       date_params = date_s.split('-')
-      if date_params.length == 2
+      if (date_params.length == 2)
         @year = date_params.first.to_i
         @month = date_params.last.to_i
         date = TimecardsHelper.get_first_day_in_fiscal_month(@year, @month, month_begins_at)
@@ -68,12 +61,12 @@ class TimecardsController < ApplicationController
     @fiscal_year = TimecardsHelper.get_fiscal_year(date, year_begins_from, month_begins_at)
     fiscal_month = TimecardsHelper.get_fiscal_month(date, month_begins_at)
 
-    if @year.nil? or @month.nil?
+    if (@year.nil? or @month.nil?)
       @month = fiscal_month
 
-      if fiscal_month < date.month and fiscal_month == 1
+      if (fiscal_month < date.month and fiscal_month == 1)
         @year = date.year + 1
-      elsif fiscal_month > date.month and fiscal_month == 12
+      elsif (fiscal_month > date.month and fiscal_month == 12)
         @year = date.year - 1
       else
         @year = date.year
@@ -98,7 +91,7 @@ class TimecardsController < ApplicationController
     Log.add_info(request, '')   # Not to show passwords.
 
     unless params[:user_id].nil?
-      if params[:user_id] != @login_user.id.to_s and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (params[:user_id] != @login_user.id.to_s and !@login_user.admin?(User::AUTH_TIMECARD))
         Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
         render(:plain => 'ERROR:' + t('msg.need_auth_to_access'))
         return
@@ -132,7 +125,7 @@ class TimecardsController < ApplicationController
 
     @timecard = Timecard.get_by(@selected_user.id, date_s)
 
-    if @selected_user == @login_user
+    if (@selected_user == @login_user)
       @schedules = Schedule.get_user_day(@login_user, @date)
     end
 
@@ -143,7 +136,6 @@ class TimecardsController < ApplicationController
 
   #=== update
   #
-  #<Ajax>
   #Updates timecard.
   #
   def update
@@ -190,12 +182,12 @@ class TimecardsController < ApplicationController
 
         unless params[:timecard]['start'].blank?
           start_t = UtilDateTime.parse(params[:timecard]['start']).to_time
-          check_error = true if breaks.first.first < start_t
+          check_error = true if (breaks.first.first < start_t)
         end
 
         unless params[:timecard]['end'].blank?
           end_t = UtilDateTime.parse(params[:timecard]['end']).to_time
-          check_error = true if end_t < breaks.last.last
+          check_error = true if (end_t < breaks.last.last)
         end
 
         if check_error
@@ -213,9 +205,9 @@ class TimecardsController < ApplicationController
       return
     end
 
-    if @timecard.update_attributes(params.require(:timecard).permit(Timecard::PERMIT_BASE))
+    if @timecard.update_attributes(Timecard.permit_base(params.require(:timecard)))
 
-      if @timecard.off? and !@timecard.get_breaks_a.empty?
+      if (@timecard.off? and !@timecard.get_breaks_a.empty?)
         @timecard.update_breaks(nil)
       end
 
@@ -243,7 +235,7 @@ class TimecardsController < ApplicationController
     begin
       timecard = Timecard.find(params[:id])
 
-      if timecard.user_id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (timecard.user_id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD))
         Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -266,7 +258,6 @@ class TimecardsController < ApplicationController
 
   #=== recent_descriptions
   #
-  #<Ajax>
   #Gets recent descriptions to select.
   #
   def recent_descriptions
@@ -280,7 +271,6 @@ class TimecardsController < ApplicationController
 
   #=== update_break
   #
-  #<Ajax>
   #Updates break.
   #
   def update_break
@@ -291,7 +281,7 @@ class TimecardsController < ApplicationController
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (@selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD))
         Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -304,7 +294,7 @@ class TimecardsController < ApplicationController
     start_dt = UtilDateTime.new(@date.year, @date.month, @date.day, params[:start_hour].to_i, params[:start_min].to_i)
     end_dt = UtilDateTime.new(@date.year, @date.month, @date.day, params[:end_hour].to_i, params[:end_min].to_i)
 
-    if start_dt == end_dt
+    if (start_dt == end_dt)
       flash[:notice] = 'ERROR:' + t('timecard.break_without_span')
       render(:partial => 'ajax_update_break', :layout => false)
       return
@@ -313,7 +303,7 @@ class TimecardsController < ApplicationController
     org_start_t = start_dt.to_time
     org_end_t = end_dt.to_time
 
-    if org_end_t < org_start_t
+    if (org_end_t < org_start_t)
       end_dt += 1
     else
       if (@timecard.end.nil? or @timecard.start.day != @timecard.end.day) and org_end_t <= @timecard.start
@@ -347,7 +337,6 @@ class TimecardsController < ApplicationController
 
   #=== delete_break
   #
-  #<Ajax>
   #Deletes break.
   #
   def delete_break
@@ -368,7 +357,7 @@ class TimecardsController < ApplicationController
     unless params[:user_id].nil?
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (@selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD))
         Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -394,7 +383,7 @@ class TimecardsController < ApplicationController
       @date = Date.parse(date_s)
     end
 
-    if params[:display] == 'mine'
+    if (params[:display] == 'mine')
       redirect_to(:action => 'month')
     else
       display_type = params[:display].split('_').first
@@ -417,7 +406,7 @@ class TimecardsController < ApplicationController
   #Shows Users list.
   #
   def users
-    if params[:action] == 'users'
+    if (params[:action] == 'users')
       Log.add_info(request, params.inspect)
     end
 
@@ -438,7 +427,7 @@ class TimecardsController < ApplicationController
     SqlHelper.validate_token([@group_id])
 
     unless @group_id.nil?
-      if @group_id == TreeElement::ROOT_ID.to_s
+      if (@group_id == TreeElement::ROOT_ID.to_s)
         con << "((groups like '%|#{@group_id}|%') or (groups is null))"
       else
         con << SqlHelper.get_sql_like([:groups], "|#{@group_id}|")
@@ -454,7 +443,7 @@ class TimecardsController < ApplicationController
     @sort_col = params[:sort_col]
     @sort_type = params[:sort_type]
 
-    if @sort_col.blank? or @sort_type.blank?
+    if (@sort_col.blank? or @sort_type.blank?)
       @sort_col = "xorder"
       @sort_type = "ASC"
     end
@@ -467,10 +456,10 @@ class TimecardsController < ApplicationController
     SqlHelper.validate_token([@sort_col, @sort_type], ['.'])
     order_by = ' order by ' + @sort_col + ' ' + @sort_type
 
-    if @sort_col != 'xorder'
+    if (@sort_col != 'xorder')
       order_by << ', xorder ASC'
     end
-    if @sort_col != 'name'
+    if (@sort_col != 'name')
       order_by << ', name ASC'
     end
 
@@ -482,7 +471,6 @@ class TimecardsController < ApplicationController
 
   #=== paidhld_list
   #
-  #<Ajax>
   #Shows list of paid holidays of the specified User.
   #
   def paidhld_list
@@ -495,7 +483,7 @@ class TimecardsController < ApplicationController
     else
       @selected_user = User.find(params[:user_id])
 
-      if @selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD)
+      if (@selected_user.id != @login_user.id and !@login_user.admin?(User::AUTH_TIMECARD))
         Log.add_check(request, '[User::AUTH_TIMECARD]'+params.inspect)
         redirect_to(:controller => 'frames', :action => 'http_error', :id => '401')
         return
@@ -558,7 +546,7 @@ class TimecardsController < ApplicationController
 
     done = false
     users_hash.each do |user_id, value|
-      if value == '1'
+      if (value == '1')
         PaidHoliday.update_for(user_id, year, num)
         done = true
       end
@@ -612,7 +600,6 @@ class TimecardsController < ApplicationController
 
   #=== update_config
   #
-  #<Ajax>
   #Updates configuration about timecards.
   #
   def update_config
@@ -638,7 +625,6 @@ class TimecardsController < ApplicationController
 
   #=== update_default_break
   #
-  #<Ajax>
   #Updates default break.
   #
   def update_default_break
@@ -649,7 +635,7 @@ class TimecardsController < ApplicationController
     start_t = Time.local(2000, 1, 1, params[:start_hour].to_i, params[:start_min].to_i)
     end_t = Time.local(2000, 1, 1, params[:end_hour].to_i, params[:end_min].to_i)
 
-    if start_t == end_t
+    if (start_t == end_t)
       flash[:notice] = 'ERROR:' + t('timecard.break_without_span')
       render(:partial => 'ajax_config_break', :layout => false)
       return
@@ -667,7 +653,7 @@ class TimecardsController < ApplicationController
 
     found = false
     spans.each do |span|
-      if span.first == org_start
+      if (span.first == org_start)
         span[0] = start_t
         span[1] = end_t
         found = true
@@ -697,7 +683,6 @@ class TimecardsController < ApplicationController
 
   #=== delete_default_break
   #
-  #<Ajax>
   #Deletes default break.
   #
   def delete_default_break
@@ -713,7 +698,7 @@ class TimecardsController < ApplicationController
       unless YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).nil?
 
         YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).each do |span|
-          if span.first == org_start
+          if (span.first == org_start)
             YamlHelper.get_value(yaml, 'timecard.default_breaks', nil).delete(span)
             ApplicationHelper.save_config_yaml(yaml)
             break

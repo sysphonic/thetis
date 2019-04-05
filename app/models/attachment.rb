@@ -1,7 +1,7 @@
 #
 #= Attachment
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 class Attachment < ApplicationRecord
@@ -10,9 +10,9 @@ class Attachment < ApplicationRecord
   belongs_to(:item, {required: false})
   belongs_to(:comment, {required: false})
 
-  require 'tempfile'
-  require 'fileutils'
-  require 'digest/md5'  # for Digest::MD5
+  require('tempfile')
+  require('fileutils')
+  require('digest/md5')  # for Digest::MD5
 
   validates_length_of(:content, :maximum => THETIS_ATTACHMENT_DB_MAX_KB*1024, :allow_nil => true)
   validates_presence_of(:name)
@@ -75,7 +75,7 @@ class Attachment < ApplicationRecord
 
     attachment.file = attrs[:file]
 
-    if attachment.location == Attachment::LOCATION_DIR
+    if (attachment.location == Attachment::LOCATION_DIR)
 
       if parent.instance_of?(Item)
         attachment.item = parent
@@ -95,7 +95,7 @@ class Attachment < ApplicationRecord
 
     attachment.save!
 
-    if attachment.location == Attachment::LOCATION_DIR
+    if (attachment.location == Attachment::LOCATION_DIR)
       FileUtils.mv(temp.path, File.join(path, attachment.id.to_s + File.extname(attachment.name)))
     end
 
@@ -112,7 +112,7 @@ class Attachment < ApplicationRecord
   #
   def copy(item_id, user_id)
 
-    if self.location == Attachment::LOCATION_DIR
+    if (self.location == Attachment::LOCATION_DIR)
       src_path = AttachmentsHelper.get_path(self)
       return nil if src_path.nil?
     end
@@ -131,7 +131,7 @@ class Attachment < ApplicationRecord
 
     attachment.save!
 
-    if attachment.location == Attachment::LOCATION_DIR
+    if (attachment.location == Attachment::LOCATION_DIR)
 
       dst_path = AttachmentsHelper.get_parent_path(attachment)
       FileUtils.mkdir_p(dst_path)
@@ -151,7 +151,7 @@ class Attachment < ApplicationRecord
   #
   def update_attributes(attrs)
 
-    if self.id.nil? or self.id <= 0
+    if (self.id.nil? or self.id <= 0)
       raise 'Use Attachment.save() instead of Attachment.update_attributes() to create a record!'
     end
 
@@ -164,11 +164,11 @@ class Attachment < ApplicationRecord
 
     if attrs[:file].nil?
 
-      if old_location == Attachment::LOCATION_DIR and new_location == Attachment::LOCATION_DB
+      if (old_location == Attachment::LOCATION_DIR and new_location == Attachment::LOCATION_DB)
 
         path = AttachmentsHelper.get_path(self)
         unless path.nil?
-          if self.size > THETIS_ATTACHMENT_DB_MAX_KB
+          if (self.size > THETIS_ATTACHMENT_DB_MAX_KB)
             raise 'Cannot move content of Attachment from DIR to DB because it is too large.'
           end
 
@@ -178,7 +178,7 @@ class Attachment < ApplicationRecord
           AttachmentsHelper.clean_dir(self)
         end
 
-      elsif old_location == Attachment::LOCATION_DB and new_location == Attachment::LOCATION_DIR
+      elsif (old_location == Attachment::LOCATION_DB and new_location == Attachment::LOCATION_DIR)
 
         path = AttachmentsHelper.get_parent_path(self)
         FileUtils.mkdir_p(path)
@@ -193,11 +193,11 @@ class Attachment < ApplicationRecord
 
     else
 
-      if old_location == Attachment::LOCATION_DIR
+      if (old_location == Attachment::LOCATION_DIR)
         path = AttachmentsHelper.get_path(self)
         FileUtils.rm(path, :force => true) unless path.nil?
 
-        if new_location != Attachment::LOCATION_DIR
+        if (new_location != Attachment::LOCATION_DIR)
           AttachmentsHelper.clean_dir(self)
         end
       end
@@ -205,7 +205,7 @@ class Attachment < ApplicationRecord
       self.file = attrs[:file]
       attrs.delete(:file)
 
-      if new_location == Attachment::LOCATION_DIR
+      if (new_location == Attachment::LOCATION_DIR)
 
         path = AttachmentsHelper.get_parent_path(self)
         FileUtils.mkdir_p(path)

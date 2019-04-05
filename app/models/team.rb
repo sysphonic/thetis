@@ -1,10 +1,8 @@
 #
 #= Team
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#Team is the unit to take on a mission (= Item whose xtype attribute is XTYPE_PROJECT).
 #
 class Team < ApplicationRecord
   public::PERMIT_BASE = [:name, :item_id, :users, :status, :req_to_del_at]
@@ -83,7 +81,7 @@ class Team < ApplicationRecord
   def update_status(new_stat)
 
     attrs = ActionController::Parameters.new({status: new_stat, req_to_del_at: nil})
-    self.update_attributes(attrs.permit(Team::PERMIT_BASE))
+    self.update_attributes(Team.permit_base(attrs))
   end
 
   #=== need_req_to_del?
@@ -95,9 +93,9 @@ class Team < ApplicationRecord
   #
   def need_req_to_del?(ignore_former_req=false)
 
-    return false if self.status == Team::STATUS_ACTIVATED
+    return false if (self.status == Team::STATUS_ACTIVATED)
 
-    if ignore_former_req or self.req_to_del_at.nil?
+    if (ignore_former_req or self.req_to_del_at.nil?)
       return true if self.updated_at.nil?
 
       base_dt = self.updated_at
@@ -119,17 +117,17 @@ class Team < ApplicationRecord
   #
   def done_req_to_del
 
-    return if self.status != Team::STATUS_DEACTIVATED
+    return if (self.status != Team::STATUS_DEACTIVATED)
 
     class << self
       def record_timestamps; false; end
     end
 
     attrs = ActionController::Parameters.new({req_to_del_at: Time.now})
-    self.update_attributes(attrs.permit(Team::PERMIT_BASE))
+    self.update_attributes(Team.permit_base(attrs))
 
     class << self
-      remove_method :record_timestamps
+      remove_method(:record_timestamps)
     end
   end
 
@@ -146,7 +144,7 @@ class Team < ApplicationRecord
     con = "xtype='#{Item::XTYPE_PROJECT}'"
 
     project_items = Item.where(con).to_a
-    return if project_items.nil? or project_items.empty?
+    return if (project_items.nil? or project_items.empty?)
 
     project_items.each do |item|
       team = item.team
@@ -216,7 +214,7 @@ class Team < ApplicationRecord
   #
   def clear_users
 
-    if self.users.nil? or self.users.empty?
+    if (self.users.nil? or self.users.empty?)
       return false
     else
       self.users = nil
@@ -230,7 +228,7 @@ class Team < ApplicationRecord
   #
   def add_users(new_users)
 
-    return if new_users.nil? or new_users.empty?
+    return if (new_users.nil? or new_users.empty?)
 
     arr = ApplicationHelper.attr_to_a(self.users)
     arr |= new_users
@@ -325,7 +323,7 @@ class Team < ApplicationRecord
   #
   def remove_application(user_ids)
 
-    return if user_ids.nil? or user_ids.empty?
+    return if (user_ids.nil? or user_ids.empty?)
 
     SqlHelper.validate_token([user_ids])
 

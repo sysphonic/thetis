@@ -1,5 +1,5 @@
 <%
-if @login_user.nil? or @login_user.auth.nil? or @login_user.auth.empty?
+if (@login_user.nil? or @login_user.auth.nil? or @login_user.auth.empty?)
 %>
 
 <script type="text/javascript">

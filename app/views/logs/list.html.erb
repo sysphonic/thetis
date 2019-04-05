@@ -92,7 +92,7 @@ user_obj_cache = {}
       user_name = User.get_name(log.user_id, users_cache, user_obj_cache)
       user_exist = !user_obj_cache[log.user_id].nil?
     end
-    if user_exist == false
+    if (user_exist == false)
     %>
       <td style="color:crimson"><%= user_name %></td>
     <% else %>

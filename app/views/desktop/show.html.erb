@@ -29,15 +29,15 @@ date_s = Date.today.strftime(Schedule::SYS_DATE_FORM)
           setTimeout("showTray()", 50);
     <% end %>
     <%
-    if @desktop.popup_schedule and !session[:schedule_popped_up]
+    if (@desktop.popup_schedule and !session[:schedule_popped_up])
       session[:schedule_popped_up] = true
     %>
           setTimeout("showSchedule()", 100);
     <% end %>
     <%
-    if !@login_user.nil? and @desktop.popup_timecard
+    if (!@login_user.nil? and @desktop.popup_timecard)
       timecard = Timecard.get_by(@login_user.id, date_s)
-      if timecard.nil? or timecard.start.nil?
+      if (timecard.nil? or timecard.start.nil?)
     %>
           setTimeout("showTimecard()", 150);
     <%

@@ -1,7 +1,7 @@
 #
 #= FoldersHelper
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
 #
 module FoldersHelper
@@ -96,7 +96,7 @@ module FoldersHelper
 
       else
         top_childs.each do |folder|
-          if folder.xtype == Folder::XTYPE_USER
+          if (folder.xtype == Folder::XTYPE_USER)
 
             user = users_cache.delete folder.owner_id
 

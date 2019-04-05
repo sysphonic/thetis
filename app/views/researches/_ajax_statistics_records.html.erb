@@ -23,14 +23,14 @@
   </tr>
 </table>
 
-<% if @researches.nil? or @researches.empty? %>
+<% if (@researches.nil? or @researches.empty?) %>
 
 <table style="width:100%; height:80%;">
   <tr style="height:20%;"><td>&nbsp;</td></tr>
   <tr style="height:60%;">
     <td style="vertical-align:middle; text-align:center;" >
 
-  <% if @group_id.nil? or @group_id.empty? %>
+  <% if (@group_id.nil? or @group_id.empty?) %>
       <%= t('group.select_to_show')%>
   <% else %>
       <%= t('msg.no_data_to_display') %>
@@ -44,7 +44,7 @@
 <%
 else
   @researches.each_with_index do |research, idx|
-    if idx >= 100
+    if (idx >= 100)
 %>
 
     <div style="text-align:center; padding-top:10px; width:100%; color:red; font-weight:bold;" >

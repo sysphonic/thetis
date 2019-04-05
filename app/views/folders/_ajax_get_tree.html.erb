@@ -28,8 +28,8 @@
   @folders_cache ||= {}
   @folder_obj_cache ||= {}
 
-  if !session_folder.nil? and Folder.exists?(session_folder)
-    if session_folder != '0'
+  if (!session_folder.nil? and Folder.exists?(session_folder))
+    if (session_folder != '0')
   %>
   array.push(["+<%= session_folder %>", "<%= Folder.get_path(session_folder, @folders_cache, @folder_obj_cache) %>", "", "", 8]);
   <%
@@ -76,7 +76,7 @@
     ["<%= folder.id %>", " <%= folder.name %>", "", "", <%= img_idx %>]
   <%
     count += 1
-    if count < child_folders.length
+    if (count < child_folders.length)
   %>
     ,
   <%

@@ -1,10 +1,8 @@
 #
 #= OfficeMap
 #
-#Copyright::(c)2007-2018 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+#Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
 #License::   New BSD License (See LICENSE file)
-#
-#OfficeMap preferences and configurations related to each User.
 #
 class OfficeMap < ApplicationRecord
   public::PERMIT_BASE = [:group_id, :img_enabled, :file]

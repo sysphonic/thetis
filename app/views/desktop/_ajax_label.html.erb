@@ -1,7 +1,7 @@
 
 <% unless @toy.nil? %>
 
-<% if params[:action] != 'update_label' %>
+<% if (params[:action] != 'update_label') %>
 <span>
 <% end %>
   <% toy_id = "toy_#{@toy.id}" %>
@@ -37,7 +37,7 @@ toy.style.display = "inline";
 
 </script>
 
-<% if params[:action] != 'update_label' %>
+<% if (params[:action] != 'update_label') %>
 </span>
 <% end %>
 
