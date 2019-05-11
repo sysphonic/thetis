@@ -1,7 +1,7 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2018, MORITA Shintaro, Sysphonic. All rights reserved.
+ Copyright (c) 2007-2019, MORITA Shintaro, Sysphonic. All rights reserved.
    http://sysphonic.com/
- This module is released under New BSD License.
+ This module is released under MIT License.
  **-----------------**-----------------**-----------------**/
 
 var __thetisbox_id = 0;

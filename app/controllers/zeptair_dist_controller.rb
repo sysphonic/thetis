@@ -2,7 +2,7 @@
 #= ZeptairDistController
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class ZeptairDistController < ApplicationController
   layout('base')

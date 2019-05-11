@@ -2,7 +2,7 @@
 #= MailAccount
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class MailAccount < ApplicationRecord
   public::PERMIT_BASE = [:title, :user_id, :is_default, :smtp_server, :smtp_port, :smtp_secure_conn, :smtp_auth, :smtp_auth_method, :smtp_username, :smtp_password, :pop_server, :pop_port, :pop_username, :pop_password, :pop_secure_conn, :pop_secure_auth, :from_name, :from_address, :reply_to, :organization, :remove_from_server, :xorder, :xtype]

@@ -2,7 +2,7 @@
 #= Schedule
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class Schedule < ApplicationRecord
   public::PERMIT_BASE = [:title, :detail, :users, :equipment, :start, :end, :scope, :repeat_start, :repeat_end, :repeat_rule, :except, :allday, :items, :xtype, :groups, :teams]

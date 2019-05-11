@@ -1,17 +1,9 @@
 #
 #= FeedEntry
 #
-#Original by::   Sysphonic
-#Authors::   MORITA Shintaro
-#Copyright:: Copyright (c) 2007-2011 MORITA Shintaro, Sysphonic. All rights reserved.
-#License::   New BSD License (See Release-Notes)
+#Copyright:: Copyright (c) 2007-2019 MORITA Shintaro, Sysphonic. All rights reserved.
+#License::   MIT License (See Release-Notes)
 #URL::   {http&#58;//sysphonic.com/}[http://sysphonic.com/]
-#
-#Entry for ATOM / RSS.
-#
-#== Note:
-#
-#* 
 #
 class FeedEntry
 

@@ -1,6 +1,6 @@
 /**-----------------**-----------------**-----------------**
- Copyright (c) 2007-2016, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
- This module is released under New BSD License.
+ Copyright (c) 2007-2019, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
+ This module is released under MIT License.
  **-----------------**-----------------**-----------------**/
 
 function layoutBaseElem(mainWidth, mainHeight, init)

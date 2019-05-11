@@ -164,7 +164,7 @@ ja:
         confirmation: "%{attribute}が一致しません。"
         taken: "%{attribute}が重複しています。"
   about:
-    license: "この製品は「修正BSDライセンス」です。"
+    license: "この製品は「MITライセンス」です。"
     license_detail: "詳しくは、LICENSEファイルをご参照ください。"
   address:
     plural: "アドレス"

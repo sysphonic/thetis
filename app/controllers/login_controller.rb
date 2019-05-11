@@ -2,7 +2,7 @@
 #= LoginController
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class LoginController < ApplicationController
   layout('base')
@@ -56,7 +56,7 @@ class LoginController < ApplicationController
         redirect_to(prms)
       else
         url_h = {:controller => params[:fwd_controller], :action => params[:fwd_action]}
-        url_h = url_h.update(params[:fwd_params]) unless params[:fwd_params].nil?
+        url_h = url_h.update(params[:fwd_params].permit!) unless params[:fwd_params].nil?
         redirect_to(url_h)
       end
     end

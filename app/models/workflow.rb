@@ -2,7 +2,7 @@
 #= Workflow
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 #Workflow is related to Item whose xtype attribute is XTYPE_WORKFLOW, and
 #has information of its status and users to require confirmation.

@@ -160,7 +160,7 @@ de:
         confirmation: "%{attribute} wird nicht gepaßt."
         taken: "%{attribute} ist bereits vorhanden."
   about:
-    license: "Das Produkt wird unter 'Neu BSD Lizenz' ausgegeben."
+    license: "Das Produkt wird unter 'MIT Lizenz' ausgegeben."
     license_detail: "Bitte befragen Sie LICENSE Datei für Detail."
   address:
     plural: "Adresse"

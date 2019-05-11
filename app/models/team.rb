@@ -2,7 +2,7 @@
 #= Team
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class Team < ApplicationRecord
   public::PERMIT_BASE = [:name, :item_id, :users, :status, :req_to_del_at]

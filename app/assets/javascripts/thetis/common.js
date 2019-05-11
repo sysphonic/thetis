@@ -1,6 +1,6 @@
 /**-----------------**-----------------**-----------------**
  Copyright (c) 2007-2019, MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
- This module is released under New BSD License.
+ This module is released under MIT License.
  **-----------------**-----------------**-----------------**/
 
 function getUserAgentName()
@@ -21,6 +21,23 @@ function getUserAgentName()
   } else {
     return "unknown";
   }
+}
+
+function getLang()
+{
+  var lang = null;
+  if (typeof(navigator.languages) != "undefined") {
+    lang = navigator.languages[0]; 
+  } else {
+    lang = navigator.language;
+  }
+  if (lang) {
+    m = lang.match(/[a-zA-Z]+/);
+    if (m && m[0]) {
+      lang = m[0];
+    }
+  }
+  return lang;
 }
 
 function getMetaContent(metaName)

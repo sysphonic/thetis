@@ -2,7 +2,7 @@
 #= MailFolder
 #
 #Copyright::(c)2007-2019 MORITA Shintaro, Sysphonic. [http://sysphonic.com/]
-#License::   New BSD License (See LICENSE file)
+#License::   MIT License (See LICENSE file)
 #
 class MailFolder < ApplicationRecord
   has_many(:emails, {:dependent => :destroy})

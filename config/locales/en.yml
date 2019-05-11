@@ -160,7 +160,7 @@ en:
         confirmation: "%{attribute} is not matched."
         taken: "%{attribute} is duplicated."
   about:
-    license: "This product is released under 'New BSD License'."
+    license: "This product is released under 'MIT License'."
     license_detail: "Please see LICENSE file for more detail."
   address:
     plural: "Addresses"
